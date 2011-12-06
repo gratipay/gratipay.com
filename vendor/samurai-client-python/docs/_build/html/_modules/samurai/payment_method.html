@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>samurai.payment_method &mdash; samurai  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="samurai  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">samurai  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for samurai.payment_method</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Payment method.</span>
+<span class="sd">    ~~~~~~~~~~~~~~~</span>
+
+<span class="sd">    Encapsulation for the stored payment data, and payment methods.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">api_base</span> <span class="kn">import</span> <span class="n">ApiBase</span>
+<span class="kn">from</span> <span class="nn">request</span> <span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">fetch_url</span>
+<span class="kn">from</span> <span class="nn">xmlutils</span> <span class="kn">import</span> <span class="n">dict_to_xml</span>
+
+<div class="viewcode-block" id="PaymentMethod"><a class="viewcode-back" href="../../samurai.html#samurai.payment_method.PaymentMethod">[docs]</a><span class="k">class</span> <span class="nc">PaymentMethod</span><span class="p">(</span><span class="n">ApiBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Proxy for samurai api payment method endpoints.</span>
+<span class="sd">    Implements `find`, `retain`, `redact` and other related operations.</span>
+
+<span class="sd">    This object makes available the response retured from the api.</span>
+<span class="sd">    ::</span>
+<span class="sd">        &lt;payment_method&gt;</span>
+<span class="sd">            &lt;payment_method_token&gt;QhLaMNNpvHwfnFbHbUYhNxadx4C&lt;/payment_method_token&gt;</span>
+<span class="sd">            &lt;created_at type=&quot;datetime&quot;&gt;2011-02-12T20:20:46Z&lt;/created_at&gt;</span>
+<span class="sd">            &lt;updated_at type=&quot;datetime&quot;&gt;2011-04-22T17:57:30Z&lt;/updated_at&gt;</span>
+<span class="sd">            &lt;custom&gt;Any value you want us to save with this payment method.&lt;/custom&gt;</span>
+<span class="sd">            &lt;is_retained type=&quot;boolean&quot;&gt;true&lt;/is_retained&gt;</span>
+<span class="sd">            &lt;is_redacted type=&quot;boolean&quot;&gt;false&lt;/is_redacted&gt;</span>
+<span class="sd">            &lt;is_sensitive_data_valid type=&quot;boolean&quot;&gt;false&lt;/is_sensitive_data_valid&gt;</span>
+<span class="sd">            &lt;messages&gt;</span>
+<span class="sd">            &lt;message class=&quot;error&quot; context=&quot;input.cvv&quot; key=&quot;too_long&quot; /&gt;</span>
+<span class="sd">            &lt;message class=&quot;error&quot; context=&quot;input.card_number&quot; key=&quot;failed_checksum&quot; /&gt;</span>
+<span class="sd">            &lt;/messages&gt;</span>
+<span class="sd">            &lt;last_four_digits&gt;1111&lt;/last_four_digits&gt;</span>
+<span class="sd">            &lt;card_type&gt;visa&lt;/card_type&gt;</span>
+<span class="sd">            &lt;first_name&gt;Bob&lt;/first_name&gt;</span>
+<span class="sd">            &lt;last_name&gt;Smith&lt;/last_name&gt;</span>
+<span class="sd">            &lt;expiry_month type=&quot;integer&quot;&gt;1&lt;/expiry_month&gt;</span>
+<span class="sd">            &lt;expiry_year type=&quot;integer&quot;&gt;2020&lt;/expiry_year&gt;</span>
+<span class="sd">            &lt;address_1 nil=&quot;true&quot;&gt;&lt;/address_1&gt;</span>
+<span class="sd">            &lt;address_2 nil=&quot;true&quot;&gt;&lt;/address_2&gt;</span>
+<span class="sd">            &lt;city nil=&quot;true&quot;&gt;&lt;/city&gt;</span>
+<span class="sd">            &lt;state nil=&quot;true&quot;&gt;&lt;/state&gt;</span>
+<span class="sd">            &lt;zip nil=&quot;true&quot;&gt;&lt;/zip&gt;</span>
+<span class="sd">            &lt;country nil=&quot;true&quot;&gt;&lt;/country&gt;</span>
+<span class="sd">        &lt;/payment_method&gt;</span>
+
+<span class="sd">    All xml elements inside top level element are directly accessible on the object.</span>
+<span class="sd">    ::</span>
+<span class="sd">        pm = PaymentMethod.find(token)</span>
+<span class="sd">        pm.is_redcated</span>
+<span class="sd">        pm.state</span>
+
+<span class="sd">    The attributes are created on demand, and exist only if the element exists in the xml object</span>
+<span class="sd">    wraps.</span>
+
+<span class="sd">    Errors while operating on it will be accessible `errors`. If there aren&#39;t any errors, `errors`</span>
+<span class="sd">    is False. If there are errors, `errors` is a list of errors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">top_xml_key</span> <span class="o">=</span> <span class="s">&#39;payment_method&#39;</span>
+
+    <span class="n">find_url</span>  <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/payment_methods/</span><span class="si">%s</span><span class="s">.xml&#39;</span>
+    <span class="n">retain_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/payment_methods/</span><span class="si">%s</span><span class="s">/retain.xml&#39;</span>
+    <span class="n">redact_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/payment_methods/</span><span class="si">%s</span><span class="s">/redact.xml&#39;</span>
+    <span class="n">create_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/payment_methods.xml&#39;</span>
+    <span class="n">update_url</span>  <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/payment_methods/</span><span class="si">%s</span><span class="s">.xml&#39;</span>
+
+    <span class="n">create_data</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="s">&#39;card_number&#39;</span><span class="p">,</span> <span class="s">&#39;cvv&#39;</span><span class="p">,</span> <span class="s">&#39;expiry_month&#39;</span><span class="p">,</span> <span class="s">&#39;expiry_year&#39;</span><span class="p">,</span>
+                       <span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;last_name&#39;</span><span class="p">,</span> <span class="s">&#39;address_1&#39;</span><span class="p">,</span> <span class="s">&#39;address_2&#39;</span><span class="p">,</span>
+                       <span class="s">&#39;city&#39;</span><span class="p">,</span> <span class="s">&#39;state&#39;</span><span class="p">,</span> <span class="s">&#39;zip&#39;</span><span class="p">,</span> <span class="s">&#39;custom&#39;</span><span class="p">,</span> <span class="s">&#39;sandbox&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_res</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PaymentMethod</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_fields</span><span class="p">(</span><span class="n">xml_res</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="PaymentMethod.find"><a class="viewcode-back" href="../../samurai.html#samurai.payment_method.PaymentMethod.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">payment_method_token</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the payment method details.</span>
+<span class="sd">        Returns xml data returned from the endpoint converted to python dictionary.</span>
+<span class="sd">        ::</span>
+<span class="sd">            pm = PaymentMethod.find(token)</span>
+<span class="sd">            if not pm.errors:</span>
+<span class="sd">                # Work on pm object here</span>
+<span class="sd">            else:</span>
+<span class="sd">                # pm.errors will be a list of errors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">find_url</span> <span class="o">%</span> <span class="n">payment_method_token</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">fetch_url</span><span class="p">(</span><span class="n">req</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="PaymentMethod.retain"><a class="viewcode-back" href="../../samurai.html#samurai.payment_method.PaymentMethod.retain">[docs]</a>    <span class="k">def</span> <span class="nf">retain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Issues `retain` call to samurai API.</span>
+<span class="sd">        ::</span>
+<span class="sd">            pm = PaymentMethod.find(token)</span>
+<span class="sd">            if not pm.retain().is_retain:</span>
+<span class="sd">                # Some thing prevented the retention.</span>
+<span class="sd">                # Check pm.errors</span>
+<span class="sd">            else:</span>
+<span class="sd">                # Successfully redacted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retain_url</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">payment_method_token</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;post&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_fields</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="PaymentMethod.redact"><a class="viewcode-back" href="../../samurai.html#samurai.payment_method.PaymentMethod.redact">[docs]</a>    <span class="k">def</span> <span class="nf">redact</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Issues `redact` call to samurai API.</span>
+<span class="sd">        ::</span>
+<span class="sd">            pm = PaymentMethod.find(token)</span>
+<span class="sd">            if not pm.redact().is_redacted:</span>
+<span class="sd">                # Some thing prevented the redaction.</span>
+<span class="sd">                # Check pm.errors</span>
+<span class="sd">            else:</span>
+<span class="sd">                # Successfully redacted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">redact_url</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">payment_method_token</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;post&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_fields</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="PaymentMethod.create"><a class="viewcode-back" href="../../samurai.html#samurai.payment_method.PaymentMethod.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">card_number</span><span class="p">,</span> <span class="n">cvv</span><span class="p">,</span> <span class="n">expiry_month</span><span class="p">,</span> <span class="n">expiry_year</span><span class="p">,</span> <span class="o">**</span><span class="n">other_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a payment method.</span>
+
+<span class="sd">        Transaprent redirects are favored method for creating payment methods.</span>
+<span class="sd">        Using this call places the burden of PCI compliance on the client since the</span>
+<span class="sd">        data passes through it.</span>
+<span class="sd">        ::</span>
+<span class="sd">            pm = PaymentMethod.create(&#39;4242424242424242&#39;, &#39;133&#39;, &#39;07&#39;, &#39;12&#39;)</span>
+<span class="sd">            assert pm.is_sensitive_data_valid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;payment_method&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;card_number&#39;</span><span class="p">:</span> <span class="n">card_number</span><span class="p">,</span>
+                <span class="s">&#39;cvv&#39;</span><span class="p">:</span> <span class="n">cvv</span><span class="p">,</span>
+                <span class="s">&#39;expiry_month&#39;</span><span class="p">:</span> <span class="n">expiry_month</span><span class="p">,</span>
+                <span class="s">&#39;expiry_year&#39;</span><span class="p">:</span> <span class="n">expiry_year</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">optional_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">other_args</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+                             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">create_data</span><span class="p">)</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s">&#39;payment_method&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">optional_data</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">dict_to_xml</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+
+        <span class="c"># Send payload and return payment method.</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">create_url</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;post&#39;</span><span class="p">)</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s">&quot;Content-Type&quot;</span><span class="p">,</span> <span class="s">&quot;application/xml&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">fetch_url</span><span class="p">(</span><span class="n">req</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="PaymentMethod.update"><a class="viewcode-back" href="../../samurai.html#samurai.payment_method.PaymentMethod.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">other_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates a payment method.</span>
+
+<span class="sd">        Payment method can&#39;t be updated once it has been retained or redacted.</span>
+<span class="sd">        ::</span>
+<span class="sd">            pm = PaymentMethod.create(&#39;4242424242424242&#39;, &#39;133&#39;, &#39;07&#39;, &#39;12&#39;)</span>
+<span class="sd">            assert pm.is_sensitive_data_valid</span>
+<span class="sd">            pm.update(first_name=&#39;dummy&#39;)</span>
+<span class="sd">            if not pm.errors:</span>
+<span class="sd">                assert pm.first_name == &#39;dummy&#39;</span>
+<span class="sd">            else:</span>
+<span class="sd">                # deal with pm.errors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;payment_method&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">optional_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">other_args</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+                             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_data</span><span class="p">)</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s">&#39;payment_method&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">optional_data</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">dict_to_xml</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+
+        <span class="c"># Send payload and return payment method.</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_url</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">payment_method_token</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;put&#39;</span><span class="p">)</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s">&quot;Content-Type&quot;</span><span class="p">,</span> <span class="s">&quot;application/xml&quot;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_fields</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">samurai  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, samurai@feefighters.com.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

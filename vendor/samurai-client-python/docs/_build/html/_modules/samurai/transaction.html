@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>samurai.transaction &mdash; samurai  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="samurai  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">samurai  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for samurai.transaction</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transaction</span>
+<span class="sd">    ~~~~~~~~~~~~</span>
+
+<span class="sd">    Transactions encapsulate the returned data from the api when a transaction is made</span>
+<span class="sd">    agains a payment token.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">xmlutils</span> <span class="kn">import</span> <span class="n">dict_to_xml</span>
+<span class="kn">from</span> <span class="nn">api_base</span> <span class="kn">import</span> <span class="n">ApiBase</span>
+<span class="kn">from</span> <span class="nn">request</span> <span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">fetch_url</span>
+<span class="kn">from</span> <span class="nn">errors</span> <span class="kn">import</span> <span class="n">UnauthorizedTransactionError</span>
+
+<div class="viewcode-block" id="Transaction"><a class="viewcode-back" href="../../samurai.html#samurai.transaction.Transaction">[docs]</a><span class="k">class</span> <span class="nc">Transaction</span><span class="p">(</span><span class="n">ApiBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A completed or authorized transaction.</span>
+<span class="sd">    This class can be used to introspect trasnaction data, as well as perform transaction</span>
+<span class="sd">    operations viz. reverse, authorize, capture etc.</span>
+
+<span class="sd">    In case of simple purchases, the returned data will be mostly used for inspection.</span>
+
+<span class="sd">    In complex transactions, opertaions on it are used to perform or cancel it.</span>
+<span class="sd">    ::</span>
+<span class="sd">        &lt;transaction&gt;</span>
+<span class="sd">            &lt;reference_id&gt;3dcFjTC7LDjIjTY3nkKjBVZ8qkZ&lt;/reference_id&gt;</span>
+<span class="sd">            &lt;transaction_token&gt;53VFyQKYBmN9vKfA9mHCTs79L9a&lt;/transaction_token&gt;</span>
+<span class="sd">            &lt;created_at type=&quot;datetime&quot;&gt;2011-04-22T17:57:56Z&lt;/created_at&gt;</span>
+<span class="sd">            &lt;descriptor&gt;Custom descriptor here if your processor supports it.&lt;/descriptor&gt;</span>
+<span class="sd">            &lt;custom&gt;Any value you like.&lt;/custom&gt;</span>
+<span class="sd">            &lt;transaction_type&gt;purchase&lt;/transaction_type&gt;</span>
+<span class="sd">            &lt;amount&gt;100.00&lt;/amount&gt;</span>
+<span class="sd">            &lt;currency_code&gt;USD&lt;/currency_code&gt;</span>
+<span class="sd">            &lt;billing_reference&gt;12345678&lt;/billing_reference&gt;</span>
+<span class="sd">            &lt;customer_reference&gt;1234&lt;/customer_reference&gt;</span>
+<span class="sd">            &lt;processor_token&gt;[Processor Token]&lt;/processor_token&gt;</span>
+<span class="sd">            &lt;processor_response&gt;</span>
+<span class="sd">                &lt;success type=&quot;boolean&quot;&gt;false&lt;/success&gt;</span>
+<span class="sd">                &lt;messages&gt;</span>
+<span class="sd">                &lt;message class=&quot;error&quot; context=&quot;processor.avs&quot; key=&quot;country_not_supported&quot; /&gt;</span>
+<span class="sd">                &lt;message class=&quot;error&quot; context=&quot;input.cvv&quot; key=&quot;too_short&quot; /&gt;</span>
+<span class="sd">                &lt;/messages&gt;</span>
+<span class="sd">            &lt;/processor_response&gt;</span>
+<span class="sd">            &lt;payment_method&gt;...&lt;/payment_method&gt;</span>
+<span class="sd">        &lt;/transaction&gt;</span>
+
+<span class="sd">    All elements inside root element `transaction` are directly available on the object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">top_xml_key</span> <span class="o">=</span> <span class="s">&#39;transaction&#39;</span>
+
+    <span class="n">find_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/transactions/</span><span class="si">%s</span><span class="s">.xml&#39;</span>
+    <span class="n">capture_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/transactions/</span><span class="si">%s</span><span class="s">/capture.xml&#39;</span>
+    <span class="n">reverse_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/transactions/</span><span class="si">%s</span><span class="s">/reverse.xml&#39;</span>
+    <span class="n">credit_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/transactions/</span><span class="si">%s</span><span class="s">/credit.xml&#39;</span>
+    <span class="n">void_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/transactions/</span><span class="si">%s</span><span class="s">/void.xml&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_res</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes transaction data by parsing `xml_res`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Transaction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_fields</span><span class="p">(</span><span class="n">xml_res</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Transaction.find"><a class="viewcode-back" href="../../samurai.html#samurai.transaction.Transaction.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">reference_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the transaction details.</span>
+<span class="sd">        Returns xml data returned from the endpoint converted to python dictionary.</span>
+<span class="sd">        ::</span>
+<span class="sd">            trans = Transaction.find(reference_id)</span>
+<span class="sd">            if not trans.errors:</span>
+<span class="sd">                # Operate on transaction object</span>
+<span class="sd">            else:</span>
+<span class="sd">                # Work on list of errors in trans.errors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">find_url</span> <span class="o">%</span> <span class="n">reference_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">fetch_url</span><span class="p">(</span><span class="n">req</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">_message_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_res</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the message block from the `parsed_res`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">parsed_res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">top_xml_key</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">parsed_res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">top_xml_key</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;processor_response&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">parsed_res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">top_xml_key</span><span class="p">][</span><span class="s">&#39;processor_response&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;messages&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_check_for_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_res</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks `parsed_res` for error blocks.</span>
+<span class="sd">        If the transaction failed, sets `self.errors`</span>
+<span class="sd">        Else delegates to superclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">parsed_res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">top_xml_key</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed_res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">top_xml_key</span><span class="p">][</span><span class="s">&#39;processor_response&#39;</span><span class="p">][</span><span class="s">&#39;success&#39;</span><span class="p">]:</span>
+                <span class="n">message_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_message_block</span><span class="p">(</span><span class="n">parsed_res</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">message_block</span> <span class="ow">and</span> <span class="n">message_block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">):</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="n">message_block</span><span class="p">[</span><span class="s">&#39;message&#39;</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="n">message</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">message</span><span class="p">]</span>
+                <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Transaction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_check_for_errors</span><span class="p">(</span><span class="n">parsed_res</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Transaction.is_success"><a class="viewcode-back" href="../../samurai.html#samurai.transaction.Transaction.is_success">[docs]</a>    <span class="k">def</span> <span class="nf">is_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if the transaction succeeded.</span>
+
+<span class="sd">        You are better of checking `trans.errors`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;processor_response&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;success&#39;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor_response</span><span class="p">[</span><span class="s">&#39;success&#39;</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Transaction.is_declined"><a class="viewcode-back" href="../../samurai.html#samurai.transaction.Transaction.is_declined">[docs]</a>    <span class="k">def</span> <span class="nf">is_declined</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if the transaction is declined.</span>
+
+<span class="sd">        You are better off checking `trans.errors`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">message_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_message_block</span>
+        <span class="k">if</span> <span class="n">message_block</span> <span class="ow">and</span> <span class="n">message_block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">):</span>
+            <span class="n">messages</span> <span class="o">=</span> <span class="n">message_block</span><span class="p">[</span><span class="s">&#39;message&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="bp">True</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">messages</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+                       <span class="ow">and</span> <span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;key&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;decline&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Transaction.capture"><a class="viewcode-back" href="../../samurai.html#samurai.transaction.Transaction.capture">[docs]</a>    <span class="k">def</span> <span class="nf">capture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Captures transaction. Works only if the transaction is authorized.</span>
+
+<span class="sd">        Returns a new transaction.</span>
+<span class="sd">        ::</span>
+<span class="sd">            trans = Processor.authorize(payment_method_token, amount)</span>
+<span class="sd">            trans = trans.capture()</span>
+<span class="sd">            if not trans.errors:</span>
+<span class="sd">                # Capture successful</span>
+<span class="sd">            else:</span>
+<span class="sd">                # Work on list of errors in trans.errors</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transact</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capture_url</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Transaction.credit"><a class="viewcode-back" href="../../samurai.html#samurai.transaction.Transaction.credit">[docs]</a>    <span class="k">def</span> <span class="nf">credit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Credits transaction. Works only if the transaction is authorized.</span>
+<span class="sd">        Depending on the settlement status of the transaction, and the behavior of the</span>
+<span class="sd">        processor endpoint, this API call may result in a `void`, `credit`, or `refund`.</span>
+
+<span class="sd">        Returns a new transaction.</span>
+<span class="sd">        ::</span>
+<span class="sd">            trans = Processor.authorize(payment_method_token, amount)</span>
+<span class="sd">            trans = trans.credit(amount)</span>
+<span class="sd">            if not trans.errors:</span>
+<span class="sd">                # Capture successful</span>
+<span class="sd">            else:</span>
+<span class="sd">                # Work on list of errors in trans.errors</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transact</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">credit_url</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Transaction.reverse"><a class="viewcode-back" href="../../samurai.html#samurai.transaction.Transaction.reverse">[docs]</a>    <span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reverses transaction. Works only if the transaction is authorized.</span>
+
+<span class="sd">        Returns a new transaction.</span>
+
+<span class="sd">        The `amount` field is optional. If left blank, the whole transaction is reversed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transact</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse_url</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Transaction.void"><a class="viewcode-back" href="../../samurai.html#samurai.transaction.Transaction.void">[docs]</a>    <span class="k">def</span> <span class="nf">void</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Voids transaction. Works only if the transaction is authorized.</span>
+
+<span class="sd">        Returns a new transaction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transact</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">void_url</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_transact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Meant to be used internally and shouldn&#39;t be called from outside.</span>
+
+<span class="sd">        Makes the specified call and returns resultant `transaction`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;transaction_token&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">UnauthorizedTransactionError</span><span class="p">(</span><span class="s">&#39;Transaction is not authorized.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">amount</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">dict_to_xml</span><span class="p">({</span><span class="s">&#39;amount&#39;</span><span class="p">:</span> <span class="n">amount</span><span class="p">})</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">endpoint</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">transaction_token</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;post&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">endpoint</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">transaction_token</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;post&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">res</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">samurai  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, samurai@feefighters.com.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
