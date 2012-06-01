@@ -1,0 +1,719 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The connection class &mdash; Psycopg 2.4.5 documentation</title>
+    
+    <link rel="stylesheet" href="_static/psycopg.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.4.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Psycopg 2.4.5 documentation" href="index.html" />
+    <link rel="next" title="The cursor class" href="cursor.html" />
+    <link rel="prev" title="The psycopg2 module content" href="module.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cursor.html" title="The cursor class"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module.html" title="The psycopg2 module content"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Psycopg 2.4.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-connection-class">
+<h1>The <tt class="docutils literal"><span class="pre">connection</span></tt> class<a class="headerlink" href="#the-connection-class" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="connection">
+<em class="property">class </em><tt class="descname">connection</tt><a class="headerlink" href="#connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the connection to a PostgreSQL database instance. It encapsulates
+a database session.</p>
+<p>Connections are created using the factory function
+<a class="reference internal" href="module.html#psycopg2.connect" title="psycopg2.connect"><tt class="xref py py-obj docutils literal"><span class="pre">connect()</span></tt></a>.</p>
+<p>Connections are thread safe and can be shared among many threads. See
+<a class="reference internal" href="usage.html#thread-safety"><em>Thread and process safety</em></a> for details.</p>
+<dl class="method">
+<dt id="connection.cursor">
+<tt class="descname">cursor</tt><big>(</big><em>[name] [, cursor_factory] [, withhold]</em><big>)</big><a class="headerlink" href="#connection.cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new <a class="reference internal" href="cursor.html#cursor" title="cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor</span></tt></a> object using the connection.</p>
+<p>If <em>name</em> is specified, the returned cursor will be a <a class="reference internal" href="usage.html#server-side-cursors"><em>server
+side cursor</em></a> (also known as <em>named cursor</em>).
+Otherwise it will be a regular <em>client side</em> cursor. By default a
+<tt class="sql docutils literal"><span class="pre">WITHOUT</span> <span class="pre">HOLD</span></tt> cursor is created; to create a <tt class="sql docutils literal"><span class="pre">WITH</span> <span class="pre">HOLD</span></tt>
+cursor, pass a <tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt> value as the <em>withhold</em> parameter.  See
+<a class="reference internal" href="usage.html#server-side-cursors"><em>Server side cursors</em></a>.</p>
+<p>The name can be a string not valid as a PostgreSQL identifier: for
+example it may start with a digit and contain non-alphanumeric
+characters and quotes.</p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 2.4: </span>previously only valid PostgreSQL identifiers were accepted as
+cursor name.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">It is unsafe to expose the <em>name</em> to an untrusted source, for
+instance you shouldn&#8217;t allow <em>name</em> to be read from a HTML form.
+Consider it as part of the query, not as a query parameter.</p>
+</div>
+<p>The <em>cursor_factory</em> argument can be used to create non-standard
+cursors. The class returned should be a subclass of
+<a class="reference internal" href="extensions.html#psycopg2.extensions.cursor" title="psycopg2.extensions.cursor"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.extensions.cursor</span></tt></a>. See <a class="reference internal" href="advanced.html#subclassing-cursor"><em>Connection and cursor factories</em></a> for
+details.</p>
+<div class="admonition-db-api-extension dbapi-extension admonition">
+<p class="first admonition-title">DB API extension</p>
+<p class="last">The <tt class="xref py py-obj docutils literal"><span class="pre">name</span></tt> and <tt class="xref py py-obj docutils literal"><span class="pre">cursor_factory</span></tt> parameters are Psycopg
+extensions to the DB API 2.0.</p>
+</div>
+</dd></dl>
+
+<span class="target" id="index-0"></span><dl class="method">
+<dt id="connection.commit">
+<tt class="descname">commit</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.commit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Commit any pending transaction to the database. Psycopg can be set to
+perform automatic commits at each operation, see
+<a class="reference internal" href="#connection.set_isolation_level" title="connection.set_isolation_level"><tt class="xref py py-obj docutils literal"><span class="pre">set_isolation_level()</span></tt></a>.</p>
+</dd></dl>
+
+<span class="target" id="index-1"></span><dl class="method">
+<dt id="connection.rollback">
+<tt class="descname">rollback</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.rollback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roll back to the start of any pending transaction.  Closing a
+connection without committing the changes first will cause an implicit
+rollback to be performed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connection.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the connection now (rather than whenever <tt class="xref py py-obj docutils literal"><span class="pre">del</span></tt> is executed).
+The connection will be unusable from this point forward; an
+<a class="reference internal" href="module.html#psycopg2.InterfaceError" title="psycopg2.InterfaceError"><tt class="xref py py-obj docutils literal"><span class="pre">InterfaceError</span></tt></a> will be raised if any operation is
+attempted with the connection.  The same applies to all cursor objects
+trying to use the connection.  Note that closing a connection without
+committing the changes first will cause any pending change to be
+discarded as if a <tt class="sql docutils literal"><span class="pre">ROLLBACK</span></tt> was performed (unless a different
+isolation level has been selected: see
+<a class="reference internal" href="#connection.set_isolation_level" title="connection.set_isolation_level"><tt class="xref py py-obj docutils literal"><span class="pre">set_isolation_level()</span></tt></a>).</p>
+<p class="versionchanged" id="index-2">
+<span class="versionmodified">Changed in version 2.2: </span>previously an explicit <tt class="sql docutils literal"><span class="pre">ROLLBACK</span></tt> was issued by Psycopg on
+<tt class="xref py py-obj docutils literal"><span class="pre">close()</span></tt>. The command could have been sent to the backend at an
+inappropriate time, so Psycopg currently relies on the backend to
+implicitly discard uncommitted changes. Some middleware are known
+to behave incorrectly though when the connection is closed during
+a transaction (when <a class="reference internal" href="#connection.status" title="connection.status"><tt class="xref py py-obj docutils literal"><span class="pre">status</span></tt></a> is
+<a class="reference internal" href="extensions.html#psycopg2.extensions.STATUS_IN_TRANSACTION" title="psycopg2.extensions.STATUS_IN_TRANSACTION"><tt class="xref py py-obj docutils literal"><span class="pre">STATUS_IN_TRANSACTION</span></tt></a>), e.g. <a class="reference external" href="http://pgbouncer.projects.postgresql.org/">PgBouncer</a>
+reports an <tt class="docutils literal"><span class="pre">unclean</span> <span class="pre">server</span></tt> and discards the connection. To
+avoid this problem you can ensure to terminate the transaction
+with a <a class="reference internal" href="#connection.commit" title="connection.commit"><tt class="xref py py-obj docutils literal"><span class="pre">commit()</span></tt></a>/<a class="reference internal" href="#connection.rollback" title="connection.rollback"><tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt></a> before
+closing.</p>
+</dd></dl>
+
+<p class="rubric" id="index-3">Exceptions as connection class attributes</p>
+<p>The <tt class="xref py py-obj docutils literal"><span class="pre">connection</span></tt> also exposes as attributes the same exceptions
+available in the <a class="reference internal" href="module.html#module-psycopg2" title="psycopg2"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2</span></tt></a> module.  See <a class="reference internal" href="module.html#dbapi-exceptions"><em>Exceptions</em></a>.</p>
+<p class="rubric" id="index-4">Two-phase commit support methods</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.3.</span></p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="usage.html#tpc"><em>Two-Phase Commit protocol support</em></a> for an introductory explanation of these methods.</p>
+</div>
+<p>Note that PostgreSQL supports two-phase commit since release 8.1: these
+methods raise <a class="reference internal" href="module.html#psycopg2.NotSupportedError" title="psycopg2.NotSupportedError"><tt class="xref py py-obj docutils literal"><span class="pre">NotSupportedError</span></tt></a> if used with an older version
+server.</p>
+<span class="target" id="tpc-methods"></span><dl class="method">
+<dt id="connection.xid">
+<tt class="descname">xid</tt><big>(</big><em>format_id</em>, <em>gtrid</em>, <em>bqual</em><big>)</big><a class="headerlink" href="#connection.xid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <a class="reference internal" href="extensions.html#psycopg2.extensions.Xid" title="psycopg2.extensions.Xid"><tt class="xref py py-obj docutils literal"><span class="pre">Xid</span></tt></a> instance to be passed to the
+<tt class="xref py py-obj docutils literal"><span class="pre">tpc_*()</span></tt> methods of this connection. The argument types and
+constraints are explained in <a class="reference internal" href="usage.html#tpc"><em>Two-Phase Commit protocol support</em></a>.</p>
+<p>The values passed to the method will be available on the returned
+object as the members <a class="reference internal" href="extensions.html#psycopg2.extensions.Xid.format_id" title="psycopg2.extensions.Xid.format_id"><tt class="xref py py-obj docutils literal"><span class="pre">format_id</span></tt></a>,
+<a class="reference internal" href="extensions.html#psycopg2.extensions.Xid.gtrid" title="psycopg2.extensions.Xid.gtrid"><tt class="xref py py-obj docutils literal"><span class="pre">gtrid</span></tt></a>, <a class="reference internal" href="extensions.html#psycopg2.extensions.Xid.bqual" title="psycopg2.extensions.Xid.bqual"><tt class="xref py py-obj docutils literal"><span class="pre">bqual</span></tt></a>.
+The object also allows accessing to these members and unpacking as a
+3-items tuple.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connection.tpc_begin">
+<tt class="descname">tpc_begin</tt><big>(</big><em>xid</em><big>)</big><a class="headerlink" href="#connection.tpc_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begins a TPC transaction with the given transaction ID <em>xid</em>.</p>
+<p>This method should be called outside of a transaction (i.e. nothing
+may have executed since the last <a class="reference internal" href="#connection.commit" title="connection.commit"><tt class="xref py py-obj docutils literal"><span class="pre">commit()</span></tt></a> or
+<a class="reference internal" href="#connection.rollback" title="connection.rollback"><tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt></a> and <a class="reference internal" href="#connection.status" title="connection.status"><tt class="xref py py-obj docutils literal"><span class="pre">connection.status</span></tt></a> is
+<a class="reference internal" href="extensions.html#psycopg2.extensions.STATUS_READY" title="psycopg2.extensions.STATUS_READY"><tt class="xref py py-obj docutils literal"><span class="pre">STATUS_READY</span></tt></a>).</p>
+<p>Furthermore, it is an error to call <tt class="xref py py-obj docutils literal"><span class="pre">commit()</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt>
+within the TPC transaction: in this case a <a class="reference internal" href="module.html#psycopg2.ProgrammingError" title="psycopg2.ProgrammingError"><tt class="xref py py-obj docutils literal"><span class="pre">ProgrammingError</span></tt></a>
+is raised.</p>
+<p>The <em>xid</em> may be either an object returned by the <a class="reference internal" href="#connection.xid" title="connection.xid"><tt class="xref py py-obj docutils literal"><span class="pre">xid()</span></tt></a>
+method or a plain string: the latter allows to create a transaction
+using the provided string as PostgreSQL transaction id. See also
+<a class="reference internal" href="#connection.tpc_recover" title="connection.tpc_recover"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_recover()</span></tt></a>.</p>
+</dd></dl>
+
+<span class="target" id="index-5"></span><dl class="method">
+<dt id="connection.tpc_prepare">
+<tt class="descname">tpc_prepare</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.tpc_prepare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the first phase of a transaction started with
+<a class="reference internal" href="#connection.tpc_begin" title="connection.tpc_begin"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_begin()</span></tt></a>.  A <a class="reference internal" href="module.html#psycopg2.ProgrammingError" title="psycopg2.ProgrammingError"><tt class="xref py py-obj docutils literal"><span class="pre">ProgrammingError</span></tt></a> is raised if
+this method is used outside of a TPC transaction.</p>
+<p>After calling <tt class="xref py py-obj docutils literal"><span class="pre">tpc_prepare()</span></tt>, no statements can be executed until
+<a class="reference internal" href="#connection.tpc_commit" title="connection.tpc_commit"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_commit()</span></tt></a> or <a class="reference internal" href="#connection.tpc_rollback" title="connection.tpc_rollback"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_rollback()</span></tt></a> will be
+called.  The <a class="reference internal" href="#connection.reset" title="connection.reset"><tt class="xref py py-obj docutils literal"><span class="pre">reset()</span></tt></a> method can be used to restore the
+status of the connection to <a class="reference internal" href="extensions.html#psycopg2.extensions.STATUS_READY" title="psycopg2.extensions.STATUS_READY"><tt class="xref py py-obj docutils literal"><span class="pre">STATUS_READY</span></tt></a>: the
+transaction will remain prepared in the database and will be
+possible to finish it with <tt class="xref py py-obj docutils literal"><span class="pre">tpc_commit(xid)</span></tt> and
+<tt class="xref py py-obj docutils literal"><span class="pre">tpc_rollback(xid)</span></tt>.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">the <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-prepare-transaction.html"><tt class="sql docutils literal"><span class="pre">PREPARE</span> <span class="pre">TRANSACTION</span></tt></a> PostgreSQL command.</p>
+</div>
+</dd></dl>
+
+<span class="target" id="index-6"></span><dl class="method">
+<dt id="connection.tpc_commit">
+<tt class="descname">tpc_commit</tt><big>(</big><span class="optional">[</span><em>xid</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#connection.tpc_commit" title="Permalink to this definition">¶</a></dt>
+<dd><p>When called with no arguments, <tt class="xref py py-obj docutils literal"><span class="pre">tpc_commit()</span></tt> commits a TPC
+transaction previously prepared with <a class="reference internal" href="#connection.tpc_prepare" title="connection.tpc_prepare"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_prepare()</span></tt></a>.</p>
+<p>If <tt class="xref py py-obj docutils literal"><span class="pre">tpc_commit()</span></tt> is called prior to <tt class="xref py py-obj docutils literal"><span class="pre">tpc_prepare()</span></tt>, a single phase
+commit is performed.  A transaction manager may choose to do this if
+only a single resource is participating in the global transaction.</p>
+<p>When called with a transaction ID <em>xid</em>, the database commits
+the given transaction.  If an invalid transaction ID is
+provided, a <a class="reference internal" href="module.html#psycopg2.ProgrammingError" title="psycopg2.ProgrammingError"><tt class="xref py py-obj docutils literal"><span class="pre">ProgrammingError</span></tt></a> will be raised.  This form
+should be called outside of a transaction, and is intended for use in
+recovery.</p>
+<p>On return, the TPC transaction is ended.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">the <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-commit-prepared.html"><tt class="sql docutils literal"><span class="pre">COMMIT</span> <span class="pre">PREPARED</span></tt></a> PostgreSQL command.</p>
+</div>
+</dd></dl>
+
+<span class="target" id="index-7"></span><dl class="method">
+<dt id="connection.tpc_rollback">
+<tt class="descname">tpc_rollback</tt><big>(</big><span class="optional">[</span><em>xid</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#connection.tpc_rollback" title="Permalink to this definition">¶</a></dt>
+<dd><p>When called with no arguments, <tt class="xref py py-obj docutils literal"><span class="pre">tpc_rollback()</span></tt> rolls back a TPC
+transaction.  It may be called before or after
+<a class="reference internal" href="#connection.tpc_prepare" title="connection.tpc_prepare"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_prepare()</span></tt></a>.</p>
+<p>When called with a transaction ID <em>xid</em>, it rolls back the given
+transaction.  If an invalid transaction ID is provided, a
+<a class="reference internal" href="module.html#psycopg2.ProgrammingError" title="psycopg2.ProgrammingError"><tt class="xref py py-obj docutils literal"><span class="pre">ProgrammingError</span></tt></a> is raised.  This form should be called
+outside of a transaction, and is intended for use in recovery.</p>
+<p>On return, the TPC transaction is ended.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">the <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-rollback-prepared.html"><tt class="sql docutils literal"><span class="pre">ROLLBACK</span> <span class="pre">PREPARED</span></tt></a> PostgreSQL command.</p>
+</div>
+</dd></dl>
+
+<span class="target" id="index-8"></span><dl class="method">
+<dt id="connection.tpc_recover">
+<tt class="descname">tpc_recover</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.tpc_recover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of <a class="reference internal" href="extensions.html#psycopg2.extensions.Xid" title="psycopg2.extensions.Xid"><tt class="xref py py-obj docutils literal"><span class="pre">Xid</span></tt></a> representing pending
+transactions, suitable for use with <a class="reference internal" href="#connection.tpc_commit" title="connection.tpc_commit"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_commit()</span></tt></a> or
+<a class="reference internal" href="#connection.tpc_rollback" title="connection.tpc_rollback"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_rollback()</span></tt></a>.</p>
+<p>If a transaction was not initiated by Psycopg, the returned Xids will
+have attributes <a class="reference internal" href="extensions.html#psycopg2.extensions.Xid.format_id" title="psycopg2.extensions.Xid.format_id"><tt class="xref py py-obj docutils literal"><span class="pre">format_id</span></tt></a> and
+<a class="reference internal" href="extensions.html#psycopg2.extensions.Xid.bqual" title="psycopg2.extensions.Xid.bqual"><tt class="xref py py-obj docutils literal"><span class="pre">bqual</span></tt></a> set to <tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt> and the
+<a class="reference internal" href="extensions.html#psycopg2.extensions.Xid.gtrid" title="psycopg2.extensions.Xid.gtrid"><tt class="xref py py-obj docutils literal"><span class="pre">gtrid</span></tt></a> set to the PostgreSQL transaction ID: such Xids are still
+usable for recovery.  Psycopg uses the same algorithm of the
+<a class="reference external" href="http://jdbc.postgresql.org/">PostgreSQL JDBC driver</a> to encode a XA triple in a string, so
+transactions initiated by a program using such driver should be
+unpacked correctly.</p>
+<p>Xids returned by <tt class="xref py py-obj docutils literal"><span class="pre">tpc_recover()</span></tt> also have extra attributes
+<a class="reference internal" href="extensions.html#psycopg2.extensions.Xid.prepared" title="psycopg2.extensions.Xid.prepared"><tt class="xref py py-obj docutils literal"><span class="pre">prepared</span></tt></a>, <a class="reference internal" href="extensions.html#psycopg2.extensions.Xid.owner" title="psycopg2.extensions.Xid.owner"><tt class="xref py py-obj docutils literal"><span class="pre">owner</span></tt></a>,
+<a class="reference internal" href="extensions.html#psycopg2.extensions.Xid.database" title="psycopg2.extensions.Xid.database"><tt class="xref py py-obj docutils literal"><span class="pre">database</span></tt></a> populated with the values read
+from the server.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">the <a class="reference external" href="http://www.postgresql.org/docs/current/static/view-pg-prepared-xacts.html"><tt class="xref py py-obj docutils literal"><span class="pre">pg_prepared_xacts</span></tt></a> system view.</p>
+</div>
+</dd></dl>
+
+<div class="admonition-db-api-extension dbapi-extension admonition">
+<p class="first admonition-title">DB API extension</p>
+<p class="last">The above methods are the only ones defined by the DB API 2.0 protocol.
+The Psycopg connection objects exports the following additional
+methods and attributes.</p>
+</div>
+<dl class="attribute">
+<dt id="connection.closed">
+<tt class="descname">closed</tt><a class="headerlink" href="#connection.closed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only attribute reporting whether the database connection is open
+(0) or closed (1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connection.cancel">
+<tt class="descname">cancel</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.cancel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel the current database operation.</p>
+<p>The method interrupts the processing of the current operation. If no
+query is being executed, it does nothing. You can call this function
+from a different thread than the one currently executing a database
+operation, for instance if you want to cancel a long running query if a
+button is pushed in the UI. Interrupting query execution will cause the
+cancelled method to raise a
+<a class="reference internal" href="extensions.html#psycopg2.extensions.QueryCanceledError" title="psycopg2.extensions.QueryCanceledError"><tt class="xref py py-obj docutils literal"><span class="pre">QueryCanceledError</span></tt></a>. Note that the termination
+of the query is not guaranteed to succeed: see the documentation for
+<a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-cancel.html#LIBPQ-PQCANCEL"><tt class="xref py py-obj docutils literal"><span class="pre">PQcancel()</span></tt></a>.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.3.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connection.reset">
+<tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the connection to the default.</p>
+<p>The method rolls back an eventual pending transaction and executes the
+PostgreSQL <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-reset.html"><tt class="sql docutils literal"><span class="pre">RESET</span></tt></a> and <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-set-session-authorization.html"><tt class="sql docutils literal"><span class="pre">SET</span> <span class="pre">SESSION</span> <span class="pre">AUTHORIZATION</span></tt></a> to revert the
+session to the default values. A two-phase commit transaction prepared
+using <a class="reference internal" href="#connection.tpc_prepare" title="connection.tpc_prepare"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_prepare()</span></tt></a> will remain in the database
+available for recover.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.0.12.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="connection.dsn">
+<tt class="descname">dsn</tt><a class="headerlink" href="#connection.dsn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only string containing the connection string used by the
+connection.</p>
+</dd></dl>
+
+<span class="target" id="index-9"></span><dl class="method">
+<dt id="connection.set_session">
+<tt class="descname">set_session</tt><big>(</big><em>[isolation_level,] [readonly,] [deferrable,] [autocommit]</em><big>)</big><a class="headerlink" href="#connection.set_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set one or more parameters for the next transactions or statements in
+the current session. See <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-set-transaction.html"><tt class="sql docutils literal"><span class="pre">SET</span> <span class="pre">TRANSACTION</span></tt></a> for further details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>isolation_level</strong> &#8211; set the <a class="reference external" href="http://www.postgresql.org/docs/current/static/transaction-iso.html">isolation level</a> for the next
+transactions/statements.  The value can be one of the
+<a class="reference internal" href="extensions.html#isolation-level-constants"><em>constants</em></a> defined in the
+<a class="reference internal" href="extensions.html#module-psycopg2.extensions" title="psycopg2.extensions"><tt class="xref py py-obj docutils literal"><span class="pre">extensions</span></tt></a> module or one of the literal values
+<tt class="docutils literal"><span class="pre">READ</span> <span class="pre">UNCOMMITTED</span></tt>, <tt class="docutils literal"><span class="pre">READ</span> <span class="pre">COMMITTED</span></tt>, <tt class="docutils literal"><span class="pre">REPEATABLE</span> <span class="pre">READ</span></tt>,
+<tt class="docutils literal"><span class="pre">SERIALIZABLE</span></tt>.</li>
+<li><strong>readonly</strong> &#8211; if <tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt>, set the connection to read only;
+read/write if <tt class="xref py py-obj docutils literal"><span class="pre">False</span></tt>.</li>
+<li><strong>deferrable</strong> &#8211; if <tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt>, set the connection to deferrable;
+non deferrable if <tt class="xref py py-obj docutils literal"><span class="pre">False</span></tt>. Only available from PostgreSQL 9.1.</li>
+<li><strong>autocommit</strong> &#8211; switch the connection to autocommit mode: not a
+PostgreSQL session setting but an alias for setting the
+<a class="reference internal" href="#connection.autocommit" title="connection.autocommit"><tt class="xref py py-obj docutils literal"><span class="pre">autocommit</span></tt></a> attribute.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The parameters <em>isolation_level</em>, <em>readonly</em> and <em>deferrable</em> also
+accept the string <tt class="docutils literal"><span class="pre">DEFAULT</span></tt> as a value: the effect is to reset the
+parameter to the server default.</p>
+<p>The function must be invoked with no transaction in progress. At every
+function invocation, only the specified parameters are changed.</p>
+<p>The default for the values are defined by the server configuration:
+see values for <a class="reference external" href="http://www.postgresql.org/docs/current/static/runtime-config-client.html#GUC-DEFAULT-TRANSACTION-ISOLATION"><tt class="sql docutils literal"><span class="pre">default_transaction_isolation</span></tt></a>,
+<a class="reference external" href="http://www.postgresql.org/docs/current/static/runtime-config-client.html#GUC-DEFAULT-TRANSACTION-READ-ONLY"><tt class="sql docutils literal"><span class="pre">default_transaction_read_only</span></tt></a>, <a class="reference external" href="http://www.postgresql.org/docs/current/static/runtime-config-client.html#GUC-DEFAULT-TRANSACTION-DEFERRABLE"><tt class="sql docutils literal"><span class="pre">default_transaction_deferrable</span></tt></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There is currently no builtin method to read the current value for
+the parameters: use <tt class="sql docutils literal"><span class="pre">SHOW</span> <span class="pre">default_transaction_...</span></tt> to read
+the values from the backend.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.4.2.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="connection.autocommit">
+<tt class="descname">autocommit</tt><a class="headerlink" href="#connection.autocommit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read/write attribute: if <tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt>, no transaction is handled by the
+driver and every statement sent to the backend has immediate effect;
+if <tt class="xref py py-obj docutils literal"><span class="pre">False</span></tt> a new transaction is started at the first command
+execution: the methods <a class="reference internal" href="#connection.commit" title="connection.commit"><tt class="xref py py-obj docutils literal"><span class="pre">commit()</span></tt></a> or <a class="reference internal" href="#connection.rollback" title="connection.rollback"><tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt></a> must be manually
+invoked to terminate the transaction.</p>
+<p>The autocommit mode is useful to execute commands requiring to be run
+outside a transaction, such as <tt class="sql docutils literal"><span class="pre">CREATE</span> <span class="pre">DATABASE</span></tt> or
+<tt class="sql docutils literal"><span class="pre">VACUUM</span></tt>.</p>
+<p>The default is <tt class="xref py py-obj docutils literal"><span class="pre">False</span></tt> (manual commit) as per DBAPI specification.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">By default, any query execution, including a simple <tt class="sql docutils literal"><span class="pre">SELECT</span></tt>
+will start a transaction: for long-running programs, if no further
+action is taken, the session will remain &#8220;idle in transaction&#8221;, a
+condition non desiderable for several reasons (locks are held by
+the session, tables bloat...). For long lived scripts, either
+ensure to terminate a transaction as soon as possible or use an
+autocommit connection.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.4.2.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="connection.isolation_level">
+<tt class="descname">isolation_level</tt><a class="headerlink" href="#connection.isolation_level" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="connection.set_isolation_level">
+<tt class="descname">set_isolation_level</tt><big>(</big><em>level</em><big>)</big><a class="headerlink" href="#connection.set_isolation_level" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">From version 2.4.2, <a class="reference internal" href="#connection.set_session" title="connection.set_session"><tt class="xref py py-obj docutils literal"><span class="pre">set_session()</span></tt></a> and <a class="reference internal" href="#connection.autocommit" title="connection.autocommit"><tt class="xref py py-obj docutils literal"><span class="pre">autocommit</span></tt></a>, offer
+finer control on the transaction characteristics.</p>
+</div>
+<p>Read or set the <a class="reference external" href="http://www.postgresql.org/docs/current/static/transaction-iso.html">transaction isolation level</a> for the current session.
+The level defines the different phenomena that can happen in the
+database between concurrent transactions.</p>
+<p>The value set or read is an integer: symbolic constants are defined in
+the module <a class="reference internal" href="extensions.html#module-psycopg2.extensions" title="psycopg2.extensions"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.extensions</span></tt></a>: see
+<a class="reference internal" href="extensions.html#isolation-level-constants"><em>Isolation level constants</em></a> for the available values.</p>
+<p>The default level is <tt class="sql docutils literal"><span class="pre">READ</span> <span class="pre">COMMITTED</span></tt>: at this level a
+transaction is automatically started the first time a database command
+is executed.  If you want an <em>autocommit</em> mode, switch to
+<a class="reference internal" href="extensions.html#psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT" title="psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT"><tt class="xref py py-obj docutils literal"><span class="pre">ISOLATION_LEVEL_AUTOCOMMIT</span></tt></a> before
+executing any command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">set_isolation_level</span><span class="p">(</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">ISOLATION_LEVEL_AUTOCOMMIT</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See also <a class="reference internal" href="usage.html#transactions-control"><em>Transactions control</em></a>.</p>
+</dd></dl>
+
+<span class="target" id="index-10"></span><dl class="attribute">
+<dt id="connection.encoding">
+<tt class="descname">encoding</tt><a class="headerlink" href="#connection.encoding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="connection.set_client_encoding">
+<tt class="descname">set_client_encoding</tt><big>(</big><em>enc</em><big>)</big><a class="headerlink" href="#connection.set_client_encoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read or set the client encoding for the current session. The default
+is the encoding defined by the database. It should be one of the
+<a class="reference external" href="http://www.postgresql.org/docs/current/static/multibyte.html">characters set supported by PostgreSQL</a></p>
+</dd></dl>
+
+<span class="target" id="index-11"></span><dl class="attribute">
+<dt id="connection.notices">
+<tt class="descname">notices</tt><a class="headerlink" href="#connection.notices" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list containing all the database messages sent to the client during
+the session.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;CREATE TABLE foo (id serial PRIMARY KEY);&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">notices</span><span class="p">)</span>
+<span class="go">[&#39;NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index &quot;foo_pkey&quot; for table &quot;foo&quot;\n&#39;,</span>
+<span class="go"> &#39;NOTICE:  CREATE TABLE will create implicit sequence &quot;foo_id_seq&quot; for serial column &quot;foo.id&quot;\n&#39;]</span>
+</pre></div>
+</div>
+<p>To avoid a leak in case excessive notices are generated, only the last
+50 messages are kept.</p>
+<p>You can configure what messages to receive using <a class="reference external" href="http://www.postgresql.org/docs/current/static/runtime-config-logging.html">PostgreSQL logging
+configuration parameters</a> such as <tt class="docutils literal"><span class="pre">log_statement</span></tt>,
+<tt class="docutils literal"><span class="pre">client_min_messages</span></tt>, <tt class="docutils literal"><span class="pre">log_min_duration_statement</span></tt> etc.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="connection.notifies">
+<tt class="descname">notifies</tt><a class="headerlink" href="#connection.notifies" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of <a class="reference internal" href="extensions.html#psycopg2.extensions.Notify" title="psycopg2.extensions.Notify"><tt class="xref py py-obj docutils literal"><span class="pre">Notify</span></tt></a> objects containing asynchronous
+notifications received by the session.</p>
+<p>For other details see <a class="reference internal" href="advanced.html#async-notify"><em>Asynchronous notifications</em></a>.</p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 2.3: </span>Notifications are instances of the <tt class="xref py py-obj docutils literal"><span class="pre">Notify</span></tt> object. Previously the
+list was composed by 2 items tuples <tt class="samp docutils literal"><span class="pre">(</span><em><span class="pre">pid</span></em><span class="pre">,</span><em><span class="pre">channel</span></em><span class="pre">)</span></tt> and
+the payload was not accessible. To keep backward compatibility,
+<tt class="xref py py-obj docutils literal"><span class="pre">Notify</span></tt> objects can still be accessed as 2 items tuples.</p>
+</dd></dl>
+
+<span class="target" id="index-12"></span><dl class="method">
+<dt id="connection.get_backend_pid">
+<tt class="descname">get_backend_pid</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.get_backend_pid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the process ID (PID) of the backend server process handling
+this connection.</p>
+<p>Note that the PID belongs to a process executing on the database
+server host, not the local host!</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">libpq docs for <a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-status.html#LIBPQ-PQBACKENDPID">PQbackendPID()</a> for details.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.0.8.</span></p>
+</dd></dl>
+
+<span class="target" id="index-13"></span><dl class="method">
+<dt id="connection.get_parameter_status">
+<tt class="descname">get_parameter_status</tt><big>(</big><em>parameter</em><big>)</big><a class="headerlink" href="#connection.get_parameter_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look up a current parameter setting of the server.</p>
+<p>Potential values for <tt class="docutils literal"><span class="pre">parameter</span></tt> are: <tt class="docutils literal"><span class="pre">server_version</span></tt>,
+<tt class="docutils literal"><span class="pre">server_encoding</span></tt>, <tt class="docutils literal"><span class="pre">client_encoding</span></tt>, <tt class="docutils literal"><span class="pre">is_superuser</span></tt>,
+<tt class="docutils literal"><span class="pre">session_authorization</span></tt>, <tt class="docutils literal"><span class="pre">DateStyle</span></tt>, <tt class="docutils literal"><span class="pre">TimeZone</span></tt>,
+<tt class="docutils literal"><span class="pre">integer_datetimes</span></tt>, and <tt class="docutils literal"><span class="pre">standard_conforming_strings</span></tt>.</p>
+<p>If server did not report requested parameter, return <tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt>.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">libpq docs for <a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-status.html#LIBPQ-PQPARAMETERSTATUS">PQparameterStatus()</a> for details.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.0.12.</span></p>
+</dd></dl>
+
+<span class="target" id="index-14"></span><dl class="method">
+<dt id="connection.get_transaction_status">
+<tt class="descname">get_transaction_status</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.get_transaction_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current session transaction status as an integer.  Symbolic
+constants for the values are defined in the module
+<a class="reference internal" href="extensions.html#module-psycopg2.extensions" title="psycopg2.extensions"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.extensions</span></tt></a>: see <a class="reference internal" href="extensions.html#transaction-status-constants"><em>Transaction status constants</em></a>
+for the available values.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">libpq docs for <a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-status.html#LIBPQ-PQTRANSACTIONSTATUS">PQtransactionStatus()</a> for details.</p>
+</div>
+</dd></dl>
+
+<span class="target" id="index-15"></span><dl class="attribute">
+<dt id="connection.protocol_version">
+<tt class="descname">protocol_version</tt><a class="headerlink" href="#connection.protocol_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>A read-only integer representing frontend/backend protocol being used.
+Currently Psycopg supports only protocol 3, which allows connection
+to PostgreSQL server from version 7.4. Psycopg versions previous than
+2.3 support both protocols 2 and 3.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">libpq docs for <a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-status.html#LIBPQ-PQPROTOCOLVERSION">PQprotocolVersion()</a> for details.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.0.12.</span></p>
+</dd></dl>
+
+<span class="target" id="index-16"></span><dl class="attribute">
+<dt id="connection.server_version">
+<tt class="descname">server_version</tt><a class="headerlink" href="#connection.server_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>A read-only integer representing the backend version.</p>
+<p>The number is formed by converting the major, minor, and revision
+numbers into two-decimal-digit numbers and appending them together.
+For example, version 8.1.5 will be returned as <tt class="docutils literal"><span class="pre">80105</span></tt>.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">libpq docs for <a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-status.html#LIBPQ-PQSERVERVERSION">PQserverVersion()</a> for details.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.0.12.</span></p>
+</dd></dl>
+
+<span class="target" id="index-17"></span><dl class="attribute">
+<dt id="connection.status">
+<tt class="descname">status</tt><a class="headerlink" href="#connection.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>A read-only integer representing the status of the connection.
+Symbolic constants for the values are defined in the module
+<a class="reference internal" href="extensions.html#module-psycopg2.extensions" title="psycopg2.extensions"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.extensions</span></tt></a>: see <a class="reference internal" href="extensions.html#connection-status-constants"><em>Connection status constants</em></a>
+for the available values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connection.lobject">
+<tt class="descname">lobject</tt><big>(</big><span class="optional">[</span><em>oid</em><span class="optional">[</span>, <em>mode</em><span class="optional">[</span>, <em>new_oid</em><span class="optional">[</span>, <em>new_file</em><span class="optional">[</span>, <em>lobject_factory</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#connection.lobject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new database large object as a <a class="reference internal" href="extensions.html#psycopg2.extensions.lobject" title="psycopg2.extensions.lobject"><tt class="xref py py-obj docutils literal"><span class="pre">lobject</span></tt></a>
+instance.</p>
+<p>See <a class="reference internal" href="usage.html#large-objects"><em>Access to PostgreSQL large objects</em></a> for an overview.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>oid</strong> &#8211; The OID of the object to read or write. 0 to create
+a new large object and and have its OID assigned automatically.</li>
+<li><strong>mode</strong> &#8211; Access mode to the object, see below.</li>
+<li><strong>new_oid</strong> &#8211; Create a new object using the specified OID. The
+function raises <a class="reference internal" href="module.html#psycopg2.OperationalError" title="psycopg2.OperationalError"><tt class="xref py py-obj docutils literal"><span class="pre">OperationalError</span></tt></a> if the OID is already
+in use. Default is 0, meaning assign a new one automatically.</li>
+<li><strong>new_file</strong> &#8211; The name of a file to be imported in the the database
+(using the <a class="reference external" href="http://www.postgresql.org/docs/current/static/lo-interfaces.html#LO-IMPORT"><tt class="xref py py-obj docutils literal"><span class="pre">lo_import()</span></tt></a> function)</li>
+<li><strong>lobject_factory</strong> &#8211; Subclass of
+<a class="reference internal" href="extensions.html#psycopg2.extensions.lobject" title="psycopg2.extensions.lobject"><tt class="xref py py-obj docutils literal"><span class="pre">lobject</span></tt></a> to be instantiated.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Available values for <em>mode</em> are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><em>mode</em></th>
+<th class="head">meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">r</span></tt></td>
+<td>Open for read only</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">w</span></tt></td>
+<td>Open for write only</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">rw</span></tt></td>
+<td>Open for read/write</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">n</span></tt></td>
+<td>Don&#8217;t open the file</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">b</span></tt></td>
+<td>Don&#8217;t decode read data (return data as <tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt> in Python 2 or <tt class="xref py py-obj docutils literal"><span class="pre">bytes</span></tt> in Python 3)</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">t</span></tt></td>
+<td>Decode read data according to <a class="reference internal" href="#connection.encoding" title="connection.encoding"><tt class="xref py py-obj docutils literal"><span class="pre">connection.encoding</span></tt></a> (return data as <tt class="xref py py-obj docutils literal"><span class="pre">unicode</span></tt> in Python 2 or <tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt> in Python 3)</td>
+</tr>
+</tbody>
+</table>
+<p><tt class="docutils literal"><span class="pre">b</span></tt> and <tt class="docutils literal"><span class="pre">t</span></tt> can be specified together with a read/write mode. If
+neither <tt class="docutils literal"><span class="pre">b</span></tt> nor <tt class="docutils literal"><span class="pre">t</span></tt> is specified, the default is <tt class="docutils literal"><span class="pre">b</span></tt> in Python 2
+and <tt class="docutils literal"><span class="pre">t</span></tt> in Python 3.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.0.8.</span></p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 2.4: </span>added <tt class="docutils literal"><span class="pre">b</span></tt> and <tt class="docutils literal"><span class="pre">t</span></tt> mode and unicode
+support.</p>
+</dd></dl>
+
+<p class="rubric">Methods related to asynchronous support.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.2.0.</span></p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="advanced.html#async-support"><em>Asynchronous support</em></a> and <a class="reference internal" href="advanced.html#green-support"><em>Support to coroutine libraries</em></a>.</p>
+</div>
+<dl class="attribute">
+<dt id="connection.async">
+<tt class="descname">async</tt><a class="headerlink" href="#connection.async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read only attribute: 1 if the connection is asynchronous, 0 otherwise.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connection.poll">
+<tt class="descname">poll</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.poll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used during an asynchronous connection attempt, or when a cursor is
+executing a query on an asynchronous connection, make communication
+proceed if it wouldn&#8217;t block.</p>
+<p>Return one of the constants defined in <a class="reference internal" href="extensions.html#poll-constants"><em>Poll constants</em></a>. If it
+returns <a class="reference internal" href="extensions.html#psycopg2.extensions.POLL_OK" title="psycopg2.extensions.POLL_OK"><tt class="xref py py-obj docutils literal"><span class="pre">POLL_OK</span></tt></a> then the connection has been
+estabilished or the query results are available on the client.
+Otherwise wait until the file descriptor returned by <a class="reference internal" href="#connection.fileno" title="connection.fileno"><tt class="xref py py-obj docutils literal"><span class="pre">fileno()</span></tt></a> is
+ready to read or to write, as explained in <a class="reference internal" href="advanced.html#async-support"><em>Asynchronous support</em></a>.
+<a class="reference internal" href="#connection.poll" title="connection.poll"><tt class="xref py py-obj docutils literal"><span class="pre">poll()</span></tt></a> should be also used by the function installed by
+<a class="reference internal" href="extensions.html#psycopg2.extensions.set_wait_callback" title="psycopg2.extensions.set_wait_callback"><tt class="xref py py-obj docutils literal"><span class="pre">set_wait_callback()</span></tt></a> as explained in
+<a class="reference internal" href="advanced.html#green-support"><em>Support to coroutine libraries</em></a>.</p>
+<p><a class="reference internal" href="#connection.poll" title="connection.poll"><tt class="xref py py-obj docutils literal"><span class="pre">poll()</span></tt></a> is also used to receive asynchronous notifications from the
+database: see <a class="reference internal" href="advanced.html#async-notify"><em>Asynchronous notifications</em></a> from further details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connection.fileno">
+<tt class="descname">fileno</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.fileno" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the file descriptor underlying the connection: useful to read
+its status during asynchronous communication.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connection.isexecuting">
+<tt class="descname">isexecuting</tt><big>(</big><big>)</big><a class="headerlink" href="#connection.isexecuting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt> if the connection is executing an asynchronous operation.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module.html"
+                        title="previous chapter">The <tt class="docutils literal"><span class="pre">psycopg2</span></tt> module content</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cursor.html"
+                        title="next chapter">The <tt class="docutils literal docutils literal"><span class="pre">cursor</span></tt> class</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/connection.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cursor.html" title="The cursor class"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module.html" title="The psycopg2 module content"
+             >previous</a> |</li>
+        <li><a href="index.html">Psycopg 2.4.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2001-2011, Federico Di Gregorio. Documentation by Daniele Varrazzo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

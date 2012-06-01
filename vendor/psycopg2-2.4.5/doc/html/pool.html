@@ -1,0 +1,190 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>psycopg2.pool – Connections pooling &mdash; Psycopg 2.4.5 documentation</title>
+    
+    <link rel="stylesheet" href="_static/psycopg.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.4.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Psycopg 2.4.5 documentation" href="index.html" />
+    <link rel="next" title="psycopg2.extras – Miscellaneous goodies for Psycopg 2" href="extras.html" />
+    <link rel="prev" title="psycopg2.tz – tzinfo implementations for Psycopg 2" href="tz.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="extras.html" title="psycopg2.extras – Miscellaneous goodies for Psycopg 2"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tz.html" title="psycopg2.tz – tzinfo implementations for Psycopg 2"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Psycopg 2.4.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="psycopg2-pool-connections-pooling">
+<h1><a class="reference internal" href="#module-psycopg2.pool" title="psycopg2.pool"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.pool</span></tt></a> &#8211; Connections pooling<a class="headerlink" href="#psycopg2-pool-connections-pooling" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-psycopg2.pool"><span id="index-0"></span></span><p>Creating new PostgreSQL connections can be an expensive operation.  This
+module offers a few pure Python classes implementing simple connection pooling
+directly in the client application.</p>
+<dl class="class">
+<dt id="psycopg2.pool.AbstractConnectionPool">
+<em class="property">class </em><tt class="descclassname">psycopg2.pool.</tt><tt class="descname">AbstractConnectionPool</tt><big>(</big><em>minconn</em>, <em>maxconn</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#psycopg2.pool.AbstractConnectionPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class implementing generic key-based pooling code.</p>
+<p>New <em>minconn</em> connections are created automatically. The pool will support
+a maximum of about <em>maxconn</em> connections.  <em>*args</em> and <em>**kwargs</em> are
+passed to the <a class="reference internal" href="module.html#psycopg2.connect" title="psycopg2.connect"><tt class="xref py py-obj docutils literal"><span class="pre">connect()</span></tt></a> function.</p>
+<p>The following methods are expected to be implemented by subclasses:</p>
+<dl class="method">
+<dt id="psycopg2.pool.AbstractConnectionPool.getconn">
+<tt class="descname">getconn</tt><big>(</big><em>key=None</em><big>)</big><a class="headerlink" href="#psycopg2.pool.AbstractConnectionPool.getconn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a free connection and assign it to <em>key</em> if not <tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="psycopg2.pool.AbstractConnectionPool.putconn">
+<tt class="descname">putconn</tt><big>(</big><em>conn</em>, <em>key=None</em>, <em>close=False</em><big>)</big><a class="headerlink" href="#psycopg2.pool.AbstractConnectionPool.putconn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put away a connection.</p>
+<p>If <em>close</em> is <tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt>, discard the connection from the pool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="psycopg2.pool.AbstractConnectionPool.closeall">
+<tt class="descname">closeall</tt><big>(</big><big>)</big><a class="headerlink" href="#psycopg2.pool.AbstractConnectionPool.closeall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close all the connections handled by the pool.</p>
+<p>Note that all the connections are closed, including ones
+eventually in use by the application.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The following classes are <a class="reference internal" href="#psycopg2.pool.AbstractConnectionPool" title="psycopg2.pool.AbstractConnectionPool"><tt class="xref py py-obj docutils literal"><span class="pre">AbstractConnectionPool</span></tt></a> subclasses ready to
+be used.</p>
+<dl class="class">
+<dt id="psycopg2.pool.SimpleConnectionPool">
+<em class="property">class </em><tt class="descclassname">psycopg2.pool.</tt><tt class="descname">SimpleConnectionPool</tt><big>(</big><em>minconn</em>, <em>maxconn</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#psycopg2.pool.SimpleConnectionPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>A connection pool that can&#8217;t be shared across different threads.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This pool class is useful only for single-threaded applications.</p>
+</div>
+</dd></dl>
+
+<span class="target" id="index-1"></span><dl class="class">
+<dt id="psycopg2.pool.ThreadedConnectionPool">
+<em class="property">class </em><tt class="descclassname">psycopg2.pool.</tt><tt class="descname">ThreadedConnectionPool</tt><big>(</big><em>minconn</em>, <em>maxconn</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#psycopg2.pool.ThreadedConnectionPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>A connection pool that works with the threading module.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This pool class can be safely used in multi-threaded applications.</p>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="psycopg2.pool.PersistentConnectionPool">
+<em class="property">class </em><tt class="descclassname">psycopg2.pool.</tt><tt class="descname">PersistentConnectionPool</tt><big>(</big><em>minconn</em>, <em>maxconn</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#psycopg2.pool.PersistentConnectionPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>A pool that assigns persistent connections to different threads.</p>
+<p>Note that this connection pool generates by itself the required keys
+using the current thread id.  This means that until a thread puts away
+a connection it will always get the same connection object by successive
+<tt class="xref py py-obj docutils literal"><span class="pre">getconn()</span></tt> calls. This also means that a thread can&#8217;t use more than one
+single connection from the pool.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This pool class is mostly designed to interact with Zope and probably
+not useful in generic applications.</p>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tz.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal"><span class="pre">psycopg2.tz</span></tt> &#8211;  <tt class="docutils literal docutils literal"><span class="pre">tzinfo</span></tt> implementations for Psycopg 2</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="extras.html"
+                        title="next chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">psycopg2.extras</span></tt> &#8211; Miscellaneous goodies for Psycopg 2</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/pool.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="extras.html" title="psycopg2.extras – Miscellaneous goodies for Psycopg 2"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tz.html" title="psycopg2.tz – tzinfo implementations for Psycopg 2"
+             >previous</a> |</li>
+        <li><a href="index.html">Psycopg 2.4.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2001-2011, Federico Di Gregorio. Documentation by Daniele Varrazzo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

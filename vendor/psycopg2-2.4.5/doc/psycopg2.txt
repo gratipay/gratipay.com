@@ -1,0 +1,3876 @@
+
+Psycopg -- PostgreSQL database adapter for Python
+*************************************************
+
+Psycopg is a PostgreSQL database adapter for the Python programming
+language.  Its main features are that it supports the full Python DB
+API 2.0 and it is thread safe (threads can share the connections). It
+was designed for heavily multi-threaded applications that create and
+destroy lots of cursors and make a large number of concurrent
+"INSERT"s or "UPDATE"s. The Psycopg distribution includes ZPsycopgDA,
+a Zope Database Adapter.
+
+Psycopg 2 is mostly implemented in C as a libpq wrapper, resulting in
+being both efficient and secure. It features client-side and *server-
+side* cursors, *asynchronous communication* and *notifications*, "COPY
+TO/COPY FROM" support, and a flexible *objects adaptation system*.
+Many basic Python types are supported out-of-the-box and mapped to
+matching PostgreSQL data types, such as strings (both bytes and
+Unicode), numbers (ints, longs, floats, decimals), booleans and
+datetime objects (both built-in and mx.DateTime), several types of
+*binary objects*. Also available are mappings between lists and
+PostgreSQL arrays of any supported type, between *dictionaries and
+PostgreSQL hstores*, and between *tuples/namedtuples and PostgreSQL
+composite types*.
+
+Psycopg 2 is both Unicode and Python 3 friendly.
+
+-[ Contents ]-
+
+* Basic module usage
+  * Passing parameters to SQL queries
+  * Adaptation of Python values to SQL types
+  * Transactions control
+  * Server side cursors
+  * Thread and process safety
+  * Using COPY TO and COPY FROM
+  * Access to PostgreSQL large objects
+  * Two-Phase Commit protocol support
+* The "psycopg2" module content
+  * Exceptions
+  * Type Objects and Constructors
+* The "connection" class
+* The "cursor" class
+* More advanced topics
+  * Connection and cursor factories
+  * Adapting new Python types to SQL syntax
+  * Type casting of SQL types into Python objects
+  * Asynchronous notifications
+  * Asynchronous support
+  * Support to coroutine libraries
+* "psycopg2.extensions" -- Extensions to the DB API
+  * SQL adaptation protocol objects
+  * Database types casting functions
+  * Additional exceptions
+  * Isolation level constants
+  * Transaction status constants
+  * Connection status constants
+  * Poll constants
+  * Additional database types
+* "psycopg2.tz" --  "tzinfo" implementations for Psycopg 2
+* "psycopg2.pool" -- Connections pooling
+* "psycopg2.extras" -- Miscellaneous goodies for Psycopg 2
+  * Connection and cursor subclasses
+  * Additional data types
+  * Fractional time zones
+  * Coroutine support
+* "psycopg2.errorcodes" -- Error codes defined by PostgreSQL
+* Frequently Asked Questions
+  * Problems with transactions handling
+  * Problems with type conversions
+  * Best practices
+  * Problems compiling and deploying psycopg2
+
+
+Basic module usage
+******************
+
+The basic Psycopg usage is common to all the database adapters
+implementing the DB API 2.0 protocol. Here is an interactive session
+showing some of the basic commands:
+
+   >>> import psycopg2
+
+   # Connect to an existing database
+   >>> conn = psycopg2.connect("dbname=test user=postgres")
+
+   # Open a cursor to perform database operations
+   >>> cur = conn.cursor()
+
+   # Execute a command: this creates a new table
+   >>> cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);")
+
+   # Pass data to fill a query placeholders and let Psycopg perform
+   # the correct conversion (no more SQL injections!)
+   >>> cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)",
+   ...      (100, "abc'def"))
+
+   # Query the database and obtain data as Python objects
+   >>> cur.execute("SELECT * FROM test;")
+   >>> cur.fetchone()
+   (1, 100, "abc'def")
+
+   # Make the changes to the database persistent
+   >>> conn.commit()
+
+   # Close communication with the database
+   >>> cur.close()
+   >>> conn.close()
+
+The main entry points of Psycopg are:
+
+* The function "connect()" creates a new database session and returns
+  a new "connection" instance.
+
+* The class "connection" encapsulates a database session. It allows
+  to:
+
+  * create new "cursor"s using the "cursor()" method to execute
+    database commands and queries,
+
+  * terminate the session using the methods "commit()" or
+    "rollback()".
+
+* The class "cursor" allows interaction with the database:
+
+  * send commands to the database using methods such as "execute()"
+    and "executemany()",
+
+  * retrieve data from the database *by iteration* or using methods
+    such as "fetchone()", "fetchmany()", "fetchall()".
+
+
+Passing parameters to SQL queries
+=================================
+
+Psycopg casts Python variables to SQL literals by type.  Many standard
+Python types are already adapted to the correct SQL representation.
+
+Example: the Python function call:
+
+   >>> cur.execute(
+   ...     """INSERT INTO some_table (an_int, a_date, a_string)
+   ...         VALUES (%s, %s, %s);""",
+   ...     (10, datetime.date(2005, 11, 18), "O'Reilly"))
+
+is converted into the SQL command:
+
+   INSERT INTO some_table (an_int, a_date, a_string)
+    VALUES (10, '2005-11-18', 'O''Reilly');
+
+Named arguments are supported too using "%(*name*)s" placeholders.
+Using named arguments the values can be passed to the query in any
+order and many placeholders can use the same values:
+
+   >>> cur.execute(
+   ...     """INSERT INTO some_table (an_int, a_date, another_date, a_string)
+   ...         VALUES (%(int)s, %(date)s, %(date)s, %(str)s);""",
+   ...     {'int': 10, 'str': "O'Reilly", 'date': datetime.date(2005, 11, 18)})
+
+While the mechanism resembles regular Python strings manipulation,
+there are a few subtle differences you should care about when passing
+parameters to a query:
+
+* The Python string operator "%" is not used: the "execute()" method
+  accepts a tuple or dictionary of values as second parameter.
+  **Never** use "%" or "+" to merge values into queries.
+
+* The variables placeholder must *always be a* "%s", even if a
+  different placeholder (such as a "%d" for integers or "%f" for
+  floats) may look more appropriate:
+
+     >>> cur.execute("INSERT INTO numbers VALUES (%d)", (42,)) # WRONG
+     >>> cur.execute("INSERT INTO numbers VALUES (%s)", (42,)) # correct
+
+* For positional variables binding, *the second argument must always
+  be a sequence*, even if it contains a single variable.  And remember
+  that Python requires a comma to create a single element tuple:
+
+     >>> cur.execute("INSERT INTO foo VALUES (%s)", "bar")    # WRONG
+     >>> cur.execute("INSERT INTO foo VALUES (%s)", ("bar"))  # WRONG
+     >>> cur.execute("INSERT INTO foo VALUES (%s)", ("bar",)) # correct
+     >>> cur.execute("INSERT INTO foo VALUES (%s)", ["bar"])  # correct
+
+* Only variable values should be bound via this method: it shouldn't
+  be used to set table or field names. For these elements, ordinary
+  string formatting should be used before running "execute()".
+
+
+The problem with the query parameters
+-------------------------------------
+
+The SQL representation for many data types is often not the same of
+the Python string representation.  The classic example is with single
+quotes in strings: SQL uses them as string constants bounds and
+requires them to be escaped, whereas in Python single quotes can be
+left unescaped in strings bounded by double quotes. For this reason a
+naïve approach to the composition of query strings, e.g. using string
+concatenation, is a recipe for terrible problems:
+
+   >>> SQL = "INSERT INTO authors (name) VALUES ('%s');" # NEVER DO THIS
+   >>> data = ("O'Reilly", )
+   >>> cur.execute(SQL % data) # THIS WILL FAIL MISERABLY
+   ProgrammingError: syntax error at or near "Reilly"
+   LINE 1: INSERT INTO authors (name) VALUES ('O'Reilly')
+                                                 ^
+
+If the variable containing the data to be sent to the database comes
+from an untrusted source (e.g. a form published on a web site) an
+attacker could easily craft a malformed string, either gaining access
+to unauthorized data or performing destructive operations on the
+database. This form of attack is called SQL injection and is known to
+be one of the most widespread forms of attack to servers. Before
+continuing, please print this page as a memo and hang it onto your
+desk.
+
+Psycopg can automatically convert Python objects to and from SQL
+literals: using this feature your code will be more robust and
+reliable. We must stress this point:
+
+Warning: Never, **never**, **NEVER** use Python string concatenation ("+") or
+  string parameters interpolation ("%") to pass variables to a SQL
+  query string.  Not even at gunpoint.
+
+The correct way to pass variables in a SQL command is using the second
+argument of the "execute()" method:
+
+   >>> SQL = "INSERT INTO authors (name) VALUES (%s);" # Note: no quotes
+   >>> data = ("O'Reilly", )
+   >>> cur.execute(SQL, data) # Note: no % operator
+
+
+Adaptation of Python values to SQL types
+========================================
+
+Many standards Python types are adapted into SQL and returned as
+Python objects when a query is executed.
+
+If you need to convert other Python types to and from PostgreSQL data
+types, see *Adapting new Python types to SQL syntax* and *Type casting
+of SQL types into Python objects*.  You can also find a few other
+specialized adapters in the "psycopg2.extras" module.
+
+In the following examples the method "mogrify()" is used to show the
+SQL string that would be sent to the database.
+
+* Python "None" and boolean values "True" and "False" are converted
+  into the proper SQL literals:
+
+     >>> cur.mogrify("SELECT %s, %s, %s;", (None, True, False))
+     >>> 'SELECT NULL, true, false;'
+
+* Numeric objects: "int", "long", "float", "Decimal" are converted in
+  the PostgreSQL numerical representation:
+
+     >>> cur.mogrify("SELECT %s, %s, %s, %s;", (10, 10L, 10.0, Decimal("10.00")))
+     >>> 'SELECT 10, 10, 10.0, 10.00;'
+
+* String types: "str", "unicode" are converted in SQL string syntax.
+  "unicode" objects ("str" in Python 3) are encoded in the connection
+  "encoding" to be sent to the backend: trying to send a character not
+  supported by the encoding will result in an error. Received data can
+  be converted either as "str" or "unicode": see *Unicode handling*.
+
+* Binary types: Python types representing binary objects are converted
+  into PostgreSQL binary string syntax, suitable for "bytea" fields.
+  Such types are "buffer" (only available in Python 2), "memoryview"
+  (available from Python 2.7), "bytearray" (available from Python 2.6)
+  and "bytes" (only from Python 3: the name is available from Python
+  2.6 but it's only an alias for the type "str"). Any object
+  implementing the Revised Buffer Protocol should be usable as binary
+  type where the protocol is supported (i.e. from Python 2.6).
+  Received data is returned as "buffer" (in Python 2) or "memoryview"
+  (in Python 3).
+
+  Changed in version 2.4: only strings were supported before.
+
+  Changed in version 2.4.1: can parse the 'hex' format from 9.0
+  servers without relying on the version of the client library.
+
+  Note: In Python 2, if you have binary data in a "str" object, you can
+    pass them to a "bytea" field using the "psycopg2.Binary" wrapper:
+
+       mypic = open('picture.png', 'rb').read()
+       curs.execute("insert into blobs (file) values (%s)",
+           (psycopg2.Binary(mypic),))
+
+  Warning: Since version 9.0 PostgreSQL uses by default a new "hex" format to
+    emit "bytea" fields. Starting from Psycopg 2.4.1 the format is
+    correctly supported.  If you use a previous version you will need
+    some extra care when receiving bytea from PostgreSQL: you must
+    have at least libpq 9.0 installed on the client or alternatively
+    you can set the bytea_output configuration parameter to "escape",
+    either in the server configuration file or in the client session
+    (using a query such as "SET bytea_output TO escape;") before
+    receiving binary data.
+
+* Date and time objects: builtin "datetime", "date", "time",
+  "timedelta" are converted into PostgreSQL's "timestamp", "date",
+  "time", "interval" data types. Time zones are supported too.  The
+  Egenix mx.DateTime objects are adapted the same way:
+
+     >>> dt = datetime.datetime.now()
+     >>> dt
+     datetime.datetime(2010, 2, 8, 1, 40, 27, 425337)
+
+     >>> cur.mogrify("SELECT %s, %s, %s;", (dt, dt.date(), dt.time()))
+     "SELECT '2010-02-08T01:40:27.425337', '2010-02-08', '01:40:27.425337';"
+
+     >>> cur.mogrify("SELECT %s;", (dt - datetime.datetime(2010,1,1),))
+     "SELECT '38 days 6027.425337 seconds';"
+
+* Python lists are converted into PostgreSQL "ARRAY"s:
+
+     >>> cur.mogrify("SELECT %s;", ([10, 20, 30], ))
+     'SELECT ARRAY[10, 20, 30];'
+
+  Note: Reading back from PostgreSQL, arrays are converted to list of
+    Python objects as expected, but only if the types are known one.
+    Arrays of unknown types are returned as represented by the
+    database (e.g. "{a,b,c}"). You can easily create a typecaster for
+    *array of unknown types*.
+
+* Python tuples are converted in a syntax suitable for the SQL "IN"
+  operator and to represent a composite type:
+
+     >>> cur.mogrify("SELECT %s IN %s;", (10, (10, 20, 30)))
+     'SELECT 10 IN (10, 20, 30);'
+
+  Note: SQL doesn't allow an empty list in the IN operator, so your code
+    should guard against empty tuples.
+
+  If you want PostgreSQL composite types to be converted into a Python
+  tuple/namedtuple you can use the "register_composite()" function.
+
+  New in version 2.0.6: the tuple "IN" adaptation.
+
+  Changed in version 2.0.14: the tuple "IN" adapter is always active.
+  In previous releases it was necessary to import the "extensions"
+  module to have it registered.
+
+  Changed in version 2.3: "namedtuple" instances are adapted like
+  regular tuples and can thus be used to represent composite types.
+
+* Python dictionaries are converted into the "hstore" data type. By
+  default the adapter is not enabled: see "register_hstore()" for
+  further details.
+
+  New in version 2.3: the "hstore" adaptation.
+
+
+Unicode handling
+----------------
+
+Psycopg can exchange Unicode data with a PostgreSQL database.  Python
+"unicode" objects are automatically *encoded* in the client encoding
+defined on the database connection (the PostgreSQL encoding, available
+in "connection.encoding", is translated into a Python codec using the
+"encodings" mapping):
+
+   >>> print u, type(u)
+   àèìòù€ <type 'unicode'>
+
+   >>> cur.execute("INSERT INTO test (num, data) VALUES (%s,%s);", (74, u))
+
+When reading data from the database, in Python 2 the strings returned
+are usually 8 bit "str" objects encoded in the database client
+encoding:
+
+   >>> print conn.encoding
+   UTF8
+
+   >>> cur.execute("SELECT data FROM test WHERE num = 74")
+   >>> x = cur.fetchone()[0]
+   >>> print x, type(x), repr(x)
+   àèìòù€ <type 'str'> '\xc3\xa0\xc3\xa8\xc3\xac\xc3\xb2\xc3\xb9\xe2\x82\xac'
+
+   >>> conn.set_client_encoding('LATIN9')
+
+   >>> cur.execute("SELECT data FROM test WHERE num = 74")
+   >>> x = cur.fetchone()[0]
+   >>> print type(x), repr(x)
+   <type 'str'> '\xe0\xe8\xec\xf2\xf9\xa4'
+
+In Python 3 instead the strings are automatically *decoded* in the
+connection "encoding", as the "str" object can represent Unicode
+characters. In Python 2 you must register a *typecaster* in order to
+receive "unicode" objects:
+
+   >>> psycopg2.extensions.register_type(psycopg2.extensions.UNICODE, cur)
+
+   >>> cur.execute("SELECT data FROM test WHERE num = 74")
+   >>> x = cur.fetchone()[0]
+   >>> print x, type(x), repr(x)
+   àèìòù€ <type 'unicode'> u'\xe0\xe8\xec\xf2\xf9\u20ac'
+
+In the above example, the "UNICODE" typecaster is registered only on
+the cursor. It is also possible to register typecasters on the
+connection or globally: see the function "register_type()" and *Type
+casting of SQL types into Python objects* for details.
+
+Note: In Python 2, if you want to uniformly receive all your database
+  input in Unicode, you can register the related typecasters globally
+  as soon as Psycopg is imported:
+
+     import psycopg2
+     import psycopg2.extensions
+     psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
+     psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
+
+  and then forget about this story.
+
+
+Time zones handling
+-------------------
+
+The PostgreSQL type "timestamp with time zone" is converted into
+Python "datetime" objects with a "tzinfo" attribute set to a
+"FixedOffsetTimezone" instance.
+
+>>> cur.execute("SET TIME ZONE 'Europe/Rome';")  # UTC + 1 hour
+>>> cur.execute("SELECT '2010-01-01 10:30:45'::timestamptz;")
+>>> cur.fetchone()[0].tzinfo
+psycopg2.tz.FixedOffsetTimezone(offset=60, name=None)
+
+Note that only time zones with an integer number of minutes are
+supported: this is a limitation of the Python "datetime" module.  A
+few historical time zones had seconds in the UTC offset: these time
+zones will have the offset rounded to the nearest minute, with an
+error of up to 30 seconds.
+
+>>> cur.execute("SET TIME ZONE 'Asia/Calcutta';")  # offset was +5:53:20
+>>> cur.execute("SELECT '1930-01-01 10:30:45'::timestamptz;")
+>>> cur.fetchone()[0].tzinfo
+psycopg2.tz.FixedOffsetTimezone(offset=353, name=None)
+
+Changed in version 2.2.2: timezones with seconds are supported (with
+rounding). Previously such timezones raised an error.  In order to
+deal with them in previous versions use
+"psycopg2.extras.register_tstz_w_secs()".
+
+
+Transactions control
+====================
+
+In Psycopg transactions are handled by the "connection" class. By
+default, the first time a command is sent to the database (using one
+of the "cursor"s created by the connection), a new transaction is
+created. The following database commands will be executed in the
+context of the same transaction -- not only the commands issued by the
+first cursor, but the ones issued by all the cursors created by the
+same connection.  Should any command fail, the transaction will be
+aborted and no further command will be executed until a call to the
+"rollback()" method.
+
+The connection is responsible to terminate its transaction, calling
+either the "commit()" or "rollback()" method.  Committed changes are
+immediately made persistent into the database.  Closing the connection
+using the "close()" method or destroying the connection object (using
+"del" or letting it fall out of scope) will result in an implicit
+"rollback()" call.
+
+It is possible to set the connection in *autocommit* mode: this way
+all the commands executed will be immediately committed and no
+rollback is possible. A few commands (e.g. "CREATE DATABASE",
+"VACUUM"...) require to be run outside any transaction: in order to be
+able to run these commands from Psycopg, the session must be in
+autocommit mode: you can use the "autocommit" property
+("set_isolation_level()" in older versions).
+
+Warning: By default even a simple "SELECT" will start a transaction: in long-
+  running programs, if no further action is taken, the session will
+  remain "idle in transaction", a condition non desiderable for
+  several reasons (locks are held by the session, tables bloat...).
+  For long lived scripts, either make sure to terminate a transaction
+  as soon as possible or use an autocommit connection.
+
+A few other transaction properties can be set session-wide by the
+"connection": for instance it is possible to have read-only
+transactions or change the isolation level. See the "set_session()"
+method for all the details.
+
+
+Server side cursors
+===================
+
+When a database query is executed, the Psycopg "cursor" usually
+fetches all the records returned by the backend, transferring them to
+the client process. If the query returned an huge amount of data, a
+proportionally large amount of memory will be allocated by the client.
+
+If the dataset is too large to be practically handled on the client
+side, it is possible to create a *server side* cursor. Using this kind
+of cursor it is possible to transfer to the client only a controlled
+amount of data, so that a large dataset can be examined without
+keeping it entirely in memory.
+
+Server side cursor are created in PostgreSQL using the "DECLARE"
+command and subsequently handled using "MOVE", "FETCH" and "CLOSE"
+commands.
+
+Psycopg wraps the database server side cursor in *named cursors*. A
+named cursor is created using the "cursor()" method specifying the
+*name* parameter. Such cursor will behave mostly like a regular
+cursor, allowing the user to move in the dataset using the "scroll()"
+method and to read the data using "fetchone()" and "fetchmany()"
+methods.
+
+Named cursors are also *iterable* like regular cursors. Note however
+that before Psycopg 2.4 iteration was performed fetching one record at
+time from the backend, resulting in a large overhead. The attribute
+"itersize" now controls how many records are fetched at time during
+the iteration: the default value of 2000 allows to fetch about 100KB
+per roundtrip assuming records of 10-20 columns of mixed number and
+strings; you may decrease this value if you are dealing with huge
+records.
+
+Named cursors are usually created "WITHOUT HOLD", meaning they live
+only as long as the current transaction. Trying to fetch from a named
+cursor after a "commit()" or to create a named cursor when the
+"connection" transaction isolation level is set to "AUTOCOMMIT" will
+result in an exception. It is possible to create a "WITH HOLD" cursor
+by specifying a "True" value for the "withhold" parameter to
+"cursor()" or by setting the "withhold" attribute to "True" before
+calling "execute()" on the cursor. It is extremely important to always
+"close()" such cursors, otherwise they will continue to hold server-
+side resources until the connection will be eventually closed. Also
+note that while "WITH HOLD" cursors lifetime extends well after
+"commit()", calling "rollback()" will automatically close the cursor.
+
+Note: It is also possible to use a named cursor to consume a cursor
+  created in some other way than using the "DECLARE" executed by
+  "execute()". For example, you may have a PL/pgSQL function returning
+  a cursor:
+
+     CREATE FUNCTION reffunc(refcursor) RETURNS refcursor AS $$
+     BEGIN
+         OPEN $1 FOR SELECT col FROM test;
+         RETURN $1;
+     END;
+     $$ LANGUAGE plpgsql;
+
+  You can read the cursor content by calling the function with a
+  regular, non-named, Psycopg cursor:
+
+     cur1 = conn.cursor()
+     cur1.callproc('reffunc', ['curname'])
+
+  and then use a named cursor in the same transaction to "steal the
+  cursor":
+
+     cur2 = conn.cursor('curname')
+     for record in cur2:     # or cur2.fetchone, fetchmany...
+         # do something with record
+         pass
+
+
+Thread and process safety
+=========================
+
+The Psycopg module and the "connection" objects are *thread-safe*:
+many threads can access the same database either using separate
+sessions and creating a "connection" per thread or using the same
+connection and creating separate "cursor"s. In DB API 2.0 parlance,
+Psycopg is *level 2 thread safe*.
+
+The difference between the above two approaches is that, using
+different connections, the commands will be executed in different
+sessions and will be served by different server processes. On the
+other hand, using many cursors on the same connection, all the
+commands will be executed in the same session (and in the same
+transaction if the connection is not in *autocommit* mode), but they
+will be serialized.
+
+The above observations are only valid for regular threads: they don't
+apply to forked processes nor to green threads. "libpq" connections
+shouldn't be used by a forked processes, so when using a module such
+as "multiprocessing" or a forking web deploy method such as FastCGI
+make sure to create the connections *after* the fork.
+
+Connections shouldn't be shared either by different green threads: see
+*Support to coroutine libraries* for further details.
+
+
+Using COPY TO and COPY FROM
+===========================
+
+Psycopg "cursor" objects provide an interface to the efficient
+PostgreSQL "COPY" command to move data from files to tables and back.
+The methods exposed are:
+
+"copy_from()"
+   Reads data *from* a file-like object appending them to a database
+   table ("COPY table FROM file" syntax). The source file must have
+   both "read()" and "readline()" method.
+
+"copy_to()"
+   Writes the content of a table *to* a file-like object ("COPY table
+   TO file" syntax). The target file must have a "write()" method.
+
+"copy_expert()"
+   Allows to handle more specific cases and to use all the "COPY"
+   features available in PostgreSQL.
+
+Please refer to the documentation of the single methods for details
+and examples.
+
+
+Access to PostgreSQL large objects
+==================================
+
+PostgreSQL offers support for large objects, which provide stream-
+style access to user data that is stored in a special large-object
+structure. They are useful with data values too large to be
+manipulated conveniently as a whole.
+
+Psycopg allows access to the large object using the "lobject" class.
+Objects are generated using the "connection.lobject()" factory method.
+Data can be retrieved either as bytes or as Unicode strings.
+
+Psycopg large object support efficient import/export with file system
+files using the "lo_import()" and "lo_export()" libpq functions.
+
+
+Two-Phase Commit protocol support
+=================================
+
+New in version 2.3.
+
+Psycopg exposes the two-phase commit features available since
+PostgreSQL 8.1 implementing the *two-phase commit extensions* proposed
+by the DB API 2.0.
+
+The DB API 2.0 model of two-phase commit is inspired by the XA
+specification, according to which transaction IDs are formed from
+three components:
+
+* a format ID (non-negative 32 bit integer)
+
+* a global transaction ID (string not longer than 64 bytes)
+
+* a branch qualifier (string not longer than 64 bytes)
+
+For a particular global transaction, the first two components will be
+the same for all the resources. Every resource will be assigned a
+different branch qualifier.
+
+According to the DB API 2.0 specification, a transaction ID is created
+using the "connection.xid()" method. Once you have a transaction id, a
+distributed transaction can be started with "connection.tpc_begin()",
+prepared using "tpc_prepare()" and completed using "tpc_commit()" or
+"tpc_rollback()".  Transaction IDs can also be retrieved from the
+database using "tpc_recover()" and completed using the above
+"tpc_commit()" and "tpc_rollback()".
+
+PostgreSQL doesn't follow the XA standard though, and the ID for a
+PostgreSQL prepared transaction can be any string up to 200 characters
+long. Psycopg's "Xid" objects can represent both XA-style transactions
+IDs (such as the ones created by the "xid()" method) and PostgreSQL
+transaction IDs identified by an unparsed string.
+
+The format in which the Xids are converted into strings passed to the
+database is the same employed by the PostgreSQL JDBC driver: this
+should allow interoperation between tools written in Python and in
+Java. For example a recovery tool written in Python would be able to
+recognize the components of transactions produced by a Java program.
+
+For further details see the documentation for the above methods.
+
+
+
+The "psycopg2" module content
+*****************************
+
+The module interface respects the standard defined in the DB API 2.0.
+
+psycopg2.connect(dsn or params [, connection_factory] [, async=0])
+
+   Create a new database session and return a new "connection" object.
+
+   The connection parameters can be specified either as a string:
+
+      conn = psycopg2.connect("dbname=test user=postgres password=secret")
+
+   or using a set of keyword arguments:
+
+      conn = psycopg2.connect(database="test", user="postgres", password="secret")
+
+   The basic connection parameters are:
+
+   * "dbname" -- the database name (only in dsn string)
+
+   * "database" -- the database name (only as keyword argument)
+
+   * "user" -- user name used to authenticate
+
+   * "password" -- password used to authenticate
+
+   * "host" -- database host address (defaults to UNIX socket if not
+     provided)
+
+   * "port" -- connection port number (defaults to 5432 if not
+     provided)
+
+   Any other connection parameter supported by the client
+   library/server can be passed either in the connection string or as
+   keyword. See the PostgreSQL documentation for a complete list of
+   supported parameters. Also note that the same parameters can be
+   passed to the client library using environment variables.
+
+   Using the *connection_factory* parameter a different class or
+   connections factory can be specified. It should be a callable
+   object taking a *dsn* argument. See *Connection and cursor
+   factories* for details.
+
+   Using *async*=1 an asynchronous connection will be created: see
+   *Asynchronous support* to know about advantages and limitations.
+
+   Changed in version 2.4.3: any keyword argument is passed to the
+   connection. Previously only the basic parameters (plus "sslmode")
+   were supported as keywords.
+
+   DB API extension: The parameters *connection_factory* and *async*
+   are Psycopg extensions to the DB API 2.0.
+
+psycopg2.apilevel
+
+   String constant stating the supported DB API level.  For "psycopg2"
+   is "2.0".
+
+psycopg2.threadsafety
+
+   Integer constant stating the level of thread safety the interface
+   supports.  For "psycopg2" is "2", i.e. threads can share the module
+   and the connection. See *Thread and process safety* for details.
+
+psycopg2.paramstyle
+
+   String constant stating the type of parameter marker formatting
+   expected by the interface.  For "psycopg2" is "pyformat".  See also
+   *Passing parameters to SQL queries*.
+
+
+Exceptions
+==========
+
+In compliance with the DB API 2.0, the module makes informations about
+errors available through the following exceptions:
+
+exception exception psycopg2.Warning
+
+   Exception raised for important warnings like data truncations while
+   inserting, etc. It is a subclass of the Python "StandardError".
+
+exception exception psycopg2.Error
+
+   Exception that is the base class of all other error exceptions. You
+   can use this to catch all errors with one single "except"
+   statement. Warnings are not considered errors and thus not use this
+   class as base. It is a subclass of the Python "StandardError".
+
+   pgerror
+
+      String representing the error message returned by the backend,
+      "None" if not available.
+
+   pgcode
+
+      String representing the error code returned by the backend,
+      "None" if not available.  The "errorcodes" module contains
+      symbolic constants representing PostgreSQL error codes.
+
+      >>> try:
+      ...     cur.execute("SELECT * FROM barf")
+      ... except Exception, e:
+      ...     pass
+
+      >>> e.pgcode
+      '42P01'
+      >>> print e.pgerror
+      ERROR:  relation "barf" does not exist
+      LINE 1: SELECT * FROM barf
+                            ^
+
+   cursor
+
+      The cursor the exception was raised from; "None" if not
+      applicable.
+
+   DB API extension: The "pgerror", "pgcode", and "cursor" attributes
+   are Psycopg extensions.
+
+exception exception psycopg2.InterfaceError
+
+   Exception raised for errors that are related to the database
+   interface rather than the database itself.  It is a subclass of
+   "Error".
+
+exception exception psycopg2.DatabaseError
+
+   Exception raised for errors that are related to the database.  It
+   is a subclass of "Error".
+
+exception exception psycopg2.DataError
+
+   Exception raised for errors that are due to problems with the
+   processed data like division by zero, numeric value out of range,
+   etc. It is a subclass of "DatabaseError".
+
+exception exception psycopg2.OperationalError
+
+   Exception raised for errors that are related to the database's
+   operation and not necessarily under the control of the programmer,
+   e.g. an unexpected disconnect occurs, the data source name is not
+   found, a transaction could not be processed, a memory allocation
+   error occurred during processing, etc.  It is a subclass of
+   "DatabaseError".
+
+exception exception psycopg2.IntegrityError
+
+   Exception raised when the relational integrity of the database is
+   affected, e.g. a foreign key check fails.  It is a subclass of
+   "DatabaseError".
+
+exception exception psycopg2.InternalError
+
+   Exception raised when the database encounters an internal error,
+   e.g. the cursor is not valid anymore, the transaction is out of
+   sync, etc.  It is a subclass of "DatabaseError".
+
+exception exception psycopg2.ProgrammingError
+
+   Exception raised for programming errors, e.g. table not found or
+   already exists, syntax error in the SQL statement, wrong number of
+   parameters specified, etc.  It is a subclass of "DatabaseError".
+
+exception exception psycopg2.NotSupportedError
+
+   Exception raised in case a method or database API was used which is
+   not supported by the database, e.g. requesting a "rollback()" on a
+   connection that does not support transaction or has transactions
+   turned off.  It is a subclass of "DatabaseError".
+
+DB API extension: Psycopg may raise a few other, more specialized,
+exceptions: currently "QueryCanceledError" and
+"TransactionRollbackError" are defined. These exceptions are not
+exposed by the main "psycopg2" module but are made available by the
+"extensions" module.  All the additional exceptions are subclasses of
+standard DB API 2.0 exceptions, so trapping them specifically is not
+required.
+
+This is the exception inheritance layout:
+
+   "StandardError"
+   |__ "Warning"
+   |__ "Error"
+       |__ "InterfaceError"
+       |__ "DatabaseError"
+           |__ "DataError"
+           |__ "OperationalError"
+           |   |__ "psycopg2.extensions.QueryCanceledError"
+           |   |__ "psycopg2.extensions.TransactionRollbackError"
+           |__ "IntegrityError"
+           |__ "InternalError"
+           |__ "ProgrammingError"
+           |__ "NotSupportedError"
+
+
+Type Objects and Constructors
+=============================
+
+Note: This section is mostly copied verbatim from the DB API 2.0
+  specification.  While these objects are exposed in compliance to the
+  DB API, Psycopg offers very accurate tools to convert data between
+  Python and PostgreSQL formats.  See *Adapting new Python types to
+  SQL syntax* and *Type casting of SQL types into Python objects*
+
+Many databases need to have the input in a particular format for
+binding to an operation's input parameters.  For example, if an input
+is destined for a DATE column, then it must be bound to the database
+in a particular string format.  Similar problems exist for "Row ID"
+columns or large binary items (e.g. blobs or RAW columns).  This
+presents problems for Python since the parameters to the .execute*()
+method are untyped.  When the database module sees a Python string
+object, it doesn't know if it should be bound as a simple CHAR column,
+as a raw BINARY item, or as a DATE.
+
+To overcome this problem, a module must provide the constructors
+defined below to create objects that can hold special values. When
+passed to the cursor methods, the module can then detect the proper
+type of the input parameter and bind it accordingly.
+
+A Cursor Object's description attribute returns information about each
+of the result columns of a query.  The type_code must compare equal to
+one of Type Objects defined below. Type Objects may be equal to more
+than one type code (e.g. DATETIME could be equal to the type codes for
+date, time and timestamp columns; see the Implementation Hints below
+for details).
+
+The module exports the following constructors and singletons:
+
+psycopg2.Date(year, month, day)
+
+   This function constructs an object holding a date value.
+
+psycopg2.Time(hour, minute, second)
+
+   This function constructs an object holding a time value.
+
+psycopg2.Timestamp(year, month, day, hour, minute, second)
+
+   This function constructs an object holding a time stamp value.
+
+psycopg2.DateFromTicks(ticks)
+
+   This function constructs an object holding a date value from the
+   given ticks value (number of seconds since the epoch; see the
+   documentation of the standard Python time module for details).
+
+psycopg2.TimeFromTicks(ticks)
+
+   This function constructs an object holding a time value from the
+   given ticks value (number of seconds since the epoch; see the
+   documentation of the standard Python time module for details).
+
+psycopg2.TimestampFromTicks(ticks)
+
+   This function constructs an object holding a time stamp value from
+   the given ticks value (number of seconds since the epoch; see the
+   documentation of the standard Python time module for details).
+
+psycopg2.Binary(string)
+
+   This function constructs an object capable of holding a binary
+   (long) string value.
+
+psycopg2.STRING
+
+   This type object is used to describe columns in a database that are
+   string-based (e.g. CHAR).
+
+psycopg2.BINARY
+
+   This type object is used to describe (long) binary columns in a
+   database (e.g. LONG, RAW, BLOBs).
+
+psycopg2.NUMBER
+
+   This type object is used to describe numeric columns in a database.
+
+psycopg2.DATETIME
+
+   This type object is used to describe date/time columns in a
+   database.
+
+psycopg2.ROWID
+
+   This type object is used to describe the "Row ID" column in a
+   database.
+
+
+
+The "connection" class
+**********************
+
+class class connection
+
+   Handles the connection to a PostgreSQL database instance. It
+   encapsulates a database session.
+
+   Connections are created using the factory function "connect()".
+
+   Connections are thread safe and can be shared among many threads.
+   See *Thread and process safety* for details.
+
+   cursor([name] [, cursor_factory] [, withhold])
+
+      Return a new "cursor" object using the connection.
+
+      If *name* is specified, the returned cursor will be a *server
+      side cursor* (also known as *named cursor*). Otherwise it will
+      be a regular *client side* cursor. By default a "WITHOUT HOLD"
+      cursor is created; to create a "WITH HOLD" cursor, pass a "True"
+      value as the *withhold* parameter.  See *Server side cursors*.
+
+      The name can be a string not valid as a PostgreSQL identifier:
+      for example it may start with a digit and contain non-
+      alphanumeric characters and quotes.
+
+      Changed in version 2.4: previously only valid PostgreSQL
+      identifiers were accepted as cursor name.
+
+      Warning: It is unsafe to expose the *name* to an untrusted source, for
+        instance you shouldn't allow *name* to be read from a HTML
+        form. Consider it as part of the query, not as a query
+        parameter.
+
+      The *cursor_factory* argument can be used to create non-standard
+      cursors. The class returned should be a subclass of
+      "psycopg2.extensions.cursor". See *Connection and cursor
+      factories* for details.
+
+      DB API extension: The "name" and "cursor_factory" parameters are
+      Psycopg extensions to the DB API 2.0.
+
+   commit()
+
+      Commit any pending transaction to the database. Psycopg can be
+      set to perform automatic commits at each operation, see
+      "set_isolation_level()".
+
+   rollback()
+
+      Roll back to the start of any pending transaction.  Closing a
+      connection without committing the changes first will cause an
+      implicit rollback to be performed.
+
+   close()
+
+      Close the connection now (rather than whenever "del" is
+      executed). The connection will be unusable from this point
+      forward; an "InterfaceError" will be raised if any operation is
+      attempted with the connection.  The same applies to all cursor
+      objects trying to use the connection.  Note that closing a
+      connection without committing the changes first will cause any
+      pending change to be discarded as if a "ROLLBACK" was performed
+      (unless a different isolation level has been selected: see
+      "set_isolation_level()").
+
+      Changed in version 2.2: previously an explicit "ROLLBACK" was
+      issued by Psycopg on "close()". The command could have been sent
+      to the backend at an inappropriate time, so Psycopg currently
+      relies on the backend to implicitly discard uncommitted changes.
+      Some middleware are known to behave incorrectly though when the
+      connection is closed during a transaction (when "status" is
+      "STATUS_IN_TRANSACTION"), e.g. PgBouncer reports an "unclean
+      server" and discards the connection. To avoid this problem you
+      can ensure to terminate the transaction with a
+      "commit()"/"rollback()" before closing.
+
+   -[ Exceptions as connection class attributes ]-
+
+   The "connection" also exposes as attributes the same exceptions
+   available in the "psycopg2" module.  See *Exceptions*.
+
+   -[ Two-phase commit support methods ]-
+
+   New in version 2.3.
+
+   See also:
+
+      *Two-Phase Commit protocol support* for an introductory
+      explanation of these methods.
+
+   Note that PostgreSQL supports two-phase commit since release 8.1:
+   these methods raise "NotSupportedError" if used with an older
+   version server.
+
+   xid(format_id, gtrid, bqual)
+
+      Returns a "Xid" instance to be passed to the "tpc_*()" methods
+      of this connection. The argument types and constraints are
+      explained in *Two-Phase Commit protocol support*.
+
+      The values passed to the method will be available on the
+      returned object as the members "format_id", "gtrid", "bqual".
+      The object also allows accessing to these members and unpacking
+      as a 3-items tuple.
+
+   tpc_begin(xid)
+
+      Begins a TPC transaction with the given transaction ID *xid*.
+
+      This method should be called outside of a transaction (i.e.
+      nothing may have executed since the last "commit()" or
+      "rollback()" and "connection.status" is "STATUS_READY").
+
+      Furthermore, it is an error to call "commit()" or "rollback()"
+      within the TPC transaction: in this case a "ProgrammingError" is
+      raised.
+
+      The *xid* may be either an object returned by the "xid()" method
+      or a plain string: the latter allows to create a transaction
+      using the provided string as PostgreSQL transaction id. See also
+      "tpc_recover()".
+
+   tpc_prepare()
+
+      Performs the first phase of a transaction started with
+      "tpc_begin()".  A "ProgrammingError" is raised if this method is
+      used outside of a TPC transaction.
+
+      After calling "tpc_prepare()", no statements can be executed
+      until "tpc_commit()" or "tpc_rollback()" will be called.  The
+      "reset()" method can be used to restore the status of the
+      connection to "STATUS_READY": the transaction will remain
+      prepared in the database and will be possible to finish it with
+      "tpc_commit(xid)" and "tpc_rollback(xid)".
+
+      See also:
+
+         the "PREPARE TRANSACTION" PostgreSQL command.
+
+   tpc_commit([xid])
+
+      When called with no arguments, "tpc_commit()" commits a TPC
+      transaction previously prepared with "tpc_prepare()".
+
+      If "tpc_commit()" is called prior to "tpc_prepare()", a single
+      phase commit is performed.  A transaction manager may choose to
+      do this if only a single resource is participating in the global
+      transaction.
+
+      When called with a transaction ID *xid*, the database commits
+      the given transaction.  If an invalid transaction ID is
+      provided, a "ProgrammingError" will be raised.  This form should
+      be called outside of a transaction, and is intended for use in
+      recovery.
+
+      On return, the TPC transaction is ended.
+
+      See also:
+
+         the "COMMIT PREPARED" PostgreSQL command.
+
+   tpc_rollback([xid])
+
+      When called with no arguments, "tpc_rollback()" rolls back a TPC
+      transaction.  It may be called before or after "tpc_prepare()".
+
+      When called with a transaction ID *xid*, it rolls back the given
+      transaction.  If an invalid transaction ID is provided, a
+      "ProgrammingError" is raised.  This form should be called
+      outside of a transaction, and is intended for use in recovery.
+
+      On return, the TPC transaction is ended.
+
+      See also:
+
+         the "ROLLBACK PREPARED" PostgreSQL command.
+
+   tpc_recover()
+
+      Returns a list of "Xid" representing pending transactions,
+      suitable for use with "tpc_commit()" or "tpc_rollback()".
+
+      If a transaction was not initiated by Psycopg, the returned Xids
+      will have attributes "format_id" and "bqual" set to "None" and
+      the "gtrid" set to the PostgreSQL transaction ID: such Xids are
+      still usable for recovery.  Psycopg uses the same algorithm of
+      the PostgreSQL JDBC driver to encode a XA triple in a string, so
+      transactions initiated by a program using such driver should be
+      unpacked correctly.
+
+      Xids returned by "tpc_recover()" also have extra attributes
+      "prepared", "owner", "database" populated with the values read
+      from the server.
+
+      See also:
+
+         the "pg_prepared_xacts" system view.
+
+   DB API extension: The above methods are the only ones defined by
+   the DB API 2.0 protocol. The Psycopg connection objects exports the
+   following additional methods and attributes.
+
+   closed
+
+      Read-only attribute reporting whether the database connection is
+      open (0) or closed (1).
+
+   cancel()
+
+      Cancel the current database operation.
+
+      The method interrupts the processing of the current operation.
+      If no query is being executed, it does nothing. You can call
+      this function from a different thread than the one currently
+      executing a database operation, for instance if you want to
+      cancel a long running query if a button is pushed in the UI.
+      Interrupting query execution will cause the cancelled method to
+      raise a "QueryCanceledError". Note that the termination of the
+      query is not guaranteed to succeed: see the documentation for
+      "PQcancel()".
+
+      New in version 2.3.
+
+   reset()
+
+      Reset the connection to the default.
+
+      The method rolls back an eventual pending transaction and
+      executes the PostgreSQL "RESET" and "SET SESSION AUTHORIZATION"
+      to revert the session to the default values. A two-phase commit
+      transaction prepared using "tpc_prepare()" will remain in the
+      database available for recover.
+
+      New in version 2.0.12.
+
+   dsn
+
+      Read-only string containing the connection string used by the
+      connection.
+
+   set_session([isolation_level,] [readonly,] [deferrable,] [autocommit])
+
+      Set one or more parameters for the next transactions or
+      statements in the current session. See "SET TRANSACTION" for
+      further details.
+
+      Parameters:
+         * **isolation_level** -- set the isolation level for the next
+           transactions/statements.  The value can be one of the
+           *constants* defined in the "extensions" module or one of
+           the literal values "READ UNCOMMITTED", "READ COMMITTED",
+           "REPEATABLE READ", "SERIALIZABLE".
+
+         * **readonly** -- if "True", set the connection to read only;
+           read/write if "False".
+
+         * **deferrable** -- if "True", set the connection to
+           deferrable; non deferrable if "False". Only available from
+           PostgreSQL 9.1.
+
+         * **autocommit** -- switch the connection to autocommit mode:
+           not a PostgreSQL session setting but an alias for setting
+           the "autocommit" attribute.
+
+      The parameters *isolation_level*, *readonly* and *deferrable*
+      also accept the string "DEFAULT" as a value: the effect is to
+      reset the parameter to the server default.
+
+      The function must be invoked with no transaction in progress. At
+      every function invocation, only the specified parameters are
+      changed.
+
+      The default for the values are defined by the server
+      configuration: see values for "default_transaction_isolation",
+      "default_transaction_read_only",
+      "default_transaction_deferrable".
+
+      Note: There is currently no builtin method to read the current value
+        for the parameters: use "SHOW default_transaction_..." to read
+        the values from the backend.
+
+      New in version 2.4.2.
+
+   autocommit
+
+      Read/write attribute: if "True", no transaction is handled by
+      the driver and every statement sent to the backend has immediate
+      effect; if "False" a new transaction is started at the first
+      command execution: the methods "commit()" or "rollback()" must
+      be manually invoked to terminate the transaction.
+
+      The autocommit mode is useful to execute commands requiring to
+      be run outside a transaction, such as "CREATE DATABASE" or
+      "VACUUM".
+
+      The default is "False" (manual commit) as per DBAPI
+      specification.
+
+      Warning: By default, any query execution, including a simple "SELECT"
+        will start a transaction: for long-running programs, if no
+        further action is taken, the session will remain "idle in
+        transaction", a condition non desiderable for several reasons
+        (locks are held by the session, tables bloat...). For long
+        lived scripts, either ensure to terminate a transaction as
+        soon as possible or use an autocommit connection.
+
+      New in version 2.4.2.
+
+   isolation_level
+
+   set_isolation_level(level)
+
+      Note: From version 2.4.2, "set_session()" and "autocommit", offer
+        finer control on the transaction characteristics.
+
+      Read or set the transaction isolation level for the current
+      session. The level defines the different phenomena that can
+      happen in the database between concurrent transactions.
+
+      The value set or read is an integer: symbolic constants are
+      defined in the module "psycopg2.extensions": see *Isolation
+      level constants* for the available values.
+
+      The default level is "READ COMMITTED": at this level a
+      transaction is automatically started the first time a database
+      command is executed.  If you want an *autocommit* mode, switch
+      to "ISOLATION_LEVEL_AUTOCOMMIT" before executing any command:
+
+         >>> conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+
+      See also *Transactions control*.
+
+   encoding
+
+   set_client_encoding(enc)
+
+      Read or set the client encoding for the current session. The
+      default is the encoding defined by the database. It should be
+      one of the characters set supported by PostgreSQL
+
+   notices
+
+      A list containing all the database messages sent to the client
+      during the session.
+
+         >>> cur.execute("CREATE TABLE foo (id serial PRIMARY KEY);")
+         >>> pprint(conn.notices)
+         ['NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "foo_pkey" for table "foo"\n',
+          'NOTICE:  CREATE TABLE will create implicit sequence "foo_id_seq" for serial column "foo.id"\n']
+
+      To avoid a leak in case excessive notices are generated, only
+      the last 50 messages are kept.
+
+      You can configure what messages to receive using PostgreSQL
+      logging configuration parameters such as "log_statement",
+      "client_min_messages", "log_min_duration_statement" etc.
+
+   notifies
+
+      List of "Notify" objects containing asynchronous notifications
+      received by the session.
+
+      For other details see *Asynchronous notifications*.
+
+      Changed in version 2.3: Notifications are instances of the
+      "Notify" object. Previously the list was composed by 2 items
+      tuples "(*pid*,*channel*)" and the payload was not accessible.
+      To keep backward compatibility, "Notify" objects can still be
+      accessed as 2 items tuples.
+
+   get_backend_pid()
+
+      Returns the process ID (PID) of the backend server process
+      handling this connection.
+
+      Note that the PID belongs to a process executing on the database
+      server host, not the local host!
+
+      See also:
+
+         libpq docs for PQbackendPID() for details.
+
+      New in version 2.0.8.
+
+   get_parameter_status(parameter)
+
+      Look up a current parameter setting of the server.
+
+      Potential values for "parameter" are: "server_version",
+      "server_encoding", "client_encoding", "is_superuser",
+      "session_authorization", "DateStyle", "TimeZone",
+      "integer_datetimes", and "standard_conforming_strings".
+
+      If server did not report requested parameter, return "None".
+
+      See also:
+
+         libpq docs for PQparameterStatus() for details.
+
+      New in version 2.0.12.
+
+   get_transaction_status()
+
+      Return the current session transaction status as an integer.
+      Symbolic constants for the values are defined in the module
+      "psycopg2.extensions": see *Transaction status constants* for
+      the available values.
+
+      See also:
+
+         libpq docs for PQtransactionStatus() for details.
+
+   protocol_version
+
+      A read-only integer representing frontend/backend protocol being
+      used. Currently Psycopg supports only protocol 3, which allows
+      connection to PostgreSQL server from version 7.4. Psycopg
+      versions previous than 2.3 support both protocols 2 and 3.
+
+      See also:
+
+         libpq docs for PQprotocolVersion() for details.
+
+      New in version 2.0.12.
+
+   server_version
+
+      A read-only integer representing the backend version.
+
+      The number is formed by converting the major, minor, and
+      revision numbers into two-decimal-digit numbers and appending
+      them together. For example, version 8.1.5 will be returned as
+      "80105".
+
+      See also:
+
+         libpq docs for PQserverVersion() for details.
+
+      New in version 2.0.12.
+
+   status
+
+      A read-only integer representing the status of the connection.
+      Symbolic constants for the values are defined in the module
+      "psycopg2.extensions": see *Connection status constants* for the
+      available values.
+
+   lobject([oid[, mode[, new_oid[, new_file[, lobject_factory]]]]])
+
+      Return a new database large object as a "lobject" instance.
+
+      See *Access to PostgreSQL large objects* for an overview.
+
+      Parameters:
+         * **oid** -- The OID of the object to read or write. 0 to
+           create a new large object and and have its OID assigned
+           automatically.
+
+         * **mode** -- Access mode to the object, see below.
+
+         * **new_oid** -- Create a new object using the specified OID.
+           The function raises "OperationalError" if the OID is
+           already in use. Default is 0, meaning assign a new one
+           automatically.
+
+         * **new_file** -- The name of a file to be imported in the
+           the database (using the "lo_import()" function)
+
+         * **lobject_factory** -- Subclass of "lobject" to be
+           instantiated.
+
+      Available values for *mode* are:
+
+      +---------+-------------------------------------------------------------------------------------------------------------------+
+      | *mode*  | meaning                                                                                                           |
+      +=========+===================================================================================================================+
+      | "r"     | Open for read only                                                                                                |
+      +---------+-------------------------------------------------------------------------------------------------------------------+
+      | "w"     | Open for write only                                                                                               |
+      +---------+-------------------------------------------------------------------------------------------------------------------+
+      | "rw"    | Open for read/write                                                                                               |
+      +---------+-------------------------------------------------------------------------------------------------------------------+
+      | "n"     | Don't open the file                                                                                               |
+      +---------+-------------------------------------------------------------------------------------------------------------------+
+      | "b"     | Don't decode read data (return data as "str" in Python 2 or "bytes" in Python 3)                                  |
+      +---------+-------------------------------------------------------------------------------------------------------------------+
+      | "t"     | Decode read data according to "connection.encoding" (return data as "unicode" in Python 2 or "str" in Python 3)   |
+      +---------+-------------------------------------------------------------------------------------------------------------------+
+
+      "b" and "t" can be specified together with a read/write mode. If
+      neither "b" nor "t" is specified, the default is "b" in Python 2
+      and "t" in Python 3.
+
+      New in version 2.0.8.
+
+      Changed in version 2.4: added "b" and "t" mode and unicode
+      support.
+
+   -[ Methods related to asynchronous support. ]-
+
+   New in version 2.2.0.
+
+   See also:
+
+      *Asynchronous support* and *Support to coroutine libraries*.
+
+   async
+
+      Read only attribute: 1 if the connection is asynchronous, 0
+      otherwise.
+
+   poll()
+
+      Used during an asynchronous connection attempt, or when a cursor
+      is executing a query on an asynchronous connection, make
+      communication proceed if it wouldn't block.
+
+      Return one of the constants defined in *Poll constants*. If it
+      returns "POLL_OK" then the connection has been estabilished or
+      the query results are available on the client. Otherwise wait
+      until the file descriptor returned by "fileno()" is ready to
+      read or to write, as explained in *Asynchronous support*.
+      "poll()" should be also used by the function installed by
+      "set_wait_callback()" as explained in *Support to coroutine
+      libraries*.
+
+      "poll()" is also used to receive asynchronous notifications from
+      the database: see *Asynchronous notifications* from further
+      details.
+
+   fileno()
+
+      Return the file descriptor underlying the connection: useful to
+      read its status during asynchronous communication.
+
+   isexecuting()
+
+      Return "True" if the connection is executing an asynchronous
+      operation.
+
+
+
+The "cursor" class
+******************
+
+class class cursor
+
+   Allows Python code to execute PostgreSQL command in a database
+   session. Cursors are created by the "connection.cursor()" method:
+   they are bound to the connection for the entire lifetime and all
+   the commands are executed in the context of the database session
+   wrapped by the connection.
+
+   Cursors created from the same connection are not isolated, i.e.,
+   any changes done to the database by a cursor are immediately
+   visible by the other cursors. Cursors created from different
+   connections can or can not be isolated, depending on the
+   connections' *isolation level*. See also "rollback()" and
+   "commit()" methods.
+
+   Cursors are *not* thread safe: a multithread application can create
+   many cursors from the same connection and should use each cursor
+   from a single thread. See *Thread and process safety* for details.
+
+   description
+
+      This read-only attribute is a sequence of 7-item sequences.
+
+      Each of these sequences is a named tuple (a regular tuple if
+      "collections.namedtuple()" is not available) containing
+      information describing one result column:
+
+      1. "name": the name of the column returned.
+
+      2. "type_code": the PostgreSQL OID of the column. You can use
+         the "pg_type" system table to get more informations about the
+         type. This is the value used by Psycopg to decide what Python
+         type use to represent the value.  See also *Type casting of
+         SQL types into Python objects*.
+
+      3. "display_size": the actual length of the column in bytes.
+         Obtaining this value is computationally intensive, so it is
+         always "None" unless the "PSYCOPG_DISPLAY_SIZE" parameter is
+         set at compile time. See also PQgetlength.
+
+      4. "internal_size": the size in bytes of the column associated
+         to this column on the server. Set to a negative value for
+         variable-size types See also PQfsize.
+
+      5. "precision": total number of significant digits in columns of
+         type "NUMERIC". "None" for other types.
+
+      6. "scale": count of decimal digits in the fractional part in
+         columns of type "NUMERIC". "None" for other types.
+
+      7. "null_ok": always "None" as not easy to retrieve from the
+         libpq.
+
+      This attribute will be "None" for operations that do not return
+      rows or if the cursor has not had an operation invoked via the
+      "execute*()" methods yet.
+
+      Changed in version 2.4: if possible, columns descriptions are
+      named tuple instead of regular tuples.
+
+   close()
+
+      Close the cursor now (rather than whenever "del" is executed).
+      The cursor will be unusable from this point forward; an
+      "InterfaceError" will be raised if any operation is attempted
+      with the cursor.
+
+   closed
+
+      Read-only boolean attribute: specifies if the cursor is closed
+      ("True") or not ("False").
+
+      DB API extension: The "closed" attribute is a Psycopg extension
+      to the DB API 2.0.
+
+      New in version 2.0.7.
+
+   connection
+
+      Read-only attribute returning a reference to the "connection"
+      object on which the cursor was created.
+
+   name
+
+      Read-only attribute containing the name of the cursor if it was
+      creates as named cursor by "connection.cursor()", or "None" if
+      it is a client side cursor.  See *Server side cursors*.
+
+      DB API extension: The "name" attribute is a Psycopg extension to
+      the DB API 2.0.
+
+   withhold
+
+      Read/write attribute: specifies if a named cursor lifetime
+      should extend outside of the current transaction, i.e., it is
+      possible to fetch from the cursor even after a
+      "commection.commit()" (but not after a "connection.rollback()").
+      See *Server side cursors*
+
+      New in version 2.4.3.
+
+      DB API extension: The "withhold" attribute is a Psycopg
+      extension to the DB API 2.0.
+
+   -[ Commands execution methods ]-
+
+   execute(operation[, parameters])
+
+      Prepare and execute a database operation (query or command).
+
+      Parameters may be provided as sequence or mapping and will be
+      bound to variables in the operation.  Variables are specified
+      either with positional ("%s") or named ("%(*name*)s")
+      placeholders. See *Passing parameters to SQL queries*.
+
+      The method returns "None". If a query was executed, the returned
+      values can be retrieved using "fetch*()" methods.
+
+   executemany(operation, seq_of_parameters)
+
+      Prepare a database operation (query or command) and then execute
+      it against all parameter tuples or mappings found in the
+      sequence "seq_of_parameters".
+
+      The function is mostly useful for commands that update the
+      database: any result set returned by the query is discarded.
+
+      Parameters are bounded to the query using the same rules
+      described in the "execute()" method.
+
+   callproc(procname[, parameters])
+
+      Call a stored database procedure with the given name. The
+      sequence of parameters must contain one entry for each argument
+      that the procedure expects. The result of the call is returned
+      as modified copy of the input sequence. Input parameters are
+      left untouched, output and input/output parameters replaced with
+      possibly new values.
+
+      The procedure may also provide a result set as output. This must
+      then be made available through the standard "fetch*()" methods.
+
+   mogrify(operation[, parameters])
+
+      Return a query string after arguments binding. The string
+      returned is exactly the one that would be sent to the database
+      running the "execute()" method or similar.
+
+      >>> cur.mogrify("INSERT INTO test (num, data) VALUES (%s, %s)", (42, 'bar'))
+      "INSERT INTO test (num, data) VALUES (42, E'bar')"
+
+      DB API extension: The "mogrify()" method is a Psycopg extension
+      to the DB API 2.0.
+
+   setinputsizes(sizes)
+
+      This method is exposed in compliance with the DB API 2.0. It
+      currently does nothing but it is safe to call it.
+
+   -[ Results retrieval methods ]-
+
+   The following methods are used to read data from the database after
+   an "execute()" call.
+
+   Note: "cursor" objects are iterable, so, instead of calling explicitly
+     "fetchone()" in a loop, the object itself can be used:
+
+     >>> cur.execute("SELECT * FROM test;")
+     >>> for record in cur:
+     ...     print record
+     ...
+     (1, 100, "abc'def")
+     (2, None, 'dada')
+     (3, 42, 'bar')
+
+     Changed in version 2.4: iterating over a *named cursor* fetches
+     "itersize" records at time from the backend. Previously only one
+     record was fetched per roundtrip, resulting in a large overhead.
+
+   fetchone()
+
+      Fetch the next row of a query result set, returning a single
+      tuple, or "None" when no more data is available:
+
+      >>> cur.execute("SELECT * FROM test WHERE id = %s", (3,))
+      >>> cur.fetchone()
+      (3, 42, 'bar')
+
+      A "ProgrammingError" is raised if the previous call to
+      "execute*()" did not produce any result set or no call was
+      issued yet.
+
+   fetchmany([size=cursor.arraysize])
+
+      Fetch the next set of rows of a query result, returning a list
+      of tuples. An empty list is returned when no more rows are
+      available.
+
+      The number of rows to fetch per call is specified by the
+      parameter. If it is not given, the cursor's "arraysize"
+      determines the number of rows to be fetched. The method should
+      try to fetch as many rows as indicated by the size parameter. If
+      this is not possible due to the specified number of rows not
+      being available, fewer rows may be returned:
+
+      >>> cur.execute("SELECT * FROM test;")
+      >>> cur.fetchmany(2)
+      [(1, 100, "abc'def"), (2, None, 'dada')]
+      >>> cur.fetchmany(2)
+      [(3, 42, 'bar')]
+      >>> cur.fetchmany(2)
+      []
+
+      A "ProgrammingError" is raised if the previous call to
+      "execute*()" did not produce any result set or no call was
+      issued yet.
+
+      Note there are performance considerations involved with the size
+      parameter.  For optimal performance, it is usually best to use
+      the "arraysize" attribute.  If the size parameter is used, then
+      it is best for it to retain the same value from one
+      "fetchmany()" call to the next.
+
+   fetchall()
+
+      Fetch all (remaining) rows of a query result, returning them as
+      a list of tuples.  An empty list is returned if there is no more
+      record to fetch.
+
+      >>> cur.execute("SELECT * FROM test;")
+      >>> cur.fetchall()
+      [(1, 100, "abc'def"), (2, None, 'dada'), (3, 42, 'bar')]
+
+      A "ProgrammingError" is raised if the previous call to
+      "execute*()" did not produce any result set or no call was
+      issued yet.
+
+   scroll(value[, mode='relative'])
+
+      Scroll the cursor in the result set to a new position according
+      to mode.
+
+      If "mode" is "relative" (default), value is taken as offset to
+      the current position in the result set, if set to "absolute",
+      value states an absolute target position.
+
+      If the scroll operation would leave the result set, a
+      "ProgrammingError" is raised and the cursor position is not
+      changed.
+
+      The method can be used both for client-side cursors and *server-
+      side cursors*.
+
+      Note: According to the DB API 2.0, the exception raised for a cursor
+        out of bound should have been "IndexError".  The best option
+        is probably to catch both exceptions in your code:
+
+           try:
+               cur.scroll(1000 * 1000)
+           except (ProgrammingError, IndexError), exc:
+               deal_with_it(exc)
+
+   arraysize
+
+      This read/write attribute specifies the number of rows to fetch
+      at a time with "fetchmany()". It defaults to 1 meaning to fetch
+      a single row at a time.
+
+   itersize
+
+      Read/write attribute specifying the number of rows to fetch from
+      the backend at each network roundtrip during *iteration* on a
+      *named cursor*. The default is 2000.
+
+      New in version 2.4.
+
+      DB API extension: The "itersize" attribute is a Psycopg
+      extension to the DB API 2.0.
+
+   rowcount
+
+      This read-only attribute specifies the number of rows that the
+      last "execute*()" produced (for DQL (Data Query Language)
+      statements like "SELECT") or affected (for DML (Data
+      Manipulation Language) statements like "UPDATE" or "INSERT").
+
+      The attribute is -1 in case no "execute*()" has been performed
+      on the cursor or the row count of the last operation if it can't
+      be determined by the interface.
+
+      Note: The DB API 2.0 interface reserves to redefine the latter case
+        to have the object return "None" instead of -1 in future
+        versions of the specification.
+
+   rownumber
+
+      This read-only attribute provides the current 0-based index of
+      the cursor in the result set or "None" if the index cannot be
+      determined.
+
+      The index can be seen as index of the cursor in a sequence (the
+      result set). The next fetch operation will fetch the row indexed
+      by "rownumber" in that sequence.
+
+   lastrowid
+
+      This read-only attribute provides the OID of the last row
+      inserted by the cursor. If the table wasn't created with OID
+      support or the last operation is not a single record insert, the
+      attribute is set to "None".
+
+      Note: PostgreSQL currently advices to not create OIDs on the tables
+        and the default for "CREATE TABLE" is to not support them. The
+        "INSERT ... RETURNING" syntax available from PostgreSQL 8.3
+        allows more flexibility.
+
+   query
+
+      Read-only attribute containing the body of the last query sent
+      to the backend (including bound arguments). "None" if no query
+      has been executed yet:
+
+      >>> cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)", (42, 'bar'))
+      >>> cur.query
+      "INSERT INTO test (num, data) VALUES (42, E'bar')"
+
+      DB API extension: The "query" attribute is a Psycopg extension
+      to the DB API 2.0.
+
+   statusmessage
+
+      Read-only attribute containing the message returned by the last
+      command:
+
+      >>> cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)", (42, 'bar'))
+      >>> cur.statusmessage
+      'INSERT 0 1'
+
+      DB API extension: The "statusmessage" attribute is a Psycopg
+      extension to the DB API 2.0.
+
+   cast(oid, s)
+
+      Convert a value from the PostgreSQL string representation to a
+      Python object.
+
+      Use the most specific of the typecasters registered by
+      "register_type()".
+
+      New in version 2.4.
+
+      DB API extension: The "cast()" method is a Psycopg extension to
+      the DB API 2.0.
+
+   tzinfo_factory
+
+      The time zone factory used to handle data types such as
+      "TIMESTAMP WITH TIME ZONE".  It should be a "tzinfo" object.  A
+      few implementations are available in the "psycopg2.tz" module.
+
+   nextset()
+
+      This method is not supported (PostgreSQL does not have multiple
+      data sets) and will raise a "NotSupportedError" exception.
+
+   setoutputsize(size[, column])
+
+      This method is exposed in compliance with the DB API 2.0. It
+      currently does nothing but it is safe to call it.
+
+   -[ COPY-related methods ]-
+
+   DB API extension: The "COPY" command is a PostgreSQL extension to
+   the SQL standard. As such, its support is a Psycopg extension to
+   the DB API 2.0.
+
+   copy_from(file, table, sep='\t', null='\\N', size=8192, columns=None)
+
+      Read data *from* the file-like object *file* appending them to
+      the table named *table*.  See *Using COPY TO and COPY FROM* for
+      an overview.
+
+      Parameters:
+         * **file** -- file-like object to read data from.  It must
+           have both "read()" and "readline()" methods.
+
+         * **table** -- name of the table to copy data into.
+
+         * **sep** -- columns separator expected in the file. Defaults
+           to a tab.
+
+         * **null** -- textual representation of "NULL" in the file.
+           The default is the two characters string "\N".
+
+         * **size** -- size of the buffer used to read from the file.
+
+         * **columns** -- iterable with name of the columns to import.
+           The length and types should match the content of the file
+           to read. If not specified, it is assumed that the entire
+           table matches the file structure.
+
+      Example:
+
+         >>> f = StringIO("42\tfoo\n74\tbar\n")
+         >>> cur.copy_from(f, 'test', columns=('num', 'data'))
+         >>> cur.execute("select * from test where id > 5;")
+         >>> cur.fetchall()
+         [(6, 42, 'foo'), (7, 74, 'bar')]
+
+      Changed in version 2.0.6: added the *columns* parameter.
+
+      Changed in version 2.4: data read from files implementing the
+      "io.TextIOBase" interface are encoded in the connection
+      "encoding" when sent to the backend.
+
+   copy_to(file, table, sep='\t', null='\\N', columns=None)
+
+      Write the content of the table named *table* *to* the file-like
+      object *file*.  See *Using COPY TO and COPY FROM* for an
+      overview.
+
+      Parameters:
+         * **file** -- file-like object to write data into.  It must
+           have a "write()" method.
+
+         * **table** -- name of the table to copy data from.
+
+         * **sep** -- columns separator expected in the file. Defaults
+           to a tab.
+
+         * **null** -- textual representation of "NULL" in the file.
+           The default is the two characters string "\N".
+
+         * **columns** -- iterable with name of the columns to export.
+           If not specified, export all the columns.
+
+      Example:
+
+         >>> cur.copy_to(sys.stdout, 'test', sep="|")
+         1|100|abc'def
+         2|\N|dada
+         ...
+
+      Changed in version 2.0.6: added the *columns* parameter.
+
+      Changed in version 2.4: data sent to files implementing the
+      "io.TextIOBase" interface are decoded in the connection
+      "encoding" when read from the backend.
+
+   copy_expert(sql, file, size=8192)
+
+      Submit a user-composed "COPY" statement. The method is useful to
+      handle all the parameters that PostgreSQL makes available (see
+      "COPY" command documentation).
+
+      Parameters:
+         * **sql** -- the "COPY" statement to execute.
+
+         * **file** -- a file-like object; must be a readable file for
+           "COPY FROM" or an writable file for "COPY TO".
+
+         * **size** -- size of the read buffer to be used in "COPY
+           FROM".
+
+      Example:
+
+      >>> cur.copy_expert("COPY test TO STDOUT WITH CSV HEADER", sys.stdout)
+      id,num,data
+      1,100,abc'def
+      2,,dada
+      ...
+
+      New in version 2.0.6.
+
+      Changed in version 2.4: files implementing the "io.TextIOBase"
+      interface are dealt with using Unicode data instead of bytes.
+
+
+
+More advanced topics
+********************
+
+
+Connection and cursor factories
+===============================
+
+Psycopg exposes two new-style classes that can be sub-classed and
+expanded to adapt them to the needs of the programmer:
+"psycopg2.extensions.cursor" and "psycopg2.extensions.connection".
+The "connection" class is usually sub-classed only to provide an easy
+way to create customized cursors but other uses are possible. "cursor"
+is much more interesting, because it is the class where query
+building, execution and result type-casting into Python variables
+happens.
+
+An example of cursor subclass performing logging is:
+
+   import psycopg2
+   import psycopg2.extensions
+   import logging
+
+   class LoggingCursor(psycopg2.extensions.cursor):
+       def execute(self, sql, args=None):
+           logger = logging.getLogger('sql_debug')
+           logger.info(self.mogrify(sql, args))
+
+           try:
+               psycopg2.extensions.cursor.execute(self, sql, args)
+           except Exception, exc:
+               logger.error("%s: %s" % (exc.__class__.__name__, exc))
+               raise
+
+   conn = psycopg2.connect(DSN)
+   cur = conn.cursor(cursor_factory=LoggingCursor)
+   cur.execute("INSERT INTO mytable VALUES (%s, %s, %s);",
+                (10, 20, 30))
+
+
+Adapting new Python types to SQL syntax
+=======================================
+
+Any Python class or type can be adapted to an SQL string.  Adaptation
+mechanism is similar to the Object Adaptation proposed in the **PEP
+246** and is exposed by the "psycopg2.extensions.adapt()" function.
+
+The "execute()" method adapts its arguments to the "ISQLQuote"
+protocol.  Objects that conform to this protocol expose a
+"getquoted()" method returning the SQL representation of the object as
+a string (the method must return "bytes" in Python 3). Optionally the
+conform object may expose a "prepare()" method.
+
+There are two basic ways to have a Python object adapted to SQL:
+
+* the object itself is conform, or knows how to make itself conform.
+  Such object must expose a "__conform__()" method that will be called
+  with the protocol object as argument. The object can check that the
+  protocol is "ISQLQuote", in which case it can return "self" (if the
+  object also implements "getquoted()") or a suitable wrapper object.
+  This option is viable if you are the author of the object and if the
+  object is specifically designed for the database (i.e. having
+  Psycopg as a dependency and polluting its interface with the
+  required methods doesn't bother you). For a simple example you can
+  take a look at the source code for the "psycopg2.extras.Inet"
+  object.
+
+* If implementing the "ISQLQuote" interface directly in the object is
+  not an option (maybe because the object to adapt comes from a third
+  party library), you can use an *adaptation function*, taking the
+  object to be adapted as argument and returning a conforming object.
+  The adapter must be registered via the "register_adapter()"
+  function.  A simple example wrapper is
+  "psycopg2.extras.UUID_adapter" used by the "register_uuid()"
+  function.
+
+A convenient object to write adapters is the "AsIs" wrapper, whose
+"getquoted()" result is simply the "str()"ing conversion of the
+wrapped object.
+
+Example: mapping of a "Point" class into the "point" PostgreSQL
+geometric type:
+
+   >>> from psycopg2.extensions import adapt, register_adapter, AsIs
+
+   >>> class Point(object):
+   ...    def __init__(self, x, y):
+   ...        self.x = x
+   ...        self.y = y
+
+   >>> def adapt_point(point):
+   ...     return AsIs("'(%s, %s)'" % (adapt(point.x), adapt(point.y)))
+
+   >>> register_adapter(Point, adapt_point)
+
+   >>> cur.execute("INSERT INTO atable (apoint) VALUES (%s)",
+   ...             (Point(1.23, 4.56),))
+
+The above function call results in the SQL command:
+
+   INSERT INTO atable (apoint) VALUES ('(1.23, 4.56)');
+
+
+Type casting of SQL types into Python objects
+=============================================
+
+PostgreSQL objects read from the database can be adapted to Python
+objects through an user-defined adapting function.  An adapter
+function takes two arguments: the object string representation as
+returned by PostgreSQL and the cursor currently being read, and should
+return a new Python object.  For example, the following function
+parses the PostgreSQL "point" representation into the previously
+defined "Point" class:
+
+>>> def cast_point(value, cur):
+...    if value is None:
+...        return None
+...
+...    # Convert from (f1, f2) syntax using a regular expression.
+...    m = re.match(r"\(([^)]+),([^)]+)\)", value)
+...    if m:
+...        return Point(float(m.group(1)), float(m.group(2)))
+...    else:
+...        raise InterfaceError("bad point representation: %r" % value)
+
+In order to create a mapping from a PostgreSQL type (either standard
+or user-defined), its OID must be known. It can be retrieved either by
+the second column of the "cursor.description":
+
+>>> cur.execute("SELECT NULL::point")
+>>> point_oid = cur.description[0][1]
+>>> point_oid
+600
+
+or by querying the system catalog for the type name and namespace (the
+namespace for system objects is "pg_catalog"):
+
+>>> cur.execute("""
+...    SELECT pg_type.oid
+...      FROM pg_type JOIN pg_namespace
+...             ON typnamespace = pg_namespace.oid
+...     WHERE typname = %(typename)s
+...       AND nspname = %(namespace)s""",
+...    {'typename': 'point', 'namespace': 'pg_catalog'})
+>>> point_oid = cur.fetchone()[0]
+>>> point_oid
+600
+
+After you know the object OID, you can create and register the new
+type:
+
+>>> POINT = psycopg2.extensions.new_type((point_oid,), "POINT", cast_point)
+>>> psycopg2.extensions.register_type(POINT)
+
+The "new_type()" function binds the object OIDs (more than one can be
+specified) to the adapter function. "register_type()" completes the
+spell.  Conversion is automatically performed when a column whose type
+is a registered OID is read:
+
+>>> cur.execute("SELECT '(10.2,20.3)'::point")
+>>> point = cur.fetchone()[0]
+>>> print type(point), point.x, point.y
+<class 'Point'> 10.2 20.3
+
+A typecaster created by "new_type()" can be also used with
+"new_array_type()" to create a typecaster converting a PostgreSQL
+array into a Python list.
+
+
+Asynchronous notifications
+==========================
+
+Psycopg allows asynchronous interaction with other database sessions
+using the facilities offered by PostgreSQL commands "LISTEN" and
+"NOTIFY". Please refer to the PostgreSQL documentation for examples
+about how to use this form of communication.
+
+Notifications are instances of the "Notify" object made available upon
+reception in the "connection.notifies" list. Notifications can be sent
+from Python code simply executing a "NOTIFY" command in an "execute()"
+call.
+
+Because of the way sessions interact with notifications (see "NOTIFY"
+documentation), you should keep the connection in "autocommit" mode if
+you wish to receive or send notifications in a timely manner.
+
+Notifications are received after every query execution. If the user is
+interested in receiving notifications but not in performing any query,
+the "poll()" method can be used to check for new messages without
+wasting resources.
+
+A simple application could poll the connection from time to time to
+check if something new has arrived. A better strategy is to use some
+I/O completion function such as "select()" to sleep until awaken from
+the kernel when there is some data to read on the connection, thereby
+using no CPU unless there is something to read:
+
+   import select
+   import psycopg2
+   import psycopg2.extensions
+
+   conn = psycopg2.connect(DSN)
+   conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+
+   curs = conn.cursor()
+   curs.execute("LISTEN test;")
+
+   print "Waiting for notifications on channel 'test'"
+   while 1:
+       if select.select([conn],[],[],5) == ([],[],[]):
+           print "Timeout"
+       else:
+           conn.poll()
+           while conn.notifies:
+               notify = conn.notifies.pop()
+               print "Got NOTIFY:", notify.pid, notify.channel, notify.payload
+
+Running the script and executing a command such as "NOTIFY test,
+'hello'" in a separate **psql** shell, the output may look similar to:
+
+   Waiting for notifications on channel 'test'
+   Timeout
+   Timeout
+   Got NOTIFY: 6535 test hello
+   Timeout
+   ...
+
+Note that the payload is only available from PostgreSQL 9.0:
+notifications received from a previous version server will have the
+"payload" attribute set to the empty string.
+
+Changed in version 2.3: Added "Notify" object and handling
+notification payload.
+
+
+Asynchronous support
+====================
+
+New in version 2.2.0.
+
+Psycopg can issue asynchronous queries to a PostgreSQL database. An
+asynchronous communication style is established passing the parameter
+*async*=1 to the "connect()" function: the returned connection will
+work in *asynchronous mode*.
+
+In asynchronous mode, a Psycopg connection will rely on the caller to
+poll the socket file descriptor, checking if it is ready to accept
+data or if a query result has been transferred and is ready to be read
+on the client. The caller can use the method "fileno()" to get the
+connection file descriptor and "poll()" to make communication proceed
+according to the current connection state.
+
+The following is an example loop using methods "fileno()" and "poll()"
+together with the Python "select()" function in order to carry on
+asynchronous operations with Psycopg:
+
+   def wait(conn):
+       while 1:
+           state = conn.poll()
+           if state == psycopg2.extensions.POLL_OK:
+               break
+           elif state == psycopg2.extensions.POLL_WRITE:
+               select.select([], [conn.fileno()], [])
+           elif state == psycopg2.extensions.POLL_READ:
+               select.select([conn.fileno()], [], [])
+           else:
+               raise psycopg2.OperationalError("poll() returned %s" % state)
+
+The above loop of course would block an entire application: in a real
+asynchronous framework, "select()" would be called on many file
+descriptors waiting for any of them to be ready.  Nonetheless the
+function can be used to connect to a PostgreSQL server only using
+nonblocking commands and the connection obtained can be used to
+perform further nonblocking queries.  After "poll()" has returned
+"POLL_OK", and thus "wait()" has returned, the connection can be
+safely used:
+
+>>> aconn = psycopg2.connect(database='test', async=1)
+>>> wait(aconn)
+>>> acurs = aconn.cursor()
+
+Note that there are a few other requirements to be met in order to
+have a completely non-blocking connection attempt: see the libpq
+documentation for "PQconnectStart()".
+
+The same loop should be also used to perform nonblocking queries:
+after sending a query via "execute()" or "callproc()", call "poll()"
+on the connection available from "cursor.connection" until it returns
+"POLL_OK", at which point the query has been completely sent to the
+server and, if it produced data, the results have been transferred to
+the client and available using the regular cursor methods:
+
+>>> acurs.execute("SELECT pg_sleep(5); SELECT 42;")
+>>> wait(acurs.connection)
+>>> acurs.fetchone()[0]
+42
+
+When an asynchronous query is being executed,
+"connection.isexecuting()" returns "True". Two cursors can't execute
+concurrent queries on the same asynchronous connection.
+
+There are several limitations in using asynchronous connections: the
+connection is always in "autocommit" mode and it is not possible to
+change it. So a transaction is not implicitly started at the first
+query and is not possible to use methods "commit()" and "rollback()":
+you can manually control transactions using "execute()" to send
+database commands such as "BEGIN", "COMMIT" and "ROLLBACK". Similarly
+"set_session()" can't be used but it is still possible to invoke the
+"SET" command with the proper "default_transaction_..." parameter.
+
+With asynchronous connections it is also not possible to use
+"set_client_encoding()", "executemany()", *large objects*, *named
+cursors*.
+
+*COPY commands* are not supported either in asynchronous mode, but
+this will be probably implemented in a future release.
+
+
+Support to coroutine libraries
+==============================
+
+New in version 2.2.0.
+
+Psycopg can be used together with coroutine-based libraries, and
+participate to cooperative multithreading.
+
+Coroutine-based libraries (such as Eventlet or gevent) can usually
+patch the Python standard library in order to enable a coroutine
+switch in the presence of blocking I/O: the process is usually
+referred as making the system *green*, in reference to the green
+threads.
+
+Because Psycopg is a C extension module, it is not possible for
+coroutine libraries to patch it: Psycopg instead enables cooperative
+multithreading by allowing the registration of a *wait callback* using
+the "psycopg2.extensions.set_wait_callback()" function. When a wait
+callback is registered, Psycopg will use libpq non-blocking calls
+instead of the regular blocking ones, and will delegate to the
+callback the responsibility to wait for the socket to become readable
+or writable.
+
+Working this way, the caller does not have the complete freedom to
+schedule the socket check whenever they want as with an *asynchronous
+connection*, but has the advantage of maintaining a complete DB API
+2.0 semantics: from the point of view of the end user, all Psycopg
+functions and objects will work transparently in the coroutine
+environment (blocking the calling green thread and giving other green
+threads the possibility to be scheduled), allowing non modified code
+and third party libraries (such as SQLAlchemy) to be used in
+coroutine-based programs.
+
+Warning: Psycopg connections are not *green thread safe* and can't be used
+  concurrently by different green threads. Trying to execute more than
+  one command at time using one cursor per thread will result in an
+  error (or a deadlock on versions before 2.4.2).Therefore,
+  programmers are advised to either avoid sharing connections between
+  coroutines or to use a library-friendly lock to synchronize shared
+  connections, e.g. for pooling.
+
+Coroutine libraries authors should provide a callback implementation
+(and possibly a method to register it) to make Psycopg as green as
+they want. An example callback (using "select()" to block) is provided
+as "psycopg2.extras.wait_select()": it boils down to something similar
+to:
+
+   def wait_select(conn):
+       while 1:
+           state = conn.poll()
+           if state == extensions.POLL_OK:
+               break
+           elif state == extensions.POLL_READ:
+               select.select([conn.fileno()], [], [])
+           elif state == extensions.POLL_WRITE:
+               select.select([], [conn.fileno()], [])
+           else:
+               raise OperationalError("bad state from poll: %s" % state)
+
+Providing callback functions for the single coroutine libraries is out
+of psycopg2 scope, as the callback can be tied to the libraries'
+implementation details. You can check the psycogreen project for
+further informations and resources about the topic.
+
+Warning: *COPY commands* are currently not supported when a wait callback is
+  registered, but they will be probably implemented in a future
+  release.*Large objects* are not supported either: they are not
+  compatible with asynchronous connections.
+
+
+
+"psycopg2.extensions" -- Extensions to the DB API
+*************************************************
+
+The module contains a few objects and function extending the minimum
+set of functionalities defined by the DB API 2.0.
+
+class class psycopg2.extensions.connection
+
+   Is the class usually returned by the "connect()" function. It is
+   exposed by the "extensions" module in order to allow subclassing to
+   extend its behaviour: the subclass should be passed to the
+   "connect()" function using the "connection_factory" parameter. See
+   also *Connection and cursor factories*.
+
+   Subclasses should have constructor signature "(*dsn*, *async*=0)".
+
+   For a complete description of the class, see "connection".
+
+class class psycopg2.extensions.cursor
+
+   It is the class usually returnded by the "connection.cursor()"
+   method. It is exposed by the "extensions" module in order to allow
+   subclassing to extend its behaviour: the subclass should be passed
+   to the "cursor()" method using the "cursor_factory" parameter. See
+   also *Connection and cursor factories*.
+
+   For a complete description of the class, see "cursor".
+
+class class psycopg2.extensions.lobject(conn[, oid[, mode[, new_oid[, new_file]]]])
+
+   Wrapper for a PostgreSQL large object. See *Access to PostgreSQL
+   large objects* for an overview.
+
+   The class can be subclassed: see the "connection.lobject()" to know
+   how to specify a "lobject" subclass.
+
+   New in version 2.0.8.
+
+   oid
+
+      Database OID of the object.
+
+   mode
+
+      The mode the database was open. See "connection.lobject()" for a
+      description of the available modes.
+
+   read(bytes=-1)
+
+      Read a chunk of data from the current file position. If -1
+      (default) read all the remaining data.
+
+      The result is an Unicode string (decoded according to
+      "connection.encoding") if the file was open in "t" mode, a bytes
+      string for "b" mode.
+
+      Changed in version 2.4: added Unicode support.
+
+   write(str)
+
+      Write a string to the large object. Return the number of bytes
+      written. Unicode strings are encoded in the
+      "connection.encoding" before writing.
+
+      Changed in version 2.4: added Unicode support.
+
+   export(file_name)
+
+      Export the large object content to the file system.
+
+      The method uses the efficient "lo_export()" libpq function.
+
+   seek(offset, whence=0)
+
+      Set the lobject current position.
+
+   tell()
+
+      Return the lobject current position.
+
+   truncate(len=0)
+
+      New in version 2.2.0.
+
+      Truncate the lobject to the given size.
+
+      The method will only be available if Psycopg has been built
+      against libpq from PostgreSQL 8.3 or later and can only be used
+      with PostgreSQL servers running these versions. It uses the
+      "lo_truncate()" libpq function.
+
+      Warning: If Psycopg is built with "lo_truncate()" support (i.e. if the
+        **pg_config** used during setup is version >= 8.3), but at
+        runtime an older libpq is found, Psycopg will fail to import.
+        See *the lo_truncate FAQ* about the problem.
+
+   close()
+
+      Close the object.
+
+   closed
+
+      Boolean attribute specifying if the object is closed.
+
+   unlink()
+
+      Close the object and remove it from the database.
+
+class class psycopg2.extensions.Notify(pid, channel, payload='')
+
+   A notification received from the backend.
+
+   "Notify" instances are made available upon reception on the
+   "notifies" member of the listening connection. The object can be
+   also accessed as a 2 items tuple returning the members
+   "(*pid*,*channel*)" for backward compatibility.
+
+   See *Asynchronous notifications* for details.
+
+   New in version 2.3.
+
+   pid
+
+      The ID of the backend process that sent the notification.
+
+      Note: if the sending session was handled by Psycopg, you can use
+      "get_backend_pid()" to know its PID.
+
+   channel
+
+      The name of the channel to which the notification was sent.
+
+   payload
+
+      The payload message of the notification.
+
+      Attaching a payload to a notification is only available since
+      PostgreSQL 9.0: for notifications received from previous
+      versions of the server this member is always the empty string.
+
+class class psycopg2.extensions.Xid(format_id, gtrid, bqual)
+
+   A transaction identifier used for two-phase commit.
+
+   Usually returned by the connection methods "xid()" and
+   "tpc_recover()". "Xid" instances can be unpacked as a 3-item tuples
+   containing the items "(*format_id*,*gtrid*,*bqual*)". The "str()"
+   of the object returns the *transaction ID* used in the commands
+   sent to the server.
+
+   See *Two-Phase Commit protocol support* for an introduction.
+
+   New in version 2.3.
+
+   from_string(s)
+
+      Create a "Xid" object from a string representation. Static
+      method.
+
+      If *s* is a PostgreSQL transaction ID produced by a XA
+      transaction, the returned object will have "format_id", "gtrid",
+      "bqual" set to the values of the preparing XA id. Otherwise only
+      the "gtrid" is populated with the unparsed string. The operation
+      is the inverse of the one performed by "str(xid)".
+
+   format_id
+
+      Format ID in a XA transaction.
+
+      A non-negative 32 bit integer. "None" if the transaction doesn't
+      follow the XA standard.
+
+   gtrid
+
+      Global transaction ID in a XA transaction.
+
+      If the transaction doesn't follow the XA standard, it is the
+      plain *transaction ID* used in the server commands.
+
+   bqual
+
+      Branch qualifier of the transaction.
+
+      In a XA transaction every resource participating to a
+      transaction receives a distinct branch qualifier. "None" if the
+      transaction doesn't follow the XA standard.
+
+   prepared
+
+      Timestamp (with timezone) in which a recovered transaction was
+      prepared.
+
+   owner
+
+      Name of the user who prepared a recovered transaction.
+
+   database
+
+      Database the recovered transaction belongs to.
+
+psycopg2.extensions.set_wait_callback(f)
+
+   Register a callback function to block waiting for data.
+
+   The callback should have signature "fun(*conn*)" and is called to
+   wait for data available whenever a blocking function from the libpq
+   is called.  Use "set_wait_callback(None)" to revert to the original
+   behaviour (i.e. using blocking libpq functions).
+
+   The function is an hook to allow coroutine-based libraries (such as
+   Eventlet or gevent) to switch when Psycopg is blocked, allowing
+   other coroutines to run concurrently.
+
+   See "wait_select()" for an example of a wait callback
+   implementation.
+
+   New in version 2.2.0.
+
+psycopg2.extensions.get_wait_callback()
+
+   Return the currently registered wait callback.
+
+   Return "None" if no callback is currently registered.
+
+   New in version 2.2.0.
+
+
+SQL adaptation protocol objects
+===============================
+
+Psycopg provides a flexible system to adapt Python objects to the SQL
+syntax (inspired to the **PEP 246**), allowing serialization in
+PostgreSQL. See *Adapting new Python types to SQL syntax* for a
+detailed description.  The following objects deal with Python objects
+adaptation:
+
+psycopg2.extensions.adapt(obj)
+
+   Return the SQL representation of *obj* as a string.  Raise a
+   "ProgrammingError" if how to adapt the object is unknown. In order
+   to allow new objects to be adapted, register a new adapter for it
+   using the "register_adapter()" function.
+
+   The function is the entry point of the adaptation mechanism: it can
+   be used to write adapters for complex objects by recursively
+   calling "adapt()" on its components.
+
+psycopg2.extensions.register_adapter(class, adapter)
+
+   Register a new adapter for the objects of class *class*.
+
+   *adapter* should be a function taking a single argument (the object
+   to adapt) and returning an object conforming the "ISQLQuote"
+   protocol (e.g. exposing a "getquoted()" method).  The "AsIs" is
+   often useful for this task.
+
+   Once an object is registered, it can be safely used in SQL queries
+   and by the "adapt()" function.
+
+class class psycopg2.extensions.ISQLQuote(wrapped_object)
+
+   Represents the SQL adaptation protocol.  Objects conforming this
+   protocol should implement a "getquoted()" and optionally a
+   "prepare()" method.
+
+   Adapters may subclass "ISQLQuote", but is not necessary: it is
+   enough to expose a "getquoted()" method to be conforming.
+
+   _wrapped
+
+      The wrapped object passes to the constructor
+
+   getquoted()
+
+      Subclasses or other conforming objects should return a valid SQL
+      string representing the wrapped object. In Python 3 the SQL must
+      be returned in a "bytes" object. The "ISQLQuote" implementation
+      does nothing.
+
+   prepare(conn)
+
+      Prepare the adapter for a connection.  The method is optional:
+      if implemented, it will be invoked before "getquoted()" with the
+      connection to adapt for as argument.
+
+      A conform object can implement this method if the SQL
+      representation depends on any server parameter, such as the
+      server version or the "standard_conforming_string" setting.
+      Container objects may store the connection and use it to
+      recursively prepare contained objects: see the implementation
+      for "psycopg2.extensions.SQL_IN" for a simple example.
+
+class class psycopg2.extensions.AsIs(object)
+
+   Adapter conform to the "ISQLQuote" protocol useful for objects
+   whose string representation is already valid as SQL representation.
+
+   getquoted()
+
+      Return the "str()" conversion of the wrapped object.
+
+      >>> AsIs(42).getquoted()
+      '42'
+
+class class psycopg2.extensions.QuotedString(str)
+
+   Adapter conform to the "ISQLQuote" protocol for string-like
+   objects.
+
+   getquoted()
+
+      Return the string enclosed in single quotes.  Any single quote
+      appearing in the the string is escaped by doubling it according
+      to SQL string constants syntax.  Backslashes are escaped too.
+
+      >>> QuotedString(r"O'Reilly").getquoted()
+      "'O''Reilly'"
+
+class class psycopg2.extensions.Binary(str)
+
+   Adapter conform to the "ISQLQuote" protocol for binary objects.
+
+   getquoted()
+
+      Return the string enclosed in single quotes.  It performs the
+      same escaping of the "QuotedString" adapter, plus it knows how
+      to escape non-printable chars.
+
+      >>> Binary("\x00\x08\x0F").getquoted()
+      "'\\\\000\\\\010\\\\017'"
+
+   Changed in version 2.0.14: previously the adapter was not exposed
+   by the "extensions" module. In older versions it can be imported
+   from the implementation module "psycopg2._psycopg".
+
+class class psycopg2.extensions.Boolean
+class class psycopg2.extensions.Float
+class class psycopg2.extensions.SQL_IN
+
+   Specialized adapters for builtin objects.
+
+class class psycopg2.extensions.DateFromPy
+class class psycopg2.extensions.TimeFromPy
+class class psycopg2.extensions.TimestampFromPy
+class class psycopg2.extensions.IntervalFromPy
+
+   Specialized adapters for Python datetime objects.
+
+class class psycopg2.extensions.DateFromMx
+class class psycopg2.extensions.TimeFromMx
+class class psycopg2.extensions.TimestampFromMx
+class class psycopg2.extensions.IntervalFromMx
+
+   Specialized adapters for mx.DateTime objects.
+
+psycopg2.extensions.adapters
+
+   Dictionary of the currently registered object adapters.  Use
+   "register_adapter()" to add an adapter for a new type.
+
+
+Database types casting functions
+================================
+
+These functions are used to manipulate type casters to convert from
+PostgreSQL types to Python objects.  See *Type casting of SQL types
+into Python objects* for details.
+
+psycopg2.extensions.new_type(oids, name, adapter)
+
+   Create a new type caster to convert from a PostgreSQL type to a
+   Python object.  The object created must be registered using
+   "register_type()" to be used.
+
+   Parameters:
+      * **oids** -- tuple of OIDs of the PostgreSQL type to convert.
+
+      * **name** -- the name of the new type adapter.
+
+      * **adapter** -- the adaptation function.
+
+   The object OID can be read from the "cursor.description" attribute
+   or by querying from the PostgreSQL catalog.
+
+   *adapter* should have signature "fun(*value*, *cur*)" where *value*
+   is the string representation returned by PostgreSQL and *cur* is
+   the cursor from which data are read. In case of "NULL", *value*
+   will be "None". The adapter should return the converted object.
+
+   See *Type casting of SQL types into Python objects* for an usage
+   example.
+
+psycopg2.extensions.new_array_type(oids, name, base_caster)
+
+   Create a new type caster to convert from a PostgreSQL array type to
+   a list of Python object.  The object created must be registered
+   using "register_type()" to be used.
+
+   Parameters:
+      * **oids** -- tuple of OIDs of the PostgreSQL type to convert.
+        It should probably be the oid of the array type (e.g. the
+        "typarray" field in the "pg_type" table.
+
+      * **name** -- the name of the new type adapter.
+
+      * **base_caster** -- a Psycopg typecaster, e.g. created using
+        the "new_type()" function. The caster should be able to parse
+        a single item of the desired type.
+
+   New in version 2.4.3.
+
+   Note: The function can be used to create a generic array typecaster,
+     returning a list of strings: just use the "STRING" as base
+     typecaster. For instance, if you want to receive from the
+     database an array of "macaddr", each address represented by
+     string, you can use:
+
+        psycopg2.extensions.register_type(
+            psycopg2.extensions.new_array_type(
+                (1040,), 'MACADDR[]', psycopg2.STRING))
+
+psycopg2.extensions.register_type(obj[, scope])
+
+   Register a type caster created using "new_type()".
+
+   If *scope* is specified, it should be a "connection" or a "cursor":
+   the type caster will be effective only limited to the specified
+   object.  Otherwise it will be globally registered.
+
+psycopg2.extensions.string_types
+
+   The global register of type casters.
+
+psycopg2.extensions.encodings
+
+   Mapping from PostgreSQL encoding names to Python codec names. Used
+   by Psycopg when adapting or casting unicode strings. See *Unicode
+   handling*.
+
+
+Additional exceptions
+=====================
+
+The module exports a few exceptions in addition to the *standard ones*
+defined by the DB API 2.0.
+
+exception exception psycopg2.extensions.QueryCanceledError
+
+   (subclasses "OperationalError")
+
+   Error related to SQL query cancellation.  It can be trapped
+   specifically to detect a timeout.
+
+   New in version 2.0.7.
+
+exception exception psycopg2.extensions.TransactionRollbackError
+
+   (subclasses "OperationalError")
+
+   Error causing transaction rollback (deadlocks, serialisation
+   failures, etc).  It can be trapped specifically to detect a
+   deadlock.
+
+   New in version 2.0.7.
+
+
+Isolation level constants
+=========================
+
+Psycopg2 "connection" objects hold informations about the PostgreSQL
+transaction isolation level.  The current transaction level can be
+read from the "isolation_level" attribute.  The default isolation
+level is "READ COMMITTED".  A different isolation level con be set
+through the "set_isolation_level()" method.  The level can be set to
+one of the following constants:
+
+psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
+
+   No transaction is started when command are issued and no "commit()"
+   or "rollback()" is required. Some PostgreSQL command such as
+   "CREATE DATABASE" or "VACUUM" can't run into a transaction: to run
+   such command use:
+
+      >>> conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+
+   See also *Transactions control*.
+
+psycopg2.extensions.ISOLATION_LEVEL_READ_UNCOMMITTED
+
+   The "READ UNCOMMITTED" isolation level is defined in the SQL
+   standard but not available in the MVCC (Multiversion concurrency
+   control) model of PostgreSQL: it is replaced by the stricter "READ
+   COMMITTED".
+
+psycopg2.extensions.ISOLATION_LEVEL_READ_COMMITTED
+
+   This is usually the the default PostgreSQL value, but a different
+   default may be set in the database configuration.
+
+   A new transaction is started at the first "execute()" command on a
+   cursor and at each new "execute()" after a "commit()" or a
+   "rollback()".  The transaction runs in the PostgreSQL "READ
+   COMMITTED" isolation level: a "SELECT" query sees only data
+   committed before the query began; it never sees either uncommitted
+   data or changes committed during query execution by concurrent
+   transactions.
+
+   See also:
+
+      Read Committed Isolation Level in PostgreSQL documentation.
+
+psycopg2.extensions.ISOLATION_LEVEL_REPEATABLE_READ
+
+   As in "ISOLATION_LEVEL_READ_COMMITTED", a new transaction is
+   started at the first "execute()" command.  Transactions run at a
+   "REPEATABLE READ" isolation level: all the queries in a transaction
+   see a snapshot as of the start of the transaction, not as of the
+   start of the current query within the transaction.  However
+   applications using this level must be prepared to retry
+   transactions due to serialization failures.
+
+   While this level provides a guarantee that each transaction sees a
+   completely stable view of the database, this view will not
+   necessarily always be consistent with some serial (one at a time)
+   execution of concurrent transactions of the same level.
+
+   Changed in version 2.4.2: The value was an alias for
+   "ISOLATION_LEVEL_SERIALIZABLE" before. The two levels are distinct
+   since PostgreSQL 9.1
+
+   See also:
+
+      Repeatable Read Isolation Level in PostgreSQL documentation.
+
+psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE
+
+   As in "ISOLATION_LEVEL_READ_COMMITTED", a new transaction is
+   started at the first "execute()" command.  Transactions run at a
+   "SERIALIZABLE" isolation level. This is the strictest transactions
+   isolation level, equivalent to having the transactions executed
+   serially rather than concurrently. However applications using this
+   level must be prepared to retry reansactions due to serialization
+   failures.
+
+   Starting from PostgreSQL 9.1, this mode monitors for conditions
+   which could make execution of a concurrent set of serializable
+   transactions behave in a manner inconsistent with all possible
+   serial (one at a time) executions of those transaction. In previous
+   version the behaviour was the same of the "REPEATABLE READ"
+   isolation level.
+
+   See also:
+
+      Serializable Isolation Level in PostgreSQL documentation.
+
+
+Transaction status constants
+============================
+
+These values represent the possible status of a transaction: the
+current value can be read using the
+"connection.get_transaction_status()" method.
+
+psycopg2.extensions.TRANSACTION_STATUS_IDLE
+
+   The session is idle and there is no current transaction.
+
+psycopg2.extensions.TRANSACTION_STATUS_ACTIVE
+
+   A command is currently in progress.
+
+psycopg2.extensions.TRANSACTION_STATUS_INTRANS
+
+   The session is idle in a valid transaction block.
+
+psycopg2.extensions.TRANSACTION_STATUS_INERROR
+
+   The session is idle in a failed transaction block.
+
+psycopg2.extensions.TRANSACTION_STATUS_UNKNOWN
+
+   Reported if the connection with the server is bad.
+
+
+Connection status constants
+===========================
+
+These values represent the possible status of a connection: the
+current value can be read from the "status" attribute.
+
+It is possible to find the connection in other status than the one
+shown below. Those are the only states in which a working connection
+is expected to be found during the execution of regular Python client
+code: other states are for internal usage and Python code should not
+rely on them.
+
+psycopg2.extensions.STATUS_READY
+
+   Connection established. No transaction in progress.
+
+psycopg2.extensions.STATUS_BEGIN
+
+   Connection established. A transaction is currently in progress.
+
+psycopg2.extensions.STATUS_IN_TRANSACTION
+
+   An alias for "STATUS_BEGIN"
+
+psycopg2.extensions.STATUS_PREPARED
+
+   The connection has been prepared for the second phase in a *two-
+   phase commit* transaction. The connection can't be used to send
+   commands to the database until the transaction is finished with
+   "tpc_commit()" or "tpc_rollback()".
+
+   New in version 2.3.
+
+
+Poll constants
+==============
+
+New in version 2.2.0.
+
+These values can be returned by "connection.poll()" during
+asynchronous connection and communication.  They match the values in
+the libpq enum "PostgresPollingStatusType".  See *Asynchronous
+support* and *Support to coroutine libraries*.
+
+psycopg2.extensions.POLL_OK
+
+   The data being read is available, or the file descriptor is ready
+   for writing: reading or writing will not block.
+
+psycopg2.extensions.POLL_READ
+
+   Some data is being read from the backend, but it is not available
+   yet on the client and reading would block.  Upon receiving this
+   value, the client should wait for the connection file descriptor to
+   be ready *for reading*. For example:
+
+      select.select([conn.fileno()], [], [])
+
+psycopg2.extensions.POLL_WRITE
+
+   Some data is being sent to the backend but the connection file
+   descriptor can't currently accept new data.  Upon receiving this
+   value, the client should wait for the connection file descriptor to
+   be ready *for writing*. For example:
+
+      select.select([], [conn.fileno()], [])
+
+psycopg2.extensions.POLL_ERROR
+
+   There was a problem during connection polling. This value should
+   actually never be returned: in case of poll error usually an
+   exception containing the relevant details is raised.
+
+
+Additional database types
+=========================
+
+The "extensions" module includes typecasters for many standard
+PostgreSQL types.  These objects allow the conversion of returned data
+into Python objects.  All the typecasters are automatically
+registered, except "UNICODE" and "UNICODEARRAY": you can register them
+using "register_type()" in order to receive Unicode objects instead of
+strings from the database.  See *Unicode handling* for details.
+
+psycopg2.extensions.BOOLEAN
+psycopg2.extensions.DATE
+psycopg2.extensions.DECIMAL
+psycopg2.extensions.FLOAT
+psycopg2.extensions.INTEGER
+psycopg2.extensions.INTERVAL
+psycopg2.extensions.LONGINTEGER
+psycopg2.extensions.TIME
+psycopg2.extensions.UNICODE
+
+   Typecasters for basic types. Note that a few other ones ("BINARY",
+   "DATETIME", "NUMBER", "ROWID", "STRING") are exposed by the
+   "psycopg2" module for DB API 2.0 compliance.
+
+psycopg2.extensions.BINARYARRAY
+psycopg2.extensions.BOOLEANARRAY
+psycopg2.extensions.DATEARRAY
+psycopg2.extensions.DATETIMEARRAY
+psycopg2.extensions.DECIMALARRAY
+psycopg2.extensions.FLOATARRAY
+psycopg2.extensions.INTEGERARRAY
+psycopg2.extensions.INTERVALARRAY
+psycopg2.extensions.LONGINTEGERARRAY
+psycopg2.extensions.ROWIDARRAY
+psycopg2.extensions.STRINGARRAY
+psycopg2.extensions.TIMEARRAY
+psycopg2.extensions.UNICODEARRAY
+
+   Typecasters to convert arrays of sql types into Python lists.
+
+psycopg2.extensions.PYDATE
+psycopg2.extensions.PYDATETIME
+psycopg2.extensions.PYINTERVAL
+psycopg2.extensions.PYTIME
+psycopg2.extensions.PYDATEARRAY
+psycopg2.extensions.PYDATETIMEARRAY
+psycopg2.extensions.PYINTERVALARRAY
+psycopg2.extensions.PYTIMEARRAY
+
+   Typecasters to convert time-related data types to Python "datetime"
+   objects.
+
+psycopg2.extensions.MXDATE
+psycopg2.extensions.MXDATETIME
+psycopg2.extensions.MXINTERVAL
+psycopg2.extensions.MXTIME
+psycopg2.extensions.MXDATEARRAY
+psycopg2.extensions.MXDATETIMEARRAY
+psycopg2.extensions.MXINTERVALARRAY
+psycopg2.extensions.MXTIMEARRAY
+
+   Typecasters to convert time-related data types to mx.DateTime
+   objects. Only available if Psycopg was compiled with "mx" support.
+
+Changed in version 2.2.0: previously the "DECIMAL" typecaster and the
+specific time-related typecasters ("PY*" and "MX*") were not exposed
+by the "extensions" module. In older versions they can be imported
+from the implementation module "psycopg2._psycopg".
+
+
+
+'psycopg2.tz' --  'tzinfo' implementations for Psycopg 2
+************************************************************
+
+This module holds two different tzinfo implementations that can be
+used as the 'tzinfo' argument to 'datetime' constructors, directly
+passed to Psycopg functions or used to set the
+'cursor.tzinfo_factory' attribute in cursors.
+
+class class psycopg2.tz.FixedOffsetTimezone(offset=None, name=None)
+
+   Fixed offset in minutes east from UTC.
+
+   This is exactly the implementation found in Python 2.3.x
+   documentation, with a small change to the '__init__()' method to
+   allow for pickling and a default name in the form 'sHH:MM' ('s'
+   is the sign.).
+
+class class psycopg2.tz.LocalTimezone
+
+   Platform idea of local timezone.
+
+   This is the exact implementation from the Python 2.3 documentation.
+
+
+
+'psycopg2.pool' -- Connections pooling
+****************************************
+
+Creating new PostgreSQL connections can be an expensive operation.
+This module offers a few pure Python classes implementing simple
+connection pooling directly in the client application.
+
+class class psycopg2.pool.AbstractConnectionPool(minconn, maxconn, *args, **kwargs)
+
+   Base class implementing generic key-based pooling code.
+
+   New *minconn* connections are created automatically. The pool will
+   support a maximum of about *maxconn* connections.  **args* and
+   ***kwargs* are passed to the 'connect()' function.
+
+   The following methods are expected to be implemented by subclasses:
+
+   getconn(key=None)
+
+      Get a free connection and assign it to *key* if not 'None'.
+
+   putconn(conn, key=None, close=False)
+
+      Put away a connection.
+
+      If *close* is 'True', discard the connection from the pool.
+
+   closeall()
+
+      Close all the connections handled by the pool.
+
+      Note that all the connections are closed, including ones
+      eventually in use by the application.
+
+The following classes are 'AbstractConnectionPool' subclasses ready
+to be used.
+
+class class psycopg2.pool.SimpleConnectionPool(minconn, maxconn, *args, **kwargs)
+
+   A connection pool that can't be shared across different threads.
+
+   Note: This pool class is useful only for single-threaded applications.
+
+class class psycopg2.pool.ThreadedConnectionPool(minconn, maxconn, *args, **kwargs)
+
+   A connection pool that works with the threading module.
+
+   Note: This pool class can be safely used in multi-threaded
+     applications.
+
+class class psycopg2.pool.PersistentConnectionPool(minconn, maxconn, *args, **kwargs)
+
+   A pool that assigns persistent connections to different threads.
+
+   Note that this connection pool generates by itself the required
+   keys using the current thread id.  This means that until a thread
+   puts away a connection it will always get the same connection
+   object by successive 'getconn()' calls. This also means that a
+   thread can't use more than one single connection from the pool.
+
+   Note: This pool class is mostly designed to interact with Zope and
+     probably not useful in generic applications.
+
+
+
+"psycopg2.extras" -- Miscellaneous goodies for Psycopg 2
+********************************************************
+
+This module is a generic place used to hold little helper functions
+and classes until a better place in the distribution is found.
+
+
+Connection and cursor subclasses
+================================
+
+A few objects that change the way the results are returned by the
+cursor or modify the object behavior in some other way. Typically
+"connection" subclasses are passed as *connection_factory* argument to
+"connect()" so that the connection will generate the matching "cursor"
+subclass. Alternatively a "cursor" subclass can be used one-off by
+passing it as the *cursor_factory* argument to the "cursor()" method
+of a regular "connection".
+
+
+Dictionary-like cursor
+----------------------
+
+The dict cursors allow to access to the retrieved records using an
+iterface similar to the Python dictionaries instead of the tuples.
+
+>>> dict_cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+>>> dict_cur.execute("INSERT INTO test (num, data) VALUES(%s, %s)",
+...                  (100, "abc'def"))
+>>> dict_cur.execute("SELECT * FROM test")
+>>> rec = dict_cur.fetchone()
+>>> rec['id']
+1
+>>> rec['num']
+100
+>>> rec['data']
+"abc'def"
+
+The records still support indexing as the original tuple:
+
+>>> rec[2]
+"abc'def"
+
+class class psycopg2.extras.DictCursor(*args, **kwargs)
+
+   A cursor that keeps a list of column name -> index mappings.
+
+class class psycopg2.extras.DictConnection
+
+   A connection that uses "DictCursor" automatically.
+
+class class psycopg2.extras.DictRow(cursor)
+
+   A row object that allow by-colmun-name access to data.
+
+
+Real dictionary cursor
+----------------------
+
+class class psycopg2.extras.RealDictCursor(*args, **kwargs)
+
+   A cursor that uses a real dict as the base type for rows.
+
+   Note that this cursor is extremely specialized and does not allow
+   the normal access (using integer indices) to fetched data. If you
+   need to access database rows both as a dictionary and a list, then
+   use the generic "DictCursor" instead of "RealDictCursor".
+
+class class psycopg2.extras.RealDictConnection
+
+   A connection that uses "RealDictCursor" automatically.
+
+class class psycopg2.extras.RealDictRow(cursor)
+
+   A "dict" subclass representing a data record.
+
+
+"namedtuple" cursor
+-------------------
+
+New in version 2.3.
+
+These objects require "collections.namedtuple()" to be found, so it is
+available out-of-the-box only from Python 2.6. Anyway, the namedtuple
+implementation is compatible with previous Python versions, so all you
+have to do is to download it and make it available where we expect it
+to be...
+
+   from somewhere import namedtuple
+   import collections
+   collections.namedtuple = namedtuple
+   from psycopg.extras import NamedTupleConnection
+   # ...
+
+class class psycopg2.extras.NamedTupleCursor
+
+   A cursor that generates results as "namedtuple".
+
+   "fetch*()" methods will return named tuples instead of regular
+   tuples, so their elements can be accessed both as regular numeric
+   items as well as attributes.
+
+   >>> nt_cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+   >>> rec = nt_cur.fetchone()
+   >>> rec
+   Record(id=1, num=100, data="abc'def")
+   >>> rec[1]
+   100
+   >>> rec.data
+   "abc'def"
+
+class class psycopg2.extras.NamedTupleConnection
+
+   A connection that uses "NamedTupleCursor" automatically.
+
+
+Logging cursor
+--------------
+
+class class psycopg2.extras.LoggingConnection
+
+   A connection that logs all queries to a file or logger object.
+
+   initialize(logobj)
+
+      Initialize the connection to log to "logobj".
+
+      The "logobj" parameter can be an open file object or a Logger
+      instance from the standard logging module.
+
+   filter(msg, curs)
+
+      Filter the query before logging it.
+
+      This is the method to overwrite to filter unwanted queries out
+      of the log or to add some extra data to the output. The default
+      implementation just does nothing.
+
+class class psycopg2.extras.LoggingCursor
+
+   A cursor that logs queries using its connection logging facilities.
+
+class class psycopg2.extras.MinTimeLoggingConnection
+
+   A connection that logs queries based on execution time.
+
+   This is just an example of how to sub-class "LoggingConnection" to
+   provide some extra filtering for the logged queries. Both the
+   "inizialize()" and "filter()" methods are overwritten to make sure
+   that only queries executing for more than "mintime" ms are logged.
+
+   Note that this connection uses the specialized cursor
+   "MinTimeLoggingCursor".
+
+class class psycopg2.extras.MinTimeLoggingCursor
+
+   The cursor sub-class companion to "MinTimeLoggingConnection".
+
+
+Additional data types
+=====================
+
+
+Hstore data type
+----------------
+
+New in version 2.3.
+
+The "hstore" data type is a key-value store embedded in PostgreSQL.
+It has been available for several server versions but with the release
+9.0 it has been greatly improved in capacity and usefulness with the
+addiction of many functions.  It supports GiST or GIN indexes allowing
+search by keys or key/value pairs as well as regular BTree indexes for
+equality, uniqueness etc.
+
+Psycopg can convert Python "dict" objects to and from "hstore"
+structures. Only dictionaries with string/unicode keys and values are
+supported.  "None" is also allowed as value but not as a key. Psycopg
+uses a more efficient "hstore" representation when dealing with
+PostgreSQL 9.0 but previous server versions are supported as well.  By
+default the adapter/typecaster are disabled: they can be enabled using
+the "register_hstore()" function.
+
+psycopg2.extras.register_hstore(conn_or_curs, globally=False, unicode=False, oid=None, array_oid=None)
+
+   Register adapter and typecaster for "dict"-"hstore" conversions.
+
+   Parameters:
+      * **conn_or_curs** -- a connection or cursor: the typecaster
+        will be registered only on this object unless *globally* is
+        set to "True"
+
+      * **globally** -- register the adapter globally, not only on
+        *conn_or_curs*
+
+      * **unicode** -- if "True", keys and values returned from the
+        database will be "unicode" instead of "str". The option is not
+        available on Python 3
+
+      * **oid** -- the OID of the "hstore" type if known. If not, it
+        will be queried on *conn_or_curs*.
+
+      * **array_oid** -- the OID of the "hstore" array type if known.
+        If not, it will be queried on *conn_or_curs*.
+
+   The connection or cursor passed to the function will be used to
+   query the database and look for the OID of the "hstore" type (which
+   may be different across databases). If querying is not desirable
+   (e.g. with *asynchronous connections*) you may specify it in the
+   *oid* parameter, which can be found using a query such as "SELECT
+   'hstore'::regtype::oid". Analogously you can obtain a value for
+   *array_oid* using a query such as "SELECT
+   'hstore[]'::regtype::oid".
+
+   Note that, when passing a dictionary from Python to the database,
+   both strings and unicode keys and values are supported.
+   Dictionaries returned from the database have keys/values according
+   to the *unicode* parameter.
+
+   The "hstore" contrib module must be already installed in the
+   database (executing the "hstore.sql" script in your "contrib"
+   directory). Raise "ProgrammingError" if the type is not found.
+
+   Changed in version 2.4: added the *oid* parameter. If not
+   specified, the typecaster is installed also if "hstore" is not
+   installed in the "public" schema.
+
+   Changed in version 2.4.3: added support for "hstore" array.
+
+
+Composite types casting
+-----------------------
+
+New in version 2.4.
+
+Using "register_composite()" it is possible to cast a PostgreSQL
+composite type (either created with the "CREATE TYPE" command or
+implicitly defined after a table row type) into a Python named tuple,
+or into a regular tuple if "collections.namedtuple()" is not found.
+
+   >>> cur.execute("CREATE TYPE card AS (value int, suit text);")
+   >>> psycopg2.extras.register_composite('card', cur)
+   <psycopg2.extras.CompositeCaster object at 0x...>
+
+   >>> cur.execute("select (8, 'hearts')::card")
+   >>> cur.fetchone()[0]
+   card(value=8, suit='hearts')
+
+Nested composite types are handled as expected, but the type of the
+composite components must be registered as well.
+
+   >>> cur.execute("CREATE TYPE card_back AS (face card, back text);")
+   >>> psycopg2.extras.register_composite('card_back', cur)
+   <psycopg2.extras.CompositeCaster object at 0x...>
+
+   >>> cur.execute("select ((8, 'hearts'), 'blue')::card_back")
+   >>> cur.fetchone()[0]
+   card_back(face=card(value=8, suit='hearts'), back='blue')
+
+Adaptation from Python tuples to composite types is automatic instead
+and requires no adapter registration.
+
+psycopg2.extras.register_composite(name, conn_or_curs, globally=False)
+
+   Register a typecaster to convert a composite type into a tuple.
+
+   Parameters:
+      * **name** -- the name of a PostgreSQL composite type, e.g.
+        created using the "CREATE TYPE" command
+
+      * **conn_or_curs** -- a connection or cursor used to find the
+        type oid and components; the typecaster is registered in a
+        scope limited to this object, unless *globally* is set to
+        "True"
+
+      * **globally** -- if "False" (default) register the typecaster
+        only on *conn_or_curs*, otherwise register it globally
+
+   Returns:
+      the registered "CompositeCaster" instance responsible for the
+      conversion
+
+   Changed in version 2.4.3: added support for array of composite
+   types
+
+class class psycopg2.extras.CompositeCaster(name, oid, attrs, array_oid=None)
+
+   Helps conversion of a PostgreSQL composite type into a Python
+   object.
+
+   The class is usually created by the "register_composite()"
+   function. You may want to create and register manually instances of
+   the class if querying the database at registration time is not
+   desirable (such as when using an *asynchronous connections*).
+
+   name
+
+      The name of the PostgreSQL type.
+
+   oid
+
+      The oid of the PostgreSQL type.
+
+   array_oid
+
+      The oid of the PostgreSQL array type, if available.
+
+   type
+
+      The type of the Python objects returned. If
+      "collections.namedtuple()" is available, it is a named tuple
+      with attributes equal to the type components. Otherwise it is
+      just the "tuple" object.
+
+   attnames
+
+      List of component names of the type to be casted.
+
+   atttypes
+
+      List of component type oids of the type to be casted.
+
+
+UUID data type
+--------------
+
+New in version 2.0.9.
+
+Changed in version 2.0.13: added UUID array support.
+
+   >>> psycopg2.extras.register_uuid()
+   <psycopg2._psycopg.type object at 0x...>
+
+   >>> # Python UUID can be used in SQL queries
+   >>> import uuid
+   >>> my_uuid = uuid.UUID('{12345678-1234-5678-1234-567812345678}')
+   >>> psycopg2.extensions.adapt(my_uuid).getquoted()
+   "'12345678-1234-5678-1234-567812345678'::uuid"
+
+   >>> # PostgreSQL UUID are transformed into Python UUID objects.
+   >>> cur.execute("SELECT 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'::uuid")
+   >>> cur.fetchone()[0]
+   UUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11')
+
+psycopg2.extras.register_uuid(oids=None, conn_or_curs=None)
+
+   Create the UUID type and an uuid.UUID adapter.
+
+   Parameters:
+      * **oids** -- oid for the PostgreSQL "uuid" type, or 2-items
+        sequence with oids of the type and the array. If not
+        specified, use PostgreSQL standard oids.
+
+      * **conn_or_curs** -- where to register the typecaster. If not
+        specified, register it globally.
+
+class class psycopg2.extras.UUID_adapter(uuid)
+
+   Adapt Python's uuid.UUID type to PostgreSQL's uuid.
+
+
+"inet" data type
+----------------
+
+New in version 2.0.9.
+
+Changed in version 2.4.5: added inet array support.
+
+   >>> psycopg2.extras.register_inet()
+   <psycopg2._psycopg.type object at 0x...>
+
+   >>> cur.mogrify("SELECT %s", (Inet('127.0.0.1/32'),))
+   "SELECT E'127.0.0.1/32'::inet"
+
+   >>> cur.execute("SELECT '192.168.0.1/24'::inet")
+   >>> cur.fetchone()[0].addr
+   '192.168.0.1/24'
+
+psycopg2.extras.register_inet(oid=None, conn_or_curs=None)
+
+   Create the INET type and an Inet adapter.
+
+   Parameters:
+      * **oid** -- oid for the PostgreSQL "inet" type, or 2-items
+        sequence with oids of the type and the array. If not
+        specified, use PostgreSQL standard oids.
+
+      * **conn_or_curs** -- where to register the typecaster. If not
+        specified, register it globally.
+
+class class psycopg2.extras.Inet(addr)
+
+   Wrap a string to allow for correct SQL-quoting of inet values.
+
+   Note that this adapter does NOT check the passed value to make sure
+   it really is an inet-compatible address but DOES call adapt() on it
+   to make sure it is impossible to execute an SQL-injection by
+   passing an evil value to the initializer.
+
+
+Fractional time zones
+=====================
+
+psycopg2.extras.register_tstz_w_secs(oids=None, conn_or_curs=None)
+
+   The function used to register an alternate type caster for
+   "TIMESTAMP WITH TIME ZONE" to deal with historical time zones with
+   seconds in the UTC offset.
+
+   These are now correctly handled by the default type caster, so
+   currently the function doesn't do anything.
+
+   New in version 2.0.9.
+
+   Changed in version 2.2.2: function is no-op: see *Time zones
+   handling*.
+
+
+Coroutine support
+=================
+
+psycopg2.extras.wait_select(conn)
+
+   Wait until a connection or cursor has data available.
+
+   The function is an example of a wait callback to be registered with
+   "set_wait_callback()". This function uses "select()" to wait for
+   data available.
+
+
+
+"psycopg2.errorcodes" -- Error codes defined by PostgreSQL
+**********************************************************
+
+New in version 2.0.6.
+
+This module contains symbolic names for all PostgreSQL error codes and
+error classes codes.  Subclasses of "Error" make the PostgreSQL error
+code available in the "pgcode" attribute.
+
+From PostgreSQL documentation:
+
+   All messages emitted by the PostgreSQL server are assigned five-
+   character error codes that follow the SQL standard's conventions
+   for "SQLSTATE" codes.  Applications that need to know which error
+   condition has occurred should usually test the error code, rather
+   than looking at the textual error message.  The error codes are
+   less likely to change across PostgreSQL releases, and also are not
+   subject to change due to localization of error messages. Note that
+   some, but not all, of the error codes produced by PostgreSQL are
+   defined by the SQL standard; some additional error codes for
+   conditions not defined by the standard have been invented or
+   borrowed from other databases.
+
+   According to the standard, the first two characters of an error
+   code denote a class of errors, while the last three characters
+   indicate a specific condition within that class. Thus, an
+   application that does not recognize the specific error code can
+   still be able to infer what to do from the error class.
+
+See also:
+
+   PostgreSQL Error Codes table
+
+An example of the available constants defined in the module:
+
+>>> errorcodes.CLASS_SYNTAX_ERROR_OR_ACCESS_RULE_VIOLATION
+'42'
+>>> errorcodes.UNDEFINED_TABLE
+'42P01'
+
+Constants representing all the error values documented by PostgreSQL
+versions between 8.1 and 9.1 are included in the module.
+
+psycopg2.errorcodes.lookup(code)
+
+   Lookup an error code or class code and return its symbolic name.
+
+   Raise "KeyError" if the code is not found.
+
+      >>> try:
+      ...     cur.execute("SELECT ouch FROM aargh;")
+      ... except Exception, e:
+      ...     pass
+      ...
+      >>> errorcodes.lookup(e.pgcode[:2])
+      'CLASS_SYNTAX_ERROR_OR_ACCESS_RULE_VIOLATION'
+      >>> errorcodes.lookup(e.pgcode)
+      'UNDEFINED_TABLE'
+
+   New in version 2.0.14.
+
+
+
+Frequently Asked Questions
+**************************
+
+Here are a few gotchas you may encounter using "psycopg2".  Feel free
+to suggest new entries!
+
+
+Problems with transactions handling
+===================================
+
+Why does "psycopg2" leave database sessions "idle in transaction"?
+   Psycopg normally starts a new transaction the first time a query is
+   executed, e.g. calling "cursor.execute()", even if the command is a
+   "SELECT".  The transaction is not closed until an explicit
+   "commit()" or "rollback()".
+
+   If you are writing a long-living program, you should probably make
+   sure to call one of the transaction closing methods before leaving
+   the connection unused for a long time (which may also be a few
+   seconds, depending on the concurrency level in your database).
+   Alternatively you can use a connection in "autocommit" mode to
+   avoid a new transaction to be started at the first command.
+
+I receive the error *current transaction is aborted, commands ignored
+until end of transaction block* and can't do anything else!
+   There was a problem *in the previous* command to the database,
+   which resulted in an error.  The database will not recover
+   automatically from this condition: you must run a "rollback()"
+   before sending new commands to the session (if this seems too
+   harsh, remember that PostgreSQL supports nested transactions using
+   the "SAVEPOINT" command).
+
+Why do I get the error *current transaction is aborted, commands
+ignored until end of transaction block* when I use "multiprocessing"
+(or any other forking system) and not when use "threading"?
+   Psycopg's connections can't be shared across processes (but are
+   thread safe).  If you are forking the Python process make sure to
+   create a new connection in each forked child. See *Thread and
+   process safety* for further informations.
+
+
+Problems with type conversions
+==============================
+
+Why does "cursor.execute()" raise the exception *can't adapt*?
+   Psycopg converts Python objects in a SQL string representation by
+   looking at the object class.  The exception is raised when you are
+   trying to pass as query parameter an object for which there is no
+   adapter registered for its class.  See *Adapting new Python types
+   to SQL syntax* for informations.
+
+I can't pass an integer or a float parameter to my query: it says *a
+number is required*, but *it is* a number!
+   In your query string, you always have to use "%s"  placeholders,
+   event when passing a number.  All Python objects are converted by
+   Psycopg in their SQL representation, so they get passed to the
+   query as strings. See *Passing parameters to SQL queries*.
+
+      >>> cur.execute("INSERT INTO numbers VALUES (%d)", (42,)) # WRONG
+      >>> cur.execute("INSERT INTO numbers VALUES (%s)", (42,)) # correct
+
+I try to execute a query but it fails with the error *not all
+arguments converted during string formatting* (or *object does not
+support indexing*). Why?
+   Psycopg always require positional arguments to be passed as a
+   sequence, even when the query takes a single parameter.  And
+   remember that to make a single item tuple in Python you need a
+   comma!  See *Passing parameters to SQL queries*.
+
+      >>> cur.execute("INSERT INTO foo VALUES (%s)", "bar")    # WRONG
+      >>> cur.execute("INSERT INTO foo VALUES (%s)", ("bar"))  # WRONG
+      >>> cur.execute("INSERT INTO foo VALUES (%s)", ("bar",)) # correct
+      >>> cur.execute("INSERT INTO foo VALUES (%s)", ["bar"])  # correct
+
+My database is Unicode, but I receive all the strings as UTF-8 "str".
+Can I receive "unicode" objects instead?
+   The following magic formula will do the trick:
+
+      psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
+      psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
+
+   See *Unicode handling* for the gory details.
+
+Psycopg converts "decimal"/"numeric" database types into Python
+"Decimal" objects. Can I have "float" instead?
+   You can register a customized adapter for PostgreSQL decimal type:
+
+      DEC2FLOAT = psycopg2.extensions.new_type(
+          psycopg2.extensions.DECIMAL.values,
+          'DEC2FLOAT',
+          lambda value, curs: float(value) if value is not None else None)
+      psycopg2.extensions.register_type(DEC2FLOAT)
+
+   See *Type casting of SQL types into Python objects* to read the
+   relevant documentation. If you find "psycopg2.extensions.DECIMAL"
+   not avalable, use "psycopg2._psycopg.DECIMAL" instead.
+
+Transferring binary data from PostgreSQL 9.0 doesn't work.
+   PostgreSQL 9.0 uses by default the "hex" format to transfer "bytea"
+   data: the format can't be parsed by the libpq 8.4 and earlier. The
+   problem is solved in Psycopg 2.4.1, that uses its own parser for
+   the "bytea" format. For previous Psycopg releases, three options to
+   solve the problem are:
+
+   * set the bytea_output parameter to "escape" in the server;
+
+   * execute the database command "SET bytea_output TO escape;" in the
+     session before reading binary data;
+
+   * upgrade the libpq library on the client to at least 9.0.
+
+Arrays of *TYPE* are not casted to list.
+   Arrays are only casted to list when their oid is known, and an
+   array typecaster is registered for them. If there is no typecaster,
+   the array is returned unparsed from PostgreSQL (e.g. "{a,b,c}"). It
+   is easy to create a generic arrays typecaster, returning a list of
+   array: an example is provided in the "new_array_type()"
+   documentation.
+
+
+Best practices
+==============
+
+When should I save and re-use a cursor as opposed to creating a new
+one as needed?
+   Cursors are lightweight objects and creating lots of them should
+   not pose any kind of problem. But note that cursors used to fetch
+   result sets will cache the data and use memory in proportion to the
+   result set size. Our suggestion is to almost always create a new
+   cursor and dispose old ones as soon as the data is not required
+   anymore (call "close()" on them.) The only exception are tight
+   loops where one usually use the same cursor for a whole bunch of
+   "INSERT"s or "UPDATE"s.
+
+When should I save and re-use a connection as opposed to creating a
+new one as needed?
+   Creating a connection can be slow (think of SSL over TCP) so the
+   best practice is to create a single connection and keep it open as
+   long as required. It is also good practice to rollback or commit
+   frequently (even after a single "SELECT" statement) to make sure
+   the backend is never left "idle in transaction".  See also
+   "psycopg2.pool" for lightweight connection pooling.
+
+What are the advantages or disadvantages of using named cursors?
+   The only disadvantages is that they use up resources on the server
+   and that there is a little overhead because a at least two queries
+   (one to create the cursor and one to fetch the initial result set)
+   are issued to the backend. The advantage is that data is fetched
+   one chunk at a time: using small "fetchmany()" values it is
+   possible to use very little memory on the client and to skip or
+   discard parts of the result set.
+
+
+Problems compiling and deploying psycopg2
+=========================================
+
+I can't compile "psycopg2": the compiler says *error: Python.h: No
+such file or directory*. What am I missing?
+   You need to install a Python development package: it is usually
+   called "python-dev".
+
+I can't compile "psycopg2": the compiler says *error: libpq-fe.h: No
+such file or directory*. What am I missing?
+   You need to install the development version of the libpq: the
+   package is usually called "libpq-dev".
+
+"psycopg2" raises "ImportError" with message *_psycopg.so: undefined
+symbol: lo_truncate* when imported.
+   This means that Psycopg has been compiled with "lo_truncate()"
+   support, which means that the libpq used at compile time was
+   version >= 8.3, but at runtime an older libpq library is found. You
+   can use:
+
+      $ ldd /path/to/packages/psycopg2/_psycopg.so | grep libpq
+
+   to find what is the version used at runtime.
+
+   You can avoid the problem by using the same version of the
+   **pg_config** at install time and the libpq at runtime.
+
+Psycopg raises *ImportError: cannot import name tz* on import in
+mod_wsgi / ASP, but it works fine otherwise.
+   If "psycopg2" is installed in an egg (e.g. because installed by
+   **easy_install**), the user running the program may be unable to
+   write in the eggs cache. Set the env variable "PYTHON_EGG_CACHE" to
+   a writable directory. With modwsgi you can use the WSGIPythonEggs
+   directive.
+
+

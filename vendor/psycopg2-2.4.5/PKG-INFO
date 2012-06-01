@@ -1,0 +1,34 @@
+Metadata-Version: 1.1
+Name: psycopg2
+Version: 2.4.5
+Summary: Python-PostgreSQL Database Adapter
+Home-page: http://initd.org/psycopg/
+Author: Federico Di Gregorio
+Author-email: fog@initd.org
+License: GPL with exceptions or ZPL
+Download-URL: http://initd.org/psycopg/tarballs/PSYCOPG-2-4/psycopg2-2.4.5.tar.gz
+Description: psycopg2 is a PostgreSQL database adapter for the Python programming
+        language.  psycopg2 was written with the aim of being very small and fast,
+        and stable as a rock.
+        
+        psycopg2 is different from the other database adapter because it was
+        designed for heavily multi-threaded applications that create and destroy
+        lots of cursors and make a conspicuous number of concurrent INSERTs or
+        UPDATEs. psycopg2 also provide full asycronous operations and support
+        for coroutine libraries.
+        
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+Classifier: License :: OSI Approved :: Zope Public License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: C
+Classifier: Programming Language :: SQL
+Classifier: Topic :: Database
+Classifier: Topic :: Database :: Front-Ends
+Classifier: Topic :: Software Development
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: Unix

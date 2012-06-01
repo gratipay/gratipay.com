@@ -1,0 +1,28 @@
+@import url("default.css");
+
+blockquote {
+    font-style: italic;
+}
+
+div.admonition-todo {
+    background-color: #ffa;
+    border: 1px solid #ee2;
+}
+
+div.dbapi-extension {
+    background-color: #eef;
+    border: 1px solid #aaf;
+}
+
+tt.sql {
+    font-size: 1em;
+    background-color: transparent;
+}
+
+a > tt.sql:hover {
+    text-decoration: underline;
+}
+
+dl.faq dt {
+    font-weight: bold;
+}

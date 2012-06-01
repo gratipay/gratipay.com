@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The psycopg2 module content &mdash; Psycopg 2.4.5 documentation</title>
+    
+    <link rel="stylesheet" href="_static/psycopg.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.4.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Psycopg 2.4.5 documentation" href="index.html" />
+    <link rel="next" title="The connection class" href="connection.html" />
+    <link rel="prev" title="Basic module usage" href="usage.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="connection.html" title="The connection class"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Basic module usage"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Psycopg 2.4.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-psycopg2">
+<span id="the-psycopg2-module-content"></span><h1>The <a class="reference internal" href="#module-psycopg2" title="psycopg2"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2</span></tt></a> module content<a class="headerlink" href="#module-psycopg2" title="Permalink to this headline">¶</a></h1>
+<p>The module interface respects the standard defined in the <a class="reference external" href="http://www.python.org/dev/peps/pep-0249/">DB API 2.0</a>.</p>
+<span class="target" id="index-0"></span><dl class="function">
+<dt id="psycopg2.connect">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">connect</tt><big>(</big><em>dsn or params [, connection_factory] [, async=0]</em><big>)</big><a class="headerlink" href="#psycopg2.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new database session and return a new <a class="reference internal" href="connection.html#connection" title="connection"><tt class="xref py py-obj docutils literal"><span class="pre">connection</span></tt></a> object.</p>
+<p>The connection parameters can be specified either as a string:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;dbname=test user=postgres password=secret&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or using a set of keyword arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s">&quot;postgres&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&quot;secret&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The basic connection parameters are:</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">dbname</span></tt> &#8211; the database name (only in dsn string)</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">database</span></tt> &#8211; the database name (only as keyword argument)</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">user</span></tt> &#8211; user name used to authenticate</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">password</span></tt> &#8211; password used to authenticate</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">host</span></tt> &#8211; database host address (defaults to UNIX socket if not provided)</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">port</span></tt> &#8211; connection port number (defaults to 5432 if not provided)</li>
+</ul>
+<p>Any other connection parameter supported by the client library/server can
+be passed either in the connection string or as keyword. See the
+PostgreSQL documentation for a complete <a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-connect.html#LIBPQ-PQCONNECTDBPARAMS">list of supported parameters</a>.
+Also note that the same parameters can be passed to the client library
+using <a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-envars.html">environment variables</a>.</p>
+<p>Using the <em>connection_factory</em> parameter a different class or
+connections factory can be specified. It should be a callable object
+taking a <em>dsn</em> argument. See <a class="reference internal" href="advanced.html#subclassing-connection"><em>Connection and cursor factories</em></a> for
+details.</p>
+<p>Using <em>async</em>=1 an asynchronous connection will be created: see
+<a class="reference internal" href="advanced.html#async-support"><em>Asynchronous support</em></a> to know about advantages and limitations.</p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 2.4.3: </span>any keyword argument is passed to the connection. Previously only the
+basic parameters (plus <tt class="xref py py-obj docutils literal"><span class="pre">sslmode</span></tt>) were supported as keywords.</p>
+<div class="admonition-db-api-extension dbapi-extension admonition">
+<p class="first admonition-title">DB API extension</p>
+<p class="last">The parameters <em>connection_factory</em> and <em>async</em> are Psycopg extensions
+to the DB API 2.0.</p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="psycopg2.apilevel">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">apilevel</tt><a class="headerlink" href="#psycopg2.apilevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>String constant stating the supported DB API level.  For <a class="reference internal" href="#module-psycopg2" title="psycopg2"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2</span></tt></a> is
+<tt class="docutils literal"><span class="pre">2.0</span></tt>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="psycopg2.threadsafety">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">threadsafety</tt><a class="headerlink" href="#psycopg2.threadsafety" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integer constant stating the level of thread safety the interface
+supports.  For <a class="reference internal" href="#module-psycopg2" title="psycopg2"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2</span></tt></a> is <tt class="docutils literal"><span class="pre">2</span></tt>, i.e. threads can share the module
+and the connection. See <a class="reference internal" href="usage.html#thread-safety"><em>Thread and process safety</em></a> for details.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="psycopg2.paramstyle">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">paramstyle</tt><a class="headerlink" href="#psycopg2.paramstyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>String constant stating the type of parameter marker formatting expected
+by the interface.  For <a class="reference internal" href="#module-psycopg2" title="psycopg2"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2</span></tt></a> is <tt class="docutils literal"><span class="pre">pyformat</span></tt>.  See also
+<a class="reference internal" href="usage.html#query-parameters"><em>Passing parameters to SQL queries</em></a>.</p>
+</dd></dl>
+
+<div class="section" id="exceptions">
+<span id="dbapi-exceptions"></span><span id="index-1"></span><h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<p>In compliance with the <a class="reference external" href="http://www.python.org/dev/peps/pep-0249/">DB API 2.0</a>, the module makes informations about errors
+available through the following exceptions:</p>
+<dl class="exception">
+<dt id="psycopg2.Warning">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">Warning</tt><a class="headerlink" href="#psycopg2.Warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception raised for important warnings like data truncations while
+inserting, etc. It is a subclass of the Python <a class="reference external" href="http://docs.python.org/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="psycopg2.Error">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">Error</tt><a class="headerlink" href="#psycopg2.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception that is the base class of all other error exceptions. You can
+use this to catch all errors with one single <tt class="xref py py-obj docutils literal"><span class="pre">except</span></tt> statement. Warnings
+are not considered errors and thus not use this class as base. It
+is a subclass of the Python <tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt>.</p>
+<dl class="attribute">
+<dt id="psycopg2.Error.pgerror">
+<tt class="descname">pgerror</tt><a class="headerlink" href="#psycopg2.Error.pgerror" title="Permalink to this definition">¶</a></dt>
+<dd><p>String representing the error message returned by the backend,
+<tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt> if not available.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="psycopg2.Error.pgcode">
+<tt class="descname">pgcode</tt><a class="headerlink" href="#psycopg2.Error.pgcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>String representing the error code returned by the backend, <tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt>
+if not available.  The <a class="reference internal" href="errorcodes.html#module-psycopg2.errorcodes" title="psycopg2.errorcodes"><tt class="xref py py-obj docutils literal"><span class="pre">errorcodes</span></tt></a> module contains
+symbolic constants representing PostgreSQL error codes.</p>
+</dd></dl>
+
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM barf&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">pgcode</span>
+<span class="go">&#39;42P01&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">e</span><span class="o">.</span><span class="n">pgerror</span>
+<span class="go">ERROR:  relation &quot;barf&quot; does not exist</span>
+<span class="go">LINE 1: SELECT * FROM barf</span>
+<span class="go">                      ^</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="psycopg2.Error.cursor">
+<tt class="descname">cursor</tt><a class="headerlink" href="#psycopg2.Error.cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The cursor the exception was raised from; <a class="reference external" href="http://docs.python.org/3.2/library/constants.html#None" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt></a> if not applicable.</p>
+</dd></dl>
+
+<div class="admonition-db-api-extension dbapi-extension admonition">
+<p class="first admonition-title">DB API extension</p>
+<p class="last">The <a class="reference internal" href="#psycopg2.Error.pgerror" title="psycopg2.Error.pgerror"><tt class="xref py py-obj docutils literal"><span class="pre">pgerror</span></tt></a>, <a class="reference internal" href="#psycopg2.Error.pgcode" title="psycopg2.Error.pgcode"><tt class="xref py py-obj docutils literal"><span class="pre">pgcode</span></tt></a>, and <a class="reference internal" href="#psycopg2.Error.cursor" title="psycopg2.Error.cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor</span></tt></a> attributes
+are Psycopg extensions.</p>
+</div>
+</dd></dl>
+
+<dl class="exception">
+<dt id="psycopg2.InterfaceError">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">InterfaceError</tt><a class="headerlink" href="#psycopg2.InterfaceError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception raised for errors that are related to the database interface
+rather than the database itself.  It is a subclass of <a class="reference internal" href="#psycopg2.Error" title="psycopg2.Error"><tt class="xref py py-obj docutils literal"><span class="pre">Error</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="psycopg2.DatabaseError">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">DatabaseError</tt><a class="headerlink" href="#psycopg2.DatabaseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception raised for errors that are related to the database.  It is a
+subclass of <a class="reference internal" href="#psycopg2.Error" title="psycopg2.Error"><tt class="xref py py-obj docutils literal"><span class="pre">Error</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="psycopg2.DataError">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">DataError</tt><a class="headerlink" href="#psycopg2.DataError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception raised for errors that are due to problems with the processed
+data like division by zero, numeric value out of range, etc. It is a
+subclass of <a class="reference internal" href="#psycopg2.DatabaseError" title="psycopg2.DatabaseError"><tt class="xref py py-obj docutils literal"><span class="pre">DatabaseError</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="psycopg2.OperationalError">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">OperationalError</tt><a class="headerlink" href="#psycopg2.OperationalError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception raised for errors that are related to the database&#8217;s operation
+and not necessarily under the control of the programmer, e.g. an
+unexpected disconnect occurs, the data source name is not found, a
+transaction could not be processed, a memory allocation error occurred
+during processing, etc.  It is a subclass of <a class="reference internal" href="#psycopg2.DatabaseError" title="psycopg2.DatabaseError"><tt class="xref py py-obj docutils literal"><span class="pre">DatabaseError</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="psycopg2.IntegrityError">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">IntegrityError</tt><a class="headerlink" href="#psycopg2.IntegrityError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception raised when the relational integrity of the database is
+affected, e.g. a foreign key check fails.  It is a subclass of
+<a class="reference internal" href="#psycopg2.DatabaseError" title="psycopg2.DatabaseError"><tt class="xref py py-obj docutils literal"><span class="pre">DatabaseError</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="psycopg2.InternalError">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">InternalError</tt><a class="headerlink" href="#psycopg2.InternalError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception raised when the database encounters an internal error, e.g. the
+cursor is not valid anymore, the transaction is out of sync, etc.  It is a
+subclass of <a class="reference internal" href="#psycopg2.DatabaseError" title="psycopg2.DatabaseError"><tt class="xref py py-obj docutils literal"><span class="pre">DatabaseError</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="psycopg2.ProgrammingError">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">ProgrammingError</tt><a class="headerlink" href="#psycopg2.ProgrammingError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception raised for programming errors, e.g. table not found or already
+exists, syntax error in the SQL statement, wrong number of parameters
+specified, etc.  It is a subclass of <a class="reference internal" href="#psycopg2.DatabaseError" title="psycopg2.DatabaseError"><tt class="xref py py-obj docutils literal"><span class="pre">DatabaseError</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="psycopg2.NotSupportedError">
+<em class="property">exception </em><tt class="descclassname">psycopg2.</tt><tt class="descname">NotSupportedError</tt><a class="headerlink" href="#psycopg2.NotSupportedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception raised in case a method or database API was used which is not
+supported by the database, e.g. requesting a <tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt> on a
+connection that does not support transaction or has transactions turned
+off.  It is a subclass of <a class="reference internal" href="#psycopg2.DatabaseError" title="psycopg2.DatabaseError"><tt class="xref py py-obj docutils literal"><span class="pre">DatabaseError</span></tt></a>.</p>
+</dd></dl>
+
+<div class="admonition-db-api-extension dbapi-extension admonition">
+<p class="first admonition-title">DB API extension</p>
+<p class="last">Psycopg may raise a few other, more specialized, exceptions: currently
+<a class="reference internal" href="extensions.html#psycopg2.extensions.QueryCanceledError" title="psycopg2.extensions.QueryCanceledError"><tt class="xref py py-obj docutils literal"><span class="pre">QueryCanceledError</span></tt></a> and
+<a class="reference internal" href="extensions.html#psycopg2.extensions.TransactionRollbackError" title="psycopg2.extensions.TransactionRollbackError"><tt class="xref py py-obj docutils literal"><span class="pre">TransactionRollbackError</span></tt></a> are defined. These
+exceptions are not exposed by the main <tt class="xref py py-obj docutils literal"><span class="pre">psycopg2</span></tt> module but are
+made available by the <a class="reference internal" href="extensions.html#module-psycopg2.extensions" title="psycopg2.extensions"><tt class="xref py py-obj docutils literal"><span class="pre">extensions</span></tt></a> module.  All the
+additional exceptions are subclasses of standard DB API 2.0 exceptions, so
+trapping them specifically is not required.</p>
+</div>
+<p>This is the exception inheritance layout:</p>
+<pre class="literal-block">
+<tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt>
+|__ <a class="reference internal" href="#psycopg2.Warning" title="psycopg2.Warning"><tt class="xref py py-obj docutils literal"><span class="pre">Warning</span></tt></a>
+|__ <a class="reference internal" href="#psycopg2.Error" title="psycopg2.Error"><tt class="xref py py-obj docutils literal"><span class="pre">Error</span></tt></a>
+    |__ <a class="reference internal" href="#psycopg2.InterfaceError" title="psycopg2.InterfaceError"><tt class="xref py py-obj docutils literal"><span class="pre">InterfaceError</span></tt></a>
+    |__ <a class="reference internal" href="#psycopg2.DatabaseError" title="psycopg2.DatabaseError"><tt class="xref py py-obj docutils literal"><span class="pre">DatabaseError</span></tt></a>
+        |__ <a class="reference internal" href="#psycopg2.DataError" title="psycopg2.DataError"><tt class="xref py py-obj docutils literal"><span class="pre">DataError</span></tt></a>
+        |__ <a class="reference internal" href="#psycopg2.OperationalError" title="psycopg2.OperationalError"><tt class="xref py py-obj docutils literal"><span class="pre">OperationalError</span></tt></a>
+        |   |__ <a class="reference internal" href="extensions.html#psycopg2.extensions.QueryCanceledError" title="psycopg2.extensions.QueryCanceledError"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.extensions.QueryCanceledError</span></tt></a>
+        |   |__ <a class="reference internal" href="extensions.html#psycopg2.extensions.TransactionRollbackError" title="psycopg2.extensions.TransactionRollbackError"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.extensions.TransactionRollbackError</span></tt></a>
+        |__ <a class="reference internal" href="#psycopg2.IntegrityError" title="psycopg2.IntegrityError"><tt class="xref py py-obj docutils literal"><span class="pre">IntegrityError</span></tt></a>
+        |__ <a class="reference internal" href="#psycopg2.InternalError" title="psycopg2.InternalError"><tt class="xref py py-obj docutils literal"><span class="pre">InternalError</span></tt></a>
+        |__ <a class="reference internal" href="#psycopg2.ProgrammingError" title="psycopg2.ProgrammingError"><tt class="xref py py-obj docutils literal"><span class="pre">ProgrammingError</span></tt></a>
+        |__ <a class="reference internal" href="#psycopg2.NotSupportedError" title="psycopg2.NotSupportedError"><tt class="xref py py-obj docutils literal"><span class="pre">NotSupportedError</span></tt></a>
+</pre>
+</div>
+<div class="section" id="type-objects-and-constructors">
+<span id="id3"></span><h2>Type Objects and Constructors<a class="headerlink" href="#type-objects-and-constructors" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This section is mostly copied verbatim from the <a class="reference external" href="http://www.python.org/dev/peps/pep-0249/">DB API 2.0</a>
+specification.  While these objects are exposed in compliance to the
+DB API, Psycopg offers very accurate tools to convert data between Python
+and PostgreSQL formats.  See <a class="reference internal" href="advanced.html#adapting-new-types"><em>Adapting new Python types to SQL syntax</em></a> and
+<a class="reference internal" href="advanced.html#type-casting-from-sql-to-python"><em>Type casting of SQL types into Python objects</em></a></p>
+</div>
+<p>Many databases need to have the input in a particular format for
+binding to an operation&#8217;s input parameters.  For example, if an
+input is destined for a DATE column, then it must be bound to the
+database in a particular string format.  Similar problems exist
+for &#8220;Row ID&#8221; columns or large binary items (e.g. blobs or RAW
+columns).  This presents problems for Python since the parameters
+to the .execute*() method are untyped.  When the database module
+sees a Python string object, it doesn&#8217;t know if it should be bound
+as a simple CHAR column, as a raw BINARY item, or as a DATE.</p>
+<p>To overcome this problem, a module must provide the constructors
+defined below to create objects that can hold special values.
+When passed to the cursor methods, the module can then detect the
+proper type of the input parameter and bind it accordingly.</p>
+<p>A Cursor Object&#8217;s description attribute returns information about
+each of the result columns of a query.  The type_code must compare
+equal to one of Type Objects defined below. Type Objects may be
+equal to more than one type code (e.g. DATETIME could be equal to
+the type codes for date, time and timestamp columns; see the
+Implementation Hints below for details).</p>
+<p>The module exports the following constructors and singletons:</p>
+<dl class="function">
+<dt id="psycopg2.Date">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">Date</tt><big>(</big><em>year</em>, <em>month</em>, <em>day</em><big>)</big><a class="headerlink" href="#psycopg2.Date" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function constructs an object holding a date value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psycopg2.Time">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">Time</tt><big>(</big><em>hour</em>, <em>minute</em>, <em>second</em><big>)</big><a class="headerlink" href="#psycopg2.Time" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function constructs an object holding a time value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psycopg2.Timestamp">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">Timestamp</tt><big>(</big><em>year</em>, <em>month</em>, <em>day</em>, <em>hour</em>, <em>minute</em>, <em>second</em><big>)</big><a class="headerlink" href="#psycopg2.Timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function constructs an object holding a time stamp value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psycopg2.DateFromTicks">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">DateFromTicks</tt><big>(</big><em>ticks</em><big>)</big><a class="headerlink" href="#psycopg2.DateFromTicks" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function constructs an object holding a date value from the given
+ticks value (number of seconds since the epoch; see the documentation of
+the standard Python time module for details).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psycopg2.TimeFromTicks">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">TimeFromTicks</tt><big>(</big><em>ticks</em><big>)</big><a class="headerlink" href="#psycopg2.TimeFromTicks" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function constructs an object holding a time value from the given
+ticks value (number of seconds since the epoch; see the documentation of
+the standard Python time module for details).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psycopg2.TimestampFromTicks">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">TimestampFromTicks</tt><big>(</big><em>ticks</em><big>)</big><a class="headerlink" href="#psycopg2.TimestampFromTicks" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function constructs an object holding a time stamp value from the
+given ticks value (number of seconds since the epoch; see the
+documentation of the standard Python time module for details).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psycopg2.Binary">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">Binary</tt><big>(</big><em>string</em><big>)</big><a class="headerlink" href="#psycopg2.Binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function constructs an object capable of holding a binary (long)
+string value.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="psycopg2.STRING">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">STRING</tt><a class="headerlink" href="#psycopg2.STRING" title="Permalink to this definition">¶</a></dt>
+<dd><p>This type object is used to describe columns in a database that are
+string-based (e.g. CHAR).</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="psycopg2.BINARY">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">BINARY</tt><a class="headerlink" href="#psycopg2.BINARY" title="Permalink to this definition">¶</a></dt>
+<dd><p>This type object is used to describe (long) binary columns in a database
+(e.g. LONG, RAW, BLOBs).</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="psycopg2.NUMBER">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">NUMBER</tt><a class="headerlink" href="#psycopg2.NUMBER" title="Permalink to this definition">¶</a></dt>
+<dd><p>This type object is used to describe numeric columns in a database.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="psycopg2.DATETIME">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">DATETIME</tt><a class="headerlink" href="#psycopg2.DATETIME" title="Permalink to this definition">¶</a></dt>
+<dd><p>This type object is used to describe date/time columns in a database.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="psycopg2.ROWID">
+<tt class="descclassname">psycopg2.</tt><tt class="descname">ROWID</tt><a class="headerlink" href="#psycopg2.ROWID" title="Permalink to this definition">¶</a></dt>
+<dd><p>This type object is used to describe the &#8220;Row ID&#8221; column in a database.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The <tt class="docutils literal"><span class="pre">psycopg2</span></tt> module content</a><ul>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li><a class="reference internal" href="#type-objects-and-constructors">Type Objects and Constructors</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="previous chapter">Basic module usage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="connection.html"
+                        title="next chapter">The <tt class="docutils literal docutils literal docutils literal"><span class="pre">connection</span></tt> class</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/module.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="connection.html" title="The connection class"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Basic module usage"
+             >previous</a> |</li>
+        <li><a href="index.html">Psycopg 2.4.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2001-2011, Federico Di Gregorio. Documentation by Daniele Varrazzo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

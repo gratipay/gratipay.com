@@ -1,0 +1,196 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>samurai.processor &mdash; samurai  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="samurai  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">samurai  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for samurai.processor</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Payment processor for simple purchases.</span>
+<span class="sd">    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="sd">    Handles purchases.</span>
+
+<span class="sd">    Simple purchases are done in a single step and there isn&#39;t an option to authorize</span>
+<span class="sd">    or rollback it.</span>
+
+<span class="sd">    Complex purchases are authorized first, and then can be rolled back or completed.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">xmlutils</span> <span class="kn">import</span> <span class="n">dict_to_xml</span>
+<span class="kn">from</span> <span class="nn">request</span> <span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">fetch_url</span>
+<span class="kn">from</span> <span class="nn">api_base</span> <span class="kn">import</span> <span class="n">ApiBase</span>
+<span class="kn">from</span> <span class="nn">transaction</span> <span class="kn">import</span> <span class="n">Transaction</span>
+
+<div class="viewcode-block" id="Processor"><a class="viewcode-back" href="../../samurai.html#samurai.processor.Processor">[docs]</a><span class="k">class</span> <span class="nc">Processor</span><span class="p">(</span><span class="n">ApiBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    `Processor` deals with payments.</span>
+
+<span class="sd">    The result of the operations is a transaction object. See documentation for `Transaction`</span>
+<span class="sd">    to see the operations possible on transactions.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">purchase_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/processors/</span><span class="si">%s</span><span class="s">/purchase.xml&#39;</span>
+    <span class="n">authorize_url</span> <span class="o">=</span> <span class="s">&#39;https://api.samurai.feefighters.com/v1/processors/</span><span class="si">%s</span><span class="s">/authorize.xml&#39;</span>
+
+    <span class="n">purchase_optional_data</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="s">&#39;billing_reference&#39;</span><span class="p">,</span> <span class="s">&#39;customer_reference&#39;</span><span class="p">,</span>
+                                 <span class="s">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s">&#39;custom&#39;</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Processor.purchase"><a class="viewcode-back" href="../../samurai.html#samurai.processor.Processor.purchase">[docs]</a>    <span class="k">def</span> <span class="nf">purchase</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">payment_method_token</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes a simple purchase call and returns a transaction object.</span>
+<span class="sd">        ::</span>
+<span class="sd">            transaction = Processor.purchase(payment_method_token, amount)</span>
+
+<span class="sd">            # Follwing additional parameters can be passed while make a purchase call.</span>
+<span class="sd">            # billing_reference: Custom identifier for this transaction in your application</span>
+<span class="sd">            # customer_reference: Custom identifier for this customer in your application</span>
+<span class="sd">            # descriptor: Custom descriptor here if your processor supports it</span>
+<span class="sd">            # custom: Any value you like.  Will be passed to your processor for tracking.</span>
+
+<span class="sd">            transaction = Processor.purchase(payment_method_token, amount,</span>
+<span class="sd">                                             billing_reference=billing_reference,</span>
+<span class="sd">                                             customer_reference=customer_reference,</span>
+<span class="sd">                                             descriptor=descripton,</span>
+<span class="sd">                                             custom=custom)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">_transact</span><span class="p">(</span><span class="n">payment_method_token</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span>
+                            <span class="s">&#39;purchase&#39;</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">purchase_url</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Processor.authorize"><a class="viewcode-back" href="../../samurai.html#samurai.processor.Processor.authorize">[docs]</a>    <span class="k">def</span> <span class="nf">authorize</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">payment_method_token</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        `authorize` doesn&#39;t charge credit card. It only reserves the transaction amount.</span>
+<span class="sd">        It returns a `Transaction` object which can be `captured` or `reversed`.</span>
+
+<span class="sd">        It takes the same parameter as the `purchase` call.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">_transact</span><span class="p">(</span><span class="n">payment_method_token</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span>
+                            <span class="s">&#39;authorize&#39;</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">authorize_url</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_transact</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">payment_method_token</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">,</span>
+                 <span class="n">endpoint</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Meant to be used internally and shouldn&#39;t be called from outside.</span>
+
+<span class="sd">        Makes an `authorize` or `purchase` request.</span>
+
+<span class="sd">        `authorize` and `purchase` have same flow, except for `transaction_type` and</span>
+<span class="sd">        `endpoint`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">purchase_data</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_construct_options</span><span class="p">(</span><span class="n">payment_method_token</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">,</span>
+                                              <span class="n">amount</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+        <span class="c"># Send payload and return transaction.</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">endpoint</span> <span class="o">%</span> <span class="n">payment_method_token</span><span class="p">,</span> <span class="n">purchase_data</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;post&#39;</span><span class="p">)</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s">&quot;Content-Type&quot;</span><span class="p">,</span> <span class="s">&quot;application/xml&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">fetch_url</span><span class="p">(</span><span class="n">req</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_construct_options</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">payment_method_token</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">,</span>
+                          <span class="n">amount</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructs XML payload to be sent for the transaction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Pick relevant options and construct xml payload.</span>
+        <span class="n">purchase_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;transaction&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">transaction_type</span><span class="p">,</span>
+                <span class="s">&#39;currency_code&#39;</span><span class="p">:</span> <span class="s">&#39;USD&#39;</span><span class="p">,</span>
+                <span class="s">&#39;amount&#39;</span><span class="p">:</span> <span class="n">amount</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+                       <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">purchase_optional_data</span><span class="p">)</span>
+        <span class="n">options</span><span class="p">[</span><span class="s">&#39;payment_method_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">payment_method_token</span>
+        <span class="n">purchase_data</span><span class="p">[</span><span class="s">&#39;transaction&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">purchase_data</span> <span class="o">=</span> <span class="n">dict_to_xml</span><span class="p">(</span><span class="n">purchase_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">purchase_data</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">samurai  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, samurai@feefighters.com.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

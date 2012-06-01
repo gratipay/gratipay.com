@@ -1,0 +1,543 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>samurai Package &mdash; samurai  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="samurai  documentation" href="index.html" />
+    <link rel="prev" title="Welcome to samurai’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to samurai’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">samurai  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="samurai-package">
+<h1>samurai Package<a class="headerlink" href="#samurai-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-samurai.api_base">
+<span id="api-base-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">api_base</span></tt> Module<a class="headerlink" href="#module-samurai.api_base" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="api-base">
+<h3>api_base<a class="headerlink" href="#api-base" title="Permalink to this headline">¶</a></h3>
+<p>Abstraction for behavior common to other api objects.</p>
+<dl class="class">
+<dt id="samurai.api_base.ApiBase">
+<em class="property">class </em><tt class="descclassname">samurai.api_base.</tt><tt class="descname">ApiBase</tt><a class="reference internal" href="_modules/samurai/api_base.html#ApiBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.api_base.ApiBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This object implements behavior common to non-abstract api objects.</p>
+<p>It&#8217;s basically a mix-in which adds methods to subclasses.
+Most of the methods here are template methods <a class="reference external" href="http://en.wikipedia.org/wiki/Template_method_pattern">http://en.wikipedia.org/wiki/Template_method_pattern</a></p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-samurai.config">
+<span id="config-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">config</span></tt> Module<a class="headerlink" href="#module-samurai.config" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="configs-for-samurai-api">
+<h3>Configs for Samurai API.<a class="headerlink" href="#configs-for-samurai-api" title="Permalink to this headline">¶</a></h3>
+<p>Set samurai api configurations on this module.</p>
+<p>Import this module and set the <cite>merchant_key</cite> and <cite>merchant_password</cite>.
+Other modules use the configuration set on this object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">samurai.config</span> <span class="kn">as</span> <span class="nn">config</span>
+<span class="n">config</span><span class="o">.</span><span class="n">merchant_key</span> <span class="o">=</span> <span class="n">your_merchant_key</span>
+<span class="n">config</span><span class="o">.</span><span class="n">merchant_password</span> <span class="o">=</span> <span class="n">your_merchant_password</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="module-samurai.errors">
+<span id="errors-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">errors</span></tt> Module<a class="headerlink" href="#module-samurai.errors" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="exceptions">
+<h3>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h3>
+<dl class="exception">
+<dt id="samurai.errors.UnauthorizedTransactionError">
+<em class="property">exception </em><tt class="descclassname">samurai.errors.</tt><tt class="descname">UnauthorizedTransactionError</tt><a class="reference internal" href="_modules/samurai/errors.html#UnauthorizedTransactionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.errors.UnauthorizedTransactionError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Raised when client tries to act on an unauthorized transaction.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-samurai.payment_method">
+<span id="payment-method-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">payment_method</span></tt> Module<a class="headerlink" href="#module-samurai.payment_method" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="payment-method">
+<h3>Payment method.<a class="headerlink" href="#payment-method" title="Permalink to this headline">¶</a></h3>
+<p>Encapsulation for the stored payment data, and payment methods.</p>
+<dl class="class">
+<dt id="samurai.payment_method.PaymentMethod">
+<em class="property">class </em><tt class="descclassname">samurai.payment_method.</tt><tt class="descname">PaymentMethod</tt><big>(</big><em>xml_res</em><big>)</big><a class="reference internal" href="_modules/samurai/payment_method.html#PaymentMethod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.payment_method.PaymentMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#samurai.api_base.ApiBase" title="samurai.api_base.ApiBase"><tt class="xref py py-class docutils literal"><span class="pre">samurai.api_base.ApiBase</span></tt></a></p>
+<p>Proxy for samurai api payment method endpoints.
+Implements <cite>find</cite>, <cite>retain</cite>, <cite>redact</cite> and other related operations.</p>
+<p>This object makes available the response retured from the api.</p>
+<div class="highlight-python"><pre>&lt;payment_method&gt;
+    &lt;payment_method_token&gt;QhLaMNNpvHwfnFbHbUYhNxadx4C&lt;/payment_method_token&gt;
+    &lt;created_at type="datetime"&gt;2011-02-12T20:20:46Z&lt;/created_at&gt;
+    &lt;updated_at type="datetime"&gt;2011-04-22T17:57:30Z&lt;/updated_at&gt;
+    &lt;custom&gt;Any value you want us to save with this payment method.&lt;/custom&gt;
+    &lt;is_retained type="boolean"&gt;true&lt;/is_retained&gt;
+    &lt;is_redacted type="boolean"&gt;false&lt;/is_redacted&gt;
+    &lt;is_sensitive_data_valid type="boolean"&gt;false&lt;/is_sensitive_data_valid&gt;
+    &lt;messages&gt;
+    &lt;message class="error" context="input.cvv" key="too_long" /&gt;
+    &lt;message class="error" context="input.card_number" key="failed_checksum" /&gt;
+    &lt;/messages&gt;
+    &lt;last_four_digits&gt;1111&lt;/last_four_digits&gt;
+    &lt;card_type&gt;visa&lt;/card_type&gt;
+    &lt;first_name&gt;Bob&lt;/first_name&gt;
+    &lt;last_name&gt;Smith&lt;/last_name&gt;
+    &lt;expiry_month type="integer"&gt;1&lt;/expiry_month&gt;
+    &lt;expiry_year type="integer"&gt;2020&lt;/expiry_year&gt;
+    &lt;address_1 nil="true"&gt;&lt;/address_1&gt;
+    &lt;address_2 nil="true"&gt;&lt;/address_2&gt;
+    &lt;city nil="true"&gt;&lt;/city&gt;
+    &lt;state nil="true"&gt;&lt;/state&gt;
+    &lt;zip nil="true"&gt;&lt;/zip&gt;
+    &lt;country nil="true"&gt;&lt;/country&gt;
+&lt;/payment_method&gt;</pre>
+</div>
+<p>All xml elements inside top level element are directly accessible on the object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pm</span> <span class="o">=</span> <span class="n">PaymentMethod</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">is_redcated</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">state</span>
+</pre></div>
+</div>
+<p>The attributes are created on demand, and exist only if the element exists in the xml object
+wraps.</p>
+<p>Errors while operating on it will be accessible <cite>errors</cite>. If there aren&#8217;t any errors, <cite>errors</cite>
+is False. If there are errors, <cite>errors</cite> is a list of errors.</p>
+<dl class="classmethod">
+<dt id="samurai.payment_method.PaymentMethod.create">
+<em class="property">classmethod </em><tt class="descname">create</tt><big>(</big><em>card_number</em>, <em>cvv</em>, <em>expiry_month</em>, <em>expiry_year</em>, <em>**other_args</em><big>)</big><a class="reference internal" href="_modules/samurai/payment_method.html#PaymentMethod.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.payment_method.PaymentMethod.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a payment method.</p>
+<p>Transaprent redirects are favored method for creating payment methods.
+Using this call places the burden of PCI compliance on the client since the
+data passes through it.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pm</span> <span class="o">=</span> <span class="n">PaymentMethod</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s">&#39;4242424242424242&#39;</span><span class="p">,</span> <span class="s">&#39;133&#39;</span><span class="p">,</span> <span class="s">&#39;07&#39;</span><span class="p">,</span> <span class="s">&#39;12&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">pm</span><span class="o">.</span><span class="n">is_sensitive_data_valid</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.payment_method.PaymentMethod.create_data">
+<tt class="descname">create_data</tt><em class="property"> = set(['city', 'first_name', 'last_name', 'zip', 'cvv', 'sandbox', 'custom', 'state', 'expiry_year', 'address_1', 'address_2', 'expiry_month', 'card_number'])</em><a class="headerlink" href="#samurai.payment_method.PaymentMethod.create_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.payment_method.PaymentMethod.create_url">
+<tt class="descname">create_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/payment_methods.xml'</em><a class="headerlink" href="#samurai.payment_method.PaymentMethod.create_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="samurai.payment_method.PaymentMethod.find">
+<em class="property">classmethod </em><tt class="descname">find</tt><big>(</big><em>payment_method_token</em><big>)</big><a class="reference internal" href="_modules/samurai/payment_method.html#PaymentMethod.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.payment_method.PaymentMethod.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the payment method details.
+Returns xml data returned from the endpoint converted to python dictionary.</p>
+<div class="highlight-python"><pre>pm = PaymentMethod.find(token)
+if not pm.errors:
+    # Work on pm object here
+else:
+    # pm.errors will be a list of errors</pre>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.payment_method.PaymentMethod.find_url">
+<tt class="descname">find_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/payment_methods/%s.xml'</em><a class="headerlink" href="#samurai.payment_method.PaymentMethod.find_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="samurai.payment_method.PaymentMethod.redact">
+<tt class="descname">redact</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/samurai/payment_method.html#PaymentMethod.redact"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.payment_method.PaymentMethod.redact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Issues <cite>redact</cite> call to samurai API.</p>
+<div class="highlight-python"><pre>pm = PaymentMethod.find(token)
+if not pm.redact().is_redacted:
+    # Some thing prevented the redaction.
+    # Check pm.errors
+else:
+    # Successfully redacted.</pre>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.payment_method.PaymentMethod.redact_url">
+<tt class="descname">redact_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/payment_methods/%s/redact.xml'</em><a class="headerlink" href="#samurai.payment_method.PaymentMethod.redact_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="samurai.payment_method.PaymentMethod.retain">
+<tt class="descname">retain</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/samurai/payment_method.html#PaymentMethod.retain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.payment_method.PaymentMethod.retain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Issues <cite>retain</cite> call to samurai API.</p>
+<div class="highlight-python"><pre>pm = PaymentMethod.find(token)
+if not pm.retain().is_retain:
+    # Some thing prevented the retention.
+    # Check pm.errors
+else:
+    # Successfully redacted.</pre>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.payment_method.PaymentMethod.retain_url">
+<tt class="descname">retain_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/payment_methods/%s/retain.xml'</em><a class="headerlink" href="#samurai.payment_method.PaymentMethod.retain_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.payment_method.PaymentMethod.top_xml_key">
+<tt class="descname">top_xml_key</tt><em class="property"> = 'payment_method'</em><a class="headerlink" href="#samurai.payment_method.PaymentMethod.top_xml_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="samurai.payment_method.PaymentMethod.update">
+<tt class="descname">update</tt><big>(</big><em>**other_args</em><big>)</big><a class="reference internal" href="_modules/samurai/payment_method.html#PaymentMethod.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.payment_method.PaymentMethod.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates a payment method.</p>
+<p>Payment method can&#8217;t be updated once it has been retained or redacted.</p>
+<div class="highlight-python"><pre>pm = PaymentMethod.create('4242424242424242', '133', '07', '12')
+assert pm.is_sensitive_data_valid
+pm.update(first_name='dummy')
+if not pm.errors:
+    assert pm.first_name == 'dummy'
+else:
+    # deal with pm.errors</pre>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.payment_method.PaymentMethod.update_url">
+<tt class="descname">update_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/payment_methods/%s.xml'</em><a class="headerlink" href="#samurai.payment_method.PaymentMethod.update_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-samurai.processor">
+<span id="processor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">processor</span></tt> Module<a class="headerlink" href="#module-samurai.processor" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="payment-processor-for-simple-purchases">
+<h3>Payment processor for simple purchases.<a class="headerlink" href="#payment-processor-for-simple-purchases" title="Permalink to this headline">¶</a></h3>
+<p>Handles purchases.</p>
+<p>Simple purchases are done in a single step and there isn&#8217;t an option to authorize
+or rollback it.</p>
+<p>Complex purchases are authorized first, and then can be rolled back or completed.</p>
+<dl class="class">
+<dt id="samurai.processor.Processor">
+<em class="property">class </em><tt class="descclassname">samurai.processor.</tt><tt class="descname">Processor</tt><a class="reference internal" href="_modules/samurai/processor.html#Processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.processor.Processor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#samurai.api_base.ApiBase" title="samurai.api_base.ApiBase"><tt class="xref py py-class docutils literal"><span class="pre">samurai.api_base.ApiBase</span></tt></a></p>
+<p><cite>Processor</cite> deals with payments.</p>
+<p>The result of the operations is a transaction object. See documentation for <cite>Transaction</cite>
+to see the operations possible on transactions.</p>
+<dl class="classmethod">
+<dt id="samurai.processor.Processor.authorize">
+<em class="property">classmethod </em><tt class="descname">authorize</tt><big>(</big><em>payment_method_token</em>, <em>amount</em>, <em>**options</em><big>)</big><a class="reference internal" href="_modules/samurai/processor.html#Processor.authorize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.processor.Processor.authorize" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>authorize</cite> doesn&#8217;t charge credit card. It only reserves the transaction amount.
+It returns a <cite>Transaction</cite> object which can be <cite>captured</cite> or <cite>reversed</cite>.</p>
+<p>It takes the same parameter as the <cite>purchase</cite> call.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.processor.Processor.authorize_url">
+<tt class="descname">authorize_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/processors/%s/authorize.xml'</em><a class="headerlink" href="#samurai.processor.Processor.authorize_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="samurai.processor.Processor.purchase">
+<em class="property">classmethod </em><tt class="descname">purchase</tt><big>(</big><em>payment_method_token</em>, <em>amount</em>, <em>**options</em><big>)</big><a class="reference internal" href="_modules/samurai/processor.html#Processor.purchase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.processor.Processor.purchase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a simple purchase call and returns a transaction object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">transaction</span> <span class="o">=</span> <span class="n">Processor</span><span class="o">.</span><span class="n">purchase</span><span class="p">(</span><span class="n">payment_method_token</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
+
+<span class="c"># Follwing additional parameters can be passed while make a purchase call.</span>
+<span class="c"># billing_reference: Custom identifier for this transaction in your application</span>
+<span class="c"># customer_reference: Custom identifier for this customer in your application</span>
+<span class="c"># descriptor: Custom descriptor here if your processor supports it</span>
+<span class="c"># custom: Any value you like.  Will be passed to your processor for tracking.</span>
+
+<span class="n">transaction</span> <span class="o">=</span> <span class="n">Processor</span><span class="o">.</span><span class="n">purchase</span><span class="p">(</span><span class="n">payment_method_token</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span>
+                                 <span class="n">billing_reference</span><span class="o">=</span><span class="n">billing_reference</span><span class="p">,</span>
+                                 <span class="n">customer_reference</span><span class="o">=</span><span class="n">customer_reference</span><span class="p">,</span>
+                                 <span class="n">descriptor</span><span class="o">=</span><span class="n">descripton</span><span class="p">,</span>
+                                 <span class="n">custom</span><span class="o">=</span><span class="n">custom</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.processor.Processor.purchase_optional_data">
+<tt class="descname">purchase_optional_data</tt><em class="property"> = set(['descriptor', 'billing_reference', 'customer_reference', 'custom'])</em><a class="headerlink" href="#samurai.processor.Processor.purchase_optional_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.processor.Processor.purchase_url">
+<tt class="descname">purchase_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/processors/%s/purchase.xml'</em><a class="headerlink" href="#samurai.processor.Processor.purchase_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-samurai.transaction">
+<span id="transaction-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">transaction</span></tt> Module<a class="headerlink" href="#module-samurai.transaction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="transaction">
+<h3>Transaction<a class="headerlink" href="#transaction" title="Permalink to this headline">¶</a></h3>
+<p>Transactions encapsulate the returned data from the api when a transaction is made
+agains a payment token.</p>
+<dl class="class">
+<dt id="samurai.transaction.Transaction">
+<em class="property">class </em><tt class="descclassname">samurai.transaction.</tt><tt class="descname">Transaction</tt><big>(</big><em>xml_res</em><big>)</big><a class="reference internal" href="_modules/samurai/transaction.html#Transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.transaction.Transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#samurai.api_base.ApiBase" title="samurai.api_base.ApiBase"><tt class="xref py py-class docutils literal"><span class="pre">samurai.api_base.ApiBase</span></tt></a></p>
+<p>A completed or authorized transaction.
+This class can be used to introspect trasnaction data, as well as perform transaction
+operations viz. reverse, authorize, capture etc.</p>
+<p>In case of simple purchases, the returned data will be mostly used for inspection.</p>
+<p>In complex transactions, opertaions on it are used to perform or cancel it.</p>
+<div class="highlight-python"><pre>&lt;transaction&gt;
+    &lt;reference_id&gt;3dcFjTC7LDjIjTY3nkKjBVZ8qkZ&lt;/reference_id&gt;
+    &lt;transaction_token&gt;53VFyQKYBmN9vKfA9mHCTs79L9a&lt;/transaction_token&gt;
+    &lt;created_at type="datetime"&gt;2011-04-22T17:57:56Z&lt;/created_at&gt;
+    &lt;descriptor&gt;Custom descriptor here if your processor supports it.&lt;/descriptor&gt;
+    &lt;custom&gt;Any value you like.&lt;/custom&gt;
+    &lt;transaction_type&gt;purchase&lt;/transaction_type&gt;
+    &lt;amount&gt;100.00&lt;/amount&gt;
+    &lt;currency_code&gt;USD&lt;/currency_code&gt;
+    &lt;billing_reference&gt;12345678&lt;/billing_reference&gt;
+    &lt;customer_reference&gt;1234&lt;/customer_reference&gt;
+    &lt;processor_token&gt;[Processor Token]&lt;/processor_token&gt;
+    &lt;processor_response&gt;
+        &lt;success type="boolean"&gt;false&lt;/success&gt;
+        &lt;messages&gt;
+        &lt;message class="error" context="processor.avs" key="country_not_supported" /&gt;
+        &lt;message class="error" context="input.cvv" key="too_short" /&gt;
+        &lt;/messages&gt;
+    &lt;/processor_response&gt;
+    &lt;payment_method&gt;...&lt;/payment_method&gt;
+&lt;/transaction&gt;</pre>
+</div>
+<p>All elements inside root element <cite>transaction</cite> are directly available on the object.</p>
+<dl class="method">
+<dt id="samurai.transaction.Transaction.capture">
+<tt class="descname">capture</tt><big>(</big><em>amount</em><big>)</big><a class="reference internal" href="_modules/samurai/transaction.html#Transaction.capture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.transaction.Transaction.capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Captures transaction. Works only if the transaction is authorized.</p>
+<p>Returns a new transaction.</p>
+<div class="highlight-python"><pre>trans = Processor.authorize(payment_method_token, amount)
+trans = trans.capture()
+if not trans.errors:
+    # Capture successful
+else:
+    # Work on list of errors in trans.errors</pre>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.transaction.Transaction.capture_url">
+<tt class="descname">capture_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/transactions/%s/capture.xml'</em><a class="headerlink" href="#samurai.transaction.Transaction.capture_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="samurai.transaction.Transaction.credit">
+<tt class="descname">credit</tt><big>(</big><em>amount</em><big>)</big><a class="reference internal" href="_modules/samurai/transaction.html#Transaction.credit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.transaction.Transaction.credit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Credits transaction. Works only if the transaction is authorized.
+Depending on the settlement status of the transaction, and the behavior of the
+processor endpoint, this API call may result in a <cite>void</cite>, <cite>credit</cite>, or <cite>refund</cite>.</p>
+<p>Returns a new transaction.</p>
+<div class="highlight-python"><pre>trans = Processor.authorize(payment_method_token, amount)
+trans = trans.credit(amount)
+if not trans.errors:
+    # Capture successful
+else:
+    # Work on list of errors in trans.errors</pre>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.transaction.Transaction.credit_url">
+<tt class="descname">credit_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/transactions/%s/credit.xml'</em><a class="headerlink" href="#samurai.transaction.Transaction.credit_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="samurai.transaction.Transaction.find">
+<em class="property">classmethod </em><tt class="descname">find</tt><big>(</big><em>reference_id</em><big>)</big><a class="reference internal" href="_modules/samurai/transaction.html#Transaction.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.transaction.Transaction.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the transaction details.
+Returns xml data returned from the endpoint converted to python dictionary.</p>
+<div class="highlight-python"><pre>trans = Transaction.find(reference_id)
+if not trans.errors:
+    # Operate on transaction object
+else:
+    # Work on list of errors in trans.errors</pre>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.transaction.Transaction.find_url">
+<tt class="descname">find_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/transactions/%s.xml'</em><a class="headerlink" href="#samurai.transaction.Transaction.find_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="samurai.transaction.Transaction.is_declined">
+<tt class="descname">is_declined</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/samurai/transaction.html#Transaction.is_declined"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.transaction.Transaction.is_declined" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the transaction is declined.</p>
+<p>You are better off checking <cite>trans.errors</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="samurai.transaction.Transaction.is_success">
+<tt class="descname">is_success</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/samurai/transaction.html#Transaction.is_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.transaction.Transaction.is_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the transaction succeeded.</p>
+<p>You are better of checking <cite>trans.errors</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="samurai.transaction.Transaction.reverse">
+<tt class="descname">reverse</tt><big>(</big><em>amount=None</em><big>)</big><a class="reference internal" href="_modules/samurai/transaction.html#Transaction.reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.transaction.Transaction.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverses transaction. Works only if the transaction is authorized.</p>
+<p>Returns a new transaction.</p>
+<p>The <cite>amount</cite> field is optional. If left blank, the whole transaction is reversed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.transaction.Transaction.reverse_url">
+<tt class="descname">reverse_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/transactions/%s/reverse.xml'</em><a class="headerlink" href="#samurai.transaction.Transaction.reverse_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.transaction.Transaction.top_xml_key">
+<tt class="descname">top_xml_key</tt><em class="property"> = 'transaction'</em><a class="headerlink" href="#samurai.transaction.Transaction.top_xml_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="samurai.transaction.Transaction.void">
+<tt class="descname">void</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/samurai/transaction.html#Transaction.void"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#samurai.transaction.Transaction.void" title="Permalink to this definition">¶</a></dt>
+<dd><p>Voids transaction. Works only if the transaction is authorized.</p>
+<p>Returns a new transaction.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="samurai.transaction.Transaction.void_url">
+<tt class="descname">void_url</tt><em class="property"> = 'https://api.samurai.feefighters.com/v1/transactions/%s/void.xml'</em><a class="headerlink" href="#samurai.transaction.Transaction.void_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">samurai Package</a><ul>
+<li><a class="reference internal" href="#module-samurai.api_base"><tt class="docutils literal"><span class="pre">api_base</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#api-base">api_base</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-samurai.config"><tt class="docutils literal"><span class="pre">config</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#configs-for-samurai-api">Configs for Samurai API.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-samurai.errors"><tt class="docutils literal"><span class="pre">errors</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-samurai.payment_method"><tt class="docutils literal"><span class="pre">payment_method</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#payment-method">Payment method.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-samurai.processor"><tt class="docutils literal"><span class="pre">processor</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#payment-processor-for-simple-purchases">Payment processor for simple purchases.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-samurai.transaction"><tt class="docutils literal"><span class="pre">transaction</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#transaction">Transaction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to samurai&#8217;s documentation!</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/samurai.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to samurai’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">samurai  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, samurai@feefighters.com.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

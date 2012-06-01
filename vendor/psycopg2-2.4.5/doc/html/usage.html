@@ -1,0 +1,710 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Basic module usage &mdash; Psycopg 2.4.5 documentation</title>
+    
+    <link rel="stylesheet" href="_static/psycopg.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.4.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Psycopg 2.4.5 documentation" href="index.html" />
+    <link rel="next" title="The psycopg2 module content" href="module.html" />
+    <link rel="prev" title="Psycopg – PostgreSQL database adapter for Python" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module.html" title="The psycopg2 module content"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Psycopg – PostgreSQL database adapter for Python"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Psycopg 2.4.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="basic-module-usage">
+<h1>Basic module usage<a class="headerlink" href="#basic-module-usage" title="Permalink to this headline">¶</a></h1>
+<p id="index-0">The basic Psycopg usage is common to all the database adapters implementing
+the <a class="reference external" href="http://www.python.org/dev/peps/pep-0249/">DB API 2.0</a> protocol. Here is an interactive session showing some of the
+basic commands:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">psycopg2</span>
+
+<span class="go"># Connect to an existing database</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;dbname=test user=postgres&quot;</span><span class="p">)</span>
+
+<span class="go"># Open a cursor to perform database operations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="go"># Execute a command: this creates a new table</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);&quot;</span><span class="p">)</span>
+
+<span class="go"># Pass data to fill a query placeholders and let Psycopg perform</span>
+<span class="go"># the correct conversion (no more SQL injections!)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO test (num, data) VALUES (</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">)&quot;</span><span class="p">,</span>
+<span class="gp">... </span>     <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s">&quot;abc&#39;def&quot;</span><span class="p">))</span>
+
+<span class="go"># Query the database and obtain data as Python objects</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM test;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="go">(1, 100, &quot;abc&#39;def&quot;)</span>
+
+<span class="go"># Make the changes to the database persistent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="go"># Close communication with the database</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The main entry points of Psycopg are:</p>
+<ul class="simple">
+<li>The function <a class="reference internal" href="module.html#psycopg2.connect" title="psycopg2.connect"><tt class="xref py py-obj docutils literal"><span class="pre">connect()</span></tt></a> creates a new database session and
+returns a new <a class="reference internal" href="connection.html#connection" title="connection"><tt class="xref py py-obj docutils literal"><span class="pre">connection</span></tt></a> instance.</li>
+<li>The class <a class="reference internal" href="connection.html#connection" title="connection"><tt class="xref py py-obj docutils literal"><span class="pre">connection</span></tt></a> encapsulates a database session. It allows to:<ul>
+<li>create new <a class="reference internal" href="cursor.html#cursor" title="cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor</span></tt></a>s using the <a class="reference internal" href="connection.html#connection.cursor" title="connection.cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor()</span></tt></a> method to
+execute database commands and queries,</li>
+<li>terminate the session using the methods <a class="reference internal" href="connection.html#connection.commit" title="connection.commit"><tt class="xref py py-obj docutils literal"><span class="pre">commit()</span></tt></a> or
+<a class="reference internal" href="connection.html#connection.rollback" title="connection.rollback"><tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt></a>.</li>
+</ul>
+</li>
+<li>The class <a class="reference internal" href="cursor.html#cursor" title="cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor</span></tt></a> allows interaction with the database:<ul>
+<li>send commands to the database using methods such as <a class="reference internal" href="cursor.html#cursor.execute" title="cursor.execute"><tt class="xref py py-obj docutils literal"><span class="pre">execute()</span></tt></a>
+and <a class="reference internal" href="cursor.html#cursor.executemany" title="cursor.executemany"><tt class="xref py py-obj docutils literal"><span class="pre">executemany()</span></tt></a>,</li>
+<li>retrieve data from the database <a class="reference internal" href="cursor.html#cursor-iterable"><em>by iteration</em></a> or
+using methods such as <a class="reference internal" href="cursor.html#cursor.fetchone" title="cursor.fetchone"><tt class="xref py py-obj docutils literal"><span class="pre">fetchone()</span></tt></a>, <a class="reference internal" href="cursor.html#cursor.fetchmany" title="cursor.fetchmany"><tt class="xref py py-obj docutils literal"><span class="pre">fetchmany()</span></tt></a>,
+<a class="reference internal" href="cursor.html#cursor.fetchall" title="cursor.fetchall"><tt class="xref py py-obj docutils literal"><span class="pre">fetchall()</span></tt></a>.</li>
+</ul>
+</li>
+</ul>
+<div class="section" id="passing-parameters-to-sql-queries">
+<span id="query-parameters"></span><span id="index-1"></span><h2>Passing parameters to SQL queries<a class="headerlink" href="#passing-parameters-to-sql-queries" title="Permalink to this headline">¶</a></h2>
+<p>Psycopg casts Python variables to SQL literals by type.  Many standard Python types
+are already <a class="reference internal" href="#python-types-adaptation">adapted to the correct SQL representation</a>.</p>
+<p>Example: the Python function call:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;INSERT INTO some_table (an_int, a_date, a_string)</span>
+<span class="gp">... </span><span class="sd">        VALUES (%s, %s, %s);&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2005</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span> <span class="s">&quot;O&#39;Reilly&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>is converted into the SQL command:</p>
+<div class="highlight-python"><pre>INSERT INTO some_table (an_int, a_date, a_string)
+ VALUES (10, '2005-11-18', 'O''Reilly');</pre>
+</div>
+<p>Named arguments are supported too using <tt class="samp docutils literal"><span class="pre">%(</span><em><span class="pre">name</span></em><span class="pre">)s</span></tt> placeholders.
+Using named arguments the values can be passed to the query in any order and
+many placeholders can use the same values:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;INSERT INTO some_table (an_int, a_date, another_date, a_string)</span>
+<span class="gp">... </span><span class="sd">        VALUES (%(int)s, %(date)s, %(date)s, %(str)s);&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s">&#39;int&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">&#39;str&#39;</span><span class="p">:</span> <span class="s">&quot;O&#39;Reilly&quot;</span><span class="p">,</span> <span class="s">&#39;date&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2005</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">18</span><span class="p">)})</span>
+</pre></div>
+</div>
+<p>While the mechanism resembles regular Python strings manipulation, there are a
+few subtle differences you should care about when passing parameters to a
+query:</p>
+<ul>
+<li><p class="first">The Python string operator <tt class="docutils literal"><span class="pre">%</span></tt> is not used: the <a class="reference internal" href="cursor.html#cursor.execute" title="cursor.execute"><tt class="xref py py-obj docutils literal"><span class="pre">execute()</span></tt></a>
+method accepts a tuple or dictionary of values as second parameter.
+<a class="reference internal" href="#sql-injection"><strong>Never</strong> use <tt class="docutils literal"><span class="pre">%</span></tt> or <tt class="docutils literal"><span class="pre">+</span></tt> to merge values
+into queries</a>.</p>
+</li>
+<li><p class="first">The variables placeholder must <em>always be a</em> <tt class="docutils literal"><span class="pre">%s</span></tt>, even if a different
+placeholder (such as a <tt class="docutils literal"><span class="pre">%d</span></tt> for integers or <tt class="docutils literal"><span class="pre">%f</span></tt> for floats) may look
+more appropriate:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO numbers VALUES (</span><span class="si">%d</span><span class="s">)&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">42</span><span class="p">,))</span> <span class="c"># WRONG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO numbers VALUES (</span><span class="si">%s</span><span class="s">)&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">42</span><span class="p">,))</span> <span class="c"># correct</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">For positional variables binding, <em>the second argument must always be a
+sequence</em>, even if it contains a single variable.  And remember that Python
+requires a comma to create a single element tuple:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO foo VALUES (</span><span class="si">%s</span><span class="s">)&quot;</span><span class="p">,</span> <span class="s">&quot;bar&quot;</span><span class="p">)</span>    <span class="c"># WRONG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO foo VALUES (</span><span class="si">%s</span><span class="s">)&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">))</span>  <span class="c"># WRONG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO foo VALUES (</span><span class="si">%s</span><span class="s">)&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">,))</span> <span class="c"># correct</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO foo VALUES (</span><span class="si">%s</span><span class="s">)&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;bar&quot;</span><span class="p">])</span>  <span class="c"># correct</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Only variable values should be bound via this method: it shouldn&#8217;t be used
+to set table or field names. For these elements, ordinary string formatting
+should be used before running <a class="reference internal" href="cursor.html#cursor.execute" title="cursor.execute"><tt class="xref py py-obj docutils literal"><span class="pre">execute()</span></tt></a>.</p>
+</li>
+</ul>
+<div class="section" id="the-problem-with-the-query-parameters">
+<span id="sql-injection"></span><span id="index-2"></span><h3>The problem with the query parameters<a class="headerlink" href="#the-problem-with-the-query-parameters" title="Permalink to this headline">¶</a></h3>
+<p>The SQL representation for many data types is often not the same of the Python
+string representation.  The classic example is with single quotes in
+strings: SQL uses them as string constants bounds and requires them to be
+escaped, whereas in Python single quotes can be left unescaped in strings
+bounded by double quotes. For this reason a naïve approach to the composition
+of query strings, e.g. using string concatenation, is a recipe for terrible
+problems:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">SQL</span> <span class="o">=</span> <span class="s">&quot;INSERT INTO authors (name) VALUES (&#39;</span><span class="si">%s</span><span class="s">&#39;);&quot;</span> <span class="c"># NEVER DO THIS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;O&#39;Reilly&quot;</span><span class="p">,</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">SQL</span> <span class="o">%</span> <span class="n">data</span><span class="p">)</span> <span class="c"># THIS WILL FAIL MISERABLY</span>
+<span class="go">ProgrammingError: syntax error at or near &quot;Reilly&quot;</span>
+<span class="go">LINE 1: INSERT INTO authors (name) VALUES (&#39;O&#39;Reilly&#39;)</span>
+<span class="go">                                              ^</span>
+</pre></div>
+</div>
+<p>If the variable containing the data to be sent to the database comes from an
+untrusted source (e.g. a form published on a web site) an attacker could
+easily craft a malformed string, either gaining access to unauthorized data or
+performing destructive operations on the database. This form of attack is
+called <a class="reference external" href="http://en.wikipedia.org/wiki/SQL_injection">SQL injection</a> and is known to be one of the most widespread forms of
+attack to servers. Before continuing, please print <a class="reference external" href="http://xkcd.com/327/">this page</a> as a memo and
+hang it onto your desk.</p>
+<p>Psycopg can <a class="reference internal" href="#python-types-adaptation">automatically convert Python objects to and from SQL
+literals</a>: using this feature your code will be more robust and
+reliable. We must stress this point:</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Never, <strong>never</strong>, <strong>NEVER</strong> use Python string concatenation (<tt class="docutils literal"><span class="pre">+</span></tt>) or
+string parameters interpolation (<tt class="docutils literal"><span class="pre">%</span></tt>) to pass variables to a SQL query
+string.  Not even at gunpoint.</p>
+</div>
+<p>The correct way to pass variables in a SQL command is using the second
+argument of the <a class="reference internal" href="cursor.html#cursor.execute" title="cursor.execute"><tt class="xref py py-obj docutils literal"><span class="pre">execute()</span></tt></a> method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">SQL</span> <span class="o">=</span> <span class="s">&quot;INSERT INTO authors (name) VALUES (</span><span class="si">%s</span><span class="s">);&quot;</span> <span class="c"># Note: no quotes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;O&#39;Reilly&quot;</span><span class="p">,</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">SQL</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="c"># Note: no % operator</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="adaptation-of-python-values-to-sql-types">
+<span id="python-types-adaptation"></span><span id="index-3"></span><h2>Adaptation of Python values to SQL types<a class="headerlink" href="#adaptation-of-python-values-to-sql-types" title="Permalink to this headline">¶</a></h2>
+<p>Many standards Python types are adapted into SQL and returned as Python
+objects when a query is executed.</p>
+<p>If you need to convert other Python types to and from PostgreSQL data types,
+see <a class="reference internal" href="advanced.html#adapting-new-types"><em>Adapting new Python types to SQL syntax</em></a> and <a class="reference internal" href="advanced.html#type-casting-from-sql-to-python"><em>Type casting of SQL types into Python objects</em></a>.  You
+can also find a few other specialized adapters in the <a class="reference internal" href="extras.html#module-psycopg2.extras" title="psycopg2.extras"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.extras</span></tt></a>
+module.</p>
+<p>In the following examples the method <a class="reference internal" href="cursor.html#cursor.mogrify" title="cursor.mogrify"><tt class="xref py py-obj docutils literal"><span class="pre">mogrify()</span></tt></a> is used to show
+the SQL string that would be sent to the database.</p>
+<span class="target" id="adapt-consts"></span><ul id="index-4">
+<li><p class="first">Python <a class="reference external" href="http://docs.python.org/3.2/library/constants.html#None" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt></a> and boolean values <a class="reference external" href="http://docs.python.org/3.2/library/constants.html#True" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt></a> and <a class="reference external" href="http://docs.python.org/3.2/library/constants.html#False" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">False</span></tt></a> are converted into the
+proper SQL literals:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">mogrify</span><span class="p">(</span><span class="s">&quot;SELECT </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;SELECT NULL, true, false;&#39;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<span class="target" id="adapt-numbers"></span><ul id="index-5">
+<li><p class="first">Numeric objects: <a class="reference external" href="http://docs.python.org/3.2/library/functions.html#int" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>, <a class="reference external" href="http://docs.python.org/library/functions.html#long" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">long</span></tt></a>, <a class="reference external" href="http://docs.python.org/3.2/library/functions.html#float" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>, <a class="reference external" href="http://docs.python.org/3.2/library/decimal.html#decimal.Decimal" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">Decimal</span></tt></a> are converted in
+the PostgreSQL numerical representation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">mogrify</span><span class="p">(</span><span class="s">&quot;SELECT </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="il">10L</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s">&quot;10.00&quot;</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;SELECT 10, 10, 10.0, 10.00;&#39;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<span class="target" id="adapt-string"></span><ul class="simple" id="index-6">
+<li>String types: <a class="reference external" href="http://docs.python.org/3.2/library/functions.html#str" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/library/functions.html#unicode" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">unicode</span></tt></a> are converted in SQL string syntax.
+<tt class="xref py py-obj docutils literal"><span class="pre">unicode</span></tt> objects (<tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt> in Python 3) are encoded in the connection
+<a class="reference internal" href="connection.html#connection.encoding" title="connection.encoding"><tt class="xref py py-obj docutils literal"><span class="pre">encoding</span></tt></a> to be sent to the backend: trying to send a character
+not supported by the encoding will result in an error. Received data can be
+converted either as <tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">unicode</span></tt>: see <a class="reference internal" href="#unicode-handling"><em>Unicode handling</em></a>.</li>
+</ul>
+<span class="target" id="adapt-binary"></span><ul id="index-7">
+<li><p class="first">Binary types: Python types representing binary objects are converted into
+PostgreSQL binary string syntax, suitable for <tt class="sql docutils literal"><span class="pre">bytea</span></tt> fields.   Such
+types are <a class="reference external" href="http://docs.python.org/library/functions.html#buffer" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">buffer</span></tt></a> (only available in Python 2), <a class="reference external" href="http://docs.python.org/3.2/library/stdtypes.html#memoryview" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">memoryview</span></tt></a> (available
+from Python 2.7), <a class="reference external" href="http://docs.python.org/3.2/library/functions.html#bytearray" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">bytearray</span></tt></a> (available from Python 2.6) and <a class="reference external" href="http://docs.python.org/3.2/library/functions.html#bytes" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">bytes</span></tt></a>
+(only from Python 3: the name is available from Python 2.6 but it&#8217;s only an
+alias for the type <tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt>). Any object implementing the <a class="reference external" href="http://www.python.org/dev/peps/pep-3118/">Revised Buffer
+Protocol</a> should be usable as binary type where the protocol is supported
+(i.e. from Python 2.6). Received data is returned as <tt class="xref py py-obj docutils literal"><span class="pre">buffer</span></tt> (in Python 2)
+or <tt class="xref py py-obj docutils literal"><span class="pre">memoryview</span></tt> (in Python 3).</p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 2.4: </span>only strings were supported before.</p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 2.4.1: </span>can parse the &#8216;hex&#8217; format from 9.0 servers without relying on the
+version of the client library.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>In Python 2, if you have binary data in a <tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt> object, you can pass them
+to a <tt class="sql docutils literal"><span class="pre">bytea</span></tt> field using the <a class="reference internal" href="module.html#psycopg2.Binary" title="psycopg2.Binary"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.Binary</span></tt></a> wrapper:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">mypic</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;picture.png&#39;</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">curs</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;insert into blobs (file) values (</span><span class="si">%s</span><span class="s">)&quot;</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">Binary</span><span class="p">(</span><span class="n">mypic</span><span class="p">),))</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Since version 9.0 PostgreSQL uses by default <a class="reference external" href="http://www.postgresql.org/docs/current/static/datatype-binary.html">a new &#8220;hex&#8221; format</a> to
+emit <tt class="sql docutils literal"><span class="pre">bytea</span></tt> fields. Starting from Psycopg 2.4.1 the format is
+correctly supported.  If you use a previous version you will need some
+extra care when receiving bytea from PostgreSQL: you must have at least
+libpq 9.0 installed on the client or alternatively you can set the
+<a class="reference external" href="http://www.postgresql.org/docs/current/static/runtime-config-client.html#GUC-BYTEA-OUTPUT">bytea_output</a> configuration parameter to <tt class="docutils literal"><span class="pre">escape</span></tt>, either in the
+server configuration file or in the client session (using a query such as
+<tt class="docutils literal"><span class="pre">SET</span> <span class="pre">bytea_output</span> <span class="pre">TO</span> <span class="pre">escape;</span></tt>) before receiving binary data.</p>
+</div>
+</li>
+</ul>
+<span class="target" id="adapt-date"></span><ul id="index-8">
+<li><p class="first">Date and time objects: builtin <a class="reference external" href="http://docs.python.org/3.2/library/datetime.html#datetime.datetime" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">datetime</span></tt></a>, <a class="reference external" href="http://docs.python.org/3.2/library/datetime.html#datetime.date" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">date</span></tt></a>,
+<a class="reference external" href="http://docs.python.org/3.2/library/datetime.html#datetime.time" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">time</span></tt></a>,  <a class="reference external" href="http://docs.python.org/3.2/library/datetime.html#datetime.timedelta" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">timedelta</span></tt></a> are converted into PostgreSQL&#8217;s
+<tt class="sql docutils literal"><span class="pre">timestamp</span></tt>, <tt class="sql docutils literal"><span class="pre">date</span></tt>, <tt class="sql docutils literal"><span class="pre">time</span></tt>, <tt class="sql docutils literal"><span class="pre">interval</span></tt> data types.
+Time zones are supported too.  The Egenix <a class="reference external" href="http://www.egenix.com/products/python/mxBase/mxDateTime/">mx.DateTime</a> objects are adapted
+the same way:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span>
+<span class="go">datetime.datetime(2010, 2, 8, 1, 40, 27, 425337)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">mogrify</span><span class="p">(</span><span class="s">&quot;SELECT </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">dt</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+<span class="go">&quot;SELECT &#39;2010-02-08T01:40:27.425337&#39;, &#39;2010-02-08&#39;, &#39;01:40:27.425337&#39;;&quot;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">mogrify</span><span class="p">(</span><span class="s">&quot;SELECT </span><span class="si">%s</span><span class="s">;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">dt</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2010</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),))</span>
+<span class="go">&quot;SELECT &#39;38 days 6027.425337 seconds&#39;;&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<span class="target" id="adapt-list"></span><ul id="index-9">
+<li><p class="first">Python lists are converted into PostgreSQL <tt class="sql docutils literal"><span class="pre">ARRAY</span></tt>s:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">mogrify</span><span class="p">(</span><span class="s">&quot;SELECT </span><span class="si">%s</span><span class="s">;&quot;</span><span class="p">,</span> <span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="p">))</span>
+<span class="go">&#39;SELECT ARRAY[10, 20, 30];&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Reading back from PostgreSQL, arrays are converted to list of Python
+objects as expected, but only if the types are known one. Arrays of
+unknown types are returned as represented by the database (e.g.
+<tt class="docutils literal"><span class="pre">{a,b,c}</span></tt>). You can easily create a typecaster for <a class="reference internal" href="extensions.html#cast-array-unknown"><em>array of
+unknown types</em></a>.</p>
+</div>
+</li>
+</ul>
+<span class="target" id="adapt-tuple"></span><ul id="index-10">
+<li><p class="first">Python tuples are converted in a syntax suitable for the SQL <tt class="sql docutils literal"><span class="pre">IN</span></tt>
+operator and to represent a composite type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">mogrify</span><span class="p">(</span><span class="s">&quot;SELECT </span><span class="si">%s</span><span class="s"> IN </span><span class="si">%s</span><span class="s">;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)))</span>
+<span class="go">&#39;SELECT 10 IN (10, 20, 30);&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">SQL doesn&#8217;t allow an empty list in the IN operator, so your code should
+guard against empty tuples.</p>
+</div>
+<p>If you want PostgreSQL composite types to be converted into a Python
+tuple/namedtuple you can use the <a class="reference internal" href="extras.html#psycopg2.extras.register_composite" title="psycopg2.extras.register_composite"><tt class="xref py py-obj docutils literal"><span class="pre">register_composite()</span></tt></a>
+function.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.0.6: </span>the tuple <tt class="sql docutils literal"><span class="pre">IN</span></tt> adaptation.</p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 2.0.14: </span>the tuple <tt class="sql docutils literal"><span class="pre">IN</span></tt> adapter is always active.  In previous releases it
+was necessary to import the <a class="reference internal" href="extensions.html#module-psycopg2.extensions" title="psycopg2.extensions"><tt class="xref py py-obj docutils literal"><span class="pre">extensions</span></tt></a> module to have it
+registered.</p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 2.3: </span><a class="reference external" href="http://docs.python.org/3.2/library/collections.html#collections.namedtuple" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">namedtuple</span></tt></a> instances are adapted like regular tuples and
+can thus be used to represent composite types.</p>
+</li>
+</ul>
+<span class="target" id="adapt-dict"></span><ul id="index-11">
+<li><p class="first">Python dictionaries are converted into the <a class="reference external" href="http://www.postgresql.org/docs/current/static/hstore.html"><tt class="sql docutils literal"><span class="pre">hstore</span></tt></a> data type. By default
+the adapter is not enabled: see <a class="reference internal" href="extras.html#psycopg2.extras.register_hstore" title="psycopg2.extras.register_hstore"><tt class="xref py py-obj docutils literal"><span class="pre">register_hstore()</span></tt></a> for
+further details.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.3: </span>the <tt class="sql docutils literal"><span class="pre">hstore</span></tt> adaptation.</p>
+</li>
+</ul>
+<div class="section" id="unicode-handling">
+<span id="index-12"></span><span id="id9"></span><h3>Unicode handling<a class="headerlink" href="#unicode-handling" title="Permalink to this headline">¶</a></h3>
+<p>Psycopg can exchange Unicode data with a PostgreSQL database.  Python
+<tt class="xref py py-obj docutils literal"><span class="pre">unicode</span></tt> objects are automatically <em>encoded</em> in the client encoding
+defined on the database connection (the <a class="reference external" href="http://www.postgresql.org/docs/current/static/multibyte.html">PostgreSQL encoding</a>, available in
+<a class="reference internal" href="connection.html#connection.encoding" title="connection.encoding"><tt class="xref py py-obj docutils literal"><span class="pre">connection.encoding</span></tt></a>, is translated into a <a class="reference external" href="http://docs.python.org/library/codecs.html#standard-encodings">Python codec</a> using the
+<a class="reference internal" href="extensions.html#psycopg2.extensions.encodings" title="psycopg2.extensions.encodings"><tt class="xref py py-obj docutils literal"><span class="pre">encodings</span></tt></a> mapping):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">u</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+<span class="go">àèìòù€ &lt;type &#39;unicode&#39;&gt;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO test (num, data) VALUES (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">);&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">74</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>When reading data from the database, in Python 2 the strings returned are
+usually 8 bit <tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt> objects encoded in the database client encoding:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">encoding</span>
+<span class="go">UTF8</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT data FROM test WHERE num = 74&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">àèìòù€ &lt;type &#39;str&#39;&gt; &#39;\xc3\xa0\xc3\xa8\xc3\xac\xc3\xb2\xc3\xb9\xe2\x82\xac&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">set_client_encoding</span><span class="p">(</span><span class="s">&#39;LATIN9&#39;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT data FROM test WHERE num = 74&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">&lt;type &#39;str&#39;&gt; &#39;\xe0\xe8\xec\xf2\xf9\xa4&#39;</span>
+</pre></div>
+</div>
+<p>In Python 3 instead the strings are automatically <em>decoded</em> in the connection
+<a class="reference internal" href="connection.html#connection.encoding" title="connection.encoding"><tt class="xref py py-obj docutils literal"><span class="pre">encoding</span></tt></a>, as the <tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt> object can represent Unicode characters.
+In Python 2 you must register a <a class="reference internal" href="advanced.html#type-casting-from-sql-to-python"><em>typecaster</em></a> in order to receive <tt class="xref py py-obj docutils literal"><span class="pre">unicode</span></tt> objects:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">psycopg2</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">,</span> <span class="n">cur</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT data FROM test WHERE num = 74&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">àèìòù€ &lt;type &#39;unicode&#39;&gt; u&#39;\xe0\xe8\xec\xf2\xf9\u20ac&#39;</span>
+</pre></div>
+</div>
+<p>In the above example, the <a class="reference internal" href="extensions.html#psycopg2.extensions.UNICODE" title="psycopg2.extensions.UNICODE"><tt class="xref py py-obj docutils literal"><span class="pre">UNICODE</span></tt></a> typecaster is
+registered only on the cursor. It is also possible to register typecasters on
+the connection or globally: see the function
+<a class="reference internal" href="extensions.html#psycopg2.extensions.register_type" title="psycopg2.extensions.register_type"><tt class="xref py py-obj docutils literal"><span class="pre">register_type()</span></tt></a> and
+<a class="reference internal" href="advanced.html#type-casting-from-sql-to-python"><em>Type casting of SQL types into Python objects</em></a> for details.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>In Python 2, if you want to uniformly receive all your database input in
+Unicode, you can register the related typecasters globally as soon as
+Psycopg is imported:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">psycopg2</span>
+<span class="kn">import</span> <span class="nn">psycopg2.extensions</span>
+<span class="n">psycopg2</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">)</span>
+<span class="n">psycopg2</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">UNICODEARRAY</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">and then forget about this story.</p>
+</div>
+</div>
+<div class="section" id="time-zones-handling">
+<span id="tz-handling"></span><span id="index-13"></span><h3>Time zones handling<a class="headerlink" href="#time-zones-handling" title="Permalink to this headline">¶</a></h3>
+<p>The PostgreSQL type <tt class="sql docutils literal"><span class="pre">timestamp</span> <span class="pre">with</span> <span class="pre">time</span> <span class="pre">zone</span></tt> is converted into Python
+<a class="reference external" href="http://docs.python.org/3.2/library/datetime.html#datetime.datetime" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">datetime</span></tt></a> objects with a <a class="reference external" href="http://docs.python.org/3.2/library/datetime.html#datetime.datetime.tzinfo" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">tzinfo</span></tt></a> attribute set
+to a <a class="reference internal" href="tz.html#psycopg2.tz.FixedOffsetTimezone" title="psycopg2.tz.FixedOffsetTimezone"><tt class="xref py py-obj docutils literal"><span class="pre">FixedOffsetTimezone</span></tt></a> instance.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SET TIME ZONE &#39;Europe/Rome&#39;;&quot;</span><span class="p">)</span>  <span class="c"># UTC + 1 hour</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT &#39;2010-01-01 10:30:45&#39;::timestamptz;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tzinfo</span>
+<span class="go">psycopg2.tz.FixedOffsetTimezone(offset=60, name=None)</span>
+</pre></div>
+</div>
+<p>Note that only time zones with an integer number of minutes are supported:
+this is a limitation of the Python <a class="reference external" href="http://docs.python.org/3.2/library/datetime.html#datetime" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">datetime</span></tt></a> module.  A few historical time
+zones had seconds in the UTC offset: these time zones will have the offset
+rounded to the nearest minute, with an error of up to 30 seconds.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SET TIME ZONE &#39;Asia/Calcutta&#39;;&quot;</span><span class="p">)</span>  <span class="c"># offset was +5:53:20</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT &#39;1930-01-01 10:30:45&#39;::timestamptz;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tzinfo</span>
+<span class="go">psycopg2.tz.FixedOffsetTimezone(offset=353, name=None)</span>
+</pre></div>
+</div>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 2.2.2: </span>timezones with seconds are supported (with rounding). Previously such
+timezones raised an error.  In order to deal with them in previous
+versions use <a class="reference internal" href="extras.html#psycopg2.extras.register_tstz_w_secs" title="psycopg2.extras.register_tstz_w_secs"><tt class="xref py py-obj docutils literal"><span class="pre">psycopg2.extras.register_tstz_w_secs()</span></tt></a>.</p>
+</div>
+</div>
+<div class="section" id="transactions-control">
+<span id="index-14"></span><span id="id12"></span><h2>Transactions control<a class="headerlink" href="#transactions-control" title="Permalink to this headline">¶</a></h2>
+<p>In Psycopg transactions are handled by the <a class="reference internal" href="connection.html#connection" title="connection"><tt class="xref py py-obj docutils literal"><span class="pre">connection</span></tt></a> class. By
+default, the first time a command is sent to the database (using one of the
+<a class="reference internal" href="cursor.html#cursor" title="cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor</span></tt></a>s created by the connection), a new transaction is created.
+The following database commands will be executed in the context of the same
+transaction &#8211; not only the commands issued by the first cursor, but the ones
+issued by all the cursors created by the same connection.  Should any command
+fail, the transaction will be aborted and no further command will be executed
+until a call to the <a class="reference internal" href="connection.html#connection.rollback" title="connection.rollback"><tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt></a> method.</p>
+<p>The connection is responsible to terminate its transaction, calling either the
+<a class="reference internal" href="connection.html#connection.commit" title="connection.commit"><tt class="xref py py-obj docutils literal"><span class="pre">commit()</span></tt></a> or <a class="reference internal" href="connection.html#connection.rollback" title="connection.rollback"><tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt></a> method.  Committed
+changes are immediately made persistent into the database.  Closing the
+connection using the <a class="reference internal" href="connection.html#connection.close" title="connection.close"><tt class="xref py py-obj docutils literal"><span class="pre">close()</span></tt></a> method or destroying the
+connection object (using <tt class="xref py py-obj docutils literal"><span class="pre">del</span></tt> or letting it fall out of scope)
+will result in an implicit <tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt> call.</p>
+<p>It is possible to set the connection in <em>autocommit</em> mode: this way all the
+commands executed will be immediately committed and no rollback is possible. A
+few commands (e.g. <tt class="sql docutils literal"><span class="pre">CREATE</span> <span class="pre">DATABASE</span></tt>, <tt class="sql docutils literal"><span class="pre">VACUUM</span></tt>...) require to be run
+outside any transaction: in order to be able to run these commands from
+Psycopg, the session must be in autocommit mode: you can use the
+<a class="reference internal" href="connection.html#connection.autocommit" title="connection.autocommit"><tt class="xref py py-obj docutils literal"><span class="pre">autocommit</span></tt></a> property (<a class="reference internal" href="connection.html#connection.set_isolation_level" title="connection.set_isolation_level"><tt class="xref py py-obj docutils literal"><span class="pre">set_isolation_level()</span></tt></a> in
+older versions).</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">By default even a simple <tt class="sql docutils literal"><span class="pre">SELECT</span></tt> will start a transaction: in
+long-running programs, if no further action is taken, the session will
+remain &#8220;idle in transaction&#8221;, a condition non desiderable for several
+reasons (locks are held by the session, tables bloat...). For long lived
+scripts, either make sure to terminate a transaction as soon as possible or
+use an autocommit connection.</p>
+</div>
+<p>A few other transaction properties can be set session-wide by the
+<tt class="xref py py-obj docutils literal"><span class="pre">connection</span></tt>: for instance it is possible to have read-only transactions or
+change the isolation level. See the <a class="reference internal" href="connection.html#connection.set_session" title="connection.set_session"><tt class="xref py py-obj docutils literal"><span class="pre">set_session()</span></tt></a> method for all
+the details.</p>
+</div>
+<div class="section" id="server-side-cursors">
+<span id="index-15"></span><span id="id13"></span><h2>Server side cursors<a class="headerlink" href="#server-side-cursors" title="Permalink to this headline">¶</a></h2>
+<p>When a database query is executed, the Psycopg <a class="reference internal" href="cursor.html#cursor" title="cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor</span></tt></a> usually fetches
+all the records returned by the backend, transferring them to the client
+process. If the query returned an huge amount of data, a proportionally large
+amount of memory will be allocated by the client.</p>
+<p>If the dataset is too large to be practically handled on the client side, it is
+possible to create a <em>server side</em> cursor. Using this kind of cursor it is
+possible to transfer to the client only a controlled amount of data, so that a
+large dataset can be examined without keeping it entirely in memory.</p>
+<p>Server side cursor are created in PostgreSQL using the <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-declare.html"><tt class="sql docutils literal"><span class="pre">DECLARE</span></tt></a> command and
+subsequently handled using <tt class="sql docutils literal"><span class="pre">MOVE</span></tt>, <tt class="sql docutils literal"><span class="pre">FETCH</span></tt> and <tt class="sql docutils literal"><span class="pre">CLOSE</span></tt> commands.</p>
+<p>Psycopg wraps the database server side cursor in <em>named cursors</em>. A named
+cursor is created using the <a class="reference internal" href="connection.html#connection.cursor" title="connection.cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor()</span></tt></a> method specifying the
+<em>name</em> parameter. Such cursor will behave mostly like a regular cursor,
+allowing the user to move in the dataset using the <a class="reference internal" href="cursor.html#cursor.scroll" title="cursor.scroll"><tt class="xref py py-obj docutils literal"><span class="pre">scroll()</span></tt></a>
+method and to read the data using <a class="reference internal" href="cursor.html#cursor.fetchone" title="cursor.fetchone"><tt class="xref py py-obj docutils literal"><span class="pre">fetchone()</span></tt></a> and
+<a class="reference internal" href="cursor.html#cursor.fetchmany" title="cursor.fetchmany"><tt class="xref py py-obj docutils literal"><span class="pre">fetchmany()</span></tt></a> methods.</p>
+<p>Named cursors are also <a class="reference internal" href="cursor.html#cursor-iterable"><em>iterable</em></a> like regular cursors.
+Note however that before Psycopg 2.4 iteration was performed fetching one
+record at time from the backend, resulting in a large overhead. The attribute
+<a class="reference internal" href="cursor.html#cursor.itersize" title="cursor.itersize"><tt class="xref py py-obj docutils literal"><span class="pre">itersize</span></tt></a> now controls how many records are fetched at time
+during the iteration: the default value of 2000 allows to fetch about 100KB
+per roundtrip assuming records of 10-20 columns of mixed number and strings;
+you may decrease this value if you are dealing with huge records.</p>
+<p>Named cursors are usually created <tt class="sql docutils literal"><span class="pre">WITHOUT</span> <span class="pre">HOLD</span></tt>, meaning they live only
+as long as the current transaction. Trying to fetch from a named cursor after
+a <a class="reference internal" href="connection.html#connection.commit" title="connection.commit"><tt class="xref py py-obj docutils literal"><span class="pre">commit()</span></tt></a> or to create a named cursor when the <a class="reference internal" href="connection.html#connection" title="connection"><tt class="xref py py-obj docutils literal"><span class="pre">connection</span></tt></a>
+transaction isolation level is set to <tt class="xref py py-obj docutils literal"><span class="pre">AUTOCOMMIT</span></tt> will result in an exception.
+It is possible to create a <tt class="sql docutils literal"><span class="pre">WITH</span> <span class="pre">HOLD</span></tt> cursor by specifying a <tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt>
+value for the <tt class="xref py py-obj docutils literal"><span class="pre">withhold</span></tt> parameter to <a class="reference internal" href="connection.html#connection.cursor" title="connection.cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor()</span></tt></a> or by setting the
+<a class="reference internal" href="cursor.html#cursor.withhold" title="cursor.withhold"><tt class="xref py py-obj docutils literal"><span class="pre">withhold</span></tt></a> attribute to <tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt> before calling <a class="reference internal" href="cursor.html#cursor.execute" title="cursor.execute"><tt class="xref py py-obj docutils literal"><span class="pre">execute()</span></tt></a> on
+the cursor. It is extremely important to always <a class="reference internal" href="cursor.html#cursor.close" title="cursor.close"><tt class="xref py py-obj docutils literal"><span class="pre">close()</span></tt></a> such cursors,
+otherwise they will continue to hold server-side resources until the connection
+will be eventually closed. Also note that while <tt class="sql docutils literal"><span class="pre">WITH</span> <span class="pre">HOLD</span></tt> cursors
+lifetime extends well after <a class="reference internal" href="connection.html#connection.commit" title="connection.commit"><tt class="xref py py-obj docutils literal"><span class="pre">commit()</span></tt></a>, calling
+<a class="reference internal" href="connection.html#connection.rollback" title="connection.rollback"><tt class="xref py py-obj docutils literal"><span class="pre">rollback()</span></tt></a> will automatically close the cursor.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is also possible to use a named cursor to consume a cursor created
+in some other way than using the <tt class="sql docutils literal"><span class="pre">DECLARE</span></tt> executed by
+<a class="reference internal" href="cursor.html#cursor.execute" title="cursor.execute"><tt class="xref py py-obj docutils literal"><span class="pre">execute()</span></tt></a>. For example, you may have a PL/pgSQL function
+returning a cursor:</p>
+<div class="highlight-python"><pre>CREATE FUNCTION reffunc(refcursor) RETURNS refcursor AS $$
+BEGIN
+    OPEN $1 FOR SELECT col FROM test;
+    RETURN $1;
+END;
+$$ LANGUAGE plpgsql;</pre>
+</div>
+<p>You can read the cursor content by calling the function with a regular,
+non-named, Psycopg cursor:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cur1</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cur1</span><span class="o">.</span><span class="n">callproc</span><span class="p">(</span><span class="s">&#39;reffunc&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;curname&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>and then use a named cursor in the same transaction to &#8220;steal the cursor&#8221;:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">cur2</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">(</span><span class="s">&#39;curname&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">cur2</span><span class="p">:</span>     <span class="c"># or cur2.fetchone, fetchmany...</span>
+    <span class="c"># do something with record</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="thread-and-process-safety">
+<span id="thread-safety"></span><span id="index-16"></span><h2>Thread and process safety<a class="headerlink" href="#thread-and-process-safety" title="Permalink to this headline">¶</a></h2>
+<p>The Psycopg module and the <a class="reference internal" href="connection.html#connection" title="connection"><tt class="xref py py-obj docutils literal"><span class="pre">connection</span></tt></a> objects are <em>thread-safe</em>: many
+threads can access the same database either using separate sessions and
+creating a <tt class="xref py py-obj docutils literal"><span class="pre">connection</span></tt> per thread or using the same
+connection and creating separate <a class="reference internal" href="cursor.html#cursor" title="cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor</span></tt></a>s. In <a class="reference external" href="http://www.python.org/dev/peps/pep-0249/">DB API 2.0</a> parlance, Psycopg is
+<em>level 2 thread safe</em>.</p>
+<p>The difference between the above two approaches is that, using different
+connections, the commands will be executed in different sessions and will be
+served by different server processes. On the other hand, using many cursors on
+the same connection, all the commands will be executed in the same session
+(and in the same transaction if the connection is not in <a class="reference internal" href="#transactions-control"><em>autocommit</em></a> mode), but they will be serialized.</p>
+<p>The above observations are only valid for regular threads: they don&#8217;t apply to
+forked processes nor to green threads. <tt class="xref py py-obj docutils literal"><span class="pre">libpq</span></tt> connections <a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-connect.html#LIBPQ-CONNECT">shouldn&#8217;t be used by a
+forked processes</a>, so when using a module such as <a class="reference external" href="http://docs.python.org/3.2/library/multiprocessing.html#multiprocessing" title="(in Python v3.2)"><tt class="xref py py-obj docutils literal"><span class="pre">multiprocessing</span></tt></a> or a
+forking web deploy method such as FastCGI make sure to create the connections
+<em>after</em> the fork.</p>
+<p>Connections shouldn&#8217;t be shared either by different green threads: see
+<a class="reference internal" href="advanced.html#green-support"><em>Support to coroutine libraries</em></a> for further details.</p>
+</div>
+<div class="section" id="using-copy-to-and-copy-from">
+<span id="copy"></span><span id="index-17"></span><h2>Using COPY TO and COPY FROM<a class="headerlink" href="#using-copy-to-and-copy-from" title="Permalink to this headline">¶</a></h2>
+<p>Psycopg <a class="reference internal" href="cursor.html#cursor" title="cursor"><tt class="xref py py-obj docutils literal"><span class="pre">cursor</span></tt></a> objects provide an interface to the efficient
+PostgreSQL <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-copy.html"><tt class="sql docutils literal"><span class="pre">COPY</span></tt></a> command to move data from files to tables and back.
+The methods exposed are:</p>
+<dl class="docutils">
+<dt><a class="reference internal" href="cursor.html#cursor.copy_from" title="cursor.copy_from"><tt class="xref py py-obj docutils literal"><span class="pre">copy_from()</span></tt></a></dt>
+<dd>Reads data <em>from</em> a file-like object appending them to a database table
+(<tt class="sql docutils literal"><span class="pre">COPY</span> <span class="pre">table</span> <span class="pre">FROM</span> <span class="pre">file</span></tt> syntax). The source file must have both
+<tt class="xref py py-obj docutils literal"><span class="pre">read()</span></tt> and <tt class="xref py py-obj docutils literal"><span class="pre">readline()</span></tt> method.</dd>
+<dt><a class="reference internal" href="cursor.html#cursor.copy_to" title="cursor.copy_to"><tt class="xref py py-obj docutils literal"><span class="pre">copy_to()</span></tt></a></dt>
+<dd>Writes the content of a table <em>to</em> a file-like object (<tt class="sql docutils literal"><span class="pre">COPY</span> <span class="pre">table</span> <span class="pre">TO</span>
+<span class="pre">file</span></tt> syntax). The target file must have a <tt class="xref py py-obj docutils literal"><span class="pre">write()</span></tt> method.</dd>
+<dt><a class="reference internal" href="cursor.html#cursor.copy_expert" title="cursor.copy_expert"><tt class="xref py py-obj docutils literal"><span class="pre">copy_expert()</span></tt></a></dt>
+<dd>Allows to handle more specific cases and to use all the <tt class="sql docutils literal"><span class="pre">COPY</span></tt>
+features available in PostgreSQL.</dd>
+</dl>
+<p>Please refer to the documentation of the single methods for details and
+examples.</p>
+</div>
+<div class="section" id="access-to-postgresql-large-objects">
+<span id="large-objects"></span><span id="index-18"></span><h2>Access to PostgreSQL large objects<a class="headerlink" href="#access-to-postgresql-large-objects" title="Permalink to this headline">¶</a></h2>
+<p>PostgreSQL offers support for <a class="reference external" href="http://www.postgresql.org/docs/current/static/largeobjects.html">large objects</a>, which provide stream-style
+access to user data that is stored in a special large-object structure. They
+are useful with data values too large to be manipulated conveniently as a
+whole.</p>
+<p>Psycopg allows access to the large object using the
+<a class="reference internal" href="extensions.html#psycopg2.extensions.lobject" title="psycopg2.extensions.lobject"><tt class="xref py py-obj docutils literal"><span class="pre">lobject</span></tt></a> class. Objects are generated using the
+<a class="reference internal" href="connection.html#connection.lobject" title="connection.lobject"><tt class="xref py py-obj docutils literal"><span class="pre">connection.lobject()</span></tt></a> factory method. Data can be retrieved either as bytes
+or as Unicode strings.</p>
+<p>Psycopg large object support efficient import/export with file system files
+using the <a class="reference external" href="http://www.postgresql.org/docs/current/static/lo-interfaces.html#LO-IMPORT"><tt class="xref py py-obj docutils literal"><span class="pre">lo_import()</span></tt></a> and <a class="reference external" href="http://www.postgresql.org/docs/current/static/lo-interfaces.html#LO-EXPORT"><tt class="xref py py-obj docutils literal"><span class="pre">lo_export()</span></tt></a> libpq functions.</p>
+</div>
+<div class="section" id="two-phase-commit-protocol-support">
+<span id="tpc"></span><span id="index-19"></span><h2>Two-Phase Commit protocol support<a class="headerlink" href="#two-phase-commit-protocol-support" title="Permalink to this headline">¶</a></h2>
+<p class="versionadded">
+<span class="versionmodified">New in version 2.3.</span></p>
+<p>Psycopg exposes the two-phase commit features available since PostgreSQL 8.1
+implementing the <em>two-phase commit extensions</em> proposed by the DB API 2.0.</p>
+<p>The DB API 2.0 model of two-phase commit is inspired by the <a class="reference external" href="http://www.opengroup.org/bookstore/catalog/c193.htm">XA specification</a>,
+according to which transaction IDs are formed from three components:</p>
+<ul class="simple">
+<li>a format ID (non-negative 32 bit integer)</li>
+<li>a global transaction ID (string not longer than 64 bytes)</li>
+<li>a branch qualifier (string not longer than 64 bytes)</li>
+</ul>
+<p>For a particular global transaction, the first two components will be the same
+for all the resources. Every resource will be assigned a different branch
+qualifier.</p>
+<p>According to the DB API 2.0 specification, a transaction ID is created using the
+<a class="reference internal" href="connection.html#connection.xid" title="connection.xid"><tt class="xref py py-obj docutils literal"><span class="pre">connection.xid()</span></tt></a> method. Once you have a transaction id, a distributed
+transaction can be started with <a class="reference internal" href="connection.html#connection.tpc_begin" title="connection.tpc_begin"><tt class="xref py py-obj docutils literal"><span class="pre">connection.tpc_begin()</span></tt></a>, prepared using
+<a class="reference internal" href="connection.html#connection.tpc_prepare" title="connection.tpc_prepare"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_prepare()</span></tt></a> and completed using <a class="reference internal" href="connection.html#connection.tpc_commit" title="connection.tpc_commit"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_commit()</span></tt></a> or
+<a class="reference internal" href="connection.html#connection.tpc_rollback" title="connection.tpc_rollback"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_rollback()</span></tt></a>.  Transaction IDs can also be retrieved from the
+database using <a class="reference internal" href="connection.html#connection.tpc_recover" title="connection.tpc_recover"><tt class="xref py py-obj docutils literal"><span class="pre">tpc_recover()</span></tt></a> and completed using the above
+<tt class="xref py py-obj docutils literal"><span class="pre">tpc_commit()</span></tt> and <tt class="xref py py-obj docutils literal"><span class="pre">tpc_rollback()</span></tt>.</p>
+<p>PostgreSQL doesn&#8217;t follow the XA standard though, and the ID for a PostgreSQL
+prepared transaction can be any string up to 200 characters long.
+Psycopg&#8217;s <a class="reference internal" href="extensions.html#psycopg2.extensions.Xid" title="psycopg2.extensions.Xid"><tt class="xref py py-obj docutils literal"><span class="pre">Xid</span></tt></a> objects can represent both XA-style
+transactions IDs (such as the ones created by the <tt class="xref py py-obj docutils literal"><span class="pre">xid()</span></tt> method) and
+PostgreSQL transaction IDs identified by an unparsed string.</p>
+<p>The format in which the Xids are converted into strings passed to the
+database is the same employed by the <a class="reference external" href="http://jdbc.postgresql.org/">PostgreSQL JDBC driver</a>: this should
+allow interoperation between tools written in Python and in Java. For example
+a recovery tool written in Python would be able to recognize the components of
+transactions produced by a Java program.</p>
+<p>For further details see the documentation for the above methods.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Basic module usage</a><ul>
+<li><a class="reference internal" href="#passing-parameters-to-sql-queries">Passing parameters to SQL queries</a><ul>
+<li><a class="reference internal" href="#the-problem-with-the-query-parameters">The problem with the query parameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adaptation-of-python-values-to-sql-types">Adaptation of Python values to SQL types</a><ul>
+<li><a class="reference internal" href="#unicode-handling">Unicode handling</a></li>
+<li><a class="reference internal" href="#time-zones-handling">Time zones handling</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transactions-control">Transactions control</a></li>
+<li><a class="reference internal" href="#server-side-cursors">Server side cursors</a></li>
+<li><a class="reference internal" href="#thread-and-process-safety">Thread and process safety</a></li>
+<li><a class="reference internal" href="#using-copy-to-and-copy-from">Using COPY TO and COPY FROM</a></li>
+<li><a class="reference internal" href="#access-to-postgresql-large-objects">Access to PostgreSQL large objects</a></li>
+<li><a class="reference internal" href="#two-phase-commit-protocol-support">Two-Phase Commit protocol support</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Psycopg &#8211; PostgreSQL database adapter for Python</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module.html"
+                        title="next chapter">The <tt class="docutils literal docutils literal docutils literal"><span class="pre">psycopg2</span></tt> module content</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/usage.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module.html" title="The psycopg2 module content"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Psycopg – PostgreSQL database adapter for Python"
+             >previous</a> |</li>
+        <li><a href="index.html">Psycopg 2.4.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2001-2011, Federico Di Gregorio. Documentation by Daniele Varrazzo.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
