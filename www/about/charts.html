@@ -38,64 +38,34 @@ using your GitHub account and setting up a $1 per week tip to your favorite
 free software developer. Thanks!</p>
 
 <h2 style="margin-top: 0; padding-top: 64px">Registrations</h2>
-<div class="chart" id="registrations"></div>
-<div class="x-axis">weeks</div>
+<div class="chart" id="participants"></div>
 
-<h2>Funders</h2>
-<div class="chart" id="funders"></div>
-<div class="x-axis">weeks</div>
+<h2>Tippers a.k.a. Funders</h2>
+<div class="chart" id="tippers"></div>
 
-<h2>Transfer Volume ($)</h2>
+<h2>Transfer Volume (USD)</h2>
 <div class="chart" id="volume"></div>
-<div class="x-axis">weeks</div>
 
-<script>
-    $(document).ready(function()
-    {
-        var Volume = $('#volume');
-        var Funders = $('#funders');
-        var Registrations= $('#registrations');
-        jQuery.get('/about/paydays.json', function(paydays)
-        {
-            var n = paydays.length - 1; // don't show Gittip #0
-            var w = 580 / n;
-            var payday = null;
-
-            for (var i=0; i < n; i++)
-            {
-                payday = paydays[i];
-
-                // registrations
-                var p3 = $(document.createElement('div'));
-                p3.addClass('point');
-                p3.text(payday.nparticipants);
-                var ntippers = parseFloat(payday.nparticipants);
-                p3.css({ top: 400 - ((ntippers / 4000) * 400) - 6
-                          , left: w * (n - i - 1)
-                           });
-                Registrations.append(p3);
-
-                // funders
-                var p2 = $(document.createElement('div'));
-                p2.addClass('point');
-                p2.text(payday.ntippers);
-                var ntippers = parseFloat(payday.ntippers);
-                p2.css({ top: 400 - ((ntippers / 200) * 400) - 6
-                          , left: w * (n - i - 1)
-                           });
-                Funders.append(p2);
-
-                // volume
-                var point = $(document.createElement('div'));
-                point.addClass('point');
-                point.text(payday.transfer_volume);
-                var volume = parseFloat(payday.transfer_volume);
-                point.css({ top: 400 - ((volume / 1100) * 400) - 6
-                          , left: w * (n - i - 1)
-                           });
-                Volume.append(point);
-            }
-        });
-    });
+<script type="text/javascript" src="/assets/jquery.flot.js"></script>
+<script type="text/javascript" src="/assets/jquery.flot.time.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+  jQuery.get('/about/paydays.json', function(paydays) {
+    var participants = [];
+    var tippers = [];
+    var transferVolume = [];
+    for (var index = 0; index < paydays.length; index++) {
+      var data = paydays[index];
+      var timestamp = new Date(data['ts_start']);
+      participants.push([timestamp, data['nparticipants']]);
+      tippers.push([timestamp, data['ntippers']]);
+      transferVolume.push([timestamp, data['transfer_volume']]);
+    }
+    var options = { xaxis: { mode: "time" } };
+    jQuery.plot(jQuery('#volume'), [ transferVolume ], options);
+    jQuery.plot(jQuery('#tippers'), [ tippers ], options);
+    jQuery.plot(jQuery('#participants'), [ participants ], options);
+  });
+});
 </script>
 {% end %}
