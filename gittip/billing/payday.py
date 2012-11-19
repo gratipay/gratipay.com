@@ -764,7 +764,16 @@ class Payday(object):
 
         """
         cursor.execute(RECORD, (tipper, tippee, amount))
-
+        # Log to Sift Science for fraud protection.
+        DATA = """{"$user_id": "%s",
+           "$seller_user_id": "%s",
+           "$type": "$transaction",
+           "$amount": %d,
+           "$currency_code": "USD",
+           "$api_key": "%s"}""" % (
+               tipper, tippee, amount, os.environ['SIFT_SCIENCE_API_KEY'])
+        urllib2.urlopen("https://api.siftscience.com/v202/events", DATA)
+        
 
     def mark_missing_funding(self):
         STATS = """\
