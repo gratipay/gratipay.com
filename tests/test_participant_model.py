@@ -26,13 +26,6 @@ class ParticipantTestCase(BaseTestCase):
         self.session.add(self.participant)
         self.session.commit()
 
-    def make_participant(self, participant_id, **kw):
-        participant = Participant(id=participant_id, **kw)
-        self.session.add(participant)
-        self.session.commit()
-        return participant
-
-
     def test_claiming_participant(self):
         expected = now = datetime.datetime.now(pytz.utc)
         self.participant.set_as_claimed(claimed_at=now)

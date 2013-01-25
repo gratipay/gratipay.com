@@ -18,7 +18,7 @@ from aspen.utils import utcnow
 from gittip import orm, wireup
 from gittip.authentication import User
 from gittip.billing.payday import Payday
-
+from gittip.models import Participant
 
 TOP = join(realpath(dirname(dirname(__file__))), '..')
 SCHEMA = open(join(TOP, "schema.sql")).read()
@@ -48,6 +48,7 @@ def populate_db_with_dummy_data(db):
         account = GitHubAccount(user_id, {"id": user_id, "login": login})
         Participant(account.participant_id).change_id(login)
 
+
 class BaseTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -59,6 +60,13 @@ class BaseTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.db.empty_tables()
+
+    def make_participant(self, participant_id, **kw):
+        participant = Participant(id=participant_id, **kw)
+        self.session.add(participant)
+        self.session.commit()
+        return participant
+
 
 class GittipBaseDBTest(unittest.TestCase):
     """
@@ -440,6 +448,8 @@ def tip_graph(*a, **kw):
 test_website = Website([ '--www_root', str(join(TOP, 'www'))
                        , '--project_root', str(TOP)
                         ])
+filepath = join(TOP, 'configure-aspen.py')
+execfile(filepath, {'website': test_website})
 
 def serve_request(path, user=None):
     """Given an URL path, return response.
