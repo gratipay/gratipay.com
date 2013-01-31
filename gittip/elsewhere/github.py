@@ -1,3 +1,4 @@
+from __future__ import division
 import gittip
 import logging
 import requests
@@ -28,8 +29,10 @@ def oauth_url(website, action, then=u""):
     """
     typecheck(website, Website, action, unicode, then, unicode)
     assert action in ACTIONS
-    url = u"https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s"
-    url %= (website.github_client_id, website.github_callback)
+    url = (u"https://github.com/login/oauth/authorize?client_id=%s"
+            "&client_secret=%s&redirect_uri=%s")
+    url %= (website.github_client_secret, website.github_client_id, 
+            website.github_callback)
 
     # Pack action,then into data and base64-encode. Querystring isn't
     # available because it's consumed by the initial GitHub request.
@@ -99,9 +102,32 @@ def get_user_info(login):
     if rec is not None:
         user_info = rec['user_info']
     else:
-        url = "https://api.github.com/users/%s?client_id=%s"
-        user_info = requests.get(url % (login,
-                                        os.environ.get('GITHUB_CLIENT_ID')))
+        url = "https://api.github.com/users/%s"
+        user_info = requests.get(url % login, params={
+            "client_id": os.environ.get('GITHUB_CLIENT_ID'),
+            "client_secret": os.environ.get('GITHUB_CLIENT_SECRET'),
+        })
+
+        percent_ratelimit_remaining = (
+            int(user_info.headers['x-ratelimit-remaining'])/12500
+        )
+        log_msg = ''
+        log_lvl = None
+        if 0.5 <= percent_ratelimit_remaining:
+            log_msg = "{0}% of ratelimit remaining for GitHub API".format(
+                percent_ratelimit_remaining * 100
+            )
+        if 0.5 <= percent_ratelimit_remaining < 0.8:
+            log_lvl = logging.WARNING
+        elif 0.8 <= percent_ratelimit_remaining < 0.95:
+            log_lvl = logging.ERROR
+        elif 0.95 <= percent_ratelimit_remaining:
+            log_lvl = logging.CRITICAL
+
+        if log_msg and log_lvl:
+            log(log_msg, level=log_lvl)
+        del(log_msg, log_lvl)
+
         status = user_info.status_code
         content = user_info.text
         if status == 200:
