@@ -30,9 +30,8 @@ def oauth_url(website, action, then=u""):
     typecheck(website, Website, action, unicode, then, unicode)
     assert action in ACTIONS
     url = (u"https://github.com/login/oauth/authorize?client_id=%s"
-            "&client_secret=%s&redirect_uri=%s")
-    url %= (website.github_client_secret, website.github_client_id, 
-            website.github_callback)
+            "&redirect_uri=%s")
+    url %= (website.github_client_id, website.github_callback)
 
     # Pack action,then into data and base64-encode. Querystring isn't
     # available because it's consumed by the initial GitHub request.
@@ -109,7 +108,8 @@ def get_user_info(login):
         })
 
         percent_ratelimit_remaining = (
-            int(user_info.headers['x-ratelimit-remaining'])/12500
+            int(user_info.headers['x-ratelimit-remaining'])
+            / int(user_info.headers['x-ratelimit-limit'])
         )
         log_msg = ''
         log_lvl = None
