@@ -1,0 +1,120 @@
+from gittip import db, AMOUNTS
+from gittip.elsewhere import github
+^L
+
+try:
+    limit = min(int(qs.get('limit', 10)), 100)
+    offset = int(qs.get('offset', 0))
+except ValueError:
+    raise Response(400)
+
+participants = db.fetchall("""
+
+    SELECT p.id id, SUM(case e.platform when 'devnet' then 1 else 0 end) > 0 has_devnet, bool_or(is_suspicious) is_suspicious
+      FROM participants p
+      INNER JOIN elsewhere e ON p.id = e.participant_id
+     --WHERE is_suspicious IS NOT true
+     GROUP BY p.id
+     ORDER BY p.id
+  LIMIT %s
+  OFFSET %s
+
+""", (limit, offset))
+
+^L
+{% extends templates/base.html %}
+
+{% block heading %}
+
+    <p class="below-header">
+        <span class="nowrap">Set up recurring gift tips to people who</span>
+        <span class="nowrap">make the world better. <a href="/about/">Learn more ...</a></span>
+    </p>
+
+    <script>
+        $(document).ready(Gittip.initJumpToPerson);
+    </script>
+    <style>
+        #jump {
+            width: auto;
+        }
+        #jump INPUT {
+            width: 6em;
+        }
+
+        TABLE {
+            font: 300 13pt/13pt Lato, sans-serif;
+            }
+        TD {
+            text-align: left;
+            vertical-align: top;
+            padding: 6pt 12pt 6pt 0;
+        }
+        TD.amount {
+            text-align: right;
+        }
+        TR.unclaimed,
+        TR.unclaimed A {
+            color: #B2A196;
+        }
+        TR.unclaimed TD SPAN {
+            font-size: 10pt;
+        }
+        #givers {
+            float: left;
+        }
+        #receivers {
+            float: right;
+        }
+        @media screen and (max-width: 640px) {
+            #givers, #receivers {
+                float: none;
+            }
+        }
+        H2.clear {
+            padding-top: 36pt;
+        }
+        H3 {
+            margin-top: 12pt;
+        }
+    </style>
+
+{% end %}
+{% block body %}
+
+    <form id="jump" action="associate">
+        Create a new UserName: <br />
+        <span class="nowrap">
+            <input type="text" name="screen_name">
+            <button type="submit">Create Account</button>
+        </span>
+    </form>
+
+    <h2>Log In As:</h2>
+
+    <div id="givers">
+        <table>
+            <tr>
+            {% for i, participant in enumerate(participants, start=1) %}
+                <td>{{ i }}.</td>
+                <td class="first">
+                <a href="/on/devnet/associate?screen_name={{ participant['id'] }}">{{ participant['id'] }}</a>
+                </td>
+                <td>{{ participant['has_devnet'] }}</td>
+                <td />
+                <td />
+                {% if i % 3 == 0 %}
+                    </tr><tr>
+                {% end %}
+            {% end %}
+            </tr>
+        </table>
+    </div>
+
+    <h2 class="clear"></h2>
+    <h3 class="clear">The DevNet Login System for GitTip</h3>
+    <p>The DevNet Login System will automatically login to any of UserNames listed above and associate a DevNet Account.</p>
+    <p>You can create a new GitTip User by entering the name in the box above and clicking "Create Account".</p>
+    <p>A DevNet account, for the most part, acts just like any other third party network using this page as it's login page.</p>
+    </p>
+{% end %}

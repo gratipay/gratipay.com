@@ -17,6 +17,8 @@ MAKING = "I am making the world better by"
 def _extract_username(tip):
     if tip['platform'] == 'github':
         key = 'login'
+    elif tip['platform'] == 'devnet':
+        key = 'screen_name'
     else:
         assert tip['platform'] == 'twitter', tip  # sanity check
         key = 'screen_name'
@@ -86,7 +88,7 @@ can_tip = True
 tip_or_pledge = "tip"
 title = participant.id      # used in <title>
 username = participant.id   # used in footer shared with on/$platform/ pages
-github_account, twitter_account = participant.get_accounts_elsewhere()
+github_account, twitter_account, devnet_account = participant.get_accounts_elsewhere()
 
 # ========================================================================== ^L
 {% extends templates/participant.html %}
@@ -791,6 +793,28 @@ src="https://www.gittip.com/assets/widgets/0002.js"&gt;
                 </a>
                 {% end %}
                 <div class="account-type">Twitter</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="account-type">
+                <img src="/assets/devnet.png" />
+            </td>
+            <td class="account-details">
+                {% if devnet_account is None %}
+                    {% if not user.ANON and user.id == participant.id %}
+                        Connect a <a href="{{ devnet.oauth_url(website, u'connect') }}">DevNet account</a>.
+                    {% else %}
+                        No DevNet account connected.
+                    {% end %}
+                {% else %}
+                <a href="{{ devnet_account.user_info.get('html_url', '') }}"
+                    ><img class="avatar"
+                    src="{{ devnet_account.user_info.get('profile_image_url_https', '/assets/%s/no-avatar.png' % __version__) }}"
+                    />{{ devnet_account.user_info.get('screen_name') }}
+                    {% if devnet_account.user_info.get('name') %}({{ devnet_account.user_info.get('name') }}){% end %}
+                </a>
+                {% end %}
+                <div class="account-type">DevNet</div>
             </td>
         </tr>
         <tr>

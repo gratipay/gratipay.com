@@ -130,6 +130,8 @@ class Participant(object):
             out = None
         elif rec['platform'] == 'github':
             out = '/on/github/%s/' % rec['user_info']['login']
+        elif rec['platform'] == 'devnet':
+            out = '/on/devnet/%s/' % rec['user_info']['screen_name']
         else:
             assert rec['platform'] == 'twitter'
             out = '/on/twitter/%s/' % rec['user_info']['screen_name']
@@ -192,13 +194,16 @@ class Participant(object):
         assert accounts is not None
         twitter_account = None
         github_account = None
+        devnet_account = None
         for account in accounts:
             if account['platform'] == 'github':
                 github_account = account
+            elif account['platform'] == 'devnet':
+                devnet_account = account
             else:
                 assert account['platform'] == 'twitter', account['platform']
                 twitter_account = account
-        return (github_account, twitter_account)
+        return (github_account, twitter_account, devnet_account)
 
 
     @require_id
@@ -594,9 +599,9 @@ class Participant(object):
         """Given two unicodes, raise WontProceed or return None.
 
         This method associates an account on another platform (GitHub, Twitter,
-        etc.) with the Gittip participant represented by self. Every account
-        elsewhere has an associated Gittip participant account, even if its
-        only a stub participant (it allows us to track pledges to that account
+        DevNet, etc.) with the Gittip participant represented by self. Every 
+        account elsewhere has an associated Gittip participant account, even if 
+        its only a stub participant (it allows us to track pledges to that account
         should they ever decide to join Gittip).
 
         In certain circumstances, we want to present the user with a

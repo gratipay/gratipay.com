@@ -1,0 +1,129 @@
+"""DevNet user page on Gittip.
+"""
+import datetime
+import decimal
+
+import requests
+from aspen import json, Response, log
+from aspen.utils import to_age, utc
+from gittip import AMOUNTS, CARDINALS, db
+from gittip.elsewhere import devnet
+from gittip.models import Participant
+
+
+# ========================================================================== ^L
+
+# Try to load from DevNet.
+# =========================
+
+user_info = devnet.get_user_info(path['screen_name'])
+
+
+# Try to load from Gittip.
+# ========================
+
+username = user_info['screen_name']
+name = user_info.get('name')
+if not name:
+    name = username
+user_info['html_url'] = "/on/devnet/%s" % username
+
+account = devnet.DevNetAccount(user_info['id'], user_info)
+participant = Participant.query.get(account.participant_id)
+can_tip = not account.is_locked
+lock_action = "unlock" if account.is_locked else "lock"
+if account.is_claimed:
+    request.redirect('/%s/' % participant.id)
+
+if not user.ANON:
+    my_tip = user.get_tip_to(participant.id)
+
+tip_or_pledge = "pledge"
+nbackers = participant.get_number_of_backers()
+
+# ========================================================================== ^L
+{% extends templates/participant.html %}
+
+{% block their_voice %}
+  {% if account.is_locked %}
+
+    <h2 class="first"><b>{{ username }}</b> has opted out of Gittip.</h2>
+
+    <p>If you are <a href="{{ user_info.get('html_url', '') }}">{{ username }}</a>
+    on DevNet, you can unlock your account to allow people to
+    pledge tips to you on Gittip. We never collect any money on your behalf
+    until you explicitly opt in.</p>
+
+    <a href="{{ devnet.oauth_url(website, u'unlock', username) }}"
+        ><button>Unlock</button></a>
+
+  {% else %}
+    <script>
+        $(document).ready(Gittip.initTipButtons);
+    </script>
+
+    <h2 class="first"><b>{{ name }}</b> has not joined Gittip.</h2>
+
+    <p>Is this you?
+    {% if user.ANON %}
+    <a href="{{ devnet.oauth_url(website, u'opt-in', username) }}">Click here</a> to opt in to Gittip.
+    {% else %}
+    You&rsquo;ll have to <a href="/sign-out.html">sign out</a> and sign back in to claim this account.
+    {% end %}</p>
+
+    <table id="accounts">
+        <tr>
+            <td class="account-type">
+                <img src="/assets/devnet.png" />
+            </td>
+            <td class="account-details">
+                <a href="{{ user_info['html_url'] }}">
+                    <img class="avatar"
+                     src="{{ user_info.get('profile_image_url_https', '/assets/%s/no-avatar.png' % __version__) }}" />
+                         {{ user_info['screen_name'] }}
+                {% if user_info.get('name') %}({{ user_info.get('name') }}){% end %}
+                </a>
+                <div class="account-type">DevNet</div>
+            </td>
+        </tr>
+    </table>
+
+
+    {% if nbackers == 0 %}
+    {% elif nbackers == 1 %}
+    <h3>There is one person ready to give.</h3>
+    {% elif nbackers < 10 %}
+    <h3>There are {{ CARDINALS[nbackers] }} people ready to give.</h3>
+    {% else %}
+    <h3>There are {{ nbackers }} people ready to give.</h3>
+    {% end %}
+
+
+    {% if not user.ANON %}
+
+    <p>{{ 'But we' if nbackers > 0 else 'We' }} will never collect money on
+    behalf of {{ username }} until they opt in.</p>
+
+    {% else %}
+
+    <p>{{ 'But we' if nbackers > 0 else 'We' }} will never collect money on
+    your behalf until you opt in.</p>
+
+    <h3>What is Gittip?</h3>
+
+    <p>Gittip is a way to thank and support your favorite artists, musicians,
+    writers, programmers, etc. by setting up a small weekly gift to them. <a
+    href="/about/">Read more ...</a></p>
+
+    <h3>Don&rsquo;t like what you see?</h3>
+
+    <p>If you are {{ username }} you can explicitly opt out of Gittip by
+    locking this account. We don&rsquo;t allow new pledges to locked
+    accounts.</p>
+
+    <a href="{{ devnet.oauth_url(website, u'lock', username) }}"
+        ><button>Lock</button></a>
+
+    {% end %}
+    {% end %}
+{% end %}

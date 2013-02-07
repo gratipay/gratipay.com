@@ -1,13 +1,14 @@
 from aspen import Response
 from gittip.elsewhere.github import GitHubAccount
 from gittip.elsewhere.twitter import TwitterAccount
+from gittip.elsewhere.devnet import DevNetAccount
 
 # ====== ^L
 if user.ANON or not POST:
     raise Response(404)
 
 platform = body['platform']
-if platform not in ('github', 'twitter'):
+if platform not in ('github', 'twitter', 'devnet'):
     raise Response(400, "bad platform: %s" % platform)
 
 user_id = body['user_id']
@@ -29,7 +30,12 @@ if expected is None or actual != expected:
     raise Response(400, msg)
 
 
-account = (GitHubAccount if platform == 'github' else TwitterAccount)(user_id)
+if platform == 'github':
+    account = GitHubAccount(user_id)
+elif platform == 'devnet':
+    account = DevNetAccount(user_id)
+else:
+    account = TwitterAccount(user_id)
 user.take_over(account, have_confirmation=True)
 request.redirect('/about/me.html')
 

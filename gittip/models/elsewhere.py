@@ -23,6 +23,8 @@ class Elsewhere(db.Model):
     def resolve_unclaimed(self):
         if self.platform == 'github':
             out = '/on/github/%s/' % self.user_info['login']
+        elif self.platform == 'devnet':
+            out = '/on/devnet/%s/' % self.user_info['screen_name']
         elif self.platform == 'twitter':
             out = '/on/twitter/%s/' % self.user_info['screen_name']
         else:

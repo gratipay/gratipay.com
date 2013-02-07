@@ -6,6 +6,7 @@
 
     {% if can_tip and user.ANON %}
         <h2>Sign in using <a href="/on/twitter/redirect">Twitter</a> or 
+            <a href="/on/devnet/login.html">DevNet</a> or 
             <a href="{{ github.oauth_url(website, u'opt-in', username) }}">
             GitHub</a> to tip {{ username }}.</h2>
     {% elif can_tip  %}

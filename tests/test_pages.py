@@ -36,6 +36,11 @@ def test_github_associate():
     actual = serve_request('/on/github/associate').body
     assert expected in actual, actual
 
+def test_devnet_associate():
+    expected = "Bad request, program!"
+    actual = serve_request('/on/devnet/associate').body
+    assert expected in actual, actual
+
 def test_twitter_associate():
     expected = "Bad request, program!"
     actual = serve_request('/on/twitter/associate').body
@@ -69,6 +74,12 @@ def test_github_proxy(requests):
     with load():
         expected = "<b>lgtest</b> has not joined"
         actual = serve_request('/on/github/lgtest/').body
+        assert expected in actual, actual
+
+def test_devnet_proxy():
+    with load():
+        expected = "<b>DevNet</b> has not joined"
+        actual = serve_request('/on/devnet/devnet/').body
         assert expected in actual, actual
 
 

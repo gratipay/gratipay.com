@@ -18,6 +18,10 @@ website.github_client_id = os.environ['GITHUB_CLIENT_ID'].decode('ASCII')
 website.github_client_secret = os.environ['GITHUB_CLIENT_SECRET'].decode('ASCII')
 website.github_callback = os.environ['GITHUB_CALLBACK'].decode('ASCII')
 
+website.devnet_consumer_key = os.environ['DEVNET_CONSUMER_KEY'].decode('ASCII')
+website.devnet_consumer_secret = os.environ['DEVNET_CONSUMER_SECRET'].decode('ASCII')
+website.devnet_callback = os.environ['DEVNET_CALLBACK'].decode('ASCII')
+
 website.twitter_consumer_key = os.environ['TWITTER_CONSUMER_KEY'].decode('ASCII')
 website.twitter_consumer_secret = os.environ['TWITTER_CONSUMER_SECRET'].decode('ASCII')
 website.twitter_callback = os.environ['TWITTER_CALLBACK'].decode('ASCII')
@@ -37,10 +41,11 @@ __version__ = open(os.path.join(website.www_root, 'version.txt')).read().strip()
 
 
 def add_stuff(request):
-    from gittip.elsewhere import github, twitter
+    from gittip.elsewhere import github, twitter, devnet
     request.context['__version__'] = __version__
     request.context['username'] = None
     request.context['github'] = github
+    request.context['devnet'] = devnet
     request.context['twitter'] = twitter
 
 website.hooks.inbound_early += [add_stuff]

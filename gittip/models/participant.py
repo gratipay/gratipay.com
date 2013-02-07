@@ -153,15 +153,17 @@ class Participant(db.Model):
                 raise self.IdAlreadyTaken
 
     def get_accounts_elsewhere(self):
-        github_account = twitter_account = None
+        github_account = twitter_account = devnet_account = None
         for account in self.accounts_elsewhere.all():
             if account.platform == "github":
                 github_account = account
+            elif account.platform == "devnet":
+                devnet_account = account
             elif account.platform == "twitter":
                 twitter_account = account
             else:
                 raise self.UnknownPlatform(account.platform)
-        return (github_account, twitter_account)
+        return (github_account, twitter_account, devnet_account)
 
     def get_tip_to(self, tippee):
         tip = self.tips_giving.filter_by(tippee=tippee).first()

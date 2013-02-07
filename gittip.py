@@ -91,7 +91,9 @@ def local_env():
     print("TWITTER_CONSUMER_KEY=QBB9vEhxO4DFiieRF68zTA", file=output)
     print("TWITTER_CONSUMER_SECRET=mUymh1hVMiQdMQbduQFYRi79EYYVeOZGrhj27H59H78", file=output)
     print("TWITTER_CALLBACK=http://127.0.0.1:8537/on/twitter/associate", file=output)
-
+    print("DEVNET_CONSUMER_KEY=QBB9vEhxO4DFiieRF68zTA", file=output)
+    print("DEVNET_CONSUMER_SECRET=mUymh1hVMiQdMQbduQFYRi79EYYVeOZGrhj27H59H78", file=output)
+    print("DEVNET_CALLBACK=http://127.0.0.1:8537/on/devnet/associate", file=output)
 
 def serve():
     run()
@@ -133,6 +135,9 @@ tests/env:
     echo "TWITTER_CONSUMER_KEY=QBB9vEhxO4DFiieRF68zTA" >> tests/env
     echo "TWITTER_CONSUMER_SECRET=mUymh1hVMiQdMQbduQFYRi79EYYVeOZGrhj27H59H78" >> tests/env
     echo "TWITTER_CALLBACK=http://127.0.0.1:8537/on/twitter/associate" >> tests/env
+    echo "DEVNET_CONSUMER_KEY=QBB9vEhxO4DFiieRF68zTA" >> tests/env
+    echo "DEVNET_CONSUMER_SECRET=mUymh1hVMiQdMQbduQFYRi79EYYVeOZGrhj27H59H78" >> tests/env
+    echo "DEVNET_CALLBACK=http://127.0.0.1:8537/on/devnet/associate" >> tests/env
 
 data: env
     ./makedb.sh gittip-test gittip-test

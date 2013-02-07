@@ -1,0 +1,100 @@
+"""Associate a DevNet account with a Gittip account.
+
+First we do the OAuth dance with DevNet. Once we've authenticated the user
+against DevNet, we record them in our elsewhere table. This table contains
+information for DevNet users whether or not they are explicit participants in
+the Gittip community.
+
+"""
+from urlparse import parse_qs
+
+import requests
+from oauth_hook import OAuthHook
+from aspen import log, Response, json
+from aspen import resources
+from gittip.elsewhere import ACTIONS, devnet, github, twitter
+from gittip.participant import NeedConfirmation
+
+from gittip import participant
+from gittip.authentication import User
+# ========================== ^L
+
+if 'denied' in qs:
+    request.redirect('/')
+
+screen_name = qs.get('screen_name') # GitTip ID
+
+if screen_name is None:
+    log(u"We got a user_info from DevNet with no screen_name [%s, %s]" % (action, then))
+    raise Response(400)
+
+then = screen_name
+
+account = participant.Participant(screen_name)
+log(u"Looked up participant: [%s]" % (account.get_details()))
+
+if account.get_details() is not None:
+    user = User.from_id(screen_name)  # give them a session
+    # look up the elsewhere accounts, specifically we're just looking to see if they already have a DevNet account
+    (github_account, twitter_account, devnet_account) = account.get_accounts_elsewhere()
+    #log(u"Looked up elsewhere:\nGitHub: %s\nTwitter: %s\nDevNet: %s" % (github_account, twitter_account, devnet_account))
+    if devnet_account is not None:
+        action = 'opt-in'
+    else:
+        action = 'connect'
+else:
+    action = 'opt-in'
+
+# Populate DevNet user info. These lines simulate the remote server populating its user_info response.
+user_id = screen_name + '@DevNet'
+user_info = {"id": user_id, "screen_name": screen_name}
+user_info['html_url'] = "/on/devnet/" + screen_name
+
+# This line then updates the database with the returned values for this DevNet entry
+# if they have an account this will be associated with their account
+# if they don't this will become the basis for their account
+account = devnet.DevNetAccount(user_info['id'], user_info)
+
+
+# Do something.
+log(u"%s wants to %s using account %s" % (screen_name, action, account))
+
+if action == 'opt-in':      # opt in
+    user = account.opt_in(screen_name)  # setting 'user' gives them a session
+elif action == 'connect':   # connect
+    if user.ANON:
+        raise Response(404)
+    try:
+        user.take_over(account, True)
+    except NeedConfirmation, obstacles:
+
+        # XXX Eep! Internal redirect! Really?!
+        request.internally_redirected_from = request.fs
+        request.fs = website.www_root + '/on/confirm.html'
+        request.resource = resources.get(request)
+
+        raise request.resource.respond(request)
+else:                       # lock or unlock
+    if then != screen_name:
+
+        # The user could spoof `then' to match their screen_name, but the most they
+        # can do is lock/unlock their own DevNet account in a convoluted way.
+
+        then = u'/on/devnet/%s/lock-fail.html' % then
+
+    else:
+
+        # Associate the DevNet screen_name with a randomly-named, unclaimed Gittip
+        # participant.
+
+        assert account.participant_id != screen_name, screen_name # sanity check
+
+
+if then == u'':
+    then = u'/%s/' % account.participant_id
+if not then.startswith(u'/'):
+    # Interpret it as a DevNet screen_name.
+    then = u'/on/devnet/%s/' % then
+request.redirect(then)
+
+# ========================== ^L text/plain

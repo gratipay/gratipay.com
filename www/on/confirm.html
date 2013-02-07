@@ -26,8 +26,8 @@ website.connect_tokens[connect_key] = connect_token
 
 other = Participant.query.get(account.participant_id)
 
-user_github_account, user_twitter_account = user.get_accounts_elsewhere()
-other_github_account, other_twitter_account = other.get_accounts_elsewhere()
+user_github_account, user_twitter_account, user_devnet_account = user.get_accounts_elsewhere()
+other_github_account, other_twitter_account, other_devnet_account = other.get_accounts_elsewhere()
 
 
 user_giving = user.get_dollars_giving()
@@ -40,7 +40,12 @@ combined_giving = user_giving + other_giving
 combined_receiving = user_receiving + other_receiving
 
 fmt = lambda x: '$' + str(int(round(x))) if x > 0 else '-'
-username = user_info['screen_name' if account.platform == 'twitter' else 'login']
+if account.platform == 'github':
+    username = user_info['login']
+elif account.platform == 'devnet':
+    username = user_info['screen_name']
+elif account.platform == 'twitter':
+    username = user_info['screen_name']
 
 title = "Confirm"
 can_tip = False
@@ -138,6 +143,10 @@ can_tip = False
                     <img src="/assets/icons/github.12.png" />
                     {{ user_github_account.user_info['login'] }}<br />
                 {% end %}
+                {% if user_devnet_account is not None %}
+                    <img src="/assets/icons/devnet.12.png" />
+                    {{ user_devnet_account['user_info']['screen_name'] }}<br />
+                {% end %}
                 {% if user_twitter_account is not None %}
                     <img src="/assets/icons/twitter.12.png" />
                     {{ user_twitter_account.user_info['screen_name'] }}<br />
@@ -166,6 +175,12 @@ can_tip = False
                     {{ other_github_account.user_info['login'] }}<br />
                     {% if account.platform == 'github' %}</span>{% end %}
                 {% end %}
+                {% if other_devnet_account is not None %}
+                    <img src="/assets/icons/devnet.12.png" />
+                    {% if account.platform == 'devnet' %}<span class="highlight">{% end %}
+                    {{ other_devnet_account.user_info['screen_name'] }}<br />
+                    {% if account.platform == 'devnet' %}</span>{% end %}
+                {% end %}
                 {% if other_twitter_account is not None %}
                     <img src="/assets/icons/twitter.12.png" />
                     {% if account.platform == 'twitter' %}<span class="highlight">{% end %}
@@ -187,13 +202,19 @@ can_tip = False
             {% if account.platform == 'github' and user_github_account is not None %}
                 <span class="account-elsewhere">
                     <img src="/assets/icons/github.12.png" />
-                    {{ user_github_account.user_info['login'] }}<br />
+                    {{ user_github_account.get_user_info()['login'] }}<br />
+                </span>
+            {% end %}
+            {% if account.platform == 'devnet' and user_devnet_account is not None %}
+                <span class="account-elsewhere">
+                    <img src="/assets/icons/devnet.12.png" />
+                    {{ user_devnet_account.get_user_info()['screen_name'] }}<br />
                 </span>
             {% end %}
             {% if account.platform == 'twitter' and user_twitter_account is not None %}
                 <span class="account-elsewhere">
                     <img src="/assets/icons/twitter.12.png" />
-                    {{ user_twitter_account.user_info['screen_name'] }}<br />
+                    {{ user_twitter_account.get_user_info()['screen_name'] }}<br />
                 </span>
             {% end %}
         </td>
@@ -225,13 +246,19 @@ can_tip = False
                 {% if user_github_account is not None %}
                     <span class="account-elsewhere">
                         <img src="/assets/icons/github.12.png" />
-                        {{ user_github_account.user_info['login'] }}<br />
+                        {{ user_github_account.get_user_info()['login'] }}<br />
+                    </span>
+                {% end %}
+                {% if user_devnet_account is not None %}
+                    <span class="account-elsewhere">
+                        <img src="/assets/icons/devnet.12.png" />
+                        {{ user_devnet_account.get_user_info()['screen_name'] }}<br />
                     </span>
                 {% end %}
                 {% if user_twitter_account is not None %}
                     <span class="account-elsewhere">
                         <img src="/assets/icons/twitter.12.png" />
-                        {{ user_twitter_account.user_info['screen_name'] }}<br />
+                        {{ user_twitter_account.get_user_info()['screen_name'] }}<br />
                     </span>
                 {% end %}
 
@@ -274,6 +301,12 @@ can_tip = False
                     <span class="account-elsewhere">
                         <img src="/assets/icons/github.12.png" />
                         {{ other_github_account.user_info['login'] }}<br />
+                    </span>
+                {% end %}
+                {% if other_devnet_account is not None and account.platform != 'devnet' %}
+                    <span class="account-elsewhere">
+                        <img src="/assets/icons/devnet.12.png" />
+                        {{ other_devnet_account.user_info['screen_name'] }}<br />
                     </span>
                 {% end %}
                 {% if other_twitter_account is not None and account.platform != 'twitter' %}
