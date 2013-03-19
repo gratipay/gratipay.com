@@ -11,9 +11,11 @@ from sqlalchemy import func
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Column, CheckConstraint, UniqueConstraint
 from sqlalchemy.types import Text, TIMESTAMP, Boolean, Numeric
+from sqlalchemy.sql.expression import desc
 
 import gittip
 from gittip.models.tip import Tip
+from gittip.models.goal import Goal
 from gittip.orm import db
 # This is loaded for now to maintain functionality until the class is fully
 # migrated over to doing everything using SQLAlchemy
@@ -45,7 +47,6 @@ class Participant(db.Model):
                      default=0.0, nullable=False)
     pending = Column(Numeric(precision=35, scale=2), default=None)
     anonymous = Column(Boolean, default=False, nullable=False)
-    goal = Column(Numeric(precision=35, scale=2), default=None)
     balanced_account_uri = Column(Text)
     last_ach_result = Column(Text)
     is_suspicious = Column(Boolean)
@@ -80,6 +81,12 @@ class Participant(db.Model):
                              , foreign_keys="Transfer.tippee"
                               )
 
+    _goal = relationship( "Goal"
+                        , backref="goal"
+                        , foreign_keys="Goal.participant"
+                        , lazy="dynamic"
+                         )
+
     def __eq__(self, other):
         return self.id == other.id
 
@@ -112,6 +119,31 @@ class Participant(db.Model):
                    .filter( 'participants.is_suspicious IS NOT true'
                           , Participant.last_bill_result == ''
                            )
+    class goal(object):
+        def __get__(self, participant, other):
+            res = self.most_recent_goal(participant)
+            return res.amount if res is not None else None
+
+        def __set__(self, participant, value):
+            last_goal = self.most_recent_goal(participant)
+            exising_create_time = last_goal.ctime if last_goal else None
+            existing_or_current_ctime = func.coalesce(  exising_create_time
+                                                      , func.current_timestamp()
+                                                      )
+            created = db.session.query(existing_or_current_ctime).as_scalar()
+            goal = Goal( ctime=created
+                       , participant=participant.id
+                       , amount=value
+                        )
+            db.session.add(goal)
+
+        def most_recent_goal(self, participant):
+            query = participant._goal.distinct("goals.participant")\
+                                  .order_by(
+                                        "goals.participant, goals.mtime DESC"
+                                  )
+            return query.first()
+    goal = goal()
 
     def resolve_unclaimed(self):
         if self.accounts_elsewhere:
