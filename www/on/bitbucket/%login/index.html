@@ -2,6 +2,7 @@
 """
 import decimal
 import os
+import re
 
 import requests
 from aspen import json, Response
@@ -49,16 +50,51 @@ elif not is_team:
     img_src = participant.get_img_src(128)
 
 elif is_team:
-    # waiting for bitbucket support to figure out 
-    # if it's possible to get members of a team via api
+    usertype = "organization"
 
-    raise Response(404, "BitBucket teams are not currently supported.")
+    bb_url = "https://bitbucket.org/api/2.0/users/%s/members" % username
+    members = []
+    resp = requests.get(bb_url)
+    if resp.status_code is not 200:
+        raise Response(404, u"BitBucket is currently unavailable")
+    else:
+        bb_data = json.loads(resp.text)
+        for m in bb_data['values']:
+            members.append(m)
 
-    # usertype = "organization"
-    can_tip = False
-    img_src = "/assets/-/avatar-default.gif"
+        while 'next' in bb_data:
+            next_url = u"https://bitbucket.org%s" % bb_data['next']
+            resp = requests.get(next_url)
+            bb_data = json.loads(resp.text)
+            for m in bb_data['values']:
+                members.append(m)
 
-url = "https://bitbucket.org/%s" % user_info["username"]
+    logins = [member['username'] for member in members]
+
+    ON_GITTIP = """\
+
+        SELECT elsewhere.user_info -> 'username' AS login
+          FROM elsewhere
+          JOIN participants p
+            ON p.id = elsewhere.participant_id
+         WHERE elsewhere.platform = 'bitbucket'
+           AND elsewhere.user_info -> 'username' = any(%s)
+           AND p.claimed_time IS NOT NULL
+
+    """
+    _on_gittip = [rec['username'] for rec in db.fetchall(ON_GITTIP, (logins,))]
+    on_gittip = []
+    not_on_gittip = []
+    for member in members:
+        seq = on_gittip if member['username'] in _on_gittip else not_on_gittip
+        tip_to = None if user.ANON else user.get_tip_to(member['username'])
+        seq.append((member, tip_to))
+    can_tip = user.ANON
+    number = len(members)
+    img_src = user_info['avatar'] + "&s=128"
+
+
+url = "https://bitbucket.org/%s" % username
 title = username
 # ========================================================================== ^L
 {% extends templates/base.html %}
@@ -99,7 +135,7 @@ title = username
         <div class="help with-padding">Sign in using
             <a href="{{ twitter.oauth_url(website, u'opt-in', path.decoded) }}">Twitter</a> or
             <a class="highlight flash-me"
-                href="{{ bitbucket.oauth_url(website, u'opt-in', path.decoded) }}">BitBucket</a>
+                href="{{ github.oauth_url(website, u'opt-in', path.decoded) }}">GitHub</a>
             to pledge to <b>{{ username }}</b>.</div>
 
     {% elif usertype == "user" and account.is_locked %}
@@ -153,8 +189,10 @@ title = username
         on BitBucket, you can unlock your account to allow people to pledge tips
         to you on Gittip.</p>
 
+        {% if 0 %}
         <a href="{{ bitbucket.oauth_url(website, u'unlock', username) }}"
             ><button>Unlock</button></a>
+        {% end %}
 
       {% else %}
         <script>$(document).ready(Gittip.initTipButtons);</script>
@@ -163,9 +201,14 @@ title = username
 
         <p>Is this you?
         {% if user.ANON %}
+
+        {% if 0 %}
         <a href="{{ bitbucket.oauth_url(website, u'opt-in', username) }}">Click
             here</a> to opt in to Gittip. We never collect money for you until
         you do.
+        {% end %}
+
+
         {% else %}
         <a href="/sign-out.html">Sign out</a> and sign back in
         to claim this account
@@ -186,13 +229,16 @@ title = username
         locking this account. We don't allow new pledges to locked
         accounts.</p>
 
+        {% if 0 %}
         <a href="{{ bitbucket.oauth_url(website, u'lock', username) }}"
             ><button>Lock</button></a>
+        {% end %}
         {% end %}
 
       {% end %}
     </div>
   {% elif usertype == "organization"  %}
+    
     <script>$(document).ready(Gittip.initTipButtons);</script>
 
     <table id="members" class="centered">
@@ -211,12 +257,12 @@ title = username
         <tr class="not-over"><td>
             {% if not user.ANON %}
             <th>
-                <a href="/on/bitbucket/{{ member['login'] }}/"><img src="{{ member.get('avatar_url', '/assets/%s/no-avatar.png' % __version__) }}" />
-                    {{ member['login'] }}</a>
+                <a href="/on/bitbucket/{{ member['username'] }}/"><img src="{{ member.get('avatar_url', '/assets/%s/no-avatar.png' % __version__) }}" />
+                    {{ member['username'] }}</a>
             </th>
             <td>
                 {% for amount in AMOUNTS %}
-                <button amount="{{ amount }}" tippee="{{ member['login'] }}"
+                <button amount="{{ amount }}" tippee="{{ member['username'] }}"
                     class="tip small {{ 'selected' if amount == tip else 'empty' }}">{{ amount }}</button>
                 {% end %}
                 {% if tip not in AMOUNTS %}
@@ -229,8 +275,8 @@ title = username
             </td>
             {% else %}
             <td>
-                <a href="/on/bitbucket/{{ member['login'] }}/"><img src="{{ member.get('avatar_url', '/assets/%s/no-avatar.png' % __version__) }}" />
-                    {{ member['login'] }}</a>
+                <a href="/on/bitbucket/{{ member['username'] }}/"><img src="{{ member.get('avatar_url', '/assets/%s/no-avatar.png' % __version__) }}" />
+                    {{ member['username'] }}</a>
             </td>
             {% end %}
         </td></tr>

@@ -35,10 +35,11 @@ def get_user_info(login):
         user_info = rec['user_info']
     else:
         url = "%s/users/%s"
-        user_info = requests.get(url % (BASE_API_URL, login), params={
-            'client_id': os.environ.get('BITBUCKET_CLIENT_ID'),
-            'client_secret': os.environ.get('BITBUCKET_CLIENT_SECRET')
-        })
+        #user_info = requests.get(url % (BASE_API_URL, login), params={
+            #'client_id': os.environ.get('BITBUCKET_CLIENT_ID'),
+            #'client_secret': os.environ.get('BITBUCKET_CLIENT_SECRET')
+        #})
+        user_info = requests.get(url % (BASE_API_URL, login))
         status = user_info.status_code
         content = user_info.content
         if status == 200:
