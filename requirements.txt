@@ -30,3 +30,5 @@
 ./vendor/raven-3.1.4.tar.gz
 
 ./vendor/fake-factory-0.2.tar.gz
+
+./vendor/pycountry-0.14.8.zip

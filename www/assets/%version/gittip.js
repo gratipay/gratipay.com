@@ -392,7 +392,7 @@ Gittip.submitPaymentForm = function(e)
     }
 
     var credit_card = {};   // holds CC info
-
+    country = $('select[id="country"]').val();
     credit_card.card_number = val('card_number');
     if (credit_card.card_number.search('[*]') !== -1)
         credit_card.card_number = '';  // don't send if it's the **** version
@@ -400,7 +400,8 @@ Gittip.submitPaymentForm = function(e)
     credit_card.name = val('name');
     credit_card.street_address = val('address_1');
     credit_card.region = val('state');
-    country = $('select[id="country"]').val();
+    credit_card.country_code = country_code;
+
     credit_card.meta = { 'address_2': val('address_2')
                        , 'region': credit_card.region // workaround
                        , 'city_town': val('city_town')
