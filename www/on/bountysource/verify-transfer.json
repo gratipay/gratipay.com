@@ -1,0 +1,39 @@
+"""API method to check the validity of a transaction from Bountysource
+"""
+from aspen import log, Response
+from gittip import db
+from gittip.elsewhere import bountysource
+
+# ============================ ^L
+
+token = qs.get('access_token', '')
+txn_id = int(qs.get('txn_id', 0))
+amount = qs.get('amount')
+note = qs.get('item_number')
+
+# try to get participant from token
+participant = bountysource.get_participant_via_access_token(token)
+
+if participant:
+    # fetch the bountysource participant username
+    bs_username = bountysource.get_participant_name()
+    
+    # if there is an exchange for the person with this id, it's valid
+    transfer = db.fetchone("""
+        SELECT id
+        FROM transfers
+        WHERE id=%s AND tipper=%s AND tippee=%s AND amount=%s AND note=%s
+    """, (txn_id, participant.username, bs_username, amount, note))
+    
+    if transfer:
+        response.code = 200
+    else:
+        response.code = 400
+    
+else:
+    response.code = 400
+    
+if response.code == 200:
+    response.body = { 'status': 'ok' }
+else:
+    response.body = { 'status': 'invalid' }

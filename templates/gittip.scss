@@ -24,6 +24,9 @@ $light-red: #F99;
     font-style: normal;
 }
 
+// Bountysoure style import
+@import "bountysource";
+
 // Mixins
 @mixin border-radius($radius: 5px) {
     -webkit-background-clip: padding-box;

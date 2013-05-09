@@ -4,7 +4,7 @@ from aspen import Response, log
 from aspen.utils import to_age
 from gittip import db, AMOUNTS
 from gittip.utils import get_participant
-
+from gittip.elsewhere import bountysource
 
 class Paydays(object):
 
@@ -13,6 +13,7 @@ class Paydays(object):
         self._paydays = list(db.fetchall("SELECT ts_start, ts_end FROM paydays "
                                          "ORDER BY ts_end DESC"))
         self._npaydays = len(self._paydays)
+        
         self._exchanges = list(db.fetchall( "SELECT * FROM exchanges "
                                             "WHERE participant=%s "
                                             "ORDER BY timestamp ASC"
@@ -38,7 +39,6 @@ class Paydays(object):
         """
         _i = 1
         for payday in self._paydays:
-
             if not (self._exchanges or self._transfers):
                 # Show all paydays since the user started really participating.
                 break
@@ -78,12 +78,13 @@ class Paydays(object):
                     event = self._transfers.pop()
                 else:
                     event = self._exchanges.pop()
-
+                
                 if 'fee' in event:
                     if event['amount'] > 0:
                         event['event'] = 'charge'
                     else:
                         event['event'] = 'credit'
+                        
                 else:
                     event['event'] = 'transfer'
 
@@ -109,12 +110,18 @@ class Paydays(object):
                         received['n'] += 1
 
                         #continue  # Don't leak!
-
+                    
+                    elif event['tippee'] == bountysource.get_participant_name():
+                        
+                        # Bountysource transfer, display a wee bit differently
+                        
+                        event['bank'] = 'Bountysource'
+                        event['item_url'] = bountysource.item_number_to_url(event['note'])
+                
                 events.append(event)
 
             if not events:
                 continue
-
 
             # Calculate balance.
             # ==================
@@ -139,11 +146,12 @@ class Paydays(object):
             for event in reversed(events):
                 yield event
             yield payday_end
-
+        
         # This should catch that logic bug.
         if self._exchanges or self._transfers:
             log("These should be empty:", self._exchanges, self._transfers)
             raise "Logic bug in payday timestamping."
+
 
 # ========================================================================== ^L
 
@@ -152,6 +160,9 @@ paydays = Paydays(participant.username, participant.balance)
 hero = "History"
 title = "%s - %s" % (participant.username, hero)
 locked = False
+
+# fetch name of bountysource participant
+bountysource_username = bountysource.get_participant_name()
 
 # ========================================================================== ^L
 {% extends templates/profile.html %}
@@ -179,6 +190,7 @@ locked = False
         </form>
         {% end %}
     </td></tr>
+
     {% for event in paydays %}
     {% if event['event'] == 'payday-start' %}
     <tr>
@@ -255,7 +267,11 @@ locked = False
     </tr>
     {% elif event['event'] == 'transfer' %}
     <tr>
-        <td class="bank"></td>
+        <td class="bank">
+        {% if event['tippee'] == bountysource_username %}
+            {{ event['bank'] }}
+        {% end %}
+        </td>
         <td class="card"></td>
         <td class="fees"></td>
 
@@ -275,6 +291,10 @@ locked = False
             {% else %}
             <td class="notes">from someone</td>
             {% end %}
+        {% elif event['tippee'] == bountysource_username %}
+            <td class="notes">
+                <a href="{{ event['item_url'] }}">{{ event['item_url'] }}</a>
+            </td>
         {% else %}
             {% if user.ADMIN %}
             <td class="notes">to
@@ -284,7 +304,6 @@ locked = False
                 <a href="/{{ event['tippee'] }}/">{{ event['tippee'] }}</a></td>
             {% end %}
         {% end %}
-
     </tr>
     {% end %}
 {% end %}

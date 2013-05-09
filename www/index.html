@@ -1,7 +1,6 @@
-from aspen import Response
+from aspen import log, Response
 from aspen.utils import to_age
 from gittip import db, AMOUNTS
-from gittip.elsewhere import github
 from gittip.models.participant import Participant
 
 def _wrap(raw):
@@ -103,7 +102,10 @@ receivers = _wrap(db.fetchall("""
 ^L
 {% extends templates/base.html %}
 {% block head %}
-    <script>$(document).ready(Gittip.initJumpToPerson);</script>
+    <script type="text/javascript">
+        $(document).ready(Gittip.initJumpToPerson);
+        $(document).ready(Gittip.initJumpToBountysourceIssue);
+    </script>
 {% end %}
 {% block heading %}
     <h2 class="top"><span>A Weekly Gift Exchange</span></h2>

@@ -10,8 +10,7 @@ from urlparse import parse_qs
 
 import requests
 from oauth_hook import OAuthHook
-from aspen import json, log, Response
-from aspen import resources
+from aspen import resources, json, log, Response
 from gittip import mixpanel
 from gittip.elsewhere import ACTIONS, bitbucket
 from gittip.participant import NeedConfirmation

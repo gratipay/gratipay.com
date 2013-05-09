@@ -1,0 +1,33 @@
+"""Associate a Bountysource account with a Gittip account. 
+
+First, must receive token from Bountysource by authorizing the application.
+"""
+from aspen import log, Response
+from gittip.elsewhere import bountysource
+
+# ========================== ^L
+
+if user.ANON:
+    raise Response(404)
+
+# Gittip generated access token, passed all the way through the auth process
+token = qs.get('access_token', '')
+
+# find participant from Bountysource created access token.
+# it better be the logged in user, dammit.
+participant = bountysource.get_participant_via_access_token(token)
+
+if not participant or participant != user:
+    raise Response(404)
+
+else:
+    # create a linked account
+    params = bountysource.filter_params(qs)
+    account = bountysource.BountysourceAccount(params['id'], params)
+
+    # associate with the Gittip participant
+    user.take_over(account)
+
+    request.redirect('/%s' % account.participant)
+
+# ========================== ^L text/plain

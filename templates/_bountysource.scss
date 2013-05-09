@@ -1,0 +1,35 @@
+.bountysource-content {
+    
+    .account-balance { 
+        color: $green;
+    }
+    
+    form#bountysource-issue-search {
+        
+        input {
+            width: 20em;
+        }
+        
+    }
+    
+}
+
+form#authorize-bountysource-payment {
+    
+    button#approve {
+        background: $green;
+    }
+    
+    button#cancel {
+        background: $light-red;
+    }
+    
+    #item-name {
+        color: $green;
+    }
+    
+    #amount {
+        color: $green;
+    }
+    
+}

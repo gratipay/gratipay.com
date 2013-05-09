@@ -1,0 +1,1 @@
+ALTER TABLE transfers ADD COLUMN note text DEFAULT NULL;

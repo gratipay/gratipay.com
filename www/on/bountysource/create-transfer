@@ -1,0 +1,81 @@
+"""POST Action to create an IPN at Bountysource
+"""
+import requests
+from urllib import urlencode
+from decimal import Decimal
+from aspen import log, Response
+from gittip import db
+from gittip.elsewhere import bountysource
+
+# ========================================== ^L
+
+if user.ANON:
+    raise Response(404)
+
+if not POST:
+    raise Response(405)
+    
+token = body.get('access_token', '')
+participant = bountysource.get_participant_via_access_token(token)
+
+if not participant:
+    raise Response(401)
+
+log('Authorize Bountysource payment with params: %s' % body)
+
+try:
+    amount = Decimal(body['amount'])
+    note = body['item_number']
+    cancel_url = body.get('cancel_url', bountysource.www_host)
+except:
+    raise Response(422)
+    
+# clicked the Cancel button
+if 'cancel' in body.keys():
+    request.redirect(cancel_url)
+
+
+# fetch the bountysource participant username
+bs_username = bountysource.get_participant_name()
+
+# Why is txn.fetchone not the same as db.fetchone? sigh.
+# I don't think the creation of the transaction below
+# is in the transaction, but it really should be.
+with db.get_transaction() as txn:
+    # create the exchange, returning the ID
+    transfer = db.fetchone("""
+        INSERT INTO transfers
+        (tipper, tippee, amount, note)
+        VALUES (%s, %s, %s, %s)
+        RETURNING id
+    """, (participant.username, bs_username, amount, note))
+
+    # if the exchange was created successfully, append id to IPN params
+    if transfer:
+        body['txn_id'] = int(transfer['id'])
+
+    # update balance of participant
+    txn.execute("""
+        UPDATE participants
+        SET balance = balance - %s
+        WHERE username = %s
+    """, (amount, participant.username))
+
+# POST to Bountysource to create IPN
+create_ipn_url = '%spayments/gittip_ipn' % (bountysource.api_host)
+create_ipn_response = requests.post(create_ipn_url, data=body)
+log('POST IPN create to Bountysource: %s POST %s' % (create_ipn_response.status_code, create_ipn_url))
+
+if create_ipn_response.status_code not in range(200,301):
+    # Note: delete exchange if IPN post fails? For now, keep things simple and 500.
+    raise Response(500, 'IPN create failed')
+
+# post to bountysource to get the receipt page!
+return_url = '%spayments/gittip_return' % (bountysource.api_host)
+return_response = requests.post(return_url, data=body, allow_redirects=True)
+log('Return to Bountysource: %s POST %s' % (return_response.status_code, return_url))
+
+# follow dat URL from return_response
+request.redirect(return_response.url)
+
+# ========================================== ^L text/plain

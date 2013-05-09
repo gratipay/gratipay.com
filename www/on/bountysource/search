@@ -1,0 +1,28 @@
+"""Search Bountysource issues
+"""
+import requests
+from aspen import log, Response
+from gittip.elsewhere import bountysource
+
+# ========================== ^L
+
+if user.ANON:
+    raise Response(404)
+    
+if not POST:
+    raise Response(404)
+
+github_account, twitter_account, bitbucket_account, bountysource_account = user.get_accounts_elsewhere()
+
+search_query = body['query']
+search_url = bountysource.search_url(search_query)
+
+# require linking of a Bountysource account if necessary, passing in search_url as the redirect_url
+if not bountysource_account:
+    auth_url = bountysource.oauth_url(website, user, search_url)
+    request.redirect(auth_url)
+
+if bountysource_account:
+    request.redirect(search_url)
+
+# ========================== ^L text/plain

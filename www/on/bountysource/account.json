@@ -1,0 +1,27 @@
+"""API method for Gittip account balance cache sync on Bountysource.
+
+Requires a valid Gittip username and associated Bountysource linked account access token.
+Access tokens are created from gittip.elsewhere.bountysource.create_access_token with
+a Gittip Participant id and Bountysource API secret.
+"""
+from aspen import Response, log
+from gittip.elsewhere import bountysource
+
+# ============================================== ^L
+
+request.allow("GET")
+
+token = qs.get('access_token', '')
+participant = bountysource.get_participant_via_access_token(token)
+
+if not participant:
+    response.status = 401
+    response.body = { 'error': 'Unauthorized' }
+
+
+else:
+    response.status = 200    
+    response.body = { 
+        "balance": participant.balance or 0.0,
+        "login": participant.username
+    }

@@ -72,15 +72,19 @@ if not user.ANON:
 # Accounts Elsewhere
 # ==================
 # For Twitter we can use an immutable id. For GitHub we have an immutable id
-# but we can't use it. For Bitbucket we don't have an immutable id. It's nice
-# that Twitter lets us use an immutable id. We should do that ourselves:
+# but we can't use it. For Bitbucket we don't have an immutable id. For Bountysource 
+# we have an immutable id. It's nice that Twitter lets us use an immutable id. 
+# We should do that ourselves:
 #
 # https://github.com/gittip/www.gittip.com/issues/680
 
-github, twitter, bitbucket = participant.get_accounts_elsewhere()
+github, twitter, bitbucket, bountysource = participant.get_accounts_elsewhere()
 if bitbucket is not None:
     bitbucket = "https://bitbucket.org/api/1.0/users/%s" % \
                                                 bitbucket.user_info['username']
+if bountysource is not None:
+    bountysource = "https://api.bountysource.com/users/%s" % \
+                   bountysource.user_info['id']
 if github is not None:
     github = "https://api.github.com/users/%s" % github.user_info['login']
 if twitter is not None:
@@ -88,6 +92,7 @@ if twitter is not None:
                                         "&include_entities=1" % twitter.user_id
 
 output['elsewhere'] = { 'bitbucket': bitbucket
+                      , 'bountysource': bountysource
                       , 'github': github
                       , 'twitter': twitter
                        }

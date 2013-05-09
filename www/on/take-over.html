@@ -36,6 +36,8 @@ elif platform == 'github':
     Account = GitHubAccount
 elif platform == 'twitter':
     Account = TwitterAccount
+elif platform == 'bountysource'
+    Account = BountysourceAccount
 
 account = Account(user_id)
 user.take_over(account, have_confirmation=True)

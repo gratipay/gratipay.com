@@ -1,0 +1,47 @@
+"""Authorize payment from Bountysource
+"""
+
+from decimal import Decimal
+from aspen import log, Response
+from gittip.elsewhere import bountysource
+
+# ========================================= ^L
+
+amount = Decimal(qs.get('amount', 0.0))
+fee = Decimal(qs.get('fee', 0.0))
+token = qs['access_token']
+success_url = qs['success_url']
+cancel_url = qs.get('cancel_url', bountysource.www_host)
+item_name = qs.get('item_name')
+item_number = qs['item_number']
+
+# ========================================= ^L
+{% extends templates/base.html %}
+
+{% block heading %}
+    <h2 class="top"><span>Authorize Bountysource Payment</span></h2>
+{% end %}    
+{% block box %}
+    <div class="as-content">
+        <form id="authorize-bountysource-payment" action="create-transfer" method="POST">
+            {% if item_name %}
+                <p>Authorize <span id="amount">${{ amount + fee }}</span> payment for <span id="item-name">{{ item_name }}</span>?</p>
+            {% else %}
+                <p>Authorize <span id="amount">${{ amount + fee }}</span> payment?</p>
+            {% end %}
+
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="access_token" value="{{ token }}">
+            
+            <input type="hidden" name="amount" value="{{ amount }}">
+            <input type="hidden" name="fee" value="{{ fee }}">
+            <input type="hidden" name="item_number" value="{{ item_number }}">
+            
+            <input type="hidden" name="success_url" value="{{ success_url }}">
+            <input type="hidden" name="cancel_url" value="{{ cancel_url }}">
+            
+            <button id="approve">Approve</button>
+            <button id="cancel" name="cancel">Cancel</button>
+        </form>
+    </div>
+{% end %}
