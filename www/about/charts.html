@@ -7,80 +7,49 @@ title = "Charts"
         width: 480px;
         float: left;
     }
-    .chart-wrapper.newline {
-        clear: left;
-    }
     H2 {
         padding-top: 12pt;
     }
     .chart {
         position: relative;
-        height: 100px;
-    }
-    .week {
-        position: absolute;
-        top: 0;
-        left: 0;
-        cursor: pointer;
-    }
-    .shaded {
-        position: absolute;
-        background: #2A8F79;
-        bottom: 0;
-    }
-    .week SPAN, .x-axis {
-        font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
-    }
-    .week SPAN.x-tick {
-        position: absolute;
-        bottom: -12pt;
-        padding: 6pt 0 0 0.5pt;
-        border: 1pt solid #614C3E;
-        border-style: none none none solid;
-        display: none;
-        color: #614C3E;
-    }
-    .week SPAN.x-tick.on {
-        border-color: #B2A196;
-        color: #B2A196;
-    }
-    .week.flagged SPAN.x-tick.on,
-    .week.hover SPAN.x-tick.on {
-        border-color: #614C3E;
-        color: #614C3E;
-    }
-    .week SPAN.y-label {
-        display: none;
-        position: absolute;
-        top: -17pt;
-        text-align: center;
-        background: white;
-        color: #614C3E;
-        border: 2pt solid #614C3E;
-        border-radius: 0 3pt 3pt 0;
-        padding: 2pt 3pt;
-    }
-    .week.max SPAN.y-label {
-        display: block;
-    }
-    .week.flagged SPAN.y-label,
-    .week.flagged SPAN.x-tick,
-    .week.hover SPAN.y-label,
-    .week.hover SPAN.x-tick {
-        display: block;
-    }
-    .eek.hover {
-        background: red;
-    }
-    .x-axis {
-        text-align: center;
-        padding-top: 14pt;
+        height: 130px;
     }
     .note {
         font-style: italic;
         font-size: 8pt;
         line-height: 10pt;
         padding-bottom: 12pt;
+    }
+    .label {
+      text-align: center;
+      font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
+    }
+    rect.bar {
+      fill: #2A8F79;
+      stroke: 0px;
+      shape-rendering: crispEdges;
+    }
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+    .flag {
+      fill: white;
+      stroke: #614C3E;
+      stroke-width: 2px;
+      shape-rendering: crispEdges;
+    }
+    .flagtext {
+      font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
+    }
+    .tick {
+      stroke: #614C3E;
+      stroke-width: 1px;
+      shape-rendering: crispEdges;
+    }
+    .ticktext {
+      font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
     }
 </style>
 
@@ -89,7 +58,7 @@ title = "Charts"
     <h2>Users</h2>
     <p class="note">Anyone who's ever created an account on Gittip</p>
     <div class="chart" id="users-"></div>
-    <div class="x-axis">weeks</div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper">
@@ -97,7 +66,7 @@ title = "Charts"
     <h2>Funders</h2>
     <p class="note">People who gave money to other people within Gittip</p>
     <div class="chart" id="funders-"></div>
-    <div class="x-axis">weeks</div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper">
@@ -105,7 +74,7 @@ title = "Charts"
     <h2>Gifts ($)</h2>
     <p class="note">Money transferred within Gittip</p>
     <div class="chart" id="volume-"></div>
-    <div class="x-axis">weeks</div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper">
@@ -113,7 +82,7 @@ title = "Charts"
     <h2>Cumulative Gifts ($)</h2>
     <p class="note">Money transferred within Gittip (cumulative)</p>
     <div class="chart" id="cumulative-"></div>
-    <div class="x-axis">weeks</div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper newline">
@@ -124,7 +93,7 @@ title = "Charts"
         href="http://blog.gittip.com/post/28158537529/why-were-you-charged-10">upped</a>
     to $10 in week 8)</p>
     <div class="chart" id="charges-"></div>
-    <div class="x-axis">weeks</div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper">
@@ -136,180 +105,160 @@ title = "Charts"
     in week 12)</p>
 
     <div class="chart" id="withdrawals-"></div>
-    <div class="x-axis">weeks</div>
+    <div class="label">weeks</div>
 </div>
 
+<script src="http://d3js.org/d3.v3.js"></script>
 <script>
     $(document).ready(function()
     {
-        var Withdrawals = $('#withdrawals-');
-        var Charges = $('#charges-');
-        var Volume = $('#volume-');
-        var Cumulative = $('#cumulative-');
-        var Users = $('#users-');
-        var Funders = $('#funders-');
+        var outerHeight = 130;
+        var outerWidth  = 480;
 
-        function mouseover()
-        {
-            var x = $(this).attr('x');
-            var y = $(this).attr('y');
+        var margin = { top: 22, right: 36, bottom:12 , left: 3 };
+        var width = outerWidth - margin.right - margin.left;
+        var height = outerHeight - margin.top - margin.bottom;
 
-            $(this).addClass('hover');
+
+        // gnarly little function to generate a "flag" with two rounded corners.
+        // See: http://www.w3.org/TR/SVG/shapes.html#RectElement for the steps to create the path
+        // here we assume rx = ry = r and only apply curves to the right side
+        // The effective width is width + r, the effective height is height + r + r
+        function flagPath(width, height, r) {
+          return "M 0 0 L " + width + " 0 A " + r + " " + r + " 0 0 1 " + 
+              (width + r) + " " + r + " L " + (width + r) + " " + height + 
+              "A " + r + " " + r + " 0 0 1 " + (width) + " " + (height + r ) + 
+              " L 0 " + (height + r) + " Z"; 
         }
 
-        function mouseout() 
-        { 
-            $(this).removeClass('hover') 
+        function barChart(data, element, accessor) {
+          var svg = d3.select(element).append("svg");
+          svg.attr({
+            width: outerWidth,
+            height: outerHeight
+          });
+
+          var g = svg.append("g")
+              .attr("transform","translate(" + margin.left + "," + margin.top + ")" );
+
+          var xScale = d3.scale.ordinal()
+              .rangeBands([0,width],0)
+              .domain(data.map(function(d,i) {return i;} ));
+          var yScale = d3.scale.linear()
+              .domain([0,d3.max(data, function(d,i) { return accessor(d,i); })])
+              .range([height,0]);
+
+          var xAxis = d3.svg.axis()
+              .scale(xScale)
+              .tickValues([])
+              .orient("bottom");
+          var yAxis = d3.svg.axis()
+              .scale(yScale)
+              .ticks(0)
+              .orient("left");
+
+          var max = d3.max(data,accessor);
+
+          var bars = g.append("g").selectAll(".bar")
+              .data(data)
+              .enter().append("rect")
+              .classed("bar", true)
+              .classed("max", function(d,i) { return accessor(d,i) === max ? true : false; })
+              .attr("x", function(d,i) { return xScale(i); })
+              .attr("width", xScale.rangeBand())
+              .attr("y", function(d,i) { return yScale(accessor(d,i)); })
+              .attr("height", function(d,i) { 
+                if (accessor(d,i) === 0) {
+                  return height - yScale(accessor(d,i));
+                }
+                return height - yScale(accessor(d,i)) + 1; 
+              });
+
+          var hoverBars = g.append("g").selectAll(".hoverbar")
+              .data(data)
+              .enter().append("rect")
+              .classed("hoverbar", true)
+              .attr("x",function(d,i) { return xScale(i); })
+              .attr("width",xScale.rangeBand())
+              .attr("y", 0)
+              .style({
+                opacity: 0
+              })
+              .attr("height", height);
+
+
+          // now that we have g, make a flag creator
+          function addFlag(d, i, klass) {
+            var numLength = ("" + d3.round(accessor(d,i))).length;
+            var flagWidth = numLength * 7; 
+            var hoverFlag = g.append("g");
+            hoverFlag.classed(klass, true);
+
+            hoverFlag.append("path")
+                .classed("flag", true)
+                .attr("d",flagPath(flagWidth,12,3));
+
+            var hoverTick = g.append("g");
+            hoverTick.classed(klass,true);
+
+            hoverTick.append("line")
+                .classed("tick",true)
+                .attr({
+                  x1: 0,
+                  y1: 0,
+                  x2: 0,
+                  y2: 12
+                });
+            hoverFlag.attr("transform","translate(" + [xScale(i) + 1,yScale(accessor(d,i)) - 20] + ")")
+            hoverFlag.append("text")
+                .classed("flagtext",true)
+                .attr("transform","translate(3,11)")
+                .text(d3.round(accessor(d,i)));
+            hoverTick.attr("transform","translate(" + [xScale(i), height] + ")")
+            hoverTick.append("text")
+                .classed("ticktext",true)
+                .attr("transform","translate(3,11)")
+                .text(i);
+          }
+
+          // Add permanent flag on max, set up mouse events.
+          bars.each(function(d,i) { 
+            if (this.classList.contains("max")) {
+              addFlag(d,i,"clicked-" + i);
+            }
+          });
+
+          hoverBars.on("mouseover", function(d,i) {
+            g.selectAll(".hover").remove();
+            addFlag(d,i,"hover");
+          });
+
+          hoverBars.on("click",function(d,i) {
+            var thisflag = g.selectAll(".clicked-" + i);
+            if (thisflag[0].length > 0 ) { // existing flag, toggle off
+              thisflag.remove()
+            } else {
+              addFlag(d,i,"clicked-" + i);
+            }
+          });
+
         }
+        d3.json('https://www.gittip.com/about/paydays.json', function(paydays) {
 
-        jQuery.get('/about/paydays.json', function(paydays)
-        {
-            var H = $('.chart').height();
-            var W = $('.chart').width();
-            var nweeks = paydays.length - 1; // don't show Gittip #0
-            var w = Math.floor((W - 20) / nweeks);
-            var W = w * nweeks;
-            
-            var payday = null;
-
-            $('.n-weeks').text(nweeks);
-            $('.chart').width(W);
-
-
-            // Compute vertical scale.
-            // =======================
-
-            var maxUsers = 0;
-            var maxFunders = 0;
-            var maxGifts = 0;
-            var maxCumulative = 0;
-            var maxWithdrawals = 0;
-            var maxCharges = 0;
-
-
-            for (var i=0; i < nweeks; i++)
-            {
-                payday = paydays[i];
-                maxUsers = Math.max( maxUsers
-                                   , parseFloat(payday.nparticipants)
-                                    );
-                maxFunders = Math.max( maxFunders
-                                     , parseFloat(payday.ntippers)
-                                      );
-                maxCumulative += parseFloat(payday.transfer_volume);
-                maxGifts = Math.max( maxGifts
-                                   , parseFloat(payday.transfer_volume)
-                                    );
-                maxWithdrawals = Math.max( maxWithdrawals
-                                         , -parseFloat(payday.ach_volume)
-                                          );
-                maxCharges = Math.max( maxCharges
-                                     , parseFloat(payday.charge_volume)
-                                      );
+            paydays.reverse(); // not sure why they're going backwards in time?
+                               // TODO: make this a generic sort by start date.
+            var transferTotal = 0;
+            for(var i=0; i < paydays.length; i++) {
+              transferTotal += paydays[i].transfer_volume;
+              paydays[i].cumulative = transferTotal;
             }
 
-            scaleUsers = Math.ceil(maxUsers / 100) * 100;
-            scaleFunders = Math.ceil(maxFunders / 100) * 100;
-            scaleGifts = Math.ceil(maxGifts / 100) * 100;
-            scaleCumulative = Math.ceil(maxCumulative / 100) * 100;
-            scaleWithdrawals = Math.ceil(maxWithdrawals / 100) * 100;
-            scaleCharges = Math.ceil(maxCharges / 100) * 100;
-
-
-            // Draw weeks.
-            // ===========
-
-            function Week(n, max, N, y, title)
-            {
-                var x = nweeks - n;
-                var create = function(x) { return document.createElement(x) };
-                var week = $(create('div')).addClass('week');
-                var shaded = $(create('div')).addClass('shaded');
-                shaded.html( '<span class="y-label">' 
-                           + parseInt(y) 
-                           + '</span>'
-                            );
-                week.append(shaded);
-                week.attr({x: x, y: y});
-
-                var xTick = $(create('span')).addClass('x-tick');
-                xTick.text(x);
-                xTick.attr('title', title);
-                if ((x % 5) === 0)
-                    xTick.addClass('on');
-                week.append(xTick);
-                if (y === max)
-                    week.addClass('flagged');
-
-                var y = parseFloat(y);
-                var h = Math.ceil(((y / N) * H));
-                week.height(H);
-                week.width(w);
-                week.css({"left": w * (nweeks - n - 1)});
-                shaded.css({"height": h});
-                return week;
-            }
-
-            var cumulative = maxCumulative;
-            for (var i=0; i < nweeks; i++)
-            {
-                var payday = paydays[i];
-                var weekstamp = payday.ts_start.slice(0, 10);
-
-                Users.append(Week( i
-                                 , maxUsers
-                                 , scaleUsers
-                                 , payday.nparticipants
-                                 , weekstamp
-                                  ));
-                Funders.append(Week( i
-                                   , maxFunders
-                                   , scaleFunders
-                                   , payday.ntippers
-                                   , weekstamp
-                                    ));
-                Volume.append(Week( i
-                                  , maxGifts
-                                  , scaleGifts
-                                  , payday.transfer_volume
-                                  , weekstamp
-                                   ));
-                Cumulative.append(Week( i
-                                      , maxCumulative
-                                      , scaleCumulative
-                                      , cumulative
-                                      , weekstamp
-                                       ));
-                cumulative -= parseFloat(payday.transfer_volume);
-                Withdrawals.append(Week( i 
-                                       , maxWithdrawals
-                                       , scaleWithdrawals
-                                       , -payday.ach_volume
-                                       , weekstamp
-                                        ));
-                Charges.append(Week( i
-                                   , maxCharges
-                                   , scaleCharges
-                                   , payday.charge_volume 
-                                   , weekstamp
-                                    ));
-            }
-
-            $('.week').width(w);
-            $('.shaded').width(w);
-
-
-            // Wire up behaviors.
-            // ==================
-
-            $('.week').click(function() 
-            { 
-                $(this).toggleClass('flagged');
-                if ($(this).hasClass('flagged'))
-                    $(this).removeClass('hover');
-            });
-            $('.week').mouseover(mouseover)
-            $('.week').mouseout(mouseout)
+            barChart(paydays, '#users-',      function(d,i) { return d.nparticipants } );
+            barChart(paydays, '#funders-',    function(d,i) { return d.ntippers } );
+            barChart(paydays, '#volume-',     function(d,i) { return d.transfer_volume } );
+            barChart(paydays, '#cumulative-', function(d,i) { return d.cumulative } );
+            barChart(paydays, '#charges-',    function(d,i) { return d.charge_volume; });
+            barChart(paydays, '#withdrawals-',function(d,i) { return -d.ach_volume; });
         });
     });
 </script>

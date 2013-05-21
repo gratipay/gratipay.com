@@ -22,6 +22,8 @@ paydays = db.fetchall("""\
          , ncc_missing
          , ncc_failing
       FROM paydays
+      WHERE
+         ts_start > '2012-06-01T07:01:13.376763+00:00'
   ORDER BY ts_start DESC
 
 """)
