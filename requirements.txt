@@ -30,3 +30,5 @@
 ./vendor/raven-3.1.4.tar.gz
 
 ./vendor/fake-factory-0.2.tar.gz
+
+./vendor/iso3166-0.1.tar.gz
