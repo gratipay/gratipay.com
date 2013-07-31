@@ -40,14 +40,9 @@ def age():
 db = None # This global is wired in wireup. It's an instance of
           # gittip.postgres.PostgresManager.
 
+MAX_TIP = Decimal('100.00')
+MIN_TIP = Decimal('0.00')
 
-AMOUNTS = [Decimal(a) for a in ( '100.00', '90.00', '80.00', '70.00', '60.00'
-                               , '50.00', '40.00', '30.00', '20.00'
-                               , '10.00', '9.00', '8.00', '7.00', '6.00'
-                               , '5.00', '4.00', '3.00', '2.00', '1.00'
-                               , '0.25'
-                               , '0.00'
-                                )]
 RESTRICTED_IDS = None
 
 
