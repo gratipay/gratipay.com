@@ -7,28 +7,9 @@ env_bin := env/$(bin_dir)
 venv := "./vendor/virtualenv-1.9.1.py"
 
 env: $(env_bin)/swaddle
-	$(python)  $(venv)\
-				--unzip-setuptools \
-				--prompt="[gittip] " \
-				--never-download \
-				--extra-search-dir=./vendor/ \
-				--distribute \
-				./env/
-	./$(env_bin)/pip install -r requirements.txt
-	./$(env_bin)/pip install ./vendor/nose-1.1.2.tar.gz
-	./$(env_bin)/pip install -e ./
 
 $(env_bin)/swaddle:
-	$(python) $(venv)\
-				--unzip-setuptools \
-				--prompt="[gittip] " \
-				--never-download \
-				--extra-search-dir=./vendor/ \
-				--distribute \
-				./env/
-	./$(env_bin)/pip install -r requirements.txt
-	./$(env_bin)/pip install ./vendor/nose-1.1.2.tar.gz
-	./$(env_bin)/pip install -e ./
+	$(python) bootstrap.py 
 
 clean:
 	rm -rf env *.egg *.egg-info tests/env

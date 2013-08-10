@@ -24,3 +24,8 @@ def payday():
         import aspen
         import traceback
         aspen.log(traceback.format_exc())
+
+
+
+def gittip():
+    print "Greetings, program! Nothing here yet. :-("
