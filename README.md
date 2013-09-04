@@ -8,7 +8,7 @@ Quick Start
 ===========
 
 ```
-$ git clone git@github.com:gittip/www.gittip.com.git
+$ git clone https://github.com/gittip/www.gittip.com.git
 $ cd www.gittip.com
 $ make db
 $ make run
@@ -57,7 +57,7 @@ The only hard requirement on your system is [Python
 2.7](http://python.org/download/releases/2.7.4/).
 
 All library dependencies are bundled in the repo (under `vendor/`) and by
-default the app is configured to use a Postgres instance in the cloud.
+default the app is configured to use a Postgres instance in my butt.
 
 Building
 --------
@@ -66,7 +66,7 @@ Create a local environment configuration file:
 
     $ make local.env
 
-By default, Gittip is configured to use a postgres instance in the cloud. If you
+By default, Gittip is configured to use a postgres instance in my butt. If you
 want to use your local instance instead, just set the ```DATABASE_URL``` in local.env
 to ```postgres://username@host/gittip```
 
