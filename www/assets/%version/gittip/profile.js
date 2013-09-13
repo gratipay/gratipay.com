@@ -363,4 +363,43 @@ $(document).ready(function()
         .on('click', '.recreate', function () {
             $.post('api-key.json', { action: 'show' }, $('.api-key').data('callback'));
         });
+
+
+    // Wire up email address input.
+    // ============================
+
+    $('a.email').click(function()
+    {
+        // "Link email address" text or existing
+        // email was clicked, show the text box
+        $('.email').toggle();
+        $('input.email').focus();
+    });
+
+    $('.email-submit')
+        .on('click', '[type=submit]', function () {
+            var $this = $(this);
+
+            $this.text('Saving...');
+
+            $.post('email.json'
+                 , { email: $('input.email').val() }
+                 , 'json'
+            ).done(function (data) {
+                $('a.email').text(data.email);
+                $('.email').toggle();
+                $this.text('Save');
+            }).fail(function (data) {
+                $this.text('Save');
+                alert('Failed to save your email address. '
+                    + 'Please try again.');
+            });
+
+            return false;
+        })
+        .on('click', '[type=cancel]', function () {
+            $('.email').toggle();
+
+            return false;
+        });
 });

@@ -289,6 +289,13 @@ class Participant(Model, MixinElsewhere, MixinTeam):
             self.set_attributes(username=suggested, username_lower=lowercased)
 
 
+    def change_email(self, email, confirmed=False):
+        gittip.db.run("UPDATE participants "
+                      "SET email = ROW(%s, %s) WHERE username=%s",
+                      (email, confirmed, self.username))
+        self.set_attributes(email=(email, confirmed))
+
+
     def update_goal(self, goal):
         typecheck(goal, (Decimal, None))
         self.db.run( "UPDATE participants SET goal=%s WHERE username=%s"

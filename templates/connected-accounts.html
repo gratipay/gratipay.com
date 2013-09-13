@@ -127,6 +127,31 @@
                     >on Balanced Payments</a>{% else %}on Balanced Payments{% end %}</div>
         </td>
     </tr>
+    {% if user.participant == participant or user.ADMIN %}
+    <tr>
+        <td class="account-type">
+            <img src="/assets/octocat.png" /><!-- This needs to change -->
+        </td>
+        <td class="account-details">
+
+            {% if participant.email is None %}
+                <a href="javascript:;" class="email">Link an email address</a>
+            {% else %}
+                <a href="javascript:;" class="email">{{ participant.email.address }}</a>
+            {% end %}
+            <form class="email-submit">
+                <input type="email" class="email hidden"
+                    {% if participant.email %}
+                        value="{{ participant.email.address }}"
+                    {% end %}
+                >
+                <button type="submit" class="email hidden">Save</button>
+                <button type="cancel" class="email cancel hidden">Cancel</button>
+            </form>
+            <div class="account-type">(not publicly viewable)</div>
+        </td>
+    </tr>
+    {% end %}
 </table>
 
 

@@ -136,6 +136,18 @@ class TestParticipant(Harness):
         actual = Participant.from_username('john').IS_PLURAL
         assert_equals(actual, expected)
 
+    def test_can_change_email(self):
+        Participant.from_username('alice').change_email('alice@gmail.com')
+        expected = 'alice@gmail.com'
+        actual = Participant.from_username('alice').email.address
+        assert_equals(actual, expected)
+
+    def test_can_confirm_email(self):
+        Participant.from_username('alice').change_email('alice@gmail.com', True)
+        expected = True
+        actual = Participant.from_username('alice').email.confirmed
+        assert_equals(actual, expected)
+
     def test_cant_take_over_claimed_participant_without_confirmation(self):
         bob_twitter = StubAccount('twitter', '2')
         with assert_raises(NeedConfirmation):

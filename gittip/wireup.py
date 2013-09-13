@@ -12,6 +12,7 @@ import stripe
 import gittip.utils.mixpanel
 from gittip.models.community import Community
 from gittip.models.participant import Participant
+from gittip.models.email_address_with_confirmation import EmailAddressWithConfirmation
 from postgres import Postgres
 
 
@@ -32,6 +33,7 @@ def db():
 
     db.register_model(Community)
     db.register_model(Participant)
+    db.register_model(EmailAddressWithConfirmation)
 
     return db
 
