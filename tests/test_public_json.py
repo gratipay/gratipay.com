@@ -20,7 +20,7 @@ class Tests(Harness):
         alice = self.make_participant('alice', last_bill_result='')
         self.make_participant('bob')
 
-        alice.set_tip_to('bob', '1.00')
+        self.make_payday(('alice', 'bob', '1.00'))
 
         data = json.loads(TestClient().get('/bob/public.json').body)
 
@@ -77,6 +77,7 @@ class Tests(Harness):
         self.make_participant('bob')
 
         alice.set_tip_to('bob', '1.00')
+        self.make_payday(('alice', 'bob', '1.00'))
 
         raw = TestClient().get('/bob/public.json', user='alice').body
 
@@ -95,6 +96,11 @@ class Tests(Harness):
         bob.set_tip_to('dana', '3.00')
         carl.set_tip_to('dana', '12.00')
 
+        self.make_payday(
+            ('alice', 'dana', '1.00'),
+            ('bob', 'dana', '3.00'),
+            ('carl', 'dana', '12.00'))
+
         raw = TestClient().get('/dana/public.json', user='alice').body
 
         data = json.loads(raw)
@@ -108,6 +114,7 @@ class Tests(Harness):
         self.make_participant('carl')
 
         bob.set_tip_to('carl', '3.00')
+        ts_start = self.make_payday(('bob', 'carl', '3.00'))
 
         raw = TestClient().get('/carl/public.json', user='alice').body
 
@@ -121,6 +128,7 @@ class Tests(Harness):
         self.make_participant('bob')
 
         alice.set_tip_to('bob', '3.00')
+        self.make_payday(('alice', 'bob', '3.00'))
 
         raw = TestClient().get('/bob/public.json', user='bob').body
 

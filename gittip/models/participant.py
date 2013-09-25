@@ -367,17 +367,10 @@ class Participant(Model, MixinElsewhere, MixinTeam):
         return self.db.one("""\
 
             SELECT sum(amount)
-              FROM ( SELECT DISTINCT ON (tipper)
-                            amount
-                          , tipper
-                       FROM tips
-                       JOIN participants p ON p.username = tipper
-                      WHERE tippee=%s
-                        AND last_bill_result = ''
-                        AND is_suspicious IS NOT true
-                   ORDER BY tipper
-                          , mtime DESC
-                    ) AS foo
+              FROM transfers
+             WHERE "timestamp">=(SELECT ts_start FROM paydays ORDER BY ts_end DESC LIMIT 1)
+               AND "timestamp"< (SELECT ts_end   FROM paydays ORDER BY ts_end DESC LIMIT 1)
+               AND tippee=%s
 
         """, (self.username,), default=Decimal('0.00'))
 
