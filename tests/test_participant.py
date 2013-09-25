@@ -22,7 +22,6 @@ from gittip.models.participant import ( UsernameIsEmpty
                                       , BadAmount
                                        )
 from gittip.testing import Harness
-from nose.tools import assert_equals, assert_raises
 
 
 # TODO: Test that accounts elsewhere are not considered claimed by default
@@ -86,12 +85,12 @@ class TestAbsorptions(Harness):
     def test_bob_has_two_dollars_in_tips(self):
         expected = Decimal('2.00')
         actual = Participant.from_username('bob').get_dollars_receiving()
-        assert_equals(actual, expected)
+        self.assertEquals(actual, expected)
 
     def test_alice_gives_to_bob_now(self):
         expected = Decimal('1.00')
         actual = Participant.from_username('alice').get_tip_to('bob')
-        assert_equals(actual, expected)
+        self.assertEquals(actual, expected)
 
     def test_deadbeef_is_archived(self):
         actual = self.db.one( "SELECT count(*) FROM absorptions "
@@ -99,7 +98,7 @@ class TestAbsorptions(Harness):
                             , (self.deadbeef_original_username,)
                              )
         expected = 1
-        assert_equals(actual, expected)
+        self.assertEquals(actual, expected)
 
     def test_alice_doesnt_gives_to_deadbeef_anymore(self):
         expected = Decimal('0.00')
@@ -129,17 +128,17 @@ class TestParticipant(Harness):
     def test_bob_is_singular(self):
         expected = True
         actual = Participant.from_username('bob').IS_SINGULAR
-        assert_equals(actual, expected)
+        self.assertEquals(actual, expected)
 
     def test_john_is_plural(self):
         expected = True
         self.make_participant('john', number='plural')
         actual = Participant.from_username('john').IS_PLURAL
-        assert_equals(actual, expected)
+        self.assertEquals(actual, expected)
 
     def test_cant_take_over_claimed_participant_without_confirmation(self):
         bob_twitter = StubAccount('twitter', '2')
-        with assert_raises(NeedConfirmation):
+        with self.assertRaises(NeedConfirmation):
             Participant.from_username('alice').take_over(bob_twitter)
 
     def test_taking_over_yourself_sets_all_to_zero(self):
@@ -148,7 +147,7 @@ class TestParticipant(Harness):
         Participant.from_username('alice').take_over(bob_twitter, have_confirmation=True)
         expected = Decimal('0.00')
         actual = Participant.from_username('alice').get_dollars_giving()
-        assert_equals(actual, expected)
+        self.assertEquals(actual, expected)
 
     def test_alice_ends_up_tipping_bob_two_dollars(self):
         carl_twitter = StubAccount('twitter', '3')
@@ -157,7 +156,7 @@ class TestParticipant(Harness):
         Participant.from_username('bob').take_over(carl_twitter, have_confirmation=True)
         expected = Decimal('2.00')
         actual = Participant.from_username('alice').get_tip_to('bob')
-        assert_equals(actual, expected)
+        self.assertEquals(actual, expected)
 
     def test_bob_ends_up_tipping_alice_two_dollars(self):
         carl_twitter = StubAccount('twitter', '3')
@@ -166,7 +165,7 @@ class TestParticipant(Harness):
         Participant.from_username('bob').take_over(carl_twitter, have_confirmation=True)
         expected = Decimal('2.00')
         actual = Participant.from_username('bob').get_tip_to('alice')
-        assert_equals(actual, expected)
+        self.assertEquals(actual, expected)
 
     def test_ctime_comes_from_the_older_tip(self):
         carl_twitter = StubAccount('twitter', '3')
@@ -184,11 +183,11 @@ class TestParticipant(Harness):
 
         expected = first.ctime
         actual = self.db.one("SELECT ctime FROM tips ORDER BY ctime LIMIT 1")
-        assert_equals(actual, expected)
+        self.assertEquals(actual, expected)
 
     def test_connecting_unknown_account_fails(self):
         unknown_account = StubAccount('github', 'jim')
-        with assert_raises(NotSane):
+        with self.assertRaises(NotSane):
             Participant.from_username('bob').take_over(unknown_account)
 
 
@@ -220,11 +219,11 @@ class Tests(Harness):
         assert self.participant == actual, actual
 
     def test_changing_username_to_nothing(self):
-        with assert_raises(UsernameIsEmpty):
+        with self.assertRaises(UsernameIsEmpty):
             self.participant.change_username('')
 
     def test_changing_username_to_all_spaces(self):
-        with assert_raises(UsernameIsEmpty):
+        with self.assertRaises(UsernameIsEmpty):
             self.participant.change_username('    ')
 
     def test_changing_username_strips_spaces(self):
@@ -237,25 +236,25 @@ class Tests(Harness):
         assert returned == 'foo bar baz', returned
 
     def test_changing_username_to_too_long(self):
-        with assert_raises(UsernameTooLong):
+        with self.assertRaises(UsernameTooLong):
             self.participant.change_username('123456789012345678901234567890123')
 
     def test_changing_username_to_already_taken(self):
         self.make_participant('user2')
-        with assert_raises(UsernameAlreadyTaken):
+        with self.assertRaises(UsernameAlreadyTaken):
             self.participant.change_username('user2')
 
     def test_changing_username_to_already_taken_is_case_insensitive(self):
         self.make_participant('UsEr2')
-        with assert_raises(UsernameAlreadyTaken):
+        with self.assertRaises(UsernameAlreadyTaken):
             self.participant.change_username('uSeR2')
 
     def test_changing_username_to_invalid_characters(self):
-        with assert_raises(UsernameContainsInvalidCharacters):
+        with self.assertRaises(UsernameContainsInvalidCharacters):
             self.participant.change_username(u"\u2603") # Snowman
 
     def test_changing_username_to_restricted_name(self):
-        with assert_raises(UsernameIsRestricted):
+        with self.assertRaises(UsernameIsRestricted):
             self.participant.change_username(self.random_restricted_username())
 
     def test_getting_tips_actually_made(self):
@@ -304,7 +303,7 @@ class Tests(Harness):
 
     def test_stt_doesnt_allow_self_tipping(self):
         alice = self.make_participant('alice', last_bill_result='')
-        assert_raises( NoSelfTipping
+        self.assertRaises( NoSelfTipping
                      , alice.set_tip_to
                      , 'alice'
                      , '1000000.00'
@@ -313,7 +312,7 @@ class Tests(Harness):
     def test_stt_doesnt_allow_just_any_ole_amount(self):
         alice = self.make_participant('alice', last_bill_result='')
         self.make_participant('bob')
-        assert_raises( BadAmount
+        self.assertRaises( BadAmount
                      , alice.set_tip_to
                      , 'bob'
                      , '1000000.00'
@@ -321,7 +320,7 @@ class Tests(Harness):
 
     def test_stt_fails_to_tip_unknown_people(self):
         alice = self.make_participant('alice', last_bill_result='')
-        assert_raises( psycopg2.IntegrityError
+        self.assertRaises( psycopg2.IntegrityError
                      , alice.set_tip_to
                      , 'bob'
                      , '1.00'
