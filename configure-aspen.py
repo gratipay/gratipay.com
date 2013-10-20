@@ -28,7 +28,7 @@ gittip.wireup.mixpanel(website)
 gittip.wireup.nanswers()
 gittip.wireup.nmembers(website)
 gittip.wireup.envvars(website)
-gittip.wireup.sentry(website)
+tell_sentry = gittip.wireup.sentry(website)
 
 
 def up_minthreads(website):
@@ -126,21 +126,6 @@ def add_stuff(request):
     request.context['gtransfer_volume'] = locale.format("%d", round(stats[1], -2), grouping=True)
 
 website.hooks.inbound_early += [add_stuff]
-
-
-# The homepage wants expensive queries. Let's periodically select into an
-# intermediate table.
-
-UPDATE_HOMEPAGE_EVERY = int(os.environ['UPDATE_HOMEPAGE_EVERY'])
-def update_homepage_queries():
-    from gittip import utils
-    while 1:
-        utils.update_homepage_queries_once(website.db)
-        time.sleep(UPDATE_HOMEPAGE_EVERY)
-
-homepage_updater = threading.Thread(target=update_homepage_queries)
-homepage_updater.daemon = True
-homepage_updater.start()
 
 
 # Do this last so we get accurate times.

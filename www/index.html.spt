@@ -29,7 +29,11 @@ except ValueError:
 new_participants = utter_hack(db.all("""
 -- new participants on homepage
 
-    SELECT * FROM homepage_new_participants
+    SELECT username, claimed_time FROM participants p
+     WHERE EXISTS (SELECT * FROM elsewhere e WHERE p.username = e.participant)
+       AND claimed_time IS NOT null
+       AND is_suspicious IS NOT true
+  ORDER BY claimed_time DESC
      LIMIT %s
     OFFSET %s
 
@@ -38,7 +42,8 @@ new_participants = utter_hack(db.all("""
 givers = utter_hack(db.all("""
 -- top givers on homepage
 
-    SELECT * FROM homepage_top_givers
+    SELECT username, anonymous, giving AS amount FROM participants
+    ORDER BY giving DESC
      LIMIT %s
     OFFSET %s
 
@@ -50,7 +55,8 @@ givers = utter_hack(db.all("""
 receivers = utter_hack(db.all("""
 -- top receivers on homepage
 
-    SELECT * FROM homepage_top_receivers
+    SELECT username, receiving AS amount FROM participants
+    ORDER BY receiving DESC
      LIMIT %s
     OFFSET %s
 
