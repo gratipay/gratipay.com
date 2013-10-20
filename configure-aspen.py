@@ -128,23 +128,5 @@ def add_stuff(request):
 website.hooks.inbound_early += [add_stuff]
 
 
-# The homepage wants expensive queries. Let's periodically select into an
-# intermediate table.
-
-UPDATE_HOMEPAGE_EVERY = int(os.environ['UPDATE_HOMEPAGE_EVERY'])
-def update_homepage_queries():
-    from gittip import utils
-    while 1:
-        try:
-            utils.update_homepage_queries_once(website.db)
-        except:
-            tell_sentry(None)
-        time.sleep(UPDATE_HOMEPAGE_EVERY)
-
-homepage_updater = threading.Thread(target=update_homepage_queries)
-homepage_updater.daemon = True
-homepage_updater.start()
-
-
 # Do this last so we get accurate times.
 gittip.wireup.request_metrics(website)

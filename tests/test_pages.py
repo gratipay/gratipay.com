@@ -8,7 +8,6 @@ import pytz
 from gittip.elsewhere.twitter import TwitterAccount
 from gittip.testing import GITHUB_USER_UNREGISTERED_LGTEST, Harness
 from gittip.testing.client import TestClient
-from gittip.utils import update_homepage_queries_once
 
 
 class TestPages(Harness):
@@ -29,7 +28,6 @@ class TestPages(Harness):
         TwitterAccount("bob", {}).opt_in("bob")
         alice = self.make_participant('alice', anonymous=True, last_bill_result='')
         alice.set_tip_to('bob', 1)
-        update_homepage_queries_once(self.db)
 
         actual = self.client.get('/').body
         expected = "Anonymous"
