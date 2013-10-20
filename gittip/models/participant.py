@@ -366,43 +366,13 @@ class Participant(Model, MixinElsewhere, MixinTeam):
     def get_dollars_receiving(self):
         """Return a Decimal.
         """
-        return self.db.one("""\
-
-            SELECT sum(amount)
-              FROM ( SELECT DISTINCT ON (tipper)
-                            amount
-                          , tipper
-                       FROM tips
-                       JOIN participants p ON p.username = tipper
-                      WHERE tippee=%s
-                        AND last_bill_result = ''
-                        AND is_suspicious IS NOT true
-                   ORDER BY tipper
-                          , mtime DESC
-                    ) AS foo
-
-        """, (self.username,), default=Decimal('0.00'))
+        return self.db.one("SELECT receiving(%s)", (self.username,), default=Decimal('0.00'))
 
 
     def get_dollars_giving(self):
         """Return a Decimal.
         """
-        return self.db.one("""\
-
-            SELECT sum(amount)
-              FROM ( SELECT DISTINCT ON (tippee)
-                            amount
-                          , tippee
-                       FROM tips
-                       JOIN participants p ON p.username = tippee
-                      WHERE tipper=%s
-                        AND is_suspicious IS NOT true
-                        AND claimed_time IS NOT NULL
-                   ORDER BY tippee
-                          , mtime DESC
-                    ) AS foo
-
-        """, (self.username,), default=Decimal('0.00'))
+        return self.db.one("SELECT giving(%s)", (self.username,), default=Decimal('0.00'))
 
 
     def get_number_of_backers(self):
