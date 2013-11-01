@@ -6,11 +6,6 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 BUILDDIR      = _build
 
-# User-friendly check for sphinx-build
-ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
-$(error The '$(SPHINXBUILD)' command was not found. Make sure you have Sphinx installed, then set the SPHINXBUILD environment variable to point to the full path of the '$(SPHINXBUILD)' executable. Alternatively you can add the directory with the executable to your PATH. If you don't have Sphinx installed, grab it from http://sphinx-doc.org/)
-endif
-
 # Internal variables.
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
@@ -29,13 +24,22 @@ help:
 clean:
 	rm -rf gittip* $(BUILDDIR)/*
 
+Sphinx-1.1.3.tar.gz:
+	pip install --no-install --download=./ sphinx==1.1.3
+
+sphinx: Sphinx-1.1.3.tar.gz
+	pip install --no-deps --no-index Sphinx-1.1.3.tar.gz
+
 rst:
 	AUTOLIB_LIBRARY_ROOT=../gittip ./autolib.py
 
-html:
+html: rst
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+serve: html
+	../env/bin/aspen -w _build/html
 
 linkcheck:
 	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
