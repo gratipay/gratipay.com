@@ -9,7 +9,7 @@ from gittip.testing.client import TestClient
 
 class Tests(Harness):
 
-    def hit_anonymous(self, method='GET', expected_code=200):
+    def hit_anonymous(self, method='GET', data={}, expected_code=200):
         user, ignored = TwitterAccount(self.db, 'alice', {}).opt_in('alice')
 
         client = TestClient()
@@ -23,7 +23,7 @@ class Tests(Harness):
         else:
             assert method == 'POST'
             response = client.post( "/alice/anonymous.json"
-                                  , {'csrf_token': csrf_token}
+                                  , dict(data, csrf_token=csrf_token)
                                   , user='alice'
                                    )
         if response.code != expected_code:
@@ -31,18 +31,29 @@ class Tests(Harness):
         return response
 
 
-    def test_participant_can_get_their_anonymity_setting(self):
+    def test_participant_can_get_their_anonymity_settings(self):
         response = self.hit_anonymous('GET')
-        actual = json.loads(response.body)['anonymous']
+        actual = json.loads(response.body)
+        assert actual == {'giving': False, 'receiving': False}
+
+    def test_participant_can_toggle_anonymous_giving(self):
+        response = self.hit_anonymous('POST', data={'toggle': 'giving'})
+        actual = json.loads(response.body)
+        assert actual['giving'] is True
+
+    def test_participant_can_toggle_anonymous_receiving(self):
+        response = self.hit_anonymous('POST', data={'toggle': 'receiving'})
+        actual = json.loads(response.body)
+        assert actual['receiving'] is True
+
+    def test_participant_can_toggle_anonymous_giving_back(self):
+        response = self.hit_anonymous('POST', data={'toggle': 'giving'})
+        response = self.hit_anonymous('POST', data={'toggle': 'giving'})
+        actual = json.loads(response.body)['giving']
         assert actual is False
 
-    def test_participant_can_toggle_their_anonymity_setting(self):
-        response = self.hit_anonymous('POST')
-        actual = json.loads(response.body)['anonymous']
-        assert actual is True
-
-    def test_participant_can_toggle_their_anonymity_setting_back(self):
-        response = self.hit_anonymous('POST')
-        response = self.hit_anonymous('POST')
-        actual = json.loads(response.body)['anonymous']
+    def test_participant_can_toggle_anonymous_receiving_back(self):
+        response = self.hit_anonymous('POST', data={'toggle': 'receiving'})
+        response = self.hit_anonymous('POST', data={'toggle': 'receiving'})
+        actual = json.loads(response.body)['receiving']
         assert actual is False
