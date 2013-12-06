@@ -30,6 +30,8 @@ ASCII_ALLOWED_IN_USERNAME = set("0123456789"
                                 "abcdefghijklmnopqrstuvwxyz"
                                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                 ".,-_:@ ")
+# We use | in Sentry logging, so don't make that allowable. :-)
+
 NANSWERS_THRESHOLD = 0  # configured in wireup.py
 
 
@@ -253,7 +255,7 @@ class Participant(Model, MixinElsewhere, MixinTeam):
 
     def change_username(self, suggested):
         """Raise Response or return None.
-        
+
         Usernames are limited to alphanumeric characters, plus ".,-_:@ ",
         and can only be 32 characters long.
 
@@ -427,21 +429,23 @@ class Participant(Model, MixinElsewhere, MixinTeam):
 
     def get_tip_distribution(self):
         """
-            Returns a data structure in the form of:
-            [
-                [TIPAMOUNT1, TIPAMOUNT2...TIPAMOUNTN],
-                total_number_patrons_giving_to_me,
-                total_amount_received
-            ]
+            Returns a data structure in the form of::
 
-            where each TIPAMOUNTN is in the form:
+                [
+                    [TIPAMOUNT1, TIPAMOUNT2...TIPAMOUNTN],
+                    total_number_patrons_giving_to_me,
+                    total_amount_received
+                ]
 
-            [amount,
-             number_of_tippers_for_this_amount,
-             total_amount_given_at_this_amount,
-             proportion_of_tips_at_this_amount,
-             proportion_of_total_amount_at_this_amount
-            ]
+            where each TIPAMOUNTN is in the form::
+
+                [
+                    amount,
+                    number_of_tippers_for_this_amount,
+                    total_amount_given_at_this_amount,
+                    proportion_of_tips_at_this_amount,
+                    proportion_of_total_amount_at_this_amount
+                ]
 
         """
         SQL = """

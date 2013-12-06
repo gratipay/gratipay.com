@@ -74,6 +74,10 @@ Next, setup your environment:
 
     $ make env
 
+If you haven't run Gittip for a while, you should reinstall the dependencies:
+
+    $ make clean env
+
 Add the necessary schemas and insert dummy data into postgres:
 
     $ make schema
@@ -176,21 +180,10 @@ Configuration
 When using `make run`, Gittip's execution environment is defined in a
 `local.env` file, which is not included in the source code repo. If you `make
 run` you'll have one generated for you, which you can then tweak as needed.
-Here's the default, which is also contained in default_local.env:
+It's a copy of [default_local.env]
+(https://github.com/gittip/www.gittip.com/blob/master/default_local.env).
 
-    CANONICAL_HOST=
-    CANONICAL_SCHEME=http
-    DATABASE_URL=postgres://gittip@localhost/gittip
-    DATABASE_MAXCONN=10
-    STRIPE_SECRET_API_KEY=1
-    STRIPE_PUBLISHABLE_API_KEY=1
-    BALANCED_API_SECRET=90bb3648ca0a11e1a977026ba7e239a9
-    GITHUB_CLIENT_ID=3785a9ac30df99feeef5
-    GITHUB_CLIENT_SECRET=e69825fafa163a0b0b6d2424c107a49333d46985
-    GITHUB_CALLBACK=http://localhost:8537/on/github/associate
-    TWITTER_CONSUMER_KEY=QBB9vEhxO4DFiieRF68zTA
-    TWITTER_CONSUMER_SECRET=mUymh1hVMiQdMQbduQFYRi79EYYVeOZGrhj27H59H78
-    TWITTER_CALLBACK=http://127.0.0.1:8537/on/twitter/associate
+The following text explains some of the content of that file:
 
 The `BALANCED_API_SECRET` is a test marketplace. To generate a new secret for
 your own testing run this command:
@@ -371,21 +364,32 @@ a reboot.
 API
 ===
 
-The Gittip API is comprised of these four endpoints:
+The Gittip API is comprised of these six endpoints:
 
-**[/about/paydays.json](https://www.gittip.com/about/paydays.json)**
-([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/paydays.json))&mdash;<i>public</i>&mdash;Returns
+**[/about/charts.json](https://www.gittip.com/about/charts.json)**
+([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
 an array of objects, one per week, showing aggregate numbers over time. The
 [charts](https://www.gittip.com/about/charts.html) page uses this.
 
+**[/about/paydays.json](https://www.gittip.com/about/paydays.json)**
+([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/paydays.json.spt))&mdash;<i>public</i>&mdash;Returns
+an array of objects, one per week, showing aggregate numbers over time. The
+[charts](https://www.gittip.com/about/charts.html) page used to use this.
+
 **[/about/stats.json](https://www.gittip.com/about/stats.json)**
-([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/stats))&mdash;<i>public</i>&mdash;Returns
+([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/stats.spt))&mdash;<i>public</i>&mdash;Returns
 an object giving a point-in-time snapshot of Gittip. The
-[stats](https://www.gittip.com/about/stats.html) page displays the same info.
+[stats](https://www.gittip.com/about/stats.html.spt) page displays the same info.
+
+**/`%username`/charts.json**
+([example](https://www.gittip.com/Gittip/charts.json),
+[source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
+an array of objects, one per week, showing aggregate numbers over time for the
+given user.
 
 **/`%username`/public.json**
-([example](https://www.gittip.com/whit537/public.json),
-[source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/public.json))&mdash;<i>public</i>&mdash;Returns an object with these keys:
+([example](https://www.gittip.com/Gittip/public.json),
+[source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/public.json.spt))&mdash;<i>public</i>&mdash;Returns an object with these keys:
 
   - "receiving"&mdash;an estimate of the amount the given participant will
     receive this week
@@ -421,7 +425,7 @@ an object giving a point-in-time snapshot of Gittip. The
 
 
 **/`%username`/tips.json**
-([source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/tips.json))&mdash;<i>private</i>&mdash;Responds
+([source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/tips.json.spt))&mdash;<i>private</i>&mdash;Responds
 to `GET` with an array of objects representing your current tips. `POST` the
 same structure back in order to update tips in bulk (be sure to set
 `Content-Type` to `application/json` instead of
@@ -460,11 +464,11 @@ for your project!
  - [Node.js: Node-Gittip](https://npmjs.org/package/gittip) (also see [Khan
    Academy's setup](http://ejohn.org/blog/gittip-at-khan-academy/))
 
-
  - [Ruby: gratitude](https://github.com/JohnKellyFerguson/gratitude): A ruby gem that wraps the Gittip API (currently in development and not feature complete).
  
  - [WordPress: WP-Gittip](https://github.com/daankortenbach/WP-Gittip)
 
+ - [hubot-gittip](https://github.com/myplanetdigital/hubot-gittip): A Hubot script for interacting with a shared Gittip account.
 
 Glossary
 ========
@@ -545,3 +549,8 @@ and [crowdsourcing.org's](http://www.crowdsourcing.org/directory)*
  - [Pitch In](http://pitchinbox.com/) - Widget-centric project-based funding campaigns
  - [Binpress](http://www.binpress.com/) - Binpress is the marketplace for commercial open-source projects.
  - [TubeStart](https://www.tubestart.com/) - a crowdfunding platform dedicated exclusively to YouTube creators
+ - [Fundit](http://www.fundit.ie/) - An Ireland-wide initiative
+ - [Snowdrift.coop](https://snowdrift.coop/) - a new sustainable patronage system
+ - [PieTrust](http://www.pietrust.com/) - an "open company" developing a secure reputation system for sharing credit.
+ - [BountyOSS](https://bountyoss.com/) - Where crowdfunding means business
+ - [Suprmasv](https://www.suprmasv.com/) - Empowering the Hacker Class.
