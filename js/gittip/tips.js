@@ -90,11 +90,11 @@ Gittip.tips.init = function() {
                 $myTip.data('old-amount', amount).change();
 
                 // update display
-                $('.total-giving').text(data.total_giving);
+                $('.my-total-giving').text('$'+data.total_giving);
                 $('.total-receiving').text(
                     // check and see if we are on our giving page or not
                     new RegExp('/' + tippee + '/').test(window.location.href) ?
-                        data.total_receiving_tippee : data.total_receiving);
+                        '$'+data.total_receiving_tippee : '$'+data.total_receiving);
 
                 // update quick stats
                 $('.quick-stats a').text('$' + data.total_giving + '/wk');
