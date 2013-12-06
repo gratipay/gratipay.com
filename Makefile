@@ -6,21 +6,17 @@ bin_dir := $(shell $(python) -c 'import sys; bin = "Scripts" if sys.platform == 
 env_bin := env/$(bin_dir)
 venv := "./vendor/virtualenv-1.9.1.py"
 
-env:
-	$(python)  $(venv)\
-				--unzip-setuptools \
+env: ./$(env_bin)/pip
+	./$(env_bin)/pip install -r requirements.txt
+	./$(env_bin)/pip install -r requirements_tests.txt
+	./$(env_bin)/pip install -e ./
+
+./$(env_bin)/pip:
+	$(python)  $(venv)	--unzip-setuptools \
 				--prompt="[gittip] " \
 				--never-download \
 				--distribute \
 				./env/
-	if [ ! -d tarballs ]; then \
-	    rm -rf tarballs; \
-	    mkdir tarballs; \
-	    ./$(env_bin)/pip install --download=tarballs -r requirements.txt; \
-	    ./$(env_bin)/pip install --download=tarballs -r requirements_tests.txt; \
-	fi
-	./$(env_bin)/pip install --no-index --no-deps tarballs/*
-	./$(env_bin)/pip install -e ./
 
 clean:
 	rm -rf env *.egg *.egg-info
