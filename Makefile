@@ -22,9 +22,6 @@ clean:
 	rm -rf env *.egg *.egg-info
 	find . -name \*.pyc -delete
 
-distclean: clean
-	rm -rf tarballs
-
 local.env:
 	echo "Creating a local.env file ..."
 	echo
