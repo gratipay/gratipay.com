@@ -4,9 +4,10 @@ from collections import defaultdict
 from decimal import Decimal
 
 from aspen import Response
-from gittip import db, CARDINALS
+from gittip import CARDINALS
 
 [---]
+db = website.db
 _suspicious = db.all("""
 
     SELECT username
