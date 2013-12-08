@@ -1,6 +1,6 @@
 """This is a horribly WET duplicate of www/index.html.
 """
-from gittip import db
+db = website.db
 [---]
 try:
     limit = min(int(qs.get('limit', 10)), 100)
@@ -31,7 +31,7 @@ givers = db.all("""
   LIMIT %s
   OFFSET %s
 
-""", (limit, offset))
+""", (limit, offset), back_as=dict)
 
 # XXX I'm nearly positive that one or both of givers and receivers can contain
 # orphan accounts. See https://github.com/gittip/www.gittip.com/issues/650
@@ -58,7 +58,7 @@ receivers = db.all("""
   LIMIT %s
   OFFSET %s
 
-""", (limit, offset))
+""", (limit, offset), back_as=dict)
 
 # anonymize
 for giver in givers:
