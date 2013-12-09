@@ -6,29 +6,17 @@ bin_dir := $(shell $(python) -c 'import sys; bin = "Scripts" if sys.platform == 
 env_bin := env/$(bin_dir)
 venv := "./vendor/virtualenv-1.9.1.py"
 
-env: $(env_bin)/swaddle
-	$(python)  $(venv)\
-				--unzip-setuptools \
-				--prompt="[gittip] " \
-				--never-download \
-				--extra-search-dir=./vendor/ \
-				--distribute \
-				./env/
+env: ./$(env_bin)/pip
 	./$(env_bin)/pip install -r requirements.txt
 	./$(env_bin)/pip install -r requirements_tests.txt
 	./$(env_bin)/pip install -e ./
 
-$(env_bin)/swaddle:
-	$(python) $(venv)\
-				--unzip-setuptools \
+./$(env_bin)/pip:
+	$(python)  $(venv)	--unzip-setuptools \
 				--prompt="[gittip] " \
 				--never-download \
-				--extra-search-dir=./vendor/ \
 				--distribute \
 				./env/
-	./$(env_bin)/pip install -r requirements.txt
-	./$(env_bin)/pip install -r requirements_tests.txt
-	./$(env_bin)/pip install -e ./
 
 clean:
 	rm -rf env *.egg *.egg-info
