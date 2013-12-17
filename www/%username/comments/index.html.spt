@@ -3,7 +3,7 @@ from gittip.utils import get_participant
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(request, restrict=False)
-hero = "Horn"
+hero = "Comments"
 title = "%s - %s" % (participant.username, hero)
 locked = False
 username = participant.username
@@ -11,14 +11,10 @@ username = participant.username
 [-----------------------------------------------------------------------------]
 {% extends templates/profile.html %}
 {% block page %}
-<div id="horn">
+<div id="comments">
   <div class="toot-form-wrapper">
     {% if not user.ANON %}
-    {% if user == participant %}
-    <h2>Toot your own horn!</h2>
-    {% else %}
-    <h2>Toot their horn!</h2>
-    {% end %}
+    <h2>Leave a Comment</h2>
     <form id="toot-form">
         <textarea id="toot" {% if user != participant %} placeholder="You're doing good work, {{ participant.username }}!" {% end %}></textarea>
         <p class="help">
