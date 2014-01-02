@@ -111,7 +111,9 @@ class Harness(unittest.TestCase):
     def make_participant(self, username, **kw):
         participant = Participant.with_random_username()
         participant.change_username(username)
+        return self.update_participant(participant, **kw)
 
+    def update_participant(self, participant, **kw):
         # brute force update for use in testing
         for k,v in kw.items():
             if k == 'claimed_time':
@@ -120,7 +122,6 @@ class Harness(unittest.TestCase):
             self.db.run("UPDATE participants SET {}=%s WHERE username=%s" \
                         .format(k), (v, participant.username))
         participant.set_attributes(**kw)
-
         return participant
 
     def make_payday(self, *transfers):
