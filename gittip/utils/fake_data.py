@@ -57,7 +57,7 @@ def fake_sentence(start=1, stop=100):
     return faker.sentence(random.randrange(start,stop))
 
 
-def fake_participant(db, number="singular", is_admin=False, anonymous=False):
+def fake_participant(db, number="singular", is_admin=False):
     """Create a fake User.
     """
     username = faker.first_name() + fake_text_id(3)
@@ -70,7 +70,8 @@ def fake_participant(db, number="singular", is_admin=False, anonymous=False):
                , ctime=faker.date_time_this_year()
                , is_admin=is_admin
                , balance=fake_balance()
-               , anonymous=anonymous
+               , anonymous_giving=(random.randrange(5) == 0)
+               , anonymous_receiving=(random.randrange(5) == 0)
                , goal=fake_balance()
                , balanced_account_uri=faker.uri()
                , last_ach_result=''
