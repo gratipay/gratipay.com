@@ -1,0 +1,19 @@
+<div class="people">
+    <h2>All Members</h2>
+    <ul class="group">
+        {% for i, participant in enumerate(new_participants, start=1) %}
+        <li{% if i > LUXURY %} class="luxury"{% endif %}>
+            <a href="/{{ participant.username }}/" class="mini-user">
+                <span class="inner">
+                    <span class="avatar"
+                        style="background-image:
+                            url('{{ participant.get_img_src() }}')">
+                    </span>
+                    <span class="age">{{ _to_age(participant) }}</span>
+                    <span class="name">{{ participant.username }}</span>
+                </span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

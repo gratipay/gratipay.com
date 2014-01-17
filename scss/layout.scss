@@ -502,6 +502,16 @@
     }
 }
 
+.col0 .people {
+
+    /* Applies to smaller communities, where we only show the New Participants
+     * listing, and not Givers or Receivers.
+     */
+
+    float: none;
+    margin: 0 auto;
+}
+
 #page {
     padding: 20px 0 0;
     background: white;
