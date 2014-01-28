@@ -6,8 +6,9 @@ from decimal import Decimal
 
 import psycopg2
 import pytz
+import mock
 from aspen.utils import utcnow
-from gittip import NotSane
+from gittip import NotSane, billing
 from gittip.elsewhere.bitbucket import BitbucketAccount
 from gittip.elsewhere.github import GitHubAccount
 from gittip.elsewhere.twitter import TwitterAccount
@@ -175,6 +176,22 @@ class TestTakeOver(Harness):
         alice_participant.take_over(bob, have_confirmation=True)
         self.db.self_check()
 
+    @mock.patch('gittip.billing.balanced.Account.query')
+    def test_clear_balanced_account_uri(self, query):
+        alice = TwitterAccount(self.db, 1, dict(screen_name='alice'))
+        bob   = GitHubAccount(self.db, 2, dict(screen_name='bob'))
+        alice_participant = alice.opt_in('alice')[0].participant
+
+        # set query.filter().one().uri
+        query.filter.return_value.one.return_value.uri = 'aaa'
+        billing.get_balanced_account(self.db, 'alice', None)
+
+        alice_participant.set_attributes(balanced_account_uri='aaa')
+        alice_participant.take_over(bob, have_confirmation=True)
+
+        # reread from db
+        new_alice = Participant.from_username('alice')
+        assert new_alice.balanced_account_uri is None
 
 class TestParticipant(Harness):
     def setUp(self):

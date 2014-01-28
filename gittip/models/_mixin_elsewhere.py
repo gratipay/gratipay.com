@@ -366,6 +366,11 @@ class MixinElsewhere(object):
                 cursor.run(ZERO_OUT_OLD_TIPS_RECEIVING, (other_username,))
                 cursor.run(ZERO_OUT_OLD_TIPS_GIVING, (other_username,))
 
+                # Clear payment info.
+                # ===================
+                cursor.run("UPDATE participants SET balanced_account_uri = null "
+                           "WHERE username = %s", (self.username,))
+
 
                 # Archive the old participant.
                 # ============================
