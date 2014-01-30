@@ -74,7 +74,9 @@ user_info['html_url'] = "https://twitter.com/" + screen_name
 # Do something.
 log(u"%s wants to %s" % (screen_name, action))
 
-account = twitter.TwitterAccount(website.db, user_info['id'], user_info)
+user_id = unicode(user_info['id'])
+
+account = twitter.TwitterAccount(website.db, user_id, user_info)
 
 if action == 'opt-in':      # opt in
     # set 'user' to give them a session :/
