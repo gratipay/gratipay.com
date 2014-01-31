@@ -1,0 +1,25 @@
+import os
+
+import gfm
+from aspen import resources
+from aspen.resources.static_resource import StaticResource
+
+
+ROOT = os.path.realpath(os.path.join(website.project_root, '..', 'gittip'))
+
+[---]
+
+docstring = "Undocumented"
+path_info = path['info']
+fs = os.path.join(ROOT, path_info.lstrip('/').replace('/', os.sep))
+if os.path.isdir(fs):
+    request.redirect('/gittip/'+path_info+'/__init__.py')
+compiled = compile(open(fs).read(), fs, 'exec')
+if compiled.co_names and compiled.co_names[0] == '__doc__':
+    docstring = gfm.gfm(compiled.co_consts[0])
+
+[---] text/html
+{% extends "templates/base.html" %}
+{% block content %}
+{{ docstring }}
+{% endblock %}

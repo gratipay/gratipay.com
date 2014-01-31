@@ -1,0 +1,7 @@
+nav_title = 'The Big Picture'
+[---]
+[---] text/html
+{% extends "templates/base.html" %}
+{% block content %}
+The big picture!
+{% endblock %}

@@ -1,0 +1,8 @@
+nav_title = "Building Gittip"
+nav_children = ['big-picture', 'branding', 'ia', 'data', 'lib', 'vendor', 'coding', 'policies']
+[---]
+[---] text/html
+{% extends "templates/base.html" %}
+{% block content %}
+Documentation for people building Gittip.
+{% endblock %}

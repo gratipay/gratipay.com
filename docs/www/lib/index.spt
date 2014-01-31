@@ -1,0 +1,12 @@
+nav_title = 'Library Reference'
+nav_children = ['css', 'javascript', 'python']
+[---]
+[---] text/html
+{% extends "templates/base.html" %}
+{% block content %}
+<ul>
+    <li><a href="./css">CSS</a></li>
+    <li><a href="./javascript">JavaScript</a></li>
+    <li><a href="./python">Python</a></li>
+</ul>
+{% endblock %}

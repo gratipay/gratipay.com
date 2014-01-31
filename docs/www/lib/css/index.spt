@@ -1,0 +1,4 @@
+nav_title = "CSS"
+[---]
+request.redirect('./gittip.css')
+[---] text/plain

@@ -1,0 +1,7 @@
+nav_title = 'Data Model'
+[---]
+[---] text/html
+{% extends "templates/base.html" %}
+{% block content %}
+Data model!
+{% endblock %}

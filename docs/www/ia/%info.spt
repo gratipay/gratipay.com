@@ -1,0 +1,41 @@
+import os
+from os.path import dirname
+
+import gfm
+from aspen import resources
+from aspen.resources.static_resource import StaticResource
+from nav import NavItem
+
+ROOT = os.path.realpath(os.path.join(website.project_root, '..', 'www'))
+
+def nav_children(nav):
+    children = []
+    url = dirname(__file__[len(ROOT):]).replace(os.sep, '/')
+    nav_item = website.nav.by_url[url]
+    for slug in os.listdir(basename):
+        child = NavItem(website, nav_item, join(ROOT, slug), slug)
+        children.append(child)
+    return children
+
+[---]
+
+docstring = "Undocumented"
+path_info = path['info']
+fs = os.path.join(ROOT, path_info.lstrip('/').replace('/', os.sep))
+if os.path.isdir(fs):
+    request.redirect('/www/'+path_info+'/index.html.spt')
+request.fs = fs
+resource = resources.get(request)
+if not isinstance(resource, StaticResource):
+    pages = resource.parse_into_pages(resource.raw)
+    compiled = compile(pages[0].content, request.fs, 'exec')
+    if compiled.co_names and compiled.co_names[0] == '__doc__':
+        docstring = gfm.gfm(compiled.co_consts[0])
+
+title = path_info + " - Information Architecture"
+
+[---] text/html
+{% extends "templates/base.html" %}
+{% block content %}
+{{ docstring }}
+{% endblock %}
