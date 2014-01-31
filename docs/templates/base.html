@@ -17,16 +17,7 @@
 
     </head>
     <body>
-        <div class="page">
-            <div class="content">
-                {% if nav_title %}<h2>{{ nav_title }}</h2>{% endif %}
-                {% block content %}{% endblock %}
-            </div>
-            <div class="nav-container">
-                <h1><a href="/">Building Gittip</a></h1>
-                {% set nav = website.nav %}
-                {% include "templates/nav.html" %}
-            </div>
-        </div>
+        <div class="page">{% block page %}
+        {% endblock %}</div>
     </body>
 </html>

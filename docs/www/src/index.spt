@@ -1,8 +1,8 @@
-nav_title = 'Library Reference'
-nav_children = ['css', 'javascript', 'python']
+nav_title = 'Source Code Reference'
+nav_children = ['css', 'javascript', 'python', 'style', 'vendor']
 [---]
 [---] text/html
-{% extends "templates/base.html" %}
+{% extends "templates/page.html" %}
 {% block content %}
 <ul>
     <li><a href="./css">CSS</a></li>

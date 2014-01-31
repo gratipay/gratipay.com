@@ -1,7 +1,7 @@
 nav_title = 'Branding Guidelines'
 [---]
 [---] text/html
-{% extends "templates/base.html" %}
+{% extends "templates/page.html" %}
 {% block content %}
 Branding Guidelines!
 {% endblock %}

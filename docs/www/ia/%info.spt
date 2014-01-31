@@ -35,7 +35,7 @@ if not isinstance(resource, StaticResource):
 title = path_info + " - Information Architecture"
 
 [---] text/html
-{% extends "templates/base.html" %}
+{% extends "templates/page.html" %}
 {% block content %}
 {{ docstring }}
 {% endblock %}

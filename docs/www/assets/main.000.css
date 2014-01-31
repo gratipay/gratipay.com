@@ -28,6 +28,9 @@ h1 {
     line-height: 48pt;
     margin: 0 0 18pt;
 }
+h1 img {
+    width: 100%;
+}
 
 h2 {
     font-size: 36pt;
@@ -89,18 +92,15 @@ strong, b {
 /*****************************************************************************/
 
 .content {
+    text-align: center;
     padding: 0 2pc 0 20pc;
 }
 
-.nav-container {
-    width: 18pc;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    height: 100%;
-    overflow: auto;
-}
 .nav {
+    text-align: center;
+}
+.nav ul {
+    text-align: left;
 }
 .nav li {
 }

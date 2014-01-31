@@ -1,7 +1,7 @@
 nav_title = 'Policies & Procedures'
 [---]
 [---] text/html
-{% extends "templates/base.html" %}
+{% extends "templates/page.html" %}
 {% block content %}
 Policies and procedures!
 {% endblock %}

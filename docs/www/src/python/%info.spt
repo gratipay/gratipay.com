@@ -19,7 +19,7 @@ if compiled.co_names and compiled.co_names[0] == '__doc__':
     docstring = gfm.gfm(compiled.co_consts[0])
 
 [---] text/html
-{% extends "templates/base.html" %}
+{% extends "templates/page.html" %}
 {% block content %}
 {{ docstring }}
 {% endblock %}

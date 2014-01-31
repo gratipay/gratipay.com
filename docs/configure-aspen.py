@@ -20,8 +20,7 @@ def add_nav_current_to_context(request, website):
     fs = request.fs
     if basename(request.fs) in website.indices:
         fs = dirname(fs)
-    if fs in website.nav.by_fs:
-        request.context['nav_current'] = website.nav.by_fs[fs]
+    request.context['nav_current'] = website.nav.by_fs.get(fs, website.nav)
 
 add_nav_to_website(website)
 
