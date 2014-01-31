@@ -25,8 +25,9 @@ name = user_info.get('name')
 if not name:
     name = username
 url = user_info['html_url'] = "https://twitter.com/%s" % username
+user_id = unicode(user_info['id'])
 
-account = twitter.TwitterAccount(website.db, user_info['id'], user_info)
+account = twitter.TwitterAccount(website.db, user_id, user_info)
 participant = Participant.from_username(account.participant)
 if account.is_claimed:
     request.redirect('/%s/' % participant.username)
