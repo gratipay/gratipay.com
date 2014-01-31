@@ -1,4 +1,4 @@
-nav_title = 'Policies & Procedures'
+nav_title = 'Policies&nbsp;& Procedures'
 [---]
 [---] text/html
 {% extends "templates/page.html" %}

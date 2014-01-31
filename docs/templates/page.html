@@ -1,15 +1,15 @@
 {% extends "templates/base.html" %}
 {% block page %}
-<div class="homepage">
-    <h1><a href="/"><img src="/assets/building-gittip.svg"
-           alt="Building Gittip"></a></h1>
-    <div class="nav">
-        {% set nav = website.nav %}
-        {% include "templates/nav.html" %}
-    </div>
-    <div class="content">
-        {% if nav_title %}<h2>{{ nav_title }}</h2>{% endif %}
-        {% block content %}{% endblock %}
-    </div>
+<div class="content">
+    {% if nav_title %}<h2>{{ nav_title }}</h2>{% endif %}
+    {% block content %}{% endblock %}
+</div>
+<div class="bottom-nav">
+    <ul>
+        <li><a href="/"><img src="/assets/schematic-heart-coin.svg" alt="Home"></a></li>
+        {% for child in website.nav.children %}
+        <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}

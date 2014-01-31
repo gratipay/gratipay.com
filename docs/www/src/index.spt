@@ -1,4 +1,4 @@
-nav_title = 'Source Code Reference'
+nav_title = 'Source&nbsp;Code Reference'
 nav_children = ['css', 'javascript', 'python', 'style', 'vendor']
 [---]
 [---] text/html

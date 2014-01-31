@@ -1,4 +1,4 @@
-nav_title = 'The Big Picture'
+nav_title = 'The&nbsp;Big Picture'
 [---]
 [---] text/html
 {% extends "templates/page.html" %}
