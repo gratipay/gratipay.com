@@ -96,3 +96,6 @@ tests/env:
 	echo "Creating a tests/env file ..."
 	echo
 	cp default_tests.env tests/env
+
+docs: 
+	ASPEN_CHANGES_RELOAD=1 PORT=8536 foreman run docs

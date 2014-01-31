@@ -48,6 +48,11 @@ h3 {
     margin: 30pt 0 14pt;
 }
 
+h4 {
+    font-size: 18pt;
+    line-height: 18pt;
+}
+
 p {
     text-indent: 0;
     margin: 0;
@@ -72,6 +77,15 @@ blockquote > p:nth-child(1) {
 ul, ol {
     margin: 0;
     padding: 0em 0 0em 1.5em;
+}
+
+dl {
+}
+dt {
+    font-weight: bold;
+}
+dd {
+    padding: 0.25em 0 1em 1em;
 }
 
 strong, b {
@@ -195,10 +209,62 @@ strong, b {
 /*****************************************************************************/
 
 .homepage {
-    text-align: center;
     margin: 24pt auto;
 }
-
+.homepage .top-nav {
+    width: 100%;
+    height: 100pt;
+    background: url("/assets/hero-bg.png");
+    border: 1px solid #dddddd;
+    border-style: solid none;
+}
+.homepage .top-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+.homepage .top-nav li {
+    font: bold 24pt/24pt Arial, sans-serif;
+    overflow: hidden;
+    display: inline-block;
+    width: 20%;
+    text-align: left;
+    border: 2pt solid #663300;
+    font-weight: bold;
+    border-radius: 4pt;
+    margin: 18pt 0 0 0.1%;
+    padding: 0;
+    background: white;
+}
+.homepage .top-nav li:nth-child(-1) {
+    margin-left: 0;
+}
+.homepage .top-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #663300;
+    padding: 6pt;
+    height: 48pt;
+}
+.homepage .top-nav li a:hover {
+    color: #339966;
+}
+.homepage .channels {
+    width: 33%;
+    float: left;
+}
+.homepage .hackers,
+.homepage .policies {
+    padding-left: 35%;
+}
+.homepage .lower {
+    padding: 24pt;
+    font: normal 12pt/14pt Arial, sans-serif;
+}
+.homepage .lower p {
+    line-height: 14pt;
+}
 
 /*****************************************************************************/
 /*
