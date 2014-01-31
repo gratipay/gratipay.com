@@ -1,6 +1,11 @@
 {% extends "templates/base.html" %}
 {% block page %}
 <div class="content">
+    <div class="breadcrumbs">
+        <ul>
+            <li><a href="/"><img src="/assets/building-gittip-tight.svg"></a></li>
+        </ul>
+    </div>
     {% if nav_title %}<h2>{{ nav_title }}</h2>{% endif %}
     {% block content %}{% endblock %}
 </div>

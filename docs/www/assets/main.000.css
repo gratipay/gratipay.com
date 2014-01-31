@@ -110,6 +110,25 @@ strong, b {
 .nav a:hover {
 }
 
+.content {
+    max-width: 48pc;
+    margin: 0 auto 7pc;
+    padding: 0 5%;
+}
+.breadcrumbs {
+    margin: 4pc 0;
+}
+.breadcrumbs ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.breadcrumbs li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
 .bottom-nav {
     width: 100%;
     height: 54pt;
@@ -123,27 +142,33 @@ strong, b {
     list-style: none;
     margin: 0;
     padding: 0;
+    text-align: right;
 }
 .bottom-nav li {
     font: bold 14pt/14pt Arial, sans-serif;
     overflow: hidden;
-    display: block;
-    float: left;
+    display: inline-block;
     width: 12%;
     text-align: left;
     border: 2pt solid #663300;
     font-weight: bold;
     border-radius: 4pt;
-    margin: 1% 1% 1% 0;
+    margin: 8pt 0 0 0.1%;
+    padding: 0;
 }
 .bottom-nav li:nth-child(-1) {
-    margin-right: 0;
+    margin-left: 0;
 }
 .bottom-nav li:nth-child(1) {
+    float: right;
     background: none;
     border: none;
     text-align: center;
     height: 80pt;
+    width: 100pt;
+}
+.bottom-nav li:nth-child(1) a {
+    padding: 0;
 }
 .bottom-nav li:nth-child(1) a:hover {
     background: transparent;
@@ -159,7 +184,7 @@ strong, b {
     height: 28pt;
 }
 .bottom-nav li a:hover {
-    background: white;
+    color: #339966;
 }
 
 
