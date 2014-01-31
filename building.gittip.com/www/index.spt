@@ -22,6 +22,12 @@ nav_children = ['big-picture', 'branding', 'ia', 'data', 'src', 'policies']
 
         <dl>
 
+            <dt>The Monday Morning Missive</dt>
+
+            <dd>We have a weekly email newsletter, <a
+                href="http://tinyletter.com/gittip/letters">The Monday Morning
+            Missive</a>, that summarizes projects going on around Gittip.</dd>
+
             <dt>IRC (Internet Relay Chat)</dt>
 
             <dd>We hang out in the #gittip channel on the Freenode network, and this is
@@ -53,24 +59,15 @@ nav_children = ['big-picture', 'branding', 'ia', 'data', 'src', 'policies']
               to YouTube</a>.</dd>
 
 
-            <dt>Medium / Tinyletter</dt>
+            <dt>Medium</dt>
 
             <dd>We have a &ldquo;<a
-              href="https://medium.com/building-gittip/latest">Building
-              Gittip</a>&rdquo; collection on Medium where anyone can publish
-            longer-form analysis and ideas. We also have an email newsletter called
-            &ldquo;<a href="http://tinyletter.com/gittip">Roll on,
-              Gittip!</a>&rdquo;</a> on Tinyletter, where we occassionally post
-            summaries of work going on around the company. Here's the <a
-              href="http://tinyletter.com/gittip/letters">archive</a>.</dd>
-
-            <dd>The primary audience for both of these is people building Gittip
-            (unlike our <a href="http://blog.gittip.com/">blog</a>, which is for the
-            general public). If you want the inside scoop but don't need it in real
-            time, subscribing on Tinyletter (<a
-              href="http://tinyletter.com/gittip">here</a>) or Medium (<a
-              href="https://medium.com/feed/building-gittip">RSS</a>) is a good option.
-            For real-time, use IRC (above).</dd>
+                href="https://medium.com/building-gittip/latest">Building
+            Gittip</a>&rdquo; collection on Medium, where anyone can publish
+            longer-form analysis and ideas. Unlike our <a
+            href="http://blog.gittip.com/">blog</a>, which is for the general
+            public, the primary audience for the Medium collection is people building
+            Gittip.</dd>
 
 
             <dt>In Person</dt>
@@ -84,8 +81,9 @@ nav_children = ['big-picture', 'branding', 'ia', 'data', 'src', 'policies']
 
             <dd>We don't have private conversations if we can help it.</dd>
 
-            <dd>To disclose security issues, see our <a href="/security.txt">security
-              page</a>.</dd>
+            <dd>To disclose security issues, see our <a
+                href="https://www.gittip.com/security.txt">security
+            page</a>.</dd>
 
         </dl>
 

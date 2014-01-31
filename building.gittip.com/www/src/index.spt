@@ -1,4 +1,4 @@
-nav_title = 'Hackers&rsquo;s Reference'
+nav_title = 'Hacker&rsquo;s Reference'
 nav_children = ['css', 'javascript', 'python', 'style', 'vendor']
 [---]
 [---] text/html
