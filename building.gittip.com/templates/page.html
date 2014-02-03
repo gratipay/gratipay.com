@@ -1,0 +1,20 @@
+{% extends "templates/base.html" %}
+{% block page %}
+<div class="content">
+    <div class="breadcrumbs">
+        <ul>
+            <li><a href="/"><img src="/assets/building-gittip-tight.svg"></a></li>
+        </ul>
+    </div>
+    {% if nav_title %}<h2>{{ nav_title }}</h2>{% endif %}
+    {% block content %}{% endblock %}
+</div>
+<div class="bottom-nav">
+    <ul>
+        <li><a href="/"><img src="/assets/schematic-heart-coin.svg" alt="Home"></a></li>
+        {% for child in website.nav.children %}
+        <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,3 +1,16 @@
+"""## Information Architecture
+
+This is Gittip's information architecture, where we document all of the pages
+on the site, and the most important thing on each page.
+
+### Homepage
+
+https://www.gittip.com/
+
+The most important thing on the homepage is making a good first impression on
+newcomers and roping them in.
+
+"""
 import os
 from aspen import Response
 from aspen.utils import to_age

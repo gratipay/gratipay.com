@@ -1,0 +1,290 @@
+/*****************************************************************************/
+/*
+/* Common
+/*
+/*****************************************************************************/
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body { height: 100%; }
+
+body {
+    font: 20pt/28pt Arial, sans-serif;
+    background: #FFF;
+    color: #000;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font: bold 100% Arial, sans-serif;
+    color: #339966;
+}
+
+h1 {
+    font-size: 48pt;
+    line-height: 48pt;
+    margin: 0 0 18pt;
+}
+h1 img {
+    width: 100%;
+}
+
+h2 {
+    font-size: 36pt;
+    line-height: 36pt;
+    margin: 0 0 16pt;
+}
+h2 a {
+    color: #339966 ! important;
+    text-decoration: none;
+}
+
+h3 {
+    font-size: 30pt;
+    line-height: 30pt;
+    margin: 30pt 0 14pt;
+}
+
+h4 {
+    font-size: 18pt;
+    line-height: 18pt;
+}
+
+p {
+    text-indent: 0;
+    margin: 0;
+    padding: 0 0 32pt;
+    line-height: 32pt;
+}
+
+blockquote {
+    line-height: 150%;
+    font-style: italic;
+    margin: 24pt 0;
+    padding: 0 0 0 12pt;
+    border-left: 6pt solid black;
+}
+blockquote span {
+    font-style: normal;
+}
+blockquote > p:nth-child(1) {
+    text-indent: 0;
+}
+
+ul, ol {
+    margin: 0;
+    padding: 0em 0 0em 1.5em;
+}
+
+dl {
+}
+dt {
+    font-weight: bold;
+}
+dd {
+    padding: 0.25em 0 1em 1em;
+}
+
+strong, b {
+    color: #339966;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.clear {
+    clear: both;
+}
+
+
+/*****************************************************************************/
+/*
+/* Layout
+/*
+/*****************************************************************************/
+
+.content {
+}
+
+.nav {
+    text-align: center;
+}
+.nav ul {
+    text-align: left;
+}
+.nav li {
+}
+.nav a {
+}
+.nav a.current {
+    background: red;
+}
+.nav a:hover {
+}
+
+.content {
+    max-width: 48pc;
+    margin: 0 auto 7pc;
+    padding: 0 5%;
+}
+.breadcrumbs {
+    margin: 4pc 0;
+}
+.breadcrumbs ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.breadcrumbs li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.bottom-nav {
+    width: 100%;
+    height: 54pt;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: url("/assets/hero-bg.png");
+    border-top: 1px solid #dddddd;
+}
+.bottom-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+}
+.bottom-nav li {
+    font: bold 14pt/14pt Arial, sans-serif;
+    overflow: hidden;
+    display: inline-block;
+    width: 12%;
+    text-align: left;
+    border: 2pt solid #663300;
+    font-weight: bold;
+    border-radius: 4pt;
+    margin: 8pt 0 0 0.1%;
+    padding: 0;
+}
+.bottom-nav li:nth-child(-1) {
+    margin-left: 0;
+}
+.bottom-nav li:nth-child(1) {
+    float: right;
+    background: none;
+    border: none;
+    text-align: center;
+    height: 80pt;
+    width: 100pt;
+}
+.bottom-nav li:nth-child(1) a {
+    padding: 0;
+}
+.bottom-nav li:nth-child(1) a:hover {
+    background: transparent;
+}
+.bottom-nav li:nth-child(1) img {
+    height: 80pt;
+}
+.bottom-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #663300;
+    padding: 3pt;
+    height: 28pt;
+}
+.bottom-nav li a:hover {
+    color: #339966;
+}
+
+
+/*****************************************************************************/
+/*
+/* Homepage
+/*
+/*****************************************************************************/
+
+.homepage {
+    margin: 24pt auto;
+}
+.homepage .top-nav {
+    width: 100%;
+    height: 100pt;
+    background: url("/assets/hero-bg.png");
+    border: 1px solid #dddddd;
+    border-style: solid none;
+}
+.homepage .top-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+.homepage .top-nav li {
+    font: bold 24pt/24pt Arial, sans-serif;
+    overflow: hidden;
+    display: inline-block;
+    width: 20%;
+    text-align: left;
+    border: 2pt solid #663300;
+    font-weight: bold;
+    border-radius: 4pt;
+    margin: 18pt 0 0 0.1%;
+    padding: 0;
+    background: white;
+}
+.homepage .top-nav li:nth-child(-1) {
+    margin-left: 0;
+}
+.homepage .top-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #663300;
+    padding: 6pt;
+    height: 48pt;
+}
+.homepage .top-nav li a:hover {
+    color: #339966;
+}
+.homepage .channels {
+    width: 33%;
+    float: left;
+}
+.homepage .hackers,
+.homepage .policies {
+    padding-left: 35%;
+}
+.homepage .lower {
+    padding: 24pt;
+    font: normal 12pt/14pt Arial, sans-serif;
+}
+.homepage .lower p {
+    line-height: 14pt;
+}
+
+/*****************************************************************************/
+/*
+/* Responsiveness
+/*
+/*****************************************************************************/
+
+@media (max-width: 950px) {
+    .header h1 {
+        float: none;
+        text-align: center;
+    }
+    .nav {
+        text-align: center;
+    }
+}
+
+@media (max-width: 580px) {
+    .nav li {
+        float: none;
+        width: 100%;
+    }
+}

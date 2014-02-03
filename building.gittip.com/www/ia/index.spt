@@ -1,0 +1,4 @@
+nav_title = "Information Architecture"
+[---]
+request.redirect('./index.html.spt')
+[---] text/plain

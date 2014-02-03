@@ -1,0 +1,4 @@
+nav_title = "Python"
+[---]
+request.redirect('./__init__.py')
+[---] text/plain

@@ -1,4 +1,6 @@
-"""This is the Python library behind www.gittip.com.
+"""## Python Library Reference
+
+This is the Python library behind www.gittip.com.
 """
 import datetime
 import locale

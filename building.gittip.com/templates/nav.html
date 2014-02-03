@@ -1,0 +1,8 @@
+<ul class="nav">
+    {% for nav in nav.children %}
+    <li>
+    <a href="{{ nav.url }}"{% if nav_current.fs == nav.fs %} class="current"{% endif %}>{{ nav.title }}</a>
+        {% include "templates/nav.html" %}
+    </li>
+    {% endfor %}
+</ul>
