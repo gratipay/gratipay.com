@@ -56,23 +56,6 @@ class MixinTeam(object):
                 return True
         return False
 
-    def get_take_last_week_for(self, member):
-        """What did the user actually take most recently? Used in throttling.
-        """
-        assert self.IS_PLURAL
-        membername = member.username if hasattr(member, 'username') \
-                                                        else member['username']
-        return self.db.one("""
-
-            SELECT amount
-              FROM transfers
-             WHERE tipper=%s AND tippee=%s
-               AND timestamp >
-                (SELECT ts_start FROM paydays ORDER BY ts_start DESC LIMIT 1)
-          ORDER BY timestamp DESC LIMIT 1
-
-        """, (self.username, membername), default=Decimal('0.00'))
-
     def get_take_for(self, member):
         """Return a Decimal representation of the take for this member, or 0.
         """
@@ -136,11 +119,18 @@ class MixinTeam(object):
         return self.db.all("""
 
             SELECT member AS username, take, ctime, mtime
+                 , ( SELECT amount
+                       FROM transfers
+                      WHERE tipper=%s AND tippee=member
+                        AND timestamp > ( SELECT ts_start
+                                            FROM paydays
+                                        ORDER BY ts_start DESC LIMIT 1 )
+                   ORDER BY timestamp DESC LIMIT 1 ) AS last_week
               FROM current_memberships
              WHERE team=%s
           ORDER BY ctime DESC
 
-        """, (self.username,), back_as=dict)
+        """, (self.username,self.username), back_as=dict)
 
     def get_teams_membership(self):
         assert self.IS_PLURAL
@@ -169,9 +159,7 @@ class MixinTeam(object):
                         # current user, but not the team itself
                         member['editing_allowed']= True
             take = member['take']
-            member['take'] = take
-            member['last_week'] = last_week = \
-                                            self.get_take_last_week_for(member)
+            last_week = member['last_week']
             member['max_this_week'] = self.compute_max_this_week(last_week)
             amount = min(take, balance)
             balance -= amount
