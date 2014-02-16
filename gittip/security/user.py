@@ -54,7 +54,7 @@ class User(object):
     def keep_signed_in_until(self, expires):
         """Extend the user's current session.
 
-        :param float expires: A UNIX timestamp (XXX timezone?)
+        :param datetime expires:
 
         """
         self.participant.set_session_expires(expires)

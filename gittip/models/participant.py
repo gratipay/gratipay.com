@@ -18,7 +18,6 @@ from aspen import Response
 from aspen.utils import typecheck
 from postgres.orm import Model
 from psycopg2 import IntegrityError
-import pytz
 
 import gittip
 from gittip import NotSane
@@ -141,17 +140,23 @@ class Participant(Model, MixinTeam):
     def set_session_expires(self, expires):
         """Set session_expires in the database.
 
-        :param float expires: A UNIX timestamp, which XXX we assume is UTC?
+        :param datetime expires:
         :database: One UPDATE, one row
 
         """
-        session_expires = datetime.datetime.fromtimestamp(expires) \
-                                                      .replace(tzinfo=pytz.utc)
-        self.db.run( "UPDATE participants SET session_expires=%s "
-                     "WHERE id=%s AND is_suspicious IS NOT true"
-                   , (session_expires, self.id,)
+        with self.db.get_cursor() as c:
+            # FOR UPDATE locks the row, otherwise there is a deadlock/serialization problem when
+            # several threads try to update this at the same time which is done with each request
+            e = c.one( "SELECT session_expires FROM participants WHERE username=%s FOR UPDATE"
+                     , (self.username,)
+                      )
+            if expires-e < datetime.timedelta(hours=12):
+                return
+            c.run( "UPDATE participants SET session_expires=%s "
+                   "WHERE id=%s AND is_suspicious IS NOT true"
+                   , (expires, self.id,)
                     )
-        self.set_attributes(session_expires=session_expires)
+        self.set_attributes(session_expires=expires)
 
 
     # Claimed-ness
