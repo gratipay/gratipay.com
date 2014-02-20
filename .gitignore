@@ -20,3 +20,4 @@ docs/_build
 docs/gittip
 docs/gittip.rst
 _vimrc_local.vim
+tests/cassettes/

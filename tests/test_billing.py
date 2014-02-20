@@ -14,7 +14,7 @@ from gittip.models.participant import Participant
 
 def setUp_balanced(o):
     o.vcr = vcr.VCR(
-        cassette_library_dir = os.path.dirname(os.path.realpath(__file__)) + '/fixtures/',
+        cassette_library_dir = os.path.dirname(os.path.realpath(__file__)) + '/cassettes/',
         record_mode = 'once',
         match_on = ['url', 'method'],
     )
