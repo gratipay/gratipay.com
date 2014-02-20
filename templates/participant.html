@@ -20,11 +20,12 @@
             <h2>{{ participant.username }} gives and receives anonymously</h2>
         {% elif not anon_giving and g > 0 and (g > r or anon_receiving) %}
             <h2 class="pad-sign">{{ participant.username }} gives</h2>
-            <div class="number">
-                <span class="{{prefix}}total-giving">{{ giving }}</span>
+            <div>
+                <span class="{{prefix}}total-giving number">{{ giving }}</span>
+                <span class="wk">/wk</span>
             </div>
             <div class="unit pad-sign">
-                per week{% if r > 0 or anon_receiving %}, and receives
+                {% if r > 0 or anon_receiving %}, and receives
                     {{ receiving }}
                 {% endif %}
             </div>

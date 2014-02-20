@@ -30,10 +30,10 @@ Gittip.profile.init = function() {
     // Wire up username knob.
     // ======================
 
-    $('form.username button.edit').click(function(e) {
+    $('form.username a.edit').click(function(e) {
         e.preventDefault();
         e.stopPropagation();
-        $('.username button.edit').hide();
+        $('.username a.edit').hide();
         $('.username button.save').show();
         $('.username button.cancel').show();
         $('.username span.view').hide();
@@ -71,7 +71,7 @@ Gittip.profile.init = function() {
         return false;
     });
     function finish_editing_username() {
-        $('.username button.edit').show();
+        $('.username a.edit').show();
         $('.username button.save').hide();
         $('.username button.cancel').hide();
         $('.username span.view').show();
@@ -89,7 +89,7 @@ Gittip.profile.init = function() {
         h = Math.max(h, 128);
         $('.statement textarea').height(h);
 
-        $('.statement button.edit').hide();
+        $('.statement a.edit').hide();
         $('.statement button.save').show();
         $('.statement button.cancel').show();
         $('.statement div.view').hide();
@@ -100,7 +100,7 @@ Gittip.profile.init = function() {
     if ($('.statement textarea').val() === '') {
         start_editing_statement();
     }
-    $('.statement button.edit').click(function(e) {
+    $('.statement a.edit').click(function(e) {
         e.preventDefault();
         e.stopPropagation();
         start_editing_statement();
@@ -135,7 +135,7 @@ Gittip.profile.init = function() {
         return false;
     });
     function finish_editing_statement() {
-        $('.statement button.edit').show();
+        $('.statement a.edit').show();
         $('.statement button.save').hide().text('Save');
         $('.statement button.cancel').hide();
         $('.statement div.view').show();
@@ -147,12 +147,12 @@ Gittip.profile.init = function() {
     // Wire up goal knob.
     // ==================
 
-    $('.goal button.edit').click(function(e) {
+    $('.goal a.edit').click(function(e) {
         e.preventDefault();
         e.stopPropagation();
         $('.goal div.view').hide();
         $('.goal table.edit').show();
-        $('.goal button.edit').hide();
+        $('.goal h2 a.edit').hide();
         $('.goal button.save').show();
         $('.goal button.cancel').show();
         return false;
@@ -206,7 +206,7 @@ Gittip.profile.init = function() {
     function finish_editing_goal() {
         $('.goal div.view').show();
         $('.goal table.edit').hide();
-        $('.goal button.edit').show();
+        $('.goal a.edit').show();
         $('.goal button.save').hide().text('Save');
         $('.goal button.cancel').hide();
     }

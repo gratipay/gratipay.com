@@ -109,10 +109,9 @@
     text-align: center;
     background: white;
     margin: -80px auto 0;
-    border: 5px solid rgba($brown, 0.4);
+    border: 5px solid rgba($brown, 0.7);
     width: 480px;
     max-width: 100%;
-    @include border-radius(3px);
     position: relative;
     z-index: 2;
 
@@ -231,7 +230,7 @@
                 /* Without this we are inline-block and we get an extra 4px.
                  * Is that due to line-height, maybe? */
                 display: block;
-                margin: 5px;
+                margin: 10px;
             }
         }
         td {
@@ -239,6 +238,16 @@
         }
         .pad-sign {
             padding-left: 36px;
+        }
+        .my-total-giving, .total-giving {
+            padding-left: 36px;
+        }
+
+        .wk {
+            font-size: 26px;
+            color: $darker-gray;
+            font-weight: 200;
+            margin-left: -7px;
         }
         /*
         form {
@@ -251,17 +260,32 @@
         }
         */
     }
+    .profile-nav {
+        padding-bottom: 10px;
+    }
+    .weekly-gift {
+        padding: 10px;
+        width: 100%;
+        height: 50px;
+        background-color: $brown;
+        color: $white;
+        font: 14px $Helvetica;
+        text-align: left;
+        > div {
+            display: inline-block;
+            line-height: 30px;
+        }
+        .label {
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        .amount {
+            float: right;
+        }
+    }
 
     .nav {
-        padding: 5px;
-
-        h2 {
-            color: $black;
-            font: bold 10px $Helvetica;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin: 0 0 3px;
-        }
+        padding: 10px;
 
         button.larger {
             font-size: 14px;
@@ -299,6 +323,21 @@
                 display: block;
                 color: white;
             }
+        }
+    }
+
+    .promo-bar {
+        background-color: $white;
+        padding: 10px 15px;
+        font-size: 13px;
+        font-weight: bold;
+        color: $gray;
+
+        img {
+            width: 18px;
+            height: 18px;
+            vertical-align: top;
+            margin-right: 2px;
         }
     }
 

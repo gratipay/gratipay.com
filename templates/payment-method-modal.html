@@ -1,0 +1,21 @@
+<div id="payment-method-dialog" class="hidden">
+    <div class="overlay"></div>
+    <form id="payment-method" class="modal">
+        <div class="close"></div>
+        <div class="content">
+            <h2>Set up payment method</h2>
+            <div class="message"><b>Your weekly gift amount has been updated.</b></div>
+            <div class="message">
+                The amount will not be sent unless you have Gittip balance or payment method set up. The payment method you select will be applied to all gifts for all users.
+            </div>
+
+            <div class="payment-option selected"><input type="radio" name="payment-option" id="credit" value="credit" checked><label for="credit">Add your credit/debit card</label></div>
+            <div class="payment-option"><input type="radio" name="payment-option" id="coinbase" value="coinbase"><label for="coinbase">Connect your Coinbase account</label></div>
+            <div class="payments-by"></div>
+        </div>
+        <div class="action-bar">
+            <a class="btn secondary">Skip</a>
+            <button class="btn primary">Continue</button>
+        </div>
+    </form>
+</div>

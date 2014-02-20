@@ -8,15 +8,18 @@ $Mono: Monaco, "Lucida Mono", monospace;
 // Colors
 $green: #396;
 $darker-green: darken($green, 10);
-$lighter-green: lighten($green, 10);
+$lighter-green: desaturate(lighten($green, 50), 20);
+$yellow: #CC9312;
 $brown: #630;
 $light-brown: desaturate(lighten($brown, 60), 60);
 $gray: #555;
-$light-gray: #DDD;
-$darker-gray: #CCC;
+$light-gray: #BBBDBF;
 $lighter-gray: #EEE;
+$dark-gray: #CCC;
+$darker-gray: #58595B;
 $black: #333;
-$red: #C00;
+$white: #fff;
+$red: #E31837;
 $light-red: #F99;
 
 @font-face {

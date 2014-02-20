@@ -1,6 +1,8 @@
 """Show information about a single participant. It might be you!
 """
 import locale
+import balanced
+from gittip import billing
 
 from aspen import json, Response
 from aspen.utils import to_age
@@ -38,6 +40,33 @@ bountysource_account = accounts.bountysource
 venmo_account = accounts.venmo
 openstreetmap_account = accounts.openstreetmap
 
+status = ". . ."
+balanced_account_uri = None
+card = ""
+bank_account = ""
+
+if not user.ANON:
+    balanced_account_uri = user.participant.balanced_account_uri
+    stripe_customer_id = user.participant.stripe_customer_id
+
+    status = "missing"
+    if stripe_customer_id or balanced_account_uri:
+        if user.participant.last_bill_result is not None:
+            status = "working" if user.participant.last_bill_result == "" \
+                                                                 else "failing"
+    if balanced_account_uri:
+        card = billing.BalancedCard(balanced_account_uri)
+        bank_account = billing.BalancedBankAccount(balanced_account_uri)
+        working = user.participant.last_ach_result == ""
+        status = "connected" if working else "not connected"        
+
+        # the id on the card might not match unless the db
+        # is updated to use the new style of urls
+
+    else:
+        card = billing.StripeCard(stripe_customer_id)
+        assert stripe_customer_id == card['id']
+
 long_statement = len(participant.statement) > LONG_STATEMENT
 communities = [c for c in community.get_list_for(website.db, username) if c.is_member]
 if participant.number == 'singular':
@@ -66,6 +95,11 @@ else:
 {% endblock %}
 
 {% block scripts %}
+<script>
+    var marketplace_uri = "{{ balanced.Marketplace.my_marketplace.uri }}";
+    var participant_username = "{{ user.participant.username }}";
+    var has_payment_method = "{{ user.participant.last_bill_result }}";
+</script>
 {% if show_charts %}
 <script>
 $(document).ready(function() {

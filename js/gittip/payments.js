@@ -18,9 +18,10 @@ Gittip.payments.havePayments = false;
 Gittip.payments.processorAttempts = 0;
 
 Gittip.payments.submitDeleteForm = function(e) {
+    console.log('called');
     var item = $("#payout").length ? "bank account" : "credit card";
     var slug = $("#payout").length ? "bank-account" : "credit-card";
-    var msg = "Really disconnect your " + item + "?";
+    var msg = "Are you sure you want to remove " + item + "?";
     if (!confirm(msg)) {
         e.stopPropagation();
         e.preventDefault();
@@ -52,13 +53,12 @@ Gittip.payments.ba = {};
 
 Gittip.payments.ba.init = function(balanced_uri, participantId) {
     Gittip.participantId = participantId;
-    $('#delete form').submit(Gittip.payments.submitDeleteForm);
+    $('#ba-delete form').submit(Gittip.payments.submitDeleteForm);
     $('#payout').submit(Gittip.payments.ba.submit);
 
     // Lazily depend on Balanced.
-    var balanced_js = "https://js.balancedpayments.com/v1/balanced.js";
+    var balanced_js = "https://js.balancedpayments.com/1.1/balanced.min.js";
     jQuery.getScript(balanced_js, function() {
-        balanced.init(balanced_uri);
         Gittip.havePayouts = true;
         $('input[type!="hidden"]').eq(0).focus();
     });
@@ -73,22 +73,18 @@ Gittip.payments.ba.submit = function (e) {
     var bankAccount = {
         name: $('#account_name').val(),
         account_number: $('#account_number').val(),
-        bank_code: $('#routing_number').val()
+        routing_number: $('#routing_number').val()
     };
 
-    var dobs = [
-        $('#dob-year').val(),
-        $('#dob-month').val(),
-        $('#dob-day').val()
-    ];
-
     Gittip.payments.ba.merchantData = {
-        type: 'person',  // Oooh, may need to vary this some day?
+        //type: 'person',  // Oooh, may need to vary this some day?
         street_address: $('#address_1').val(),
         postal_code: $('#zip').val(),
         phone_number: $('#phone_number').val(),
         region: $('#state').val(),
-        dob: dobs.join('-'),
+        dob_month: $('#dob-month').val(),
+        dob_year: $('#dob-year').val(),
+        dob_day: $('#dob-day').val(),
         name: $('#name').val()
     };
     var errors = [];
@@ -124,25 +120,12 @@ Gittip.payments.ba.submit = function (e) {
     }
 
 
-    // Validate date of birth.
-    // =======================
-    // This might not be on the page if they've already verified their
-    // identity.
-
-    if (dobs[0] !== undefined) {
-        var d = new Date(dobs[0], dobs[1] - 1, dobs[2]);
-        // (1900, 2, 31) gives 3 march :P
-        if (d.getMonth() !== dobs[1] - 1)
-            errors.push('Invalid date of birth.');
-    }
-
-
     // Validate routing number.
     // ========================
 
     var $rn = $('#routing_number');
-    if (bankAccount.bank_code) {
-        if (!balanced.bankAccount.validateRoutingNumber(bankAccount.bank_code)) {
+    if (bankAccount.routing_number) {
+        if (!balanced.bankAccount.validateRoutingNumber(bankAccount.routing_number)) {
             $rn.closest('div').addClass('error');
             errors.push("That routing number is invalid.");
         } else {
@@ -163,7 +146,7 @@ Gittip.payments.ba.submit = function (e) {
 
 Gittip.payments.ba.handleResponse = function (response) {
     console.log('bank account response', response);
-    if (response.status != 201) {
+    if (response.status_code !== 201) {
         $('button#save').text('Save');
         var msg = response.status.toString() + " " + response.error.description;
         jQuery.ajax(
@@ -188,7 +171,7 @@ Gittip.payments.ba.handleResponse = function (response) {
         setTimeout(function() {
             $('#status').removeClass('highlight');
         }, 8000);
-        $('#delete').show();
+        $('#ba-delete').show();
         Gittip.forms.clearFeedback();
         $('button#save').text('Save');
         setTimeout(function() {
@@ -198,18 +181,11 @@ Gittip.payments.ba.handleResponse = function (response) {
 
     function detailedFeedback(data) {
         $('#status').text('failing');
-        $('#delete').show();
+        $('#ba-delete').show();
         var messages = [data.error];
         if (data.problem == 'More Info Needed') {
-            var redirect_uri = data.redirect_uri;
-            for (var key in Gittip.payments.ba.merchantData) {
-                redirect_uri += 'merchant[' + encodeURIComponent(key) + ']'
-                    + '=' + encodeURIComponent((Gittip.payments.ba.merchantData[key])) + '&';
-            }
             messages = [ "Sorry, we couldn't verify your identity. Please "
-                       + "check, correct, and resubmit your details, or "
-                       + "step through our <a href=\"" + redirect_uri
-                       + "\">payment processor's escalation process</a>."
+                       + "check, correct, and resubmit your details."
             ];
         }
         Gittip.forms.showFeedback(data.problem, messages);
@@ -217,7 +193,7 @@ Gittip.payments.ba.handleResponse = function (response) {
     }
 
     var detailsToSubmit = Gittip.payments.ba.merchantData;
-    detailsToSubmit.bank_account_uri = response.data.uri;
+    detailsToSubmit.bank_account_uri = response.bank_accounts[0].href;
 
     Gittip.forms.submit( "/bank-account.json"
                        , detailsToSubmit
@@ -234,13 +210,12 @@ Gittip.payments.cc = {};
 
 Gittip.payments.cc.init = function(balanced_uri, participantId) {
     Gittip.participantId = participantId;
-    $('#delete form').submit(Gittip.payments.submitDeleteForm);
+    $('#cc-delete form').submit(Gittip.payments.submitDeleteForm);
     $('form#payment').submit(Gittip.payments.cc.submit);
 
     // Lazily depend on Balanced.
-    var balanced_js = "https://js.balancedpayments.com/v1/balanced.js";
+    var balanced_js = "https://js.balancedpayments.com/1.1/balanced.min.js";
     jQuery.getScript(balanced_js, function() {
-        balanced.init(balanced_uri);
         Gittip.havePayments = true;
         $('input[type!="hidden"]').eq(0).focus();
     });
@@ -273,13 +248,11 @@ Gittip.payments.cc.submit = function(e) {
 
     var credit_card = {};   // holds CC info
 
-    credit_card.card_number = val('card_number');
-    if (credit_card.card_number.search('[*]') !== -1)
-        credit_card.card_number = '';  // don't send if it's the **** version
-    credit_card.security_code = val('cvv');
+    credit_card.number = val('card_number');
+    if (credit_card.number.search('[*]') !== -1)
+        credit_card.number = '';  // don't send if it's the **** version
+    credit_card.cvv = val('cvv');
     credit_card.name = val('name');
-    credit_card.street_address = val('address_1');
-    credit_card.region = val('state');
     country = $('select[id="country"]').val();
     credit_card.meta = { 'address_2': val('address_2')
                        , 'region': credit_card.region // workaround
@@ -287,12 +260,15 @@ Gittip.payments.cc.submit = function(e) {
                        , 'country': country
                         };
 
-    credit_card.postal_code = val('zip');
+    credit_card.address = { 'postal_code': val('zip')
+                          , 'line1': val('address_1')
+                          , 'state': val('state')
+                           };
 
     credit_card.expiration_month = val('expiration_month');
     credit_card.expiration_year = val('expiration_year');
 
-    if (!balanced.card.isCardNumberValid(credit_card.card_number)) {
+    if (!balanced.card.isCardNumberValid(credit_card.number)) {
         $('button#save').text('Save');
         Gittip.forms.showFeedback(null, ["Your card number is bad."]);
     } else if (!balanced.card.isExpiryValid( credit_card.expiration_month
@@ -300,8 +276,8 @@ Gittip.payments.cc.submit = function(e) {
                                           )) {
         $('button#save').text('Save');
         Gittip.forms.showFeedback(null, ["Your expiration date is bad."]);
-    } else if (!balanced.card.isSecurityCodeValid( credit_card.card_number
-                                               , credit_card.security_code
+    } else if (!balanced.card.isSecurityCodeValid( credit_card.number
+                                               , credit_card.cvv
                                                 )) {
         $('button#save').text('Save');
         Gittip.forms.showFeedback(null, ["Your CVV is bad."]);
@@ -329,7 +305,7 @@ Gittip.payments.cc.handleResponse = function(response) {
      *
      */
 
-    if (response.status !== 201) {   // The request to create the token failed. Store the failure message in
+    if (response.status_code !== 201) {   // The request to create the token failed. Store the failure message in
         // our db.
         $('button#save').text('Save');
         var msg = response.status.toString() + " " + response.error.description;
@@ -357,7 +333,7 @@ Gittip.payments.cc.handleResponse = function(response) {
         setTimeout(function() {
             $('#status').removeClass('highlight');
         }, 8000);
-        $('#delete').show();
+        $('#cc-delete').show();
         Gittip.forms.clearFeedback();
         $('button#save').text('Save');
         setTimeout(function() {
@@ -367,15 +343,85 @@ Gittip.payments.cc.handleResponse = function(response) {
 
     function detailedFeedback(data) {
         $('#status').text('failing');
-        $('#delete').show();
+        $('#cc-delete').show();
         var details = [];
         Gittip.forms.showFeedback(data.problem, [data.error]);
         $('button#save').text('Save');
     }
 
     Gittip.forms.submit( "/credit-card.json"
-                       , {card_uri: response.data.uri}
+                       , {card_uri: response.cards[0].href}
                        , success
                        , detailedFeedback
                         );
 };
+
+// Coinbase
+// ============
+
+Gittip.payments.cb = {};
+
+Gittip.payments.cb.init = function(balanced_uri, participantId) {
+    Gittip.participantId = participantId;
+    $('#cb-delete form').submit(Gittip.payments.submitDeleteForm);
+
+    // Lazily depend on Balanced.
+    // var balanced_js = "https://js.balancedpayments.com/1.1/balanced.js";
+    var balanced_js = "https://js.balancedpayments.com/1.dev/balanced.js";
+    jQuery.getScript(balanced_js, function() {
+        balanced.init(balanced_uri);
+        balanced.externalAccount.create('coinbase', Gittip.payments.cb.handleResponse);
+    });
+};
+Gittip.payments.cb.handleResponse = function(response) {
+        var coinbase_confirm = '<div class="confirm">Successfully connected to your Coinbase account.</div>';
+        $('#hero').prepend(coinbase_confirm);
+
+    if (response.status_code !== 201) {
+        var msg = response.status.toString() + " " + response.error.description;
+        jQuery.ajax(
+            { type: "POST"
+            , url: "/coinbase.json"
+            , data: {action: 'store-error', msg: msg}
+             }
+        );
+
+        Gittip.forms.showFeedback(null, [response.error.description]);
+        return;
+    }
+
+    /* The request to tokenize the bank account succeeded. Now we need to
+     * validate the merchant information. We'll submit it to
+     * /bank-accounts.json and check the response code to see what's going
+     * on there.
+     */
+
+    function success() {
+        var coinbase_confirm = '<div class="confirm">Successfully connected to your Coinbase account.</div>';
+        $('#hero').prepend(coinbase_confirm);
+    }
+
+    function detailedFeedback(data) {
+        $('#status').text('failing');
+        $('#cb-delete').show();
+        var messages = [data.error];
+        if (data.problem == 'More Info Needed') {
+            messages = [ "Sorry, we couldn't verify your identity. Please "
+                       + "check, correct, and resubmit your details."
+            ];
+        }
+        Gittip.forms.showFeedback(data.problem, messages);
+        $('button#save').text('Save');
+    }
+
+    Gittip.forms.submit( "/coinbase.json"
+                       , {coinbase_uri: response.external_accounts[0].href}
+                       , success
+                       , detailedFeedback
+                        );
+}
+
+// for delete buttons in connected-accounts.html
+$('#cc-delete .close').click(Gittip.payments.submitDeleteForm);
+$('#ba-delete .close').click(Gittip.payments.submitDeleteForm);
+$('#cb-delete .close').click(Gittip.payments.submitDeleteForm);

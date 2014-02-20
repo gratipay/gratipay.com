@@ -13,16 +13,31 @@ button::-moz-focus-inner {
     padding: 0;
 }
 
-button {
+button, .btn {
     background: $gray;
     border: 0;
     color: white;
     font: bold 12px $Helvetica;
-    margin: 0 0 0 1px;
-    padding: 5px 8px;
+    padding: 10px 50px;
+    text-transform: uppercase;
+    margin: 15px 0;
     @include border-radius(3px);
     cursor: pointer;
     display: inline;
+
+    &.primary {
+        background-color: $green;
+    }
+
+    &.secondary {
+        background-color: $light-gray;
+    }
+
+    &.small {
+        padding: 5px 8px;
+        margin: 0 0 0 1px;
+        background-color: $gray;
+    }
 
     &:disabled {
         opacity: .5;
@@ -32,10 +47,22 @@ button {
             cursor: default;
         }
     }
+    
+    &:hover {
+        &:disabled {
+            background-color: $green !important;
+        }
+
+        &.primary {
+            background-color: $darker-green;
+        }
+
+        &.secondary {
+            background-color: $gray;
+        }
+    }
 }
-button:hover {
-    background: $darker-gray;
-}
+
 button.selected {
     background: $green;
 }

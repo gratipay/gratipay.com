@@ -19,19 +19,8 @@ if not user.ANON:
     if balanced_account_uri:
         working = user.participant.last_ach_result == ""
         status = "connected" if working else "not connected"
-        account = balanced.Account.find(balanced_account_uri)
 
         bank_account = billing.BalancedBankAccount(balanced_account_uri)
-        if bank_account.is_setup:
-
-            # Factored out to aid debugging. This extra var will show up in the
-            # context on Sentry so we can compare the two values. See:
-            #
-            #   https://github.com/gittip/www.gittip.com/issues/791
-
-            _bank_account_account_uri = bank_account['account_uri']
-
-            assert balanced_account_uri == _bank_account_account_uri
 
     username = user.participant.username
 
@@ -81,7 +70,7 @@ title = "Bank Account"
 
     <style>
         {% if not balanced_account_uri %}
-        #delete {
+        #ba-delete {
             display: none;
         }
         {% endif %}
@@ -92,7 +81,7 @@ title = "Bank Account"
 
                 {% if bank_account and bank_account.is_setup %}
                 <h2>Current: {{ bank_account['bank_name'] }}
-                ******{{ bank_account['last_four'] }}</h2>
+                ******{{ bank_account['account_number'][-4:] }}</h2>
                 {% endif %}
 
                 <div id="feedback">{% if user.participant.last_ach_result %}
@@ -170,6 +159,13 @@ title = "Bank Account"
 
                 <div class="clear"></div>
 
+                <div class="half left">
+                    <label for="ssn_last4">Last four SSN digits (Not required)</label>
+                    <input id="ssn_last4" value="" />
+                </div>
+
+                <div class="clear"></div>
+
 
                 <h2>Routing Information</h2>
                 {% endif %}
@@ -195,16 +191,16 @@ title = "Bank Account"
 
             <div class="nav level-1">
                 <button class="selected larger" id="save"
-                    type="submit">Save</button>
+                    type="submit">Update bank account</button>
             </div>
         </form>
 
 
         {% if bank_account and bank_account.is_setup %}
-        <div id="delete" class="nav level-2">
+        <div id="ba-delete" class="nav level-2">
             <form action="bank-account.json" class="special" method="POST">
                 <input type="hidden" name="action" value="delete">
-                <button>Disconnect My Bank Account</button>
+                <button>Remove bank account</button>
             </form>
         </div>
         {% endif %}

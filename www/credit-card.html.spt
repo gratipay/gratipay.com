@@ -19,13 +19,14 @@ if not user.ANON:
         if user.participant.last_bill_result is not None:
             status = "working" if user.participant.last_bill_result == "" \
                                                                  else "failing"
-
     if balanced_account_uri:
         card = billing.BalancedCard(balanced_account_uri)
-        assert balanced_account_uri == card['id']
+        # the id on the card might not match unless the db
+        # is updated to use the new style of urls
     else:
         card = billing.StripeCard(stripe_customer_id)
         assert stripe_customer_id == card['id']
+
 
     username = user.participant.username
 
@@ -77,7 +78,7 @@ title = "Credit Card"
 
     <style>
         {% if status == "missing" %}
-        #delete {
+        #cc-delete {
             display: none;
         }
         {% endif %}
@@ -87,7 +88,7 @@ title = "Credit Card"
             <div class="constrain-width group">
 
                 {% if status != "missing" %}
-                <h2>Current: {{ card['card_type'] }} {{ card['last4'] }}</h2>
+                <h2>Current: {{ card['brand'] }} {{ card['number'][-4:] }}</h2>
                 {% endif %}
 
                 <div id="feedback">{% if user.participant.last_bill_result %}
@@ -166,15 +167,15 @@ title = "Credit Card"
 
             <div class="nav level-1">
                 <button class="selected larger" id="save"
-                    type="submit">Save</button>
+                    type="submit">Update card</button>
             </div>
 
         </form>
 
-        <div id="delete" class="nav level-2">
+        <div id="cc-delete" class="nav level-2">
             <form action="credit-card.json" class="special" method="POST">
                 <input type="hidden" name="action" value="delete">
-                <button>Disconnect My Credit Card</button>
+                <button>Remove card</button>
             </form>
         </div>
     </div>
