@@ -165,35 +165,56 @@ class TestPaydayCharge(TestPaydayBase):
                      .associate_to_customer(paying_customer)
         balanced.BankAccount.fetch(self.bank_account_href)\
                             .associate_to_customer(self.balanced_customer_href)
-        bob = self.make_participant('bob', claimed_time=day_ago,
+        coinbase_customer = balanced.Customer().save()
+        external_account = balanced.ExternalAccount(
+            token='123123123',
+            provider='test'
+        ).save()
+        external_account.associate_to_customer(coinbase_customer)
+
+        bob = self.make_participant('bob2', claimed_time=day_ago,
                                     balanced_account_uri=self.balanced_customer_href,
                                     last_bill_result='',
                                     is_suspicious=False)
-        carl = self.make_participant('carl', claimed_time=day_ago,
+        carl = self.make_participant('carl2', claimed_time=day_ago,
                                      balanced_account_uri=paying_customer.href,
                                      last_bill_result='',
                                      is_suspicious=False)
-        carl.set_tip_to('bob', '15.00')
+        jeff = self.make_participant('jeff2', claimed_time=day_ago,
+                                     balanced_account_uri=coinbase_customer.href,
+                                     last_bill_result='',
+                                     is_suspicious=False)
+        carl.set_tip_to('bob2', '15.00')
+        jeff.set_tip_to('carl2', '2.00')
         self.payday.run()
 
-        bob = Participant.from_username('bob')
-        carl = Participant.from_username('carl')
+        bob = Participant.from_username('bob2')
+        carl = Participant.from_username('carl2')
+        jeff = Participant.from_username('jeff2')
 
         assert bob.balance == Decimal('0.00')
-        assert carl.balance == Decimal('0.00')
+        assert carl.balance == Decimal('2.00')
+        assert jeff.balance == Decimal('7.41')
 
         bob_customer = balanced.Customer.fetch(bob.balanced_account_uri)
         carl_customer = balanced.Customer.fetch(carl.balanced_account_uri)
+        jeff_customer = balanced.Customer.fetch(jeff.balanced_account_uri)
 
         bob_credits = bob_customer.credits.all()
         assert len(bob_credits) == 1
         assert bob_credits[0].amount == 1500
-        assert bob_credits[0].description == 'bob'
+        assert bob_credits[0].description == 'bob2'
 
         carl_debits = carl_customer.debits.all()
         assert len(carl_debits) == 1
         assert carl_debits[0].amount == 1576  # base amount + fee
-        assert carl_debits[0].description == 'carl'
+        assert carl_debits[0].description == 'carl2'
+
+        jeff_debits = jeff_customer.debits.all()
+        assert len(jeff_debits) == 1
+        assert jeff_debits[0].amount == 1000
+        assert jeff_debits[0].description == 'jeff2'
+        assert jeff_debits[0].source.id == external_account.id
 
 
 class TestBillingCharges(TestPaydayBase):

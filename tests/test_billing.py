@@ -19,12 +19,7 @@ def setUp_balanced(o):
         match_on = ['url', 'method'],
     )
     o.vcr_cassette = o.vcr.use_cassette('{}.yml'.format(o.__name__)).__enter__()
-    o.balanced_api_key = balanced.APIKey().save().secret
-    balanced.configure(o.balanced_api_key)
-    mp = balanced.Marketplace.my_marketplace
-    if not mp:
-        mp = balanced.Marketplace().save()
-    o.balanced_marketplace = mp
+    o.balanced_marketplace = balanced.Marketplace.my_marketplace
 
 
 def setUp_balanced_resources(o):
@@ -55,7 +50,6 @@ def setUp_balanced_resources(o):
 
 def tearDown_balanced(o):
     o.vcr_cassette.__exit__(None, None, None)
-
 
 class TestBillingBase(Harness):
 
@@ -222,6 +216,36 @@ class TestBalancedBankAccount(Harness):
         bank_account = billing.BalancedBankAccount(None)
         assert not bank_account.is_setup
         assert not bank_account['id']
+
+
+class TestBalancedExternalAccount(Harness):
+    """Tests related to processing coinbase transactions"""
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestBalancedExternalAccount, cls).setUpClass()
+        setUp_balanced(cls)
+
+    def setUp(self):
+        Harness.setUp(self)
+        setUp_balanced_resources(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        tearDown_balanced(cls)
+        super(TestBalancedExternalAccount, cls).tearDownClass()
+
+    def test_balanced_external_account(self):
+        ea = balanced.ExternalAccount(
+            token='123123123',
+            provider='test'
+        ).save()
+        ea.associate_to_customer(self.balanced_customer_href)
+
+        ea_account = billing.BalancedExternalAccount(self.balanced_customer_href)
+
+        assert ea_account['customer_href'] == self.balanced_customer_href
+
 
 
 class TestBillingAssociate(TestBillingBase):

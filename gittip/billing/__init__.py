@@ -79,13 +79,15 @@ def associate(db, thing, username, balanced_account_uri, balanced_thing_uri):
         if thing == "credit card":
             SQL %= "bill"
             obj = balanced.Card.fetch(balanced_thing_uri)
-            #add = balanced_account.add_card
 
-        else:
-            assert thing == "bank account", thing # sanity check
+        elif thing == "bank account":
             SQL %= "ach"
             obj = balanced.BankAccount.fetch(balanced_thing_uri)
-            #add = balanced_account.add_bank_account
+
+        else:
+            assert thing == "coinbase", thing  # sanity check
+            SQL %= "coinbase"
+            obj = balanced.ExternalAccount.fetch(balanced_thing_uri)
 
         obj.associate_to_customer(balanced_account)
     except balanced.exc.HTTPError as err:
@@ -107,11 +109,15 @@ def invalidate_on_balanced(thing, balanced_account_uri):
     See: https://github.com/balanced/balanced-api/issues/22
 
     """
-    assert thing in ("credit card", "bank account")
+    assert thing in ("credit card", "bank account", "coinbase")
     typecheck(balanced_account_uri, (str, unicode))
 
     customer = balanced.Customer.fetch(balanced_account_uri)
-    things = customer.cards if thing == "credit card" else customer.bank_accounts
+    things = {
+        "credit card": customer.cards,
+        "bank account": customer.bank_accounts,
+        "coinbase": customer.external_accounts
+    }[thing]
 
     for _thing in things:
         _thing.unstore()
@@ -124,17 +130,23 @@ def clear(db, thing, username, balanced_account_uri):
               )
     assert thing in ("credit card", "bank account"), thing
     invalidate_on_balanced(thing, balanced_account_uri)
+    sql = {
+        "credit card": "bill",
+        "bank account": "ach",
+        "coinbase": "coinbase"
+    }[thing]
     CLEAR = """\
 
         UPDATE participants
            SET last_%s_result=NULL
          WHERE username=%%s
 
-    """ % ("bill" if thing == "credit card" else "ach")
+    """ % sql
     db.run(CLEAR, (username,))
 
 
 def store_error(db, thing, username, msg):
+    # TODO: make this store coinbase errors
     typecheck(thing, unicode, username, unicode, msg, unicode)
     assert thing in ("credit card", "bank account"), thing
     ERROR = """\
@@ -297,3 +309,16 @@ class BalancedBankAccount(BalancedThing):
             return None
 
         return self._get(mapper[item])
+
+
+class BalancedExternalAccount(BalancedThing):
+
+    thing_type = 'external_account'
+
+    def __getitem__(self, item):
+        item = {
+            'id': 'href',
+            'customer_href': 'customer.href',
+        }.get(item, item)
+
+        return self._get(item)

@@ -655,9 +655,16 @@ class Payday(object):
 
         try:
             customer = balanced.Customer.fetch(balanced_customer_href)
-            customer.cards.one().debit(amount=cents, description=username)
-            log(msg + "succeeded.")
-            error = ""
+            source = customer.cards.first()
+            if not source:
+                source = customer.external_accounts.first()
+            if source:
+                source.debit(amount=cents, description=username)
+                log(msg + "succeeded.")
+                log("Cusotmer: {} {} token: {}".format(username, customer.href, source.href))
+                error = ""
+            else:
+                error = "Does not have a funding source"
         except balanced.exc.HTTPError as err:
             error = err.message.message
             log(msg + "failed: %s" % error)

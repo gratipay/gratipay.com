@@ -378,8 +378,7 @@ Gittip.payments.cb.init = function(balanced_uri, participantId) {
     $('#cb-delete form').submit(Gittip.payments.submitDeleteForm);
 
     // Lazily depend on Balanced.
-    // var balanced_js = "https://js.balancedpayments.com/1.1/balanced.js";
-    var balanced_js = "https://js.balancedpayments.com/1.dev/balanced.js";
+    var balanced_js = "https://js.balancedpayments.com/1.1/balanced.js";
     jQuery.getScript(balanced_js, function() {
         balanced.init(balanced_uri);
         balanced.externalAccount.create('coinbase', Gittip.payments.cb.handleResponse);
