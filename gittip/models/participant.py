@@ -145,18 +145,19 @@ class Participant(Model, MixinTeam):
 
         """
         with self.db.get_cursor() as c:
-            # FOR UPDATE locks the row, otherwise there is a deadlock/serialization problem when
-            # several threads try to update this at the same time which is done with each request
-            e = c.one( "SELECT session_expires FROM participants WHERE username=%s FOR UPDATE"
-                     , (self.username,)
-                      )
-            if expires-e < datetime.timedelta(hours=12):
+            done = c.one("""
+                UPDATE participants SET session_expires=%(expires)s
+                WHERE id=%(id)s
+                AND is_suspicious IS NOT true
+                AND session_expires + INTERVAL '12 hours' < %(expires)s
+                RETURNING id
+            """, dict(expires=expires, id=self.id))
+            if done is None:
                 return
-            c.run( "UPDATE participants SET session_expires=%s "
-                   "WHERE id=%s AND is_suspicious IS NOT true"
-                   , (expires, self.id,)
-                    )
+            add_event(c, 'participant',
+                dict(action='set', id=self.id, values=dict(session_expires=unicode(expires))))
         self.set_attributes(session_expires=expires)
+
 
 
     # Claimed-ness
