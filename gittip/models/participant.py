@@ -144,6 +144,8 @@ class Participant(Model, MixinTeam):
         :database: One UPDATE, one row
 
         """
+        if not self.session_expires + datetime.timedelta(hours=12) < expires:
+            return
         with self.db.get_cursor() as c:
             done = c.one("""
                 UPDATE participants SET session_expires=%(expires)s
