@@ -70,7 +70,7 @@ title = "Bank Account"
 
     <style>
         {% if not balanced_customer_href %}
-        #delete {
+        #ba-delete {
             display: none;
         }
         {% endif %}
@@ -190,17 +190,17 @@ title = "Bank Account"
             </div>
 
             <div class="nav level-1">
-                <button class="selected larger" id="save"
-                    type="submit">Save</button>
+                <button class="selected large" id="save"
+                    type="submit">Update bank account</button>
             </div>
         </form>
 
 
         {% if bank_account and bank_account.is_setup %}
-        <div id="delete" class="nav level-2">
+        <div id="ba-delete" class="nav level-2">
             <form action="bank-account.json" class="special" method="POST">
                 <input type="hidden" name="action" value="delete">
-                <button>Disconnect My Bank Account</button>
+                <button>Remove bank account</button>
             </form>
         </div>
         {% endif %}

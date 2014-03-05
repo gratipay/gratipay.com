@@ -187,6 +187,14 @@ def envvars(website):
             envvar('BITBUCKET_CONSUMER_SECRET'),
             envvar('BITBUCKET_CALLBACK'),
         ),
+        Bountysource(
+            website.db,
+            None,
+            envvar('BOUNTYSOURCE_API_SECRET'),
+            envvar('BOUNTYSOURCE_CALLBACK'),
+            envvar('BOUNTYSOURCE_API_HOST'),
+            envvar('BOUNTYSOURCE_WWW_HOST'),
+        ),
         OpenStreetMap(
             website.db,
             envvar('OPENSTREETMAP_CONSUMER_KEY'),
@@ -198,15 +206,8 @@ def envvars(website):
     ]
     website.signin_platforms = PlatformRegistry(signin_platforms)
     AccountElsewhere.signin_platforms_names = tuple(p.name for p in signin_platforms)
+
     other_platforms =  [
-        Bountysource(
-            website.db,
-            None,
-            envvar('BOUNTYSOURCE_API_SECRET'),
-            envvar('BOUNTYSOURCE_CALLBACK'),
-            envvar('BOUNTYSOURCE_API_HOST'),
-            envvar('BOUNTYSOURCE_WWW_HOST'),
-        ),
         Venmo(
             website.db,
             envvar('VENMO_CLIENT_ID'),

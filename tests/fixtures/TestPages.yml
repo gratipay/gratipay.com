@@ -1,13 +1,53 @@
 - request: !!python/object:vcr.request.Request
     body: null
     headers: !!python/object/apply:__builtin__.frozenset
+    - - !!python/tuple [content-type, !!python/unicode application/json;revision=1.1]
+      - !!python/tuple [Accept-Encoding, 'gzip, deflate, compress']
+      - !!python/tuple [accept, !!python/unicode application/vnd.api+json;revision=1.1]
+      - !!python/tuple [User-Agent, !!python/unicode balanced-python/1.0.1beta3]
+      - !!python/tuple [Authorization, !!python/unicode Basic YWstdGVzdC0yMXZpNG96bXhZNFJQaDVBM085Y3F2cDdBVmNGU0tHVFA6Tm9uZQ==]
+    host: api.balancedpayments.com
+    method: GET
+    path: /marketplaces?limit=25&offset=0
+    port: 443
+    protocol: https
+  response:
+    body: {string: "{\n  \"meta\": {\n    \"last\": \"/marketplaces?limit=25&offset=0\",\n
+        \   \"next\": null,\n    \"href\": \"/marketplaces?limit=25&offset=0\",\n
+        \   \"limit\": 25,\n    \"offset\": 0,\n    \"previous\": null,\n    \"total\":
+        1,\n    \"first\": \"/marketplaces?limit=25&offset=0\"\n  },\n  \"marketplaces\":
+        [\n    {\n      \"in_escrow\": 46890,\n      \"domain_url\": \"example.com\",\n
+        \     \"name\": \"Test Marketplace\",\n      \"links\": {\n        \"owner_customer\":
+        \"CU7zXmxLOeFa1wHCrrPTxCJk\"\n      },\n      \"href\": \"/marketplaces/TEST-MP7zVkkuMsGEYQ7c2xl58Qqe\",\n
+        \     \"created_at\": \"2014-02-21T21:49:00.457357Z\",\n      \"support_email_address\":
+        \"support@example.com\",\n      \"updated_at\": \"2014-02-21T21:49:01.093302Z\",\n
+        \     \"support_phone_number\": \"+16505551234\",\n      \"production\": false,\n
+        \     \"meta\": {},\n      \"unsettled_fees\": 0,\n      \"id\": \"TEST-MP7zVkkuMsGEYQ7c2xl58Qqe\"\n
+        \   }\n  ],\n  \"links\": {\n    \"marketplaces.debits\": \"/debits\",\n    \"marketplaces.reversals\":
+        \"/reversals\",\n    \"marketplaces.customers\": \"/customers\",\n    \"marketplaces.credits\":
+        \"/credits\",\n    \"marketplaces.cards\": \"/cards\",\n    \"marketplaces.card_holds\":
+        \"/card_holds\",\n    \"marketplaces.refunds\": \"/refunds\",\n    \"marketplaces.owner_customer\":
+        \"/customers/{marketplaces.owner_customer}\",\n    \"marketplaces.transactions\":
+        \"/transactions\",\n    \"marketplaces.bank_accounts\": \"/bank_accounts\",\n
+        \   \"marketplaces.callbacks\": \"/callbacks\",\n    \"marketplaces.events\":
+        \"/events\"\n  }\n}"}
+    headers: ["Content-Type: application/json\r\n", "Date: Sat, 22 Feb 2014 04:43:19
+        GMT\r\n", "Server: ngx_openresty/1.2.6.3\r\n", "X-Balanced-Guru: OHMd9e623669b7b11e38793026ba7cac9da\r\n",
+      "X-Balanced-Host: balanced-api-05\r\n", "X-Balanced-Marketplace: TEST-MP7zVkkuMsGEYQ7c2xl58Qqe\r\n",
+      "X-Balanced-Merchant: TEST-MR7dsEuTLyOFVcn7X5mhyEC6\r\n", "X-Balanced-Revision:
+        1.1\r\n", "X-Balanced-Software-Build: f760e54ed83b2df2c9ef3a8dc3b60c5a70831d3f\r\n",
+      "Content-Length: 1408\r\n", "Connection: keep-alive\r\n"]
+    status: {code: 200, message: OK}
+- request: !!python/object:vcr.request.Request
+    body: null
+    headers: !!python/object/apply:__builtin__.frozenset
     - - !!python/tuple [Accept-Encoding, 'gzip, deflate, compress']
-      - !!python/tuple [Accept, '*/*']
-      - !!python/tuple [Authorization, 'OAuth oauth_nonce="137591929179705732001392910038",
-          oauth_timestamp="1392910038", oauth_version="1.0", oauth_signature_method="HMAC-SHA1",
+      - !!python/tuple [Authorization, 'OAuth oauth_nonce="94597912494277276921393044199",
+          oauth_timestamp="1393044199", oauth_version="1.0", oauth_signature_method="HMAC-SHA1",
           oauth_consumer_key="QBB9vEhxO4DFiieRF68zTA", oauth_token="34175404-G6W8Hh19GWuUhIMEXK0LyZsy7N9aCMcy1bYJ9rI",
-          oauth_signature="rgGWI%2F9gk8cryBIMurDwLG3X3lI%3D"']
-      - !!python/tuple [User-Agent, python-requests/1.2.3 CPython/2.7.5 Darwin/12.5.0]
+          oauth_signature="iypJ7gMU5eaZkoi4UEoG4TaawXU%3D"']
+      - !!python/tuple [Accept, '*/*']
+      - !!python/tuple [User-Agent, python-requests/1.2.3 CPython/2.7.6 Linux/3.12.9-2-ARCH]
     host: api.twitter.com
     method: GET
     path: /1.1/users/show.json?screen_name=twitter
@@ -16,37 +56,37 @@
   response:
     body:
       string: !!binary |
-        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
+        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
     headers: ["cache-control: no-cache, no-store, must-revalidate, pre-check=0, post-check=0\r\n",
-      "content-encoding: gzip\r\n", "content-length: 1235\r\n", "content-type: application/json;charset=utf-8\r\n",
-      "date: Thu, 20 Feb 2014 15:27:18 GMT\r\n", "expires: Tue, 31 Mar 1981 05:00:00
-        GMT\r\n", "last-modified: Thu, 20 Feb 2014 15:27:18 GMT\r\n", "pragma: no-cache\r\n",
-      "server: tfe\r\n", "set-cookie: lang=en\r\n", "set-cookie: guest_id=v1%3A139291003823273009;
-        Domain=.twitter.com; Path=/; Expires=Sat, 20-Feb-2016 15:27:18 UTC\r\n", "status:
+      "content-encoding: gzip\r\n", "content-length: 1227\r\n", "content-type: application/json;charset=utf-8\r\n",
+      "date: Sat, 22 Feb 2014 04:43:19 GMT\r\n", "expires: Tue, 31 Mar 1981 05:00:00
+        GMT\r\n", "last-modified: Sat, 22 Feb 2014 04:43:19 GMT\r\n", "pragma: no-cache\r\n",
+      "server: tfe\r\n", "set-cookie: lang=en\r\n", "set-cookie: guest_id=v1%3A139304419957157213;
+        Domain=.twitter.com; Path=/; Expires=Mon, 22-Feb-2016 04:43:19 UTC\r\n", "status:
         200 OK\r\n", "strict-transport-security: max-age=631138519\r\n", "x-access-level:
         read\r\n", "x-content-type-options: nosniff\r\n", "x-frame-options: SAMEORIGIN\r\n",
-      "x-rate-limit-limit: 180\r\n", "x-rate-limit-remaining: 177\r\n", "x-rate-limit-reset:
-        1392910100\r\n", "x-transaction: d7a88e315048b4b4\r\n", "x-xss-protection:
+      "x-rate-limit-limit: 180\r\n", "x-rate-limit-remaining: 179\r\n", "x-rate-limit-reset:
+        1393045099\r\n", "x-transaction: af43233e2ffe1aee\r\n", "x-xss-protection:
         1; mode=block\r\n"]
     status: {code: 200, message: OK}

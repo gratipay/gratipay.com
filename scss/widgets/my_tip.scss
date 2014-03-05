@@ -3,54 +3,151 @@ form.my-tip {
     overflow: hidden;
 
     .tip-controls {
-        text-align: right;
-        width: 60%;
-        float: left;
-
         .tip-suggestions {
-            display: inline-block;
-            font-size: 0.9em;
+            text-align: right;
 
             li {
-                float: left;
-                margin: 0;
-
-                &:before {
-                    content: ", ";
-                }
-
-                &:first-child:before {
-                    content: "";
-                }
+                display: inline-block;
+                margin: 10px 0px 10px 20px;
             }
         }
-    }
 
-    .tip-actions {
-        width: 38%;
-        float: right;
-        text-align: left;
-        border-left: 1px solid $brown;
-        padding-left: 1.9%;
+        .tip-amount {
+            position: relative;
+            font-size: 45px;
+            font-weight: bold;
+            color: $light-gray;
 
-        .cancel-tip {
-            font-size: 0.9em;
+            input {
+                display: inline-block;
+                border: 1px solid $light-gray;
+                padding-right: 10px;
+                height: 60px;
+                color: $light-gray;
+
+                &:focus {
+                    color: $black;
+                    outline: none;
+                }
+            }
+
+            .dollar {
+                position: absolute;
+                top: 15px;
+                left: 15px;
+            }
         }
+
+        .notice {
+            color: $gray;
+            font-size: 13px;
+            padding-top: 5px;
+        }        
     }
 
-    .cancel-tip {
-        opacity: 0.5;
-        cursor: default;
-    }
+}
 
-    &.changed {
-        .cancel-tip {
-            opacity: 1;
-            cursor: pointer;
-        }
-    }
+.confirm {
+    background-color: $yellow;
+    padding: 8px 0px;
+    font-size: 13px;
+    color: $white;
+    text-align: center;
 }
 
 input.my-tip {
+    width: 100%;
+}
+#matrix input.my-tip {
     width: 5.5em;
+}
+
+#payment-method-dialog {
+    
+    .overlay {
+        position: fixed;
+        z-index: 998;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: auto;
+        background-color: $black;
+        opacity: 0.8;
+    }
+    .modal {
+        position: absolute;
+        overflow: visible;
+        top: 50%;
+        left: 50%;
+        width: 488px;
+        z-index: 1050;
+        background-color: $white;
+        opacity: 1;
+
+        .close {
+            position: absolute;
+            background-image: url("/assets/close_button.png");
+            background-size: cover;
+            width: 20px;
+            height: 20px;
+            top: 20px;
+            right: 20px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .content {
+            background-color: $white;
+            padding: 50px 50px 10px 50px;
+
+            h2 {
+                letter-spacing: -2px;
+                font: normal 30px 'Mensch', 'Helvetica Neue', Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif;
+                font-weight: bold;
+                color: $black
+            }
+
+            .message {
+                font-size: 13px;
+                color: $gray;
+                padding: 5px 20px 15px;
+
+                &:first-of-type {
+                    padding-top: 20px;
+                }
+            }
+
+            .payment-option {
+                text-align: left;
+                border: 1px solid $light-gray;
+                padding: 15px 5px;
+                margin: 5px 0;
+                @include border-radius(3px);
+                font-weight: bold;
+
+                input {
+                    margin: 0 10px;
+                }
+                &.selected {
+                    border: 1px solid $green;
+                    background-color: $lighter-green;
+                }
+            }
+            .payments-by {
+                background-image: url("/assets/payments-by.png");
+                background-size: cover;
+                width: 200px;
+                height: 24px;
+                display: inline-block;
+                margin-top: 10px;
+            }
+        }
+        .action-bar {
+            background-color: $lighter-gray;
+            padding: 10px 50px;
+       }
+    }
 }

@@ -15,8 +15,8 @@
     }
 
     .notification-notice {
-        background: $darker-gray;
-        background: transparentize($darker-gray, $transparency);
+        background: $dark-gray;
+        background: transparentize($dark-gray, $transparency);
     }
 
     .notification-success {

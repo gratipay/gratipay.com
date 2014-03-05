@@ -138,6 +138,22 @@ class TestBalancedBankAccount(BalancedHarness):
         assert bank_account['account_number'] == 'xxx233a'
 
 
+class TestBalancedExternalAccount(BalancedHarness):
+    """Tests related to processing coinbase transactions"""
+
+    def test_balanced_external_account(self):
+        ea = balanced.ExternalAccount(
+            token='123123123',
+            provider='test'
+        ).save()
+        ea.associate_to_customer(self.balanced_customer_href)
+
+        ea_account = billing.BalancedExternalAccount(
+            self.balanced_customer_href)
+
+        assert ea_account['customer_href'] == self.balanced_customer_href
+
+
 class TestBillingAssociate(BalancedHarness):
 
     def test_associate_valid_card(self):

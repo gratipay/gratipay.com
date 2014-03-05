@@ -633,7 +633,7 @@ class Payday(object):
             log(msg + "succeeded.")
             error = ""
         except balanced.exc.HTTPError as err:
-            error = err.message.message
+            error = err.description
         except:
             error = repr(sys.exc_info()[1])
 
@@ -656,11 +656,15 @@ class Payday(object):
 
         try:
             customer = balanced.Customer.fetch(balanced_customer_href)
-            customer.cards.one().debit(amount=cents, description=username)
+            try:
+                source = customer.cards.one()
+            except balanced.exc.wac.NoResultFound:
+                source = customer.external_accounts.one()
+            source.debit(amount=cents, description=username)
             log(msg + "succeeded.")
             error = ""
         except balanced.exc.HTTPError as err:
-            error = err.message.message
+            error = err.description
         except:
             error = repr(sys.exc_info()[1])
 

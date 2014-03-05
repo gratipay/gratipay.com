@@ -9,98 +9,61 @@
             <img src="/assets/{{ platform.name }}.png" />
         </td>
         <td class="account-details">
+            <div class="account-type">{{ platform.display_name }}</div>
             {% if account == None %}
+                <span class="none">None</span>
                 {% if not user.ANON and user.participant == participant %}
-                    {% call auth_button(platform.name, 'connect') %}
-                        Connect a {{ platform.display_name }} account
-                    {% endcall %}
-                {% else %}
-                    No {{ platform.display_name }} account connected.
+                    <a class="btn small toggle-bitcoin" href="javascript:;">+ Add</a>
                 {% endif %}
             {% else %}
-                <a rel="me" href="{{ account.html_url|e }}"
-                    ><img class="avatar" src="{{ get_avatar_url(account)|e }}"
-                    />{{ account.user_name|e }}
+                <a rel="me" href="{{ account.html_url|e }}">
+                    {{ account.user_name|e }}
                     {% if account.display_name and account.display_name != account.user_name %}
                         ({{ account.display_name|e }})
                     {% endif %}
                 </a>
                 {% if user.participant == participant %}
-                    <button class="account-delete"
+                    <div class="account-delete close" title="Disconnect"
                             data-platform="{{ platform.name }}"
                             data-user_id="{{ account.user_id }}">
-                        Disconnect
-                    </button>
+                    </div>
                 {% endif %}
-                <div class="account-type">on {{ platform.display_name }}</div>
+                
             {% endif %}
         </td>
     </tr>
 {% endfor %}
-    <tr>
-        <td class="account-type">
-            <img src="/assets/balanced-avatar.png" />
-        </td>
-        <td class="account-details">
-            {% if user.participant == participant %}
+</table>
 
-            <a href="/credit-card.html">Credit card</a>:
-            <!--
-            These spans are here because otherwise Chrome effs up the
-            unicode(?!)
-            -->
-            <span>{% if participant.last_bill_result != "" %}&#x2718;{% else %}&#x2714;{% endif %}</span>
-            &nbsp; &nbsp; &nbsp;
-            <a href="/bank-account.html">Bank account</a>:
-            <span>{% if participant.last_ach_result != "" %}&#x2718;{% else %}&#x2714;{% endif %}</span>
-
-            {% else %}
-
-            Credit card:
-            <span>{% if participant.last_bill_result != "" %}&#x2718;{% else %}&#x2714;{% endif %}</span>
-            &nbsp; &nbsp; &nbsp;
-            Bank account:
-            <span>{% if participant.last_ach_result != "" %}&#x2718;{% else %}&#x2714;{% endif %}</span>
-
-            {% endif %}
-            <div class="account-type">{% if user.ADMIN and participant.balanced_customer_href %}
-                <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href[4:] }}"
-                    >on Balanced Payments</a>{% else %}on Balanced Payments{% endif %}</div>
-        </td>
-    </tr>
+<h2>One-off {{ 'Receiving' if user.participant == participant else 'Giving' }} Options</h2>
+<table id="accounts">
     <tr>
         <td class="account-type">
             <img src="/assets/bitcoin.png" />
         </td>
         <td class="account-details">
-
+            <div class="account-type">Bitcoin</div>
             {% if not user.ANON and user.participant == participant %}
                 <div class="bitcoin">
             {% else %}
                 <div>
             {% endif %}
-                {% if participant.bitcoin_address %}
-                    <a rel="me" href="http://blockchain.info/address/{{ participant.bitcoin_address }}">
-                      {{ participant.bitcoin_address }}
-                    </a>
-                    {% if not user.ANON and user.participant == participant %}
-                    <div class="edit-bitcoin">
-                        (<a href="javascript:;" class="toggle-bitcoin">Edit</a>) Bitcoin address
-                    </div>
-                    {% else %}
-                    <div class="account-type">
-                        Bitcoin address
-                    </div>
 
-                    {% endif %}
+            {% if participant.bitcoin_address %}
+                <a class="address" rel="me" href="http://blockchain.info/address/{{ participant.bitcoin_address }}">
+                  {{ participant.bitcoin_address }}
+                </a>
+                {% if not user.ANON and user.participant == participant %}
 
-                {% else %}
-                    {% if not user.ANON and user.participant == participant %}
-                        Add a <a href="javascript:;" class="toggle-bitcoin">Bitcoin address</a>.
-                    {% else %}
-                        No Bitcoin receiving address.
-                    {% endif %}
+                <a href="javascript:;" class="edit-bitcoin btn small toggle-bitcoin">Edit</a>
                 {% endif %}
+
+            {% else %}
+                <span class="none">None</span>
+                {% if not user.ANON and user.participant == participant %}
+                    <a class="btn small toggle-bitcoin" href="javascript:;">+ Add</a>
+                {% endif %}
+            {% endif %}
             </div>
             <form class="bitcoin-submit">
                 <div class="address">
@@ -111,8 +74,8 @@
                     >
                 </div>
                 <div class="buttons">
-                    <button type="submit" class="bitcoin hidden">Save</button>
-                    <button type="cancel" class="bitcoin cancel hidden">Cancel</button>
+                    <button type="submit" class="small bitcoin hidden">Save</button>
+                    <button type="cancel" class="small bitcoin cancel hidden">Cancel</button>
                 </div>
             </form>
 
@@ -120,4 +83,96 @@
     </tr>
 </table>
 
+{% if not user.ANON and user.participant == participant %}
+<h2>Adding Money
+    {% if user.ADMIN and participant.balanced_customer_href %}
+        <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href }}" title="Go to Balanced Dashboard"><div class="payments-by"></div></a>
+    {% else %}
+        <div class="payments-by"></div>
+    {% endif %}
+</h2>
+<table id="accounts">
+    <tr>
+        <td class="account-type">
+            <img src="/assets/card_icon.jpg" />
+        </td>
+        <td class="account-details">
+            <div class="account-type">Credit card</div>
+            {% if participant.last_bill_result != "" %}
+                {% if participant.last_coinbase_result != "" %}
+                    <span class="none">None</span>
+                    <a class="btn small" href="/credit-card.html">+ Add</a>
+                {% else %}
+                    <span class="none">Delete your coinbase account first.</span>
+                    <a class="btn small disabled">+ Add</a>
+                {% endif %}
+            {% else %}
+                {{ card['brand'] }} {{ card['number'][-4:] }}
+                    <div id="cc-delete">
+                        <form action="credit-card.json" class="special" method="POST">
+                            <input type="hidden" name="action" value="delete">
+                            <div id="delete-cc" class="close" title="Delete card"></div>
+                        </form>
+                    </div>
 
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td class="account-type">
+            <img src="/assets/coinbase_icon.jpg" />
+        </td>
+        <td class="account-details">
+            <div class="account-type">Coinbase</div>
+            {% if participant.last_coinbase_result != "" %}
+                {% if participant.last_bill_result != "" %}
+                    <span class="none">None</span>
+                    <a class="btn small" id="connect-coinbase" href="#">+ Add</a>
+                {% else %}
+                    <span class="none">Delete your credit card first.</span>
+                    <a class="btn small disabled">+ Add</a>
+                {% endif %}
+            {% else %}
+                <span>Connected</span>
+                <div id="cb-delete">
+                    <form action="bank-account.json" class="special" method="POST">
+                        <input type="hidden" name="action" value="delete">
+                        <div id="delete-cb" class="close" title="Delete card"></div>
+                    </form>
+                </div>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+<h2>Withdrawing Money
+    {% if user.ADMIN and participant.balanced_customer_href %}
+        <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href }}" title="Go to Balanced Dashboard"><div class="payments-by"></div></a>
+    {% else %}
+        <div class="payments-by"></div>
+    {% endif %}
+</h2>
+<table id="accounts">
+    <tr>
+        <td class="account-type">
+            <img src="/assets/bank_account_icon.jpg" />
+        </td>
+        <td class="account-details">
+            <div class="account-type">Bank account</div>
+            {% if participant.last_ach_result != "" %}
+                <span class="none">none</span>
+                <a class="btn small" href="/bank-account.html">+ Add</a>
+            {% else %}
+                {{ bank_account['bank_name'] }}
+                <div id="ba-delete">
+                    <form action="bank-account.json" class="special" method="POST">
+                        <input type="hidden" name="action" value="delete">
+                        <div id="delete-ba" class="close" title="Delete card"></div>
+                    </form>
+                </div>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+{% endif %}
+</div>

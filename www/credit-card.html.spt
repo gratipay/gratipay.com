@@ -78,7 +78,7 @@ title = "Credit Card"
 
     <style>
         {% if status == "missing" %}
-        #delete {
+        #cc-delete {
             display: none;
         }
         {% endif %}
@@ -166,16 +166,16 @@ title = "Credit Card"
             </div>
 
             <div class="nav level-1">
-                <button class="selected larger" id="save"
-                    type="submit">Save</button>
+                <button class="selected large" id="save"
+                    type="submit">Update card</button>
             </div>
 
         </form>
 
-        <div id="delete" class="nav level-2">
+        <div id="cc-delete" class="nav level-2">
             <form action="credit-card.json" class="special" method="POST">
                 <input type="hidden" name="action" value="delete">
-                <button>Disconnect My Credit Card</button>
+                <button>Remove card</button>
             </form>
         </div>
     </div>
