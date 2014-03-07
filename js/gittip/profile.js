@@ -301,12 +301,12 @@ Gittip.profile.init = function() {
                 $('a.bitcoin').text(d.bitcoin_address);
                 $('.bitcoin').toggle();
                 if (d.bitcoin_address === '') {
-                    html = "Add a <a href=\"javascript:;\" class=\"toggle-bitcoin\">Bitcoin address</a>.";
+                    html = '<span class="none">none</span><a class="btn small toggle-bitcoin" href="javascript:;">+ Add</a>';
                 } else {
-                    html = "<a rel=\"me\" href=\"http://blockchain.info/address/";
-                    html += d.bitcoin_address + "\">" + d.bitcoin_address + "</a>";
-                    html += "<div class=\"edit-bitcoin\"><a href=\"javascript:;\" class=\"toggle-bitcoin\">Edit</a> bitcoin address ";
-                    html += "</div>";
+                    html = '<a class="address" rel="me" href="http://blockchain.info/address/';
+                    html += d.bitcoin_address + '">' + d.bitcoin_address + '</a>';
+                    html += '<a href="javascript:;" class="edit-bitcoin btn small toggle-bitcoin">Edit</a>';
+                    html += '</div>';
                 }
                 $('div.bitcoin').html(html);
                 $this.text('Save');

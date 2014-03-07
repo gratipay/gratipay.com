@@ -4,8 +4,12 @@
     }
 
     .username {
-        input {
-            width: 6em;
+        input[type="checkbox"] {
+            width: 18px;
+            display: none;
+        }
+        input[type="text"] {
+            width: 200px;
             display: none;
         }
         .warning {
@@ -60,14 +64,21 @@
     .bitcoin-submit {
         .address input {
             width: 100%;
+            margin: 5px 0;
         }
         .buttons {
             margin-top: 3pt;
         }
     }
     .bitcoin {
+        .address {
+            font-size: 13px;    
+        }
+        
         .edit-bitcoin {
-            margin-top: 3pt;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: inline-block;
         }
     }
 }
