@@ -4,8 +4,10 @@ import locale
 
 from aspen import json, Response
 from aspen.utils import to_age
+import balanced
 from gittip.utils import get_avatar_url, get_participant, wrap, plural
 from gittip.models import community
+from gittip import billing
 
 MAKING = "making the world better by"
 LONG_STATEMENT = 256
@@ -42,6 +44,36 @@ else:
     I_AM = "We are"
     I_M = "We're"
     MY = "Our"
+
+status = ". . ."
+balanced_customer_href = None
+card = ""
+bank_account = ""
+has_payment_method = False
+
+if not user.ANON:
+    balanced_customer_href = user.participant.balanced_customer_href
+    stripe_customer_id = user.participant.stripe_customer_id
+    has_payment_method = user.participant.last_bill_result == ""
+
+    status = "missing"
+    if stripe_customer_id or balanced_customer_href:
+        if user.participant.last_bill_result is not None:
+            status = "working" if user.participant.last_bill_result == "" \
+                                                                 else "failing"
+    if balanced_customer_href:
+        card = billing.BalancedCard(balanced_customer_href)
+        bank_account = billing.BalancedBankAccount(balanced_customer_href)
+        working = user.participant.last_ach_result == ""
+        status = "connected" if working else "not connected"
+
+        # the id on the card might not match unless the db
+        # is updated to use the new style of urls
+
+    else:
+        card = billing.StripeCard(stripe_customer_id)
+        assert stripe_customer_id == card['id']
+
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/profile.html" %}

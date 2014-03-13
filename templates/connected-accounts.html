@@ -1,15 +1,75 @@
 {% from 'templates/auth.html' import auth_button with context %}
 {% from 'templates/account-row.html' import account_row with context %}
 
-<h2>Connected Accounts</h2>
-<table id="accounts">
+{% if not user.ANON and user.participant == participant %}
+<h2>Add Money Every Week
+    {% if user.ADMIN and participant.balanced_customer_href %}
+        <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href }}"
+           title="Go to Balanced Dashboard"><div class="payments-by"></div></a>
+    {% else %}
+        <div class="payments-by"></div>
+    {% endif %}
+</h2>
+<table class="accounts">
+    <tr>
+        <td class="account-type">
+            <img src="/assets/card_icon.jpg" />
+        </td>
+        <td class="account-details">
+            <div class="account-type">Credit card</div>
+            {% if participant.last_bill_result != "" %}
+                <span class="none">None</span>
+                <button class="secondary" onclick="window.location='/credit-card.html';">
+                    + Add
+                </button>
+            {% else %}
+                {{ card['brand'] }} {{ card['number'][-4:] }}
+                    <div id="cc-delete">
+                        <form action="credit-card.json" class="special" method="POST">
+                            <input type="hidden" name="action" value="delete">
+                            <div id="delete-cc" class="close" title="Delete card"></div>
+                        </form>
+                    </div>
 
-    <!-- social profiles -->
-    {% for platform in website.social_profiles %}
-    {{ account_row(platform, accounts, auth_button) }}
-    {% endfor %}
+            {% endif %}
+        </td>
+    </tr>
+</table>
 
-    <!-- one-off receiving options -->
+<h2>Withdraw Money Every Week
+    {% if user.ADMIN and participant.balanced_customer_href %}
+        <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href }}"
+           title="Go to Balanced Dashboard"><div class="payments-by"></div></a>
+    {% else %}
+        <div class="payments-by"></div>
+    {% endif %}
+</h2>
+<table class="accounts">
+    <tr>
+        <td class="account-type">
+            <img src="/assets/bank_account_icon.jpg" />
+        </td>
+        <td class="account-details">
+            <div class="account-type">Bank account</div>
+            {% if participant.last_ach_result != "" %}
+                <span class="none">none</span>
+                <a class="btn small" href="/bank-account.html">+ Add</a>
+            {% else %}
+                {{ bank_account['bank_name'] }}
+                <div id="ba-delete">
+                    <form action="bank-account.json" class="special" method="POST">
+                        <input type="hidden" name="action" value="delete">
+                        <div id="delete-ba" class="close" title="Delete card"></div>
+                    </form>
+                </div>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+{% endif %}
+
+<h2>One-time {% if user.participant == participant %}Receiving{% else %}Giving{% endif %} Options</h2>
+<table class="accounts">
     <tr>
         <td class="account-type">
             <img src="/assets/bitcoin.png" />
@@ -53,44 +113,18 @@
                     >
                 </div>
                 <div class="buttons">
-                    <button type="submit" class="bitcoin hidden">Save</button>
-                    <button type="cancel" class="bitcoin cancel hidden">Cancel</button>
+                    <button type="submit" class="small bitcoin hidden">Save</button>
+                    <button type="cancel" class="small bitcoin cancel hidden">Cancel</button>
                 </div>
             </form>
         </td>
     </tr>
     {{ account_row(website.platforms.venmo, accounts, auth_button) }}
+</table>
 
-    <!-- add/withdraw money (recurring) -->
-    <tr>
-        <td class="account-type">
-            <img src="/assets/balanced-avatar.png" />
-        </td>
-        <td class="account-details">
-            {% if user.participant == participant %}
-
-            <a href="/credit-card.html">Credit card</a>:
-            <!--
-            These spans are here because otherwise Chrome effs up the
-            unicode(?!)
-            -->
-            <span>{% if participant.last_bill_result != "" %}&#x2718;{% else %}&#x2714;{% endif %}</span>
-            &nbsp; &nbsp; &nbsp;
-            <a href="/bank-account.html">Bank account</a>:
-            <span>{% if participant.last_ach_result != "" %}&#x2718;{% else %}&#x2714;{% endif %}</span>
-
-            {% else %}
-
-            Credit card:
-            <span>{% if participant.last_bill_result != "" %}&#x2718;{% else %}&#x2714;{% endif %}</span>
-            &nbsp; &nbsp; &nbsp;
-            Bank account:
-            <span>{% if participant.last_ach_result != "" %}&#x2718;{% else %}&#x2714;{% endif %}</span>
-
-            {% endif %}
-            <div class="account-type">{% if user.ADMIN and participant.balanced_customer_href %}
-                <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href[4:] }}"
-                    >on Balanced Payments</a>{% else %}on Balanced Payments{% endif %}</div>
-        </td>
-    </tr>
+<h2>Social Profiles</h2>
+<table class="accounts">
+    {% for platform in website.social_profiles %}
+    {{ account_row(platform, accounts, auth_button) }}
+    {% endfor %}
 </table>
