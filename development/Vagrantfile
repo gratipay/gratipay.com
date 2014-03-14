@@ -1,0 +1,59 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.define "gittip"
+
+  config.vm.box = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+
+  # Use vagrant-cachier to speed up builds if available.
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.auto_detect = true
+  end
+
+  config.omnibus.chef_version = "11.10.4"
+
+  # Sync the project directory and expose the app
+  config.vm.synced_folder "../", "/vagrant"
+  config.vm.network :forwarded_port, guest: 8537, host: 8537
+
+  config.vm.provider :virtualbox do |vb|
+    vb.name = "gittip"
+  end
+
+  config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = "cookbooks"
+    chef.add_recipe "apt"
+    chef.add_recipe "git"
+    chef.add_recipe "python"
+    chef.add_recipe "postgresql::apt_pgdg_postgresql"
+    chef.add_recipe "postgresql::server"
+    chef.add_recipe "postgresql::contrib"
+
+    chef.json = {
+      :postgresql => {
+        :version => "9.3",
+        :config => {
+          :ssl_cert_file => "/etc/ssl/certs/ssl-cert-snakeoil.pem",
+          :ssl_key_file => "/etc/ssl/private/ssl-cert-snakeoil.key",
+        },
+        :password => {
+          :postgres => "sekret",
+        },
+        :contrib => {
+          :extensions => [
+            "hstore",
+          ],
+        },
+      },
+    }
+  end
+
+  config.vm.provision :shell,
+      :path => "scripts/vagrant-setup.sh"
+
+end
