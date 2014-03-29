@@ -390,19 +390,17 @@ class Participant(Model, MixinTeam):
         return self.db.one("""\
 
             SELECT sum(amount)
-              FROM ( SELECT DISTINCT ON (tipper)
-                            amount
-                          , tipper
-                       FROM tips
-                       JOIN participants p ON p.username = tipper
+              FROM ( SELECT amount
+                       FROM current_tips
                       WHERE tippee=%s
-                        AND last_bill_result = ''
-                        AND is_suspicious IS NOT true
-                   ORDER BY tipper
-                          , mtime DESC
+                        AND tipper_last_bill_result = ''
+                      UNION
+                     SELECT take
+                       FROM current_memberships
+                      WHERE member=%s
                     ) AS foo
 
-        """, (self.username,), default=Decimal('0.00'))
+        """, (self.username, self.username), default=Decimal('0.00'))
 
 
     def get_dollars_giving(self):
