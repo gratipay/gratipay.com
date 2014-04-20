@@ -20,7 +20,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url =  File.exist?("gittip.box") ? "file://gittip.box" : "http://downloads.gittipllc.netdna-cdn.com/gittip.box"
 
   # Sync the project directory and expose the app
-  config.vm.synced_folder ".", "/home/vagrant/#{PROJECT_DIRECTORY}"
+  # NFS will be ignored on windows and the slower "Shared Folders" will be used
+  config.vm.network "private_network", ip: "192.168.85.37"
+  config.vm.synced_folder ".", "/home/vagrant/#{PROJECT_DIRECTORY}", type: "nfs"
   config.vm.network :forwarded_port, guest: 8537, host: 8537
 
   # TODO: Pin apt-get packages to the same versions Heroku uses
