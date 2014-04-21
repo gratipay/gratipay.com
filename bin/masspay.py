@@ -41,8 +41,8 @@ GITTIP_CSV = '{}.output.gittip.csv'.format(ts)
 def round_(d):
     return d.quantize(D('0.01'))
 
-def print_rule():
-    print("-" * 80)
+def print_rule(w=80):
+    print("-" * w)
 
 
 class Payee(object):
@@ -55,16 +55,17 @@ class Payee(object):
     additional_note = ""
 
     def __init__(self, rec):
-        self.username, self.email, amount = rec
+        self.username, self.email, fee_cap, amount = rec
         self.gross = D(amount)
         self.fee = D(0)
+        self.fee_cap = D(fee_cap)
         self.net = self.gross
 
     def assess_fee(self):
         fee = self.gross - round_(self.gross / D('1.02'))   # 2% fee
-        fee = min(fee, D('20.00'))                          # capped at $20
-        self.fee += fee                                     #  XXX or $1 for U.S. :/
-        self.net -= fee                                     #  XXX See #1675.
+        fee = min(fee, self.fee_cap)                        # capped at $20, or $1 for U.S.
+        self.fee += fee
+        self.net -= fee
         if self.net % 1 == D('0.25'):
 
             # Prevent an escrow leak. It's complicated, but it goes something
@@ -113,9 +114,10 @@ def compute_input_csv():
 
     """)
     writer = csv.writer(open(INPUT_CSV, 'w+'))
-    print_rule()
-    print("{:<24}{:<32} {:^7} {:^7} {:^7}".format("username", "email", "balance", "tips", "amount"))
-    print_rule()
+    print_rule(88)
+    headers = "username", "email", "fee cap", "balance", "tips", "amount"
+    print("{:<24}{:<32} {:^7} {:^7} {:^7} {:^7}".format(*headers))
+    print_rule(88)
     total_gross = 0
     for participant in participants:
         tips, total = participant.get_tips_and_total(for_payday=False)
@@ -125,16 +127,17 @@ def compute_input_csv():
             # See https://github.com/gittip/www.gittip.com/issues/1958.
             continue
         total_gross += amount
-        print("{:<24}{:<32} {:>7} {:>7} {:>7}".format( participant.username
-                                                     , participant.paypal_email
-                                                     , participant.balance
-                                                     , total
-                                                     , amount
-                                                      ))
-        row = (participant.username, participant.paypal_email, amount)
+        print("{:<24}{:<32} {:>7} {:>7} {:>7} {:>7}".format( participant.username
+                                                           , participant.paypal_email
+                                                           , participant.paypal_fee_cap
+                                                           , participant.balance
+                                                           , total
+                                                           , amount
+                                                            ))
+        row = (participant.username, participant.paypal_email, participant.paypal_fee_cap, amount)
         writer.writerow(row)
-    print(" "*72, "-"*7)
-    print("{:>80}".format(total_gross))
+    print(" "*80, "-"*7)
+    print("{:>88}".format(total_gross))
 
 
 def compute_output_csvs():
@@ -166,7 +169,7 @@ def compute_output_csvs():
     print("{:>64} {:>7} {:>7}".format(total_gross, total_fees, total_net))
 
 
-def record_exchanges_in_gittip():
+def post_back_to_gittip():
 
     try:
         gittip_api_key = os.environ['GITTIP_API_KEY']
@@ -200,26 +203,51 @@ def record_exchanges_in_gittip():
                 raise SystemExit
 
 
+def run_report():
+    """Print a report to help Determine how much escrow we should store in PayPal.
+    """
+    totals = []
+    max_masspay = max_weekly_growth = D(0)
+    for filename in os.listdir('.'):
+        if not filename.endswith('.input.csv'):
+            continue
+
+        datestamp = filename.split('.')[0]
+
+        totals.append(D(0))
+        for rec in csv.reader(open(filename)):
+            amount = rec[-1]
+            totals[-1] += D(amount)
+
+        max_masspay = max(max_masspay, totals[-1])
+        if len(totals) == 1:
+            print("{} {:8}".format(datestamp, totals[-1]))
+        else:
+            weekly_growth = totals[-1] / totals[-2]
+            max_weekly_growth = max(max_weekly_growth, weekly_growth)
+            print("{} {:8} {:4.1f}".format(datestamp, totals[-1], weekly_growth))
+
+    print()
+    print("Max Withdrawal:    ${:9,.2f}".format(max_masspay))
+    print("Max Weekly Growth:  {:8.1f}".format(max_weekly_growth))
+    print("5x Current:        ${:9,.2f}".format(5 * totals[-1]))
+
+
 def main():
-    print("Looking for files for {} ...".format(ts))
-    for filename in (INPUT_CSV, PAYPAL_CSV, GITTIP_CSV):
-        print("  [{}] {}".format('x' if os.path.exists(filename) else ' ', filename))
-
     if not sys.argv[1:]:
-        if raw_input("\nCompute input CSV? [y/N] ") == 'y':
-            compute_input_csv()
-        if raw_input("\nCompute output CSVs? [y/N] ") == 'y':
-            compute_output_csvs()
-        if raw_input("\nRecord exchanges in Gittip? [y/N] ") == 'y':
-            record_exchanges_in_gittip()
-
-    else:
-        if '-i' in sys.argv:
-            compute_input_csv()
-        if '-o' in sys.argv:
-            compute_output_csvs()
-        if '-r' in sys.argv:
-            record_exchanges_in_gittip()
+        print("Looking for files for {} ...".format(ts))
+        for filename in (INPUT_CSV, PAYPAL_CSV, GITTIP_CSV):
+            print("  [{}] {}".format('x' if os.path.exists(filename) else ' ', filename))
+        print("Rerun with one of these options:")
+        print("  -i - hits db to generate input CSV (needs envvars via heroku + honcho)")
+        print("  -o - computes output CSVs (doesn't need anything but input CSV)")
+        print("  -p - posts back to Gittip (prompts for API key)")
+    elif '-i' in sys.argv:
+        compute_input_csv()
+    elif '-o' in sys.argv:
+        compute_output_csvs()
+    elif '-p' in sys.argv:
+        post_back_to_gittip()
 
 
 if __name__ == '__main__':
