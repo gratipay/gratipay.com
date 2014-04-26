@@ -1,8 +1,9 @@
 """Defines website authentication helpers.
 """
 import rfc822
-import time
+from datetime import datetime, timedelta
 
+import pytz
 import gittip
 from aspen import Response
 from gittip.security import csrf
@@ -10,7 +11,8 @@ from gittip.security.user import User
 
 
 BEGINNING_OF_EPOCH = rfc822.formatdate(0)
-TIMEOUT = 60 * 60 * 24 * 7 # one week
+TIMEOUT = timedelta(weeks=1)
+EPOCH = datetime(1970, 1, 1, tzinfo=pytz.utc)
 ROLES = ['anonymous', 'authenticated', 'owner', 'admin']
 ROLES_SHOULD_BE = "It should be one of: {}.".format(', '.join(ROLES))
 
@@ -92,14 +94,15 @@ def outbound(request, response):
         else:
             # expired cookie in the request, instruct browser to delete it
             response.headers.cookie['session'] = ''
-            expires = 0
+            expires = EPOCH
     else: # user is authenticated
         response.headers['Expires'] = BEGINNING_OF_EPOCH # don't cache
         response.headers.cookie['session'] = user.participant.session_token
-        expires = time.time() + TIMEOUT
+        expires = datetime.now(tz=pytz.utc) + TIMEOUT
         user.keep_signed_in_until(expires)
 
     cookie = response.headers.cookie['session']
+    expires = (expires - EPOCH).total_seconds()
     # I am not setting domain, because it is supposed to default to what we
     # want: the domain of the object requested.
     #cookie['domain']
