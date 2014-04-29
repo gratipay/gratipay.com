@@ -10,9 +10,13 @@ username = participant.username   # used in footer shared with on/$platform/
                                   # pages
 locked = False
 
+accounts = participant.get_accounts_elsewhere()
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/profile.html" %}
+{% from 'templates/auth.html' import auth_button with context %}
+{% from 'templates/account-row.html' import account_row with context %}
+
 
 {% block scripts %}
 <script>$(document).ready(Gittip.account.init);</script>
@@ -109,6 +113,59 @@ locked = False
                 </tr>
             </table>
         {% endif %}
+
+        {% if not user.ANON and user.participant == participant %}
+        <h2>Other Receiving Options</h2>
+        {% else %}
+        <h2>Other Giving Options</h2>
+        {% endif %}
+        <table class="accounts">
+
+            <!-- one-off receiving options -->
+            <tr>
+                <td class="account-type">
+                    <img src="{{ website.asset_url }}/bitcoin.png" />
+                </td>
+                <td class="account-details">
+                    <div class="account-type">Bitcoin</div>
+                    {% if not user.ANON and user.participant == participant %}
+                        <div class="bitcoin">
+                    {% else %}
+                        <div>
+                    {% endif %}
+                        {% if participant.bitcoin_address %}
+                            <a class="address" rel="me" href="https://blockchain.info/address/{{ participant.bitcoin_address }}">
+                              {{ participant.bitcoin_address }}
+                            </a>
+                            {% if not user.ANON and user.participant == participant %}
+                            <button class="toggle-bitcoin">Edit</button>
+                            {% endif %}
+
+                        {% else %}
+                            <span class="none">None</span>
+                            {% if not user.ANON and user.participant == participant %}
+                                <button class="toggle-bitcoin">+ Add</button>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <form class="bitcoin-submit">
+                        <div class="address">
+                            <input type="text" class="bitcoin hidden"
+                                {% if participant.bitcoin_address %}
+                                    value="{{ participant.bitcoin_address }}"
+                                {% endif %}
+                            >
+                        </div>
+                        <div class="buttons">
+                            <button type="submit" class="bitcoin hidden">Save</button>
+                            <button type="cancel" class="bitcoin cancel hidden">Cancel</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            {{ account_row(website.platforms.venmo, accounts, auth_button) }}
+        </table>
+
 
         <h2>Email Settings</h2>
         <table class="accounts">
