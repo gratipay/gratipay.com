@@ -379,7 +379,7 @@ def update_homepage_queries_once(db):
         cursor.execute("""
 
         INSERT INTO homepage_top_givers (username, anonymous, amount, avatar_url, statement, number)
-            SELECT tipper, anonymous_giving, sum(amount) AS amount, avatar_url, statement, number
+            SELECT tipper, p.anonymous_giving, sum(amount) AS amount, avatar_url, statement, number
               FROM (    SELECT DISTINCT ON (tipper, tippee)
                                amount
                              , tipper
@@ -395,7 +395,7 @@ def update_homepage_queries_once(db):
                       ) AS foo
               JOIN participants p ON p.username = tipper
              WHERE is_suspicious IS NOT true
-          GROUP BY tipper, anonymous_giving, avatar_url, statement, number
+          GROUP BY tipper, p.anonymous_giving, avatar_url, statement, number
           ORDER BY amount DESC
              LIMIT 100;
 
@@ -405,22 +405,23 @@ def update_homepage_queries_once(db):
         cursor.execute("""
 
         INSERT INTO homepage_top_receivers (username, anonymous, amount, avatar_url, statement, number)
-            SELECT tippee, anonymous_receiving, sum(amount) AS amount, avatar_url, statement, number
+            SELECT tippee, p.anonymous_receiving, sum(amount) AS amount, avatar_url, statement, number
               FROM (    SELECT DISTINCT ON (tipper, tippee)
                                amount
                              , tippee
                           FROM tips
-                          JOIN participants p ON p.username = tipper
+                          JOIN participants p ON p.username = tippee
+                          JOIN participants p2 ON p2.username = tipper
                           JOIN elsewhere ON elsewhere.participant = tippee
-                         WHERE last_bill_result = ''
+                         WHERE p2.last_bill_result = ''
+                           AND p.is_suspicious IS NOT true
+                           AND p.claimed_time IS NOT null
                            AND elsewhere.is_locked = false
-                           AND is_suspicious IS NOT true
-                           AND claimed_time IS NOT null
                       ORDER BY tipper, tippee, mtime DESC
                       ) AS foo
               JOIN participants p ON p.username = tippee
              WHERE is_suspicious IS NOT true
-          GROUP BY tippee, anonymous_receiving, avatar_url, statement, number
+          GROUP BY tippee, p.anonymous_receiving, avatar_url, statement, number
           ORDER BY amount DESC
              LIMIT 100;
 
