@@ -163,4 +163,56 @@ Gittip.account.init = function() {
         return false;
     });
 
+    $('.bitcoin').on("click", ".toggle-bitcoin", function()
+    {
+        // "Add bitcoin address" text or existing
+        // bitcoin address was clicked, show the text box
+        $('.bitcoin').toggle();
+        $('input.bitcoin').focus();
+    });
+
+    // Wire up bitcoin input.
+    $('.bitcoin-submit')
+        .on('click', '[type=submit]', function () {
+            var $this = $(this);
+
+            $this.text('Saving...');
+
+            function success(d) {
+                $('a.bitcoin').text(d.bitcoin_address);
+                $('.bitcoin').toggle();
+                if (d.bitcoin_address === '') {
+                    html = "<span class=\"none\">None</span>"
+                    html += "<button class=\"toggle-bitcoin\">+ Add</button>";
+                } else {
+                    html = "<a class=\"address\" rel=\"me\" href=\"https://blockchain.info/address/";
+                    html += d.bitcoin_address + "\">" + d.bitcoin_address + "</a>";
+                    html += "<button class=\"toggle-bitcoin\">Edit</button>";
+                }
+                $('div.bitcoin').html(html);
+                $this.text('Save');
+            }
+
+            jQuery.ajax({
+                    url: "../bitcoin.json",
+                    type: "POST",
+                    dataType: 'json',
+                    success: success,
+                    error: function () {
+                        $this.text('Save');
+                        Gittip.notification("Invalid Bitcoin address. Please try again.", 'error');
+                    },
+                    data: {
+                        bitcoin_address: $('input.bitcoin').val()
+                    }
+                }
+            )
+
+            return false;
+        })
+        .on('click', '[type=cancel]', function () {
+            $('.bitcoin').toggle();
+
+            return false;
+        });
 };
