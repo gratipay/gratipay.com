@@ -11,7 +11,7 @@ from gittip import wireup
     help={
         'username': "Gittip username. (required)",
         'email':    "PayPal email address. (required)",
-        'api-key-fragment': "First 8 characters of user's API key.",
+        'api-key-fragment': "First 8 characters of user's API key. (required)",
         'overwrite': "Override existing PayPal email?",
     }
 )
