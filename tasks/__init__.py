@@ -75,12 +75,12 @@ def set_paypal_email(username='', email='', api_key_fragment='', overwrite=False
 
     SET_EMAIL = """
             UPDATE participants
-               SET paypal_email=%s%s
-             WHERE username=%s;
-    """
-    print(SET_EMAIL % (email, FEE_CAP, username))
+               SET paypal_email=%%s%s
+             WHERE username=%%s;
+    """ % FEE_CAP
+    print(SET_EMAIL % (email, username))
 
-    db.run(SET_EMAIL, (email, FEE_CAP, username))
+    db.run(SET_EMAIL, (email, username))
 
     print("All done.")
 
