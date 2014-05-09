@@ -56,7 +56,7 @@ def set_paypal_email(username='', email='', api_key_fragment='', overwrite=False
     # users inside the U.S. Most Gittip users using PayPal are outside the U.S.
     # so we set to $20 and I'll manually adjust to $1 when running MassPay and
     # noticing that something is off.
-    FEE_CAP = ', paypal_fee_cap=20'  #
+    FEE_CAP = ', paypal_fee_cap=20'
 
     if fields.paypal_email != None:
         print("PayPal email is already set to: " + fields.paypal_email)
