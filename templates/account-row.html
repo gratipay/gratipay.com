@@ -6,7 +6,7 @@
         <td class="account-type">
             <div class="sanity-preserving-wrapper">
                 {% if account != None %}
-                    <img class="avatar" src="{{ avatar_url(account) }}"/>
+                    <img class="avatar" src="{{ avatar_url(account) }}" data-default-avatar="{{ website.asset_url }}/avatar-default.png"/>
                 {% endif %}
               <img class="platform" src="{{ website.asset_url }}/{{ platform.name }}.png" />
             </div>
