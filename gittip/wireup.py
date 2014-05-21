@@ -213,6 +213,7 @@ def other_stuff(website, env):
     website.compress_assets = env.gittip_compress_assets
 
     website.segment_key = env.segment_key
+    website.google_analytics_id = env.google_analytics_id
     website.sentry_dsn = env.sentry_dsn
 
     website.min_threads = env.min_threads
@@ -258,6 +259,7 @@ def env():
         NANSWERS_THRESHOLD              = int,
         UPDATE_HOMEPAGE_EVERY           = int,
         SEGMENT_KEY                     = unicode,
+        GOOGLE_ANALYTICS_ID             = unicode,
         SENTRY_DSN                      = unicode,
         LOG_BUSY_THREADS_EVERY          = int,
         LOG_METRICS                     = is_yesish,
