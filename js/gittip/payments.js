@@ -253,19 +253,10 @@ Gittip.payments.cc.submit = function(e) {
     credit_card.cvv = val('cvv');
     credit_card.name = val('name');
     country = $('select[id="country"]').val();
-    credit_card.meta = { 'address_2': val('address_2')
-                       , 'region': credit_card.region // workaround
-                       , 'city_town': val('city_town')
-                       , 'country': country
-                        };
 
-    // XXX We're duping some of this info in both meta and address due to
-    // evolution of the Balanced API and our stepwise keeping-up. See:
-    // https://github.com/gittip/www.gittip.com/issues/2446 and links from
-    // there.
     credit_card.address = { 'line1': val('address_1')
                           , 'line2': val('address_2')
-                          , 'city': val('city_town')
+                          , 'city': val('city')
                           , 'state': val('state')
                           , 'postal_code': val('zip')
                           , 'country_code': country

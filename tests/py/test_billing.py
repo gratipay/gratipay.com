@@ -18,8 +18,7 @@ class TestBalancedCard(BalancedHarness):
 
         expected = {
             'id': self.balanced_customer_href,
-            'last_four': 'xxxxxxxxxxxx1111',
-            'last4': 'xxxxxxxxxxxx1111',
+            'number': 'xxxxxxxxxxxx1111',
             'expiration_month': 10,
             'expiration_year': 2020,
             'address_1': '123 Main Street',

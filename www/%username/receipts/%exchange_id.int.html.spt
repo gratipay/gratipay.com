@@ -93,12 +93,12 @@ if exchange is None:
     <div id="their-info">
         {{ card['name'] }}
         ({{ participant.username }})<br />
-        {{ card['last4'] }} ({{ card['card_type'] }})<br />
+        {{ card['number'][-4:] }} ({{ card['card_type'] }})<br />
         {{ card['address_1'] }}<br />
         {% if card['address_2'] %}
         {{ card['address_2'] }}<br />
         {% endif %}
-        {{ card['city_town'] }}{% if card['city_town'] %},{% endif %}
+        {{ card['city'] }}{% if card['city'] %},{% endif %}
         {{ card['state'] }}
         {{ card['zip'] }}<br />
         {{ COUNTRIES_MAP.get(card['country'], '') }}

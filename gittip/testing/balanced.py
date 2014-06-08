@@ -28,16 +28,9 @@ class BalancedHarness(Harness):
             expiration_month=10,
             expiration_year=2020,
             address={
-                'line1': "123 Main Street",
+                'line1': '123 Main Street',
                 'state': 'Confusion',
                 'postal_code': '90210',
-            },
-            # gittip stores some of the address data in the meta fields,
-            # continue using them to support backwards compatibility
-            meta={
-                'address_2': 'Box 2',
-                'city_town': '',
-                'region': 'Confusion',
             }
         ).save().href) # XXX Why don't we actually associate this with the customer? See XXX in
                        # test_billing_payday.TestPaydayChargeOnBalanced.

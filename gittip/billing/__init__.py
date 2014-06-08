@@ -177,10 +177,6 @@ class StripeCard(object):
         """
         if name == 'id':
             out = self._customer.id if self._customer is not None else None
-        elif name == 'last4':
-            out = self._get('last4')
-            if out:
-                out = "************" + out
         else:
             name = { 'address_1': 'address_line1'
                    , 'address_2': 'address_line2'
@@ -272,15 +268,11 @@ class BalancedCard(BalancedThing):
     keys_to_attr_paths = {
         'id': 'customer.href',
         'address_1': 'address.line1',
-        'address_2': 'meta.address_2',
-        'country': 'meta.country',
-        'city_town': 'meta.city_town',
+        'address_2': 'address.line2',
+        'country': 'address.country',
+        'city': 'address.city',
+        'state': 'address.state',
         'zip': 'address.postal_code',
-        # gittip is saving the state in the meta field
-        # for compatibility with legacy customers
-        'state': 'meta.region',
-        'last4': 'number',
-        'last_four': 'number',
         'expiration_month': 'expiration_month',
         'expiration_year': 'expiration_year',
     }

@@ -133,8 +133,8 @@ title = "Credit Card"
                 <label for="address_2">Address 2</label>
                 <input id="address_2" value="{{ card['address_2'] }}" />
 
-                <label for="city_town">City or Town</label>
-                <input id="city_town" value="{{ card['city_town'] }}" />
+                <label for="city">City or Town</label>
+                <input id="city" value="{{ card['city'] }}" />
 
 
 
