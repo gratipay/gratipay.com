@@ -1,5 +1,17 @@
 BEGIN;
 
+    INSERT INTO tips (tipper, tippee, amount, ctime)
+        SELECT tipper, tippee, 0
+             , ( SELECT ctime
+                   FROM tips
+                  WHERE tipper=tipper
+                    AND tippee=tippee
+                  LIMIT 1
+               )
+          FROM current_tips
+         WHERE (tipper LIKE 'deactivated-%' OR tippee LIKE 'deactivated-%')
+           AND amount > 0;
+
     UPDATE participants
        SET username = substring(username from 13)
          , username_lower = lower(substring(username from 13))
