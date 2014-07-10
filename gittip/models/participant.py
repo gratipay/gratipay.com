@@ -386,7 +386,7 @@ class Participant(Model, MixinTeam):
         """
         if self.IS_PLURAL:
             self.remove_all_members(cursor)
-        session_expires = cursor.one("""
+        r = cursor.one("""
 
             INSERT INTO communities (ctime, name, slug, participant, is_member) (
                 SELECT ctime, name, slug, %(username)s, false
@@ -413,27 +413,15 @@ class Participant(Model, MixinTeam):
                  , claimed_time=NULL
                  , session_token=NULL
                  , session_expires=now()
+                 , balanced_customer_href=NULL
                  , giving=0
                  , pledging=0
                  , receiving=0
              WHERE username=%(username)s
-         RETURNING session_expires;
+         RETURNING participants.*;
 
         """, dict(username=self.username))
-        self.set_attributes( statement=''
-                           , goal=None
-                           , anonymous_giving=False
-                           , anonymous_receiving=False
-                           , number='singular'
-                           , avatar_url=None
-                           , email=None
-                           , claimed_time=None
-                           , session_token=None
-                           , session_expires=session_expires
-                           , giving=0
-                           , pledging=0
-                           , receiving=0
-                            )
+        self.set_attributes(**r._asdict())
 
 
     # Random Junk
@@ -1044,6 +1032,7 @@ class Participant(Model, MixinTeam):
                      , claimed_time=NULL
                      , session_token=NULL
                      , session_expires=now()
+                     , balanced_customer_href=NULL
                  WHERE username=%s
              RETURNING username
 

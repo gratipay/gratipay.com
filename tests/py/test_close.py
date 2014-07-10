@@ -308,6 +308,7 @@ class TestClosing(Harness):
         assert alice.receiving == new_alice.receiving == 0
         assert alice.session_token == new_alice.session_token == None
         assert alice.session_expires.year == new_alice.session_expires.year == date.today().year
+        assert alice.balanced_customer_href == new_alice.balanced_customer_href == None
 
     def test_cpi_clears_communities(self):
         alice = self.make_participant('alice')
