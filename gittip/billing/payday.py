@@ -84,7 +84,7 @@ class NoPayday(Exception):
         return "No payday found where one was expected."
 
 
-LOOP_PAYIN, LOOP_PACHINKO, LOOP_PAYOUT = range(3)
+LOOP_PAYIN, LOOP_PACHINKO, LOOP_PAYOUT = 0, 1, 2
 
 
 class Payday(object):
@@ -609,7 +609,7 @@ class Payday(object):
                 also_log = " ($%s balance - $%s in obligations)"
                 also_log %= (balance, total)
             log("Minimum payout is $%s. %s is only due $%s%s."
-               % (minimum_credit, participant.username, amount, also_log))
+                % (minimum_credit, participant.username, amount, also_log))
             return      # Participant owed too little.
 
         if not is_whitelisted(participant):
@@ -728,7 +728,7 @@ class Payday(object):
         processor and modifying Postgres accordingly.
 
         For Balanced, this could be automated by generating an ID locally and
-        commiting that to the db and then passing that through in the meta
+        committing that to the db and then passing that through in the meta
         field.* Then syncing would be a case of simply::
 
             for payment in unresolved_payments:
