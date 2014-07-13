@@ -49,7 +49,7 @@ def set_paypal_email(username='', email='', api_key_fragment='', overwrite=False
 
     print(fields)
 
-    if fields == None:
+    if fields is None:
         print("No Gittip participant found with username '" + username + "'")
         sys.exit(2)
 
@@ -59,7 +59,7 @@ def set_paypal_email(username='', email='', api_key_fragment='', overwrite=False
     # noticing that something is off.
     FEE_CAP = ', paypal_fee_cap=20'
 
-    if fields.paypal_email != None:
+    if fields.paypal_email is not None:
         print("PayPal email is already set to: " + fields.paypal_email)
         if not overwrite:
             print("Not overwriting existing PayPal email.")
@@ -67,7 +67,7 @@ def set_paypal_email(username='', email='', api_key_fragment='', overwrite=False
         else:
             FEE_CAP = ''  # Don't overwrite fee_cap when overwriting email address.
 
-    if fields.api_key == None:
+    if fields.api_key is None:
         assert first_eight == "None"
     else:
         assert fields.api_key[0:8] == first_eight
