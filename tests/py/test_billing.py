@@ -98,14 +98,9 @@ class TestBalancedCard(BalancedHarness):
                     "values (113.00, 30.00, 'alice') "
                     "returning id"
                     )
-        part_list = self.db.all ("select * from participants "
-                                 "where username='alice'"
-                                 )
-        #ex_id = self.db.run("lastval()")
-        #expected = "'Card' has no attribute 'card_type'"
         url_receipt = '/alice/receipts/{}.html'.format(ex_id)
-        actual = self.client.GET(url_receipt, auth_as='alice').body.decode('utf8')
         #import pdb; pdb.set_trace()
+        actual = self.client.GET(url_receipt, auth_as='alice').body.decode('utf8')
         assert 'Visa' in actual
         
 class TestBalancedBankAccount(BalancedHarness):
