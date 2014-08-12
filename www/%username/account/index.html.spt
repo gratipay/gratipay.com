@@ -15,7 +15,19 @@ locked = False
 {% extends "templates/profile.html" %}
 
 {% block scripts %}
-<script>$(document).ready(Gittip.account.init);</script>
+<script>
+    $(document).ready(Gittip.account.init);
+    $(function() {
+        $('#account-balance').bind('click', '.auth-button', function(e) {
+            $('#account-balance [data-hidden]').each(function(idx, elem) {
+                var e = $(elem);
+                e.text(e.data('hidden'));
+            });
+            $(e.target).hide();
+
+        });
+    });
+</script>
 
 {{ super() }}
 {% endblock %}
@@ -53,6 +65,22 @@ locked = False
         </p>
 
         {% if not user.ANON and (user.ADMIN or user.participant == participant) %}
+            <h2>Account Balance</h2>
+            <table class="accounts" id="account-balance">
+                <tr>
+                    <td class="account-type">
+                        <img src="{{ website.asset_url }}/bank_account_icon.jpg" />
+                    </td>
+                    <td class="account-details">
+                        <div class="account-type">Ready for Payout</div>
+                            <a class="account-username" data-hidden="${{ participant.balance }}" href="">-- Hidden --</a>
+                    </td>
+                    <td class="account-action">
+                        <a class="button auth-button">Show</a>
+                    </td>
+                </td>
+            </table>
+
             <h2>Adding Money
                 {% if user.ADMIN and participant.balanced_customer_href %}
                     <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href }}"
