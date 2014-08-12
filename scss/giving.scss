@@ -1,0 +1,19 @@
+#giving {
+    h2 { white-space: nowrap }
+
+    th {
+        vertical-align: middle;
+        padding-right: 0.5em;
+    }
+  
+    td {
+        text-align: left;
+        height: 30px;
+    }
+
+   tr.tip, tr.pledge {
+        th, td {
+            white-space: nowrap
+        }
+    }
+}

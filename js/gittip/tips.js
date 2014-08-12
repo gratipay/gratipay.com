@@ -20,7 +20,7 @@ Gittip.tips.init = function() {
     function checkTip() {
         var $this     = $(this),
             $parent   = $this.parents('form'),
-            $confirm  = $parent.find('.confirm-tip'),
+            $confirm  = $parent.find('.confirm'),
             amount    = parseFloat($this.val(), 10) || 0,
             oldAmount = parseFloat(this.defaultValue, 10),
             max       = parseFloat($this.prop('max')),
@@ -71,13 +71,13 @@ Gittip.tips.init = function() {
                 });
         });
 
-    $('.my-tip .cancel-tip').click(function(event) {
+    $('.my-tip .cancel').click(function(event) {
         event.preventDefault();
 
         $(this).parents('form').trigger('reset');
     });
 
-    $('.my-tip .tip-suggestions a').click(function(event) {
+    $('.my-tip .suggestions a').click(function(event) {
         event.preventDefault();
 
         var $this  = $(this),
@@ -88,7 +88,7 @@ Gittip.tips.init = function() {
 
     $('form.my-tip').on('reset', function() {
         $(this).removeClass('changed');
-        $(this).find('.confirm-tip').prop('disabled', true);
+        $(this).find('.confirm').prop('disabled', true);
         $(window).off('beforeunload.tips');
     });
 

@@ -13,24 +13,7 @@ first_time = qs.get('first_time') == '1'
 [-----------------------------------------------------------------------------]
 {% extends "templates/profile.html" %}
 {% block page %}
-<style>
-    #matrix td {
-        text-align: left;
-        height: 30px;
-    }
-    #matrix h2,
-    #matrix tr.tip td,
-    #matrix tr.tip th,
-    #matrix tr.pledge td,
-    #matrix tr.pledge th {
-        white-space: nowrap;
-    }
-    #matrix th {
-        vertical-align: middle;
-        padding-right: 0.5em;
-    }
-</style>
-<table id="matrix" class="col0">
+<table id="giving" class="col0">
     <tr>
         <td colspan="2">
             {% if first_time %}
@@ -51,6 +34,22 @@ first_time = qs.get('first_time') == '1'
 
             {% endif %}
             {% if participant == user.participant %}
+            <h2>When my balance runs low, use my
+                <select><option>Credit Card</option></select>
+            </h2>
+
+
+<form class="money my-tip">
+    to add $ <input class="money my-tip" min="10" max="1000" step="0.01" value="10.00" type="number">
+    - <span data-tip="Gittip is <a href='ff'>funded on Gittip</a>; we don't charge any fees to keep the site going. This is a standard credit card fee of 2.9% + 30&cent;"
+            style="display: inline-block; border-bottom: 1px dashed #999;">$0.59 fee</span> = <span style="font-weight: bold">$9.41</span> usable
+    <span>
+    <button class="confirm" disabled="">Confirm</button>
+    <a href="#" class="cancel">Cancel</a>
+    </span>
+</form>
+
+
             <h2>You give <span class="my-total-giving">${{ total }}</span> per
                 week</h2>
             {% else %}
