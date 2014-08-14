@@ -22,7 +22,7 @@
 					[ 'b', '$', receiving = _.ml(['span', '0.00'])] , ' / wk'
 				],
 				['br'],
-				' on ', ['a', { href: baseURI }, 'Gittip' ], '.'
+				' on ', ['a', { href: baseURI }, 'Gratipay' ], '.'
 			]
 		]
 	), script);

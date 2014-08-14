@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""This is a command line utility for managing Gittip backups.
+"""This is a command line utility for managing Gratipay backups.
 
 Running this script gets you a `snapper> ` prompt with commands to take backups
 and load them locally. Backups are managed as *.psql files in ../backups/, and

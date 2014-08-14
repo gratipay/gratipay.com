@@ -35,7 +35,7 @@ first_time = qs.get('first_time') == '1'
         <td colspan="2">
             {% if first_time %}
 
-            <h2>{{ _("Thanks for joining Gittip!") }}</h2>
+            <h2>{{ _("Thanks for joining Gratipay!") }}</h2>
 
             <p>{{ _("To get you started, we've suggested a few people to give to below. Next steps:") }}</p>
 

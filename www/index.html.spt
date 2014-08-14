@@ -9,7 +9,7 @@ the most important thing on each page.
 https://www.gittip.com/
 
 This is the homepage. The most important thing is to give a good first
-impression of Gittip and help people take the next step, whatever that might be
+impression of Gratipay and help people take the next step, whatever that might be
 for them.
 
 """
@@ -24,7 +24,7 @@ from aspen.utils import utcnow
     <meta name="fb:app_id" content="229465400522758" />
     <meta name="og:type" content="website" />
     <meta name="og:url" content="https://www.gittip.com/" />
-    <meta name="og:title" content="Gittip" />
+    <meta name="og:title" content="Gratipay" />
     <meta name="og:image" content="{{ website.asset_url }}/gittip.opengraph.png" />
     <style>
         .pennies, .container { display: none; }
@@ -36,7 +36,7 @@ from aspen.utils import utcnow
 {% block scripts %}
 <script>
     $(document).ready(function () {
-        Gittip.jump.init();
+        Gratipay.jump.init();
     });
 </script>
 {{ super() }}
@@ -46,7 +46,7 @@ from aspen.utils import utcnow
 {% block whole_page %}
 <div class="homepage">
     <div class="pitch">
-        <img src="{{ website.asset_url }}/logo.white.svg" alt="Gittip">
+        <img src="{{ website.asset_url }}/logo.white.svg" alt="Gratipay">
         <h1>{{ _("Weekly Payments") }}</h1>
         <p>{{ _("Motivated by Gratitude") }}</p>
 
@@ -84,7 +84,7 @@ from aspen.utils import utcnow
                 "<a href='/about/charts.html'>", "</a>") + " " +
             _("Want to see who they are? Browse {0}our communities{1}.",
                 "<a href='/for/'>", "</a>") + " " +
-            _("Want to work for Gittip? We are an {0}open company{1}.",
+            _("Want to work for Gratipay? We are an {0}open company{1}.",
                 "<a href='http://building.gittip.com/big-picture/welcome'>", "</a>") }}</p>
 
         {% else %}

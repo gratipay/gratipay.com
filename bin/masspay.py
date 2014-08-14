@@ -9,10 +9,10 @@ interfacing with PayPal's MassPay feature.
 
 This script provides for:
 
-  1. Computing an input CSV by hitting the Gittip database directly.
+  1. Computing an input CSV by hitting the Gratipay database directly.
   2. Computing two output CSVs (one to upload to PayPal, the second to use for POSTing
-      the exchanges back to Gittip)
-  3. POSTing the exchanges back to Gittip via the HTTP API.
+      the exchanges back to Gratipay)
+  3. POSTing the exchanges back to Gratipay via the HTTP API.
 
 The idea is that you run steps 1 and 2, then run through the MassPay UI on the
 PayPal website using the appropriate CSV from step 2, then run step 3.
@@ -85,7 +85,7 @@ class Payee(object):
         #
         #   9. We can't.
         #
-        #  10. Our solution is to leave a penny behind in Gittip for
+        #  10. Our solution is to leave a penny behind in Gratipay for
         #       affected payees.
         #
         #  11. BUT ... if we upload 1.25, PayPal upcharges to 1.28. Think about
@@ -190,7 +190,7 @@ def post_back_to_gittip():
     try:
         gittip_api_key = os.environ['GITTIP_API_KEY']
     except KeyError:
-        gittip_api_key = getpass.getpass("Gittip API key: ")
+        gittip_api_key = getpass.getpass("Gratipay API key: ")
 
     try:
         gittip_base_url = os.environ['GITTIP_BASE_URL']
@@ -220,7 +220,7 @@ def post_back_to_gittip():
                     print('... resulted in a {} response:'.format(response.status_code))
                     print(response.text)
                 raise SystemExit
-        print("POSTed MassPay back to Gittip for {} users.".format(nposts))
+        print("POSTed MassPay back to Gratipay for {} users.".format(nposts))
 
 
 def run_report():
@@ -261,7 +261,7 @@ def main():
         print("Rerun with one of these options:")
         print("  -i - hits db to generate input CSV (needs envvars via heroku + honcho)")
         print("  -o - computes output CSVs (doesn't need anything but input CSV)")
-        print("  -p - posts back to Gittip (prompts for API key)")
+        print("  -p - posts back to Gratipay (prompts for API key)")
     elif '-i' in sys.argv:
         compute_input_csv()
     elif '-o' in sys.argv:

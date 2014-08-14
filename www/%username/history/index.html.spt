@@ -62,7 +62,7 @@ else:
     </tr>
     <tr class="head">
         <td colspan="3" class="outside">&larr; {{ _("Outside") }}</td>
-        <td colspan="4" class="inside">{{ _("Inside Gittip") }} &rarr;</td>
+        <td colspan="4" class="inside">{{ _("Inside Gratipay") }} &rarr;</td>
     </tr>
     <tr class="head">
         <td class="bank">{{ _("Bank") }}</td>

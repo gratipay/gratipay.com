@@ -89,5 +89,5 @@ def outbound(request, response, website):
     version = website.version
 
     # Set misc headers for the website
-    response.headers['X-Gittip-Version'] = version
+    response.headers['X-Gratipay-Version'] = version
     response.headers['Content-Language'] = 'en'

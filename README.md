@@ -1,13 +1,13 @@
-# Welcome to Gittip [<img height="26px" src="https://raw.githubusercontent.com/gittip/www.gittip.com/master/www/assets/%25version/gittip.opengraph.png"/>](https://www.gittip.com/)
+# Welcome to Gratipay [<img height="26px" src="https://raw.githubusercontent.com/gittip/www.gittip.com/master/www/assets/%25version/gittip.opengraph.png"/>](https://www.gittip.com/)
 
 [![Build Status](http://img.shields.io/travis/gittip/www.gittip.com/master.svg)](https://travis-ci.org/gittip/www.gittip.com)
 [![Coverage Status](https://img.shields.io/coveralls/gittip/www.gittip.com.svg)](https://coveralls.io/r/gittip/www.gittip.com?branch=master)
 [![HuBoard badge](http://img.shields.io/badge/Hu-Board-7965cc.svg)](https://huboard.com/gittip/www.gittip.com)
 [![Open Bounties](https://api.bountysource.com/badge/team?team_id=423&style=bounties_received)](https://www.bountysource.com/teams/gittip/issues)
 
-Gittip is a weekly gift exchange, helping to create a culture of generosity.
+Gratipay is a weekly gift exchange, helping to create a culture of generosity.
 If you'd like to learn more, check out <https://gittip.com/about>.
-If you'd like to contribute to Gittip, check out <http://building.gittip.com>.
+If you'd like to contribute to Gratipay, check out <http://building.gittip.com>.
 
 Quick Start
 ===========
@@ -82,7 +82,7 @@ Table of Contents
 Installation
 ============
 
-Thanks for hacking on Gittip! Be sure to review
+Thanks for hacking on Gratipay! Be sure to review
 [CONTRIBUTING](https://github.com/gittip/www.gittip.com/blob/master/CONTRIBUTING.md#readme)
 as well if that's what you're planning to do.
 
@@ -118,8 +118,8 @@ for more information](http://stackoverflow.com/a/22355874/347246)):
 Building
 --------
 
-All Python dependencies (including virtualenv) are bundled with Gittip in the
-vendor/ directory. Gittip is designed so that you don't manage its
+All Python dependencies (including virtualenv) are bundled with Gratipay in the
+vendor/ directory. Gratipay is designed so that you don't manage its
 virtualenv directly and you don't download its dependencies at build
 time.
 
@@ -131,7 +131,7 @@ in a sandbox:
 
     $ make env
 
-If you haven't run Gittip for a while, you can reinstall the dependencies:
+If you haven't run Gratipay for a while, you can reinstall the dependencies:
 
     $ make clean env
 
@@ -145,15 +145,15 @@ Launching
 ---------
 
 Once you've installed Python and Postgres and set up a database, you can use
-make to build and launch Gittip:
+make to build and launch Gratipay:
 
     $ make run
 
 If you don't have make, look at the Makefile to see what steps you need
-to perform to build and launch Gittip. The Makefile is pretty simple and
+to perform to build and launch Gratipay. The Makefile is pretty simple and
 straightforward.
 
-If Gittip launches successfully it will look like this:
+If Gratipay launches successfully it will look like this:
 
 ```
 $ make run
@@ -220,7 +220,7 @@ in encrypted directories.
 Docker
 ------------
 
-You can also install/run Gittip with Docker.
+You can also install/run Gratipay with Docker.
 
 Either pull the image from the Docker Index:
 
@@ -283,7 +283,7 @@ If you get stuck somewhere along the way, you can find help in the #gittip
 channel on [Freenode](http://webchat.freenode.net/) or in the [issue
 tracker](/gittip/www.gittip.com/issues/new) here on GitHub.
 
-Thanks for installing Gittip! :smiley:
+Thanks for installing Gratipay! :smiley:
 
 
 Modifying CSS
@@ -296,7 +296,7 @@ combined in `scss/gittip.scss` which itself is compiled by `libsass` in
 Testing [![Build Status](http://img.shields.io/travis/gittip/www.gittip.com/master.svg)](https://travis-ci.org/gittip/www.gittip.com)
 =======
 
-Please write unit tests for all new code and all code you change. Gittip's
+Please write unit tests for all new code and all code you change. Gratipay's
 test suite uses the py.test test runner, which will be installed into the
 virtualenv you get by running `make env`. As a rule of thumb, each test case
 should perform one assertion.
@@ -361,7 +361,7 @@ some fake data, so that more of the site is functional, run this command:
 API
 ===
 
-The Gittip API is comprised of these six endpoints:
+The Gratipay API is comprised of these six endpoints:
 
 **[/about/charts.json](https://www.gittip.com/about/charts.json)**
 ([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
@@ -375,23 +375,23 @@ an array of objects, one per week, showing aggregate numbers over time. The
 
 **[/about/stats.json](https://www.gittip.com/about/stats.json)**
 ([source](https://github.com/gittip/www.gittip.com/tree/master/www/about/stats.spt))&mdash;<i>public</i>&mdash;Returns
-an object giving a point-in-time snapshot of Gittip. The
+an object giving a point-in-time snapshot of Gratipay. The
 [stats](https://www.gittip.com/about/stats.html) page displays the same info.
 
 **/`%username`/charts.json**
-([example](https://www.gittip.com/Gittip/charts.json),
+([example](https://www.gittip.com/Gratipay/charts.json),
 [source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
 an array of objects, one per week, showing aggregate numbers over time for the
 given user.
 
 **/`%username`/public.json**
-([example](https://www.gittip.com/Gittip/public.json),
+([example](https://www.gittip.com/Gratipay/public.json),
 [source](https://github.com/gittip/www.gittip.com/tree/master/www/%25username/public.json.spt))&mdash;<i>public</i>&mdash;Returns an object with these keys:
 
   - "receiving"&mdash;an estimate of the amount the given participant will
     receive this week
 
-  - "my_tip"&mdash;logged-in user's tip to the Gittip participant in
+  - "my_tip"&mdash;logged-in user's tip to the Gratipay participant in
     question; possible values are:
 
       - `undefined` (key not present)&mdash;there is no logged-in user
@@ -454,33 +454,33 @@ curl https://www.gittip.com/foobar/tips.json \
 API Implementations
 -------------------
 
-Below are some projects that use the Gittip APIs, that can serve as inspiration
+Below are some projects that use the Gratipay APIs, that can serve as inspiration
 for your project!
 
- - [Drupal: Gittip](https://drupal.org/project/gittip): Includes a Gittip
+ - [Drupal: Gratipay](https://drupal.org/project/gittip): Includes a Gratipay
    giving field type to let you implement the Khan academy model for users on
    your Drupal site.
 
- - [Node.js: Node-Gittip](https://npmjs.org/package/gittip) (also see [Khan
+ - [Node.js: Node-Gratipay](https://npmjs.org/package/gittip) (also see [Khan
    Academy's setup](http://ejohn.org/blog/gittip-at-khan-academy/))
 
  - [Ruby: gratitude](https://github.com/JohnKellyFerguson/gratitude): A ruby
-   gem that wraps the Gittip API.
+   gem that wraps the Gratipay API.
 
- - [WordPress: WP-Gittip](https://github.com/daankortenbach/WP-Gittip)
+ - [WordPress: WP-Gratipay](https://github.com/daankortenbach/WP-Gratipay)
 
  - [hubot-gittip](https://github.com/myplanetdigital/hubot-gittip): A Hubot
-   script for interacting with a shared Gittip account.
+   script for interacting with a shared Gratipay account.
 
  - [gittip-collab](https://github.com/engineyard/gittip-collab): A Khan-style
-   tool for managing a Gittip account as a team.
+   tool for managing a Gratipay account as a team.
 
- - [WWW::Gittip](https://metacpan.org/pod/WWW::Gittip): A Perl module
-   implementing the Gittip API more or less
+ - [WWW::Gratipay](https://metacpan.org/pod/WWW::Gratipay): A Perl module
+   implementing the Gratipay API more or less
 
- - [php-curl-class](https://github.com/php-curl-class/php-curl-class/blob/master/examples/gittip_send_tip.php): A php class to tip using the Gittip API.
+ - [php-curl-class](https://github.com/php-curl-class/php-curl-class/blob/master/examples/gittip_send_tip.php): A php class to tip using the Gratipay API.
 
- - [gittip-twisted](https://github.com/TigerND/gittip-twisted): Gittip client
+ - [gittip-twisted](https://github.com/TigerND/gittip-twisted): Gratipay client
    for the Twisted framework
 
 
@@ -488,11 +488,11 @@ Glossary
 ========
 
 **Account Elsewhere** - An entity's registration on a platform other than
-Gittip (e.g., Twitter).
+Gratipay (e.g., Twitter).
 
 **Entity** - An entity.
 
-**Participant** - An entity registered with Gittip.
+**Participant** - An entity registered with Gratipay.
 
-**User** - A person using the Gittip website. Can be authenticated or
+**User** - A person using the Gratipay website. Can be authenticated or
 anonymous. If authenticated, the user is guaranteed to also be a participant.

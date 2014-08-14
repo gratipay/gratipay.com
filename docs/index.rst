@@ -2,7 +2,7 @@ www.gittip.com
 ==============
 
 Welcome! This is the documentation for programmers working on `www.gittip.com`_
-(not to be confused with programmers working with Gittip's `web API`_).
+(not to be confused with programmers working with Gratipay's `web API`_).
 
 .. _www.gittip.com: https://github.com/gittip/www.gittip.com
 .. _web API: https://github.com/gittip/www.gittip.com#api
@@ -19,7 +19,7 @@ blacklisted or whitelisted user.
     * blacklisted cannot do anything
 
 
-The exchanges table records movements of money into and out of Gittip. The
+The exchanges table records movements of money into and out of Gratipay. The
 ``amount`` column shows a positive amount for payins and a negative amount for
 payouts. The ``fee`` column is always positive. For both payins and payouts,
 the ``amount`` does not include the ``fee`` (e.g., a $10 payin would result in

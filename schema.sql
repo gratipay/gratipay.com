@@ -85,7 +85,7 @@ CREATE TABLE paydays
 , exchange_fees_volume  numeric(35,2)               DEFAULT 0.00
  );
 
--- exchanges -- when a participant moves cash between Gittip and their bank
+-- exchanges -- when a participant moves cash between Gratipay and their bank
 CREATE TABLE exchanges
 ( id                    serial                      PRIMARY KEY
 , timestamp             timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -288,15 +288,15 @@ ALTER TABLE paydays RENAME COLUMN nach_failures TO nach_failing; -- double oops
 ALTER TABLE elsewhere ALTER COLUMN participant_id SET NOT NULL;
 
 -- Every account elsewhere must have at least a stub participant account in
--- Gittip. However, not every participant must have an account elsewhere. A
+-- Gratipay. However, not every participant must have an account elsewhere. A
 -- participant without a connected account elsewhere will have no way to login
--- to Gittip. It will be considered "archived."
+-- to Gratipay. It will be considered "archived."
 
 
 -------------------------------------------------------------------------------
 -- https://github.com/gittip/www.gittip.com/issues/406
 
--- Gittip participants can only connect one account per platform at a time.
+-- Gratipay participants can only connect one account per platform at a time.
 
 ALTER TABLE elsewhere ADD CONSTRAINT "elsewhere_platform_participant_id_key"
     UNIQUE (platform, participant_id);
@@ -746,7 +746,7 @@ BEGIN;
     -- Create a memberships table. Take is an int between 0 and 1000 inclusive,
     -- and is the tenths of a percent that the given member is taking from the
     -- given team. So if my take is 102 for gittip, that means I'm taking 10.2%
-    -- of Gittip's budget. The application layer is responsible for ensuring
+    -- of Gratipay's budget. The application layer is responsible for ensuring
     -- that current takes sum to 1000 or less for a given team. Any shortfall
     -- is the take for the team itself.
 

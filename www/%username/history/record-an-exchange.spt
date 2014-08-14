@@ -32,7 +32,7 @@ with website.db.get_cursor() as cursor:
     cursor.execute(SQL, params)
 
     if amount < 0:
-        # For payouts, we need to take the fee out of their Gittip balance.
+        # For payouts, we need to take the fee out of their Gratipay balance.
         balance_adjustment = amount - fee
     else:
         # For payins, we don't have to worry about the fee relative to their

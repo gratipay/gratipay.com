@@ -1,5 +1,5 @@
-"""*Participant* is the name Gittip gives to people and groups that are known
-to Gittip. We've got a ``participants`` table in the database, and a
+"""*Participant* is the name Gratipay gives to people and groups that are known
+to Gratipay. We've got a ``participants`` table in the database, and a
 :py:class:`Participant` class that we define here. We distinguish several kinds
 of participant, based on certain properties.
 
@@ -52,7 +52,7 @@ NANSWERS_THRESHOLD = 0  # configured in wireup.py
 NOTIFIED_ABOUT_EXPIRATION = b'notifiedAboutExpiration'
 
 class Participant(Model, MixinTeam):
-    """Represent a Gittip participant.
+    """Represent a Gratipay participant.
     """
 
     typname = 'participants'
@@ -220,7 +220,7 @@ class Participant(Model, MixinTeam):
     # Claiming
     # ========
     # An unclaimed Participant is a stub that's created when someone pledges to
-    # give to an AccountElsewhere that's not been connected on Gittip yet.
+    # give to an AccountElsewhere that's not been connected on Gratipay yet.
 
     def resolve_unclaimed(self):
         """Given a username, return an URL path.
@@ -816,7 +816,7 @@ class Participant(Model, MixinTeam):
         # Compute the total.
         # ==================
         # For payday we only want to process payments to tippees who have
-        # themselves opted into Gittip. For the tipper's profile page we want
+        # themselves opted into Gratipay. For the tipper's profile page we want
         # to show the total amount they've pledged (so they're not surprised
         # when someone *does* start accepting tips and all of a sudden they're
         # hit with bigger charges.
@@ -866,7 +866,7 @@ class Participant(Model, MixinTeam):
             out += " receives $%.2f/wk" % receiving
         else:
             out += " is"
-        return out + " on Gittip"
+        return out + " on Gratipay"
 
 
     def get_age_in_seconds(self):
@@ -961,16 +961,16 @@ class Participant(Model, MixinTeam):
         Returns None or raises NeedConfirmation.
 
         This method associates an account on another platform (GitHub, Twitter,
-        etc.) with the given Gittip participant. Every account elsewhere has an
-        associated Gittip participant account, even if its only a stub
+        etc.) with the given Gratipay participant. Every account elsewhere has an
+        associated Gratipay participant account, even if its only a stub
         participant (it allows us to track pledges to that account should they
-        ever decide to join Gittip).
+        ever decide to join Gratipay).
 
         In certain circumstances, we want to present the user with a
         confirmation before proceeding to transfer the account elsewhere to
-        the new Gittip account; NeedConfirmation is the signal to request
+        the new Gratipay account; NeedConfirmation is the signal to request
         confirmation. If it was the last account elsewhere connected to the old
-        Gittip account, then we absorb the old Gittip account into the new one,
+        Gratipay account, then we absorb the old Gratipay account into the new one,
         effectively archiving the old account.
 
         Here's what absorbing means:
@@ -1112,7 +1112,7 @@ class Participant(Model, MixinTeam):
             # Load the existing connection.
             # =============================
             # Every account elsewhere has at least a stub participant account
-            # on Gittip.
+            # on Gratipay.
 
             elsewhere = cursor.one("""
 
@@ -1136,11 +1136,11 @@ class Participant(Model, MixinTeam):
             # three cases:
             #
             #   - the other participant is not a stub; we are taking the
-            #       account elsewhere away from another viable Gittip
+            #       account elsewhere away from another viable Gratipay
             #       participant
             #
             #   - the other participant has no other accounts elsewhere; taking
-            #       away the account elsewhere will leave the other Gittip
+            #       away the account elsewhere will leave the other Gratipay
             #       participant without any means of logging in, and it will be
             #       archived and its tips absorbed by us
             #

@@ -1,4 +1,4 @@
-"""JSON endpoint for a Gittip widget.
+"""JSON endpoint for a Gratipay widget.
 """
 import re
 

@@ -1,16 +1,16 @@
 """
 
-The most important object in the Gittip object model is Participant, and the
+The most important object in the Gratipay object model is Participant, and the
 second most important one is Ccommunity. There are a few others, but those are
 the most important two. Participant, in particular, is at the center of
-everything on Gittip.
+everything on Gratipay.
 
 """
 from postgres import Postgres
 import psycopg2.extras
 
 
-class GittipDB(Postgres):
+class GratipayDB(Postgres):
 
     def self_check(self):
         with self.get_cursor() as cursor:

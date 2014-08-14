@@ -3,13 +3,13 @@ title = "About"
 {% extends "templates/about.html" %}
 {% block page %}
 <div class="col">
-    <h2>What Is Gittip?</h2>
+    <h2>What Is Gratipay?</h2>
 
-    <p>Gittip is a way to give <b>small weekly cash gifts</b> to people you
+    <p>Gratipay is a way to give <b>small weekly cash gifts</b> to people you
     love and are inspired by.</p>
 
     <p>Gifts are <b>weekly</b>. The intention is for people to depend on money
-    received through Gittip in order to pay their bills, and bills are
+    received through Gratipay in order to pay their bills, and bills are
     recurring.</p>
 
     <p>Gifts come with <b>no strings attached</b>. You don't know exactly where
@@ -33,13 +33,13 @@ title = "About"
 
     <p>Gifts are distributed <b>every Thursday</b>. Gifts come out of your
     current balance (the money people have given to you), and if that's not
-    enough, Gittip can charge your credit card to make up the difference. We
+    enough, Gratipay can charge your credit card to make up the difference. We
     upcharge to cover a processing fee of <b>2.9% + 30&cent;</b> when pulling
     money in from your credit card. We also charge you no less than <b>$10</b>
     at a time, to minimize credit card processing fees. Anything extra remains
     in your account to be used next week. Recipients get the <b>full face
     value</b> of your gift to them. If you give someone $3, they will have $3
-    in their Gittip account every Thursday until you run out of money.</p>
+    in their Gratipay account every Thursday until you run out of money.</p>
 
     <p>For example, let's say that you have $2.00 in your account, and
     you are set up to give $1.00 each to 20 people. Here's what we will
@@ -79,14 +79,14 @@ title = "About"
     <h2>Contact Us</h2>
 
     <p style="width: 45%; float: left">
-      <b>Gittip, LLC</b><br />
+      <b>Gratipay, LLC</b><br />
       716 Park Road<br />
       Ambridge, PA 15003<br />
       USA<br />
       <br />
       Email: <a href="mailto:support@gittip.com">support@gittip.com</a><br />
-      Twitter: <a href="https://twitter.com/Gittip">@Gittip</a><br />
-      Facebook: <a href="https://www.facebook.com/pages/Gittip/229465400522758">Gittip</a><br />
+      Twitter: <a href="https://twitter.com/Gratipay">@Gratipay</a><br />
+      Facebook: <a href="https://www.facebook.com/pages/Gratipay/229465400522758">Gratipay</a><br />
       Freenode: <a href="http://chat.gittip.com/">#gittip</a><br />
       GitHub: <a href="https://github.com/gittip/www.gittip.com/issues/new">gittip</a>
     </p>
@@ -99,10 +99,10 @@ title = "About"
     <div class="clear"></div>
 
     <a name="get-involved"></a>
-    <h2>Help Build Gittip</h2>
+    <h2>Help Build Gratipay</h2>
 
-    <p>Want to help us with design, code, marketing, and management for Gittip?
-    Learn how on <a href="http://building.gittip.com/">Building Gittip</a>!</p>
+    <p>Want to help us with design, code, marketing, and management for Gratipay?
+    Learn how on <a href="http://building.gittip.com/">Building Gratipay</a>!</p>
 
 </div>
 {% endblock %}

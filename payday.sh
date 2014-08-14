@@ -19,9 +19,9 @@ if [ $# = 0 -o "$1" = "" ]; then
     echo
     echo "Usage: $0 <number> [\"for_real_please\"]"
     echo
-    echo "  This is a payday wrapper script for Gittip. It runs payday, logging to a file."
+    echo "  This is a payday wrapper script for Gratipay. It runs payday, logging to a file."
     echo "  You must pass at least one argument, a small integer indicating which week of "
-    echo "  Gittip you are running (it's only used to decide where to log). If you pass a"
+    echo "  Gratipay you are running (it's only used to decide where to log). If you pass a"
     echo "  second arg then it must be the string \"for_real_please\", and in that case we"
     echo "  try to run against the production database. Without that string we run using "
     echo "  your local.env configuration."

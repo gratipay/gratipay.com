@@ -1,7 +1,7 @@
-"""This is Gittip's payday algorithm.
+"""This is Gratipay's payday algorithm.
 
-Exchanges (moving money between Gittip and the outside world) and transfers
-(moving money amongst Gittip users) happen within an isolated event called
+Exchanges (moving money between Gratipay and the outside world) and transfers
+(moving money amongst Gratipay users) happen within an isolated event called
 payday. This event has duration (it's not punctiliar).
 
 Payday is designed to be crash-resistant. Everything that can be rolled back
@@ -32,7 +32,7 @@ class NoPayday(Exception):
 class Payday(object):
     """Represent an abstract event during which money is moved.
 
-    On Payday, we want to use a participant's Gittip balance to settle their
+    On Payday, we want to use a participant's Gratipay balance to settle their
     tips due (pulling in more money via credit card as needed), but we only
     want to use their balance at the start of Payday. Balance changes should be
     atomic globally per-Payday.

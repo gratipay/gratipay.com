@@ -137,7 +137,7 @@ $(document).ready(function() {
         var button = $(this);
         var name = button.attr('data-name');
         var is_member = button.attr('data-is-member') === 'true';
-        Gittip.communities.update(name, !is_member, function()
+        Gratipay.communities.update(name, !is_member, function()
         {
             window.location.reload();
         });
@@ -161,7 +161,7 @@ $(document).ready(function() {
     {% if user.ANON %}
     <div class="help with-padding">
         {% include "templates/sign-in-using.html" %}
-        {{ _("{0} to join the {1} community on Gittip.", "", community.name) }}
+        {{ _("{0} to join the {1} community on Gratipay.", "", community.name) }}
     </div>
     {% else %}
     {% set is_member = community.check_membership(user.participant) %}
@@ -182,7 +182,7 @@ $(document).ready(function() {
 
     <h2>{{ _("You're the first one here!") }}</h2>
 
-    <p>{{ _("Bring the {0} community to Gittip to find like-minded people to give to.", community.name) }}</p>
+    <p>{{ _("Bring the {0} community to Gratipay to find like-minded people to give to.", community.name) }}</p>
 
 </div>
 

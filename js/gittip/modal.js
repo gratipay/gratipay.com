@@ -1,10 +1,10 @@
-Gittip.modal = {};
+Gratipay.modal = {};
 
 /**
  * Confirm dialog
  *
  * @example
- *      Gittip.modal.confirm({
+ *      Gratipay.modal.confirm({
  *          message: 'Error.',
  *          yes: 'Yes', // optional
  *          no: 'No', // optional
@@ -20,14 +20,14 @@ Gittip.modal = {};
  *
  * @param {object} options
  */
-Gittip.modal.confirm = function(options) {
+Gratipay.modal.confirm = function(options) {
     var message = options.message;
     var callback = options.callback;
     var yesText = options.yes || 'Yes';
     var noText = options.no || 'No';
     var selected = (options.selected || 'yes').toLowerCase();
 
-    var dialog = Gittip.jsonml(['div', { 'class': 'modal modal-confirm' },
+    var dialog = Gratipay.jsonml(['div', { 'class': 'modal modal-confirm' },
         ['p', message],
 
         ['div', { 'class': 'controls' },

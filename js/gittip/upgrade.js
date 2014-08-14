@@ -1,6 +1,6 @@
-Gittip.upgrade = {};
+Gratipay.upgrade = {};
 
-Gittip.upgrade.init = function () {
+Gratipay.upgrade.init = function () {
 
     var userAgent = navigator.userAgent.toLowerCase();
     var browser = (userAgent.indexOf('msie') != -1) ? parseInt(userAgent.split('msie')[1], 10) : -1;
@@ -17,4 +17,4 @@ Gittip.upgrade.init = function () {
     }
 };
 
-$(document).ready(Gittip.upgrade.init);
+$(document).ready(Gratipay.upgrade.init);

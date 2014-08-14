@@ -16,7 +16,7 @@ locked = False
 {% extends "templates/profile.html" %}
 
 {% block scripts %}
-<script>$(document).ready(Gittip.account.init);</script>
+<script>$(document).ready(Gratipay.account.init);</script>
 
 {{ super() }}
 {% endblock %}
@@ -36,7 +36,7 @@ locked = False
             </h2>
 
             <h2 class="warning">
-            {{ _("Have you linked to your Gittip profile from other websites? Be sure to update those links!") }}
+            {{ _("Have you linked to your Gratipay profile from other websites? Be sure to update those links!") }}
             </h2>
         </form>
         <p>

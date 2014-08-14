@@ -7,14 +7,14 @@ msgstr ""
 msgid "Navigation"
 msgstr "Navigado"
 
-msgid "{0} just joined Gittip! :D"
-msgstr "{0} ĵus aliĝis Gittip! :D"
+msgid "{0} just joined Gratipay! :D"
+msgstr "{0} ĵus aliĝis Gratipay! :D"
 
 msgid "{0} joined recently"
 msgstr "{0} aliĝis lastatempe"
 
-msgid "{0} is quietly watching the Gittip world"
-msgstr "{0} trankvile rigardante la Gittip mondo"
+msgid "{0} is quietly watching the Gratipay world"
+msgstr "{0} trankvile rigardante la Gratipay mondo"
 
 msgid "{0} users exchanging {1} per week"
 msgstr "{0} uzantoj interŝanĝanta {1} po semajno"
@@ -78,8 +78,8 @@ msgstr "Vi estos kunigi {0} aktivaj uzantoj, kiuj interŝanĝis {1} {2}pasintsem
 msgid "Want to see who they are? Browse {0}our communities{1}."
 msgstr "Volas vidi kiu estas? Foliumu {0}niaj komunumoj{1}."
 
-msgid "Want to work for Gittip? We are an {0}open company{1}."
-msgstr "Volas labori por Gittip? Ni estas {0}malferma socio{1}."
+msgid "Want to work for Gratipay? We are an {0}open company{1}."
+msgstr "Volas labori por Gratipay? Ni estas {0}malferma socio{1}."
 
 msgid "Welcome, {0}!"
 msgstr "Bonvenon, {0}!"
@@ -128,11 +128,11 @@ msgstr "Mi estas ĉi tie kiel mastrino, kaj ĝentile malakceptu ricevi donacojn.
 msgid "We're here as a patron, and politely decline to receive gifts."
 msgstr "Ni estas ĉi tie kiel mastrino, kaj ĝentile malakceptu ricevi donacojn."
 
-msgid "My goal is to receive {0} per week on Gittip."
-msgstr "Mia celo estas ricevi {0} por semajno sur Gittip."
+msgid "My goal is to receive {0} per week on Gratipay."
+msgstr "Mia celo estas ricevi {0} por semajno sur Gratipay."
 
-msgid "Our goal is to receive {0} per week on Gittip."
-msgstr "Nia celo estas ricevi {0} por semajno sur Gittip."
+msgid "Our goal is to receive {0} per week on Gratipay."
+msgstr "Nia celo estas ricevi {0} por semajno sur Gratipay."
 
 msgid "Statement"
 msgstr "Aserto"
@@ -198,8 +198,8 @@ msgstr "Desacoplado"
 msgid "Giving"
 msgstr "Doni"
 
-msgid "Thanks for joining Gittip!"
-msgstr "Dankon pro via aliĝo Gittip!"
+msgid "Thanks for joining Gratipay!"
+msgstr "Dankon pro via aliĝo Gratipay!"
 
 msgid "To get you started, we've suggested a few people to give to below. Next steps:"
 msgstr "Por enkonduki vin, ni sugestis kelkajn homojn doni pli sube. Sekva paŝojn:"
@@ -245,8 +245,8 @@ msgstr "Iliaj balanciĝo estas {0}."
 msgid "Outside"
 msgstr "Ekstere"
 
-msgid "Inside Gittip"
-msgstr "Interne Gittip"
+msgid "Inside Gratipay"
+msgstr "Interne Gratipay"
 
 msgid "Bank"
 msgstr "Banko"
@@ -286,14 +286,14 @@ msgstr "Iloj"
 msgid "Widget #{0}"
 msgstr "Ilo #{0}"
 
-msgid "Use this code to embed a Gittip button on your website:"
-msgstr "Uzu tiun kodon por enkorpigi a Gittip butonon sur vian retejon:"
+msgid "Use this code to embed a Gratipay button on your website:"
+msgstr "Uzu tiun kodon por enkorpigi a Gratipay butonon sur vian retejon:"
 
-msgid "The button opens your profile on Gittip in a new tab or window. Here's what the text reads:"
-msgstr "La butono malfermas vian profilon en Gittip en nova langeto aŭ fenestro. Jen kion la teksto diras:"
+msgid "The button opens your profile on Gratipay in a new tab or window. Here's what the text reads:"
+msgstr "La butono malfermas vian profilon en Gratipay en nova langeto aŭ fenestro. Jen kion la teksto diras:"
 
-msgid "person is not logged into Gittip or doesn't tip you"
-msgstr "persono ne estas ensalutinta en Gittip aŭ ne klini vin"
+msgid "person is not logged into Gratipay or doesn't tip you"
+msgstr "persono ne estas ensalutinta en Gratipay aŭ ne klini vin"
 
 msgid "person tips you; shows current gift amount"
 msgstr "persono konsiletoj vi; montras nuna donaco kvanto"
@@ -304,8 +304,8 @@ msgstr "viajn proprajn butono"
 msgid "Here's an example using {0}:"
 msgstr "Jen ekzemplo uzanta {0}:"
 
-msgid "Use this code to add a Gittip \"receiving\" widget on your website:"
-msgstr "Uzu tiun kodon por aldoni Gittip \"ricevi\" ilon en via retejo:"
+msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
+msgstr "Uzu tiun kodon por aldoni Gratipay \"ricevi\" ilon en via retejo:"
 
 msgid "Here's what it looks like:"
 msgstr "Jen kia ĝi aspektas kiel:"
@@ -321,8 +321,8 @@ msgstr "Konto"
 msgid "You are {0}"
 msgstr "Vi estas {0}"
 
-msgid "Have you linked to your Gittip profile from other websites? Be sure to update those links!"
-msgstr "Ĉu vi ligita al via Gittip profilon de aliaj retejoj? Nepre aktualigi tiujn ligilojn!"
+msgid "Have you linked to your Gratipay profile from other websites? Be sure to update those links!"
+msgstr "Ĉu vi ligita al via Gratipay profilon de aliaj retejoj? Nepre aktualigi tiujn ligilojn!"
 
 msgid "Hide total giving from others."
 msgstr "Kaŝi entute dankesprimas al aliaj."
@@ -401,8 +401,8 @@ msgstr "Komunumo"
 msgid "Browse {0}All Communities{1}"
 msgstr "Foliumu {0}Ĉiujn Komunumoj{1}"
 
-msgid "{0} to join the {1} community on Gittip."
-msgstr "{0} por kuniĝi la {1} komunumo sur Gittip."
+msgid "{0} to join the {1} community on Gratipay."
+msgstr "{0} por kuniĝi la {1} komunumo sur Gratipay."
 
 msgid "Leave"
 msgstr "Lasi"
@@ -413,8 +413,8 @@ msgstr "Aliĝu"
 msgid "You're the first one here!"
 msgstr "Vi estas la unua ĉi tie!"
 
-msgid "Bring the {0} community to Gittip to find like-minded people to give to."
-msgstr "Alportu la {0} komunumon Gittip trovi samideanoj homojn doni."
+msgid "Bring the {0} community to Gratipay to find like-minded people to give to."
+msgstr "Alportu la {0} komunumon Gratipay trovi samideanoj homojn doni."
 
 msgid "New Members"
 msgstr "Novaj Membroj"
@@ -436,8 +436,8 @@ msgstr "Pli"
 msgid "Browse Communities"
 msgstr "Foliumu Komunumoj"
 
-msgid "{0}There are{1} {2} {3}communities on Gittip.{4}"
-msgstr "{0}Estas{1} {2} {3}komunumoj sur Gittip.{4}"
+msgid "{0}There are{1} {2} {3}communities on Gratipay.{4}"
+msgstr "{0}Estas{1} {2} {3}komunumoj sur Gratipay.{4}"
 
 msgid "Large Communities"
 msgstr "Grandaj Komunumoj"
@@ -464,11 +464,11 @@ msgstr "Via kreditkarto estas {0}funkcianta{1}"
 msgid "Your credit card is {0}failing{1}"
 msgstr "Via kreditkarto {0}maltrafas{1}"
 
-msgid "When you don't have enough money in your Gittip account to cover your gifts, we will attempt to pull money in using this credit card."
-msgstr "Kiam vi ne havas sufiĉan monon en vian Gittip konto kovri viajn donacojn, ni provos tiri monon uzanta ĉi kreditkarto."
+msgid "When you don't have enough money in your Gratipay account to cover your gifts, we will attempt to pull money in using this credit card."
+msgstr "Kiam vi ne havas sufiĉan monon en vian Gratipay konto kovri viajn donacojn, ni provos tiri monon uzanta ĉi kreditkarto."
 
-msgid "When you don't have enough money in your Gittip account to cover your gifts, we can attempt to pull money in using a credit card."
-msgstr "Kiam vi ne havas sufiĉan monon en vian Gittip konto kovri viajn donacojn, ni povas provi tiri monon uzanta kreditkarto."
+msgid "When you don't have enough money in your Gratipay account to cover your gifts, we can attempt to pull money in using a credit card."
+msgstr "Kiam vi ne havas sufiĉan monon en vian Gratipay konto kovri viajn donacojn, ni povas provi tiri monon uzanta kreditkarto."
 
 msgid "If your credit card is missing or fails then your gifts won't go through for that week."
 msgstr "Se via kreditkarto mankas aŭ mankas do viajn donacojn ne iros tra por tiu semajno."
@@ -526,14 +526,14 @@ msgstr "Via bankokonto estas {0}konektitaj{1}"
 msgid "Your bank account is {0}not connected{1}"
 msgstr "Via bankokonto estas {0}ne konektitaj{1}"
 
-msgid "When you receive money on Gittip we will automatically deposit it into your bank account."
-msgstr "Kiam vi ricevas monon Gittip ni aŭtomate deponi ĝin en vian bankokonton."
+msgid "When you receive money on Gratipay we will automatically deposit it into your bank account."
+msgstr "Kiam vi ricevas monon Gratipay ni aŭtomate deponi ĝin en vian bankokonton."
 
-msgid "When you receive money on Gittip we can automatically deposit it into your bank account."
-msgstr "Kiam vi ricevas monon Gittip povas aŭtomate deponi ĝin en vian bankokonton."
+msgid "When you receive money on Gratipay we can automatically deposit it into your bank account."
+msgstr "Kiam vi ricevas monon Gratipay povas aŭtomate deponi ĝin en vian bankokonton."
 
-msgid "If you don't connect a bank account then your money will accumulate within Gittip unless you regift it to others."
-msgstr "Se vi ne konekti bankokonto tiam via mono amasigos ene Gittip se vi re-donaco ĝin al aliaj."
+msgid "If you don't connect a bank account then your money will accumulate within Gratipay unless you regift it to others."
+msgstr "Se vi ne konekti bankokonto tiam via mono amasigos ene Gratipay se vi re-donaco ĝin al aliaj."
 
 msgid "{0} and then you'll be able to add{1} or change your bank account."
 msgstr "{0} kaj poste vi povos aldoni{1} aŭ ŝanĝi vian bankokonton."

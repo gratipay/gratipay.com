@@ -1,25 +1,25 @@
-Gittip.profile = {};
+Gratipay.profile = {};
 
-Gittip.profile.toNumber = function(number) {
+Gratipay.profile.toNumber = function(number) {
     if (number == 'plural')
-        Gittip.profile.toPlural();
+        Gratipay.profile.toPlural();
     else if (number == 'singular')
-        Gittip.profile.toSingular();
+        Gratipay.profile.toSingular();
 };
 
-Gittip.profile.toPlural = function() {
+Gratipay.profile.toPlural = function() {
     $('.i-am').text('We are');
     $('.i-m').text("We're");
     $('.my').text("Our");
 };
 
-Gittip.profile.toSingular = function() {
+Gratipay.profile.toSingular = function() {
     $('.i-am').text('I am');
     $('.i-m').text("I'm");
     $('.my').text("My");
 };
 
-Gittip.profile.init = function() {
+Gratipay.profile.init = function() {
     ////////////////////////////////////////////////////////////
     //                                                         /
     // XXX This is ripe for refactoring. I ran out of steam. :-/
@@ -70,13 +70,13 @@ Gittip.profile.init = function() {
         function success(d) {
             $('.statement .view span').html(d.statement);
             var number = $('.statement select').val();
-            Gittip.profile.toNumber(number);
+            Gratipay.profile.toNumber(number);
             finish_editing_statement();
             update_members_button(is_plural);
         }
         function error(e) {
             $('.statement button.save').css('opacity', 1);
-            Gittip.notification(JSON.parse(e.responseText).error_message_long, 'error');
+            Gratipay.notification(JSON.parse(e.responseText).error_message_long, 'error');
         }
         jQuery.ajax(
             { url: "statement.json"
@@ -161,7 +161,7 @@ Gittip.profile.init = function() {
             , success: success
             , error: function() {
                     $('.goal button.save').css('opacity', 1);
-                    Gittip.notification("Failed to change your funding goal. Please try again.", 'error');
+                    Gratipay.notification("Failed to change your funding goal. Please try again.", 'error');
                 }
              }
         );
@@ -220,7 +220,7 @@ Gittip.profile.init = function() {
                     success: success,
                     error: function () {
                         $this.css('opacity', 1);
-                        Gittip.notification("Invalid Bitcoin address. Please try again.", 'error');
+                        Gratipay.notification("Invalid Bitcoin address. Please try again.", 'error');
                     },
                     data: {
                         bitcoin_address: $('input.bitcoin').val()
@@ -247,9 +247,9 @@ Gittip.profile.init = function() {
             },
             error: function (e) {
                 try {
-                    Gittip.notification(JSON.parse(e.responseText).error_message_long, 'error');
+                    Gratipay.notification(JSON.parse(e.responseText).error_message_long, 'error');
                 } catch(exception) {
-                    Gittip.notification("Some error occured: "+exception, 'error')
+                    Gratipay.notification("Some error occured: "+exception, 'error')
                 }
             },
             data: { platform: this.dataset.platform, user_id: this.dataset.user_id }

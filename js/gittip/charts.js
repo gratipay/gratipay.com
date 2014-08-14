@@ -1,7 +1,7 @@
-Gittip.charts = {};
+Gratipay.charts = {};
 
 
-Gittip.charts.make = function(series) {
+Gratipay.charts.make = function(series) {
     // Takes an array of time series data.
 
     if (!series.length) {
