@@ -50,7 +50,7 @@ from aspen.utils import utcnow
         <h1>{{ _("Weekly Payments") }}</h1>
         <p>{{ _("Motivated by Gratitude") }}</p>
 
-        <p>{{ _("Sustainably crowdfund your business, personal projects, or charity, with {0}no extra fees{1}.",
+        <p>{{ _("Sustainably crowdfund your business, personal projects, or charity.",
             "<span>", "</span>") }}</p>
 
         <p><a href="/about/">{{ _("Learn more.") }}</a></p>

@@ -54,8 +54,8 @@ msgstr "Semajna Pago"
 msgid "Motivated by Gratitude"
 msgstr "Motivita de Dankemo"
 
-msgid "Sustainably crowdfund your business, personal projects, or charity, with {0}no extra fees{1}."
-msgstr "Longdaŭre financi via negoco, personaj projektoj, aux amon, per {0}ekstra kotizoj{1}."
+msgid "Sustainably crowdfund your business, personal projects, or charity."
+msgstr "Longdaŭre financi via negoco, personaj projektoj, aux amon."
 
 msgid "Learn more."
 msgstr "Ekscii pli."
