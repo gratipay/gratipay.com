@@ -1,4 +1,4 @@
-"""Teams on Gittip are plural participants with members.
+"""Teams on Gratipay are plural participants with members.
 """
 from collections import OrderedDict
 from decimal import Decimal

@@ -1,23 +1,23 @@
 /* Bank Account and Credit Card forms
  *
- * These two forms share some common wiring under the Gittip.payments
- * namespace, and each has unique code under the Gittip.payments.{cc,ba}
+ * These two forms share some common wiring under the Gratipay.payments
+ * namespace, and each has unique code under the Gratipay.payments.{cc,ba}
  * namespaces. Each form gets its own page so we only instantiate one of these
  * at a time.
  *
  */
 
-Gittip.payments = {};
+Gratipay.payments = {};
 
 
 // Common code
 // ===========
 
-Gittip.payments.havePayments = false;
+Gratipay.payments.havePayments = false;
 
-Gittip.payments.processorAttempts = 0;
+Gratipay.payments.processorAttempts = 0;
 
-Gittip.payments.submitDeleteForm = function(e) {
+Gratipay.payments.submitDeleteForm = function(e) {
     var item = $("#payout").length ? "bank account" : "credit card";
     var slug = $("#payout").length ? "bank-account" : "credit-card";
     var msg = "Really disconnect your " + item + "?";
@@ -36,7 +36,7 @@ Gittip.payments.submitDeleteForm = function(e) {
           }
         , error: function(x,y,z) {
             select(cur);
-            Gittip.notification("Sorry, something went wrong deleting your " + item + ". :(", 'error');
+            Gratipay.notification("Sorry, something went wrong deleting your " + item + ". :(", 'error');
             console.log(x,y,z);
           }
          }
@@ -44,24 +44,24 @@ Gittip.payments.submitDeleteForm = function(e) {
     return false;
 };
 
-Gittip.payments.onError = function(response) {
+Gratipay.payments.onError = function(response) {
     $('button#save').css('opacity', 1);
     var msg = response.status_code + ": " +
         $.map(response.errors, function(obj) { return obj.description }).join(', ');
-    Gittip.forms.showFeedback(null, [msg]);
+    Gratipay.forms.showFeedback(null, [msg]);
     return msg;
 };
 
-Gittip.payments.onSuccess = function(data) {
+Gratipay.payments.onSuccess = function(data) {
     $('#status').text('working').addClass('highlight');
     setTimeout(function() {
         $('#status').removeClass('highlight');
     }, 8000);
     $('#delete').show();
-    Gittip.forms.clearFeedback();
+    Gratipay.forms.clearFeedback();
     $('button#save').css('opacity', 1);
     setTimeout(function() {
-        window.location.href = '/' + Gittip.participantId + '/';
+        window.location.href = '/' + Gratipay.participantId + '/';
     }, 1000);
 };
 
@@ -69,26 +69,26 @@ Gittip.payments.onSuccess = function(data) {
 // Bank Accounts
 // =============
 
-Gittip.payments.ba = {};
+Gratipay.payments.ba = {};
 
-Gittip.payments.ba.init = function(balanced_uri, participantId) {
-    Gittip.participantId = participantId;
-    $('#delete form').submit(Gittip.payments.submitDeleteForm);
-    $('#payout').submit(Gittip.payments.ba.submit);
+Gratipay.payments.ba.init = function(balanced_uri, participantId) {
+    Gratipay.participantId = participantId;
+    $('#delete form').submit(Gratipay.payments.submitDeleteForm);
+    $('#payout').submit(Gratipay.payments.ba.submit);
 
     // Lazily depend on Balanced.
     var balanced_js = "https://js.balancedpayments.com/1.1/balanced.min.js";
     jQuery.getScript(balanced_js, function() {
-        Gittip.havePayouts = true;
+        Gratipay.havePayouts = true;
         $('input[type!="hidden"]').eq(0).focus();
     });
 };
 
-Gittip.payments.ba.submit = function (e) {
+Gratipay.payments.ba.submit = function (e) {
     e.preventDefault();
 
     $('button#save').css('opacity', 0.5);
-    Gittip.forms.clearFeedback();
+    Gratipay.forms.clearFeedback();
 
     var bankAccount = {
         name: $('#account_name').val(),
@@ -96,7 +96,7 @@ Gittip.payments.ba.submit = function (e) {
         routing_number: $('#routing_number').val()
     };
 
-    Gittip.payments.ba.merchantData = {
+    Gratipay.payments.ba.merchantData = {
         //type: 'person',  // Oooh, may need to vary this some day?
         street_address: $('#address_1').val(),
         postal_code: $('#zip').val(),
@@ -156,17 +156,17 @@ Gittip.payments.ba.submit = function (e) {
 
     if (errors.length) {
         $('button#save').css('opacity', 1);
-        Gittip.forms.showFeedback(null, errors);
+        Gratipay.forms.showFeedback(null, errors);
     } else {
         balanced.bankAccount.create( bankAccount
-                                   , Gittip.payments.ba.handleResponse
+                                   , Gratipay.payments.ba.handleResponse
                                     );
     }
 };
 
-Gittip.payments.ba.handleResponse = function (response) {
+Gratipay.payments.ba.handleResponse = function (response) {
     if (response.status_code !== 201) {
-        var msg = Gittip.payments.onError(response);
+        var msg = Gratipay.payments.onError(response);
         $.post('/bank-account.json', {action: 'store-error', msg: msg});
         return;
     }
@@ -186,16 +186,16 @@ Gittip.payments.ba.handleResponse = function (response) {
                        + "check, correct, and resubmit your details."
             ];
         }
-        Gittip.forms.showFeedback(data.problem, messages);
+        Gratipay.forms.showFeedback(data.problem, messages);
         $('button#save').css('opacity', 1);
     }
 
-    var detailsToSubmit = Gittip.payments.ba.merchantData;
+    var detailsToSubmit = Gratipay.payments.ba.merchantData;
     detailsToSubmit.bank_account_uri = response.bank_accounts[0].href;
 
-    Gittip.forms.submit( "/bank-account.json"
+    Gratipay.forms.submit( "/bank-account.json"
                        , detailsToSubmit
-                       , Gittip.payments.onSuccess
+                       , Gratipay.payments.onSuccess
                        , detailedFeedback
                         );
 };
@@ -204,36 +204,36 @@ Gittip.payments.ba.handleResponse = function (response) {
 // Credit Cards
 // ============
 
-Gittip.payments.cc = {};
+Gratipay.payments.cc = {};
 
-Gittip.payments.cc.init = function(balanced_uri, participantId) {
-    Gittip.participantId = participantId;
-    $('#delete form').submit(Gittip.payments.submitDeleteForm);
-    $('form#payment').submit(Gittip.payments.cc.submit);
+Gratipay.payments.cc.init = function(balanced_uri, participantId) {
+    Gratipay.participantId = participantId;
+    $('#delete form').submit(Gratipay.payments.submitDeleteForm);
+    $('form#payment').submit(Gratipay.payments.cc.submit);
 
     // Lazily depend on Balanced.
     var balanced_js = "https://js.balancedpayments.com/1.1/balanced.min.js";
     jQuery.getScript(balanced_js, function() {
-        Gittip.havePayments = true;
+        Gratipay.havePayments = true;
         $('input[type!="hidden"]').eq(0).focus();
     });
 };
 
-Gittip.payments.cc.submit = function(e) {
+Gratipay.payments.cc.submit = function(e) {
 
     e.stopPropagation();
     e.preventDefault();
     $('button#save').css('opacity', 0.5);
-    Gittip.forms.clearFeedback();
+    Gratipay.forms.clearFeedback();
 
-    if (!Gittip.havePayments) {
-        if (Gittip.paymentProcessorAttempts++ === 50)
-            Gittip.notification( "Gah! Apparently we suck. If you're really motivated, call "
+    if (!Gratipay.havePayments) {
+        if (Gratipay.paymentProcessorAttempts++ === 50)
+            Gratipay.notification( "Gah! Apparently we suck. If you're really motivated, call "
                  + "me (Chad) at 412-925-4220 and we'll figure this out. "
                  + "Sorry. :-("
                   );
         else
-            setTimeout(Gittip.submitPaymentForm, 200);
+            setTimeout(Gratipay.submitPaymentForm, 200);
         return false;
     }
 
@@ -275,27 +275,27 @@ Gittip.payments.cc.submit = function(e) {
 
     if (!balanced.card.isCardNumberValid(credit_card.number)) {
         $('button#save').css('opacity', 1);
-        Gittip.forms.showFeedback(null, ["Your card number is bad."]);
+        Gratipay.forms.showFeedback(null, ["Your card number is bad."]);
     } else if (!balanced.card.isExpiryValid( credit_card.expiration_month
                                          , credit_card.expiration_year
                                           )) {
         $('button#save').css('opacity', 1);
-        Gittip.forms.showFeedback(null, ["Your expiration date is bad."]);
+        Gratipay.forms.showFeedback(null, ["Your expiration date is bad."]);
     } else if (!balanced.card.isSecurityCodeValid( credit_card.number
                                                , credit_card.cvv
                                                 )) {
         $('button#save').css('opacity', 1);
-        Gittip.forms.showFeedback(null, ["Your CVV is bad."]);
+        Gratipay.forms.showFeedback(null, ["Your CVV is bad."]);
     } else {
-        balanced.card.create(credit_card, Gittip.payments.cc.handleResponse);
+        balanced.card.create(credit_card, Gratipay.payments.cc.handleResponse);
     }
 
     return false;
 };
 
-Gittip.payments.cc.handleResponse = function(response) {
+Gratipay.payments.cc.handleResponse = function(response) {
     if (response.status_code !== 201) {
-        var msg = Gittip.payments.onError(response);
+        var msg = Gratipay.payments.onError(response);
         $.post('/credit-card.json', {action: 'store-error', msg: msg});
         return;
     }
@@ -312,13 +312,13 @@ Gittip.payments.cc.handleResponse = function(response) {
         $('#status').text('failing');
         $('#delete').show();
         var details = [];
-        Gittip.forms.showFeedback(data.problem, [data.error]);
+        Gratipay.forms.showFeedback(data.problem, [data.error]);
         $('button#save').css('opacity', 1);
     }
 
-    Gittip.forms.submit( "/credit-card.json"
+    Gratipay.forms.submit( "/credit-card.json"
                        , {card_uri: response.cards[0].href}
-                       , Gittip.payments.onSuccess
+                       , Gratipay.payments.onSuccess
                        , detailedFeedback
                         );
 };

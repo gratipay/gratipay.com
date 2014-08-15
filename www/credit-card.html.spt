@@ -19,8 +19,8 @@ if not user.ANON:
             status = _("Your credit card is {0}working{1}") if user.participant.last_bill_result == "" \
                 else _("Your credit card is {0}failing{1}")
 
-    pull_money = _("When you don't have enough money in your Gittip account to cover your gifts, we will attempt to pull money in using this credit card.") if balanced_customer_href \
-        else _("When you don't have enough money in your Gittip account to cover your gifts, we can attempt to pull money in using a credit card.")
+    pull_money = _("When you don't have enough money in your Gratipay account to cover your gifts, we will attempt to pull money in using this credit card.") if balanced_customer_href \
+        else _("When you don't have enough money in your Gratipay account to cover your gifts, we can attempt to pull money in using a credit card.")
 
     card = billing.BalancedCard(balanced_customer_href)
     # the id on the card might not match unless the db
@@ -46,7 +46,7 @@ title = _("Credit Card")
 <script>
     $(document).ready(function()
     {
-        Gittip.payments.cc.init("{{ balanced.Marketplace.my_marketplace.uri }}", "{{ user.participant.username }}");
+        Gratipay.payments.cc.init("{{ balanced.Marketplace.my_marketplace.uri }}", "{{ user.participant.username }}");
         $('#country').chosen();
     });
 </script>

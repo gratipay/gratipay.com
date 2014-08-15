@@ -1,7 +1,7 @@
-var GittipWidget0001 = {};
+var GratipayWidget0001 = {};
 
 
-GittipWidget0001.create_element = function(el_type, ident, opts)
+GratipayWidget0001.create_element = function(el_type, ident, opts)
 {
     var id = "autoloaded-" + ident;
     if (document.getElementById(id))
@@ -16,7 +16,7 @@ GittipWidget0001.create_element = function(el_type, ident, opts)
 };
 
 
-GittipWidget0001.setup = function()
+GratipayWidget0001.setup = function()
 {
     // Get the script element and compute a CSS file to load.
 
@@ -33,7 +33,7 @@ GittipWidget0001.setup = function()
 
     // Load the CSS file. (We need this even if the page already has jQuery.)
 
-    GittipWidget0001.create_element( 'link'
+    GratipayWidget0001.create_element( 'link'
                                    , 'widget'
                                    , { 'href': cssURI
                                      , 'type': 'text/css'
@@ -46,30 +46,30 @@ GittipWidget0001.setup = function()
 
     if (!('jQuery' in window))
     {
-        GittipWidget0001.create_element( 'script'
+        GratipayWidget0001.create_element( 'script'
                                        , 'jquery'
                                        , { 'src': jQueryURI
                                          , 'type': 'text/javascript'
                                           }
                                         );
-        setTimeout(GittipWidget0001.setup, 50);
+        setTimeout(GratipayWidget0001.setup, 50);
         return;
     }
 
 
     // Once jQuery is loaded, proceed.
 
-    $('span.gittip-0001[gittip-username]').each(GittipWidget0001.setupOneWidget);
+    $('span.gittip-0001[gittip-username]').each(GratipayWidget0001.setupOneWidget);
 };
 
 
-GittipWidget0001.setupOneWidget = function()
+GratipayWidget0001.setupOneWidget = function()
 {
     var DEFAULT = '0.00';
 
     var span = $(this)
       , username = span.attr('gittip-username')
-      , base = GittipWidget0001.base;
+      , base = GratipayWidget0001.base;
        ;
 
     function updateWidget(a, b, c)
@@ -80,7 +80,7 @@ GittipWidget0001.setupOneWidget = function()
 
     function startUpdatingWidget()
     {
-        var uri = GittipWidget0001.base + '/' + username + '/public.json'
+        var uri = GratipayWidget0001.base + '/' + username + '/public.json'
         jQuery.ajax({ 'url': uri
                     , 'type': 'GET'
                     , 'dataType': 'json'
@@ -95,9 +95,9 @@ GittipWidget0001.setupOneWidget = function()
                    + '<b><a href="' + base + '/' + username + '/">'
                    + '$<span class="receiving">' + DEFAULT + '</span></b>'
                    + ' / wk</a><br />'
-                   + 'on <a href="' + base + '/">Gittip</a>.</span>')
+                   + 'on <a href="' + base + '/">Gratipay</a>.</span>')
         startUpdatingWidget();
     });
 };
 
-GittipWidget0001.setup();
+GratipayWidget0001.setup();

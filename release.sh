@@ -19,7 +19,7 @@ if [ $# = 0 ]; then
     echo
     echo "Usage: $0 <version>"
     echo
-    echo "  This is a release script for Gittip. We bump the version number in "
+    echo "  This is a release script for Gratipay. We bump the version number in "
     echo "  www/version.txt and then do a git dance, pushing to Heroku."
     echo
     exit

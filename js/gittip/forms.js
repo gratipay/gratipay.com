@@ -1,13 +1,13 @@
 // Form Generics
 // =============
 
-Gittip.forms = {};
+Gratipay.forms = {};
 
-Gittip.forms.clearFeedback = function() {
+Gratipay.forms.clearFeedback = function() {
     $('#feedback').empty();
 };
 
-Gittip.forms.showFeedback = function(msg, details) {
+Gratipay.forms.showFeedback = function(msg, details) {
     if (msg === null)
         msg = "Failure";
     msg = '<h2><span class="highlight">' + msg + '</span></h2>';
@@ -18,16 +18,16 @@ Gittip.forms.showFeedback = function(msg, details) {
             $('#feedback .details').append('<li>' + details[i] + '</li>');
 };
 
-Gittip.forms.submit = function(url, data, success, error) {
+Gratipay.forms.submit = function(url, data, success, error) {
     if (success === undefined) {
         success = function() {
-            Gittip.forms.showFeedback("Success!");
+            Gratipay.forms.showFeedback("Success!");
         };
     }
 
     if (error === undefined) {
         error = function(data) {
-            Gittip.forms.showFeedback(data.problem);
+            Gratipay.forms.showFeedback(data.problem);
         };
     }
 
@@ -39,7 +39,7 @@ Gittip.forms.submit = function(url, data, success, error) {
     }
 
     function _error(xhr, foo, bar) {
-        Gittip.forms.showFeedback( "So sorry!!"
+        Gratipay.forms.showFeedback( "So sorry!!"
                                  , ["There was a fairly drastic error with your request."]
                                   );
         console.log("failed", xhr, foo, bar);
@@ -54,7 +54,7 @@ Gittip.forms.submit = function(url, data, success, error) {
                  });
 };
 
-Gittip.forms.initCSRF = function() {   // https://docs.djangoproject.com/en/dev/ref/contrib/csrf/#ajax
+Gratipay.forms.initCSRF = function() {   // https://docs.djangoproject.com/en/dev/ref/contrib/csrf/#ajax
     jQuery(document).ajaxSend(function(event, xhr, settings) {
         function sameOrigin(url) {
             // url could be relative or scheme relative or absolute
@@ -73,7 +73,7 @@ Gittip.forms.initCSRF = function() {   // https://docs.djangoproject.com/en/dev/
         }
 
         if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
-            xhr.setRequestHeader("X-CSRF-TOKEN", Gittip.getCookie('csrf_token'));
+            xhr.setRequestHeader("X-CSRF-TOKEN", Gratipay.getCookie('csrf_token'));
         }
     });
 };

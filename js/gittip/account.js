@@ -1,6 +1,6 @@
-Gittip.account = {};
+Gratipay.account = {};
 
-Gittip.account.init = function() {
+Gratipay.account.init = function() {
 
     // Wire up username knob.
     // ======================
@@ -26,7 +26,7 @@ Gittip.account.init = function() {
         }
         function error(e) {
             $('#save-username').css('opacity', 1);
-            Gittip.notification(JSON.parse(e.responseText).error_message_long, 'error');
+            Gratipay.notification(JSON.parse(e.responseText).error_message_long, 'error');
         }
         jQuery.ajax(
             { url: "../username.json"
@@ -67,7 +67,7 @@ Gittip.account.init = function() {
                 $('.anonymous-giving input').attr('checked', data.giving);
             }
             , error: function() {
-                Gittip.notification("Failed to change your anonymity preference. Please try again.", 'error');
+                Gratipay.notification("Failed to change your anonymity preference. Please try again.", 'error');
             }
         });
     });
@@ -86,7 +86,7 @@ Gittip.account.init = function() {
                 $('.anonymous-receiving input').attr('checked', data.receiving);
             }
             , error: function() {
-                Gittip.notification("Failed to change your anonymity preference. Please try again.", 'error');
+                Gratipay.notification("Failed to change your anonymity preference. Please try again.", 'error');
             }
         });
     });
@@ -152,7 +152,7 @@ Gittip.account.init = function() {
             success: success,
             error: function (data) {
                 $this.css('opacity', 1);
-                Gittip.notification('Failed to save your email address. '
+                Gratipay.notification('Failed to save your email address. '
                                   + 'Please try again.', 'error');
             },
             data: {email: $('input.email').val()}

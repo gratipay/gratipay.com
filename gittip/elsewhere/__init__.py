@@ -24,7 +24,7 @@ class UnknownAccountElsewhere(Exception): pass
 
 
 class PlatformRegistry(object):
-    """Registry of platforms we support connecting to Gittip accounts.
+    """Registry of platforms we support connecting to Gratipay accounts.
     """
     def __init__(self, platforms):
         self.__dict__ = OrderedDict((p.name, p) for p in platforms)

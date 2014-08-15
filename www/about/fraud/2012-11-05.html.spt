@@ -173,7 +173,7 @@ title = "The Delpan Incident"
 {% block box %}
 <div class="as-content left">
 
-    <p>Gittip's first <a href="./">fraud incident</a> surfaced when an
+    <p>Gratipay's first <a href="./">fraud incident</a> surfaced when an
     unknown user named delpan appeared among the top receivers on the site.
     This page provides data and collects information related to the
     incident.</p>
@@ -194,11 +194,11 @@ title = "The Delpan Incident"
 
         <li>Blog post: &ldquo;<a
             href="http://blog.gittip.com/post/35057426257/stolen-money-on-gittip-part-1">Stolen
-            Money on Gittip, Part 1</a>&rdquo;</li>
+            Money on Gratipay, Part 1</a>&rdquo;</li>
 
         <li>Hacker News discussion: &ldquo;<a
         href="http://news.ycombinator.com/item?id=4743954">Stolen Money on
-        Gittip, Part 1</a>&rdquo;</li>
+        Gratipay, Part 1</a>&rdquo;</li>
 
         <li>Vice Motherboard: &ldquo;<a
         href="http://motherboard.vice.com/2012/11/6/thieves-launder-money-by-crowdfunding-themselves--2">Thieves
@@ -291,11 +291,11 @@ occured over a period of <b>{{ nweeks }} weeks</b>, from
         <td class="amount">${{ total_withdrawn }}&nbsp;</td></tr>
     <tr><th>Given to Innocent Bystanders</th>
         <td class="amount">${{ total_legit }}&nbsp;</td></tr>
-    <tr><th>Still Escrowed in Gittip</th>
+    <tr><th>Still Escrowed in Gratipay</th>
         <td class="amount">${{ total_escrowed }}&nbsp;</td></tr>
     <tr><th>Fees - Balanced</th>
         <td class="amount">${{ balanced_fees }}&nbsp;</td></tr>
-    <tr><th>Fees - Gittip</th>
+    <tr><th>Fees - Gratipay</th>
         <td class="amount">${{ gittip_fees }}&nbsp;</td></tr>
     <tr><th><b>Total Stolen</b></th>
         <td class="amount"><b>${{ total_charged }}&nbsp;</b></td></tr>

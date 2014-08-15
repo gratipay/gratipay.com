@@ -1,4 +1,4 @@
-"""Functions for moving money between Gittip and the outside world.
+"""Functions for moving money between Gratipay and the outside world.
 """
 from __future__ import unicode_literals
 
@@ -82,7 +82,7 @@ def ach_credit(db, participant, withhold, minimum_credit=MINIMUM_CREDIT):
 
     # Compute the amount to credit them.
     # ==================================
-    # Leave money in Gittip to cover their obligations next week (as these
+    # Leave money in Gratipay to cover their obligations next week (as these
     # currently stand).
 
     balance = participant.balance
@@ -152,7 +152,7 @@ def ach_credit(db, participant, withhold, minimum_credit=MINIMUM_CREDIT):
 def create_card_hold(db, participant, amount):
     """Create a hold on the participant's credit card.
 
-    Amount should be the nominal amount. We'll compute Gittip's fee below
+    Amount should be the nominal amount. We'll compute Gratipay's fee below
     this function and add it to amount to end up with charge_amount.
 
     """
@@ -270,7 +270,7 @@ def record_exchange(db, kind, amount, fee, participant, status):
     Records in the exchanges table have these characteristics:
 
         amount  It's negative for credits (representing an outflow from
-                Gittip to you) and positive for charges.
+                Gratipay to you) and positive for charges.
                 The sign is how we differentiate the two in, e.g., the
                 history page.
 

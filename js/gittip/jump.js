@@ -2,15 +2,15 @@
 // ====================
 // "Who inspires you?"
 
-Gittip.jump = {};
+Gratipay.jump = {};
 
-Gittip.jump.init = function() {
+Gratipay.jump.init = function() {
     function jump(e) {
         e.preventDefault();
         e.stopPropagation();
 
-        var platform = Gittip.trim($('#jump select').val()),
-            val      = Gittip.trim($('#jump input').val());
+        var platform = Gratipay.trim($('#jump select').val()),
+            val      = Gratipay.trim($('#jump input').val());
         if (val)
             window.location = '/on/' + platform + '/' + val + '/';
     }

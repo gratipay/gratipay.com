@@ -56,7 +56,7 @@ def get_list_for(db, username):
     """.format(member_test, sort_order), params)
 
 class Community(Model):
-    """Model a community on Gittip.
+    """Model a community on Gratipay.
     """
 
     typname = "community_summary"

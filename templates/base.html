@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
-    <title>{% if title %}{{ title|e }} - {% endif %}Gittip</title>
+    <title>{% if title %}{{ title|e }} - {% endif %}Gratipay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ website.asset_url }}/gittip.css" type="text/css">
     <link rel="apple-touch-icon-precomposed" href="{{ website.asset_url }}/touch/icon-60x60.png">
@@ -18,7 +18,7 @@
                 <h1>
                     <a href="/">
                         <img src="{{ website.asset_url }}/logo.png"
-                             alt="Gittip" />
+                             alt="Gratipay" />
                     </a>
                 </h1>
                 </td><td class="motto luxury">
@@ -122,7 +122,7 @@
             return s.replace('{{ decimal_symbol }}', '.');
         }
 
-        $(document).ready(Gittip.init);
+        $(document).ready(Gratipay.init);
     </script>
     {% block scripts %}
 
@@ -131,7 +131,7 @@
     {% if not user.ANON and user.participant.credit_card_expiring(request, response) %}
     <script>
         $(document).ready(function () {
-            Gittip.notification(["span", "Your credit card is about to expire! ", ['a', {'href': '/credit-card.html'}, 'Update card']], "error")
+            Gratipay.notification(["span", "Your credit card is about to expire! ", ['a', {'href': '/credit-card.html'}, 'Update card']], "error")
         });
     </script>
     {% endif %}

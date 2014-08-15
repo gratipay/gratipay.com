@@ -1,6 +1,6 @@
-Gittip.tips = {};
+Gratipay.tips = {};
 
-Gittip.tips.init = function() {
+Gratipay.tips.init = function() {
 
     // Check the tip value on change, or 0.7 seconds after the user stops typing.
     // If the user presses enter, the browser should natively submit the form.
@@ -105,7 +105,7 @@ Gittip.tips.init = function() {
             return;
 
         if(isAnon)
-            Gittip.notification("Please sign in first", 'error');
+            Gratipay.notification("Please sign in first", 'error');
         else {
             // send request to change tip
             $.post('/' + tippee + '/tip.json', { amount: amount }, function(data) {
@@ -128,10 +128,10 @@ Gittip.tips.init = function() {
                 // update quick stats
                 $('.quick-stats a').text('$' + data.total_giving + '/wk');
 
-                Gittip.notification("Tip changed to $" + amount.toFixed(2) + "!", 'success');
+                Gratipay.notification("Tip changed to $" + amount.toFixed(2) + "!", 'success');
             })
             .fail(function() {
-                Gittip.notification('Sorry, something went wrong while changing your tip. :(', 'error');
+                Gratipay.notification('Sorry, something went wrong while changing your tip. :(', 'error');
                 console.log.apply(console, arguments);
             })
         }

@@ -101,18 +101,18 @@ locked = False
 <div class="col1">
     <h2>{{ _("Widget #{0}", 1) }}</h2>
 
-    <p>{{ _("Use this code to embed a Gittip button on your website:") }}</p>
+    <p>{{ _("Use this code to embed a Gratipay button on your website:") }}</p>
 
     <pre>&lt;script data-gittip-username="{{ participant.username }}"
         data-gittip-widget="button"
         src="//gttp.co/v1.js"&gt;&lt;/script&gt;</pre>
 
-    <p>{{ _("The button opens your profile on Gittip in a new tab or window. Here's what the text reads:") }}</p>
+    <p>{{ _("The button opens your profile on Gratipay in a new tab or window. Here's what the text reads:") }}</p>
 
     <ul class="button-examples no-bullets">
 
-        <li><button class="old-widget-style">Gittip</button>&mdash;
-        {{ _("person is not logged into Gittip or doesn't tip you") }}</li>
+        <li><button class="old-widget-style">Gratipay</button>&mdash;
+        {{ _("person is not logged into Gratipay or doesn't tip you") }}</li>
 
         <li><button class="old-widget-style">3.00</button>&mdash;
         {{ _("person tips you; shows current gift amount") }}</li>
@@ -131,7 +131,7 @@ locked = False
 
     <h2>{{ _("Widget #{0}", 2) }}</h2>
 
-    <p>{{ _("Use this code to add a Gittip \"receiving\" widget on your website:") }}</p>
+    <p>{{ _("Use this code to add a Gratipay \"receiving\" widget on your website:") }}</p>
 
     <pre>&lt;script data-gittip-username="{{ participant.username }}"
         src="//gttp.co/v1.js"&gt;&lt;/script&gt;</pre>

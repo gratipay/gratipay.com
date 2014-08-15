@@ -54,7 +54,7 @@ title = "Please Confirm"
 
     <div><img class="platform-icon" src="{{ platform.icon }}"
     /> <span class="highlight">{{ user_name }}</span> is connected<br />to
-    <b>{{ other.username }}</b> on Gittip.<br />Transfer it?</div>
+    <b>{{ other.username }}</b> on Gratipay.<br />Transfer it?</div>
 
     <h2>Now</h2>
 

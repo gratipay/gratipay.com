@@ -1,4 +1,4 @@
-Gittip.team = (function() {
+Gratipay.team = (function() {
     function init() {
         var $team = $('#team');
 
@@ -50,7 +50,7 @@ Gittip.team = (function() {
         var rows = [];
 
         if (nmembers === 0) {
-            rows.push(Gittip.jsonml(
+            rows.push(Gratipay.jsonml(
                 [ 'tr'
                 , ['td', {'colspan': '6', 'class': 'no-members'}, "No members"]
                  ]
@@ -69,7 +69,7 @@ Gittip.team = (function() {
                 increase = 'max';
 
             if (i < nmembers)
-                rows.push(Gittip.jsonml(
+                rows.push(Gratipay.jsonml(
                     [ 'tr'
                     , ['td', {'class': 'n'}, (i === nmembers ? '' : nmembers - i)]
                     , ['td', ['a', {'href': '/'+member.username+'/'}, member.username]]
@@ -80,7 +80,7 @@ Gittip.team = (function() {
                      ]
                 ));
             else if (nmembers > 0)
-                rows.push(Gittip.jsonml(
+                rows.push(Gratipay.jsonml(
                     [ 'tr'
                     , ['td']
                     , ['td']
@@ -113,7 +113,7 @@ Gittip.team = (function() {
         var items = [];
         for (var i=0, len=results.length; i<len; i++) {
             var result = results[i];
-            items.push(Gittip.jsonml(
+            items.push(Gratipay.jsonml(
                 ['li', {"data-id": result.id}, result.username]
             ));
         }
@@ -124,7 +124,7 @@ Gittip.team = (function() {
         e.preventDefault();
         e.stopPropagation();
         var query = $('#query').val();
-        setTake(query, '0.01', function() { Gittip.notification('Member added!', 'success'); });
+        setTake(query, '0.01', function() { Gratipay.notification('Member added!', 'success'); });
         $('#lookup-results').empty();
         $('#query').val('').focus();
         return false;
@@ -135,7 +135,7 @@ Gittip.team = (function() {
         e.stopPropagation();
         var membername = $(e.target).attr('data-username');
         if (confirm("Remove " + membername + " from this team?"))
-            setTake(membername, '0.00', function() { Gittip.notification('Member removed!'); });
+            setTake(membername, '0.00', function() { Gratipay.notification('Member removed!'); });
         return false;
     }
 
@@ -161,21 +161,21 @@ Gittip.team = (function() {
         var username = _.attr('data-username'),
                 take = _.val();
         if (take.search(/^\d+\.?\d*$/) !== 0)
-            Gittip.notification("Bad input! Must be a number.", 'error');
+            Gratipay.notification("Bad input! Must be a number.", 'error');
         else
         {
             var callback = function(d) {
                 var newTake = $.grep(d, function(row) { return row.username == username })[0].take;
                 if ( take == newTake)
-                    Gittip.notification('Updated your take!', 'success');
+                    Gratipay.notification('Updated your take!', 'success');
                 else
-                    Gittip.notification('You cannot exceed double of last week. Updated your take to ' + newTake + '.', 'error');
+                    Gratipay.notification('You cannot exceed double of last week. Updated your take to ' + newTake + '.', 'error');
 
                 // Have a little fun if updating the user's take results in the team balance
                 // equaling $0.01 or $1.00
                 var balance = $('.figure.balance').last().text();
                 if (localStorage && !localStorage.lastSushi && (balance == '0.01' || balance == '1.00')) {
-                    Gittip.notification('Achievement Unlocked: The Last Sushi Roll', 'success');
+                    Gratipay.notification('Achievement Unlocked: The Last Sushi Roll', 'success');
                     localStorage.lastSushi = true;
                 }
             };
@@ -184,7 +184,7 @@ Gittip.team = (function() {
                     resetTake();
                     return false;
                 }
-                callback = function() { Gittip.notification('Removed!'); };
+                callback = function() { Gratipay.notification('Removed!'); };
             }
             setTake(username, take, callback);
         }
@@ -205,8 +205,8 @@ Gittip.team = (function() {
                 , success: function(d) { drawRows(d); callback(d); }
                 , error: function(xhr) {
                         switch (xhr.status) {
-                            case 404: Gittip.notification("Unknown user!", 'error'); break;
-                            default: Gittip.notification("Problem! " + xhr.status, 'error');
+                            case 404: Gratipay.notification("Unknown user!", 'error'); break;
+                            default: Gratipay.notification("Problem! " + xhr.status, 'error');
                         }
                     }
                  });

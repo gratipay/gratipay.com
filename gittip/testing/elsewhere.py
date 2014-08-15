@@ -175,7 +175,7 @@ github = lambda: {
     "email": "chad@zetaweb.com",
     "public_repos": 25,
     "events_url": "https://api.github.com/users/whit537/events{/privacy}",
-    "company": "Gittip",
+    "company": "Gratipay",
     "gists_url": "https://api.github.com/users/whit537/gists{/gist_id}",
     "html_url": "https://github.com/whit537",
     "subscriptions_url": "https://api.github.com/users/whit537/subscriptions",

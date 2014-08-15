@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """\
-Gittip
+Gratipay
 ~~~~~~
 
 A personal funding platform.

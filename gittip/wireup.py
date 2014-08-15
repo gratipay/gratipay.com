@@ -21,7 +21,7 @@ from gittip.models.account_elsewhere import AccountElsewhere
 from gittip.models.community import Community
 from gittip.models.participant import Participant
 from gittip.models.email_address_with_confirmation import EmailAddressWithConfirmation
-from gittip.models import GittipDB
+from gittip.models import GratipayDB
 
 
 def canonical(env):
@@ -32,7 +32,7 @@ def canonical(env):
 def db(env):
     dburl = env.database_url
     maxconn = env.database_maxconn
-    db = GittipDB(dburl, maxconn=maxconn)
+    db = GratipayDB(dburl, maxconn=maxconn)
 
     db.register_model(Community)
     db.register_model(AccountElsewhere)
@@ -271,7 +271,7 @@ def env():
         these = len(env.malformed) != 1 and 'these' or 'this'
         plural = len(env.malformed) != 1 and 's' or ''
         aspen.log_dammit("=" * 42)
-        aspen.log_dammit( "Oh no! Gittip.com couldn't understand %s " % these
+        aspen.log_dammit( "Oh no! Gratipay.com couldn't understand %s " % these
                         , "environment variable%s:" % plural
                          )
         aspen.log_dammit(" ")
@@ -288,7 +288,7 @@ def env():
         these = len(env.missing) != 1 and 'these' or 'this'
         plural = len(env.missing) != 1 and 's' or ''
         aspen.log_dammit("=" * 42)
-        aspen.log_dammit( "Oh no! Gittip.com needs %s missing " % these
+        aspen.log_dammit( "Oh no! Gratipay.com needs %s missing " % these
                         , "environment variable%s:" % plural
                          )
         aspen.log_dammit(" ")
@@ -296,10 +296,10 @@ def env():
             aspen.log_dammit("  " + key)
         aspen.log_dammit(" ")
         aspen.log_dammit( "(Sorry, we must've started looking for "
-                        , "%s since you last updated Gittip!)" % these
+                        , "%s since you last updated Gratipay!)" % these
                          )
         aspen.log_dammit(" ")
-        aspen.log_dammit("Running Gittip locally? Edit ./local.env.")
+        aspen.log_dammit("Running Gratipay locally? Edit ./local.env.")
         aspen.log_dammit("Running the test suite? Edit ./tests/env.")
         aspen.log_dammit(" ")
         aspen.log_dammit("See ./default_local.env for hints.")
