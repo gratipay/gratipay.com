@@ -212,6 +212,7 @@ def other_stuff(website, env):
     website.compress_assets = env.gittip_compress_assets
 
     website.segment_key = env.segment_key
+    website.google_analytics_id = env.google_analytics_id
     website.sentry_dsn = env.sentry_dsn
 
     website.log_metrics = env.log_metrics
@@ -253,6 +254,7 @@ def env():
         UPDATE_GLOBAL_STATS_EVERY       = int,
         CHECK_DB_EVERY                  = int,
         SEGMENT_KEY                     = unicode,
+        GOOGLE_ANALYTICS_ID             = unicode,
         SENTRY_DSN                      = unicode,
         LOG_METRICS                     = is_yesish,
         MANDRILL_KEY                    = unicode,
