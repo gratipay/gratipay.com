@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from __future__ import print_function
+
 from gittip import wireup
 
 db = wireup.db(wireup.env())
@@ -40,5 +42,12 @@ def transfer(tip):
     """, tip)
 
 for user in affected:
+    print(user.username)
     for tip in user.tips:
+        print('   ', tip['amount'], 'to', tip['tippee'])
         transfer(tip)
+
+print('\nnew balances:')
+for user in affected:
+    b = db.one("select balance from participants where username = %s", (user.username,))
+    print('   ', b, user.username)
