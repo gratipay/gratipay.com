@@ -32,8 +32,8 @@ affected = db.all("""
 def transfer(tipper, tippee, amount):
     db.run("""
 
-        UPDATE participants SET balance = (balance - %(amount)s WHERE username = %(tipper)s;
-        UPDATE participants SET balance = (balance + %(amount)s WHERE username = %(tippee)s;
+        UPDATE participants SET balance = (balance - %(amount)s) WHERE username = %(tipper)s;
+        UPDATE participants SET balance = (balance + %(amount)s) WHERE username = %(tippee)s;
         INSERT INTO transfers (tipper, tippee, amount, context)
              VALUES ( ( SELECT p.username
                           FROM participants p
