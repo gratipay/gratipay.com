@@ -35,17 +35,7 @@ def transfer(tipper, tippee, amount):
         UPDATE participants SET balance = (balance - %(amount)s) WHERE username = %(tipper)s;
         UPDATE participants SET balance = (balance + %(amount)s) WHERE username = %(tippee)s;
         INSERT INTO transfers (tipper, tippee, amount, context)
-             VALUES ( ( SELECT p.username
-                          FROM participants p
-                          JOIN participants p2 ON p.id = p2.id
-                         WHERE p2.username = %(tipper)s)
-                    , ( SELECT p.username
-                          FROM participants p
-                          JOIN participants p2 ON p.id = p2.id
-                         WHERE p2.username = %(tippee)s)
-                    , %(amount)s
-                    , 'one-off'
-                    );
+             VALUES (%(tipper)s, %(tippee)s, %(amount)s, 'one-off');
 
     """)
 
