@@ -6,7 +6,7 @@ db = wireup.db(wireup.env())
 
 affected = db.all("""
 
-    select p.username, p.balance, count(*), sum(t.amount), array_agg(t.id) as tips from (
+    select p.username, p.balance, count(*), sum(t.amount), json_agg(t.*) as tips from (
       select distinct on (tipper, tippee) t.* from tips t
           where mtime < (select ts_start from paydays where ts_start::date = '2014-08-14')
           order by tipper, tippee, mtime desc
@@ -29,7 +29,7 @@ affected = db.all("""
 
 """)
 
-def transfer(tipper, tippee, amount):
+def transfer(tip):
     db.run("""
 
         UPDATE participants SET balance = (balance - %(amount)s) WHERE username = %(tipper)s;
@@ -37,8 +37,8 @@ def transfer(tipper, tippee, amount):
         INSERT INTO transfers (tipper, tippee, amount, context)
              VALUES (%(tipper)s, %(tippee)s, %(amount)s, 'one-off');
 
-    """)
+    """, tip)
 
 for user in affected:
     for tip in user.tips:
-        transfer(tip.tipper, tip.tippee, tip.amount)
+        transfer(tip)
