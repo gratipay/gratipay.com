@@ -27,7 +27,7 @@ affected = db.all("""
         ) is null
 
       group by p.username, p.balance
-      having sum(t.amount) <= p.balance or p.last_bill_result = '';
+      having sum(t.amount) <= p.balance;
 
 """)
 
