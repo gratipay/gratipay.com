@@ -1,12 +1,23 @@
 {% set teams = participant.get_teams() %}
 {% if teams %}
-<h2>{{ _('Teams') }}</h2>
-<ul class="team memberships">
-    {% for team in teams %}
-    <li>
-        <a href="/{{ team.name }}/">{{ team.name }}</a>
-        <div class="fine">{{ with_others(team) }}</div>
-    </li>
-    {% endfor %}
-</ul>
+    {% if user.participant == participant %}
+        <h2>{{ ngettext("You are in {n} team", "You are in {n} teams",
+                       len(teams)) }}</h2>
+    {% else %}
+        <h2>{{ _("Teams") }}</h2>
+    {% endif %}
+    <ul class="team memberships">
+        {% for team in teams %}
+        <li>
+            <a href="/{{ team.name }}/">{{ team.name }}</a>
+            <div class="fine">{{ with_others(team) }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% if user.participant == participant %}
+        <p><a href="/about/teams/">{{ _("Learn more about how teams work") }}</a></p>
+    {% endif %}
+{% elif user.participant == participant %}
+    <h2>{{ _('You are not in any team') }}</h2>
+    <p><a href="/about/teams/">{{ _('What are Teams?') }}</a></p>
 {% endif %}

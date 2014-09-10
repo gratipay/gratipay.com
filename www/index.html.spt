@@ -1,23 +1,33 @@
-"""## Information Architecture
+from gratipay.models import community
 
-This is where we document all the pages on our website, with their purpose and
-the most important thing on each page.
-
-
-### Homepage
-
-https://gratipay.com/
-
-This is the homepage. The most important thing is to give a good first
-impression of Gratipay and help people take the next step, whatever that might be
-for them.
-
-"""
-from aspen.utils import utcnow
-
-from gratipay.security.user import SESSION_TIMEOUT
 [---]
+
+if not user.ANON:
+    participant = user.participant # for team listing
+    communities = community.get_list_for(website.db, user.participant.id)
+
+    def with_others(obj):
+        others = obj.nmembers - 1
+        return ngettext("with {n} other", "with {n} others", others)
+
+
+friends_hack = website.db.all("""
+
+    SELECT username
+         , claimed_time
+         , avatar_url
+         , statement
+         , number
+      FROM participants
+     WHERE claimed_time IS NOT NULL
+       AND is_suspicious IS NOT TRUE
+  ORDER BY claimed_time DESC
+     LIMIT 9
+
+""")
+
 [---]
+{% from 'templates/avatar-url.html' import avatar_url with context %}
 {% extends "templates/base.html" %}
 {% block head %}
     <link rel="publisher" href="https://plus.google.com/104524895706770139568">
@@ -27,38 +37,31 @@ from gratipay.security.user import SESSION_TIMEOUT
     <meta name="og:url" content="https://gratipay.com/" />
     <meta name="og:title" content="Gratipay" />
     <meta name="og:image" content="{{ website.asset_url }}/gratipay.opengraph.png" />
-    <style>
-        .pennies, .container { display: none; }
-        #upgrade_browser .container { display: block; }
-        html, body { height: 100%; min-height: 100%; }
-    </style>
 {% endblock %}
 
-{% block scripts %}
-<script>
-    $(document).ready(function () {
-        Gratipay.jump.init();
-    });
-</script>
-{{ super() }}
+{% block heading %}
+{% if user.ANON %}{% else %}{{ super() }}{% endif %}
 {% endblock %}
-
-{% block heading %}{% endblock %}
 {% block whole_page %}
+{% if user.ANON %}
+<style>
+    .pennies, .container { display: none; }
+    #upgrade_browser .container { display: block; }
+    html, body { height: 100%; min-height: 100%; }
+</style>
 <div class="homepage">
     <div class="pitch">
         <img src="{{ website.asset_url }}/gratipay.white.svg" alt="Gratipay">
         <h1>{{ _("Weekly Payments") }}</h1>
         <p>{{ _("Motivated by Gratitude") }}</p>
 
-        <p>{{ _("Sustainably crowdfund your business, personal projects, or charity, with {0}no extra fees{1}.",
+        <p>{{ _("Sustainably crowdfund your business, personal projects, or charity with voluntary payments.",
             "<span>", "</span>") }}</p>
 
         <p><a href="/about/">{{ _("Learn more") }}</a></p>
 
     </div>
     <div class="action">
-    {% if user.ANON %}
         {{ _("{0}Sign In{1} {2}to Accept Weekly Payments{3}",
             "<h1>", "</h1>", "<p>", "</p>") }}
         {% from 'templates/auth.html' import auth_button with context %}
@@ -87,53 +90,68 @@ from gratipay.security.user import SESSION_TIMEOUT
                 "<a href='/for/'>", "</a>") + " " +
             _("Want to work for Gratipay? We are an {0}open company{1}.",
                 "<a href='http://inside.gratipay.com/big-picture/welcome'>", "</a>") }}</p>
-
-    {% else %}
-        <a class="sign-out" href='/sign-out.html'>{{ _("Sign out") }}</a>
-
-        {% set quick = utcnow() - SESSION_TIMEOUT  %}
-        {% if user.participant.claimed_time > quick %}
-            <h1>{{ _("Welcome, {0}!", user.participant.username) }}</h1>
-            <p>{{ _("Thanks for joining Gratipay!") }}</p>
-        {% else %}
-            <h1>{{ _("Welcome back, {0}!", user.participant.username) }}</h1>
-            <p>{{ _("Your balance is {0}.", format_currency(user.participant.balance, "USD")) }}</p>
-        {% endif %}
-
-        {% if user.participant.giving == user.participant.receiving == 0 %}
-            <p>{{ _("Next steps:") }}</p>
-            <ol>
-                <li>{{ _("Start tipping people, you can find great people to tip by browsing {0}our communities{1}.",
-                         "<a href='/for/'>", "</a>") }}</li>
-                <li>{{ _("{0}Add a credit card{1} to make sure your weekly tips go through this Thursday.",
-                        "<a href='/credit-card.html'>", "</a>") }}</li>
-                <li>{{ _("{0}Fill out your profile{1} to let others know about you.",
-                        "<a href='/"+ user.participant.username + "/'>", "</a>") }}</li>
-                <li>{{ _("Reach a wider audience by {0}embedding our widgets{1} on your blog/website.",
-                        "<a href='/"+ user.participant.username + "/widgets'>", "</a>") }}</li>
-            </ol>
-            <p></p>
-        {% else %}
-            <p>{{ _("Go to {0}your profile{1}.",
-                    "<a href='/" + user.participant.username + "/'>", "</a>") }}</p>
-        {% endif %}
-
-        {% include "templates/support-gratipay.html" %}
-
-        <div class="jump">
-        <form id="jump">
-        {{ _("Jump to {0} from {1}",
-            "<input placeholder='username' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' size='12'>",
-            """<select>
-                <option value='twitter'>Twitter</option>
-                <option value='github'>GitHub</option>
-                <option value='bitbucket'>Bitbucket</option>
-            </select>""") }}
-            <button type="submit">{{ _("Go") }}</button>
-        </form>
-        </div>
-
-    {% endif %}
     </div>
 </div>
+{% else %}
+<style>
+    #hero { padding-bottom: 50px; }
+</style>
+<div class="container">
+    <div id="page" class="group">
+        {% block page %}
+        <div class="col1">
+
+            <h2>{{ _("You give {0} per week", format_currency(participant.giving, 'USD')) }}</h2>
+
+            <p>Let's play the giving game! Click your Twitter friends to give
+            them a quarter a week!</p>
+
+            <div class="people">
+                <ul class="group">
+                    {% for i, participant in enumerate(friends_hack, start=1) %}
+                    <li>
+                        <a href="/{{ participant.username }}/" class="mini-user tip">
+                            <span class="inner">
+                                <span class="avatar"
+                                    style="background-image: url('{{ avatar_url(participant) }}')">
+                                </span>
+                                <span class="name">{{ participant.username }}</span>
+                            </span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="clear"></div>
+
+        </div>
+
+        <div class="col2">
+
+            <h2>{{ _("You receive {0} per week", format_currency(participant.receiving, 'USD')) }}</h2>
+
+            {% if not participant.accepts_tips %}
+                <p>{{ _("You are currently declining tips, you can change that {0}on your profile{1}.",
+                        "<a href='/"+ user.participant.username + "/'>", "</a>") }}</p>
+            {% elif participant.goal and participant.receiving >= participant.goal %}
+                <p>{{ _("Congratulations, you have reached your goal of receiving {0} per week!", participant.goal) }}
+            {% else %}
+                <p>{{ _("To receive money, do something awesome and then tell people about it:") }}</p>
+                <ol>
+                    <li>{{ _("{0}Fill out your profile{1} to let others know about you.",
+                             "<a href='/"+ user.participant.username + "/'>", "</a>") }}</li>
+                    <li>{{ _("Reach a wider audience by {0}embedding our widgets{1} on your blog/website.",
+                             "<a href='/"+ user.participant.username + "/widgets'>", "</a>") }}</li>
+                </ol>
+            {% endif %}
+
+
+            {% include "templates/team-listing.html" %}
+            {% include "templates/community-listing.html" %}
+
+        </div>
+        {% endblock %}
+    </div>
+</div>
+{% endif %}
 {% endblock %}

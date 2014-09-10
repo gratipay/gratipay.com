@@ -1,11 +1,21 @@
 {% if communities %}
-<h2>{{ _("Communities") }}</h2>
-<ul class="community memberships">
-    {% for community in communities %}
-    <li>
-        <a href="/for/{{ community.slug }}/">{{ community.name }}</a>
-        <div class="fine">{{ with_others(community) }}</div>
-    </li>
-    {% endfor %}
-</ul>
+    {% if user.participant == participant %}
+        <h2>{{ ngettext("You are in {n} community", "You are in {n} communities",
+                       len(communities)) }}</h2>
+    {% else %}
+        <h2>{{ _("Communities") }}</h2>
+    {% endif %}
+    <ul class="community memberships">
+        {% for community in communities %}
+        <li>
+            <a href="/for/{{ community.slug }}/">{{ community.name }}</a>
+            <div class="fine">{{ with_others(community) }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+{% elif user.participant == participant %}
+    <h2>{{ _("You haven't joined any community") }}</h2>
+{% endif %}
+{% if user.participant == participant %}
+    <p><a href="/for/">{{ _("Join Communities") }}</a></p>
 {% endif %}

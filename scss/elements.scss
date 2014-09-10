@@ -32,8 +32,8 @@ a img {
     border: 0;
 }
 p, dd {
-    margin: 0;
-    padding: 0 0 1em;
+    margin: 0 0 1em;
+    padding: 0;
 }
 dt {
     font-weight: bold;
@@ -47,10 +47,10 @@ pre {
 }
 li {
     margin: 0;
-    margin: 0 0 1em 1.5em;
+    margin: 0 0 0.8em 1.5em;
 }
 ol {
-    margin: 1em 0 0;
+    margin: 0 0 1em;
 }
 ol li {
     list-style: outside decimal;
