@@ -102,3 +102,13 @@ class TestPages(Harness):
                     "VALUES(100,'alice',1,0.1)")
         request = self.client.GET("/alice/receipts/100.html", auth_as="alice")
         assert request.code == 200
+
+    def test_display_creditcard_failure_qty_on_history(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_exchange('bill', 50, 0, alice)
+        self.make_exchange('ach', -12, 0, alice, status='failed')
+        self.make_exchange('ach', -40, 0, alice, status='failed')
+        history_url = "/alice/history/"
+        actual = self.client.GET(history_url, auth_as='alice').body.decode('utf8')
+        assert "Your card failed 2 time(s)." in actual
+

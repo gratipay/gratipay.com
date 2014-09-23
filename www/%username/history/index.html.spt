@@ -21,6 +21,18 @@ if participant == user.participant:
 else:
     BALANCE = _("Their balance is {0}.", format_currency(participant.balance, "USD"))
 
+failures = 0
+for event in events:
+    if event['kind'] == 'credit':
+        if event['status'] and event['status'] == 'failed':
+    	    failures += 1
+
+if participant == user.participant:
+    FAILURES = _("Your card failed {0} time(s).", failures)
+else:
+    FAILURES = _("Their card failed {0} time(s).", failures)
+
+
 [-----------------------------------------------------------------------------]
 {% extends "templates/profile.html" %}
 {% block page %}
@@ -31,6 +43,9 @@ else:
     </td></tr>
     <tr><td colspan="7">
         <h2>{{ BALANCE }}</h2>
+    </td></tr>
+    <tr><td colspan="7">
+        <h2>{{ FAILURES }}</h2>
         {% if user.ADMIN %}
         <h2>Record an Exchange.</h2>
         <p style="text-align: left">
