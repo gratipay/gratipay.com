@@ -96,39 +96,32 @@ $(document).ready(function() {
         {% include "templates/profile-edit.html" %}
     </div>
 {% else %}
-    <div class="group">
+    <div class="content group">
         {% if participant.statement %}
-        <div class="{% if long_statement %}col1{% else %}col0{% endif %}">
-            <h2>{{ STATEMENT }}</h2>
-            <div class="statement markdown-output">
-                {{ markdown.render(MAKING.format(participant.statement)) }}
-            </div>
-            {% include "templates/team-listing.html" %}
-            {% include "templates/community-listing.html" %}
+        <h2>{{ STATEMENT }}</h2>
+        <div class="statement markdown-output">
+            {{ markdown.render(MAKING.format(participant.statement)) }}
         </div>
-        <div class="{% if long_statement %}col2{% else %}col0{% endif %}">
-        {% else %}
-        <div class="col0">
-            {% include "templates/team-listing.html" %}
-            {% include "templates/community-listing.html" %}
         {% endif %}
 
-            <h2>{{ _("Funding Goal") }}</h2>
-            <div class="goal">
-                {% if participant.goal == None %}
-                {{ GRATEFUL }}
-                {% elif participant.goal == 0 %}
-                {{ PATRON }}
-                {% elif participant.goal < 0 %}
-                {{ PATRON_NO_GIFTS }}
-                {% else %}
-                {{ GOAL }}
-                {% endif %}
-            </div>
+        {% include "templates/team-listing.html" %}
+        {% include "templates/community-listing.html" %}
 
-            {% include "templates/charts-for-user.html" %}
-            {% include "templates/connected-accounts.html" %}
+        <h2>{{ _("Funding Goal") }}</h2>
+        <div class="goal">
+            {% if participant.goal == None %}
+            {{ GRATEFUL }}
+            {% elif participant.goal == 0 %}
+            {{ PATRON }}
+            {% elif participant.goal < 0 %}
+            {{ PATRON_NO_GIFTS }}
+            {% else %}
+            {{ GOAL }}
+            {% endif %}
         </div>
+
+        {% include "templates/charts-for-user.html" %}
+        {% include "templates/connected-accounts.html" %}
     </div>
 {% endif %}
 

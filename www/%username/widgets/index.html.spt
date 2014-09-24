@@ -98,7 +98,7 @@ locked = False
             -1px -1px 0 rgba(255,255,255,.25) inset;
     }
 </style>
-<div class="col1">
+<div class="content">
     <h2>{{ _("Widget #{0}", 1) }}</h2>
 
     <p>{{ _("Use this code to embed a Gratipay button on your website:") }}</p>
@@ -126,8 +126,6 @@ locked = False
         {{ _("Here's an example using {0}:", "<a href='/whit537/'>whit537</a>") }}
         <script data-gratipay-username="whit537" data-gratipay-widget="button" src="//gttp.co/v1.js"></script>
     </p>
-</div>
-<div class="col2">
 
     <h2>{{ _("Widget #{0}", 2) }}</h2>
 

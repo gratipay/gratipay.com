@@ -4,7 +4,7 @@ title = "About teams"
 [---]
 {% extends "templates/about.html" %}
 {% block page %}
-<div class="col0">
+<div class="content">
 
 <h2>About Teams</h2>
 
@@ -101,7 +101,7 @@ you can increase to $1). If you set your new take higher than double the
 previous take, it will be clipped to double. Here’s the throttled growth curve:
 </p>
 
-<img src="{{ website.asset_url }}/teams/take-growth-curve.png" class="col0" />
+<img src="{{ website.asset_url }}/teams/take-growth-curve.png" class="content" />
 
 <p>Note that your take does not increase automatically, and no-one else can
 change it for you. This means you will have to increase your take manually each

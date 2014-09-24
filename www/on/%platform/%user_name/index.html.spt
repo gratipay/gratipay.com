@@ -104,7 +104,7 @@ else:
 
 {% from 'templates/auth.html' import auth_button with context %}
 
-<div class="col0">
+<div class="content">
   {% if locked %}
 
     {% if is_team %}

@@ -4,7 +4,7 @@ title = "Frequently Asked Questions"
 [---]
 {% extends "templates/about.html" %}
 {% block page %}
-<div class="col1">
+<div class="content">
     <dl>
 
         <dt id="what-gratipay">What is Gratipay?</dt>
@@ -92,11 +92,6 @@ title = "Frequently Asked Questions"
         </ol>
 
         </dd>
-
-    </dl>
-</div>
-<div class="col2">
-    <dl>
 
         <dt id="maximum-amount">Is there a minimum or maximum amount I can give or receive?</dt>
 

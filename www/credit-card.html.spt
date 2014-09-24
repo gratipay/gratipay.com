@@ -183,7 +183,7 @@ title = _("Credit Card")
 {% endblock %}
 
 {% block page %}
-<div class="col0 payment-footer">
+<div class="content payment-footer">
 
     <p>Credit card information is stored and processed by <a
         href="https://www.balancedpayments.com/">Balanced Payments</a>.<br />

@@ -1,4 +1,4 @@
-<div class="col1">
+<div class="content">
 
     <!-- Statement -->
     <form class="statement">
@@ -31,21 +31,6 @@
         </div>
     </form>
 
-
-    <!-- Memberships -->
-    {% include "templates/team-listing.html" %}
-    {% include "templates/community-listing.html" %}
-    {% if not communities %}
-    {#
-        Still show the communities heading in this case. Otherwise it's set in
-        community-listing.html. See https://github.com/gratipay/gratipay.com/pull/1916.
-    #}
-    <h2>{{ _("Communities") }}</h2>
-    {% endif %}
-    <a href="/for/">{{ _("Join Communities") }}</a>
-
-</div>
-<div class="col2">
 
     <!-- Funding Goal -->
     <form class="goal">
@@ -99,23 +84,32 @@
         </td></tr></table>
     </form>
 
+
+    <!-- Memberships -->
+    {% include "templates/team-listing.html" %}
+    {% include "templates/community-listing.html" %}
+    {% if not communities %}
+    {#
+        Still show the communities heading in this case. Otherwise it's set in
+        community-listing.html. See https://github.com/gratipay/gratipay.com/pull/1916.
+    #}
+    <h2>{{ _("Communities") }}</h2>
+    {% endif %}
+    <a href="/for/">{{ _("Join Communities") }}</a>
+
+
+    <!-- Chart -->
     {% include "templates/charts-for-user.html" %}
 
 
     <!-- Connected Accounts -->
     {% include "templates/connected-accounts.html" %}
 
-</div>
-<div class="clear"></div>
-
 {% if participant.receiving > 0 %}
-{% set tip_distribution = participant.get_tip_distribution()[0] %}
-<div class="col1">
+    {% set tip_distribution = participant.get_tip_distribution()[0] %}
     <h2>{{ _("Tips Received, by Number of Tips") }}</h2>
     {% include "templates/tip-distribution.html" %}
-</div>
 
-<div class="col2">
     <h2>{{ _("Tips Received, by Dollar Amount") }}</h2>
     <table class="tip-distribution">
         {% for amount, ncontributors, summed, pcontributors, psummed in tip_distribution %}
@@ -131,6 +125,5 @@
         </tr>
         {% endfor %}
     </table>
-</div>
-
 {% endif %}
+</div>
