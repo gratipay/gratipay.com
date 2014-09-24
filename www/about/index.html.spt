@@ -3,7 +3,7 @@ title = "About"
 [---]
 {% extends "templates/about.html" %}
 {% block page %}
-<div class="col">
+<div class="content">
     <h2>What Is Gratipay?</h2>
 
     <p>Gratipay (formerly Gittip) is a way to give <b>small weekly cash gifts</b> to people you
@@ -21,13 +21,6 @@ title = "About"
     <i>total</i> amount you receive is public. Participants on both sides of
     the equation are rewarded publicly for their participation. (You can opt
     out of publicly displaying your total giving.)</p>
-
-
-
-</div>
-
-
-<div class="col1">
 
     <a name="details"></a>
     <h2>Details</h2>
@@ -71,10 +64,6 @@ title = "About"
         U.S.</a> Right now they're handled manually&mdash;<a
         href="#contact-us">contact us</a> as needed&mdash;with postage and/or
     fees charged at cost.</p>
-
-</div>
-<div class="col2">
-
 
     <a name="contact-us"></a>
     <h2>Contact Us</h2>

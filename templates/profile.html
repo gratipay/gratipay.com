@@ -12,36 +12,27 @@
 {% block heading %}<h1>{{ hero }}</h1>{% endblock %}
 
 {% block nav %}
-{% set current_page = path.raw.split('/')[2] %}
-{% if user.participant == participant or user.ADMIN %}
-<div class="nav level-2">
-    <h2>{{ _("Navigation") }}</h2>
-    {% set pages = [
-        ('/', _('Profile')),
-        ('/giving/', _('Giving')),
-        ('/history/', _('History')),
-        ('/widgets/', _('Widgets')),
-        ('/account/', _('Account')),
-    ] %}
-    {% for slug, name in pages %}
-    <a href="/{{ participant.username }}{{ slug }}"><button{% if slug.strip('/') == current_page %} class="selected"{% endif %}>{{ _(name) }}</button></a>
-    {% endfor %}
-
-    <a href="/{{ participant.username }}/members/" id="members-button"
-    {% if not participant.show_as_team(user) %}
-        class="hidden"
+    {% set current_page = path.raw.split('/')[2] %}
+    {% if user.participant == participant or user.ADMIN %}
+        {% set pages = [
+            ('/', _('Profile')),
+            ('/giving/', _('Giving')),
+            ('/history/', _('History')),
+            ('/widgets/', _('Widgets')),
+            ('/account/', _('Account')),
+        ] %}
+        <ul>
+            {% for slug, name in pages %}
+            <li{% if slug.strip('/') == current_page %} class="selected"{% endif %}><a href="/{{ participant.username }}{{ slug }}">{{ _(name) }}</a></li>
+            {% endfor %}
+            <li{% if 'members' == current_page %} class="selected"{% endif %}{% if not participant.show_as_team(user) %} class="hidden"{% endif %}><a href="/{{ participant.username }}/members/" id="members-button">{{ _('Members') }}</a></li>
+            {% if user.ADMIN %}
+            <li{% if 'events' == current_page %} class="selected"{% endif %}><a href="/{{ participant.username }}/events/">Events</a></li>
+            {% endif %}
+        </ul>
+    {% elif participant.show_as_team(user) %}
+        <ul>
+            <li{% if '' == current_page %} class="selected"{% endif %}><a href="/{{ participant.username }}/">{{ _('Profile') }}</a></li>
+            <li{% if 'members' == current_page %} class="selected"{% endif %}><a href="/{{ participant.username }}/members/">{{ _('Members') }}</a></li>
     {% endif %}
-    ><button{% if 'members' == current_page %} class="selected"{% endif %}>{{ _('Members') }}</button></a>
-
-    {% if user.ADMIN %}
-    <a href="/{{ participant.username }}/events/"><button{% if 'events' == current_page %} class="selected"{% endif %}>Events</button></a>
-    {% endif %}
-</div>
-{% elif participant.show_as_team(user) %}
-<div class="nav level-2">
-    <h2>{{ _("Navigation") }}</h2>
-    <a href="/{{ participant.username }}/"><button{% if '' == current_page %} class="selected"{% endif %}>{{ _('Profile') }}</button></a>
-    <a href="/{{ participant.username }}/members/"><button{% if 'members' == current_page %} class="selected"{% endif %}>{{ _('Members') }}</button></a>
-</div>
-{% endif %}
 {% endblock %}

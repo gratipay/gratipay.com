@@ -4,7 +4,7 @@ title = "Pricing"
 [---] text/html
 {% extends "templates/about.html" %}
 {% block page %}
-<div class="col0">
+<div class="content">
 
     <p>We suggest the following pricing tiers, based on how much money you give
     or receive through Gratipay:</p>

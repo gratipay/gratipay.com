@@ -4,7 +4,7 @@ title = "Fraud"
 {% extends "templates/about.html" %}
 {% block page %}
 
-<div class="col0">
+<div class="content">
     This page collects Gratipay fraud incident reports.
     <ol>
         <li><a href="2012-11-05.html">2012-11-05 - The Delpan Incident</a></li>

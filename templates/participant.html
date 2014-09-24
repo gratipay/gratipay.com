@@ -68,24 +68,6 @@
 {% endif %}
 {% endif %}
 
-{% block nav %}{% endblock %}
-
-{% if participant.username == 'aaronsw' %}
-<div class="nav level-3">
-    <a href="http://news.ycombinator.com/item?id=5046845">RIP :`(</a>
-</div>
-<!--
-
-After following Aaron's career for a decade, I interacted with him for the
-first time three days before he committed suicide:
-
-    https://twitter.com/aaronsw/status/288664016723791873
-
-:`(
-
--->
-{% endif %}
-
 {% if user.ADMIN %}
 <label class="is-suspicious-knob" data-username="{{ participant.username }}">
     Suspicious
@@ -99,38 +81,21 @@ first time three days before he committed suicide:
 {% endblock %}
 
 
-{% block body %}
+{% block nav %}
+    {{ super() }}
+    {% if participant.username == 'aaronsw' %}
+    <div class="nav level-3">
+        <a href="http://news.ycombinator.com/item?id=5046845">RIP :`(</a>
+    </div>
+    <!--
 
-            <h2>Share</h2>
+    After following Aaron's career for a decade, I interacted with him for the
+    first time three days before he committed suicide:
 
-            <!-- http://developers.facebook.com/docs/reference/plugins/like/ -->
-            <div id="fb-root"></div>
-            <script>(function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));</script>
-            <div class="fb-like" data-send="false" data-width="120" data-show-faces="false"></div>
+        https://twitter.com/aaronsw/status/288664016723791873
 
+    :`(
 
-            <!-- https://dev.twitter.com/docs/tweet-button -->
-            <a href="https://twitter.com/share" 
-               class="twitter-share-button" data-lang="en" 
-               data-text="I just tipped a hard-working genius with Gratipay. You can too:" 
-               data-url="https://gratipay.com/">Tweet</a>
-            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-
-            <!-- http://www.google.com/webmasters/+1/button/ -->
-            <g:plusone size="small" annotation="inline" width="120"></g:plusone>
-            <script type="text/javascript">
-              (function() {
-                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-                po.src = 'https://apis.google.com/js/plusone.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-              })();
-            </script>
-
+    -->
+    {% endif %}
 {% endblock %}

@@ -58,11 +58,19 @@
     {% block whole_page %}
     <div class="container">
         {% block killbox %}
+        <style>
+            .nav {
+                top: 100px;
+            }
+        </style>
         <div class="box">
             {% block box %}{% endblock %}
         </div>
         {% endblock %}
         <div id="page" class="group">
+            <div class="nav">
+                {% block nav %}{% endblock %}
+            </div>
             {% block page %}{% endblock %}
         </div>
     </div>

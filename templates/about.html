@@ -1,17 +1,14 @@
 {% extends "templates/base.html" %}
-{% block box %}
+{% block killbox %}{% endblock %}
+{% block nav %}
     {% set current_page = path.raw.split('/')[2] %}
     {% set nav_base = "/about" %}
-    <div class="nav">
+    <ul>
         {% set pages = [('/', _('About')), ('/faq.html', _('FAQ')), ('/teams/', _('Teams'))] %}
         {% include "templates/nav.html" %}
-    </div>
-    <div class="nav level-1">
         {% set pages = [('/pricing', _('Pricing')), ('/stats.html', _('Stats')), ('/charts.html', _('Charts'))] %}
         {% include "templates/nav.html" %}
-    </div>
-    <div class="nav level-2">
         {% set pages = [('/terms/', _('Terms')), ('/privacy/', _('Privacy')), ('/fraud/', _('Fraud')), ('/dnt.html', _('DNT'))] %}
         {% include "templates/nav.html" %}
-    </div>
+    </ul>
 {% endblock %}

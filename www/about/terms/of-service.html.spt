@@ -4,7 +4,7 @@ title = "Terms of Service"
 {% extends "templates/about.html" %}
 
 {% block page %}
-<div class="col0">
+<div class="content">
 <h2>Terms of Service</h2>
 
 <p><i>Last Updated: April 9, 2013</i></p>

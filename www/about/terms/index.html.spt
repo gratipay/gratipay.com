@@ -4,7 +4,7 @@ title = "Terms and Conditions"
 {% extends "templates/about.html" %}
 
 {% block page %}
-<div class="col0">
+<div class="content">
 <h2>Terms and Conditions</h2>
 
 <p><i>Last Updated: July 3, 2014</i></p>

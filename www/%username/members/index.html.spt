@@ -25,7 +25,7 @@ username = team.username  # used in footer shared with on/%platform/ pages
 
 {% block page %}
 
-<div id="team" class="col0">
+<div id="team" class="content">
   <table>
       <tr>
         <th></th>

@@ -23,7 +23,7 @@ locked = False
 
 {% block page %}
 <div id="profile-edit">
-    <div class="col0">
+    <div class="content">
 
         <!-- Name and Anonymous -->
         <form class="username">

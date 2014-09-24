@@ -165,7 +165,7 @@ $(document).ready(function() {
 
 {% if community.nmembers == 0 %}
 
-<div class="col0">
+<div class="content">
 
     <h2>{{ _("You're the first one here!") }}</h2>
 

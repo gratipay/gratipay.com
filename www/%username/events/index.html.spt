@@ -22,7 +22,7 @@ events = db.all(SQL, (unicode(participant.id),))
 <style>
     td { padding: 4px; }
 </style>
-<table id="events" class="centered">
+<table id="events" class="centered content">
 
     {% for e in events %}
     <tr>

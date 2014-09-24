@@ -30,7 +30,7 @@ locked = False
         padding-right: 0.5em;
     }
 </style>
-<table id="matrix" class="col0">
+<table id="matrix" class="content">
     <tr>
         <td colspan="2">
             {% if participant == user.participant %}

@@ -70,7 +70,7 @@ title = _("Browse Communities")
         text-transform: uppercase;
     }
 </style>
-<div class="col0">
+<div class="content">
 
     <h2>{{ _("Large Communities") }}</h2>
     <ul class="community memberships">
