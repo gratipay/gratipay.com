@@ -151,5 +151,7 @@ locked = False
 
     <p><script data-gratipay-username="{{ participant.username }}" data-gratipay-widget="giving" src="//gttp.co/v1.js"></script></p>
 
+    <p>{{ _("Wondering how this would look on a live webpage? Have a look at {0}whit537's blog{1}.", "<a href='http://whit537.org/#footer' target='_blank'>", "</a>") }}</p>
+
 </div>
 {% endblock %}
