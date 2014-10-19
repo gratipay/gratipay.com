@@ -812,6 +812,9 @@ msgstr ""
 msgid "This is not a valid Bitcoin address."
 msgstr "Este não é um endereço de Bitcoin válido."
 
+msgid "This is not a valid Dogecoin address."
+msgstr "Este não é um endereço de Dogecoin válido."
+
 msgid "Your bank account is {0}not connected{1}"
 msgstr "Sua conta bancária está {0}não conectada{1}"
 

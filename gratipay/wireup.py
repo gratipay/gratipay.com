@@ -232,6 +232,11 @@ def cryptocoin_networks(website):
             'display_name': 'Bitcoin',
             'logo': website.asset('cryptocoins/bitcoin.png'),
         },
+        {
+            'name': 'dogecoin',
+            'display_name': 'Dogecoin',
+            'logo': website.asset('cryptocoins/dogecoin.png')
+        }
     ]
 
 

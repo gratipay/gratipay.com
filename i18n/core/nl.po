@@ -811,6 +811,9 @@ msgstr "U dient eerst uw identiteit te verifiëren."
 msgid "This is not a valid Bitcoin address."
 msgstr "Dit is geen geldig Bitcoin adres."
 
+msgid "This is not a valid Dogecoin address."
+msgstr "Dit is geen geldig Dogecoin adres."
+
 msgid "Your bank account is {0}not connected{1}"
 msgstr "Uw bank rekening is {0} niet gekoppeld{1}"
 

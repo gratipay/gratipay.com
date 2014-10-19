@@ -770,7 +770,7 @@ class Participant(Model, MixinTeam):
             SELECT network, address
               FROM current_exchange_routes r
              WHERE participant = %s
-               AND network = 'bitcoin'
+               AND ((network = 'bitcoin') OR (network = 'dogecoin'))
                AND error <> 'invalidated'
         """, (self.id,))
         return {r.network: r.address for r in routes}

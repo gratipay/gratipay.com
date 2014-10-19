@@ -535,6 +535,9 @@ msgstr "네!"
 msgid "This is not a valid Bitcoin address."
 msgstr ""
 
+msgid "This is not a valid Dogecoin address."
+msgstr ""
+
 msgid ""
 "Warning: Doing this will remove all the tips you are currently receiving.\n"
 "\n"
