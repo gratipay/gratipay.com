@@ -140,11 +140,11 @@ msgstr "Profils sur les réseaux sociaux"
 
 #: templates/connected-accounts.html:20
 msgid "Other Receiving Options"
-msgstr "Autres methodes de reception de paiements"
+msgstr "Autres méthodes de réception de paiements"
 
 #: templates/connected-accounts.html:22
 msgid "Other Giving Options"
-msgstr "Autres methodes d'envoi de paiements"
+msgstr "Autres méthodes d'envoi de paiements"
 
 #: templates/connected-accounts.html:43 templates/profile-edit.html:7
 #: templates/profile-edit.html:54 www/bank-account.html.spt:193
@@ -248,7 +248,7 @@ msgstr "{0} observe silencieusement la planète Gratipay"
 
 #: templates/participant.tip.html:5
 msgid "This account has been locked by its owner."
-msgstr "Ce compte a été vérouillé par son propriétaire."
+msgstr "Ce compte a été verrouillé par son propriétaire."
 
 #: templates/participant.tip.html:11 templates/participant.tip.html:23
 msgid "Your Weekly Pledge"
@@ -272,19 +272,19 @@ msgstr "Présentation"
 
 #: templates/profile-edit.html:23
 msgid "Markdown supported."
-msgstr ""
+msgstr "Vou spouvez écrire en markdown"
 
 #: templates/profile-edit.html:24
 msgid "What is markdown?"
-msgstr ""
+msgstr "Qu'est-ce que le markdown ?"
 
 #: templates/profile-edit.html:25
 msgid "View source."
-msgstr ""
+msgstr "Voir la source."
 
 #: templates/profile-edit.html:45
 msgid "Join Communities"
-msgstr "Joindre des communautés"
+msgstr "Rejoindre des communautés"
 
 #: templates/profile-edit.html:52 www/%username/index.html.spt:116
 msgid "Funding Goal"
@@ -342,12 +342,12 @@ msgstr "Connectez vous"
 #: templates/support-gratipay.html:5
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
-msgstr "Seulement {0}% des utilisateurs actifs {1}supportent Gratipay{2}."
+msgstr "Seulement {0}% des utilisateurs actifs {1}soutiennent Gratipay{2}."
 
 #: templates/support-gratipay.html:7
 #, python-format
 msgid "{0}% of active users also {1}support Gratipay{2}."
-msgstr "{0}% des utilisateurs actifs {1}supportent Gratipay{2}."
+msgstr "{0}% des utilisateurs actifs {1}soutiennent Gratipay{2}."
 
 #: templates/support-gratipay.html:11
 msgid "Will you help us reach {0}%?"
@@ -367,7 +367,7 @@ msgstr "Non merci"
 
 #: templates/support-gratipay.html:22
 msgid "We fund Gratipay solely through your voluntary payments!"
-msgstr "Gratipay n'est financé que par vos dons!"
+msgstr "Gratipay n'est financé que par vos dons !"
 
 #: templates/support-gratipay.html:23 www/index.html.spt:57
 msgid "Learn more"
@@ -390,7 +390,7 @@ msgid ""
 "When you receive money on Gratipay we'll automatically deposit it into "
 "your bank account."
 msgstr ""
-"Quand vous recevez des dons nous les déposerons automatiquement sur votre"
+"Quand vous recevrez des dons nous les déposerons automatiquement sur votre"
 " compte bancaire."
 
 #: www/bank-account.html.spt:38
@@ -399,7 +399,7 @@ msgid ""
 "within Gratipay unless you regift it to others."
 msgstr ""
 "Si vous ne connectez pas de compte bancaire alors votre argent "
-"s'accumulera dans votre balance, sauf si vous le donner à d'autres "
+"s'accumulera dans votre balance, sauf si vous le donnez à d'autres "
 "utilisateurs."
 
 #: www/bank-account.html.spt:61
@@ -448,7 +448,7 @@ msgstr "Pays"
 
 #: www/bank-account.html.spt:130
 msgid "non-US?"
-msgstr "Pas aux États-Unis?"
+msgstr "Pas aux États-Unis ?"
 
 #: www/bank-account.html.spt:136
 msgid "Contact Phone Number"
@@ -464,7 +464,7 @@ msgstr "4 derniers chiffres de votre numéro de Sécurité Sociale"
 
 #: www/bank-account.html.spt:162
 msgid "(Not required)"
-msgstr "(Optionnel)"
+msgstr "(facultatif)"
 
 #: www/bank-account.html.spt:174
 msgid "Name on Bank Account"
@@ -619,7 +619,7 @@ msgstr ""
 #: www/index.html.spt:90
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr ""
-"Vous voulez travaillez pour Gratipay ? Nous sommes une {0}entreprise "
+"Vous voulez travailler pour Gratipay ? Nous sommes une {0}entreprise "
 "ouverte{1}."
 
 #: www/index.html.spt:98
@@ -640,14 +640,14 @@ msgstr "Vous avec {0} dans votre compte Gratipay."
 
 #: www/index.html.spt:106
 msgid "Next steps:"
-msgstr "Étapes suivantes:"
+msgstr "Étapes suivantes :"
 
 #: www/index.html.spt:108
 msgid ""
 "Start tipping people; you can find great people to tip by browsing {0}our"
 " communities{1}."
 msgstr ""
-"Commencer à donner, vous pouvez {0}explorer nos communautés{1} pour "
+"Commencez à donner, vous pouvez {0}explorer nos communautés{1} pour "
 "trouver des gens super à qui donner."
 
 #: www/index.html.spt:110
@@ -684,7 +684,7 @@ msgstr ""
 
 #: www/sign-out.html.spt:30
 msgid "Yes!"
-msgstr ""
+msgstr "Oui !"
 
 #: www/%username/index.html.spt:33 www/%username/statement.json.spt:26
 #: www/for/%slug/index.html.spt:12
@@ -812,7 +812,7 @@ msgstr "Documentation de l'API"
 
 #: www/%username/account/index.html.spt:192
 msgid "Do Not Track"
-msgstr ""
+msgstr "Ne pas me pister"
 
 #: www/%username/account/index.html.spt:196
 msgid "On"
@@ -904,7 +904,7 @@ msgstr "Balance"
 
 #: www/%username/history/index.html.spt:86
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #: www/%username/history/index.html.spt:87
 msgid "Notes"
@@ -1027,7 +1027,7 @@ msgstr "Rejoindre"
 
 #: www/for/%slug/index.html.spt:170
 msgid "You're the first one here!"
-msgstr "Vous êtes le premier ici!"
+msgstr "Vous êtes le premier/la première ici!"
 
 #: www/for/%slug/index.html.spt:172
 msgid "Bring the {0} community to Gratipay to find like-minded people to give to."
