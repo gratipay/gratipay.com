@@ -65,7 +65,7 @@ from gratipay.security.user import SESSION_TIMEOUT
     <div class="action">
     {% if user.ANON %}
         {{ _("{0}Sign In{1} {2}to Accept Weekly Payments{3}",
-            "<h1>", "</h1>", "<p>", "</p>") }}
+            "<h1>", "</h1>", "<p id='greeting-text'>", "</p>") }}
         {% from 'templates/auth.html' import auth_button with context %}
 
         <div class="twitter">
