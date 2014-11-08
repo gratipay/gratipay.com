@@ -44,9 +44,6 @@
       &.github button {
         @include has-icon("github");
       }
-      &.bitbucket button {
-        @include has-icon("bitbucket");
-      }
       &.openstreetmap button {
         @include has-icon("openstreetmap");
       }

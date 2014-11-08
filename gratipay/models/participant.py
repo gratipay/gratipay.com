@@ -954,6 +954,7 @@ class Participant(Model, MixinTeam):
             SELECT elsewhere.*::elsewhere_with_participant
               FROM elsewhere
              WHERE participant=%s
+               AND platform != 'bitbucket'
 
         """, (self.username,))
         accounts_dict = {account.platform: account for account in accounts}

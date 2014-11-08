@@ -633,12 +633,6 @@ class Tests(Harness):
         resolved = self.make_participant('alice').resolve_unclaimed()
         assert resolved is None, resolved
 
-    def test_ru_returns_bitbucket_url_for_stub_from_bitbucket(self):
-        unclaimed = self.make_elsewhere('bitbucket', '1234', 'alice')
-        stub = Participant.from_username(unclaimed.participant.username)
-        actual = stub.resolve_unclaimed()
-        assert actual == "/on/bitbucket/alice/"
-
     def test_ru_returns_github_url_for_stub_from_github(self):
         unclaimed = self.make_elsewhere('github', '1234', 'alice')
         stub = Participant.from_username(unclaimed.participant.username)

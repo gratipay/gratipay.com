@@ -458,9 +458,6 @@ given user.
 
   - "elsewhere"&mdash;participant's connected accounts elsewhere; returns an object with these keys:
 
-      - "bitbucket"&mdash;participant's Bitbucket account; possible values are:
-          - `undefined` (key not present)&mdash;no Bitbucket account connected
-          - `https://bitbucket.org/api/1.0/users/%bitbucket_username`
       - "github"&mdash;participant's GitHub account; possible values are:
           - `undefined` (key not present)&mdash;no GitHub account connected
           - `https://api.github.com/users/%github_username`

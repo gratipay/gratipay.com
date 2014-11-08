@@ -18,7 +18,6 @@ import raven
 import mandrill
 from environment import Environment, is_yesish
 from gratipay.elsewhere import PlatformRegistry
-from gratipay.elsewhere.bitbucket import Bitbucket
 from gratipay.elsewhere.bountysource import Bountysource
 from gratipay.elsewhere.github import GitHub
 from gratipay.elsewhere.facebook import Facebook
@@ -186,11 +185,6 @@ def accounts_elsewhere(website, env):
         env.google_client_secret,
         env.google_callback,
     )
-    bitbucket = Bitbucket(
-        env.bitbucket_consumer_key,
-        env.bitbucket_consumer_secret,
-        env.bitbucket_callback,
-    )
     openstreetmap = OpenStreetMap(
         env.openstreetmap_consumer_key,
         env.openstreetmap_consumer_secret,
@@ -211,12 +205,12 @@ def accounts_elsewhere(website, env):
         env.venmo_callback,
     )
 
-    signin_platforms = [twitter, github, facebook, google, bitbucket, openstreetmap]
+    signin_platforms = [twitter, github, facebook, google, openstreetmap]
     website.signin_platforms = PlatformRegistry(signin_platforms)
     AccountElsewhere.signin_platforms_names = tuple(p.name for p in signin_platforms)
 
     # For displaying "Connected Accounts"
-    website.social_profiles = [twitter, github, facebook, google, bitbucket, openstreetmap, bountysource]
+    website.social_profiles = [twitter, github, facebook, google, openstreetmap, bountysource]
 
     all_platforms = signin_platforms + [bountysource, venmo]
     website.platforms = AccountElsewhere.platforms = PlatformRegistry(all_platforms)
@@ -340,9 +334,6 @@ def env():
         GITHUB_CLIENT_ID                = unicode,
         GITHUB_CLIENT_SECRET            = unicode,
         GITHUB_CALLBACK                 = unicode,
-        BITBUCKET_CONSUMER_KEY          = unicode,
-        BITBUCKET_CONSUMER_SECRET       = unicode,
-        BITBUCKET_CALLBACK              = unicode,
         TWITTER_CONSUMER_KEY            = unicode,
         TWITTER_CONSUMER_SECRET         = unicode,
         TWITTER_CALLBACK                = unicode,

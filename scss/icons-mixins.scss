@@ -29,8 +29,6 @@
     content: "\e003";
   } @else if $name == "openstreetmap" {
     content: "\e004";
-  } @else if $name == "bitbucket" {
-    content: "\e005";
   }
 }
 

@@ -18,7 +18,7 @@ from gratipay.elsewhere._extractors import not_available
 
 
 ACTIONS = {'opt-in', 'connect', 'lock', 'unlock'}
-PLATFORMS = 'facebook google bitbucket bountysource github openstreetmap twitter venmo'.split()
+PLATFORMS = 'facebook google bountysource github openstreetmap twitter venmo'.split()
 
 
 class UnknownAccountElsewhere(Exception): pass

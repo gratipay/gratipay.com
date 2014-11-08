@@ -80,7 +80,6 @@ from gratipay.security.user import SESSION_TIMEOUT
         {% call auth_button('google', 'opt-in') %}Google{% endcall %}
         {% call auth_button('facebook', 'opt-in') %}Facebook{% endcall %}
         {% call auth_button('github', 'opt-in') %}GitHub{% endcall %}
-        {% call auth_button('bitbucket', 'opt-in') %}Bitbucket{% endcall %}
         {% call auth_button('openstreetmap', 'opt-in') %}OpenStreetMap{% endcall %}
         </span></div>
 
@@ -136,7 +135,6 @@ from gratipay.security.user import SESSION_TIMEOUT
             """<select>
                 <option value='twitter'>Twitter</option>
                 <option value='github'>GitHub</option>
-                <option value='bitbucket'>Bitbucket</option>
             </select>""") }}
             <button type="submit">{{ _("Go") }}</button>
         </form>
