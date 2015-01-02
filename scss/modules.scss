@@ -26,7 +26,7 @@
         span.money {
             color: $black;
             display: block;
-            font: bold 16px $Ideal;
+            font: bold 11px $Ideal;
             margin: 7px 0 5px 0;
 
             span.unit {
@@ -35,6 +35,9 @@
         }
         span.age {
             font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         span.name {
             display: block;
