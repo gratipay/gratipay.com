@@ -15,7 +15,20 @@ from gratipay.version import get_version
 
 
 import aspen
-from aspen import log_dammit
+from aspen import log_dammit, json_
+
+
+# Monkey patch aspen.json_.dumps to make it compact.
+# ================================================
+
+old_dumps = json_.dumps
+
+def compact_dumps(*a, **kw):
+    kw['indent'] = None
+    kw['separators'] = (',', ':')
+    return old_dumps(*a, **kw)
+
+json_.dumps = compact_dumps
 
 
 # Monkey patch aspen.Response

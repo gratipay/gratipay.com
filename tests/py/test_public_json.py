@@ -151,12 +151,9 @@ class Tests(Harness):
     def test_jsonp_works(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')
-
         alice.set_tip_to(bob, '3.00')
 
-        raw = self.client.GxT('/bob/public.json?callback=foo', auth_as='bob').body
-
-        assert raw == '''\
+        expected = '''\
 foo({
     "avatar": null,
     "elsewhere": {
@@ -175,4 +172,8 @@ foo({
     "on": "gratipay",
     "receiving": "3.00",
     "username": "bob"
-})''' % dict(user_id=bob.id, elsewhere_id=bob.get_accounts_elsewhere()['github'].id)
+})'''.replace(' ', '').replace('\n', '')
+        expected %= dict(user_id=bob.id, elsewhere_id=bob.get_accounts_elsewhere()['github'].id)
+
+        actual = self.client.GxT('/bob/public.json?callback=foo', auth_as='bob').body
+        assert actual == expected

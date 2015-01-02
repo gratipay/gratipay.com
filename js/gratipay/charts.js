@@ -53,7 +53,8 @@ Gratipay.charts.make = function(series) {
     }
 
     for (var i=0, len=maxes.length; i < len; i++) {
-        scales.push(Math.ceil(maxes[i] / 100) * 100);
+        var max = parseInt(charts[i].attr('data-y-max') || maxes[i], 10);
+        scales.push(Math.ceil(max / 100) * 100);
     }
 
 
@@ -67,8 +68,13 @@ Gratipay.charts.make = function(series) {
         week.append(shaded);
 
         var xTick = $(document.createElement('span')).addClass('x-tick');
-        xTick.text(i+1).attr('title', title);
+        xTick.text(i).attr('title', title);
         week.append(xTick);
+
+        if (y > scales[j]) {
+            // clip with no flag
+            y = scales[j];
+        }
 
         // Display a max flag (only once)
         if (y === maxes[j]) {
@@ -81,29 +87,58 @@ Gratipay.charts.make = function(series) {
         return week;
     }
 
+    function wireup(week) {
+        week.click(function() {
+            $(this).toggleClass('flagged');
+            if ($(this).hasClass('flagged'))
+                $(this).removeClass('hover');
+        });
+
+        week.mouseover(function() {
+            $(this).addClass('hover');
+        });
+
+        week.mouseout(function() {
+            $(this).removeClass('hover');
+        });
+    }
+
     for (var i=0, point; point = series[i]; i++) {
         for (var j=0, chart; chart = charts[j]; j++) {
-            chart.append(
-                Week(i, j, scales[j], point[chart.varname], point.date)
-            );
+            var week = Week(i, j, scales[j], point[chart.varname], point.date);
+            wireup(week);
+            chart.append(week);
         }
     }
 
+};
 
-    // Wire up behaviors.
-    // ==================
 
-    $('.week').click(function() {
-        $(this).toggleClass('flagged');
-        if ($(this).hasClass('flagged'))
-            $(this).removeClass('hover');
-    });
+Gratipay.charts.retention = {};
 
-    $('.week').mouseover(function() {
-        $(this).addClass('hover');
-    });
 
-    $('.week').mouseout(function() {
-        $(this).removeClass('hover');
-    });
+Gratipay.charts.retention.make = function(data) {
+
+    Gratipay.charts.make(data[0]);  // new_users
+
+    var retention = data[1];
+    var nweeks = retention.length;
+    var w = (1 / nweeks * 100).toFixed(10) + '%';
+    var chart = $('#chart_retention');
+
+    function get_color(p) {
+        return 'hsl(149,50%,' + (100 - (p*60)).toFixed() + '%)';
+    }
+
+    for (var i=0; i < nweeks; i++) {
+        var nretention = retention[i].length;
+        var week = $(document.createElement('div')).addClass('week').css('width', w);
+        for (var j=0; j < nretention; j++) {
+            var retained = $(document.createElement('div')).addClass('retained');
+            var p = parseFloat(retention[i][j][0], 10);
+            retained.css({background: get_color(p), height: '1'});
+            week.append(retained);
+        }
+        chart.append(week);
+    }
 };

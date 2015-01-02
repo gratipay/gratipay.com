@@ -3,7 +3,8 @@ charts = website.db.all("""\
 
     SELECT ts_start::date   AS date
          , nparticipants    AS total_users
-         , nactive          AS active_users
+         , ntippers         AS givers
+         , ((ntippers::float / nparticipants) * 10000)::int AS giver_ratio
          , ( SELECT sum(transfer_volume)
                FROM paydays
               WHERE ts_start <= p.ts_start
@@ -17,4 +18,4 @@ charts = website.db.all("""\
 """)
 response.headers["Access-Control-Allow-Origin"] = "*"
 [---] application/json via json_dump
-charts[:-1]  # Don't show Gratipay #0.
+charts

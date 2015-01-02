@@ -1,0 +1,54 @@
+from collections import defaultdict
+
+def get_cohorts():
+    transfers = website.db.all("select timestamp::date as date, tipper as username "
+                               "from transfers where context='tip' order by timestamp")
+
+    usermap = {}
+    cohorts = defaultdict(list)
+
+    for date, username in transfers:
+        if username not in usermap:
+            usermap[username] = [date, date]
+            cohorts[date].append(username)
+        else:
+            usermap[username][1] = date
+
+    return usermap, cohorts
+
+usermap, cohorts = get_cohorts()
+
+[---]
+
+if bool(qs.get('recompute', 0)):
+    usermap, cohorts = get_cohorts()
+
+
+# Compute the retention for each cohort.
+# ======================================
+
+new_givers = []
+retentions = []
+for date, givers in sorted(cohorts.items()):
+
+    retention = defaultdict(int)
+    for username in givers:
+        start, end = usermap[username]
+        nweeks = (end - start).days // 7
+        for n in range(nweeks, -1, -1):
+            retention[n] += 1
+
+    max_weeks = max(retention.keys())
+    tgivers = len(givers)
+    new_givers.append({'new_givers': tgivers})  # formatted to work with charts.js
+
+    retentions.append([])
+    for nweeks in range(0, max_weeks+1):
+        ngivers = retention.get(nweeks, 0)
+        pgivers = ngivers / tgivers
+        pgivers = float('{:.3}'.format(pgivers))
+        retentions[-1].append((pgivers, ngivers))
+
+response.headers["Access-Control-Allow-Origin"] = "*"
+[---] application/json via json_dump
+[new_givers, retentions]

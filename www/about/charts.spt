@@ -7,6 +7,7 @@ title = "Charts"
 <script>
 $(document).ready(function() {
     jQuery.get('/about/charts.json', Gratipay.charts.make);
+    jQuery.get('/about/retention.json', Gratipay.charts.retention.make);
 });
 </script>
 
@@ -14,28 +15,46 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block page %}
-<div class="two-column">
+<div class="col1">
     <div class="chart-wrapper">
         <a name="users"></a>
         <h2>Total Users</h2>
         <p class="note">Anyone who's ever created an account on Gratipay</p>
-        <div class="chart" id="chart_total_users"></div>
+        <div class="chart bar" id="chart_total_users"></div>
         <div class="x-axis">weeks</div>
     </div>
 
     <div class="chart-wrapper">
         <a name="active"></a>
-        <h2>Active Users</h2>
-        <p class="note">Users that gave and/or received money within Gratipay (per week)</p>
-        <div class="chart" id="chart_active_users"></div>
+        <h2>Givers</h2>
+        <p class="note">Users that gave money using Gratipay (per week)</p>
+        <div class="chart bar" id="chart_givers"></div>
         <div class="x-axis">weeks</div>
     </div>
 
     <div class="chart-wrapper">
+        <a name="pactive"></a>
+        <h2>Giver Ratio</h2>
+        <p class="note">Givers per 10,000 total users</p>
+        <div class="chart bar" id="chart_giver_ratio" data-y-max="1500" data-max-since="8"></div>
+        <div class="x-axis">weeks</div>
+    </div>
+
+    <div class="chart-wrapper">
+        <a name="cohort"></a>
+        <h2>Giver Cohorts</h2>
+        <p class="note">The number of new givers per week, and their activity over time</p>
+        <div class="chart bar" id="chart_new_givers"></div>
+        <div class="x-axis"></div>
+        <div class="chart retention" id="chart_retention"></div>
+    </div>
+</div>
+<div class="col1">
+    <div class="chart-wrapper">
         <a name="cumulative-gifts"></a>
         <h2>Total Gifts ($)</h2>
         <p class="note">Money transferred within Gratipay (cumulative)</p>
-        <div class="chart" id="chart_total_gifts"></div>
+        <div class="chart bar" id="chart_total_gifts"></div>
         <div class="x-axis">weeks</div>
     </div>
 
@@ -43,18 +62,15 @@ $(document).ready(function() {
         <a name="gifts"></a>
         <h2>Weekly Gifts ($)</h2>
         <p class="note">Money transferred within Gratipay (per week)</p>
-        <div class="chart" id="chart_weekly_gifts"></div>
+        <div class="chart bar" id="chart_weekly_gifts"></div>
         <div class="x-axis">weeks</div>
     </div>
 
     <div class="chart-wrapper newline">
         <a name="charges"></a>
         <h2>Charges ($)</h2>
-        <p class="note">Money moved into Gratipay via credit card<br /> (minimum
-        charge <a
-            href="http://blog.gittip.com/post/28158537529/why-were-you-charged-10">upped</a>
-        to $10 in week 8)</p>
-        <div class="chart" id="chart_charges"></div>
+        <p class="note">Money moved into Gratipay via credit card</p>
+        <div class="chart bar" id="chart_charges"></div>
         <div class="x-axis">weeks</div>
     </div>
 
@@ -62,11 +78,9 @@ $(document).ready(function() {
         <a name="withdrawals"></a>
         <h2>Withdrawals ($)</h2>
 
-        <p class="note">Money withdrawn from Gratipay to a bank account<br />(feature <a
-            href="http://blog.gittip.com/post/30116848405/with-payouts-gittip-is-minimally-viable">added</a>
-        in week 12)</p>
+        <p class="note">Money withdrawn from Gratipay to a bank account</p>
 
-        <div class="chart" id="chart_withdrawals"></div>
+        <div class="chart bar" id="chart_withdrawals"></div>
         <div class="x-axis">weeks</div>
     </div>
 </div>

@@ -153,7 +153,8 @@ class TestChartsJson(Harness):
                    , "weekly_gifts": 3.0
                    , "charges": 0.0
                    , "withdrawals": 0.0
-                   , "active_users": 3
+                   , "givers": 2
+                   , "giver_ratio": 5000
                    , "total_users": 4
                    , "total_gifts": 6.0
                     }
