@@ -41,8 +41,8 @@ Gratipay.account.post_email = function(e) {
 
 Gratipay.account.init = function() {
 
-    // Wire up username knob.
-    // ======================
+    // Wire up username.
+    // =================
 
     Gratipay.forms.jsEdit({
         hideEditButton: true,
@@ -54,8 +54,8 @@ Gratipay.account.init = function() {
     });
 
 
-    // Wire up account type knob.
-    // ==========================
+    // Wire up account type.
+    // =====================
 
     $('.number input').click(function(e) {
         var $input = $(this);
@@ -90,65 +90,17 @@ Gratipay.account.init = function() {
     });
 
 
-    // Wire up aggregate giving knob.
-    // ==============================
+    // Wire up email addresses list.
+    // =============================
 
-    $('.anonymous-giving input').click(function() {
-        jQuery.ajax(
-            { url: '../anonymous.json'
-            , type: 'POST'
-            , data: {toggle: 'giving'}
-            , dataType: 'json'
-            , success: function(data) {
-                $('.anonymous-giving input').attr('checked', data.giving);
-            }
-            , error: function() {
-                Gratipay.notification("Failed to change your anonymity preference. Please try again.", 'error');
-            }
-        });
-    });
+    $('.emails button, .emails input').prop('disabled', false);
+    $('.emails button[class]').on('click', Gratipay.account.post_email);
+    $('form.add-email').on('submit', Gratipay.account.post_email);
 
 
-    // Wire up aggregate receiving knob.
-    // ==============================
+    // Wire up API key.
+    // ================
 
-    $('.anonymous-receiving input').click(function() {
-        jQuery.ajax(
-            { url: '../anonymous.json'
-            , type: 'POST'
-            , data: {toggle: 'receiving'}
-            , dataType: 'json'
-            , success: function(data) {
-                $('.anonymous-receiving input').attr('checked', data.receiving);
-            }
-            , error: function() {
-                Gratipay.notification("Failed to change your anonymity preference. Please try again.", 'error');
-            }
-        });
-    });
-
-
-    // Wire up search opt out
-    // ======================
-
-    $('.is-searchable input').click(function() {
-        jQuery.ajax(
-            { url: '../privacy.json'
-            , type: 'POST'
-            , data: {toggle: 'is_searchable'}
-            , dataType: 'json'
-            , success: function(data) {
-                $('.is-searchable input').attr('checked', !data.is_searchable);
-            }
-            , error: function() {
-                Gratipay.notification("Failed to change your search opt out settings. Please try again.", 'error');
-            }
-        });
-    });
-
-    // Wire up API Key
-    // ===============
-    //
     var callback = function(data) {
         $('.api-key span').text(data.api_key || 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
 
@@ -174,16 +126,46 @@ Gratipay.account.init = function() {
     });
 
 
-    // Wire up email addresses list.
-    // =============================
+    // Wire up privacy settings.
+    // =========================
 
-    $('.emails button, .emails input').prop('disabled', false);
-    $('.emails button[class]').on('click', Gratipay.account.post_email);
-    $('form.add-email').on('submit', Gratipay.account.post_email);
+    $('.privacy input').each(function() {
+        var $input = $(this);
+        var field = $input.attr('name');
+        var is_checkbox = $input.attr('type') === 'checkbox';
+
+        $(this).click(function() {
+
+            if (is_checkbox)
+                var value = $input.prop('checked').toString();
+            else
+                var value = $input.attr('value');
+            console.log(field, value);
+
+            jQuery.ajax(
+                { url: './privacy'
+                , type: 'POST'
+                , data: {field: field, value: value}
+                , dataType: 'text'
+                , success: function(data) {
+                    if (is_checkbox)
+                        $input.attr('checked', data[field]);
+                    else    // assumed to be a radio
+                        $('[value=' + data[field]).prop('checked', true);
+                    Gratipay.notification("Privacy preferences updated.", "success");
+                }
+                , error: function() {
+                    Gratipay.notification( "Sorry, we failed to update your privacy preferences."
+                                         , "error"
+                                          );
+                }
+            });
+        });
+    });
 
 
-    // Wire up close knob.
-    // ===================
+    // Wire up close account.
+    // ======================
 
     $('button.close-account').click(function() {
         window.location.href = './close';

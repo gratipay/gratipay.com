@@ -29,7 +29,7 @@ username = path['username']
 
 anonymous = website.db.one("""
 
-    SELECT anonymous_receiving
+    SELECT not public_receiving AS anonymous
       FROM participants
      WHERE username = %s
 

@@ -1,14 +1,5 @@
 [---]
 title = _("About")
-example = website.db.one("""
-
-    SELECT username FROM participants
-     WHERE is_suspicious IS NOT true
-       AND (giving > 10 AND NOT anonymous_giving)
-        OR (receiving > 10 AND NOT anonymous_receiving)
-  ORDER BY random() LIMIT 1
-
-""")
 [---] text/html
 {% extends "templates/basic-info.html" %}
 {% block content %}

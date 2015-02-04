@@ -18,12 +18,30 @@
     }
 
     .your-tip {
-        input {
+        input.amount {
             width: 120px;
             height: 33px;
             text-align: right;
             font: bold 28px/28px $Ideal;
             color: $black;
+        }
+        .options {
+            font: normal 11px/14px $Ideal;
+            text-align: left;
+            float: right;
+            margin: 0 0 10px;
+            width: 0;
+            display: table;
+            label {
+                display: table-row;
+                span {
+                    display: table-cell;
+                    padding-right: 5px;
+                    &:last-child {
+                        padding-right: 0;
+                    }
+                }
+            }
         }
     }
     button {

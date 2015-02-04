@@ -19,7 +19,7 @@ class Tests(Harness):
                                             , last_bill_result=''
                                              )
             self.warbucks = warbucks
-        self.warbucks.set_tip_to(team, '100')
+        self.warbucks.set_tip_to(team, '100', False, False)
         return team
 
     def take_last_week(self, team, member, amount, actual_amount=None):
@@ -127,7 +127,7 @@ class Tests(Harness):
         team.set_take_for(alice, D('42.00'), alice)
         assert alice.taking == 42
         assert alice.receiving == 42
-        self.warbucks.set_tip_to(alice, D('10.00'))
+        self.warbucks.set_tip_to(alice, D('10.00'), False, False)
         assert alice.taking == 42
         assert alice.receiving == 52
         team.set_take_for(alice, D('50.00'), alice)
@@ -158,7 +158,7 @@ class Tests(Harness):
         self.take_last_week(team, alice, '40.00')
         team.set_take_for(alice, D('42.00'), alice)
 
-        self.warbucks.set_tip_to(team, D('10.00'))  # hard times
+        self.warbucks.set_tip_to(team, D('10.00'), False, False)  # hard times
         alice = Participant.from_username('alice')
         assert alice.receiving == alice.taking == 10
 

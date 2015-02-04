@@ -68,7 +68,7 @@ givers = query_cache.all("""
 
     SELECT username
          , id
-         , anonymous_giving AS anonymous
+         , not public_giving AS anonymous
          , giving AS amount
          , avatar_url
          , number
@@ -91,7 +91,7 @@ receivers = query_cache.all("""
 
     SELECT username
          , id
-         , anonymous_receiving AS anonymous
+         , not public_receiving AS anonymous
          , receiving AS amount
          , avatar_url
          , number

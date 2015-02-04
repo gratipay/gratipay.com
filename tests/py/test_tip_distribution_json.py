@@ -12,8 +12,8 @@ class Tests(Harness):
         bob = self.make_participant('bob', claimed_time='now', number='plural')
         carl = self.make_participant('carl', claimed_time='now', last_bill_result='')
 
-        alice.set_tip_to(bob, '200.00')
-        carl.set_tip_to(bob, '300.00')
+        alice.set_tip_to(bob, '200.00', False, False)
+        carl.set_tip_to(bob, '300.00', False, False)
 
         response = self.client.GET("/about/tip-distribution.json")
         tip_distribution = json.loads(response.body)

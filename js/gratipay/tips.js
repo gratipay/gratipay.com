@@ -13,11 +13,11 @@ Gratipay.tips.init = function() {
     });
 
     $('.your-tip button.edit').click(function() {
-        $('.your-tip input').focus();
+        $('.your-tip input.amount').focus();
     });
 
     $('.your-tip button.stop').click(function() {
-        $('.your-tip input').val('0');
+        $('.your-tip input.amount').val('0');
         $('.your-tip button.save').click();
     });
 
@@ -26,17 +26,19 @@ Gratipay.tips.init = function() {
     });
 
     // Cancel if the user presses the Escape key
-    $('.your-tip input').keyup(function(e) {
+    $('.your-tip input.amount').keyup(function(e) {
         if (e.keyCode === 27)
             $('.your-tip button.cancel').click();
     });
+
+    $('.your-tip button.edit').click();
 };
 
 
 Gratipay.tips.initSupportGratipay = function() {
     $('.support-gratipay button').click(function() {
         var amount = parseFloat($(this).attr('data-amount'), 10);
-        Gratipay.tips.set('Gratipay', amount, function() {
+        Gratipay.tips.set('Gratipay', amount, false, false, function() {
             Gratipay.notification("Thank you so much for supporting Gratipay! :D", 'success');
             $('.support-gratipay').slideUp();
 
@@ -75,15 +77,18 @@ Gratipay.tips.afterTipChange = function(data) {
 };
 
 
-Gratipay.tips.set = function(tippee, amount, callback) {
+Gratipay.tips.set = function(tippee, amount, show_tippee, show_everyone, callback) {
 
     // send request to change tip
-    $.post('/' + tippee + '/tip.json', { amount: amount }, function(data) {
+    var data = { amount: amount, show_tippee: show_tippee, show_everyone: show_everyone};
+    $.post('/' + tippee + '/tip.json', data, function(data) {
         if (callback) callback(data);
         Gratipay.tips.afterTipChange(data);
     })
     .fail(function(e) {
-        Gratipay.notification('Sorry, something went wrong while changing your tip: ' + e.responseJSON.error_message_long + '. :(', 'error');
+        Gratipay.notification( 'Sorry, something went wrong while changing your tip: '
+                             + e.responseJSON.error_message_long + '. :(', 'error'
+                              );
         console.log.apply(console, arguments);
     });
 };

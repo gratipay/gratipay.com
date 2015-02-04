@@ -482,8 +482,12 @@ class Participant(Model, MixinTeam):
 
             UPDATE participants
                SET goal=NULL
-                 , anonymous_giving=False
-                 , anonymous_receiving=False
+                 , public_giving=True
+                 , public_receiving=True
+                 , public_supporting=False
+                 , public_supporters=False
+                 , tell_supporting=False
+                 , know_supporters=False
                  , number='singular'
                  , avatar_url=NULL
                  , email_address=NULL
@@ -888,7 +892,8 @@ class Participant(Model, MixinTeam):
             self.set_attributes(is_free_rider=is_free_rider)
 
 
-    def set_tip_to(self, tippee, amount, update_self=True, update_tippee=True, cursor=None):
+    def set_tip_to(self, tippee, amount, show_tippee, show_everyone, update_self=True,
+            update_tippee=True, cursor=None):
         """Given a Participant or username, and amount as str, returns a dict.
 
         We INSERT instead of UPDATE, so that we have history to explore. The
@@ -925,19 +930,24 @@ class Participant(Model, MixinTeam):
         NEW_TIP = """\
 
             INSERT INTO tips
-                        (ctime, tipper, tippee, amount)
+                        (ctime, tipper, tippee, amount, show_tippee, show_everyone)
                  VALUES ( COALESCE (( SELECT ctime
                                         FROM tips
                                        WHERE (tipper=%(tipper)s AND tippee=%(tippee)s)
                                        LIMIT 1
                                       ), CURRENT_TIMESTAMP)
-                        , %(tipper)s, %(tippee)s, %(amount)s
+                        , %(tipper)s, %(tippee)s, %(amount)s, %(show_tippee)s, %(show_everyone)s
                          )
               RETURNING *
                       , ( SELECT count(*) = 0 FROM tips WHERE tipper=%(tipper)s ) AS first_time_tipper
 
         """
-        args = dict(tipper=self.username, tippee=tippee.username, amount=amount)
+        args = dict( tipper=self.username
+                   , tippee=tippee.username
+                   , amount=amount
+                   , show_tippee=show_tippee
+                   , show_everyone=show_everyone
+                    )
         t = (cursor or self.db).one(NEW_TIP, args)
 
         if update_self:
@@ -1137,9 +1147,9 @@ class Participant(Model, MixinTeam):
         out = self.username
         receiving = self.receiving
         giving = self.giving
-        if (giving > receiving) and not self.anonymous_giving:
+        if (giving > receiving) and self.public_giving:
             out += " gives $%.2f/wk" % giving
-        elif receiving > 0 and not self.anonymous_receiving:
+        elif receiving > 0 and self.public_receiving:
             out += " receives $%.2f/wk" % receiving
         else:
             out += " is"
@@ -1665,7 +1675,7 @@ class Participant(Model, MixinTeam):
         # Values:
         #   null - user is receiving anonymously
         #   3.00 - user receives this amount in tips
-        if not self.anonymous_receiving:
+        if self.public_receiving:
             receiving = str(self.receiving)
         else:
             receiving = None
@@ -1675,7 +1685,7 @@ class Participant(Model, MixinTeam):
         # Values:
         #   null - user is giving anonymously
         #   3.00 - user gives this amount in tips
-        if not self.anonymous_giving:
+        if self.public_giving:
             giving = str(self.giving)
         else:
             giving = None

@@ -171,36 +171,111 @@ emails = participant.get_emails()
           <a href="https://github.com/gratipay/gratipay.com#api">{{ _("API docs") }}</a>
         </div>
 
-        <h2>{{ _("Privacy") }}</h2>
-        <p>
-            <label class="anonymous-giving">
-                <input type="checkbox"
-                    {% if participant.anonymous_giving %}checked="true"{% endif %} />
-                    {{ _("Hide total giving from others.") }}
-            </label>
-            <br />
-            {% if participant.IS_SINGULAR %}
-            <label class="anonymous-receiving">
-                <input type="checkbox"
-                    {% if participant.anonymous_receiving %}checked="true"{% endif %} />
-                    {{ _("Hide total receiving from others.") }}
-            </label>
-            {% endif %}
-            <br />
-            <label class="is-searchable">
-                <input type="checkbox"
-                    {% if not participant.is_searchable %}checked="true"{% endif %} />
-                    {{ _("Hide myself from search results.") }}
-            </label>
-        </p>
-        <p id="dnt">
-            <a href="/about/privacy/#dnt">{{ _("Do Not Track") }}</a>:
-            {% if request.headers.get('DNT') == '1' %}
-                {{ _("On").upper() }}
-            {% else %}
-                {{ _("Off").upper() }}
-            {% endif %}
-        </p>
+        <div class="privacy">
+            <h2>{{ _("Privacy") }}</h2>
+            {{ _("Allow everyone to see:") }}
+
+            <ul class="options">
+                <li>
+                    <label>
+                        <input type="checkbox" name="is_searchable"
+                            {% if participant.is_searchable %}checked="true"{% endif %} />
+                        {{ _("my profile in search results") }}
+                        <div class="note">both on Gratipay and in search engines such as Google</div>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="public_giving"
+                            {% if participant.public_giving %}checked="true"{% endif %} />
+                        {{ _("the total amount I give") }}
+                        <div class="note">{{ _("and the number of people I support") }}</div>
+                    </label>
+                </li>
+                {% if participant.IS_SINGULAR %}
+                <li>
+                    <label>
+                        <input type="checkbox" name="public_receiving"
+                            {% if participant.public_receiving %}checked="true"{% endif %} />
+                        {{ _("the total amount I receive") }}
+                        <div class="note">{{ _("and the number of supporters I have") }}</div>
+                    </label>
+                </li>
+                {% endif %}
+            </ul>
+
+            {{ _("Allow everyone to see:") }}
+            <div class="note">
+                {{ _("You can override these defaults for each payment.") }}
+            </div>
+            <ul class="options">
+                <li>
+                    <label>
+                        <input type="checkbox" name="public_supporting"
+                            {% if participant.public_supporting %}checked="true"{% endif %} />
+                        {{ _("who I support") }}
+                        <div class="note">{{ ("but not specific amounts") }}</div>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="public_supporters"
+                            {% if participant.public_supporters %}checked="true"{% endif %} />
+                        {{ _("who supports me") }}
+                        <div class="note">{{ ("but not specific amounts") }}</div>
+                    </label>
+                </li>
+            </ul>
+
+            {{ _("Allow people I support to see:") }}
+            <div class="note">
+                {{ _("You can override this default for each payment you set up.") }}
+            </div>
+
+            <ul class="options">
+                <li>
+                    <label>
+                        <input type="checkbox" name="tell_supporting"
+                            {% if participant.tell_supporting %}checked="true"{% endif %} />
+                        {{ _("who I am and the amount I pay them") }}
+                    </label>
+                </li>
+            </ul>
+
+            {{ _("Who pays you what, exactly?") }}
+            <ul class="options">
+                <li>
+                    <label>
+                        <input type="radio" name="know_supporters" value="false"
+                            {% if not participant.know_supporters %}checked="true"{% endif %} />
+                        {{ _("I don't want to know.") }}
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="radio" name="know_supporters" value="null"
+                            {% if participant.know_supporters == None %}checked="true"{% endif %} />
+                        {{ _("Allow my supporters to tell me.") }}
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="radio" name="know_supporters" value="true"
+                            {% if participant.know_supporters %}checked="true"{% endif %} />
+                        {{ _("Require my supporters to tell me.") }}
+                    </label>
+                </li>
+            </ul>
+
+            <p id="dnt">
+                <a href="/about/privacy/#dnt">{{ _("Do Not Track") }}</a>:
+                {% if request.headers.get('DNT') == '1' %}
+                    {{ _("On").upper() }}
+                {% else %}
+                    {{ _("Off").upper() }}
+                {% endif %}
+            </p>
+        </div>
 
         <div class="close">
           <h2>{{ _("Close") }}</h2>

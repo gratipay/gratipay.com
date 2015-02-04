@@ -13,56 +13,61 @@ from gratipay.utils import get_participant
 if user.ANON:
     raise Response(403, _("Please sign in first"))
 
+out = {}
+
+# Get tipper and tippee.
+# ======================
+
+tipper = user.participant
+tippee = get_participant(request, restrict=False, resolve_unclaimed=False)
+
+
+# Get and maybe set amount.
+# =========================
+
+if POST:
+    if tippee == tipper:
+        raise Response(400, "no self-tipping")
+
+    try:
+        amount = parse_decimal(body['amount'])
+        show_tippee = body['show_tippee'] == 'true'
+        show_everyone = body['show_everyone'] == 'true'
+        out = tipper.set_tip_to(tippee, amount, show_tippee, show_everyone)
+    except (InvalidOperation, ValueError, BadAmount, NumberFormatError):
+        raise Response(400, "bad amount")
+    except UserDoesntAcceptTips:
+        raise Response(400, "user doesn't accept tips")
 else:
-    out = {}
+    out = tipper.get_tip_to(tippee.username)
 
-    # Get tipper and tippee.
-    # ======================
+amount = out['amount']
+total_giving = tipper.giving
+total_receiving = tipper.receiving
 
-    tipper = user.participant
-    tippee = get_participant(request, restrict=False, resolve_unclaimed=False)
+out["amount"] = str(amount)
+out["amount_l"] = format_currency(amount, 'USD')
+out["msg"] = _("Tip changed to {0} per week!", out["amount_l"])
+out["npatrons"] = tippee.npatrons
+out["tippee_id"] = tippee.id
+out["total_giving"] = str(total_giving)
+out["total_giving_l"] = format_currency(total_giving, 'USD')
+out["total_receiving"] = str(total_receiving)
+out["total_receiving_l"] = format_currency(total_receiving, 'USD')
 
+if tippee.public_receiving:
+    total_receiving_tippee = tippee.receiving
+    out["total_receiving_tippee"] = str(total_receiving_tippee)
+    out["total_receiving_tippee_l"] = format_currency(total_receiving_tippee, 'USD')
+else:
+    out["total_receiving_tippee"] = None
+    out["total_receiving_tippee_l"] = '[' + _("hidden") + ']'
 
-    # Get and maybe set amount.
-    # =========================
-
-    if POST and 'amount' in body and tippee != tipper:
-        try:
-            out = tipper.set_tip_to(tippee, parse_decimal(body['amount']))
-        except (InvalidOperation, ValueError, BadAmount, NumberFormatError):
-            raise Response(400, "bad amount")
-        except UserDoesntAcceptTips:
-            raise Response(400, "user doesn't accept tips")
-    else:
-        out = tipper.get_tip_to(tippee.username)
-
-    amount = out['amount']
-    total_giving = tipper.giving
-    total_receiving = tipper.receiving
-
-    out["amount"] = str(amount)
-    out["amount_l"] = format_currency(amount, 'USD')
-    out["msg"] = _("Tip changed to {0} per week!", out["amount_l"])
-    out["npatrons"] = tippee.npatrons
-    out["tippee_id"] = tippee.id
-    out["total_giving"] = str(total_giving)
-    out["total_giving_l"] = format_currency(total_giving, 'USD')
-    out["total_receiving"] = str(total_receiving)
-    out["total_receiving_l"] = format_currency(total_receiving, 'USD')
-
-    if not tippee.anonymous_receiving:
-        total_receiving_tippee = tippee.receiving
-        out["total_receiving_tippee"] = str(total_receiving_tippee)
-        out["total_receiving_tippee_l"] = format_currency(total_receiving_tippee, 'USD')
-    else:
-        out["total_receiving_tippee"] = None
-        out["total_receiving_tippee_l"] = '[' + _("hidden") + ']'
-
-    if 'ctime' in out:
-        out["ctime"] = str(out['ctime'])
-        out["mtime"] = str(out['mtime'])
-    else:
-        out["ctime"] = out["mtime"] = None
+if 'ctime' in out:
+    out["ctime"] = str(out['ctime'])
+    out["mtime"] = str(out['mtime'])
+else:
+    out["ctime"] = out["mtime"] = None
 
 
 [---] application/json via json_dump

@@ -138,7 +138,7 @@ class TestPages(Harness):
     def test_giving_page(self):
         alice = self.make_participant('alice', claimed_time='now')
         bob = self.make_participant('bob', claimed_time='now')
-        alice.set_tip_to(bob, "1.00")
+        alice.set_tip_to(bob, "1.00", False, False)
         actual = self.client.GET("/alice/giving/", auth_as="alice").body
         expected = "bob"
         assert expected in actual
@@ -146,7 +146,7 @@ class TestPages(Harness):
     def test_giving_page_shows_unclaimed(self):
         alice = self.make_participant('alice', claimed_time='now')
         emma = self.make_elsewhere('github', 58946, 'emma').participant
-        alice.set_tip_to(emma, "1.00")
+        alice.set_tip_to(emma, "1.00", False, False)
         actual = self.client.GET("/alice/giving/", auth_as="alice").body
         expected1 = "emma"
         expected2 = "Unclaimed"
@@ -156,8 +156,8 @@ class TestPages(Harness):
     def test_giving_page_shows_cancelled(self):
         alice = self.make_participant('alice', claimed_time='now')
         bob = self.make_participant('bob', claimed_time='now')
-        alice.set_tip_to(bob, "1.00")
-        alice.set_tip_to(bob, "0.00")
+        alice.set_tip_to(bob, "1.00", False, False)
+        alice.set_tip_to(bob, "0.00", False, False)
         actual = self.client.GET("/alice/giving/", auth_as="alice").body
         assert "bob" in actual
         assert "Cancelled" in actual

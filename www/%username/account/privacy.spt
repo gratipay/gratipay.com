@@ -1,0 +1,35 @@
+from aspen import Response
+
+FIELDS = ( "is_searchable"
+         , "public_giving"
+         , "public_receiving"
+         , "public_supporting"
+         , "public_supporters"
+         , "tell_supporting"
+         , "know_supporters"
+          )
+[---]
+if user.ANON:
+    raise Response(404)
+request.allow("POST")
+
+field = body.get("field")
+if field not in FIELDS:
+    raise Response(400)
+
+value = body.get("value")
+if value not in ("true", "false", "null"):
+    raise Response(400)
+value = {"true": True, "false": False, "null": None}[value]
+
+rec = website.db.one("""
+
+    UPDATE participants
+       SET {0}=%(value)s
+     WHERE username=%(username)s
+ RETURNING {0}
+
+""".format(field), {"value": value, "username": user.participant.username})
+
+[---] text/plain
+{{ {True: "true", False: "false", None: "null"}[rec] }}

@@ -20,12 +20,18 @@ class TestTipJson(Harness):
 
         # Then, add a $1.50 and $3.00 tip
         response1 = self.client.POST( "/test_tippee1/tip.json"
-                                    , {'amount': "1.00"}
+                                    , { 'amount': "1.00"
+                                      , 'show_tippee': 'false'
+                                      , 'show_everyone': 'false'
+                                       }
                                     , auth_as='test_tipper'
                                      )
 
         response2 = self.client.POST( "/test_tippee2/tip.json"
-                                    , {'amount': "3.00"}
+                                    , { 'amount': "3.00"
+                                      , 'show_tippee': 'false'
+                                      , 'show_everyone': 'false'
+                                       }
                                     , auth_as='test_tipper'
                                      )
 
@@ -43,14 +49,20 @@ class TestTipJson(Harness):
         self.make_participant("bob", claimed_time=now)
 
         response = self.client.PxST( "/alice/tip.json"
-                                   , {'amount': "110.00"}
+                                   , { 'amount': "110.00"
+                                     , 'show_tippee': 'false'
+                                     , 'show_everyone': 'false'
+                                      }
                                    , auth_as='bob'
                                     )
         assert "bad amount" in response.body
         assert response.code == 400
 
         response = self.client.PxST( "/alice/tip.json"
-                                   , {'amount': "-1.00"}
+                                   , { 'amount': "-1.00"
+                                     , 'show_tippee': 'false'
+                                     , 'show_everyone': 'false'
+                                      }
                                    , auth_as='bob'
                                     )
         assert "bad amount" in response.body
@@ -62,7 +74,10 @@ class TestTipJson(Harness):
         self.make_participant("bob", claimed_time=now)
 
         response = self.client.PxST( "/alice/tip.json"
-                                   , {'amount': "10.00"}
+                                   , { 'amount': "10.00"
+                                     , 'show_tippee': 'false'
+                                     , 'show_everyone': 'false'
+                                      }
                                    , auth_as='bob'
                                     )
         assert "user doesn't accept tips" in response.body
@@ -73,7 +88,10 @@ class TestTipJson(Harness):
         alice = self.make_elsewhere('twitter', 1, 'alice')
         self.make_participant("bob", claimed_time=now)
         response = self.client.POST( "/%s/tip.json" % alice.participant.username
-                                   , {'amount': "10.00"}
+                                   , { 'amount': "10.00"
+                                     , 'show_tippee': 'false'
+                                     , 'show_everyone': 'false'
+                                      }
                                    , auth_as='bob'
                                     )
         data = json.loads(response.body)

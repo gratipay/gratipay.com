@@ -5,7 +5,7 @@ from gratipay.utils import get_participant
 participant = get_participant(request, restrict=False)
 if not participant.accepts_tips:
     request.redirect('../')
-elif participant.anonymous_receiving:
+elif not participant.public_receiving:
     if user.ANON or (user.participant != participant and not user.ADMIN):
         request.redirect('../')
 

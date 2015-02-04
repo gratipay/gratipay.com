@@ -1,0 +1,22 @@
+.options {
+    li {
+        margin: 0;
+        padding: 0 0 0 20px;
+        position: relative;
+
+        input {
+            position: absolute;
+            top: 6px;
+            left: 0px;
+        }
+
+        .note {
+            padding: 0 0 5px;
+        }
+        &:last-child .note {
+            padding: 0;
+        }
+    }
+    margin: 10px 0 40px;
+    padding: 0;
+}

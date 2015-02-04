@@ -127,7 +127,7 @@ class TestBalancedBankAccount(BalancedHarness):
 class TestBillingAssociate(BalancedHarness):
 
     def test_associate_valid_card(self):
-        self.david.set_tip_to(self.homer, 10)
+        self.david.set_tip_to(self.homer, 10, False, False)
         card = balanced.Card(
             number='4242424242424242',
             expiration_year=2020,

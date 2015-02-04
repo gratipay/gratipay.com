@@ -59,8 +59,12 @@ def fake_participant(db, number="singular", is_admin=False):
                    , ctime=faker.date_time_this_year()
                    , is_admin=is_admin
                    , balance=0
-                   , anonymous_giving=(random.randrange(5) == 0)
-                   , anonymous_receiving=(number != 'plural' and random.randrange(5) == 0)
+                   , public_giving=(random.randrange(5) == 0)
+                   , public_receiving=(number != 'plural' and random.randrange(5) == 0)
+                   , public_supporting=(random.randrange(5) == 0)
+                   , public_supporters=(random.randrange(5) == 0)
+                   , tell_supporting=(random.randrange(5) == 0)
+                   , know_supporters=(random.randrange(5) == 0)
                    , balanced_customer_href=faker.uri()
                    , last_ach_result=''
                    , is_suspicious=False

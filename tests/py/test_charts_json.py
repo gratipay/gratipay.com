@@ -24,8 +24,8 @@ class TestChartsJson(Harness):
         self.make_exchange('bill', 10, 0, self.bob)
         self.make_participant('notactive', claimed_time='now')
 
-        self.alice.set_tip_to(self.carl, '1.00')
-        self.bob.set_tip_to(self.carl, '2.00')
+        self.alice.set_tip_to(self.carl, '1.00', False, False)
+        self.bob.set_tip_to(self.carl, '2.00', False, False)
 
     def run_payday(self):
         with patch.object(Payday, 'fetch_card_holds') as fch:
@@ -57,8 +57,8 @@ class TestChartsJson(Harness):
         self.run_payday()   # zeroth, ignored
         self.run_payday()   # first
 
-        self.alice.set_tip_to(self.carl, '5.00')
-        self.bob.set_tip_to(self.carl, '0.00')
+        self.alice.set_tip_to(self.carl, '5.00', False, False)
+        self.bob.set_tip_to(self.carl, '0.00', False, False)
 
         self.run_payday()   # second
 
@@ -80,12 +80,12 @@ class TestChartsJson(Harness):
         self.run_payday()   # first
 
         # Oops! Sorry, Carl. :-(
-        self.alice.set_tip_to(self.carl, '0.00')
-        self.bob.set_tip_to(self.carl, '0.00')
+        self.alice.set_tip_to(self.carl, '0.00', False, False)
+        self.bob.set_tip_to(self.carl, '0.00', False, False)
         self.run_payday()   # second
 
         # Bouncing back ...
-        self.alice.set_tip_to(self.carl, '5.00')
+        self.alice.set_tip_to(self.carl, '5.00', False, False)
         self.run_payday()   # third
 
         expected = [ { "date": today()
@@ -166,8 +166,8 @@ class TestChartsJson(Harness):
     def test_anonymous_receiver(self):
         self.run_payday()
         self.run_payday()
-        self.client.POST('/carl/anonymous.json',
-                         {'toggle': 'receiving'},
+        self.client.POST('/carl/account/privacy',
+                         {'field': 'public_receiving', 'value': 'false'},
                          auth_as='carl')
 
         r = self.client.GxT('/carl/charts.json')

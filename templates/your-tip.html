@@ -5,25 +5,69 @@
 {% else %}
     <div class="cta">
         {% set tippee = participant.username %}
-        {% set tip = user.participant.get_tip_to(tippee)['amount'] %}
+        {% set tip = user.participant.get_tip_to(tippee) %}
         <h2>{{ _('Your Tip') }}</h2>
         <div class="js-edit your-tip {{ 'anon' if user.ANON }}"
              data-tippee="{{ participant.id }}">
             <div class="view">
-                <span class="amount">{{ format_currency(tip, 'USD') }}</span>
+                <span class="amount">{{ format_currency(tip['amount'], 'USD') }}</span>
                 <div class="per-week">{{ _("per week") }}</div>
-                <button class="edit {{ 'not-zero' if tip > 0 }}">
-                  {{ _("Edit") if tip > 0 else _("Give to {0}", tippee) }}
+                <button class="edit {{ 'not-zero' if tip['amount'] > 0 }}">
+                  {{ _("Edit") if tip['amount'] > 0 else _("Give to {0}", tippee) }}
                 </button>
             </div>
             <form class="edit" action="/{{ tippee }}/tip.json">
                 $
-                <input type="text" name="amount" class="amount" value="{{ format_decimal(tip) }}"
+                <input type="text" name="amount" class="amount"
+                       value="{{ format_decimal(tip['amount']) }}"
                        min="0" max="{{ '1000' if participant.IS_PLURAL else '100' }}">
                 <div class="per-week">{{ _("per week") }}</div>
-                <button class="save">{{ _("Save") }}</button>
-                <button class="cancel">{{ _("Cancel") }}</button>
-                <button class="stop {{ 'zero' if not tip }}">{{ _("Stop Giving") }}</button>
+
+                <div class="options">
+                    <label>
+                        <span class="input">
+                            <input type="hidden" name="show_everyone" value="false">
+                            <input type="checkbox" name="show_everyone" value="true"
+                                {% if participant.public_supporters %}
+                                    {% if tip['show_everyone'] %}
+                                    checked="true"
+                                    {% elif user.participant.public_supporting %}
+                                    checked="true"
+                                    {% endif %}
+                                {% else %}
+                                disabled="true"
+                                {% endif %}>
+                        </span>
+                        <span class="label">share publicly</span>
+                    </label>
+                    <label>
+                        <span class="input">
+                            <input type="hidden" name="show_tippee"
+                                {% if participant.know_supporters == True %}
+                                value="true"
+                                {% else %}
+                                value="false"
+                                {% endif %}>
+                            <input type="checkbox" name="show_tippee" value="true"
+                                {% if participant.know_supporters == True %}
+                                disabled="true" checked="true"
+                                {% elif participant.know_supporters == False %}
+                                disabled="true"
+                                {% elif tip['show_tippee'] %}
+                                checked="true"
+                                {% elif user.participant.tell_supporting %}
+                                checked="true"
+                                {% endif %}>
+                        </span>
+                        <span class="label">share details with<br>{{ participant.username }}</span>
+                    </label>
+                </div>
+
+                <div class="clear">
+                    <button class="save">{{ _("Save") }}</button>
+                    <button class="cancel">{{ _("Cancel") }}</button>
+                    <button class="stop {{ 'zero' if not tip }}">{{ _("Stop Giving") }}</button>
+                </div>
             </form>
         </div>
 

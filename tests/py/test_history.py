@@ -27,7 +27,7 @@ class TestHistory(Harness):
         carl = self.make_participant('carl', claimed_time='now')
         team.add_member(bob)
         team.set_take_for(bob, Decimal('1.00'), team)
-        alice.set_tip_to(bob, Decimal('5.00'))
+        alice.set_tip_to(bob, Decimal('5.00'), False, False)
 
         assert bob.balance == 0
         for i in range(2):

@@ -36,6 +36,48 @@ def _set_cookie(response, *args, **kw):
 aspen.Response.set_cookie = _set_cookie
 
 
+# Patch Aspen to fix form data parsing bug.
+# =========================================
+# Upstream fix: https://github.com/gratipay/aspen-python/pull/413
+
+import cgi
+from aspen.http.mapping import Mapping
+
+def formdata(raw, headers):
+    """Parse raw as form data"""
+
+    # Force the cgi module to parse as we want. If it doesn't find
+    # something besides GET or HEAD here then it ignores the fp
+    # argument and instead uses environ['QUERY_STRING'] or even
+    # sys.stdin(!). We want it to parse request bodies even if the
+    # method is GET (we already parsed the querystring elsewhere).
+
+    environ = {"REQUEST_METHOD": "POST"}
+    parsed = cgi.FieldStorage( fp = cgi.StringIO(raw)  # Ack.
+                             , environ = environ
+                             , headers = headers
+                             , keep_blank_values = True
+                             , strict_parsing = False
+                              )
+    result = Mapping()
+    for k in parsed.keys():
+        vals = parsed[k]
+        if not isinstance(vals, list):
+            vals = [vals]
+        for v in vals:
+            if isinstance(v, cgi.MiniFieldStorage):
+                v = v.value.decode("UTF-8")  # XXX Really?  Always UTF-8?
+            else:
+                assert isinstance(v, cgi.FieldStorage), v
+                if v.filename is None:
+                    v = v.value.decode("UTF-8")
+            result.add(k, v)
+    return result
+
+website.body_parsers["application/x-www-form-urlencoded"] = formdata
+website.body_parsers["multipart/form-data"] = formdata
+
+
 # Wireup Algorithm
 # ================
 

@@ -59,7 +59,10 @@ class TestTipsJson(Harness):
         self.make_participant("test_tipper", claimed_time=now)
 
         response = self.client.POST( '/test_tippee1/tip.json'
-                                   , {'amount': '1.00'}
+                                   , { 'amount': '1.00'
+                                     , 'show_tippee': 'false'
+                                     , 'show_everyone': 'false'
+                                      }
                                    , auth_as='test_tipper'
                                     )
 
@@ -80,9 +83,9 @@ class TestTipsJson(Harness):
 
         response = self.client.POST( '/test_tipper/tips.json'
                                    , body=json.dumps([{ 'username': 'test_tippee1'
-                                                 , 'platform': 'badname'
-                                                 , 'amount': '1.00'
-                                                  }])
+                                                      , 'platform': 'badname'
+                                                      , 'amount': '1.00'
+                                                       }])
                                    , auth_as='test_tipper'
                                    , content_type='application/json'
                                     )
