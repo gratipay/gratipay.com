@@ -4,6 +4,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import re
 
+high_risk = []
+low_risk = []
+
 for root, dirs, files in os.walk('www'):
     for filename in files:
         if not filename.endswith('.spt'):
@@ -30,5 +33,19 @@ for root, dirs, files in os.walk('www'):
                             linerange = "{}-{}".format(*curblock[1:])
                         else:
                             linerange = "{}".format(curblock[1])
-                        print("{}  {:>9}  {}".format(filepath, linerange, replacement))
+
+                        if re.match(r'^{{ _\("[A-Za-z0-9 ,.!]+?"\) }}$', replacement):
+                            queue = low_risk
+                        else:
+                            queue = high_risk
+
+                        queue.append((filepath, linerange, replacement))
                 curblock = ['', -1, -1]
+
+for name, queue in (("High Risk", high_risk), ("Low Risk", low_risk)):
+    header = "{} (N={})".format(name, len(queue))
+    print(header)
+    print("="*len(header))
+    for filepath, linerange, replacement in queue:
+        print("{}  {:>9}  {}".format(filepath, linerange, replacement))
+    print()
