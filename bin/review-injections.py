@@ -5,7 +5,9 @@ import os
 import re
 
 high_risk = []
-low_risk = []
+simple_i18n = []
+assets = []
+escaped = []
 
 for root, dirs, files in os.walk('www'):
     for filename in files:
@@ -34,15 +36,25 @@ for root, dirs, files in os.walk('www'):
                         else:
                             linerange = "{}".format(curblock[1])
 
-                        if re.match(r'^{{ _\("[A-Za-z0-9 ,.!]+?"\) }}$', replacement):
-                            queue = low_risk
+                        if re.match(r'^{{.*?[|]e ?}}$', replacement):
+                            queue = escaped
+                        elif re.match(r'^{{ _\("[A-Za-z0-9 ,.!\'?]+?"\) }}$', replacement):
+                            queue = simple_i18n
+                        elif re.match(r'^{{ website\.asset.*? }}$', replacement):
+                            queue = assets
                         else:
                             queue = high_risk
 
                         queue.append((filepath, linerange, replacement))
                 curblock = ['', -1, -1]
 
-for name, queue in (("High Risk", high_risk), ("Low Risk", low_risk)):
+queues = ( ("High Risk", high_risk)
+         , ("Simple i18n", simple_i18n)
+         , ("Assets", assets)
+         , ("Escaped", escaped)
+          )
+
+for name, queue in queues:
     header = "{} (N={})".format(name, len(queue))
     print(header)
     print("="*len(header))
