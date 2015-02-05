@@ -1,3 +1,4 @@
+{% autoescape false %}
 <form id="jump">
     {{ _("Jump to {0} from {1}",
          """<input placeholder='username' autocomplete='off' autocorrect='off'
@@ -10,3 +11,4 @@
          </select>""") }}
     <button type="submit">{{ _("Go") }}</button>
 </form>
+{% endautoescape %}

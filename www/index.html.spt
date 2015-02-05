@@ -44,8 +44,10 @@ from gratipay.security.user import SESSION_TIMEOUT
     <h1>{{ _("Weekly Payments") }}</h1>
     <p>{{ _("Motivated by Gratitude") }}</p>
 
+    {% autoescape false %}
     <p>{{ _("Sustainably crowdfund your business, personal projects, or charity, with {0}no extra fees{1}.",
         "<span>", "</span>") }}</p>
+    {% endautoescape %}
 
     <p><a href="/about/">{{ _("Learn more") }}</a></p>
 {% endblock %}
@@ -54,8 +56,8 @@ from gratipay.security.user import SESSION_TIMEOUT
 {% block content %}
     {% if user.ANON %}
     <div class="action">
-        {{ _("{0}Sign In{1} {2}to Accept Weekly Payments{3}",
-            "<h1>", "</h1>", "<p>", "</p>") }}
+        <h1>{{ _("Sign In") }}</h1>
+        <p>{{ _("to Accept Weekly Payments") }}</p>
         {% from 'templates/auth.html' import auth_button with context %}
 
         <div class="twitter">
@@ -75,6 +77,7 @@ from gratipay.security.user import SESSION_TIMEOUT
             </span>
         </div>
 
+        {% autoescape false %}
         <p class="other">{{
             _("By signing in, you indicate that you have read and agree to our {0}Terms and Conditions{1}.",
                 "<a href='/about/terms/'>", "</a>") + " " +
@@ -86,6 +89,7 @@ from gratipay.security.user import SESSION_TIMEOUT
                 "<a href='/for/'>", "</a>") + " " +
             _("Want to work for Gratipay? We are an {0}open company{1}.",
                 "<a href='http://inside.gratipay.com/big-picture/welcome'>", "</a>") }}</p>
+        {% endautoescape %}
 
     {% else %}
     <div class="greeting">
@@ -103,19 +107,27 @@ from gratipay.security.user import SESSION_TIMEOUT
         {% if user.participant.giving == user.participant.receiving == 0 %}
             <p>{{ _("Next steps:") }}</p>
             <ol>
-                <li>{{ _("Start tipping people; you can find great people to tip by browsing {0}our communities{1}.",
+                {% autoescape false %}
+                <li>{{ _("Start tipping people; you can find great people to tip by browsing "
+                         "{0}our communities{1}.",
                          "<a href='/for/'>", "</a>") }}</li>
-                <li>{{ _("{0}Add a credit card{1} to make sure your weekly tips go through this Thursday.",
-                        "<a href='/credit-card.html'>", "</a>") }}</li>
+                <li>{{ _("{0}Add a credit card{1} to make sure your weekly tips go through this "
+                         "Thursday.",
+                         "<a href='/credit-card.html'>", "</a>") }}</li>
                 <li>{{ _("{0}Fill out your profile{1} to let others know about you.",
-                        "<a href='/"+ user.participant.username + "/'>", "</a>") }}</li>
-                <li>{{ _("Reach a wider audience by {0}embedding our widgets{1} on your blog/website.",
-                        "<a href='/"+ user.participant.username + "/widgets'>", "</a>") }}</li>
+                         "<a href='/"+ user.participant.username + "/'>", "</a>") }}</li>
+                <li>{{ _("Reach a wider audience by {0}embedding our widgets{1} on your "
+                         "blog/website.",
+                         "<a href='/"+ user.participant.username + "/widgets'>", 
+                         "</a>") }}</li>
+                {% endautoescape %}
             </ol>
             <p></p>
         {% else %}
+            {% autoescape false %}
             <p>{{ _("Go to {0}your profile{1}.",
                     "<a href='/" + user.participant.username + "/'>", "</a>") }}</p>
+            {% endautoescape %}
         {% endif %}
 
         {% include "templates/jump.html" %}
