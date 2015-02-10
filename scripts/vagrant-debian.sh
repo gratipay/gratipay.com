@@ -3,6 +3,7 @@
 # installs Python-independent project dependencies
 
 apt-get -y install postgresql
+apt-get -y install postgresql-contrib  # pg_stat_statements, pg_trgm
 apt-get -y install libpq-dev
 apt-get -y install python-dev  # for building psycopg2
 apt-get -y install g++  # for libsass
