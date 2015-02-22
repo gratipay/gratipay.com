@@ -10,7 +10,7 @@ CREATE TEMPORARY TABLE temp_participants ON COMMIT DROP AS
          , 0::numeric(35,2) AS receiving
          , 0 as npatrons
          , goal
-         , COALESCE(last_bill_result = '', false) AS credit_card_ok
+         , COALESCE(last_bill_result = '' OR last_coinbase_result = '', false) AS has_funding
       FROM participants
      WHERE is_suspicious IS NOT true;
 
@@ -47,7 +47,7 @@ CREATE OR REPLACE FUNCTION fake_tip() RETURNS trigger AS $$
               FROM temp_participants p
              WHERE username = NEW.tipper
         );
-        IF (NEW.amount > tipper.fake_balance AND NOT tipper.credit_card_ok) THEN
+        IF (NEW.amount > tipper.fake_balance AND NOT tipper.has_funding) THEN
             RETURN NULL;
         END IF;
         IF (NEW.claimed) THEN
@@ -143,7 +143,7 @@ UPDATE temp_tips t
    SET is_funded = true
   FROM temp_participants p
  WHERE p.username = t.tipper
-   AND p.credit_card_ok;
+   AND p.has_funding;
 
 SELECT settle_tip_graph();
 

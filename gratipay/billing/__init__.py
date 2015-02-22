@@ -29,8 +29,15 @@ def store_result(db, thing, participant, new_result):
 
     Also update receiving amounts of the participant's tippees.
     """
-    assert thing in ("credit card", "bank account"), thing
-    column = 'last_%s_result' % ('bill' if thing == 'credit card' else 'ach')
+    assert thing in ("credit card", "bank account", "coinbase account"), thing
+    if thing == "credit card":
+        x = "bill"
+    elif thing == "bank account":
+        x = "ach"
+    else:
+        assert thing == "coinbase account"
+        x = "coinbase"
+    column = 'last_%s_result' % x
     old_result = getattr(participant, column)
 
     # Update last_thing_result in the DB
@@ -42,7 +49,7 @@ def store_result(db, thing, participant, new_result):
     participant.set_attributes(**{column: new_result})
 
     # Update the receiving amounts of tippees if requested and necessary
-    if thing != "credit card":
+    if thing == "bank account":
         return
     if participant.is_suspicious or new_result == old_result:
         return
@@ -78,6 +85,8 @@ def associate(db, thing, participant, balanced_account, balanced_thing_uri):
     try:
         if thing == "credit card":
             obj = balanced.Card.fetch(balanced_thing_uri)
+        elif thing == "coinbase account":
+            obj = balanced.ExternalAccount.fetch(balanced_thing_uri)
         else:
             assert thing == "bank account", thing # sanity check
             obj = balanced.BankAccount.fetch(balanced_thing_uri)
@@ -88,6 +97,7 @@ def associate(db, thing, participant, balanced_account, balanced_thing_uri):
         error = ''
     typecheck(error, unicode)
 
+    #TODO - modify store_result to handle Coinbase
     store_result(db, thing, participant, error)
     return error
 
@@ -101,10 +111,15 @@ def invalidate_on_balanced(thing, customer):
     See: https://github.com/balanced/balanced-api/issues/22
 
     """
-    assert thing in ("credit card", "bank account")
+    assert thing in ("credit card", "bank account", "coinbase account")
     typecheck(customer, balanced.Customer)
 
-    things = customer.cards if thing == "credit card" else customer.bank_accounts
+    if thing == "credit card":
+        things = customer.cards
+    elif thing == "coinbase account":
+        things = customer.external_accounts
+    else:
+        things = customer.bank_accounts
 
     for _thing in things:
         _thing.unstore()

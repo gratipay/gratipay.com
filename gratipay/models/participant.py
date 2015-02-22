@@ -704,6 +704,9 @@ class Participant(Model, MixinTeam):
     def accepts_tips(self):
         return (self.goal is None) or (self.goal >= 0)
 
+    @property
+    def has_funding(self):
+        return self.last_bill_result == '' or self.last_coinbase_result == ''
 
     def insert_into_communities(self, is_member, name, slug):
         participant_id = self.id
@@ -808,7 +811,7 @@ class Participant(Model, MixinTeam):
 
     def update_giving(self, cursor=None):
         # Update is_funded on tips
-        if self.last_bill_result == '':
+        if self.has_funding:
             (cursor or self.db).run("""
                 UPDATE current_tips
                    SET is_funded = true

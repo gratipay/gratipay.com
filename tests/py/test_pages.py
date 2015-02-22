@@ -204,3 +204,17 @@ class TestPages(Harness):
         self.make_participant('alice', claimed_time='now')
         body = self.client.GET("/alice/", auth_as="alice").body
         assert b'Edit' in body
+
+    def test_account_page_coinbase_account_connected(self):
+        self.make_participant('alice', claimed_time='now')
+        self.db.run("UPDATE participants SET last_coinbase_result='' WHERE username = 'alice'")
+        actual = self.client.GET("/alice/account/", auth_as="alice").body
+        expected = "Your coinbase account is connected"
+        assert expected in actual
+
+    def test_account_page_coinbase_account_failing(self):
+        self.make_participant('alice', claimed_time='now')
+        self.db.run("UPDATE participants SET last_coinbase_result='error' WHERE username = 'alice'")
+        actual = self.client.GET("/alice/account/", auth_as="alice").body
+        expected = "Your coinbase account is <b>failing</b>"
+        assert expected in actual

@@ -183,6 +183,50 @@ class TestPayday(BalancedHarness):
         Payday.start().update_cached_amounts()
         check()
 
+    def test_update_cached_amounts_considers_coinbase(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        bob = self.make_participant('bob', claimed_time='now', last_bill_result=None,
+                                    last_coinbase_result='')
+        carl = self.make_participant('carl', claimed_time='now', last_bill_result="Fail!",
+                                     last_coinbase_result='Fail!')
+        dana = self.make_participant('dana', claimed_time='now')
+        alice.set_tip_to(dana, '1.00')
+        bob.set_tip_to(dana, '2.00')
+        carl.set_tip_to(dana, '3.00')
+
+        def check():
+            alice = Participant.from_username('alice')
+            bob = Participant.from_username('bob')
+            carl = Participant.from_username('carl')
+            dana = Participant.from_username('dana')
+            assert alice.giving == D('1.00')
+            assert bob.giving == D('2.00')
+            assert carl.giving == D('0.00')
+            assert dana.receiving == D('3.00')
+            assert dana.npatrons == 2
+            funded_tips = self.db.all("SELECT amount FROM tips WHERE is_funded ORDER BY id")
+            assert funded_tips == [1, 2]
+
+        # Pre-test check
+        check()
+
+        # Check that update_cached_amounts doesn't mess anything up
+        Payday.start().update_cached_amounts()
+        check()
+
+        # Check that update_cached_amounts actually updates amounts
+        self.db.run("""
+            UPDATE tips SET is_funded = false;
+            UPDATE participants
+               SET giving = 0
+                 , npatrons = 0
+                 , pledging = 0
+                 , receiving = 0
+                 , taking = 0;
+        """)
+        Payday.start().update_cached_amounts()
+        check()
+
     @mock.patch('gratipay.billing.payday.log')
     def test_start_prepare(self, log):
         self.clear_tables()

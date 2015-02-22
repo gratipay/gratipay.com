@@ -1,3 +1,4 @@
+import balanced
 
 from gratipay.utils import get_participant
 
@@ -14,6 +15,15 @@ emails = participant.get_emails()
 
 {% block scripts %}
 <script>$(document).ready(Gratipay.account.init);</script>
+
+{% if not user.ANON %}
+<script>
+    $(document).ready(function() {
+        Gratipay.payments.cb.init();
+    });
+</script>
+{% endif %}
+
 {{ super() }}
 {% endblock %}
 
@@ -87,6 +97,28 @@ emails = participant.get_emails()
                             <a class="button auth-button" href="/credit-card.html">{{ _("+ Add") }}</a>
                         {% else %}
                             <a class="button auth-button" href="/credit-card.html">{{ _("Edit") }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="account-type">
+                        <img src="{{ website.asset_url }}/coinbase.jpg" />
+                    </td>
+                    <td class="account-details">
+                        <div class="account-type">{{ _("Coinbase Account") }}</div>
+                        {% if participant.last_coinbase_result == "" %}
+                            <span id="cb-status">{{ _("Your coinbase account is {0}connected{1}", "", "") }}</span>
+                        {% elif participant.last_coinbase_result %}
+                            <span id="cb-status">{{ _("Your coinbase account is {0}failing{1}", "<b>", "</b>") }}</span>
+                        {% else %}
+                            <span id="cb-status"></span>
+                        {% endif %}
+                    </td>
+                    <td class="account-action">
+                        {% if participant.last_coinbase_result is none %}
+                            <a class="button auth-button" href="#" id="cb-button" data-action="add">{{ _("+ Add") }}</a>
+                        {% else %}
+                            <a class="button auth-button" href="#" id="cb-button" data-action="remove">{{ _("Remove") }}</a>
                         {% endif %}
                     </td>
                 </tr>

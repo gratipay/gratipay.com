@@ -1,0 +1,48 @@
+"""
+
+When a user connects her Coinbase account, Balanced always gives us a
+single-use token in return, provided that the required permissions were granted.
+This script takes the token and tries to associate it with
+a Balanced account object (creating one as needed).
+
+"""
+from aspen import Response
+from gratipay import billing
+
+[-----------------------------------------------------------------------------]
+
+if user.ANON:
+    raise Response(404)
+
+request.allow('POST')
+out = {}
+
+if body.get('action') == 'delete':
+    billing.clear( website.db
+                 , u"coinbase account"
+                 , user.participant.username
+                 , user.participant.balanced_customer_href
+                  )
+# TODO
+#elif body.get('action') == 'store-error':
+    # billing.store_result(website.db, u"credit card", user.participant.username, body['msg'])
+else:
+
+    # Associate the single-use token representing the coinbase account.
+
+    account_href = body['account_href']
+
+    error = billing.associate( website.db
+                             , u"coinbase account"
+                             , user.participant.username
+                             , user.participant.balanced_customer_href
+                             , account_href
+                              )
+
+    if error:
+        out = {"problem": "Problem", "error": error}
+    else:
+        out = {"problem": ""}
+
+[---] application/json via json_dump
+out

@@ -547,6 +547,26 @@ class Tests(Harness):
         funded_tips = self.db.all("SELECT amount FROM tips WHERE is_funded ORDER BY id")
         assert funded_tips == [3, 6, 5]
 
+    def test_coinbase_result_changes_is_funded(self):
+        alice = self.make_participant('alice', claimed_time='now', last_coinbase_result='')
+        bob = self.make_participant('bob', claimed_time='now', last_coinbase_result=None)
+        carl = self.make_participant('carl', claimed_time='now', last_coinbase_result="Fail!")
+        raj = self.make_participant('raj', claimed_time='now', last_coinbase_result="Fail!", last_bill_result='')
+        dana = self.make_participant('dana', claimed_time='now')
+        alice.set_tip_to(dana, '1.00') # Funded
+        bob.set_tip_to(dana, '2.00') # Not Funded
+        carl.set_tip_to(dana, '3.00') # Not Funded
+        raj.set_tip_to(dana, '4.00') # Funded by CC
+
+        assert alice.giving == Decimal('1.00')
+        assert bob.giving == Decimal('0.00')
+        assert carl.giving == Decimal('0.00')
+        assert raj.giving == Decimal('4.00')
+        assert dana.receiving == Decimal('5.00')
+
+        funded_tips = self.db.all("SELECT amount FROM tips WHERE is_funded ORDER BY id")
+        assert funded_tips == [1, 4]
+
     def test_only_latest_tip_counts(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob', claimed_time='now', last_bill_result='')
