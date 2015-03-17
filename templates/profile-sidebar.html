@@ -56,6 +56,21 @@
     {% endif %}
 </div>
 
+{% set current_page = request.path.raw %}
+{% set last_part = request.path.raw.split('/')[2] %}
+{% if participant.claimed_time and last_part in ('settings', 'history', 'widgets', 'events') %}
+{% set nav_base = '/%s' % participant.username %}
+{% set u = participant.username %}
+{% set pages = [ ('/%s/settings/'%u,    _('Settings'),  True,   False)
+               , ('/%s/history/'%u,     _('History'),   True,   False)
+               , ('/%s/widgets/'%u,     _('Widgets'),   True,   False)
+               , ('/%s/events/'%u,      _('Events'),    False,  False)
+                ] %}
+{% set pages = filter_profile_nav(user, participant, pages) %}
+{% set tertiary = True %}
+{% include "templates/profile-nav.html" %}
+{% endif %}
+
 {% if participant.accepts_tips and participant.claimed_time %}
 {% if participant != user.participant %}
 {% include "templates/your-tip.html" %}

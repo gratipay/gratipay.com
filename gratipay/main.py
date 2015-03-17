@@ -32,7 +32,7 @@ website.renderer_factories['jinja2'].Renderer.global_context = {
     # This is shared via class inheritance with jinja2_htmlescaped.
     'b64encode': base64.b64encode,
     'enumerate': enumerate,
-    'filter_profile_subnav': utils.filter_profile_subnav,
+    'filter_profile_nav': utils.filter_profile_nav,
     'float': float,
     'len': len,
     'range': range,
