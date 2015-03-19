@@ -16,7 +16,7 @@
             margin-top: 11px;
         }
         &.highlight {
-            @include box-shadow(0, 0, 8px, $green);
+            box-shadow: 0 0 8px $green;
             background: $darker-green;
         }
     }

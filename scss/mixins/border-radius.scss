@@ -1,0 +1,4 @@
+@mixin border-radius($radius: 5px) {
+    border-radius: $radius;
+    background-clip: padding-box;
+}

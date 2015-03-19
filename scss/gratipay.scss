@@ -10,18 +10,21 @@
 
 */
 
-@import "mixins/layout";
-@import "mixins/icons";
-@import "mixins/borders-backgrounds-shadows";
 @import "mixins/animation";
+@import "mixins/border-radius";
+@import "mixins/icons";
+@import "mixins/layout";
 @import "mixins/transform";
-@import "utils";
 @import "variables";
+@import "utils";
 
+// dependency order
 @import "elements/reset";
 @import "elements/buttons-knobs";
 @import "elements/elements";
 
+// alphabetical order
+@import "components/accounts";
 @import "components/chart";
 @import "components/chosen";
 @import "components/communities";
@@ -33,7 +36,9 @@
 @import "components/leaderboard";
 @import "components/linear_gradient";
 @import "components/loading-indicators";
+@import "components/members";
 @import "components/memberships";
+@import "components/mini-user";
 @import "components/payments-by";
 @import "components/profile-statement";
 @import "components/sign_in";
@@ -43,14 +48,18 @@
 @import "components/tipr";
 @import "components/upgrade";
 
-@import "fragments/accounts";
-@import "fragments/members";
-@import "fragments/mini-user";
+// spatial order (top to bottom)
 @import "fragments/notifications";
+@import "fragments/header";
+@import "fragments/secondary-nav";
+@import "fragments/card";
+@import "fragments/content";
+@import "fragments/footer";
 
-@import "layouts/layout";
-@import "layouts/responsiveness";
+// content size order
+@import "layouts/smallest";
 
+// random order
 @import "pages/homepage";
 @import "pages/history";
 @import "pages/team";
