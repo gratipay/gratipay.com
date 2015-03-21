@@ -10,6 +10,8 @@ pip := $(env_bin)/pip
 honcho := $(env_bin)/honcho
 honcho_run := $(honcho) run -e defaults.env,local.env
 py_test := $(honcho) run -e $(test_env_files) $(env_bin)/py.test
+wheel_cache := $(HOME)/.cache/pip/wheels
+
 
 ifdef PYTEST
 	pytest = ./tests/py/$(PYTEST)
@@ -18,14 +20,17 @@ else
 endif
 
 env: requirements.txt requirements_tests.txt setup.py
+	mkdir -p $(wheel_cache)
 	$(python) $(venv) \
-				--unzip-setuptools \
 				--prompt="[gratipay] " \
 				--extra-search-dir=./vendor/ \
 				--always-copy \
 				./env/
-	$(pip) install -r requirements.txt
-	$(pip) install -r requirements_tests.txt
+	$(pip) install ./vendor/wheel-0.24.0-py2.py3-none-any.whl --no-index
+	$(pip) wheel -f ./vendor/ --wheel-dir=$(wheel_cache) --no-index -r requirements.txt
+	$(pip) wheel -f ./vendor/ --wheel-dir=$(wheel_cache) --no-index -r requirements_tests.txt
+	$(pip) install -f $(wheel_cache) --no-index -r requirements.txt
+	$(pip) install -f $(wheel_cache) --no-index -r requirements_tests.txt
 	$(pip) install -e ./
 
 clean:

@@ -8,7 +8,7 @@ before_install:
  - node --version
 install:
  - make env node_modules
- - pip install coveralls
+ - pip install coveralls --disable-pip-version-check
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
@@ -27,3 +27,6 @@ notifications:
       - "%{repository} (%{branch}:%{commit} by %{author}): %{message} (%{build_url})"
     skip_join: true
 sudo: false
+cache:
+  directories:
+    - $HOME/.cache/pip

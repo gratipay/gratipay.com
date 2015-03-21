@@ -102,7 +102,7 @@ def install_requirements():
 
     print 'Installing requirements...'
 
-    shell(pip_path, 'install', '-r', 'requirements.txt')
+    shell(pip_path, 'install', '-r', 'requirements.txt', '-f', './vendor' )
     shell(pip_path, 'install', os.path.join(vendor_path, 'nose-1.1.2.tar.gz'))
     shell(pip_path, 'install', '-e', '.')
 
