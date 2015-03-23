@@ -35,7 +35,7 @@
 
 ./vendor/six-1.8.0.tar.gz
 ./vendor/libsass-0.3.0.tar.gz
-./vendor/honcho-cfcc7ebb.tar.gz
+./vendor/honcho-0.6.6-py2.py3-none-any.whl
 
 ./vendor/environment-1.0.0.tar.gz
 

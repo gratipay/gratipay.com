@@ -47,14 +47,14 @@ version="$((prev + 1))"
 
 
 # Check that the environment contains all required variables
-heroku config -sa gratipay | ./env/bin/honcho run -e /dev/stdin \
+heroku config -sa gratipay | ./env/bin/honcho -e /dev/stdin run \
     ./env/bin/python gratipay/wireup.py
 
 
 # Sync the translations
 echo "Syncing translations..."
 if [ ! -e .transifexrc -a ! -e ~/.transifexrc ]; then
-    heroku config -sa gratipay | ./env/bin/honcho run -e /dev/stdin make transifexrc
+    heroku config -sa gratipay | ./env/bin/honcho -e /dev/stdin run make transifexrc
 fi
 make i18n_upload
 make i18n_download

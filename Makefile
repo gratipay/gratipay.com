@@ -8,8 +8,8 @@ venv := "./vendor/virtualenv-1.11.6.py"
 test_env_files := defaults.env,tests/test.env,tests/local.env
 pip := $(env_bin)/pip
 honcho := $(env_bin)/honcho
-honcho_run := $(honcho) run -e defaults.env,local.env
-py_test := $(honcho) run -e $(test_env_files) $(env_bin)/py.test
+honcho_run := $(honcho) -e defaults.env,local.env run
+py_test := $(honcho) -e $(test_env_files) run $(env_bin)/py.test
 
 ifdef PYTEST
 	pytest = ./tests/py/$(PYTEST)
@@ -37,7 +37,7 @@ schema: env
 
 schema-diff: test-schema
 	pg_dump -sO `heroku config:get DATABASE_URL -a gratipay` >prod.sql
-	$(honcho) run -e $(test_env_files) sh -c 'pg_dump -sO "$$DATABASE_URL"' >local.sql
+	$(honcho) -e $(test_env_files) run sh -c 'pg_dump -sO "$$DATABASE_URL"' >local.sql
 	diff -uw prod.sql local.sql
 	rm prod.sql local.sql
 
@@ -54,7 +54,7 @@ py: env
 	$(honcho_run) $(env_bin)/python -i gratipay/main.py
 
 test-schema: env
-	$(honcho) run -e $(test_env_files) ./recreate-schema.sh
+	$(honcho) -e $(test_env_files) run ./recreate-schema.sh
 
 pyflakes: env
 	$(env_bin)/pyflakes bin gratipay tests
