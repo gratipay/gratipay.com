@@ -60,25 +60,25 @@ tabs = {
         <p class="note">{{ tabs[tab]['note'] }}</p>
     {% endif %}
 
-    <table>
+    <table class="table">
         <thead>
             <tr>
-                <th class="recipient">{{ _("Recipient") }}</th>
+                <th>{{ _("Recipient") }}</th>
                 {% if tab != 'cancelled' %}
-                    <th class="amount">{{ _("Amount") }}</th>
+                    <th class="figure">{{ _("Amount ($)") }}</th>
                 {% endif %}
-                <th class="mtime">{{ _("Last Set") }}</th>
-                <th class="ctime">{{ _("First Set") }}</th>
+                <th class="figure">{{ _("Last Set") }}</th>
+                <th class="figure">{{ _("First Set") }}</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
-                <th></th>
+                <td></td>
                 {% if tab != 'cancelled' %}
-                    <th class="total">{{ total }}</th>
+                    <td class="figure total">{{ total }}</td>
                 {% endif %}
-                <th></th>
-                <th></th>
+                <td></td>
+                <td></td>
             </tr>
         </tfoot>
         <tbody>
@@ -93,10 +93,10 @@ tabs = {
                 {% endif %}
             </td>
             {% if tab != 'cancelled' %}
-                <td class="amount">{{ tip.amount }}</td>
+                <td class="figure">{{ tip.amount }}</td>
             {% endif %}
-            <td class="mtime">{{ to_age(tip.mtime) }}</td>
-            <td class="ctime">{{ to_age(tip.ctime) }}</td>
+            <td class="figure">{{ to_age(tip.mtime) }}</td>
+            <td class="figure">{{ to_age(tip.ctime) }}</td>
         </tr>
         {% endfor %}
         </tbody>
