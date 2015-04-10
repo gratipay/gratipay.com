@@ -16,7 +16,10 @@ tips = [t for t in tips if t.amount > 0]
 unclaimed_tips = [t for t in unclaimed_tips if t.amount > 0]
 
 
-tab = request.qs.get('tab') or 'active'
+tab = request.qs.get('tab')
+
+if not tab in ['cancelled', 'unclaimed']:
+    tab = 'active'
 
 tabs = {
     'active': {
