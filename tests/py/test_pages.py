@@ -166,7 +166,7 @@ class TestPages(Harness):
         alice = self.make_participant('alice', claimed_time='now')
         emma = self.make_elsewhere('github', 58946, 'emma').participant
         alice.set_tip_to(emma, "1.00")
-        actual = self.client.GET("/alice/giving/", auth_as="alice").body
+        actual = self.client.GET("/alice/giving/?tab=unclaimed", auth_as="alice").body
         expected1 = "emma"
         expected2 = "Unclaimed"
         assert expected1 in actual
@@ -177,7 +177,7 @@ class TestPages(Harness):
         bob = self.make_participant('bob', claimed_time='now')
         alice.set_tip_to(bob, "1.00")
         alice.set_tip_to(bob, "0.00")
-        actual = self.client.GET("/alice/giving/", auth_as="alice").body
+        actual = self.client.GET("/alice/giving/?tab=cancelled", auth_as="alice").body
         assert "bob" in actual
         assert "Cancelled" in actual
 
