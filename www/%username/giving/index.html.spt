@@ -10,140 +10,101 @@ title = participant.username
 subhead = _("Giving")
 recently = utcnow() - timedelta(days=30)
 cancelled_tips = [x for x in tips if x.amount == 0 and x.mtime >= recently]
-ncancelled_tips = len(cancelled_tips)
-
-CANCELLED = ngettext( "You cancelled {n} tip in the past 30 days"
-                    , "You cancelled {n} tips in the past 30 days"
-                    , ncancelled_tips
-                     )
 
 # don't filter until after cancelled are looked at
 tips = [t for t in tips if t.amount > 0]
-ntips = len(tips)
 unclaimed_tips = [t for t in unclaimed_tips if t.amount > 0]
-nunclaimed_tips = len(unclaimed_tips)
+
 
 tab = request.qs.get('tab') or 'active'
 
-translated_states = {
-    'active': _('Active'),
-    'unclaimed': _('Unclaimed'),
-    'cancelled': _('Cancelled')
+tabs = {
+    'active': {
+        'tips': tips,
+        'ntips': len(tips),
+        'name': _("Active"),
+        'note': None
+    },
+    'unclaimed': {
+        'tips': unclaimed_tips,
+        'ntips': len(unclaimed_tips),
+        'name': _("Unclaimed"),
+        'note': _("These are tips you've set to people who haven't joined Gratipay yet.")
+    },
+    'cancelled': {
+        'tips': cancelled_tips,
+        'ntips': len(cancelled_tips),
+        'name': _("Cancelled"),
+        'note': _("These are tips that you recently cancelled.")
+    }
 }
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/profile.html" %}
 {% block content %}
 
+<div class="giving">
+
+<p>{{ _("You give {0} every week.", format_currency(participant.giving, "USD")) }}</p>
+
+<h2>{{ _("Tips") }}</h2>
+
 <ul class="nav">
     {% for state in ['active', 'unclaimed', 'cancelled'] %}
-        <li><a href="?tab={{ state }}" class="{{ 'selected' if tab == state }}">{{ translated_states[state] }}</a></li>
+        <li><a href="?tab={{ state }}" class="{{ 'selected' if tab == state }}">{{ tabs[state]['name'] }}</a></li>
     {% endfor %}
 </ul>
 
-<div class="giving">
+{% if tabs[tab]['ntips'] %}
+    {% if tabs[tab]['note'] %}
+        <p class="note">{{ tabs[tab]['note'] }}</p>
+    {% endif %}
 
-{% if tab == 'active' %}
-
-    {% if ntips %}
-    <div class="pane">
-        <h2>{{ _("Tips") }} (N={{ ntips }})</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th class="recipient">{{ _("Recipient") }}</th>
-                    <th class="amount">{{ _("Weekly") }}</th>
-                    <th class="mtime">{{ _("Last Set") }}</th>
-                    <th class="ctime">{{ _("First Set") }}</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th></th>
-                    <th class="total">{{ total }}</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot>
-            <tbody>
-            {% for tip in tips %}
+    <table>
+        <thead>
             <tr>
-                <td class="recipient"><a href="/{{ tip.tippee }}/">{{ tip.tippee }}</a></td>
-                <td class="amount">{{ tip.amount }}</td>
-                <td class="mtime">{{ to_age(tip.mtime) }}</td>
-                <td class="ctime">{{ to_age(tip.ctime) }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
-{% elif tab == 'cancelled' %}
-
-    {% if ncancelled_tips %}
-    <div class="pane">
-        <h2>{{ _("Recently Cancelled") }} (N={{ ncancelled_tips }})</h2>
-        <p class="note">{{ _("within the last 30 days") }}</p>
-        <table>
-            <thead>
-                <tr>
-                    <th class="recipient">{{ _("Recipient") }}</th>
-                    <th class="mtime">{{ _("Cancelled") }}</th>
-                    <th class="ctime">{{ _("First Set") }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tip in cancelled_tips %}
-                <tr>
-                    <td class="recipient"><a href="/{{ tip.tippee }}/">{{ tip.tippee }}</a></td>
-                    <td class="mtime">{{ to_age(tip.mtime) }}</td>
-                    <td class="ctime">{{ to_age(tip.ctime) }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
-{% elif tab == 'unclaimed' %}
-
-    {% if nunclaimed_tips %}
-    <div class="pane">
-        <h2>{{ _("Unclaimed") }} (N={{ len(unclaimed_tips) }})</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th class="recipient">{{ _("Recipient") }}</th>
+                <th class="recipient">{{ _("Recipient") }}</th>
+                {% if tab != 'cancelled' %}
                     <th class="amount">{{ _("Amount") }}</th>
-                    <th class="mtime">{{ _("Last Set") }}</th>
-                    <th class="ctime">{{ _("First Set") }}</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th></th>
-                    <th class="total">{{ unclaimed_total }}</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot>
-            <tbody>
-            {% for tip in unclaimed_tips %}
-                <tr>
-                    <td class="recipient">
-                        <img class="platform-icon" src="{{ website.asset('platforms/%s.12.png' % tip.platform) }}" />
-                        <a href="/{{ tip.tippee }}/">{{ tip.user_name }}</a>
-                    </td>
-                    <td class="amount">{{ tip.amount }}</td>
-                    <td class="mtime">{{ to_age(tip.mtime) }}</td>
-                    <td class="ctime">{{ to_age(tip.ctime) }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
+                {% endif %}
+                <th class="mtime">{{ _("Last Set") }}</th>
+                <th class="ctime">{{ _("First Set") }}</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th></th>
+                {% if tab != 'cancelled' %}
+                    <th class="total">{{ total }}</th>
+                {% endif %}
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        <tbody>
+        {% for tip in tabs[tab]['tips'] %}
+        <tr>
+            <td class="recipient">
+                {% if tab == 'unclaimed' %}
+                    <img class="platform-icon" src="{{ website.asset('platforms/%s.12.png' % tip.platform) }}" />
+                    <a href="/{{ tip.tippee }}/">{{ tip.user_name }}</a>
+                {% else %}
+                    <a href="/{{ tip.tippee }}/">{{ tip.tippee }}</a>
+                {% endif %}
+            </td>
+            {% if tab != 'cancelled' %}
+                <td class="amount">{{ tip.amount }}</td>
+            {% endif %}
+            <td class="mtime">{{ to_age(tip.mtime) }}</td>
+            <td class="ctime">{{ to_age(tip.ctime) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+
+<p>{{ _("No tips to show") }}</p>
 
 {% endif %}
 
