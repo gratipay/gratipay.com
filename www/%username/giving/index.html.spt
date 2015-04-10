@@ -77,7 +77,7 @@ tabs = {
         <tfoot>
             <tr>
                 <td></td>
-                {% if tab != 'cancelled' %}
+                {% if tab == 'active' %}
                     <td class="figure total">{{ total }}</td>
                 {% endif %}
                 <td></td>
