@@ -1,0 +1,17 @@
+# This data file explains the flow of money through Gratipay
+# and fees taken by different parties.
+
+#### Ins (the way donations are accepted into Gratipay)
+
+Way             | Provider   | Fee    | When       | Details
+----------------+------------+--------+------------+----------
+Credit Card     | Balanced   | ?      | At pay day | 
+Bitcoin         | Coinbase   | ?      | ?          |
+
+#### Outs (the way donations moved out of Gratipay)
+
+Way             | Provider   | Fee    | When       | Details
+----------------+------------+--------+------------+----------
+Bank Account    | Balanced   | ?      | At pay day | 
+Paypal          |            | ?      | ?          |
+Bitcoin         |            | ?      | ?          |
