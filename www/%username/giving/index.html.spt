@@ -26,23 +26,28 @@ tabs = {
         'tips': tips,
         'ntips': len(tips),
         'name': _("Active"),
-        'note': None
+        'note': None,
+        'total': total
     },
     'unclaimed': {
         'tips': unclaimed_tips,
         'ntips': len(unclaimed_tips),
         'name': _("Unclaimed"),
-        'note': _("These are tips you've set to people who haven't joined Gratipay yet.")
+        'note': _("These are tips you've set to people who haven't joined Gratipay yet."),
+        'total': unclaimed_total
     },
     'cancelled': {
         'tips': cancelled_tips,
         'ntips': len(cancelled_tips),
         'name': _("Cancelled"),
-        'note': _("These are tips that you recently cancelled.")
+        'note': _("These are tips that you recently cancelled."),
+        'total': 0
     }
 }
 
 [-----------------------------------------------------------------------------]
+{% from 'templates/giving-table.html' import giving_table with context %}
+
 {% extends "templates/profile.html" %}
 {% block content %}
 
@@ -63,51 +68,10 @@ tabs = {
         <p class="note">{{ tabs[tab]['note'] }}</p>
     {% endif %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>{{ _("Recipient") }}</th>
-                {% if tab != 'cancelled' %}
-                    <th class="figure">{{ _("Amount ($)") }}</th>
-                {% endif %}
-                <th class="figure">{{ _("Last Set") }}</th>
-                <th class="figure">{{ _("First Set") }}</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <td></td>
-                {% if tab == 'active' %}
-                    <td class="figure total">{{ total }}</td>
-                {% endif %}
-                <td></td>
-                <td></td>
-            </tr>
-        </tfoot>
-        <tbody>
-        {% for tip in tabs[tab]['tips'] %}
-        <tr>
-            <td class="recipient">
-                {% if tab == 'unclaimed' %}
-                    <img class="platform-icon" src="{{ website.asset('platforms/%s.12.png' % tip.platform) }}" />
-                    <a href="/{{ tip.tippee }}/">{{ tip.user_name }}</a>
-                {% else %}
-                    <a href="/{{ tip.tippee }}/">{{ tip.tippee }}</a>
-                {% endif %}
-            </td>
-            {% if tab != 'cancelled' %}
-                <td class="figure">{{ tip.amount }}</td>
-            {% endif %}
-            <td class="figure">{{ to_age(tip.mtime) }}</td>
-            <td class="figure">{{ to_age(tip.ctime) }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
+    {{ giving_table(tab, tabs[tab]['tips'], tabs[tab]['total']) }}
 {% else %}
 
-<p>{{ _("No tips to show") }}</p>
+    <p>{{ _("No tips to show") }}</p>
 
 {% endif %}
 
