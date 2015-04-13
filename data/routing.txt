@@ -3,15 +3,15 @@
 
 #### Ins (the way donations are accepted into Gratipay)
 
-Way             | Provider   | Fee    | When       | Details
+Route           | Provider   | Fee    | When       | Details
 ----------------+------------+--------+------------+----------
-Credit Card     | Balanced   | ?      | At pay day | 
-Bitcoin         | Coinbase   | ?      | ?          |
+Credit Card     | Balanced   | ?      | At payday  | 
+Bitcoin         | Coinbase   | ?      | On request |
 
 #### Outs (the way donations moved out of Gratipay)
 
-Way             | Provider   | Fee    | When       | Details
+Route           | Provider   | Fee    | When       | Details
 ----------------+------------+--------+------------+----------
-Bank Account    | Balanced   | ?      | At pay day | 
-Paypal          |            | ?      | ?          |
-Bitcoin         |            | ?      | ?          |
+Bank Account    | Balanced   | ?      | At payday  | 
+Paypal          |            | ?      | At payday  |
+Bitcoin         |            | ?      | On request |
