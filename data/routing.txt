@@ -3,15 +3,20 @@
 
 #### Ins (the way donations are accepted into Gratipay)
 
-Route           | Provider   | Fee    | When       | Details
-----------------+------------+--------+------------+----------
-Credit Card     | Balanced   | ?      | At payday  | 
-Bitcoin         | Coinbase   | ?      | On request |
+Route           | Provider   | Fee          | When       | Details
+----------------+------------+--------------+------------+----------
+Credit Card     | Balanced   | 2.9% + 30¢   | At payday  | $10 min
+Bitcoin         | Coinbase   | 1% + 15¢     | On request |
+
+# https://gratipay.com/about/faq#how-add-funds
+
 
 #### Outs (the way donations moved out of Gratipay)
 
-Route           | Provider   | Fee    | When       | Details
-----------------+------------+--------+------------+----------
-Bank Account    | Balanced   | ?      | At payday  | 
-Paypal          |            | ?      | At payday  |
-Bitcoin         |            | ?      | On request |
+Route           | Provider   | Fee          | When       | Details
+----------------+------------+--------------+------------+-----------
+Bank Account    | Balanced   | 0            | At payday  | U.S. only
+Paypal          |            | max(2%, $20) | At payday  |
+Bitcoin         |            | 1% + 15¢     | On request |
+
+# https://gratipay.com/about/faq#how-withdraw-funds
