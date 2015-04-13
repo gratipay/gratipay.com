@@ -16,11 +16,6 @@ tips = [t for t in tips if t.amount > 0]
 unclaimed_tips = [t for t in unclaimed_tips if t.amount > 0]
 
 
-tab = request.qs.get('tab')
-
-if not tab in ['cancelled', 'unclaimed']:
-    tab = 'active'
-
 tabs = {
     'active': {
         'tips': tips,
@@ -49,6 +44,12 @@ tabs = {
 {% from 'templates/giving-table.html' import giving_table with context %}
 
 {% extends "templates/profile.html" %}
+
+{% block scripts %}
+<script>$(document).ready(Gratipay.giving.init);</script>
+{{ super() }}
+{% endblock %}
+
 {% block content %}
 
 <div class="giving">
@@ -57,23 +58,29 @@ tabs = {
 
 <h2>{{ _("Tips") }}</h2>
 
-<ul class="nav">
-    {% for state in ['active', 'unclaimed', 'cancelled'] %}
-        <li><a href="?tab={{ state }}" class="{{ 'selected' if tab == state }}">{{ tabs[state]['name'] }}</a></li>
+<ul class="nav" id="tab-nav">
+    {% for tab in tabs.keys() %}
+        <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>
     {% endfor %}
 </ul>
 
-{% if tabs[tab]['ntips'] %}
-    {% if tabs[tab]['note'] %}
-        <p class="note">{{ tabs[tab]['note'] }}</p>
+{% for tab in tabs.keys() %}
+    <div class='tab' data-tab='{{ tab }}'>
+    {% if tabs[tab]['ntips'] %}
+
+        {% if tabs[tab]['note'] %}
+            <p class="note">{{ tabs[tab]['note'] }}</p>
+        {% endif %}
+
+        {{ giving_table(tab, tabs[tab]['tips'], tabs[tab]['total']) }}
+
+    {% else %}
+
+        <p>{{ _("No tips to show") }}</p>
+
     {% endif %}
-
-    {{ giving_table(tab, tabs[tab]['tips'], tabs[tab]['total']) }}
-{% else %}
-
-    <p>{{ _("No tips to show") }}</p>
-
-{% endif %}
+    </div>
+{% endfor %}
 
 </div>
 {% endblock %}
