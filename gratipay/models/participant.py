@@ -668,11 +668,12 @@ class Participant(Model, MixinTeam):
                 )
 
     def queue_email(self, spt_name, **context):
-        self.db.run("""
-            INSERT INTO email_queue
-                        (participant, spt_name, context)
-                 VALUES (%s, %s, %s)
-        """, (self.id, spt_name, pickle.dumps(context)))
+        if self.email_address:
+            self.db.run("""
+                INSERT INTO email_queue
+                            (participant, spt_name, context)
+                     VALUES (%s, %s, %s)
+            """, (self.id, spt_name, pickle.dumps(context)))
 
     @classmethod
     def dequeue_emails(cls):
