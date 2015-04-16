@@ -204,11 +204,10 @@ class TestEmail(EmailHarness):
 
     def test_can_queue_an_email(self):
         larry = self.make_participant('larry', email_address='larry@example.com')
-        larry.queue_email("verification", blah='blah')
+        larry.queue_email("verification")
+        assert self.db.one('SELECT spt_name FROM email_queue') == 'verification'
 
-        Participant.dequeue_emails()
-        assert self.mailer.call_count == 1
-        last_email = self.get_last_email()
-        assert last_email['to'][0]['email'] == 'larry@example.com'
-        expected = "to connect larry"
-        assert expected in last_email['text']
+    def test_cant_queue_an_email_without_an_address(self):
+        larry = self.make_participant('larry')
+        larry.queue_email("verification")
+        assert self.db.one('SELECT spt_name FROM email_queue') is None
