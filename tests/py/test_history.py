@@ -139,7 +139,7 @@ class TestHistoryPage(Harness):
         self.alice.close('downstream')
 
         response = self.client.GET('/alice/history/?year=2013', auth_as='bob')
-        assert response.code == 200
+        assert "automatic charge" in response.body
 
 class TestExport(Harness):
 
