@@ -179,6 +179,7 @@ def create_card_hold(db, participant, amount):
     # ===============
 
     cents, amount_str, charge_amount, fee = _prep_hit(amount)
+    amount = charge_amount - fee
     msg = "Holding " + amount_str + " on Balanced for " + username + " ... "
 
     hold = None
