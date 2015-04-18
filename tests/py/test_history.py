@@ -126,19 +126,12 @@ class TestHistoryPage(Harness):
         assert self.client.GET('/alice/history/', auth_as='alice').code == 200
 
     def test_admin_can_view_closed_participant_history(self):
-        # Admin
         self.make_participant('bob', claimed_time='now', is_admin=True)
-        # Create an exchange in 2013
-        e_id = self.make_exchange('balanced-cc', 50, 0, self.alice)
-        self.db.run("""
-            UPDATE exchanges
-               SET timestamp = '2013-1-1 00:00:01'
-        """)
-        # Close Account
+
         self.alice.set_tip_to('bob', '1')
         self.alice.close('downstream')
 
-        response = self.client.GET('/alice/history/?year=2013', auth_as='bob')
+        response = self.client.GET('/alice/history/?year=%s' % self.past_year, auth_as='bob')
         assert "automatic charge" in response.body
 
 class TestExport(Harness):
