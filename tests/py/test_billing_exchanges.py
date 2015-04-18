@@ -77,7 +77,8 @@ class TestCardHolds(BalancedHarness):
         assert error == "Foobar()"
         exchange = self.db.one("SELECT * FROM exchanges")
         assert exchange
-        assert exchange.amount
+        assert exchange.amount == D('9.41')
+        assert exchange.fee == D('0.59')
         assert exchange.status == 'failed'
         janet = Participant.from_id(self.janet.id)
         assert self.janet.get_credit_card_error() == 'Foobar()'
