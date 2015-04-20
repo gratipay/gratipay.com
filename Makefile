@@ -26,6 +26,7 @@ env: requirements.txt requirements_tests.txt setup.py
 	$(pip) install --no-index -f ./vendor/ -r requirements.txt
 	$(pip) install --no-index -f ./vendor/ -r requirements_tests.txt
 	$(pip) install -e ./
+	touch env
 
 clean:
 	rm -rf env *.egg *.egg-info
