@@ -22,7 +22,7 @@ $body
 </div>
 
 [---] text/plain
-{{ _("Greetings, program!") }}
+{{ _("Greetings!") }}
 
 $body
 
