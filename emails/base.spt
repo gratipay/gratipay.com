@@ -22,7 +22,6 @@ $body
 </div>
 
 [---] text/plain
-{{ _("Greetings, program!") }}
 
 $body
 
