@@ -116,6 +116,24 @@ class TestHistory(Harness):
         assert balance == 10
 
 
+class TestHistoryPage(Harness):
+
+    def setUp(self):
+        Harness.setUp(self)
+        make_history(self)
+
+    def test_participant_can_view_history(self):
+        assert self.client.GET('/alice/history/', auth_as='alice').code == 200
+
+    def test_admin_can_view_closed_participant_history(self):
+        self.make_participant('bob', claimed_time='now', is_admin=True)
+
+        self.alice.set_tip_to('bob', '1')
+        self.alice.close('downstream')
+
+        response = self.client.GET('/alice/history/?year=%s' % self.past_year, auth_as='bob')
+        assert "automatic charge" in response.body
+
 class TestExport(Harness):
 
     def setUp(self):
