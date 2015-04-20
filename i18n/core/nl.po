@@ -22,8 +22,8 @@ msgstr ""
 msgid "Something not right? Reply to this email for help."
 msgstr "Is er iets mis? Beantwoord deze mail voor hulp."
 
-msgid "Greetings, program!"
-msgstr "Goedendag, programma!"
+msgid "Greetings!"
+msgstr ""
 
 msgid "Oh no! A problem supporting {0}!"
 msgstr ""
@@ -249,6 +249,18 @@ msgstr "Verwijderen"
 
 msgid "Edit"
 msgstr "Verander"
+
+msgid "Recipient"
+msgstr "Ontvanger"
+
+msgid "Amount ($)"
+msgstr ""
+
+msgid "Last Set"
+msgstr "Laatste serie"
+
+msgid "First Set"
+msgstr "Eerste serie"
 
 msgid "Jump to {0} from {1}"
 msgstr "Ga naal {0} van {1}"
@@ -687,40 +699,29 @@ msgstr "Verficatie e-mail opnieuw versturen"
 msgid "View your email addresses"
 msgstr "Bekijk uw e-mailadressen."
 
-msgid "You cancelled {n} tip in the past 30 days"
-msgid_plural "You cancelled {n} tips in the past 30 days"
-msgstr[0] "Je hebt {n} fooi geannuleerd in de afgelopen 30 dagen"
-msgstr[1] "Je hebt {n} fooien geannuleerd in de afgelopen 30 dagen"
-
-msgid "Tips"
-msgstr "Fooien"
-
-msgid "Recipient"
-msgstr "Ontvanger"
-
-msgid "Weekly"
-msgstr "Wekelijks"
-
-msgid "Last Set"
-msgstr "Laatste serie"
-
-msgid "First Set"
-msgstr "Eerste serie"
-
-msgid "Recently Cancelled"
-msgstr "Recent geannuleerd"
-
-msgid "within the last 30 days"
-msgstr "in de afgelopen 30 dagen"
-
-msgid "Cancelled"
-msgstr "Geannuleerd"
+msgid "Active"
+msgstr ""
 
 msgid "Unclaimed"
 msgstr "Niet geclaimed"
 
-msgid "Amount"
-msgstr "Bedrag"
+msgid "These are tips you've set to people who haven't joined Gratipay yet."
+msgstr ""
+
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+msgid "These are tips that you recently cancelled."
+msgstr ""
+
+msgid "You give {0} every week."
+msgstr ""
+
+msgid "Tips"
+msgstr "Fooien"
+
+msgid "No tips to show"
+msgstr ""
 
 msgid "Export History"
 msgstr "Exporteer geschiedenis"

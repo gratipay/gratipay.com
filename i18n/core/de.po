@@ -25,7 +25,7 @@ msgstr ""
 msgid "Something not right? Reply to this email for help."
 msgstr "Stimmt etwas nicht? Sie können uns erreichen, indem Sie auf diese E-Mail antworten."
 
-msgid "Greetings, program!"
+msgid "Greetings!"
 msgstr ""
 
 msgid "Oh no! A problem supporting {0}!"
@@ -252,6 +252,18 @@ msgstr ""
 
 msgid "Edit"
 msgstr "Edieren"
+
+msgid "Recipient"
+msgstr "Empfänger"
+
+msgid "Amount ($)"
+msgstr ""
+
+msgid "Last Set"
+msgstr ""
+
+msgid "First Set"
+msgstr ""
 
 msgid "Jump to {0} from {1}"
 msgstr "Springe von {1} zu {0}"
@@ -690,40 +702,29 @@ msgstr "Verifikationsmail erneut senden"
 msgid "View your email addresses"
 msgstr "Liste Ihrer E-Mail Adressen"
 
-msgid "You cancelled {n} tip in the past 30 days"
-msgid_plural "You cancelled {n} tips in the past 30 days"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Tips"
-msgstr "Trinkgelder"
-
-msgid "Recipient"
-msgstr "Empfänger"
-
-msgid "Weekly"
-msgstr "Wöchentlich"
-
-msgid "Last Set"
+msgid "Active"
 msgstr ""
-
-msgid "First Set"
-msgstr ""
-
-msgid "Recently Cancelled"
-msgstr "In letzter Zeit abgebrochen"
-
-msgid "within the last 30 days"
-msgstr "innerhalb der letzten 30 Tage"
-
-msgid "Cancelled"
-msgstr "Abgebrochen"
 
 msgid "Unclaimed"
 msgstr ""
 
-msgid "Amount"
-msgstr "Betrag"
+msgid "These are tips you've set to people who haven't joined Gratipay yet."
+msgstr ""
+
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
+msgid "These are tips that you recently cancelled."
+msgstr ""
+
+msgid "You give {0} every week."
+msgstr ""
+
+msgid "Tips"
+msgstr "Trinkgelder"
+
+msgid "No tips to show"
+msgstr ""
 
 msgid "Export History"
 msgstr "Verlauf exportieren"
