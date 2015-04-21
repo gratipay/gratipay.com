@@ -2,6 +2,7 @@ from decimal import Decimal, InvalidOperation
 
 from aspen import Response
 from gratipay.utils import get_participant
+from gratipay.models.exchange_route import ExchangeRoute
 
 [---------------------------------------------]
 
@@ -29,12 +30,21 @@ if request.method == 'POST':
     if not status in ['pre', 'pending', 'failed', 'succeeded']:
         raise Response(400)
 
+    try:
+        route_id = int(request.body['route_id'])
+    except (KeyError, ValueError):
+        raise Response(400)
+
+    route = ExchangeRoute.from_id(route_id)
+    if not route or route.participant != participant.id:
+        raise Response(400)
+
     with website.db.get_cursor() as cursor:
         cursor.run("""
             INSERT INTO exchanges
-                        (amount, fee, participant, recorder, note, status)
-                 VALUES (%s, %s, %s, %s, %s, %s)
-        """, (amount, fee, participant.username, user.participant.username, note, status))
+                        (amount, fee, route, participant, recorder, note, status)
+                 VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (amount, fee, route_id, participant.username, user.participant.username, note, status))
 
         if amount < 0:
             # For payouts, we need to take the fee out of their Gratipay balance.
