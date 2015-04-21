@@ -15,6 +15,13 @@ participant = get_participant(state)
 banner = '~' + participant.username
 title = "Record an exchange"
 
+if request.method == 'GET':
+    routes = website.db.all("""
+       SELECT r.*::exchange_routes
+         FROM exchange_routes r
+        WHERE participant=%s
+    """, (participant.id, ))
+
 if request.method == 'POST':
     try:
         amount = Decimal(request.body['amount'])
@@ -80,6 +87,11 @@ if request.method == 'POST':
 </p>
 <form action="" method="POST">
     <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
+    <h3>Routes</h3>
+    {% for route in routes %}
+        <input type="radio" name="route_id" value="{{ route.id }}">
+        {{ "%s - %s (%s)" % (route.network, route.address, route.error or "working") }}<br>
+    {% endfor %}
     <input name="amount" placeholder="amount" />
     <input name="fee" placeholder="fee" />
     <select name="status">
