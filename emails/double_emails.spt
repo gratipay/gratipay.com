@@ -1,0 +1,17 @@
+Sorry for the email hiccup!
+
+[---] text/html
+Last week we started sending out email notifications for credit card charges. Three days ago we <a href="https://github.com/gratipay/gratipay.com/issues/3352">accidentally</a> sent you a second notification. Don't worry, though: We didn't charge you twice, we just notified you twice. You can double-check your <a href="https://gratipay.com/about/me/history/">transaction history here</a>. Sorry for the error!
+
+[---] text/plain
+Last week we started sending out email notifications for credit card charges. Three days ago we accidentally sent you a second notification. Don't worry, though: We didn't charge you twice, we just notified you twice.
+
+Here's a link to the GitHub issue related to the incident:
+
+https://github.com/gratipay/gratipay.com/issues/3352
+
+You can double-check your transaction history by following the link below.
+
+https://gratipay.com/about/me/history/
+
+Sorry for the error!

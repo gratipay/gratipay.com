@@ -14,4 +14,4 @@ with open('./sql/emails.txt') as f:
     """, (tuple(emails), ))
 
 for p in participants:
-    p.queue_email('initial')
+    p.queue_email('double_emails')
