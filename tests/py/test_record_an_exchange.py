@@ -26,11 +26,17 @@ class TestRecordAnExchange(Harness):
 
         if 'route_id' not in data:
             try:
-                data['route_id'] = ExchangeRoute.insert(self.bob, 'paypal', 'bob@gmail.com')
+                data['route_id'] = ExchangeRoute.insert(self.bob, 'paypal', 'bob@gmail.com').id
             except IntegrityError:
-                data['route_id'] = ExchangeRoute.from_network(self.bob, 'paypal')
+                data['route_id'] = ExchangeRoute.from_network(self.bob, 'paypal').id
+
+        if data['status'] is None:
+            del(data['status'])
+        if data['route_id'] is None:
+            del(data['route_id'])
 
         return self.client.PxST('/~bob/history/record-an-exchange', data, auth_as='alice')
+
 
     # tests
     # =====
@@ -61,6 +67,25 @@ class TestRecordAnExchange(Harness):
         actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'note': '   '}).code
         assert actual == 400
 
+    def test_no_route_id_is_400(self):
+        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': None}).code
+        assert actual == 400
+
+    def test_bad_route_id_is_400(self):
+        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': 'foo'}).code
+        assert actual == 400
+
+    def test_non_existent_route_id_is_400(self):
+        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': '123456'}).code
+        assert actual == 400
+
+    def test_route_should_belong_to_user_else_400(self):
+        alice = self.make_participant('alice', claimed_time=utcnow(), is_admin=True)
+        self.make_participant('bob', claimed_time=utcnow())
+        route = ExchangeRoute.insert(alice, 'paypal', 'alice@gmail.com')
+        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': route.id}, False).code
+        assert actual == 400
+
     def test_dropping_balance_below_zero_is_allowed_in_this_context(self):
         self.record_an_exchange({'amount': '-10', 'fee': '0'})
         actual = self.db.one("SELECT balance FROM participants WHERE username='bob'")
@@ -73,8 +98,9 @@ class TestRecordAnExchange(Harness):
                    , "participant": "bob"
                    , "recorder": "alice"
                    , "note": "noted"
+                   , "route": ExchangeRoute.from_network(self.bob, 'paypal').id
                     }
-        SQL = "SELECT amount, fee, participant, recorder, note " \
+        SQL = "SELECT amount, fee, participant, recorder, note, route " \
               "FROM exchanges"
         actual = self.db.one(SQL, back_as=dict)
         assert actual == expected
