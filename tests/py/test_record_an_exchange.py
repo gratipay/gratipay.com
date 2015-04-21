@@ -42,8 +42,9 @@ class TestRecordAnExchange(Harness):
     # =====
 
     def test_success_is_302(self):
-        actual = self.record_an_exchange({'amount': '10', 'fee': '0'}).code
-        assert actual == 302
+        response = self.record_an_exchange({'amount': '10', 'fee': '0'})
+        assert response.code == 302
+        assert response.headers['location'] == '/bob/history/'
 
     def test_non_admin_is_403(self):
         self.make_participant('alice', claimed_time=utcnow())
@@ -52,39 +53,48 @@ class TestRecordAnExchange(Harness):
         assert actual == 403
 
     def test_bad_amount_is_400(self):
-        actual = self.record_an_exchange({'amount': 'cheese', 'fee': '0'}).code
-        assert actual == 400
+        response = self.record_an_exchange({'amount': 'cheese', 'fee': '0'})
+        assert response.code == 400
+        assert response.body == "Invalid amount/fee"
 
     def test_bad_fee_is_400(self):
-        actual = self.record_an_exchange({'amount': '10', 'fee': 'cheese'}).code
-        assert actual == 400
+        response = self.record_an_exchange({'amount': '10', 'fee': 'cheese'})
+        assert response.code == 400
+        assert response.body == "Invalid amount/fee"
 
     def test_no_note_is_400(self):
-        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'note': ''}).code
-        assert actual == 400
+        response = self.record_an_exchange({'amount': '10', 'fee': '0', 'note': ''})
+        assert response.code == 400
+        assert response.body == "Invalid note"
 
     def test_whitespace_note_is_400(self):
-        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'note': '   '}).code
-        assert actual == 400
+        response = self.record_an_exchange({'amount': '10', 'fee': '0', 'note': '   '})
+        assert response.code == 400
+        assert response.body == "Invalid note"
 
     def test_no_route_id_is_400(self):
-        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': None}).code
-        assert actual == 400
+        response = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': None})
+        assert response.code == 400
+        assert response.body == "Invalid route_id"
 
     def test_bad_route_id_is_400(self):
-        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': 'foo'}).code
-        assert actual == 400
+        response = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': 'foo'})
+        assert response.code == 400
+        assert response.body == "Invalid route_id"
 
     def test_non_existent_route_id_is_400(self):
-        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': '123456'}).code
-        assert actual == 400
+        response = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': '123456'})
+        assert response.code == 400
+        assert response.body == "Route doesn't exist"
 
     def test_route_should_belong_to_user_else_400(self):
         alice = self.make_participant('alice', claimed_time=utcnow(), is_admin=True)
         self.make_participant('bob', claimed_time=utcnow())
         route = ExchangeRoute.insert(alice, 'paypal', 'alice@gmail.com')
-        actual = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': route.id}, False).code
-        assert actual == 400
+
+        response = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': route.id}, False)
+        assert response.code == 400
+        assert response.body == "Route doesn't exist"
 
     def test_dropping_balance_below_zero_is_allowed_in_this_context(self):
         self.record_an_exchange({'amount': '-10', 'fee': '0'})

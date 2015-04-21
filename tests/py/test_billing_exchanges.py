@@ -236,6 +236,52 @@ class TestFees(Harness):
 
 class TestRecordExchange(Harness):
 
+    def test_record_exchange_records_exchange(self):
+        alice = self.make_participant('alice', last_bill_result='')
+        record_exchange( self.db
+                       , ExchangeRoute.from_network(alice, 'braintree-cc')
+                       , amount=D("0.59")
+                       , fee=D("0.41")
+                       , participant=alice
+                       , status='pre'
+                        )
+        actual = self.db.one("""
+            SELECT amount, fee, participant, status, route
+              FROM exchanges
+        """, back_as=dict)
+        expected = { "amount": D('0.59')
+                   , "fee": D('0.41')
+                   , "participant": "alice"
+                   , "status": 'pre'
+                   , "route": ExchangeRoute.from_network(alice, 'braintree-cc').id
+                    }
+        assert actual == expected
+
+    def test_record_exchange_requires_valid_route(self):
+        alice = self.make_participant('alice', last_bill_result='')
+        bob = self.make_participant('bob', last_bill_result='')
+        with self.assertRaises(AssertionError):
+            record_exchange( self.db
+                           , ExchangeRoute.from_network(bob, 'braintree-cc')
+                           , amount=D("0.59")
+                           , fee=D("0.41")
+                           , participant=alice
+                           , status='pre'
+                            )
+
+    def test_record_exchange_stores_error_in_note(self):
+        alice = self.make_participant('alice', last_bill_result='')
+        record_exchange( self.db
+                       , ExchangeRoute.from_network(alice, 'braintree-cc')
+                       , amount=D("0.59")
+                       , fee=D("0.41")
+                       , participant=alice
+                       , status='pre'
+                       , error='Card payment failed'
+                        )
+        exchange = self.db.one("SELECT * FROM exchanges")
+        assert exchange.note == 'Card payment failed'
+
     def test_record_exchange_doesnt_update_balance_for_positive_amounts(self):
         alice = self.make_participant('alice', last_bill_result='')
         record_exchange( self.db
@@ -297,7 +343,7 @@ class TestRecordExchange(Harness):
 
     def test_record_exchange_result_updates_balance_for_positive_amounts(self):
         alice = self.make_participant('alice', balance=4, last_bill_result='')
-        cc = ExchangeRoute.from_network(alice, 'braintree-cc')        
+        cc = ExchangeRoute.from_network(alice, 'braintree-cc')
         e_id = record_exchange(self.db, cc, D('31.59'), D('0.01'), alice, 'pre')
         assert alice.balance == D('4.00')
         record_exchange_result(self.db, e_id, 'succeeded', None, alice)

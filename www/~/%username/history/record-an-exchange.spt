@@ -27,24 +27,24 @@ if request.method == 'POST':
         amount = Decimal(request.body['amount'])
         fee = Decimal(request.body['fee'])
     except InvalidOperation:
-        raise Response(400)
+        raise Response(400, "Invalid amount/fee")
 
     note = request.body['note'].strip()
     if not note:
-        raise Response(400)
+        raise Response(400, "Invalid note")
 
     status = request.body['status']
     if not status in ['pre', 'pending', 'failed', 'succeeded']:
-        raise Response(400)
+        raise Response(400, "Invalid status")
 
     try:
         route_id = int(request.body['route_id'])
     except (KeyError, ValueError):
-        raise Response(400)
+        raise Response(400, "Invalid route_id")
 
     route = ExchangeRoute.from_id(route_id)
-    if not route or route.participant != participant.id:
-        raise Response(400)
+    if not route or route.participant.id != participant.id:
+        raise Response(400, "Route doesn't exist")
 
     with website.db.get_cursor() as cursor:
         cursor.run("""

@@ -275,6 +275,8 @@ def record_exchange(db, route, amount, fee, participant, status, error=None):
 
     """
 
+    assert route.participant.id == participant.id
+
     with db.get_cursor() as cursor:
 
         exchange_id = cursor.one("""
