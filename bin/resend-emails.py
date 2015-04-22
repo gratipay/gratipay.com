@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+
+"""This is a one-off script to resend emails for #3355."""
+
 import sys
 
 from gratipay import wireup
