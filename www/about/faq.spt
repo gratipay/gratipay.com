@@ -8,13 +8,21 @@ subhead = _("Frequently Asked Questions")
 <div class="row">
     <dl class="col1">
 
-        <dt id="what-gratipay">What is Gratipay?</dt>
+        <dt id="what-gratipay">What is Gratipay?
+            <a class="permlink" title="Permalink to this headline" href="#what-gratipay">
+                &#182;
+            </a>
+        </dt>
 
         <dd>Gratipay is weekly payments, motivated by gratitude. Gratipay is
         sustainable funding, with no extra fees and no strings attached.</dd>
 
 
-        <dt id="who-gratipay">Who is Gratipay?</dt>
+        <dt id="who-gratipay">Who is Gratipay?
+            <a class="permlink" title="Permalink to this headline" href="#who-gratipay">
+                &#182;
+            </a>
+        </dt>
 
         <dd>Gratipay is an <a
             href="http://blog.gittip.com/post/26350459746/the-first-open-company">open
@@ -25,14 +33,22 @@ subhead = _("Frequently Asked Questions")
         members of the Gratipay team <a href="/Gratipay/members/">here</a>.</dd>
 
 
-        <dt id="how-funded">How is Gratipay funded?</dt>
+        <dt id="how-funded">How is Gratipay funded?
+            <a class="permlink" title="Permalink to this headline" href="#how-funded">
+                &#182;
+            </a>
+        </dt>
 
         <dd>Gratipay is funded <a href="/Gratipay/">on Gratipay</a>. We <a
             href="/about/#details">charge a fee</a> to cover the things that we
         ourselves are charged for.</dd>
 
 
-        <dt id="one-time-gift">Can I make a one-time gift?</dt>
+        <dt id="one-time-gift">Can I make a one-time gift?
+            <a class="permlink" title="Permalink to this headline" href="#one-time-gift">
+                &#182;
+            </a>
+        </dt>
 
         <dd>No. Gratipay is designed for long-term, sustainable funding, and only
         supports recurring gifts at this time. We will probably offer one-time
@@ -42,12 +58,20 @@ subhead = _("Frequently Asked Questions")
         the first week.</dd>
 
 
-        <dt id="not-in-us">I'm not in the U.S., can I still use Gratipay?</dt>
+        <dt id="not-in-us">I'm not in the U.S., can I still use Gratipay?
+            <a class="permlink" title="Permalink to this headline" href="#not-in-us">
+                &#182;
+            </a>
+        </dt>
 
         <dd>Yes, but moving funds takes more time and the fees are higher.</dd>
 
 
-        <dt id="how-add-funds">How do I add funds to Gratipay?</dt>
+        <dt id="how-add-funds">How do I add funds to Gratipay?
+            <a class="permlink" title="Permalink to this headline" href="#how-add-funds">
+                &#182;
+            </a>
+        </dt>
 
         <dd>There are two ways to add funds to Gratipay:
 
@@ -68,7 +92,11 @@ subhead = _("Frequently Asked Questions")
         </dd>
 
 
-        <dt id="how-withdraw-funds">How do I withdraw funds from Gratipay?</dt>
+        <dt id="how-withdraw-funds">How do I withdraw funds from Gratipay?
+            <a class="permlink" title="Permalink to this headline" href="#how-withdraw-funds">
+                &#182;
+            </a>
+        </dt>
 
         <dd>There are three ways to withdraw funds from Gratipay:
 
@@ -93,19 +121,31 @@ subhead = _("Frequently Asked Questions")
         </dd>
 
 
-        <dt id="taxable">Do I have to pay taxes on the income I receive from Gratipay?</dt>
+        <dt id="taxable">Do I have to pay taxes on the income I receive from Gratipay?
+            <a class="permlink" title="Permalink to this headline" href="#taxable">
+                &#182;
+            </a>
+        </dt>
 
         <dd>We can't offer blanket legal advice on that, sorry. You'll have to
         talk to a lawyer.</dd>
 
 
-        <dt id="tax-deductible">Are gifts I give through Gratipay tax-deductible?</dt>
+        <dt id="tax-deductible">Are gifts I give through Gratipay tax-deductible?
+            <a class="permlink" title="Permalink to this headline" href="#tax-deductible">
+                &#182;
+            </a>
+        </dt>
 
         <dd>No.</dd>
     </dl>
     <dl class="col1">
 
-        <dt id="why-did-my-receipts-decrease">Why did my receipts decrease?</dt>
+        <dt id="why-did-my-receipts-decrease">Why did my receipts decrease?
+            <a class="permlink" title="Permalink to this headline"  href="#why-did-my-receipts-decrease">
+                &#182;
+            </a>
+        </dt>
 
         <dd>We know that it can be disappointing for your donations received
           weekly to decrease, for any reason at all. Gratipay itself will never
@@ -135,7 +175,11 @@ subhead = _("Frequently Asked Questions")
           </ol>
         </dd>
 
-        <dt id="maximum-amount">Is there a minimum or maximum amount I can give or receive?</dt>
+        <dt id="maximum-amount">Is there a minimum or maximum amount I can give or receive?
+            <a class="permlink" title="Permalink to this headline" href="#maximum-amount">
+                &#182;
+            </a>
+        </dt>
 
         <dd>There are no restrictions on the total amount you can give
         or receive.</dd>
@@ -150,12 +194,20 @@ subhead = _("Frequently Asked Questions")
         large patrons.</dd>
 
 
-        <dt id="support-organizations">Can I use Gratipay to support organizations?</dt>
+        <dt id="support-organizations">Can I use Gratipay to support organizations?
+            <a class="permlink" title="Permalink to this headline" href="#support-organizations">
+                &#182;
+            </a>
+        </dt>
 
         <dd>Yes. Some accounts on Gratipay represent organizations.</dd>
 
 
-        <dt id="whats-point-of-communities">What's the point of communities?</dt>
+        <dt id="whats-point-of-communities">What's the point of communities?
+            <a class="permlink" title="Permalink to this headline" href="#whats-point-of-communities">
+                &#182;
+            </a>
+        </dt>
 
         <dd><a href="/for/">Communities</a> let you identify with groups
         of people that share your interests, such as <a href="/for/python/">
@@ -163,7 +215,11 @@ subhead = _("Frequently Asked Questions")
         regions</a>.
 
 
-        <dt id="how-know-right-person">How do I know my gifts are being received by the right person?</dt>
+        <dt id="how-know-right-person">How do I know my gifts are being received by the right person?
+            <a class="permlink" title="Permalink to this headline" href="#how-know-right-person">
+                &#182;
+            </a>
+        </dt>
 
         <dd>You can follow links to Gratipay from a trusted source like a person
         or organization's website. Also, Twitter verifies accounts in instances
@@ -172,14 +228,22 @@ subhead = _("Frequently Asked Questions")
 
 
         <dt id="dont-want-gifts">I don't want to receive gifts, I just want to give them. What should
-        I do?</dt>
+        I do?
+            <a class="permlink" title="Permalink to this headline" href="#dont-want-gifts">
+                &#182;
+            </a>
+        </dt>
 
         <dd>Please select &ldquo;I'm here as a patron, and politely decline to
         receive gifts.&rdquo; as your personal funding goal. We won't show gift
         buttons to others on your profile.</dd>
 
 
-        <dt id="close-account">How do I close my account?</dt>
+        <dt id="close-account">How do I close my account?
+            <a class="permlink" title="Permalink to this headline" href="#close-account">
+                &#182;
+            </a>
+        </dt>
 
         <dd><a href="/about/me/settings/close">Close account</a></dd>
 
