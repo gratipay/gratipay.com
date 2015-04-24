@@ -59,7 +59,7 @@ tabs = {
 <h2>{{ _("Tips") }}</h2>
 
 <ul class="nav" id="tab-nav">
-    {% for tab in tabs.keys() %}
+    {% for tab in ['active', 'unclaimed', 'cancelled'] %}
         <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>
     {% endfor %}
 </ul>
