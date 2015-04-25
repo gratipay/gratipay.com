@@ -137,7 +137,7 @@ else:
 
     <label class="half left">
         <span>{{ _("Last four SSN digits") }} {{ _("(Not required)") }}</span>
-        <input name="ssn_last4" value="{{ account.ssn_last4 or '' }}" />
+        <input name="ssn_last4" type="password" value="{{ account.ssn_last4 or '' }}" />
     </label>
 
     <div class="clear"></div>
