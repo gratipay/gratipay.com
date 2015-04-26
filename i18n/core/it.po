@@ -21,7 +21,7 @@ msgid "Something not right? Reply to this email for help."
 msgstr "Qualcosa non va? Rispondi a questa email per ricevere aiuto."
 
 msgid "Greetings!"
-msgstr ""
+msgstr "Saluti!"
 
 msgid "Oh no! A problem supporting {0}!"
 msgstr "Oh no! Un problema supportando {0}!"
@@ -252,7 +252,7 @@ msgid "Recipient"
 msgstr "Beneficiario"
 
 msgid "Amount ($)"
-msgstr ""
+msgstr "Ammontare ($)"
 
 msgid "Last Set"
 msgstr "Modificati"
@@ -698,28 +698,28 @@ msgid "View your email addresses"
 msgstr "Guarda il tuo indirizzo email"
 
 msgid "Active"
-msgstr ""
+msgstr "Attivo"
 
 msgid "Unclaimed"
 msgstr "Non riscossi"
 
 msgid "These are tips you've set to people who haven't joined Gratipay yet."
-msgstr ""
+msgstr "Queste sono le donazioni che hai predisposto per persone che non si sono ancora iscritte a Gratipay."
 
 msgid "Cancelled"
 msgstr "Cancellati"
 
 msgid "These are tips that you recently cancelled."
-msgstr ""
+msgstr "Queste sono le donazioni che hai annullato recentemente."
 
 msgid "You give {0} every week."
-msgstr ""
+msgstr "Doni {0} ogni settimana."
 
 msgid "Tips"
 msgstr "Donazioni"
 
 msgid "No tips to show"
-msgstr ""
+msgstr "Nessuna donazione da mostrare"
 
 msgid "Export History"
 msgstr "Storia Export"
