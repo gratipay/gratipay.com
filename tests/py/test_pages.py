@@ -24,6 +24,7 @@ class TestPages(Harness):
         if setup:
             setup(alice)
         i = len(self.client.www_root)
+        urls = []
         for spt in find_files(self.client.www_root, '*.spt'):
             url = spt[i:-4].replace('/%username/', '/alice/') \
                            .replace('/for/%slug/', '/for/wonderland/') \
@@ -32,10 +33,18 @@ class TestPages(Harness):
                            .replace('/%membername', '/alan') \
                            .replace('/%exchange_id.int', '/%s' % exchange_id) \
                            .replace('/%redirect_to', '/giving') \
-                           .replace('/%endpoint', '/public')
+                           .replace('/%endpoint', '/public') \
+                           .replace('/about/me/%sub', '/about/me')
             assert '/%' not in url
             if 'index' in url.split('/')[-1]:
                 url = url.rsplit('/', 1)[0] + '/'
+                urls.append(url)
+        urls.extend("""
+           /about/me
+           /about/me/
+           /about/me/history
+        """.split())
+        for url in urls:
             try:
                 r = self.client.GET(url, **kw)
             except Response as r:
