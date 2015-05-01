@@ -1212,11 +1212,11 @@ msgstr "Ou, si vous voulez un widget qui affiche combien vous donnez, vous pouve
 msgid "Frequently Asked Questions"
 msgstr "Foire Aux Questions"
 
-msgid "Sign In"
-msgstr "Connectez vous"
-
 msgid "The Delpan Incident"
 msgstr "L'incident Delpan"
+
+msgid "Sign In"
+msgstr "Connectez vous"
 
 msgid "Fraud Review Dashboard"
 msgstr ""

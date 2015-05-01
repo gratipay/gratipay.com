@@ -1209,11 +1209,11 @@ msgstr "O, se vorresti includere un widget \"Dona\", puoi aggiungere l'attributo
 msgid "Frequently Asked Questions"
 msgstr "FAQ - Domande Frequenti"
 
-msgid "Sign In"
-msgstr "Accedi"
-
 msgid "The Delpan Incident"
 msgstr "L'Incidente Delpan"
+
+msgid "Sign In"
+msgstr "Accedi"
 
 msgid "Fraud Review Dashboard"
 msgstr "Dashboard Recensione Rischio Frodi"

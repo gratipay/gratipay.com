@@ -1211,11 +1211,11 @@ msgstr "Of, als je een 'geef' widgets wilt invoegen, kan je het {0} attribuut to
 msgid "Frequently Asked Questions"
 msgstr "Veelgestelde vragen"
 
-msgid "Sign In"
-msgstr "Log in"
-
 msgid "The Delpan Incident"
 msgstr "Het Delpan incident"
+
+msgid "Sign In"
+msgstr "Log in"
 
 msgid "Fraud Review Dashboard"
 msgstr "Fraude controle dashboard"

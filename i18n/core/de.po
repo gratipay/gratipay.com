@@ -1215,10 +1215,10 @@ msgstr ""
 msgid "Frequently Asked Questions"
 msgstr "Oft gefragte Fragen"
 
-msgid "Sign In"
+msgid "The Delpan Incident"
 msgstr ""
 
-msgid "The Delpan Incident"
+msgid "Sign In"
 msgstr ""
 
 msgid "Fraud Review Dashboard"

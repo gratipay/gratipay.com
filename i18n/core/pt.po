@@ -1212,11 +1212,11 @@ msgstr "Ou, se você quiser incluir um widget \"doando\", você pode adicionar o
 msgid "Frequently Asked Questions"
 msgstr "Perguntas Mais Frequentes"
 
-msgid "Sign In"
-msgstr "Iniciar sessão"
-
 msgid "The Delpan Incident"
 msgstr "O incidente Delpan"
+
+msgid "Sign In"
+msgstr "Iniciar sessão"
 
 msgid "Fraud Review Dashboard"
 msgstr "Painel de revisão de fraude"

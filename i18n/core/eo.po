@@ -1208,11 +1208,11 @@ msgstr "Aŭ, se vi ŝatus inkluzivas \"donado\" ilo, vi povas aldoni la {0} atri
 msgid "Frequently Asked Questions"
 msgstr "Oftaj demandoj"
 
-msgid "Sign In"
-msgstr "Ensaluti"
-
 msgid "The Delpan Incident"
 msgstr "La okazintaĵo de Delpan"
+
+msgid "Sign In"
+msgstr "Ensaluti"
 
 msgid "Fraud Review Dashboard"
 msgstr "Panelo por Fraŭda Recenzo"
