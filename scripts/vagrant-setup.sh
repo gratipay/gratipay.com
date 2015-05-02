@@ -12,7 +12,7 @@ sudo -u postgres psql -U postgres -qf /vagrant/scripts/vagrant-postgre.sql
 
 # Set up the environment, the database, and run Gratipay
 cd /vagrant
-sudo -u vagrant make clean env schema data
+sudo -u vagrant --set-home make clean env schema data
 
 # Output helper text
 cat <<EOF
