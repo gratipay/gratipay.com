@@ -11,3 +11,4 @@ apt-get -y install git  # release.sh and commit process
 apt-get -y install npm  # for jstests
 apt-get -y install nodejs-legacy  # for grunt, which calls `node` executable
                                   # (which was renamed to `nodejs` in Debian/Ubuntu)
+apt-get -y install default-jre  # jstests need java to run selenium
