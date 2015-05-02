@@ -247,12 +247,12 @@ Vagrant
 Vagrant provides a convenient interface to VirtualBox to run and test
 Gratipay in virtual machine. This may be handy if you're on Windows.
 
-You will [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/)
+You will need [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/)
 installed. On Linux you may need to install `nfs-kernel-server` as well.
 
 With Vagrant, you can run Gratipay by running `vagrant up` from the project
-directory. Please note that if you switch between running Gratipay on your
-own machine to Vagrant and vice versa, you need to run `make clean`.
+directory. Please note that if you ever switch between running Gratipay on your
+own machine to Vagrant or vice versa, you will need to run `make clean`.
 
 The `Vagrantfile` will download pristine Ubuntu image (base box), save it
 and create virtual machine (VM) in VirtualBox, then it will setup Gratipay
