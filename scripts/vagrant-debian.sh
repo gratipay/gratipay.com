@@ -3,8 +3,12 @@
 # installs Python-independent project dependencies
 
 apt-get -y install postgresql
+apt-get -y install postgresql-contrib  # pg_stat_statements, pg_trgm
 apt-get -y install libpq-dev
 apt-get -y install python-dev  # for building psycopg2
 apt-get -y install g++  # for libsass
 apt-get -y install git  # release.sh and commit process
 apt-get -y install npm  # for jstests
+apt-get -y install nodejs-legacy  # for grunt, which calls `node` executable
+                                  # (which was renamed to `nodejs` in Debian/Ubuntu)
+apt-get -y install default-jre  # jstests need java to run selenium

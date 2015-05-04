@@ -42,6 +42,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # using Ubuntu 14.04, because it is what our hosting (Heroku) uses
     # (search cedar-14 for details)
     base.vm.box = "ubuntu/trusty64"
+    # use 32-bit box on 32-bit host, because running 64-bit box is slow
+    # https://steve-jansen.github.io/blog/2014/03/14/configuring-vagrant-to-dynamically-match-guest-and-host-cpu-architectures/
+    if ENV["PROCESSOR_ARCHITECTURE"] == "x86"
+      puts "Using 32-bit guest architecture.."
+      base.vm.box = "ubuntu/trusty32"
+    end
 
     # --- install prerequisites ---
     # [ ] use the same package versions as Heroku

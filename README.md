@@ -36,7 +36,7 @@ $ make test
 Vagrant
 -------
 
-Given VirtualBox 4.3 and Vagrant 1.6.x:
+Given VirtualBox 4.3 and Vagrant 1.7.x:
 
 ```
 $ vagrant up
@@ -244,15 +244,23 @@ development then sign up for an account of your own at
 
 Vagrant
 -------
-If you have Vagrant installed, you can run Gratipay by running `vagrant up` from the project directory. Please note that if you ever switch between running Gratipay on your own machine to Vagrant or vice versa, you will need to run `make clean`.
+Vagrant provides a convenient interface to VirtualBox to run and test
+Gratipay in virtual machine. This may be handy if you're on Windows.
 
-If you're using Vagrant for the first time you'll need [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) installed. If you're on Linux you'll need to install `nfs-kernel-server`.
+You will need [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/)
+installed. On Linux you may need to install `nfs-kernel-server` as well.
 
-The `Vagrantfile` will download a custom made image from the Internet. If you have a slow internet connection, you can download a local copy of this file, by running:
+With Vagrant, you can run Gratipay by running `vagrant up` from the project
+directory. Please note that if you ever switch between running Gratipay on your
+own machine to Vagrant or vice versa, you will need to run `make clean`.
 
-`curl https://downloads.gratipay.com/gratipay.box`
+The `Vagrantfile` will download pristine Ubuntu image (base box), save it
+and create virtual machine (VM) in VirtualBox, then it will setup Gratipay
+prerequisites (the process known as provisioning) and show welcome message.
 
-Once downloaded into the top of the project tree, our Vagrantfile will use this local file automatically when you run `vagrant up`. Vagrant is setup to use key based SSH authentication, if you're prompted for a password when logging in please use `vagrant`.
+The next time you run `vagrant up`, it will reuse the VM. Vagrant uses SSH
+based authentication. To login into VM use `vagrant ssh` command. If you're
+prompted for a password when logging in please use `vagrant`. 
 
 **Mac users:** If you're prompted for a password during initial installation, it's sudo and you should enter your Mac OS password.
 
