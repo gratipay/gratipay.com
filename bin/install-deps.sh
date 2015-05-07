@@ -2,37 +2,47 @@
 
 set -e # exit when any command fails
 
-# Install base dependencies
-sudo apt-get install -y g++ git language-pack-en libpq-dev make python-dev wget
+echo "[*] Installing base dependencies..
+      g++         - for compiling libsass
+      git
+      libpq-dev   - for compiling psycopg2
+      make
+      postgresql
+      postgresql-contrib  - pg_trgm, pg_stat_statements
+      python
+      python-dev  - for building misaka"
+sudo apt-get install -y \
+    g++ \
+    git \
+    libpq-dev \
+    make \
+    postgresql \
+    postgresql-contrib \
+    python \
+    language-pack-en \
+    python-dev
 
-# Get Postgres installed and running
-pkgmissing() {
-    if dpkg -l | grep 'ii  '$1' ' > /dev/null;
-    then
-        return 1;
-    fi;
-    return 0;
-}
+echo "[*] Installing dependencies for tests..
+      default-jre     - jstests need java to run selenium
+      nodejs-legacy   - for grunt, which calls 'node' executable,
+                        which was renamed to nodejs in Debian/Ubuntu
+      npm
+"
+sudo apt-get install -y \
+    default-jre \
+    nodejs-legacy \
+    npm
 
-if pkgmissing postgresql-9.3; then
-    if ! dpkg -l postgresql-9.3
-    then
-        echo " configuring apt for postgres-9.3"
-        codename=`lsb_release -cs`
-        aptlist="deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main"
-        echo $aptlist | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
-        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 
-        sudo apt-get update
-    fi
-    sudo apt-get install -y postgresql-9.3 postgresql-contrib
-    sudo service postgresql start
-fi
+echo "[*] Enabling current user to admin PostgreSQL.."
 
 if [ -z ""`psql template1 -tAc "select usename from pg_user where usename='$USER'"` ];
 then
     sudo -u postgres createuser --superuser $USER
 fi;
+
+
+echo "[*] Creating databases.."
 
 db_exists() {
     if [ -n ""`psql template1 -tAc "select datname from pg_database where datname='$1'"` ];
