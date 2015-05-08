@@ -15,10 +15,10 @@ Gratipay.payments = {};
 
 Gratipay.payments.init = function() {
     $('#delete').submit(Gratipay.payments.deleteRoute);
+}
 
-    // Lazily depend on Balanced.
-    var balanced_js = "https://js.balancedpayments.com/1.1/balanced.min.js";
-    jQuery.getScript(balanced_js, function() {
+Gratipay.payments.lazyLoad = function(script_url) {
+    jQuery.getScript(script_url, function() {
         $('input[type!="hidden"]').eq(0).focus();
     }).fail(Gratipay.error);
 }
@@ -91,7 +91,11 @@ Gratipay.payments.ba = {};
 
 Gratipay.payments.ba.init = function() {
     Gratipay.payments.init();
-    $('form#bank-account').submit(Gratipay.payments.ba.submit);
+
+    // Lazily depend on Balanced.
+    Gratipay.payments.lazyLoad("https://js.balancedpayments.com/1.1/balanced.min.js")    
+
+    $('form#bank-account').submit(Gratipay.payments.ba.submit);    
 };
 
 Gratipay.payments.ba.submit = function (e) {
@@ -131,6 +135,10 @@ Gratipay.payments.cc = {};
 
 Gratipay.payments.cc.init = function() {
     Gratipay.payments.init();
+
+    // Lazily depend on Braintree.
+    Gratipay.payments.lazyLoad("https://js.braintreegateway.com/v2/braintree.js")    
+
     $('form#credit-card').submit(Gratipay.payments.cc.submit);
     Gratipay.payments.cc.formatInputs(
         $('#card_number'),
