@@ -11,6 +11,7 @@ echo "[*] Installing base dependencies..
       postgresql-contrib  - pg_trgm, pg_stat_statements
       python
       python-dev  - for building misaka"
+sudo apt-get update
 sudo apt-get install -y \
     g++ \
     git \
