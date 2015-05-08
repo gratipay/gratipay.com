@@ -39,7 +39,7 @@ echo "[*] Enabling current user to admin PostgreSQL.."
 
 if [ -z ""`psql template1 -tAc "select usename from pg_user where usename='$USER'"` ];
 then
-    sudo -u postgres createuser --superuser $USER
+    sudo -i -u postgres createuser --superuser $USER
 fi;
 
 
