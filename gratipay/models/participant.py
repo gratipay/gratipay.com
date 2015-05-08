@@ -775,7 +775,11 @@ class Participant(Model, MixinTeam):
         return getattr(ExchangeRoute.from_network(self, 'balanced-ba'), 'error', None)
 
     def get_credit_card_error(self):
-        return getattr(ExchangeRoute.from_network(self, 'braintree-cc'), 'error', None)
+        if self.braintree_customer_id:
+            return getattr(ExchangeRoute.from_network(self, 'braintree-cc'), 'error', None)
+        # Backward compatibility until we get rid of balanced
+        else:
+            return getattr(ExchangeRoute.from_network(self, 'balanced-cc'), 'error', None)
 
     def get_cryptocoin_addresses(self):
         routes = self.db.all("""
