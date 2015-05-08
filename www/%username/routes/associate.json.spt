@@ -38,7 +38,7 @@ if change:
 
     elif network == 'braintree-cc':
         result = braintree.PaymentMethod.create({
-            "customer_id": participant.id,
+            "customer_id": participant.braintree_customer_id,
             "payment_method_nonce": address,
             "options": {"verify_card": True}
         })
