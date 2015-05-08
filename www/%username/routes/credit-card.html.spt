@@ -1,4 +1,5 @@
 import balanced
+import braintree
 
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.utils import get_participant
@@ -71,6 +72,8 @@ title = _("Credit Card")
 
     <div class="cc-ba">
         <form id="credit-card" autocomplete="off">
+
+            <input type="hidden" id="braintree_token" value="{{ participant.get_braintree_token() }}">
 
             <h2>{{ _("Required") }}</h2>
 
