@@ -13,6 +13,7 @@ from babel.core import Locale
 from babel.messages.pofile import read_po
 from babel.numbers import parse_pattern
 import balanced
+import braintree
 import gratipay
 import gratipay.billing.payday
 import raven
@@ -68,6 +69,17 @@ def mail(env, project_root='.'):
 def billing(env):
     balanced.configure(env.balanced_api_secret)
 
+    if env.braintree_sandbox_mode:
+        braintree_env = braintree.Environment.Sandbox
+    else:
+        braintree_env = braintree.Environment.Production
+
+    braintree.Configuration.configure(
+        braintree_env,
+        env.braintree_merchant_id,
+        env.braintree_public_key,
+        env.braintree_private_key
+    )
 
 def username_restrictions(website):
     gratipay.RESTRICTED_USERNAMES = os.listdir(website.www_root)
@@ -344,6 +356,10 @@ def env():
         GRATIPAY_CACHE_STATIC           = is_yesish,
         GRATIPAY_COMPRESS_ASSETS        = is_yesish,
         BALANCED_API_SECRET             = unicode,
+        BRAINTREE_SANDBOX_MODE          = is_yesish,
+        BRAINTREE_MERCHANT_ID           = unicode,
+        BRAINTREE_PUBLIC_KEY            = unicode,
+        BRAINTREE_PRIVATE_KEY           = unicode,
         GITHUB_CLIENT_ID                = unicode,
         GITHUB_CLIENT_SECRET            = unicode,
         GITHUB_CALLBACK                 = unicode,
