@@ -3,6 +3,7 @@ import braintree
 
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.utils import get_participant
+from gratipay.billing.null_objects import NullCard
 
 [-----------------------------------------------------------------------------]
 
@@ -14,9 +15,9 @@ if not user.ANON:
     status = "missing"
     status_msg = _("Your credit card is {0}missing{1}")
 
-    route = ExchangeRoute.from_network(participant, 'balanced-cc')
+    route = ExchangeRoute.from_network(participant, 'braintree-cc')
     if route:
-        card = balanced.Card.fetch(route.address)
+        card = braintree.PaymentMethod.find(route.address)
         last_bill_result = route.error
         if last_bill_result == "":
             status = "working"
@@ -25,7 +26,7 @@ if not user.ANON:
             status = "failing"
             status_msg = _("Your credit card is {0}failing{1}")
     else:
-        card = balanced.Card(address={}, meta={})
+        card = NullCard()
 
 title = _("Credit Card")
 
@@ -81,8 +82,8 @@ title = _("Credit Card")
                 <span>{{ _("Credit Card Number") }}</span>
                 <input id="card_number" required />
                 <span class="invalid-msg">{{ _("This card number is invalid.") }}</span>
-                {% if card.number %}<span>{{
-                    _("Current: {0}", card.number)
+                {% if card.masked_number %}<span>{{
+                    _("Current: {0}", card.masked_number)
                 }}</span>{% endif %}
             </label>
 
@@ -93,13 +94,18 @@ title = _("Credit Card")
                 <span class="invalid-msg">{{ _("This expiration date is invalid.") }}</span>
                 <span class="date_slash">/</span>
                 <input id="expiration_year" placeholder="{{ _('YY') }}" title="{{ _('Expiration Year') }}"
-                       value="{{ card.expiration_year - 2000 if card.expiration_year }}" required />
+                       value="{{ (card.expiration_year|int) - 2000 if card.expiration_year }}" required />
             </div>
 
             <label class="half right">
                 <span>{{ _("CVV") }}</span>
                 <input id="cvv" required />
                 <span class="invalid-msg">{{ _("This verification code is invalid.") }}</span>
+            </label>
+
+            <label class="half">
+                <span>{{ _("ZIP or Postal Code") }}</span>
+                <input id="zip" value="{{ card.billing_address.postal_code }}" />
             </label>
 
             <div class="info">
@@ -113,43 +119,7 @@ title = _("Credit Card")
 
             <label>
                 <span>{{ _("Full Name on Card") }}</span>
-                <input id="name" value="{{ card.name }}" />
-            </label>
-
-            <label>
-                <span>{{ _("Address 1") }}</span>
-                <input id="address_1" value="{{ card.address.line1 }}" />
-            </label>
-
-            <label>
-                <span>{{ _("Address 2") }}</span>
-                <input id="address_2" value="{{ card.address.line2 or card.meta.address_2 }}" />
-            </label>
-
-            <label>
-                <span>{{ _("City or Town") }}</span>
-                <input id="city_town" value="{{ card.address.city or card.meta.city_town }}" />
-            </label>
-
-            <label class="half">
-                <span>{{ _("State or Province") }}</span>
-                <input id="state" value="{{ card.address.state or card.meta.region }}" />
-            </label>
-
-            <label class="half right">
-                <span>{{ _("ZIP or Postal Code") }}</span>
-                <input id="zip" value="{{ card.address.postal_code }}" />
-            </label>
-
-            <label>
-                <span>{{ _("Country") }}</span>
-                <select id="country" data-placeholder="{{ _('Select your country...') }}">
-                    <option value=""></option>
-                {% set country = card.address.country_code or card.meta.country %}
-                {% for each in locale.countries.items() %}
-                    <option value="{{ each[0] }}" {{ 'selected' if each[0] == country else '' }}>{{ each[1] }}</option>
-                {% endfor %}
-                </select>
+                <input id="name" value="{{ card.cardholder_name }}" />
             </label>
 
             <button class="selected larger" id="save" type="submit">{{ _("Save") }}</button>
