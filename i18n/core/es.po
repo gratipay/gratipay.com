@@ -1213,6 +1213,9 @@ msgstr "O, si quieres incluir un widget \"Recibiendo\", puedes añadir el atribu
 msgid "Frequently Asked Questions"
 msgstr ""
 
+msgid "Temporarily Disabled"
+msgstr ""
+
 msgid "The Delpan Incident"
 msgstr ""
 
