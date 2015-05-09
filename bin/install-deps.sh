@@ -35,10 +35,11 @@ sudo apt-get install -y \
     npm
 
 
-echo "[*] Enabling current user to admin PostgreSQL.."
+echo "[*] Checking if current user has access to create databases.."
 
-if [ -z ""`psql template1 -tAc "select usename from pg_user where usename='$USER'"` ];
+if [ -z ""`sudo -i -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$USER'"` ];
 then
+    echo "'$USER' entry does not exist in PostgreSQL, creating.."
     sudo -i -u postgres createuser --superuser $USER
 fi;
 
