@@ -4,6 +4,7 @@ import re
 from decimal import Decimal as D
 
 from aspen import Response
+import pytest
 
 from gratipay.security.user import SESSION
 from gratipay.testing import Harness
@@ -195,6 +196,7 @@ class TestPages(Harness):
         body = self.client.GET("/alice/", auth_as="alice").body
         assert b'Edit' in body
 
+    @pytest.mark.xfail
     def test_anon_bank_acc_page(self):
         body = self.client.GET("/alice/routes/bank-account.html").body
         assert "<h1>Bank Account</h1>" in body

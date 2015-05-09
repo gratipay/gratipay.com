@@ -5,6 +5,8 @@ from gratipay.utils import get_participant
 
 [-----------------------------------------------------------------------------]
 
+request.redirect('/about/migration')
+
 status = status_msg = ""
 
 if not user.ANON:

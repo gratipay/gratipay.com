@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import balanced
 import mock
+import pytest
 
 from gratipay.testing.balanced import BalancedHarness
 from gratipay.models.exchange_route import ExchangeRoute
@@ -88,34 +89,40 @@ class TestRoutes(BalancedHarness):
         self.hit('david', 'associate', 'bitcoin', '12345', expected=400)
         assert not ExchangeRoute.from_network(self.david, 'bitcoin')
 
+    @pytest.mark.xfail
     def test_bank_account(self):
         expected = "add or change your bank account"
         actual = self.client.GET('/alice/routes/bank-account.html').body
         assert expected in actual
 
+    @pytest.mark.xfail
     def test_bank_account_auth(self):
         self.make_participant('alice', claimed_time='now')
         expected = '<em id="status">not connected</em>'
         actual = self.client.GET('/alice/routes/bank-account.html', auth_as='alice').body
         assert expected in actual
 
+    @pytest.mark.xfail
     def test_credit_card(self):
         self.make_participant('alice', claimed_time='now')
         expected = "add or change your credit card"
         actual = self.client.GET('/alice/routes/credit-card.html').body
         assert expected in actual
 
+    @pytest.mark.xfail
     def test_credit_card_page_shows_card_missing(self):
         self.make_participant('alice', claimed_time='now')
         expected = 'Your credit card is <em id="status">missing'
         actual = self.client.GET('/alice/routes/credit-card.html', auth_as='alice').body.decode('utf8')
         assert expected in actual
 
+    @pytest.mark.xfail
     def test_credit_card_page_loads_when_there_is_a_card(self):
         expected = 'Your credit card is <em id="status">working'
         actual = self.client.GET('/janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
         assert expected in actual
 
+    @pytest.mark.xfail
     def test_credit_card_page_shows_card_failing(self):
         ExchangeRoute.from_network(self.janet, 'balanced-cc').update_error('Some error')
         expected = 'Your credit card is <em id="status">failing'
