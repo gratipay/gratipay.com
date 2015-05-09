@@ -3,7 +3,7 @@ import braintree
 
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.utils import get_participant
-from gratipay.billing.null_objects import NullCard
+from gratipay.billing.instruments import CreditCard
 
 [-----------------------------------------------------------------------------]
 
@@ -15,9 +15,13 @@ if not user.ANON:
     status = "missing"
     status_msg = _("Your credit card is {0}missing{1}")
 
-    route = ExchangeRoute.from_network(participant, 'braintree-cc')
+    braintree_route = ExchangeRoute.from_network(participant, 'braintree-cc')
+    balanced_route = ExchangeRoute.from_network(participant, 'balanced-cc')
+
+    route = braintree_route or balanced_route
+
     if route:
-        card = braintree.PaymentMethod.find(route.address)
+        card = CreditCard.from_route(route)
         last_bill_result = route.error
         if last_bill_result == "":
             status = "working"
@@ -26,7 +30,7 @@ if not user.ANON:
             status = "failing"
             status_msg = _("Your credit card is {0}failing{1}")
     else:
-        card = NullCard()
+        card = CreditCard()
 
 title = _("Credit Card")
 
@@ -82,8 +86,8 @@ title = _("Credit Card")
                 <span>{{ _("Credit Card Number") }}</span>
                 <input id="card_number" required />
                 <span class="invalid-msg">{{ _("This card number is invalid.") }}</span>
-                {% if card.masked_number %}<span>{{
-                    _("Current: {0}", card.masked_number)
+                {% if card.number %}<span>{{
+                    _("Current: {0}", card.number)
                 }}</span>{% endif %}
             </label>
 
@@ -105,7 +109,7 @@ title = _("Credit Card")
 
             <label class="half">
                 <span>{{ _("ZIP or Postal Code") }}</span>
-                <input id="zip" value="{{ card.billing_address.postal_code }}" />
+                <input id="zip" value="{{ card.address_postal_code }}" />
             </label>
 
             <div class="info">

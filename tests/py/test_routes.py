@@ -116,6 +116,10 @@ class TestRoutes(BalancedHarness):
         actual = self.client.GET('/janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
         assert expected in actual
 
+    def test_credit_card_page_shows_details_for_balanced_cards(self):
+        response = self.client.GET('/janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
+        assert self.card.number in response
+
     def test_credit_card_page_shows_card_failing(self):
         ExchangeRoute.from_network(self.janet, 'balanced-cc').update_error('Some error')
         expected = 'Your credit card is <em id="status">failing'
