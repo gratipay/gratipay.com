@@ -3,12 +3,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import balanced
 import mock
 
-from gratipay.testing.balanced import BalancedHarness
+from gratipay.testing.billing import BillingHarness
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
 
 
-class TestRoutes(BalancedHarness):
+class TestRoutes(BillingHarness):
 
     def hit(self, username, action, network, address, expected=200):
         r =  self.client.POST('/%s/routes/%s.json' % (username, action),

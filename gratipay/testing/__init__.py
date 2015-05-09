@@ -196,8 +196,8 @@ class Harness(unittest.TestCase):
             network = route
             route = ExchangeRoute.from_network(participant, network)
             if not route:
-                from .balanced import BalancedHarness
-                route = ExchangeRoute.insert(participant, network, BalancedHarness.card_href)
+                from .balanced import BillingHarness
+                route = ExchangeRoute.insert(participant, network, BillingHarness.card_href)
                 assert route
         e_id = record_exchange(self.db, route, amount, fee, participant, 'pre')
         record_exchange_result(self.db, e_id, status, error, participant)

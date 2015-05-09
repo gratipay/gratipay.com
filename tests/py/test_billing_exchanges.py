@@ -22,10 +22,10 @@ from gratipay.exceptions import NegativeBalance, NotWhitelisted
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
 from gratipay.testing import Foobar, Harness
-from gratipay.testing.balanced import BalancedHarness
+from gratipay.testing.billing import BillingHarness
 
 
-class TestCredits(BalancedHarness):
+class TestCredits(BillingHarness):
 
     def test_ach_credit_withhold(self):
         self.make_exchange('balanced-cc', 27, 0, self.homer)
@@ -61,7 +61,7 @@ class TestCredits(BalancedHarness):
         assert error == 'No bank account'
 
 
-class TestCardHolds(BalancedHarness):
+class TestCardHolds(BillingHarness):
 
     def test_create_card_hold_for_suspicious_raises_NotWhitelisted(self):
         bob = self.make_participant('bob', is_suspicious=True,
@@ -335,7 +335,7 @@ class TestRecordExchange(Harness):
         assert alice.balance == D('35.59')
 
 
-class TestSyncWithBalanced(BalancedHarness):
+class TestSyncWithBalanced(BillingHarness):
 
     def test_sync_with_balanced(self):
         with mock.patch('gratipay.billing.exchanges.record_exchange_result') as rer:

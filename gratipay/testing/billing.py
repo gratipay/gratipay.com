@@ -9,7 +9,7 @@ from gratipay.testing import Harness
 from gratipay.testing.vcr import use_cassette
 
 
-class BalancedHarness(Harness):
+class BillingHarness(Harness):
 
     def setUp(self):
         self.david = self.make_participant('david', is_suspicious=False,
@@ -32,11 +32,11 @@ class BalancedHarness(Harness):
         for t in itertools.chain(credits, debits):
             t.meta.pop('exchange_id')
             t.save()
-        super(BalancedHarness, cls).tearDownClass()
+        super(BillingHarness, cls).tearDownClass()
 
 
-with use_cassette('BalancedHarness'):
-    cls = BalancedHarness
+with use_cassette('BillingHarness'):
+    cls = BillingHarness
     balanced.configure(balanced.APIKey().save().secret)
     mp = balanced.Marketplace.my_marketplace
     if not mp:

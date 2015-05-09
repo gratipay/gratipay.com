@@ -11,11 +11,11 @@ from gratipay.billing.payday import NoPayday, Payday
 from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
 from gratipay.testing import Foobar, Harness
-from gratipay.testing.balanced import BalancedHarness
+from gratipay.testing.billing import BillingHarness
 from gratipay.testing.emails import EmailHarness
 
 
-class TestPayday(BalancedHarness):
+class TestPayday(BillingHarness):
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_moves_money(self, fch):
@@ -253,7 +253,7 @@ class TestPayday(BalancedHarness):
         assert payin.call_count == 1
 
 
-class TestPayin(BalancedHarness):
+class TestPayin(BillingHarness):
 
     def create_card_holds(self):
         payday = Payday.start()
