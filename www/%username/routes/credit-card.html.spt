@@ -127,7 +127,7 @@ title = _("Credit Card")
         </form>
 
         {% if status != "missing" %}
-        <form id="delete" data-network="balanced-cc" data-address="{{ card.href }}"
+        <form id="delete" data-network="{{ route.network }}" data-address="{{ route.address }}"
               data-confirm="{{ _('Are you sure you want to disconnect your credit card?') }}">
             <button>{{ _("Disconnect My Credit Card") }}</button>
         </form>

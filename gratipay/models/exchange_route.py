@@ -77,6 +77,8 @@ class ExchangeRoute(Model):
     def invalidate(self):
         if self.network == 'balanced-ba':
             balanced.BankAccount.fetch(self.address).delete()
+        elif self.network == 'balanced-cc':
+            balanced.Card.fetch(self.address).unstore()
         elif self.network == 'braintree-cc':
             braintree.PaymentMethod.delete(self.address)
 
