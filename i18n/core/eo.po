@@ -1208,6 +1208,9 @@ msgstr "Aŭ, se vi ŝatus inkluzivas \"donado\" ilo, vi povas aldoni la {0} atri
 msgid "Frequently Asked Questions"
 msgstr "Oftaj demandoj"
 
+msgid "Temporarily Disabled"
+msgstr ""
+
 msgid "The Delpan Incident"
 msgstr "La okazintaĵo de Delpan"
 
