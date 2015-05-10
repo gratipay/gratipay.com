@@ -118,7 +118,11 @@ else:
         <td class="status">{{ translated_status[event['status']] }}</td>
         <td class="notes">
         {% if event['recorder'] == None %}
-            {{ _("Automatic Charge").lower() }}
+            {% if event['route'].network == 'balanced-cc' %}
+                {{ _("Automatic Charge").lower() }}
+            {% elif event['route'].network == 'coinbase-payin' %}
+                {{ _("Bitcoin Payin").lower() }}
+            {% endif %}
             {% if event['note'] %}&mdash;{{ event['note'] }}{% endif %}
         {% elif event['note'] %}
             &ldquo;{{ event['note'] }}&rdquo;&mdash;

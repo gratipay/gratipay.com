@@ -1,0 +1,9 @@
+{{ _("Your Bitcoin payin was successful!") }}
+
+[---] text/html
+{{ _("Your Bitcoin payment for {0} succeeded. Thanks for using Gratipay!",
+     format_currency(amount, 'USD')) }}
+
+[---] text/plain
+{{ _("Your Bitcoin payment for {0} succeeded. Thanks for using Gratipay!",
+     format_currency(amount, 'USD')) }}

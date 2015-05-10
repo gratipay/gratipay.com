@@ -1,0 +1,35 @@
+from aspen import Response
+from aspen import log_dammit
+from coinbase.error import APIError
+from gratipay.utils import get_participant
+
+[---]
+
+request.allow('POST')
+
+participant = get_participant(state, restrict=True)
+account = website.coinbase.get_account('primary')
+
+out = {}
+
+try:
+    result = account.create_button(
+        "Gratipay (%s)" % participant.username, # name
+        "100", # price_string
+        "USD", # price_currency_iso
+        description="Gratipay Bitcoin Payin",
+        choose_price=True,
+        custom=participant.id,
+        custom_secure=True
+    )
+    out['code'] = result.code
+
+    if website.coinbase_sandbox_mode:
+        out['iframe_base_url'] = "https://sandbox.coinbase.com/checkouts/"
+    else:
+        out['iframe_base_url'] = "https://www.coinbase.com/checkouts/"
+
+except APIError:
+    raise Response(502, _("We're having trouble communicating with Coinbase, please try again."))
+[---]
+out

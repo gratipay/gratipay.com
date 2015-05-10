@@ -17,6 +17,7 @@ import gratipay
 import gratipay.billing.payday
 import raven
 import mandrill
+from coinbase.client import Client as Coinbase
 from environment import Environment, is_yesish
 from gratipay.elsewhere import PlatformRegistry
 from gratipay.elsewhere.bitbucket import Bitbucket
@@ -68,6 +69,13 @@ def mail(env, project_root='.'):
 def billing(env):
     balanced.configure(env.balanced_api_secret)
 
+def coinbase(env):
+    coinbase = Coinbase(env.coinbase_api_key, env.coinbase_api_secret)
+
+    if env.coinbase_sandbox_mode:
+        coinbase.BASE_API_URI = 'https://api.sandbox.coinbase.com/v1/'
+
+    return coinbase
 
 def username_restrictions(website):
     gratipay.RESTRICTED_USERNAMES = os.listdir(website.www_root)
@@ -344,6 +352,10 @@ def env():
         GRATIPAY_CACHE_STATIC           = is_yesish,
         GRATIPAY_COMPRESS_ASSETS        = is_yesish,
         BALANCED_API_SECRET             = unicode,
+        COINBASE_API_KEY                = unicode,
+        COINBASE_API_SECRET             = unicode,
+        COINBASE_SECRET_KEY             = unicode,
+        COINBASE_SANDBOX_MODE           = is_yesish,
         GITHUB_CLIENT_ID                = unicode,
         GITHUB_CLIENT_SECRET            = unicode,
         GITHUB_CALLBACK                 = unicode,

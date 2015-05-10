@@ -1,0 +1,53 @@
+"""An endpoint to receive Coinbase's callbacks.
+
+Docs: https://developers.coinbase.com/docs/merchants/callbacks
+
+"""
+
+import json
+from decimal import Decimal as D
+
+from aspen import Response
+from psycopg2 import IntegrityError
+from gratipay.billing.exchanges import record_exchange, record_exchange_result
+from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.models.participant import Participant
+
+[---]
+
+request.allow('POST')
+
+if request.qs.get('secret_key') != website.coinbase_secret_key:
+    raise Response(401)
+
+order = request.body.get('order', None)
+
+if order:
+    # Fetch the participant from the order's 'custom' attribute.
+    participant = Participant.from_id(int(order['custom']))
+    assert participant
+
+    # Create a route corresponding to the order ID if it doesn't exist already.
+    try:
+        route = ExchangeRoute.insert(participant, 'coinbase-payin', order['id'])
+    except IntegrityError:
+        route = ExchangeRoute.from_address(participant, 'coinbase-payin', order['id'])
+
+    status = order['event']['type']
+
+    # We're ignoring mispayments/expired orders here.
+    if status == 'completed':
+        assert order['total_native']['currency_iso'] == 'USD'
+        assert order['total_payout']['currency_iso'] == 'USD'
+        amount = int(order['total_payout']['cents']) * D('0.01')
+        fee = int(order['total_native']['cents']) * D('0.01') - amount
+
+        e_id = record_exchange(website.db, route, amount, fee, participant, 'pre')
+        record_exchange_result(website.db, e_id, 'succeeded', None, participant)
+        participant.queue_email(
+            'coinbase_success',
+            amount=amount
+        )
+
+
+[---] text/plain

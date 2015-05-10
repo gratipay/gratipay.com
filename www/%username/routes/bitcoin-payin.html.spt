@@ -1,0 +1,46 @@
+from gratipay.utils import get_participant
+
+[-----------------------------------------------------------------------------]
+if not user.ANON:
+    participant = get_participant(state, restrict=True)
+
+title = _("Bitcoin Payin")
+[-----------------------------------------------------------------------------]
+{% extends "templates/base.html" %}
+
+{% block heading %}
+    <h1>{{ _("Bitcoin Payin") }}</h1>
+    <p>{{ _("We currently support one-time payins via Bitcoin.") }}
+    {{ _("You can either send bitcoins manually, or use your coinbase account to complete the transaction.") }}
+{% endblock %}
+
+{% block scripts %}
+
+    {% if not user.ANON %}
+    <script>
+        $(document).ready(function() {
+            Gratipay.payments.bc.init();
+        });
+    </script>
+    {% endif %}
+
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+    {% if user.ANON %}
+        {% include "templates/sign-in-using.html" %}
+        {{ _("and then you'll be able to payin with bitcoin.") }}
+    {% else %}
+        <div class="coinbase-box"
+            data-success-msg="{{ _("Your payment succeeded!") }}"
+            data-mispaid-msg="{{ _(
+                "You paid the wrong amount, contact support to reclaim the mispaid bitcoin."
+            ) }}"
+        >
+            <button class="selected larger" id="pay">{{ _("Pay") }}</button>
+        </div>
+    {% endif %}
+
+{% endblock %}

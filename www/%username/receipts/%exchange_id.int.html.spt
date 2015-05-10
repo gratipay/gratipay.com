@@ -93,17 +93,22 @@ else:
     <h1>Receipt</h1>
 
     <div id="their-info">
-        {{ card.name }}
-        ({{ participant.username }})<br />
-        {{ card.number }} ({{ card.brand }})<br />
-        {{ card.address.line1 }}<br />
-        {% if card.address.line2 %}
-        {{ card.address.line2 }}<br />
+        {% if route and route.network == 'coinbase-payin' %}
+            {{ participant.username }} <br /> <br />
+            Coinbase Order ID: {{ route.address }} <br /><br />
+        {% else %}
+            {{ card.name }}
+            ({{ participant.username }})<br />
+            {{ card.number }} ({{ card.brand }})<br />
+            {{ card.address.line1 }}<br />
+            {% if card.address.line2 %}
+            {{ card.address.line2 }}<br />
+            {% endif %}
+            {{ card.address.city }}{% if card.address.city %},{% endif %}
+            {{ card.address.state }}
+            {{ card.address.postal_code }}<br />
+            {{ locale.countries.get(card.address.country_code, '') }}
         {% endif %}
-        {{ card.address.city }}{% if card.address.city %},{% endif %}
-        {{ card.address.state }}
-        {{ card.address.postal_code }}<br />
-        {{ locale.countries.get(card.address.country_code, '') }}
     </div>
 
     <table>

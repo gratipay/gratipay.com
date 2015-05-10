@@ -50,7 +50,7 @@ def reject_forgeries(request, csrf_token):
     # Assume that anything not defined as 'safe' by RC2616 needs protection.
     if request.line.method not in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
 
-        # But for webhooks we depend on IP filtering for security.
+        # But for webhooks we depend on IP filtering(balanced), or secret keys(coinbase) for security.
         if request.line.uri.startswith('/callbacks/'):
             return
 

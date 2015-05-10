@@ -325,3 +325,54 @@ Gratipay.payments.cc.submit = function(e) {
     balanced.card.create(credit_card, Gratipay.payments.associate('balanced-cc'));
     return false;
 };
+
+// Bitcoin Payin
+// =============
+
+Gratipay.payments.bc = {};
+
+Gratipay.payments.bc.init = function () {
+    $('button#pay').click(Gratipay.payments.bc.createOrder);
+};
+
+Gratipay.payments.bc.createOrder = function () {
+    var amount = $('form#bitcoin-payin input#amount').val();
+    $('button#pay').prop('disabled', true);
+    jQuery.ajax({
+        url: "/" + Gratipay.username + "/routes/bitcoin-payin.json",
+        data: {},
+        type: "POST",
+        success: function(data) {
+            var iframe = $('<iframe src="' + data.iframe_base_url +
+                           data.code +
+                           '/inline"' +
+                           'frameborder="0"></iframe>');
+            $('button#pay').remove();
+            $('.coinbase-box').append(iframe);
+            // Add an event listener for messages from coinbase
+            window.addEventListener('message', Gratipay.payments.bc.handleMessages);
+        },
+        error: Gratipay.error
+    });
+    return false;
+}
+
+Gratipay.payments.bc.handleMessages = function () {
+    var coinbase_sources = ['https://www.coinbase.com', 'https://sandbox.coinbase.com'];
+
+    var msg = {
+        success: $('.coinbase-box').data('success-msg'),
+        mispaid: $('.coinbase-box').data('mispaid-msg')
+    }
+
+    if (coinbase_sources.indexOf(event.origin) != -1) {
+        var event_type = event.data.split('|')[0];
+
+        if (event_type == 'coinbase_payment_complete') {
+            Gratipay.notification(msg.success, 'success');
+        }
+        else if (event_type == 'coinbase_payment_mispaid') {
+            Gratipay.notification(msg.mispaid, 'error');
+        }
+    }
+}

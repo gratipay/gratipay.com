@@ -70,8 +70,12 @@ def iter_payday_events(db, participant, year=None):
 
     username = participant.username
     exchanges = db.all("""
-        SELECT *
-          FROM exchanges
+        SELECT *,
+              ( SELECT r.*::exchange_routes
+                  FROM exchange_routes r
+                 WHERE r.id = e.route
+              ) AS route
+          FROM exchanges e
          WHERE participant=%(username)s
            AND extract(year from timestamp) = %(year)s
     """, locals(), back_as=dict)

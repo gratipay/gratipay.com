@@ -90,6 +90,19 @@ emails = participant.get_emails()
                         }}</a>
                     </td>
                 </tr>
+                <tr>
+                    <td class="account-type">
+                        <img src="{{ website.asset('cryptocoins/bitcoin.png') }}" />
+                    </td>
+                    <td class="account-details">
+                        <div class="account-type">{{ _("Bitcoin") }}</div>
+                    </td>
+                    <td class="account-action">
+                        <a class="button auth-button" href="../routes/bitcoin-payin.html">{{
+                            _("+ Add")
+                        }}</a>
+                    </td>
+                </tr>
             </table>
 
             <h2>{{ _("Withdrawing Money") }}
