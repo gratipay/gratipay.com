@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import itertools
 
 import balanced
+import braintree
 
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.testing import Harness
@@ -12,17 +13,27 @@ from gratipay.testing.vcr import use_cassette
 class BillingHarness(Harness):
 
     def setUp(self):
+        # Balanced Customer without funding instruments
         self.david = self.make_participant('david', is_suspicious=False,
                                            claimed_time='now',
                                            balanced_customer_href=self.david_href)
+
+        # Balanced Customer with CC attached
         self.janet = self.make_participant('janet', is_suspicious=False,
                                            claimed_time='now',
                                            balanced_customer_href=self.janet_href)
         self.janet_route = ExchangeRoute.insert(self.janet, 'balanced-cc', self.card_href)
+
+        # Balanced Customer with BA attached
         self.homer = self.make_participant('homer', is_suspicious=False,
                                            claimed_time='now',
                                            balanced_customer_href=self.homer_href)
         self.homer_route = ExchangeRoute.insert(self.homer, 'balanced-ba', self.bank_account_href)
+
+        # Braintree Customer without funding instruments
+        self.bob = self.make_participant('bob', is_suspicious=False,
+                                         claimed_time='now',
+                                         braintree_customer_id=self.bob_bt_id)
 
     @classmethod
     def tearDownClass(cls):
@@ -74,3 +85,5 @@ with use_cassette('BillingHarness'):
     ).save()
     cls.bank_account.associate_to_customer(cls.homer_href)
     cls.bank_account_href = unicode(cls.bank_account.href)
+
+    cls.bob_bt_id = braintree.Customer.create().customer.id
