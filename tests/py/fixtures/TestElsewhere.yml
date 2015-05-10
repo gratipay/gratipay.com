@@ -7,37 +7,37 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAALxW227jNhD9FVYPRYu6sW7WxUBRbOOkfci2WGQXLbAOBEoa2WwoUiUpJ27gf9+h
-        ZdmKL4ttUdQvJufG4cyZQ704rHSmXuAFcTTxJ/EI95k2ypk6B6EzcgStAWU/K2pYQ9co0YUCENmp
-        gssC11KgFHeNkhXjkB2kouV85JSAAVizM9y6m7aEH0kf6SvyO8AjXxNc1yCMJkaSBmTDgVBREgO0
-        1mQtW5IDZ7ACwsQVHtgqjgGXxjR6Oh/Px+aqkPNxHUH4529eWIdogtGYYaCd6Utnvv3D7ceXL3J/
-        bjABKLNj28UudXSp52O0LJluOF3vDIdqVDJRssIm8dEd+cHD5mFzVJV9Vg+bzbaQBgoD2K6Kcg0j
-        p5KcyydQOitkKwy2MYoTFCsGotwLfewpZxode0nijxxsHrUiinvnVjHylirip8QLpt5k6gbkOxd/
-        xHe9AFOt6Eq2ihnYRw2x0KbIZFVpwO33XoLmI8ewGrK/pbCQuKF4qBLkPcrINx/uydfkmgpa0m8x
-        4gJkBoLmfHCfFShWsYFAG2pafTg0TgK8CxULjA7C6Q1spV7d560UZAYFcT3ie9PAxxoc7mM7aDE/
-        CdJJ4E9c3wtSL4pi3x1g/1SJXgaebfQ3jeRygfAZESwKmf16T7A3K1aCIkwTRAfYDhRMLAgls5m8
-        J9QYWjxOiYXKAFWz6s0v+j78I5pdkTspH60HglxB2RZAqta0Cohi+pHghY4h+c7c3NUq/XB/Z1Gv
-        MZXCVn3eum5QULJUUP0wdw4nPjGD7dhC08EjOCqF7CA077zgfWeDg5eTa5wpYbpo8zHtDGwRVCsK
-        OoQhE5mChq8zI7OuIZmtbzfmZ5VdkU8NsNfqgu9OdcnzFRl1akRYvyykVCUTmLXuRTiWBRz0wiiW
-        t0aqvYEC8wRgeui53RDYGRiIhkSypHpp6GI7r9iPdZ1Lvttsk7cchmPdi0755iwwztPN1rQUmtXI
-        hl1ZO85hCLvSkuV8vHKfw2U8WTxX8fMJFX2B77z1XT96xVOTdJR4SFOXWPIAyc+yJDPLNu/O7Cnx
-        mDuZ1i1gIn4aR6c8ejnAmaQ9LxrhFHf82vfwgN5dnweSRmrNcsSVBqySYSvYqw7cs3mNmhMuYzoz
-        igrNKarPSREKJ079W5kjWSwUosxSNrf+zrU7u7mZOWdtWE0XcIyOJtdXOPP1oqvTJTescRJMkjCN
-        42Q+TvMwoHnh+bSKwzCpgAZ+4VU0TxI/L8r8qsH7fz6HbNvoVw3/n1MxuD8p6T+pUZ9NECf2VXNd
-        Lw7dOEiTCcomKQ2Dqsq9oKhwSYM09KMk9YqySBO3yoRUNeVH2f2L6vz3SeRUCOSh43G82B1rjQkc
-        PgNxHbqpH0dxHAy/7Jh43OPUdZPwp3Cg1cgpOVVZjhSMp/d2t9vfGTvc8L3VDEF/Gw2s7BO81wbb
-        30CLPHuCqj0SSqhoy022M74kP/LqHkhmx757FzoBvjx/IUEZyxGmVwlp8Pul+8zdvSObTwAAAP//
-        AwBEpthWYAsAAA==
+        H4sIAAAAAAAAALxWbY/jNBD+KyYf0CG6bd7aJJUQEru38AWBYNGddFlFTjJpzTp2sJ3dK6v+d8ZJ
+        k6bt7goQIl9qz5vHzzwz7rPDSmftBV4QrZb+MprhPtNGOWvnKHRmjqA1oOx7RQ1r6A4lulAAIrtU
+        cFngWgqU4q5RsmIcsqNUtJzPnBIwAGsOhp27aUv4lgyRviAfAB74juC6BmE0MZI0IBsOhIqSGKC1
+        JjvZkhw4g0cgTMzxwFZxDLg1ptHrdJEuzLyQ6aJeQfj7T15Yh2iC0ZhhoJ31c2/e/eD20/Pfcv/c
+        YAJQZue2m0Pq6FKnC7QsmW443R0Mp2pUMlGywibxyZ35wf3+fn+GypjV/X7fAWmgMIDlqijXMHMq
+        ybl8AqWzQrbCYBkjL0axYiDKURgssSRMo+MgiYOZg8WjVkRx79wqRn6kivgJ8YK1t1y7AfnaxY/4
+        rhdgqhV9lK1iBsaoeE5rikxWlQbcXnlh6Lozx7Aasj+lsJR4T/FQJcgdysi7334lX5JrKmhJv8KI
+        G5AZCJrzyX0eQbGKTQTaUNPqyaGJvQsVG4wOwhkMLFIn97nbtnifHXEj4vvr0F278fE+Sws9nrFM
+        ViF+ge/64coNV1Ew4f6lEr0MfLbRLS2JtwzSFqOFt1IRswVSMaUNsfdHnpZ4+BMQ/cCaBkqC2OF2
+        SmZS7AoOa3LOs1/Ezx8+gv/xBzpH+hOqgJQADTpqqdRuTtZX7+y9MWJhMU5b1w0KSrYKqm/Sjop9
+        tCdmEPyOiA5RwFEpZE+YtPeCu94Gz8nJNXaQMH20dEF7A3tl1YqCTknHRKZsQpmRWQ9/ZtHsm/pF
+        ZQ/ppQFWVr3ie1C95nkyeno18mlYFlKqkgnMWg8ibMICjnphFMtbI9VooMBggcyE3ZbylvFjG52O
+        jS3VW0M3XXdiPXZ1Lvlh0yVvi4xNPIjeni7Hqr81XWooWVv3s2UYJVc5l5thixOW7xoNV6FflS4U
+        bplAfDGF3ghjGe2vTkZT5M2SsJ9NAyJHLhxQm0gaqTXLsUoahEawHmFUHft2f1qDiznAdGYUFZpT
+        VL8kRWAvnIZ3JqfFw0Zhzey449bfuXZv3r+/cV60YTXdwATqDukm13PsoHrTo/Sam04XcbCMwySK
+        4nSR5GFA88LzaRWFYVwBDfzCq2gex35elPm8wfu/nUPWFfuk6P9zKgb3F5D+E4yGbIIoju3Edb0o
+        dKMgiZcoWyY0DKoq94KiwiUNktBfxYlXlEUSu1UmpKopP8vuX6Dz3yeRUyGwq89b8tXqWGtM4PgX
+        Ctehm/jRKuqekvFfERMPI09dNw6/CydazUrIqcpyHGh4+mB3230v2OGGj1Y3SPrb1cTKPl+jNui+
+        iRan1gWrRiaUUNGWm+xg/Jr8zKt/bpht+37K9gKc43+0oI2dEWZQCWnw7e//Ih6m8v4vAAAA//8D
+        ACcUQ3acCgAA
     headers:
       cache-control: ['no-cache, no-store, must-revalidate, pre-check=0, post-check=0']
+      content-disposition: [attachment; filename=json.json]
       content-encoding: [gzip]
-      content-length: ['1150']
+      content-length: ['1092']
       content-type: [application/json;charset=utf-8]
       expires: ['Tue, 31 Mar 1981 05:00:00 GMT']
-      last-modified: ['Wed, 03 Dec 2014 19:07:28 GMT']
+      last-modified: ['Sun, 10 May 2015 10:09:16 GMT']
       pragma: [no-cache]
-      set-cookie: ['guest_id=v1%3A141763364870903280; Domain=.twitter.com; Path=/;
-          Expires=Fri, 02-Dec-2016 19:07:28 UTC']
+      set-cookie: ['guest_id=v1%3A143125255632019927; Domain=.twitter.com; Path=/;
+          Expires=Tue, 09-May-2017 10:09:16 UTC']
       status: [200 OK]
       strict-transport-security: [max-age=631138519]
     status: {code: 200, message: OK}
@@ -53,14 +53,15 @@ interactions:
         Cin5qcUKefklCqkVmcUlekq1sbUAAAAA//8DALaCUj9FAAAA
     headers:
       cache-control: ['no-cache, no-store, must-revalidate, pre-check=0, post-check=0']
+      content-disposition: [attachment; filename=json.json]
       content-encoding: [gzip]
       content-length: ['93']
       content-type: [application/json;charset=utf-8]
       expires: ['Tue, 31 Mar 1981 05:00:00 GMT']
-      last-modified: ['Mon, 09 Feb 2015 13:27:54 GMT']
+      last-modified: ['Sun, 10 May 2015 10:09:20 GMT']
       pragma: [no-cache]
-      set-cookie: ['guest_id=v1%3A142348847445563563; Domain=.twitter.com; Path=/;
-          Expires=Wed, 08-Feb-2017 13:27:54 UTC']
+      set-cookie: ['guest_id=v1%3A143125256069613402; Domain=.twitter.com; Path=/;
+          Expires=Tue, 09-May-2017 10:09:20 UTC']
       status: [404 Not Found]
       strict-transport-security: [max-age=631138519]
     status: {code: 404, message: Not Found}
@@ -103,7 +104,6 @@ interactions:
       expires: ['Sat, 01 Jan 2000 00:00:00 GMT']
       facebook-api-version: [v1.0]
       pragma: [no-cache]
-      vary: [Accept-Encoding]
       www-authenticate: ['OAuth "Facebook Platform" "not_found" "(#803) Some of the
           aliases you requested do not exist: adhsjakdjsdkjsajdhksda"']
     status: {code: 404, message: Not Found}
@@ -115,8 +115,8 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA6pWSi0qyi9SslKoVspNLS5OTE8FspUSUzKKsxKzU7KKU7KzihOzUjKyi1MSlWpr
-        AQAAAP//AwDzNKZTMAAAAA==
+        H4sIAAAAAAAAA6tWSi0qyi9SslKoVspNLS5OTE8FspUSUzKKsxKzU7KKU7KzihOzUjKyi1MSlWpr
+        AfM0plMwAAAA
     headers:
       content-encoding: [gzip]
       content-language: [en]
