@@ -1,8 +1,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import balanced
+from braintree.test.nonces import Nonces
 import mock
-import pytest
 
 from gratipay.testing.billing import BillingHarness
 from gratipay.models.exchange_route import ExchangeRoute
@@ -32,29 +32,25 @@ class TestRoutes(BillingHarness):
         assert len(cards) == 0
 
     def test_associate_and_delete_valid_card(self):
-        card = balanced.Card(
-            number='4242424242424242',
-            expiration_year=2020,
-            expiration_month=12
-        ).save()
-        customer = self.david.get_balanced_account()
-        self.hit('david', 'associate', 'balanced-cc', card.href)
+        self.hit('bob', 'associate', 'braintree-cc', Nonces.Transactable)
 
-        cards = customer.cards.all()
+        customer = self.bob.get_braintree_account()
+        cards = customer.credit_cards
         assert len(cards) == 1
-        assert cards[0].href == card.href
+        assert self.bob.get_credit_card_error() == ''
 
-        assert self.david.get_credit_card_error() == ''
+        self.hit('bob', 'delete', 'braintree-cc', cards[0].token)
 
-        self.hit('david', 'delete', 'balanced-cc', card.href)
+        customer = self.bob.get_braintree_account()
+        assert len(customer.credit_cards) == 0
 
-        david = Participant.from_username('david')
-        assert david.get_credit_card_error() == 'invalidated'
-        assert david.balanced_customer_href
+        bob = Participant.from_username('bob')
+        assert bob.get_credit_card_error() == 'invalidated'
+        assert bob.braintree_customer_id
 
     def test_associate_invalid_card(self):
-        self.hit('david', 'associate', 'balanced-cc', '/cards/CC123123123123', expected=400)
-        assert self.david.get_credit_card_error() is None
+        self.hit('bob', 'associate', 'braintree-cc', 'an-invalid-nonce', expected=400)
+        assert self.bob.get_credit_card_error() is None
 
     def test_associate_and_delete_bank_account_valid(self):
         bank_account = balanced.BankAccount( name='Alice G. Krebs'
@@ -125,7 +121,7 @@ class TestRoutes(BillingHarness):
         actual = self.client.GET('/alice/routes/credit-card.html', auth_as='alice').body.decode('utf8')
         assert expected in actual
 
-    def test_credit_card_page_loads_when_there_is_a_card(self):
+    def test_credit_card_page_loads_when_there_is_a_balanced_card(self):
         expected = 'Your credit card is <em id="status">working'
         actual = self.client.GET('/janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
         assert expected in actual
@@ -134,13 +130,13 @@ class TestRoutes(BillingHarness):
         response = self.client.GET('/janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
         assert self.card.number in response
 
-    def test_credit_card_page_shows_card_failing(self):
+    def test_credit_card_page_shows_when_balanced_card_is_failing(self):
         ExchangeRoute.from_network(self.janet, 'balanced-cc').update_error('Some error')
         expected = 'Your credit card is <em id="status">failing'
         actual = self.client.GET('/janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
         assert expected in actual
 
-    def test_receipt_page_loads(self):
+    def test_receipt_page_loads_for_balanced_cards(self):
         ex_id = self.make_exchange('balanced-cc', 113, 30, self.janet)
         url_receipt = '/janet/receipts/{}.html'.format(ex_id)
         actual = self.client.GET(url_receipt, auth_as='janet').body.decode('utf8')
