@@ -96,7 +96,9 @@ with use_cassette('BillingHarness'):
 
     cls.obama_bt_id = braintree.Customer.create().customer.id
 
-    cls.obama_cc_token = braintree.PaymentMethod.create({
+    cls.bt_card = braintree.PaymentMethod.create({
         "customer_id": cls.obama_bt_id,
         "payment_method_nonce": Nonces.Transactable
-    }).payment_method.token
+    }).payment_method
+
+    cls.obama_cc_token = cls.bt_card.token
