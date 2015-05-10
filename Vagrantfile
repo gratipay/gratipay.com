@@ -52,7 +52,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # --- install prerequisites ---
     # [ ] use the same package versions as Heroku
     #   [ ] figure out how to fetch Heroku versions
-    base.vm.provision :shell, :path => "scripts/vagrant-debian.sh"  # install system prerequisites
+    base.vm.provision :shell, :path => "scripts/bootstrap-debian.sh"  # install system prerequisites
     base.vm.provision :shell, :path => "scripts/vagrant-setup.sh"   # apply user specific settings                                                                 
   end
 
