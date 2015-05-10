@@ -56,12 +56,14 @@ db_exists() {
 
 if ! db_exists gratipay-test;
 then
+    echo "..creating gratipay-test"
     createdb gratipay-test
     psql -q gratipay-test -c 'alter database "gratipay-test" set synchronous_commit to off'
 fi
 
 if ! db_exists gratipay;
 then
+    echo "..creating gratipay"
     createdb gratipay
 fi
 
