@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import balanced
 import mock
+import pytest
 
 from gratipay.testing.billing import BillingHarness
 from gratipay.models.exchange_route import ExchangeRoute
@@ -16,6 +17,19 @@ class TestRoutes(BillingHarness):
                               auth_as=username, raise_immediately=False)
         assert r.code == expected
         return r
+
+    # Remove this once we've dumped 'balanced-cc' altogether
+    def test_associate_balanced_card_should_fail(self):
+        card = balanced.Card(
+            number='4242424242424242',
+            expiration_year=2020,
+            expiration_month=12
+        ).save()
+        customer = self.david.get_balanced_account()
+        self.hit('david', 'associate', 'balanced-cc', card.href, expected=400)
+
+        cards = customer.cards.all()
+        assert len(cards) == 0
 
     def test_associate_and_delete_valid_card(self):
         card = balanced.Card(
