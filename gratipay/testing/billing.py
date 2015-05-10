@@ -4,6 +4,7 @@ import itertools
 
 import balanced
 import braintree
+from braintree.test.nonces import Nonces
 
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.testing import Harness
@@ -31,9 +32,14 @@ class BillingHarness(Harness):
         self.homer_route = ExchangeRoute.insert(self.homer, 'balanced-ba', self.bank_account_href)
 
         # Braintree Customer without funding instruments
-        self.bob = self.make_participant('bob', is_suspicious=False,
+        self.roman = self.make_participant('roman', is_suspicious=False,
                                          claimed_time='now',
-                                         braintree_customer_id=self.bob_bt_id)
+                                         braintree_customer_id=self.roman_bt_id)
+        # Braintree Customer with CC attached
+        self.obama = self.make_participant('obama', is_suspicious=False,
+                                          claimed_time='now',
+                                          braintree_customer_id=self.obama_bt_id)
+        self.obama_route = ExchangeRoute.insert(self.obama, 'braintree-cc', self.obama_cc_token)
 
     @classmethod
     def tearDownClass(cls):
@@ -86,4 +92,11 @@ with use_cassette('BillingHarness'):
     cls.bank_account.associate_to_customer(cls.homer_href)
     cls.bank_account_href = unicode(cls.bank_account.href)
 
-    cls.bob_bt_id = braintree.Customer.create().customer.id
+    cls.roman_bt_id = braintree.Customer.create().customer.id
+
+    cls.obama_bt_id = braintree.Customer.create().customer.id
+
+    cls.obama_cc_token = braintree.PaymentMethod.create({
+        "customer_id": cls.obama_bt_id,
+        "payment_method_nonce": Nonces.Transactable
+    }).payment_method.token

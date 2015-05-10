@@ -32,25 +32,25 @@ class TestRoutes(BillingHarness):
         assert len(cards) == 0
 
     def test_associate_and_delete_valid_card(self):
-        self.hit('bob', 'associate', 'braintree-cc', Nonces.Transactable)
+        self.hit('roman', 'associate', 'braintree-cc', Nonces.Transactable)
 
-        customer = self.bob.get_braintree_account()
+        customer = self.roman.get_braintree_account()
         cards = customer.credit_cards
         assert len(cards) == 1
-        assert self.bob.get_credit_card_error() == ''
+        assert self.roman.get_credit_card_error() == ''
 
-        self.hit('bob', 'delete', 'braintree-cc', cards[0].token)
+        self.hit('roman', 'delete', 'braintree-cc', cards[0].token)
 
-        customer = self.bob.get_braintree_account()
+        customer = self.roman.get_braintree_account()
         assert len(customer.credit_cards) == 0
 
-        bob = Participant.from_username('bob')
-        assert bob.get_credit_card_error() == 'invalidated'
-        assert bob.braintree_customer_id
+        roman = Participant.from_username('roman')
+        assert roman.get_credit_card_error() == 'invalidated'
+        assert roman.braintree_customer_id
 
     def test_associate_invalid_card(self):
-        self.hit('bob', 'associate', 'braintree-cc', 'an-invalid-nonce', expected=400)
-        assert self.bob.get_credit_card_error() is None
+        self.hit('roman', 'associate', 'braintree-cc', 'an-invalid-nonce', expected=400)
+        assert self.roman.get_credit_card_error() is None
 
     def test_associate_and_delete_bank_account_valid(self):
         bank_account = balanced.BankAccount( name='Alice G. Krebs'
