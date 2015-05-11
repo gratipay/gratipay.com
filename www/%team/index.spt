@@ -1,0 +1,41 @@
+"""Show information about a single team.
+"""
+from collections import OrderedDict
+
+from gratipay.models import community
+from gratipay.utils import excerpt_intro, get_team, markdown
+
+[---]
+
+team = get_team(state)
+tip_or_pledge = "tip"
+title = team.display_name
+
+[---] text/html
+{% extends "templates/team.html" %}
+
+{% block content %}
+{% if user.participant == team.owner %}
+    <div id="team-edit">
+        {% include "templates/profile-edit.html" %}
+    </div>
+{% else %}
+    <div class="col0">
+        Foo.
+        {% if statement %}
+        <h2>{{ _("Statement") }}</h2>
+        <div class="statement profile-statement">
+            {{ markdown.render(statement) }}
+        </div>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if user.participant == participant %}
+<script>$(document).ready(Gratipay.profile.init);</script>
+{% endif %}
+{{ super() }}
+{% endblock %}
+

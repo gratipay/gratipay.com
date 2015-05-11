@@ -53,6 +53,34 @@ def canonicalize(path, base, canonical, given, arguments=None):
         raise Response(302, headers={"Location": newpath})
 
 
+def get_team(state, resolve_unclaimed=True):
+    """Given a Request, raise Response or return Team.
+    """
+    request = state['request']
+    user = state['user']
+    slug = request.line.uri.path['team']
+    qs = request.line.uri.querystring
+
+    from gratipay.models.team import Team # avoid circular import
+    team = Team.from_slug(slug)
+
+    if team is None:
+        # Try to redirect to a Participant.
+        from gratipay.models.participant import Participant # avoid circular import
+        participant = Participant.from_username(slug)
+        if participant is not None:
+            qs = '?' + request.qs.raw if request.qs.raw else ''
+            request.redirect('/~' + request.path.raw[1:] + qs)
+        raise Response(404)
+
+    canonicalize(request.line.uri.path.raw, '/', team.slug, slug, qs)
+
+    if team.is_closed and not user.ADMIN:
+        raise Response(410)
+
+    return team
+
+
 def get_participant(state, restrict=True, resolve_unclaimed=True):
     """Given a Request, raise Response or return Participant.
 

@@ -1,0 +1,14 @@
+{% extends "templates/base.html" %}
+{% block scripts %}
+    {% if user.ADMIN %}<script src="{{ website.asset('admin.js') }}"></script>{% endif %}
+    <script>$(document).ready(Gratipay.tips.init)</script>
+{% endblock %}
+
+{% block subnav %}
+{% set current_page = request.path.raw %}
+{% set s = team.slug %}
+{% set pages = [ ('/'+s+'/',            _('Profile'))
+               , ('/'+s+'/payroll/',    _('Payroll'))
+                ] %}
+{% include "templates/nav.html" %}
+{% endblock %}
