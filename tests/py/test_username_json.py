@@ -12,7 +12,7 @@ class Tests(Harness):
         if auth_as:
             self.make_participant(auth_as, claimed_time='now')
 
-        r = self.client.POST('/alice/username.json', {'username': new_username},
+        r = self.client.POST('/~alice/username.json', {'username': new_username},
                              auth_as=auth_as, raise_immediately=False)
         return r.code, json.loads(r.body)
 
