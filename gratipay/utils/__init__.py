@@ -75,7 +75,7 @@ def get_participant(state, restrict=True, resolve_unclaimed=True):
     if participant is None:
         raise Response(404)
 
-    canonicalize(request.line.uri.path.raw, '/', participant.username, slug, qs)
+    canonicalize(request.line.uri.path.raw, '/~/', participant.username, slug, qs)
 
     if participant.is_closed:
         if user.ADMIN:
