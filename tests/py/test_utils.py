@@ -34,7 +34,7 @@ class Tests(Harness):
         with self.assertRaises(Response) as cm:
             utils.get_participant(state, restrict=False)
         assert cm.exception.code
-        assert cm.exception.headers['Location'] == '/~alice/'
+        assert cm.exception.headers['Location'] == '/~/alice/'
 
     def test_dict_to_querystring_converts_dict_to_querystring(self):
         expected = "?foo=bar"
