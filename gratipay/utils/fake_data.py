@@ -10,6 +10,7 @@ from psycopg2 import IntegrityError
 from gratipay import wireup, MAX_TIP_SINGULAR, MIN_TIP
 from gratipay.elsewhere import PLATFORMS
 from gratipay.models.participant import Participant
+from gratipay.models.team import Team
 from gratipay.models import community
 from gratipay.models import check_db
 
@@ -48,7 +49,7 @@ def fake_sentence(start=1, stop=100):
 
 
 def fake_participant(db, number="singular", is_admin=False):
-    """Create a fake User.
+    """Create a fake Participant.
     """
     username = faker.first_name() + fake_text_id(3)
     try:
@@ -71,6 +72,30 @@ def fake_participant(db, number="singular", is_admin=False):
 
     #Call participant constructor to perform other DB initialization
     return Participant.from_username(username)
+
+
+def fake_team(db, owner):
+    """Create a fake Team.
+    """
+    display_name = faker.company()
+    slug = display_name.replace('.', '').replace(' ', '')
+    try:
+        _fake_thing( db
+                   , "teams"
+                   , display_name=display_name
+                   , slug=slug
+                   , slug_lower=slug.lower()
+                   , homepage=faker.url()
+                   , product_or_service=faker.text()
+                   , getting_involved=faker.text()
+                   , getting_paid=faker.text()
+                   , owner=owner.username
+                    )
+    except IntegrityError:
+      return fake_participant(db, owner)
+
+    #Call team constructor to perform other DB initialization
+    return Team.from_slug(slug)
 
 
 def fake_community(db, creator):
@@ -228,32 +253,31 @@ def clean_db(db):
     """)
 
 
-def populate_db(db, num_participants=100, num_tips=200, num_teams=5, num_transfers=5000, num_communities=20):
+def populate_db(db, nparticipants=100, ntips=200, nteams=5, ntransfers=5000, ncommunities=20):
     """Populate DB with fake data.
     """
     print("Making Participants")
     participants = []
-    for i in xrange(num_participants):
+    for i in xrange(nparticipants):
         participants.append(fake_participant(db))
 
     print("Making Teams")
-    for i in xrange(num_teams):
-        team = fake_participant(db, number="plural")
-        #Add 1 to 3 members to the team
-        members = random.sample(participants, random.randint(1, 3))
-        for p in members:
+    for i in xrange(nteams):
+        #Add 1 to 3 participants to the team's payroll
+        payroll = random.sample(participants, random.randint(1, 3))
+        team = fake_team(db, owner=payroll[0])
+        for p in payroll[1:]:
             team.add_member(p)
-        participants.append(team)
 
     print("Making Elsewheres")
     for p in participants:
         #All participants get between 1 and 3 elsewheres
-        num_elsewheres = random.randint(1, 3)
-        for platform_name in random.sample(PLATFORMS, num_elsewheres):
+        nelsewheres = random.randint(1, 3)
+        for platform_name in random.sample(PLATFORMS, nelsewheres):
             fake_elsewhere(db, p, platform_name)
 
     print("Making Communities")
-    for i in xrange(num_communities):
+    for i in xrange(ncommunities):
         creator = random.sample(participants, 1)
         community = fake_community(db, creator[0])
 
@@ -263,14 +287,14 @@ def populate_db(db, num_participants=100, num_tips=200, num_teams=5, num_transfe
 
     print("Making Tips")
     tips = []
-    for i in xrange(num_tips):
+    for i in xrange(ntips):
         tipper, tippee = random.sample(participants, 2)
         tips.append(fake_tip(db, tipper, tippee))
 
     # Transfers
     transfers = []
-    for i in xrange(num_transfers):
-        sys.stdout.write("\rMaking Transfers (%i/%i)" % (i+1, num_transfers))
+    for i in xrange(ntransfers):
+        sys.stdout.write("\rMaking Transfers (%i/%i)" % (i+1, ntransfers))
         sys.stdout.flush()
         tipper, tippee = random.sample(participants, 2)
         transfers.append(fake_transfer(db, tipper, tippee))

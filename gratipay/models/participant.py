@@ -45,7 +45,6 @@ from gratipay.exceptions import (
 )
 
 from gratipay.models import add_event
-from gratipay.models._mixin_team import MixinTeam
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.security.crypto import constant_time_compare
@@ -63,7 +62,7 @@ EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 USERNAME_MAX_SIZE = 32
 
-class Participant(Model, MixinTeam):
+class Participant(Model):
     """Represent a Gratipay participant.
     """
 
@@ -794,6 +793,14 @@ class Participant(Model, MixinTeam):
 
     # Random Junk
     # ===========
+
+    def on_payroll(self, team):
+        """Given a Team object, return a boolean.
+        """
+        for rec in team.get_current_payroll():
+            if rec['recipient'] == self.username:
+                return True
+        return False
 
     @property
     def profile_url(self):

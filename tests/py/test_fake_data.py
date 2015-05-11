@@ -10,14 +10,17 @@ class TestFakeData(Harness):
     """
 
     def test_fake_data(self):
-        num_participants = 5
-        num_tips = 5
-        num_teams = 1
-        num_transfers = 5
-        fake_data.populate_db(self.db, num_participants, num_tips, num_teams, num_transfers)
+        nparticipants = 5
+        ntips = 5
+        nteams = 1
+        ntransfers = 5
+        fake_data.populate_db(self.db, nparticipants, ntips, nteams, ntransfers)
         tips = self.db.all("SELECT * FROM tips")
         participants = self.db.all("SELECT * FROM participants")
+        teams = self.db.all("SELECT * FROM teams")
         transfers = self.db.all("SELECT * FROM transfers")
-        assert len(tips) == num_tips
-        assert len(participants) == num_participants + num_teams
-        assert len(transfers) == num_transfers
+        teams = self.db.all("SELECT * FROM teams")
+        assert len(tips) == ntips
+        assert len(participants) == nparticipants
+        assert len(teams) == nteams
+        assert len(transfers) == ntransfers

@@ -2,6 +2,7 @@
 """
 from collections import OrderedDict
 from decimal import Decimal
+from postgres.orm import Model
 
 from aspen.utils import typecheck
 
@@ -10,17 +11,35 @@ class MemberLimitReached(Exception): pass
 
 class StubParticipantAdded(Exception): pass
 
-class MixinTeam(object):
-    """This class provides methods for working with a Participant as a Team.
-
-    :param Participant participant: the underlying :py:class:`~gratipay.participant.Participant` object for this team
-
+class Team(Model):
+    """Represent a Gratipay team.
     """
 
-    # XXX These were all written with the ORM and need to be converted.
+    typname = 'teams'
 
-    def __init__(self, participant):
-        self.participant = participant
+    @classmethod
+    def from_id(cls, id):
+        """Return an existing team based on id.
+        """
+        return cls._from_thing("id", id)
+
+    @classmethod
+    def from_slug(cls, slug):
+        """Return an existing team based on slug.
+        """
+        return cls._from_thing("slug_lower", slug.lower())
+
+    @classmethod
+    def _from_thing(cls, thing, value):
+        assert thing in ("id", "slug_lower")
+        return cls.db.one("""
+
+            SELECT teams.*::teams
+              FROM teams
+             WHERE {}=%s
+
+        """.format(thing), (value,))
+
 
     def show_as_team(self, user):
         """Return a boolean, whether to show this participant as a team.
@@ -38,7 +57,6 @@ class MixinTeam(object):
     def add_member(self, member):
         """Add a member to this team.
         """
-        assert self.IS_PLURAL
         if len(self.get_current_takes()) == 149:
             raise MemberLimitReached
         if not member.is_claimed:

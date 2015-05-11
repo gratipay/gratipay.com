@@ -14,9 +14,10 @@ BEGIN;
     , owner                 text                        NOT NULL REFERENCES participants
                                                             ON UPDATE CASCADE ON DELETE RESTRICT
     , is_approved           boolean                     DEFAULT NULL
-    , nsupporters           integer                     NOT NULL DEFAULT 0
     , receiving             numeric(35,2)               NOT NULL DEFAULT 0
+    , nsupporters           integer                     NOT NULL DEFAULT 0
     , payroll               numeric(35,2)               NOT NULL DEFAULT 0
+    , npayroll              integer                     NOT NULL DEFAULT 0
      );
 
 
