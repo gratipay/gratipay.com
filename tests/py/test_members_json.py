@@ -10,7 +10,7 @@ from aspen import Response
 class Tests(Harness):
 
     def hit_members_json(self, method='GET', auth_as=None):
-        response = self.client.GET('/A-Team/members/index.json', auth_as=auth_as)
+        response = self.client.GET('/~A-Team/members/index.json', auth_as=auth_as)
         return json.loads(response.body)
 
 

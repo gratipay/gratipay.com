@@ -21,7 +21,7 @@ class Tests(Harness):
 
     def hit_api_key_json(self, method='GET'):
         method = getattr(self.client, method)
-        response = method("/alice/api-key.json", auth_as='alice')
+        response = method("/~alice/api-key.json", auth_as='alice')
         return json.loads(response.body)['api_key']
 
 

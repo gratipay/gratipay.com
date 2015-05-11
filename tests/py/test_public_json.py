@@ -14,7 +14,7 @@ class Tests(Harness):
 
     def test_on_key_gives_gratipay(self):
         self.make_participant('alice', last_bill_result='')
-        data = json.loads(self.client.GET('/alice/public.json').body)
+        data = json.loads(self.client.GET('/~alice/public.json').body)
 
         assert data['on'] == 'gratipay'
 
@@ -24,7 +24,7 @@ class Tests(Harness):
 
         alice.set_tip_to(bob, '1.00')
 
-        data = json.loads(self.client.GET('/bob/public.json').body)
+        data = json.loads(self.client.GET('/~bob/public.json').body)
 
         assert data['receiving'] == '1.00'
 
@@ -34,7 +34,7 @@ class Tests(Harness):
 
         alice.set_tip_to(bob, '1.00')
 
-        data = json.loads(self.client.GET('/bob/public.json').body)
+        data = json.loads(self.client.GET('/~bob/public.json').body)
 
         assert data.has_key('my_tip') == False
 
@@ -44,7 +44,7 @@ class Tests(Harness):
 
         alice.set_tip_to(bob, '1.00')
 
-        data = json.loads(self.client.GET('/alice/public.json').body)
+        data = json.loads(self.client.GET('/~alice/public.json').body)
 
         assert data['giving'] == '1.00'
 
@@ -55,7 +55,7 @@ class Tests(Harness):
                                      )
         bob = self.make_participant('bob')
         alice.set_tip_to(bob, '1.00')
-        data = json.loads(self.client.GET('/alice/public.json').body)
+        data = json.loads(self.client.GET('/~alice/public.json').body)
 
         assert data['giving'] == None
 
@@ -66,23 +66,23 @@ class Tests(Harness):
                                      )
         bob = self.make_participant('bob')
         alice.set_tip_to(bob, '1.00')
-        data = json.loads(self.client.GET('/alice/public.json').body)
+        data = json.loads(self.client.GET('/~alice/public.json').body)
 
         assert data['receiving'] == None
 
     def test_anonymous_does_not_get_goal_if_user_regifts(self):
         self.make_participant('alice', last_bill_result='', goal=0)
-        data = json.loads(self.client.GET('/alice/public.json').body)
+        data = json.loads(self.client.GET('/~alice/public.json').body)
         assert data.has_key('goal') == False
 
     def test_anonymous_gets_null_goal_if_user_has_no_goal(self):
         self.make_participant('alice', last_bill_result='')
-        data = json.loads(self.client.GET('/alice/public.json').body)
+        data = json.loads(self.client.GET('/~alice/public.json').body)
         assert data['goal'] == None
 
     def test_anonymous_gets_user_goal_if_set(self):
         self.make_participant('alice', last_bill_result='', goal=1)
-        data = json.loads(self.client.GET('/alice/public.json').body)
+        data = json.loads(self.client.GET('/~alice/public.json').body)
         assert data['goal'] == '1.00'
 
     def test_authenticated_user_gets_their_tip(self):
@@ -91,7 +91,7 @@ class Tests(Harness):
 
         alice.set_tip_to(bob, '1.00')
 
-        raw = self.client.GET('/bob/public.json', auth_as='alice').body
+        raw = self.client.GET('/~bob/public.json', auth_as='alice').body
 
         data = json.loads(raw)
 
@@ -108,7 +108,7 @@ class Tests(Harness):
         bob.set_tip_to(dana, '3.00')
         carl.set_tip_to(dana, '12.00')
 
-        raw = self.client.GET('/dana/public.json', auth_as='alice').body
+        raw = self.client.GET('/~dana/public.json', auth_as='alice').body
 
         data = json.loads(raw)
 
@@ -122,7 +122,7 @@ class Tests(Harness):
 
         bob.set_tip_to(carl, '3.00')
 
-        raw = self.client.GET('/carl/public.json', auth_as='alice').body
+        raw = self.client.GET('/~carl/public.json', auth_as='alice').body
 
         data = json.loads(raw)
 
@@ -135,7 +135,7 @@ class Tests(Harness):
 
         alice.set_tip_to(bob, '3.00')
 
-        raw = self.client.GET('/bob/public.json', auth_as='bob').body
+        raw = self.client.GET('/~bob/public.json', auth_as='bob').body
 
         data = json.loads(raw)
 
@@ -144,7 +144,7 @@ class Tests(Harness):
 
     def test_access_control_allow_origin_header_is_asterisk(self):
         self.make_participant('alice', last_bill_result='')
-        response = self.client.GET('/alice/public.json')
+        response = self.client.GET('/~alice/public.json')
 
         assert response.headers['Access-Control-Allow-Origin'] == '*'
 
@@ -154,7 +154,7 @@ class Tests(Harness):
 
         alice.set_tip_to(bob, '3.00')
 
-        raw = self.client.GxT('/bob/public.json?callback=foo', auth_as='bob').body
+        raw = self.client.GxT('/~bob/public.json?callback=foo', auth_as='bob').body
 
         assert raw == '''\
 foo({

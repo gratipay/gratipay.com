@@ -31,6 +31,16 @@ def dict_to_querystring(mapping):
     return u'?' + u'&'.join(arguments)
 
 
+def use_tildes_for_participants(request):
+    if request.path.raw.startswith('/~/'):
+        to = '/~' + request.path.raw[3:]
+        if request.qs.raw:
+            to += '?' + request.qs.raw
+        request.redirect(to)
+    elif request.path.raw.startswith('/~'):
+        request.path.__init__('/~/' + request.path.raw[2:])
+
+
 def canonicalize(path, base, canonical, given, arguments=None):
     if given != canonical:
         assert canonical.lower() == given.lower()  # sanity check

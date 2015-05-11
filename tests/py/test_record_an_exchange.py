@@ -21,7 +21,7 @@ class TestRecordAnExchange(Harness):
         data = {'amount': amount, 'fee': fee, 'note': note}
         if status is not None:
             data['status'] = status
-        return self.client.PxST('/bob/history/record-an-exchange', data, auth_as='alice')
+        return self.client.PxST('/~bob/history/record-an-exchange', data, auth_as='alice')
 
     # tests
     # =====

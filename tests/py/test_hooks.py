@@ -61,7 +61,7 @@ class Tests(Harness):
         api_key = alice.recreate_api_key()
 
         auth_header = b'Basic ' + b64encode(b'%s:%s' % (alice.id, api_key))
-        response = self.client.GET( '/alice/public.json'
+        response = self.client.GET( '/~alice/public.json'
                                   , HTTP_AUTHORIZATION=auth_header
                                   , HTTP_X_FORWARDED_PROTO=b'https'
                                   , HTTP_HOST=b'gratipay.com'
@@ -75,7 +75,7 @@ class Tests(Harness):
         api_key = alice.recreate_api_key()
 
         auth_header = b'Basic ' + b64encode(b'%s:' % api_key)
-        response = self.client.GET( '/alice/public.json'
+        response = self.client.GET( '/~alice/public.json'
                                   , HTTP_AUTHORIZATION=auth_header
                                   , HTTP_X_FORWARDED_PROTO=b'https'
                                   , HTTP_HOST=b'gratipay.com'
@@ -86,7 +86,7 @@ class Tests(Harness):
     def test_bad_userid_returns_401(self):
         self.make_participant('alice', claimed_time='now')
         auth_header = b'Basic ' + b64encode(b'foo:')
-        response = self.client.GxT( '/alice/public.json'
+        response = self.client.GxT( '/~alice/public.json'
                                   , HTTP_AUTHORIZATION=auth_header
                                   , HTTP_X_FORWARDED_PROTO=b'https'
                                   , HTTP_HOST=b'gratipay.com'
