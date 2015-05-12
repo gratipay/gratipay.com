@@ -19,6 +19,7 @@ import uuid
 
 from aspen.utils import utcnow
 import balanced
+import braintree
 from dependency_injection import resolve_dependencies
 from markupsafe import escape as htmlescape
 from postgres.orm import Model
@@ -774,7 +775,11 @@ class Participant(Model, MixinTeam):
         return getattr(ExchangeRoute.from_network(self, 'balanced-ba'), 'error', None)
 
     def get_credit_card_error(self):
-        return getattr(ExchangeRoute.from_network(self, 'balanced-cc'), 'error', None)
+        if self.braintree_customer_id:
+            return getattr(ExchangeRoute.from_network(self, 'braintree-cc'), 'error', None)
+        # Backward compatibility until we get rid of balanced
+        else:
+            return getattr(ExchangeRoute.from_network(self, 'balanced-cc'), 'error', None)
 
     def get_cryptocoin_addresses(self):
         routes = self.db.all("""
@@ -1364,6 +1369,33 @@ class Participant(Model, MixinTeam):
             customer = balanced.Customer.fetch(self.balanced_customer_href)
         return customer
 
+    def get_braintree_account(self):
+        """Fetch or create a braintree account for this participant.
+        """
+        if not self.braintree_customer_id:
+            customer = braintree.Customer.create({
+                'custom_fields': {'participant_id': self.id}
+            }).customer
+
+            r = self.db.one("""
+                UPDATE participants
+                   SET braintree_customer_id=%s
+                 WHERE id=%s
+                   AND braintree_customer_id IS NULL
+             RETURNING id
+            """, (customer.id, self.id))
+
+            if not r:
+                return self.get_braintree_account()
+        else:
+            customer = braintree.Customer.find(self.braintree_customer_id)
+        return customer
+
+    def get_braintree_token(self):
+        account = self.get_braintree_account()
+
+        token = braintree.ClientToken.generate({'customer_id': account.id})
+        return token
 
     class StillReceivingTips(Exception): pass
     class BalanceIsNotZero(Exception): pass

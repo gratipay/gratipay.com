@@ -5,9 +5,6 @@ from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.utils import get_participant
 
 [-----------------------------------------------------------------------------]
-
-request.redirect('/about/migration')
-
 account = None
 bank_account = None
 status = ""

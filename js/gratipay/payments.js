@@ -15,10 +15,10 @@ Gratipay.payments = {};
 
 Gratipay.payments.init = function() {
     $('#delete').submit(Gratipay.payments.deleteRoute);
+}
 
-    // Lazily depend on Balanced.
-    var balanced_js = "https://js.balancedpayments.com/1.1/balanced.min.js";
-    jQuery.getScript(balanced_js, function() {
+Gratipay.payments.lazyLoad = function(script_url) {
+    jQuery.getScript(script_url, function() {
         $('input[type!="hidden"]').eq(0).focus();
     }).fail(Gratipay.error);
 }
@@ -43,37 +43,16 @@ Gratipay.payments.deleteRoute = function(e) {
     return false;
 };
 
-Gratipay.payments.onError = function(response) {
-    $('button#save').prop('disabled', false);
-    var msg = response.status_code + ": " +
-        $.map(response.errors, function(obj) { return obj.description }).join(', ');
-    Gratipay.notification(msg, 'error', -1);
-    return msg;
-};
-
 Gratipay.payments.onSuccess = function(data) {
     $('button#save').prop('disabled', false);
     window.location.reload();
 };
 
-Gratipay.payments.associate = function (network) { return function (response) {
-    if (response.status_code !== 201) {
-        return Gratipay.payments.onError(response);
-    }
-
-    /* The request to tokenize the thing succeeded. Now we need to associate it
-     * to the Customer on Balanced and to the participant in our DB.
-     */
-    var data = {
-        network: network,
-        address: network == 'balanced-ba' ? response.bank_accounts[0].href
-                                          : response.cards[0].href,
-    };
-
+Gratipay.payments.associate = function (network, address) {
     jQuery.ajax({
         url: "associate.json",
         type: "POST",
-        data: data,
+        data: {network: network, address: address},
         dataType: "json",
         success: Gratipay.payments.onSuccess,
         error: [
@@ -81,7 +60,7 @@ Gratipay.payments.associate = function (network) { return function (response) {
             function() { $('button#save').prop('disabled', false); },
         ],
     });
-}};
+};
 
 
 // Bank Accounts
@@ -91,6 +70,10 @@ Gratipay.payments.ba = {};
 
 Gratipay.payments.ba.init = function() {
     Gratipay.payments.init();
+
+    // Lazily depend on Balanced.
+    Gratipay.payments.lazyLoad("https://js.balancedpayments.com/1.1/balanced.min.js")
+
     $('form#bank-account').submit(Gratipay.payments.ba.submit);
 };
 
@@ -118,9 +101,24 @@ Gratipay.payments.ba.submit = function (e) {
     }
 
     // Okay, send the data to Balanced.
-    balanced.bankAccount.create( bankAccount
-                               , Gratipay.payments.associate('balanced-ba')
-                                );
+    balanced.bankAccount.create(bankAccount, function (response) {
+        if (response.status_code !== 201) {
+            return Gratipay.payments.ba.onError(response);
+        }
+
+        /* The request to tokenize the thing succeeded. Now we need to associate it
+         * to the Customer on Balanced and to the participant in our DB.
+         */
+        Gratipay.payments.associate('balanced-ba', response.bank_accounts[0].href);
+    });
+};
+
+Gratipay.payments.ba.onError = function(response) {
+    $('button#save').prop('disabled', false);
+    var msg = response.status_code + ": " +
+        $.map(response.errors, function(obj) { return obj.description }).join(', ');
+    Gratipay.notification(msg, 'error', -1);
+    return msg;
 };
 
 
@@ -131,6 +129,10 @@ Gratipay.payments.cc = {};
 
 Gratipay.payments.cc.init = function() {
     Gratipay.payments.init();
+
+    // Lazily depend on Braintree.
+    Gratipay.payments.lazyLoad("https://js.braintreegateway.com/v2/braintree.js")
+
     $('form#credit-card').submit(Gratipay.payments.cc.submit);
     Gratipay.payments.cc.formatInputs(
         $('#card_number'),
@@ -271,57 +273,33 @@ Gratipay.payments.cc.submit = function(e) {
     $('button#save').prop('disabled', true);
     Gratipay.forms.clearInvalid($(this));
 
-    // Adapt our form lingo to balanced nomenclature.
+    // Adapt our form lingo to braintree nomenclature.
 
     function val(field) {
         return $('form#credit-card #'+field).val();
     }
 
-    var credit_card = {};   // holds CC info
+    var credit_card = {};
 
     credit_card.number = val('card_number').replace(/[^\d]/g, '');
     credit_card.cvv = val('cvv');
-    credit_card.name = val('name');
-    var country = val('country') || null;
-
-    credit_card.meta = { 'address_2': val('address_2')
-                       , 'region': val('state')
-                       , 'city_town': val('city_town')
-                       , 'country': country
-                        };
-
-    // XXX We're duping some of this info in both meta and address due to
-    // evolution of the Balanced API and our stepwise keeping-up. See:
-    // https://github.com/gratipay/gratipay.com/issues/2446 and links from
-    // there.
-    credit_card.address = { 'line1': val('address_1')
-                          , 'line2': val('address_2')
-                          , 'city': val('city_town')
-                          , 'state': val('state')
-                          , 'postal_code': val('zip')
-                          , 'country_code': country
-                           };
-
-    credit_card.expiration_month = val('expiration_month');
+    credit_card.cardholderName = val('name');
+    credit_card.billingAddress = { 'postalCode': val('zip') };
+    credit_card.expirationMonth = val('expiration_month');
     var year = val('expiration_year');
-    credit_card.expiration_year = year.length == 2 ? '20' + year : year;
+    credit_card.expirationYear = year.length == 2 ? '20' + year : year;
 
-    var is_card_number_invalid = !balanced.card.isCardNumberValid(credit_card.number);
-    var is_expiry_invalid = !balanced.card.isExpiryValid(credit_card.expiration_month,
-                                                         credit_card.expiration_year);
-    var is_cvv_invalid = !balanced.card.isSecurityCodeValid(credit_card.number,
-                                                            credit_card.cvv);
+    // TODO: Client Side validation
 
-    Gratipay.forms.setInvalid($('#card_number'), is_card_number_invalid);
-    Gratipay.forms.setInvalid($('#expiration_month'), is_expiry_invalid);
-    Gratipay.forms.setInvalid($('#cvv'), is_cvv_invalid);
+    var client = new braintree.api.Client({clientToken: val('braintree_token')});
 
-    if (is_card_number_invalid || is_expiry_invalid || is_cvv_invalid) {
-        $('button#save').prop('disabled', false);
-        Gratipay.forms.focusInvalid($(this));
-        return false;
-    }
+    client.tokenizeCard(credit_card, function (err, nonce) {
+        if (err) {
+            Gratipay.notification(err, 'error')
+        } else {
+            Gratipay.payments.associate('braintree-cc', nonce);
+        }
+    });
 
-    balanced.card.create(credit_card, Gratipay.payments.associate('balanced-cc'));
     return false;
 };

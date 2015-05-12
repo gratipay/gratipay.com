@@ -3,6 +3,7 @@ import balanced
 from aspen import Response
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.utils import get_participant
+from gratipay.billing.instruments import CreditCard
 
 [-------------------]
 
@@ -19,10 +20,10 @@ if exchange is None:
     raise Response(404)
 
 route = ExchangeRoute.from_id(exchange.route)
-if route and route.network == 'balanced-cc':
-    card = balanced.Card.fetch(route.address)
+if route:
+    card = CreditCard.from_route(route)
 else:
-    card = balanced.Card(address={}, meta={})
+    card = CreditCard()
 
 [-------------------]
 <style>
@@ -93,17 +94,17 @@ else:
     <h1>Receipt</h1>
 
     <div id="their-info">
-        {{ card.name }}
+        {{ card.cardholder_name }}
         ({{ participant.username }})<br />
-        {{ card.number }} ({{ card.brand }})<br />
-        {{ card.address.line1 }}<br />
-        {% if card.address.line2 %}
-        {{ card.address.line2 }}<br />
+        {{ card.number }} ({{ card.card_type }})<br />
+        {{ card.address_line1 }}<br />
+        {% if card.address_line2 %}
+        {{ card.address_line2 }}<br />
         {% endif %}
-        {{ card.address.city }}{% if card.address.city %},{% endif %}
-        {{ card.address.state }}
-        {{ card.address.postal_code }}<br />
-        {{ locale.countries.get(card.address.country_code, '') }}
+        {{ card.address_city }}{% if card.address_city %},{% endif %}
+        {{ card.address_state }}
+        {{ card.address_postal_code }}<br />
+        {{ locale.countries.get(card.address_country_code, '') }}
     </div>
 
     <table>

@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from aspen import Response
 import balanced
+import braintree
 
 from gratipay.billing.exchanges import repr_exception
 from gratipay.models.exchange_route import ExchangeRoute
@@ -24,16 +25,28 @@ if change:
     if not address:
         raise Response(400, _("The address cannot be empty."))
 
-    if network.startswith('balanced-'):
+    if network == 'balanced-ba':
         account = participant.get_balanced_account()
 
-        if network == 'balanced-ba' and account.merchant_status != 'underwritten':
+        if account.merchant_status != 'underwritten':
             raise Response(400, _("You need to verify your identity first."))
 
         try:
             ExchangeRoute.associate_balanced(participant, account, network, address)
         except balanced.exc.HTTPError as err:
             raise Response(400, repr_exception(err))
+
+    elif network == 'braintree-cc':
+        result = braintree.PaymentMethod.create({
+            "customer_id": participant.braintree_customer_id,
+            "payment_method_nonce": address,
+            "options": {"verify_card": True}
+        })
+
+        if result.is_success:
+            ExchangeRoute.insert(participant, network, result.payment_method.token)
+        else:
+            raise Response(400, result.errors.deep_errors[0].message)
 
     elif network == 'bitcoin':
         if not bitcoin.validate(address):

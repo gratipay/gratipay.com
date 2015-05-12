@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import balanced
+import braintree
 from postgres.orm import Model
 
 
@@ -74,12 +75,13 @@ class ExchangeRoute(Model):
         return r
 
     def invalidate(self):
-        if self.network.startswith('balanced-'):
-            if self.network == 'balanced-cc':
-                balanced.Card.fetch(self.address).unstore()
-            else:
-                assert self.network == 'balanced-ba'
-                balanced.BankAccount.fetch(self.address).delete()
+        if self.network == 'balanced-ba':
+            balanced.BankAccount.fetch(self.address).delete()
+        elif self.network == 'balanced-cc':
+            balanced.Card.fetch(self.address).unstore()
+        elif self.network == 'braintree-cc':
+            braintree.PaymentMethod.delete(self.address)
+
         self.update_error('invalidated')
 
     def update_error(self, new_error, propagate=True):

@@ -3,26 +3,43 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import itertools
 
 import balanced
+import braintree
+from braintree.test.nonces import Nonces
 
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.testing import Harness
 from gratipay.testing.vcr import use_cassette
 
 
-class BalancedHarness(Harness):
+class BillingHarness(Harness):
 
     def setUp(self):
+        # Balanced Customer without funding instruments
         self.david = self.make_participant('david', is_suspicious=False,
                                            claimed_time='now',
                                            balanced_customer_href=self.david_href)
+
+        # Balanced Customer with CC attached
         self.janet = self.make_participant('janet', is_suspicious=False,
                                            claimed_time='now',
                                            balanced_customer_href=self.janet_href)
         self.janet_route = ExchangeRoute.insert(self.janet, 'balanced-cc', self.card_href)
+
+        # Balanced Customer with BA attached
         self.homer = self.make_participant('homer', is_suspicious=False,
                                            claimed_time='now',
                                            balanced_customer_href=self.homer_href)
         self.homer_route = ExchangeRoute.insert(self.homer, 'balanced-ba', self.bank_account_href)
+
+        # Braintree Customer without funding instruments
+        self.roman = self.make_participant('roman', is_suspicious=False,
+                                         claimed_time='now',
+                                         braintree_customer_id=self.roman_bt_id)
+        # Braintree Customer with CC attached
+        self.obama = self.make_participant('obama', is_suspicious=False,
+                                          claimed_time='now',
+                                          braintree_customer_id=self.obama_bt_id)
+        self.obama_route = ExchangeRoute.insert(self.obama, 'braintree-cc', self.obama_cc_token)
 
     @classmethod
     def tearDownClass(cls):
@@ -32,11 +49,11 @@ class BalancedHarness(Harness):
         for t in itertools.chain(credits, debits):
             t.meta.pop('exchange_id')
             t.save()
-        super(BalancedHarness, cls).tearDownClass()
+        super(BillingHarness, cls).tearDownClass()
 
 
-with use_cassette('BalancedHarness'):
-    cls = BalancedHarness
+with use_cassette('BillingHarness'):
+    cls = BillingHarness
     balanced.configure(balanced.APIKey().save().secret)
     mp = balanced.Marketplace.my_marketplace
     if not mp:
@@ -74,3 +91,14 @@ with use_cassette('BalancedHarness'):
     ).save()
     cls.bank_account.associate_to_customer(cls.homer_href)
     cls.bank_account_href = unicode(cls.bank_account.href)
+
+    cls.roman_bt_id = braintree.Customer.create().customer.id
+
+    cls.obama_bt_id = braintree.Customer.create().customer.id
+
+    cls.bt_card = braintree.PaymentMethod.create({
+        "customer_id": cls.obama_bt_id,
+        "payment_method_nonce": Nonces.Transactable
+    }).payment_method
+
+    cls.obama_cc_token = cls.bt_card.token
