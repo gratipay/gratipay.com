@@ -506,6 +506,260 @@ msgstr "Ben je zeker dat je wil uitloggen?"
 msgid "Yes!"
 msgstr "Ja!"
 
+msgid "Frequently Asked Questions"
+msgstr "Veelgestelde vragen"
+
+msgid "The Delpan Incident"
+msgstr "Het Delpan incident"
+
+msgid "Sign In"
+msgstr "Log in"
+
+msgid "Fraud Review Dashboard"
+msgstr "Fraude controle dashboard"
+
+msgid "There is {n} community on Gratipay."
+msgid_plural "There are {n} communities on Gratipay."
+msgstr[0] "Er is {n} community op Gratipay."
+msgstr[1] "Er zijn {n} communities op Gratipay."
+
+msgid "Find or add a community ..."
+msgstr "Zoek of voeg een gemeenschap toe ..."
+
+msgid "{n} Member"
+msgid_plural "{n} Members"
+msgstr[0] "{n} Lid"
+msgstr[1] "{n} Leden"
+
+msgid "Popular Communities"
+msgstr "Populaire gemeenschappen"
+
+msgid "Teams (N={0})"
+msgstr "Teams (N={0})"
+
+msgid "Team Name"
+msgstr "Team naam"
+
+msgid "Receiving ($)"
+msgstr "Ontvangt ($)"
+
+msgid "Goal ($)"
+msgstr "Doel ($)"
+
+#, python-format
+msgid "% Funded"
+msgstr "% Gefinancierd"
+
+msgid "Receiving{0} Per Member ($)"
+msgstr "Ontvangt {0} per lid ($)"
+
+msgid "Member"
+msgid_plural "Members"
+msgstr[0] "Lid"
+msgstr[1] "Leden"
+
+msgid "Organized {0} ago."
+msgstr "{0} geleden georganiseerd."
+
+msgid "{0} to join the {1} community on Gratipay."
+msgstr "{0} vervoegt de {1} gemeenschap op Gratipay."
+
+msgid "Leave"
+msgstr "Verlaat"
+
+msgid "Join"
+msgstr "Vervoeg"
+
+msgid "You're the first one here!"
+msgstr "Je bent de eerste hier!"
+
+msgid ""
+"Bring the {0} community to Gratipay to find like-minded people to give to."
+msgstr "Breng de {0} gemeenschap naar Gratipay om gelijkgestemden mensen te vinden om aan te geven."
+
+msgid "New Members"
+msgstr "Nieuwe leden"
+
+msgid "Top Givers"
+msgstr "Top gevers"
+
+msgid "Anonymous"
+msgstr "Anoniem"
+
+msgid "Top Receivers"
+msgstr "Top ontvangers"
+
+msgid "More"
+msgstr "Meer"
+
+msgid "Please Confirm"
+msgstr "Bevestigen alstublieft"
+
+msgid "{0} is connected to {1} on Gratipay."
+msgstr "{0} is verbonden met {1} op Gratipay."
+
+msgid "Transfer it?"
+msgstr "Overmaken?"
+
+msgid "How the accounts are now"
+msgstr "Huidige staat van de account"
+
+msgid "How the accounts will be after the transfer"
+msgstr "Staat van de account na de overboeking"
+
+msgid "Abandoned:"
+msgstr "Verlaten:"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nee"
+
+msgid "Friend Finder"
+msgstr ""
+
+msgid "You have {n} friend on {0}."
+msgid_plural "You have {n} friends on {0}."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"Note: privacy settings may prevent Gratipay from seeing some of your {0} "
+"friends."
+msgstr ""
+
+msgid "Please refresh your {0} connection"
+msgstr ""
+
+msgid "to find your friends from there."
+msgstr ""
+
+msgid "Connect your {0} account"
+msgstr "Verbind uw {0} account"
+
+msgid "No friends found."
+msgstr "Geen vrienden gevonden."
+
+msgid "Name"
+msgstr "Naam"
+
+msgid "On Gratipay?"
+msgstr "Op Gratipay?"
+
+msgid "Supporters"
+msgstr ""
+
+msgid "Failure"
+msgstr "Mislukt"
+
+msgid "Are you really an administrator of the {0} team?"
+msgstr "Bent u echt de administrator van het {0} team?"
+
+msgid ""
+"Your attempt to claim this account failed because you're logged into {0} as "
+"someone who isn't an administrator of the {1} team. Please sign out and "
+"{2}try again{3}."
+msgstr "Uw poging om deze account te bemachtingen is mislukt, omdat u bent ingelogd op {0} als iemand die geen administrator is van het {1} team. Logt u alstublieft uit en {2}probeer het opnieuw{3}."
+
+msgid "Are you really {0}?"
+msgstr "Bent u echt {0}?"
+
+msgid ""
+"Your attempt to claim this account failed because you're logged into {0} as "
+"someone else. Please sign out and {1}try again{2}."
+msgstr "Uw poging om deze account te bemachtigen is mislukt, omdat u bent ingelogd op {0} als iemand anders. Logt u alstublieft uit en {1}probeer het opnieuw{2}."
+
+msgid "{0} is a private team"
+msgstr "{0} is een privé team"
+
+msgid "{0} is a big team"
+msgstr "{0} is een groot team"
+
+msgid "{0} is a team with {n} public member"
+msgid_plural "{0} is a team with {n} public members"
+msgstr[0] "{0} is een team met {n} publiek lid"
+msgstr[1] "{0} is een team met {n} publieke leden"
+
+msgid "Team Members"
+msgstr "Teamleden"
+
+msgid "A Lot"
+msgstr "Veel"
+
+msgid "Gifts Waiting"
+msgstr "Fooien staan klaar"
+
+msgid ""
+"If you are an administrator of this {0} team account, you can unlock it to "
+"allow people to pledge tips to your team on Gratipay."
+msgstr "Als u een administrator bent van dit {0} team account, dan kunt deze ontgrendelen zodat anderen giften kunnen beloven aan uw team op Gratipay."
+
+msgid ""
+"If you are {0} on {1}, you can unlock your account to allow people to pledge"
+" tips to you on Gratipay."
+msgstr "Als u {0} op {1} bent, dan kunt u uw account ontgrendelen zodat anderen u giften kunnen beloven op Gratipay."
+
+msgid "Unlock"
+msgstr "Ontgrendelen"
+
+msgid "{0} has not joined Gratipay."
+msgstr "{0} is geen lid geworden van Gratipay."
+
+msgid ""
+"Are you an administrator of this {0} team account? Connect it to your "
+"Gratipay account."
+msgstr "Bent u een administrator van dit {0} team account? Verbind het met uw Gratipay account."
+
+msgid "Connect team account"
+msgstr "Verbind het team account"
+
+msgid "Is this you? We never collect money for you unless you join."
+msgstr "Bent u dit? We verzamelen geen giften voor u, behalve als u lid wordt."
+
+msgid "Join Gratipay"
+msgstr "Word lid van Gratipay"
+
+msgid "Is this yours? Connect it to your Gratipay account."
+msgstr "Is dit van u? Verbind het aan uw Gratipay account."
+
+msgid "Connect"
+msgstr "Verbinden"
+
+msgid "What is Gratipay?"
+msgstr "Wat is Gratipay?"
+
+msgid ""
+"Gratipay is a way to thank and support your favorite artists, musicians, "
+"writers, programmers, etc. by setting up a small weekly cash gift to them."
+msgstr "Gratipay is een manier om uw favoriete artiesten, muzikanten, schrijvers, programmeurs, etc te bedanken door middel van een kleine wekelijkse donatie."
+
+msgid "Don't like what you see?"
+msgstr "Niet tevreden?"
+
+msgid ""
+"If you are an owner of this {0} account, you can explicitly opt out of "
+"Gratipay by locking it. We don't allow new pledges to locked accounts."
+msgstr "Als u de eigenaar bent van deze account {0} account, dan kunt u deze Gratipay account vergrendelen via een opt-out. Het is niet toegestaan om te doneren aan vergrendelde accounts."
+
+msgid "Lock"
+msgstr "Vergrendelen"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "declines gifts"
+msgstr "donaties weigeren"
+
+msgid "accepts gifts"
+msgstr "donaties accepteren"
+
+msgid "opted out of Gratipay"
+msgstr "opted out uit Gratipay"
+
+msgid "hasn't joined Gratipay yet"
+msgstr "is nog geen lid geworden van Gratipay"
+
 msgid ""
 "Warning: Doing this will remove all the tips you are currently receiving.\n"
 "\n"
@@ -687,9 +941,6 @@ msgstr "Verlopen"
 msgid "The verification code for {0} has expired."
 msgstr "De verificatie code voor {0} is verlopen."
 
-msgid "Failure"
-msgstr "Mislukt"
-
 msgid "The verification code for {0} is bad."
 msgstr "De verificatie code voor {0} klopt niet."
 
@@ -780,9 +1031,6 @@ msgstr "Debet"
 msgid "Balance"
 msgstr "Balans"
 
-msgid "Status"
-msgstr "Status"
-
 msgid "Notes"
 msgstr "Notas"
 
@@ -832,9 +1080,6 @@ msgstr "Uw deel van de opbrengst is {0} (het is niet mogelijk om deze week meer 
 
 msgid "Your take is now {0}."
 msgstr "Uw deel van de opbrengst is {0}."
-
-msgid "Team Members"
-msgstr "Teamleden"
 
 msgid "Updating…"
 msgstr "Bijwerken..."
@@ -1195,248 +1440,3 @@ msgid ""
 "Or, if you'd like to include a \"giving\" widget, you can add the {0} "
 "attribute:"
 msgstr "Of, als je een 'geef' widgets wilt invoegen, kan je het {0} attribuut toevoegen:"
-
-msgid "Frequently Asked Questions"
-msgstr "Veelgestelde vragen"
-
-msgid "The Delpan Incident"
-msgstr "Het Delpan incident"
-
-msgid "Sign In"
-msgstr "Log in"
-
-msgid "Fraud Review Dashboard"
-msgstr "Fraude controle dashboard"
-
-msgid "There is {n} community on Gratipay."
-msgid_plural "There are {n} communities on Gratipay."
-msgstr[0] "Er is {n} community op Gratipay."
-msgstr[1] "Er zijn {n} communities op Gratipay."
-
-msgid "Find or add a community ..."
-msgstr "Zoek of voeg een gemeenschap toe ..."
-
-msgid "{n} Member"
-msgid_plural "{n} Members"
-msgstr[0] "{n} Lid"
-msgstr[1] "{n} Leden"
-
-msgid "Popular Communities"
-msgstr "Populaire gemeenschappen"
-
-msgid "Teams (N={0})"
-msgstr "Teams (N={0})"
-
-msgid "Team Name"
-msgstr "Team naam"
-
-msgid "Receiving ($)"
-msgstr "Ontvangt ($)"
-
-msgid "Goal ($)"
-msgstr "Doel ($)"
-
-#, python-format
-msgid "% Funded"
-msgstr "% Gefinancierd"
-
-msgid "Receiving{0} Per Member ($)"
-msgstr "Ontvangt {0} per lid ($)"
-
-msgid "Member"
-msgid_plural "Members"
-msgstr[0] "Lid"
-msgstr[1] "Leden"
-
-msgid "Organized {0} ago."
-msgstr "{0} geleden georganiseerd."
-
-msgid "{0} to join the {1} community on Gratipay."
-msgstr "{0} vervoegt de {1} gemeenschap op Gratipay."
-
-msgid "Leave"
-msgstr "Verlaat"
-
-msgid "Join"
-msgstr "Vervoeg"
-
-msgid "You're the first one here!"
-msgstr "Je bent de eerste hier!"
-
-msgid ""
-"Bring the {0} community to Gratipay to find like-minded people to give to."
-msgstr "Breng de {0} gemeenschap naar Gratipay om gelijkgestemden mensen te vinden om aan te geven."
-
-msgid "New Members"
-msgstr "Nieuwe leden"
-
-msgid "Top Givers"
-msgstr "Top gevers"
-
-msgid "Anonymous"
-msgstr "Anoniem"
-
-msgid "Top Receivers"
-msgstr "Top ontvangers"
-
-msgid "More"
-msgstr "Meer"
-
-msgid "Please Confirm"
-msgstr "Bevestigen alstublieft"
-
-msgid "{0} is connected to {1} on Gratipay."
-msgstr "{0} is verbonden met {1} op Gratipay."
-
-msgid "Transfer it?"
-msgstr "Overmaken?"
-
-msgid "How the accounts are now"
-msgstr "Huidige staat van de account"
-
-msgid "How the accounts will be after the transfer"
-msgstr "Staat van de account na de overboeking"
-
-msgid "Abandoned:"
-msgstr "Verlaten:"
-
-msgid "Yes"
-msgstr "Ja"
-
-msgid "No"
-msgstr "Nee"
-
-msgid "Friend Finder"
-msgstr ""
-
-msgid "You have {n} friend on {0}."
-msgid_plural "You have {n} friends on {0}."
-msgstr[0] ""
-msgstr[1] ""
-
-msgid ""
-"Note: privacy settings may prevent Gratipay from seeing some of your {0} "
-"friends."
-msgstr ""
-
-msgid "Please refresh your {0} connection"
-msgstr ""
-
-msgid "to find your friends from there."
-msgstr ""
-
-msgid "Connect your {0} account"
-msgstr "Verbind uw {0} account"
-
-msgid "No friends found."
-msgstr "Geen vrienden gevonden."
-
-msgid "Name"
-msgstr "Naam"
-
-msgid "On Gratipay?"
-msgstr "Op Gratipay?"
-
-msgid "Supporters"
-msgstr ""
-
-msgid "Are you really an administrator of the {0} team?"
-msgstr "Bent u echt de administrator van het {0} team?"
-
-msgid ""
-"Your attempt to claim this account failed because you're logged into {0} as "
-"someone who isn't an administrator of the {1} team. Please sign out and "
-"{2}try again{3}."
-msgstr "Uw poging om deze account te bemachtingen is mislukt, omdat u bent ingelogd op {0} als iemand die geen administrator is van het {1} team. Logt u alstublieft uit en {2}probeer het opnieuw{3}."
-
-msgid "Are you really {0}?"
-msgstr "Bent u echt {0}?"
-
-msgid ""
-"Your attempt to claim this account failed because you're logged into {0} as "
-"someone else. Please sign out and {1}try again{2}."
-msgstr "Uw poging om deze account te bemachtigen is mislukt, omdat u bent ingelogd op {0} als iemand anders. Logt u alstublieft uit en {1}probeer het opnieuw{2}."
-
-msgid "{0} is a private team"
-msgstr "{0} is een privé team"
-
-msgid "{0} is a big team"
-msgstr "{0} is een groot team"
-
-msgid "{0} is a team with {n} public member"
-msgid_plural "{0} is a team with {n} public members"
-msgstr[0] "{0} is een team met {n} publiek lid"
-msgstr[1] "{0} is een team met {n} publieke leden"
-
-msgid "A Lot"
-msgstr "Veel"
-
-msgid "Gifts Waiting"
-msgstr "Fooien staan klaar"
-
-msgid ""
-"If you are an administrator of this {0} team account, you can unlock it to "
-"allow people to pledge tips to your team on Gratipay."
-msgstr "Als u een administrator bent van dit {0} team account, dan kunt deze ontgrendelen zodat anderen giften kunnen beloven aan uw team op Gratipay."
-
-msgid ""
-"If you are {0} on {1}, you can unlock your account to allow people to pledge"
-" tips to you on Gratipay."
-msgstr "Als u {0} op {1} bent, dan kunt u uw account ontgrendelen zodat anderen u giften kunnen beloven op Gratipay."
-
-msgid "Unlock"
-msgstr "Ontgrendelen"
-
-msgid "{0} has not joined Gratipay."
-msgstr "{0} is geen lid geworden van Gratipay."
-
-msgid ""
-"Are you an administrator of this {0} team account? Connect it to your "
-"Gratipay account."
-msgstr "Bent u een administrator van dit {0} team account? Verbind het met uw Gratipay account."
-
-msgid "Connect team account"
-msgstr "Verbind het team account"
-
-msgid "Is this you? We never collect money for you unless you join."
-msgstr "Bent u dit? We verzamelen geen giften voor u, behalve als u lid wordt."
-
-msgid "Join Gratipay"
-msgstr "Word lid van Gratipay"
-
-msgid "Is this yours? Connect it to your Gratipay account."
-msgstr "Is dit van u? Verbind het aan uw Gratipay account."
-
-msgid "Connect"
-msgstr "Verbinden"
-
-msgid "What is Gratipay?"
-msgstr "Wat is Gratipay?"
-
-msgid ""
-"Gratipay is a way to thank and support your favorite artists, musicians, "
-"writers, programmers, etc. by setting up a small weekly cash gift to them."
-msgstr "Gratipay is een manier om uw favoriete artiesten, muzikanten, schrijvers, programmeurs, etc te bedanken door middel van een kleine wekelijkse donatie."
-
-msgid "Don't like what you see?"
-msgstr "Niet tevreden?"
-
-msgid ""
-"If you are an owner of this {0} account, you can explicitly opt out of "
-"Gratipay by locking it. We don't allow new pledges to locked accounts."
-msgstr "Als u de eigenaar bent van deze account {0} account, dan kunt u deze Gratipay account vergrendelen via een opt-out. Het is niet toegestaan om te doneren aan vergrendelde accounts."
-
-msgid "Lock"
-msgstr "Vergrendelen"
-
-msgid "declines gifts"
-msgstr "donaties weigeren"
-
-msgid "accepts gifts"
-msgstr "donaties accepteren"
-
-msgid "opted out of Gratipay"
-msgstr "opted out uit Gratipay"
-
-msgid "hasn't joined Gratipay yet"
-msgstr "is nog geen lid geworden van Gratipay"

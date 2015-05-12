@@ -511,6 +511,260 @@ msgstr "Bist du sicher, dass du dich abmelden möchtest?"
 msgid "Yes!"
 msgstr "Ja!"
 
+msgid "Frequently Asked Questions"
+msgstr "Oft gefragte Fragen"
+
+msgid "The Delpan Incident"
+msgstr ""
+
+msgid "Sign In"
+msgstr ""
+
+msgid "Fraud Review Dashboard"
+msgstr ""
+
+msgid "There is {n} community on Gratipay."
+msgid_plural "There are {n} communities on Gratipay."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Find or add a community ..."
+msgstr ""
+
+msgid "{n} Member"
+msgid_plural "{n} Members"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Popular Communities"
+msgstr ""
+
+msgid "Teams (N={0})"
+msgstr ""
+
+msgid "Team Name"
+msgstr ""
+
+msgid "Receiving ($)"
+msgstr ""
+
+msgid "Goal ($)"
+msgstr ""
+
+#, python-format
+msgid "% Funded"
+msgstr ""
+
+msgid "Receiving{0} Per Member ($)"
+msgstr ""
+
+msgid "Member"
+msgid_plural "Members"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Organized {0} ago."
+msgstr ""
+
+msgid "{0} to join the {1} community on Gratipay."
+msgstr ""
+
+msgid "Leave"
+msgstr ""
+
+msgid "Join"
+msgstr ""
+
+msgid "You're the first one here!"
+msgstr ""
+
+msgid ""
+"Bring the {0} community to Gratipay to find like-minded people to give to."
+msgstr ""
+
+msgid "New Members"
+msgstr ""
+
+msgid "Top Givers"
+msgstr ""
+
+msgid "Anonymous"
+msgstr "Anonym"
+
+msgid "Top Receivers"
+msgstr ""
+
+msgid "More"
+msgstr ""
+
+msgid "Please Confirm"
+msgstr "Bitte bestätige"
+
+msgid "{0} is connected to {1} on Gratipay."
+msgstr ""
+
+msgid "Transfer it?"
+msgstr ""
+
+msgid "How the accounts are now"
+msgstr ""
+
+msgid "How the accounts will be after the transfer"
+msgstr ""
+
+msgid "Abandoned:"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Friend Finder"
+msgstr ""
+
+msgid "You have {n} friend on {0}."
+msgid_plural "You have {n} friends on {0}."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"Note: privacy settings may prevent Gratipay from seeing some of your {0} "
+"friends."
+msgstr ""
+
+msgid "Please refresh your {0} connection"
+msgstr ""
+
+msgid "to find your friends from there."
+msgstr ""
+
+msgid "Connect your {0} account"
+msgstr ""
+
+msgid "No friends found."
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "On Gratipay?"
+msgstr ""
+
+msgid "Supporters"
+msgstr ""
+
+msgid "Failure"
+msgstr "Fehler"
+
+msgid "Are you really an administrator of the {0} team?"
+msgstr ""
+
+msgid ""
+"Your attempt to claim this account failed because you're logged into {0} as "
+"someone who isn't an administrator of the {1} team. Please sign out and "
+"{2}try again{3}."
+msgstr ""
+
+msgid "Are you really {0}?"
+msgstr ""
+
+msgid ""
+"Your attempt to claim this account failed because you're logged into {0} as "
+"someone else. Please sign out and {1}try again{2}."
+msgstr ""
+
+msgid "{0} is a private team"
+msgstr ""
+
+msgid "{0} is a big team"
+msgstr ""
+
+msgid "{0} is a team with {n} public member"
+msgid_plural "{0} is a team with {n} public members"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Team Members"
+msgstr "Team Mitglieder"
+
+msgid "A Lot"
+msgstr "Sehr viel"
+
+msgid "Gifts Waiting"
+msgstr ""
+
+msgid ""
+"If you are an administrator of this {0} team account, you can unlock it to "
+"allow people to pledge tips to your team on Gratipay."
+msgstr ""
+
+msgid ""
+"If you are {0} on {1}, you can unlock your account to allow people to pledge"
+" tips to you on Gratipay."
+msgstr ""
+
+msgid "Unlock"
+msgstr ""
+
+msgid "{0} has not joined Gratipay."
+msgstr ""
+
+msgid ""
+"Are you an administrator of this {0} team account? Connect it to your "
+"Gratipay account."
+msgstr ""
+
+msgid "Connect team account"
+msgstr ""
+
+msgid "Is this you? We never collect money for you unless you join."
+msgstr ""
+
+msgid "Join Gratipay"
+msgstr ""
+
+msgid "Is this yours? Connect it to your Gratipay account."
+msgstr ""
+
+msgid "Connect"
+msgstr ""
+
+msgid "What is Gratipay?"
+msgstr ""
+
+msgid ""
+"Gratipay is a way to thank and support your favorite artists, musicians, "
+"writers, programmers, etc. by setting up a small weekly cash gift to them."
+msgstr ""
+
+msgid "Don't like what you see?"
+msgstr ""
+
+msgid ""
+"If you are an owner of this {0} account, you can explicitly opt out of "
+"Gratipay by locking it. We don't allow new pledges to locked accounts."
+msgstr ""
+
+msgid "Lock"
+msgstr ""
+
+msgid "Status"
+msgstr "Status"
+
+msgid "declines gifts"
+msgstr ""
+
+msgid "accepts gifts"
+msgstr ""
+
+msgid "opted out of Gratipay"
+msgstr ""
+
+msgid "hasn't joined Gratipay yet"
+msgstr ""
+
 msgid ""
 "Warning: Doing this will remove all the tips you are currently receiving.\n"
 "\n"
@@ -692,9 +946,6 @@ msgstr "Abgelaufen"
 msgid "The verification code for {0} has expired."
 msgstr "Der Verifikationscode für {0} ist abgelaufen."
 
-msgid "Failure"
-msgstr "Fehler"
-
 msgid "The verification code for {0} is bad."
 msgstr "Der Verifikationscode für {0} ist falsch."
 
@@ -785,9 +1036,6 @@ msgstr "Schulden"
 msgid "Balance"
 msgstr "Guthaben"
 
-msgid "Status"
-msgstr "Status"
-
 msgid "Notes"
 msgstr "Notizen"
 
@@ -837,9 +1085,6 @@ msgstr ""
 
 msgid "Your take is now {0}."
 msgstr ""
-
-msgid "Team Members"
-msgstr "Team Mitglieder"
 
 msgid "Updating…"
 msgstr "Lädt..."
@@ -1199,249 +1444,4 @@ msgstr ""
 msgid ""
 "Or, if you'd like to include a \"giving\" widget, you can add the {0} "
 "attribute:"
-msgstr ""
-
-msgid "Frequently Asked Questions"
-msgstr "Oft gefragte Fragen"
-
-msgid "The Delpan Incident"
-msgstr ""
-
-msgid "Sign In"
-msgstr ""
-
-msgid "Fraud Review Dashboard"
-msgstr ""
-
-msgid "There is {n} community on Gratipay."
-msgid_plural "There are {n} communities on Gratipay."
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Find or add a community ..."
-msgstr ""
-
-msgid "{n} Member"
-msgid_plural "{n} Members"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Popular Communities"
-msgstr ""
-
-msgid "Teams (N={0})"
-msgstr ""
-
-msgid "Team Name"
-msgstr ""
-
-msgid "Receiving ($)"
-msgstr ""
-
-msgid "Goal ($)"
-msgstr ""
-
-#, python-format
-msgid "% Funded"
-msgstr ""
-
-msgid "Receiving{0} Per Member ($)"
-msgstr ""
-
-msgid "Member"
-msgid_plural "Members"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Organized {0} ago."
-msgstr ""
-
-msgid "{0} to join the {1} community on Gratipay."
-msgstr ""
-
-msgid "Leave"
-msgstr ""
-
-msgid "Join"
-msgstr ""
-
-msgid "You're the first one here!"
-msgstr ""
-
-msgid ""
-"Bring the {0} community to Gratipay to find like-minded people to give to."
-msgstr ""
-
-msgid "New Members"
-msgstr ""
-
-msgid "Top Givers"
-msgstr ""
-
-msgid "Anonymous"
-msgstr "Anonym"
-
-msgid "Top Receivers"
-msgstr ""
-
-msgid "More"
-msgstr ""
-
-msgid "Please Confirm"
-msgstr "Bitte bestätige"
-
-msgid "{0} is connected to {1} on Gratipay."
-msgstr ""
-
-msgid "Transfer it?"
-msgstr ""
-
-msgid "How the accounts are now"
-msgstr ""
-
-msgid "How the accounts will be after the transfer"
-msgstr ""
-
-msgid "Abandoned:"
-msgstr ""
-
-msgid "Yes"
-msgstr ""
-
-msgid "No"
-msgstr ""
-
-msgid "Friend Finder"
-msgstr ""
-
-msgid "You have {n} friend on {0}."
-msgid_plural "You have {n} friends on {0}."
-msgstr[0] ""
-msgstr[1] ""
-
-msgid ""
-"Note: privacy settings may prevent Gratipay from seeing some of your {0} "
-"friends."
-msgstr ""
-
-msgid "Please refresh your {0} connection"
-msgstr ""
-
-msgid "to find your friends from there."
-msgstr ""
-
-msgid "Connect your {0} account"
-msgstr ""
-
-msgid "No friends found."
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "On Gratipay?"
-msgstr ""
-
-msgid "Supporters"
-msgstr ""
-
-msgid "Are you really an administrator of the {0} team?"
-msgstr ""
-
-msgid ""
-"Your attempt to claim this account failed because you're logged into {0} as "
-"someone who isn't an administrator of the {1} team. Please sign out and "
-"{2}try again{3}."
-msgstr ""
-
-msgid "Are you really {0}?"
-msgstr ""
-
-msgid ""
-"Your attempt to claim this account failed because you're logged into {0} as "
-"someone else. Please sign out and {1}try again{2}."
-msgstr ""
-
-msgid "{0} is a private team"
-msgstr ""
-
-msgid "{0} is a big team"
-msgstr ""
-
-msgid "{0} is a team with {n} public member"
-msgid_plural "{0} is a team with {n} public members"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "A Lot"
-msgstr "Sehr viel"
-
-msgid "Gifts Waiting"
-msgstr ""
-
-msgid ""
-"If you are an administrator of this {0} team account, you can unlock it to "
-"allow people to pledge tips to your team on Gratipay."
-msgstr ""
-
-msgid ""
-"If you are {0} on {1}, you can unlock your account to allow people to pledge"
-" tips to you on Gratipay."
-msgstr ""
-
-msgid "Unlock"
-msgstr ""
-
-msgid "{0} has not joined Gratipay."
-msgstr ""
-
-msgid ""
-"Are you an administrator of this {0} team account? Connect it to your "
-"Gratipay account."
-msgstr ""
-
-msgid "Connect team account"
-msgstr ""
-
-msgid "Is this you? We never collect money for you unless you join."
-msgstr ""
-
-msgid "Join Gratipay"
-msgstr ""
-
-msgid "Is this yours? Connect it to your Gratipay account."
-msgstr ""
-
-msgid "Connect"
-msgstr ""
-
-msgid "What is Gratipay?"
-msgstr ""
-
-msgid ""
-"Gratipay is a way to thank and support your favorite artists, musicians, "
-"writers, programmers, etc. by setting up a small weekly cash gift to them."
-msgstr ""
-
-msgid "Don't like what you see?"
-msgstr ""
-
-msgid ""
-"If you are an owner of this {0} account, you can explicitly opt out of "
-"Gratipay by locking it. We don't allow new pledges to locked accounts."
-msgstr ""
-
-msgid "Lock"
-msgstr ""
-
-msgid "declines gifts"
-msgstr ""
-
-msgid "accepts gifts"
-msgstr ""
-
-msgid "opted out of Gratipay"
-msgstr ""
-
-msgid "hasn't joined Gratipay yet"
 msgstr ""
