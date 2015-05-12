@@ -17,6 +17,10 @@ class Team(Model):
 
     typname = 'teams'
 
+
+    # Constructors
+    # ============
+
     @classmethod
     def from_id(cls, id):
         """Return an existing team based on id.
@@ -41,18 +45,8 @@ class Team(Model):
         """.format(thing), (value,))
 
 
-    def show_as_team(self, user):
-        """Return a boolean, whether to show this participant as a team.
-        """
-        if not self.IS_PLURAL:
-            return False
-        if user.ADMIN:
-            return True
-        if not self.get_current_takes():
-            if self == user.participant:
-                return True
-            return False
-        return True
+    # Add/Remove
+    # ==========
 
     def add_member(self, member):
         """Add a member to this team.
@@ -61,32 +55,27 @@ class Team(Model):
             raise MemberLimitReached
         if not member.is_claimed:
             raise StubParticipantAdded
-        self.__set_take_for(member, Decimal('0.01'), self)
+        self.__set_take_for(member, Decimal('0.01'), self.owner)
 
     def remove_member(self, member):
         """Remove a member from this team.
         """
         assert self.IS_PLURAL
-        self.__set_take_for(member, Decimal('0.00'), self)
+        self.__set_take_for(member, Decimal('0.00'), self.owner)
 
     def remove_all_members(self, cursor=None):
         (cursor or self.db).run("""
-            INSERT INTO takes (ctime, member, team, amount, recorder) (
-                SELECT ctime, member, %(username)s, 0.00, %(username)s
-                  FROM current_takes
-                 WHERE team=%(username)s
+            INSERT INTO payroll (ctime, member, team, amount, recorder) (
+                SELECT ctime, member, %(slug)s, 0.00, %(recorder)s
+                  FROM current_payroll
+                 WHERE team=%(slug)s
                    AND amount > 0
             );
-        """, dict(username=self.username))
+        """, dict(slug=self.slug, recorder=self.owner))
 
-    def member_of(self, team):
-        """Given a Participant object, return a boolean.
-        """
-        assert team.IS_PLURAL
-        for take in team.get_current_takes():
-            if take['member'] == self.username:
-                return True
-        return False
+
+    # Other
+    # =====
 
     def get_take_last_week_for(self, member):
         """Get the user's nominal take last week. Used in throttling.
@@ -113,7 +102,7 @@ class Team(Model):
         """Return a Decimal representation of the take for this member, or 0.
         """
         assert self.IS_PLURAL
-        return self.db.one( "SELECT amount FROM current_takes "
+        return self.db.one( "SELECT amount FROM current_payroll "
                             "WHERE member=%s AND team=%s"
                           , (member.username, self.username)
                           , default=Decimal('0.00')
@@ -143,23 +132,22 @@ class Team(Model):
         if take > max_this_week:
             take = max_this_week
 
-        self.__set_take_for(member, take, recorder, cursor)
+        self.__set_take_for(member, take, recorder.username, cursor)
         return take
 
     def __set_take_for(self, member, amount, recorder, cursor=None):
-        assert self.IS_PLURAL
         # XXX Factored out for testing purposes only! :O Use .set_take_for.
         with self.db.get_cursor(cursor) as cursor:
             # Lock to avoid race conditions
-            cursor.run("LOCK TABLE takes IN EXCLUSIVE MODE")
+            cursor.run("LOCK TABLE payroll IN EXCLUSIVE MODE")
             # Compute the current takes
             old_takes = self.compute_actual_takes(cursor)
             # Insert the new take
             cursor.run("""
 
-                INSERT INTO takes (ctime, member, team, amount, recorder)
+                INSERT INTO payroll (ctime, member, team, amount, recorder)
                  VALUES ( COALESCE (( SELECT ctime
-                                        FROM takes
+                                        FROM payroll
                                        WHERE member=%(member)s
                                          AND team=%(team)s
                                        LIMIT 1
@@ -170,8 +158,8 @@ class Team(Model):
                         , %(recorder)s
                          )
 
-            """, dict(member=member.username, team=self.username, amount=amount,
-                      recorder=recorder.username))
+            """, dict(member=member.username, team=self.slug, amount=amount,
+                      recorder=recorder))
             # Compute the new takes
             new_takes = self.compute_actual_takes(cursor)
             # Update receiving amounts in the participants table
@@ -184,7 +172,7 @@ class Team(Model):
         and `new_takes`.
         """
         for username in set(old_takes.keys()).union(new_takes.keys()):
-            if username == self.username:
+            if username == self.slug: # XXX Bug!
                 continue
             old = old_takes.get(username, {}).get('actual_amount', Decimal(0))
             new = new_takes.get(username, {}).get('actual_amount', Decimal(0))
@@ -203,41 +191,39 @@ class Team(Model):
     def get_current_takes(self, cursor=None):
         """Return a list of member takes for a team.
         """
-        assert self.IS_PLURAL
         TAKES = """
             SELECT member, amount, ctime, mtime
-              FROM current_takes
+              FROM current_payroll
              WHERE team=%(team)s
           ORDER BY ctime DESC
         """
-        records = (cursor or self.db).all(TAKES, dict(team=self.username))
+        records = (cursor or self.db).all(TAKES, dict(team=self.slug))
         return [r._asdict() for r in records]
 
-    def get_team_take(self, cursor=None):
-        """Return a single take for a team, the team itself's take.
+    def get_owners_take(self, cursor=None):
+        """Return a single take for a team, the owners's take.
         """
-        assert self.IS_PLURAL
-        TAKE = "SELECT sum(amount) FROM current_takes WHERE team=%s"
-        total_take = (cursor or self.db).one(TAKE, (self.username,), default=0)
+        TAKE = "SELECT sum(amount) FROM current_payroll WHERE team=%s"
+        total_take = (cursor or self.db).one(TAKE, (self.slug,), default=0)
         team_take = max(self.receiving - total_take, 0)
-        membership = { "ctime": None
-                     , "mtime": None
-                     , "member": self.username
-                     , "amount": team_take
-                      }
-        return membership
+        take = { "ctime": None
+               , "mtime": None
+               , "member": self.owner
+               , "amount": team_take
+                }
+        return take
 
     def compute_actual_takes(self, cursor=None):
         """Get the takes, compute the actual amounts, and return an OrderedDict.
         """
         actual_takes = OrderedDict()
         nominal_takes = self.get_current_takes(cursor=cursor)
-        nominal_takes.append(self.get_team_take(cursor=cursor))
-        budget = balance = self.balance + self.receiving - self.giving
+        nominal_takes.append(self.get_owners_take(cursor=cursor))
+        budget = balance = self.receiving
         for take in nominal_takes:
             nominal_amount = take['nominal_amount'] = take.pop('amount')
             actual_amount = take['actual_amount'] = min(nominal_amount, balance)
-            if take['member'] != self.username:
+            if take['member'] != self.slug: # XXX Bug! Different namespaces now.
                 balance -= actual_amount
             take['balance'] = balance
             take['percentage'] = (actual_amount / budget) if budget > 0 else 0
@@ -249,7 +235,7 @@ class Team(Model):
         assert self.IS_PLURAL
         return self.db.one("""
             SELECT COUNT(*)
-              FROM current_takes
+              FROM current_payroll
              WHERE team=%s
         """, (self.username, ))
 

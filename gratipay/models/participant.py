@@ -814,15 +814,20 @@ class Participant(Model):
         """
         return self.db.all("""
 
-            SELECT team AS name
+            SELECT team AS slug
                  , ( SELECT count(*)
-                       FROM current_takes
+                       FROM current_payroll
                       WHERE team=x.team
                     ) AS nmembers
-              FROM current_takes x
+              FROM current_payroll x
              WHERE member=%s;
 
         """, (self.username,))
+
+    def member_of(self, team):
+        """Given a Participant object, return a boolean.
+        """
+        return team.slug in [t.slug for t in self.get_teams()]
 
     @property
     def accepts_tips(self):

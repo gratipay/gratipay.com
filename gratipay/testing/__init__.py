@@ -146,6 +146,17 @@ class Harness(unittest.TestCase):
         return unicode(balanced.Customer(meta=dict(seq=seq)).save().href)
 
 
+    def make_team(self, slug, owner):
+        team = self.db.one("""
+            INSERT INTO teams
+                        (slug, slug_lower, display_name, homepage, product_or_service,
+                         getting_involved, getting_paid, owner)
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+              RETURNING teams.*::teams
+        """, (slug, slug.lower(), '', '', '', '', '', owner))
+        return team
+
+
     def make_participant(self, username, **kw):
         participant = self.db.one("""
             INSERT INTO participants

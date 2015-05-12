@@ -5,8 +5,8 @@ BEGIN;
     ( slug                  text                        PRIMARY KEY
     , id                    bigserial                   NOT NULL UNIQUE
     , ctime                 timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
-    , display_name          text                        NOT NULL
     , slug_lower            text                        NOT NULL UNIQUE
+    , display_name          text                        NOT NULL
     , homepage              text                        NOT NULL
     , product_or_service    text                        NOT NULL
     , getting_involved      text                        NOT NULL
@@ -62,7 +62,7 @@ BEGIN;
     , ctime             timestamp with time zone    NOT NULL
     , mtime             timestamp with time zone    NOT NULL
                                                     DEFAULT CURRENT_TIMESTAMP
-    , recipient         text                        NOT NULL REFERENCES participants
+    , member            text                        NOT NULL REFERENCES participants
                                                         ON UPDATE CASCADE ON DELETE RESTRICT
     , team              text                        NOT NULL REFERENCES teams
                                                         ON UPDATE CASCADE ON DELETE RESTRICT
@@ -74,11 +74,11 @@ BEGIN;
 
     CREATE VIEW current_payroll AS
         SELECT * FROM (
-             SELECT DISTINCT ON (recipient, team) payroll.*
+             SELECT DISTINCT ON (member, team) payroll.*
                FROM payroll
-               JOIN participants p ON p.username = payroll.recipient
+               JOIN participants p ON p.username = payroll.member
               WHERE p.is_suspicious IS NOT TRUE
-           ORDER BY recipient
+           ORDER BY member
                   , team
                   , mtime DESC
         ) AS anon WHERE amount > 0;
