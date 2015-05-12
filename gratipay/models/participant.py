@@ -658,19 +658,6 @@ class Participant(Model, MixinTeam):
         self._mailer.messages.send(message=message)
         return 1 # Sent
 
-    def notify_patrons(self, elsewhere, tips=None):
-        tips = self.get_tips_receiving() if tips is None else tips
-        for t in tips:
-            p = Participant.from_username(t.tipper)
-            if p.email_address and p.notify_on_opt_in:
-                p.queue_email(
-                    'notify_patron',
-                    user_name=elsewhere.user_name,
-                    platform=elsewhere.platform_data.display_name,
-                    amount=t.amount,
-                    profile_url=elsewhere.gratipay_url,
-                )
-
     def queue_email(self, spt_name, **context):
         self.db.run("""
             INSERT INTO email_queue
@@ -1602,8 +1589,6 @@ class Participant(Model, MixinTeam):
                 # this is a no op - trying to take over itself
                 return
 
-            # Save old tips so we can notify patrons that they've been claimed
-            old_tips = None if other.is_claimed else other.get_tips_receiving()
 
             # Make sure we have user confirmation if needed.
             # ==============================================
@@ -1739,9 +1724,6 @@ class Participant(Model, MixinTeam):
 
         if new_balance is not None:
             self.set_attributes(balance=new_balance)
-
-        if old_tips:
-            self.notify_patrons(elsewhere, tips=old_tips)
 
         self.update_avatar()
 
