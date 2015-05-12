@@ -167,6 +167,31 @@ class Team(Model):
             # Update is_funded on member's tips
             member.update_giving(cursor)
 
+    def update_receiving(self, cursor=None):
+        old_takes = self.compute_actual_takes(cursor=cursor)
+        r = (cursor or self.db).one("""
+            WITH our_subscriptions AS (
+                     SELECT amount
+                       FROM current_subscriptions
+                       JOIN participants p2 ON p2.username = subscriber
+                      WHERE team = %(slug)s
+                        AND p2.is_suspicious IS NOT true
+                        AND amount > 0
+                        AND is_funded
+                 )
+            UPDATE teams t
+               SET receiving = (COALESCE((
+                       SELECT sum(amount)
+                         FROM our_subscriptions
+                   ), 0))
+                 , nsupporters = COALESCE((SELECT count(*) FROM our_subscriptions), 0)
+             WHERE t.slug = %(slug)s
+         RETURNING receiving, nsupporters
+        """, dict(slug=self.slug))
+        self.set_attributes(receiving=r.receiving, nsupporters=r.nsupporters)
+        new_takes = self.compute_actual_takes(cursor=cursor)
+        self.update_taking(old_takes, new_takes, cursor=cursor)
+
     def update_taking(self, old_takes, new_takes, cursor=None, member=None):
         """Update `taking` amounts based on the difference between `old_takes`
         and `new_takes`.

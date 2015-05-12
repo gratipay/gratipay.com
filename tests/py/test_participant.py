@@ -11,14 +11,12 @@ from aspen.utils import utcnow
 from gratipay import NotSane
 from gratipay.exceptions import (
     HasBigTips,
-    UserDoesntAcceptTips,
     UsernameIsEmpty,
     UsernameTooLong,
     UsernameAlreadyTaken,
     UsernameContainsInvalidCharacters,
     UsernameIsRestricted,
-    NoSelfTipping,
-    NoTippee,
+    NoTeam,
     BadAmount,
 )
 from gratipay.models.account_elsewhere import AccountElsewhere
@@ -468,7 +466,7 @@ class Tests(Harness):
 
     def test_stt_sets_tip_to(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
+        bob = self.make_team('bob')
         alice.set_tip_to(bob, '1.00')
 
         actual = alice.get_tip_to('bob')['amount']
@@ -476,7 +474,7 @@ class Tests(Harness):
 
     def test_stt_returns_a_dict(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
+        bob = self.make_team('bob')
         actual = alice.set_tip_to(bob, '1.00')
         assert isinstance(actual, dict)
         assert isinstance(actual['amount'], Decimal)
@@ -485,35 +483,20 @@ class Tests(Harness):
 
     def test_stt_returns_False_for_second_time_tipper(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob')
+        bob = self.make_team('bob')
         alice.set_tip_to(bob, '1.00')
         actual = alice.set_tip_to(bob, '2.00')
         assert actual['amount'] == 2
         assert actual['first_time_tipper'] is False
 
-    def test_stt_doesnt_allow_self_tipping(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.assertRaises(NoSelfTipping, alice.set_tip_to, 'alice', '10.00')
-
     def test_stt_doesnt_allow_just_any_ole_amount(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.make_participant('bob')
-        self.assertRaises(BadAmount, alice.set_tip_to, 'bob', '1000.00')
-
-    def test_stt_allows_higher_tip_to_plural_receiver(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', number='plural')
-        actual = alice.set_tip_to(bob, '1000.00')
-        assert actual['amount'] == 1000
-
-    def test_stt_still_caps_tips_to_plural_receivers(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.make_participant('bob', number='plural')
+        self.make_team('bob')
         self.assertRaises(BadAmount, alice.set_tip_to, 'bob', '1000.01')
 
     def test_stt_fails_to_tip_unknown_people(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.assertRaises(NoTippee, alice.set_tip_to, 'bob', '1.00')
+        self.assertRaises(NoTeam, alice.set_tip_to, 'bob', '1.00')
 
     def test_stt_is_free_rider_defaults_to_none(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
@@ -521,14 +504,14 @@ class Tests(Harness):
 
     def test_stt_sets_is_free_rider_to_false(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        gratipay = self.make_participant('Gratipay', number='plural')
+        gratipay = self.make_team('Gratipay')
         alice.set_tip_to(gratipay, '0.01')
         assert alice.is_free_rider is False
         assert Participant.from_username('alice').is_free_rider is False
 
     def test_stt_resets_is_free_rider_to_null(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        gratipay = self.make_participant('Gratipay', number='plural')
+        gratipay = self.make_team('Gratipay')
         alice.set_tip_to(gratipay, '0.00')
         assert alice.is_free_rider is None
         assert Participant.from_username('alice').is_free_rider is None
@@ -634,12 +617,6 @@ class Tests(Harness):
         alice.set_tip_to(bob, '12.00')
         alice.set_tip_to(bob, '3.00')
         assert alice.pledging == Decimal('3.00')
-
-    def test_cant_pledge_to_locked_accounts(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', goal=-1)
-        with self.assertRaises(UserDoesntAcceptTips):
-            alice.set_tip_to(bob, '3.00')
 
     def test_pledging_isnt_giving(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')

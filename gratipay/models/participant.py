@@ -34,10 +34,8 @@ from gratipay.exceptions import (
     UsernameContainsInvalidCharacters,
     UsernameIsRestricted,
     UsernameAlreadyTaken,
-    NoSelfTipping,
-    NoTippee,
+    NoTeam,
     BadAmount,
-    UserDoesntAcceptTips,
     EmailAlreadyTaken,
     CannotRemovePrimaryEmail,
     EmailNotVerified,
@@ -47,6 +45,7 @@ from gratipay.exceptions import (
 from gratipay.models import add_event
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.models.team import Team
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import i18n, is_card_expiring, emails, notifications, pricing
 from gratipay.utils.username import safely_reserve_a_username
@@ -1047,7 +1046,7 @@ class Participant(Model):
             self.set_attributes(is_free_rider=is_free_rider)
 
 
-    def set_tip_to(self, tippee, amount, update_self=True, update_tippee=True, cursor=None):
+    def set_tip_to(self, team, amount, update_self=True, update_team=True, cursor=None):
         """Given a Participant or username, and amount as str, returns a dict.
 
         We INSERT instead of UPDATE, so that we have history to explore. The
@@ -1064,68 +1063,63 @@ class Participant(Model):
         """
         assert self.is_claimed  # sanity check
 
-        if not isinstance(tippee, Participant):
-            tippee, u = Participant.from_username(tippee), tippee
-            if not tippee:
-                raise NoTippee(u)
-
-        if self.username == tippee.username:
-            raise NoSelfTipping
+        if not isinstance(team, Team):
+            team, slug = Team.from_slug(team), team
+            if not team:
+                raise NoTeam(slug)
 
         amount = Decimal(amount)  # May raise InvalidOperation
-        max_tip = gratipay.MAX_TIP_PLURAL if tippee.IS_PLURAL else gratipay.MAX_TIP_SINGULAR
-        if (amount < gratipay.MIN_TIP) or (amount > max_tip):
+        if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
             raise BadAmount
-
-        if not tippee.accepts_tips and amount != 0:
-            raise UserDoesntAcceptTips
 
         # Insert tip
         NEW_TIP = """\
 
-            INSERT INTO tips
-                        (ctime, tipper, tippee, amount)
+            INSERT INTO subscriptions
+                        (ctime, subscriber, team, amount)
                  VALUES ( COALESCE (( SELECT ctime
-                                        FROM tips
-                                       WHERE (tipper=%(tipper)s AND tippee=%(tippee)s)
+                                        FROM subscriptions
+                                       WHERE (subscriber=%(subscriber)s AND team=%(team)s)
                                        LIMIT 1
                                       ), CURRENT_TIMESTAMP)
-                        , %(tipper)s, %(tippee)s, %(amount)s
+                        , %(subscriber)s, %(team)s, %(amount)s
                          )
               RETURNING *
-                      , ( SELECT count(*) = 0 FROM tips WHERE tipper=%(tipper)s ) AS first_time_tipper
+                      , ( SELECT count(*) = 0
+                            FROM subscriptions
+                           WHERE team=%(team)s ) AS first_time_tipper
 
         """
-        args = dict(tipper=self.username, tippee=tippee.username, amount=amount)
+        args = dict(subscriber=self.username, team=team.slug, amount=amount)
         t = (cursor or self.db).one(NEW_TIP, args)
 
         if update_self:
             # Update giving/pledging amount of tipper
             self.update_giving(cursor)
-        if update_tippee:
+        if update_team:
             # Update receiving amount of tippee
-            tippee.update_receiving(cursor)
-        if tippee.username == 'Gratipay':
+            team.update_receiving(cursor)
+        if team.slug == 'Gratipay':
             # Update whether the tipper is using Gratipay for free
             self.update_is_free_rider(None if amount == 0 else False, cursor)
 
         return t._asdict()
 
 
-    def get_tip_to(self, tippee):
+    def get_tip_to(self, slug):
         """Given a username, returns a dict.
         """
         default = dict(amount=Decimal('0.00'), is_funded=False)
         return self.db.one("""\
 
             SELECT *
-              FROM tips
-             WHERE tipper=%s
-               AND tippee=%s
+              FROM subscriptions
+             WHERE subscriber=%s
+               AND team=%s
           ORDER BY mtime DESC
              LIMIT 1
 
-        """, (self.username, tippee), back_as=dict, default=default)
+        """, (self.username, slug), back_as=dict, default=default)
 
 
     def get_tip_distribution(self):

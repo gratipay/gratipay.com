@@ -53,10 +53,8 @@ class HasBigTips(ProblemChangingNumber):
 
 
 class TooGreedy(Exception): pass
-class NoSelfTipping(Exception): pass
-class NoTippee(Exception): pass
+class NoTeam(Exception): pass
 class BadAmount(Exception): pass
-class UserDoesntAcceptTips(Exception): pass
 
 class FailedToReserveUsername(Exception): pass
 
