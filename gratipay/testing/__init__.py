@@ -147,16 +147,17 @@ class Harness(unittest.TestCase):
         return unicode(balanced.Customer(meta=dict(seq=seq)).save().href)
 
 
-    def make_team(self, slug="A Team", owner="hannibal"):
+    def make_team(self, display_name="The A Team", owner="hannibal"):
         if Participant.from_username(owner) is None:
             self.make_participant(owner, claimed_time='now')
+        slug = display_name.replace('.', '').replace(' ', '').replace(',', '')
         team = self.db.one("""
             INSERT INTO teams
                         (slug, slug_lower, display_name, homepage, product_or_service,
                          getting_involved, getting_paid, owner)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
               RETURNING teams.*::teams
-        """, (slug, slug.lower(), '', '', '', '', '', owner))
+        """, (slug, slug.lower(), display_name, '', '', '', '', owner))
         return team
 
 
