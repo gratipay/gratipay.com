@@ -10,7 +10,6 @@ LONG_STATEMENT = 256
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=False)
-tip_or_pledge = "tip"
 title = username = participant.username
 
 accounts = participant.get_accounts_elsewhere()

@@ -8,7 +8,6 @@ from gratipay.utils import get_participant
 participant = team = get_participant(state, restrict=False)
 if not team.show_as_team(user):
   request.redirect('../')
-tip_or_pledge = "tip"
 title = team.username
 subhead = _("Team Members")
 
