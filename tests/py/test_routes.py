@@ -123,16 +123,16 @@ class TestRoutes(BillingHarness):
 
     def test_credit_card_page_loads_when_there_is_a_braintree_card(self):
         expected = 'Your credit card is <em id="status">working'
-        actual = self.client.GET('/obama/routes/credit-card.html', auth_as='obama').body.decode('utf8')
+        actual = self.client.GET('/~obama/routes/credit-card.html', auth_as='obama').body.decode('utf8')
         assert expected in actual
 
     def test_credit_card_page_shows_details_for_braintree_cards(self):
-        response = self.client.GET('/obama/routes/credit-card.html', auth_as='obama').body.decode('utf8')
+        response = self.client.GET('/~obama/routes/credit-card.html', auth_as='obama').body.decode('utf8')
         assert self.bt_card.masked_number in response
 
     def test_receipt_page_loads_for_braintree_cards(self):
         ex_id = self.make_exchange(self.obama_route, 113, 30, self.obama)
-        url_receipt = '/obama/receipts/{}.html'.format(ex_id)
+        url_receipt = '/~obama/receipts/{}.html'.format(ex_id)
         actual = self.client.GET(url_receipt, auth_as='obama').body.decode('utf8')
         assert self.bt_card.card_type in actual
 
@@ -142,7 +142,7 @@ class TestRoutes(BillingHarness):
         assert expected in actual
 
     def test_credit_card_page_shows_details_for_balanced_cards(self):
-        response = self.client.GET('/janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
+        response = self.client.GET('/~janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
         assert self.card.number in response
 
     def test_credit_card_page_shows_when_balanced_card_is_failing(self):
