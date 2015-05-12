@@ -267,7 +267,7 @@ class Participant(Model, MixinTeam):
 
     @property
     def usage(self):
-        return max(self.giving + self.pledging, self.receiving)
+        return max(self.giving, self.receiving)
 
     @property
     def suggested_payment(self):
@@ -296,8 +296,8 @@ class Participant(Model, MixinTeam):
 
     # Claiming
     # ========
-    # An unclaimed Participant is a stub that's created when someone pledges to
-    # give to an AccountElsewhere that's not been connected on Gratipay yet.
+    # An unclaimed Participant is a stub that's created when someone visits our
+    # page for an AccountElsewhere that's not been connected on Gratipay yet.
 
     def resolve_unclaimed(self):
         """Given a username, return an URL path.
@@ -482,7 +482,6 @@ class Participant(Model, MixinTeam):
                  , session_token=NULL
                  , session_expires=now()
                  , giving=0
-                 , pledging=0
                  , receiving=0
                  , npatrons=0
              WHERE username=%(username)s
@@ -966,8 +965,8 @@ class Participant(Model, MixinTeam):
                  RETURNING *
                 """, (is_funded, tip.id)))
 
-        # Update giving and pledging on participant
-        giving, pledging = (cursor or self.db).one("""
+        # Update giving on participant
+        giving = (cursor or self.db).one("""
             WITH our_tips AS (
                      SELECT amount, p2.claimed_time
                        FROM current_tips
@@ -983,15 +982,10 @@ class Participant(Model, MixinTeam):
                          FROM our_tips
                         WHERE claimed_time IS NOT NULL
                    ), 0)
-                 , pledging = COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                        WHERE claimed_time IS NULL
-                   ), 0)
              WHERE p.username = %(username)s
-         RETURNING giving, pledging
+         RETURNING giving
         """, dict(username=self.username))
-        self.set_attributes(giving=giving, pledging=pledging)
+        self.set_attributes(giving=giving)
 
         return updated
 
@@ -1088,7 +1082,7 @@ class Participant(Model, MixinTeam):
         t = (cursor or self.db).one(NEW_TIP, args)
 
         if update_self:
-            # Update giving/pledging amount of tipper
+            # Update giving amount of tipper
             self.update_giving(cursor)
         if update_tippee:
             # Update receiving amount of tippee
@@ -1394,7 +1388,6 @@ class Participant(Model, MixinTeam):
                      , session_token=NULL
                      , session_expires=now()
                      , giving = 0
-                     , pledging = 0
                      , receiving = 0
                      , taking = 0
                  WHERE username=%s
@@ -1425,8 +1418,7 @@ class Participant(Model, MixinTeam):
         This method associates an account on another platform (GitHub, Twitter,
         etc.) with the given Gratipay participant. Every account elsewhere has an
         associated Gratipay participant account, even if its only a stub
-        participant (it allows us to track pledges to that account should they
-        ever decide to join Gratipay).
+        participant.
 
         In certain circumstances, we want to present the user with a
         confirmation before proceeding to transfer the account elsewhere to

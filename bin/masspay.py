@@ -138,7 +138,7 @@ def compute_input_csv():
     print_rule(88)
     total_gross = 0
     for participant in participants:
-        total = participant.giving + participant.pledging
+        total = participant.giving
         amount = participant.balance - total
         if amount < 0.50:
             # Minimum payout of 50 cents. I think that otherwise PayPal upcharges to a penny.

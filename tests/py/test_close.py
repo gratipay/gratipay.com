@@ -286,7 +286,6 @@ class TestClosing(Harness):
                                      , session_token='deadbeef'
                                      , session_expires='2000-01-01'
                                      , giving=20
-                                     , pledging=30
                                      , receiving=40
                                      , npatrons=21
                                       )
@@ -306,7 +305,6 @@ class TestClosing(Harness):
         assert alice.email_address == new_alice.email_address == None
         assert alice.claimed_time == new_alice.claimed_time == None
         assert alice.giving == new_alice.giving == 0
-        assert alice.pledging == new_alice.pledging == 0
         assert alice.receiving == new_alice.receiving == 0
         assert alice.npatrons == new_alice.npatrons == 0
         assert alice.session_token == new_alice.session_token == None
