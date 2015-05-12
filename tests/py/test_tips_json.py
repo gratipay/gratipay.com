@@ -20,7 +20,7 @@ class TestTipsJson(Harness):
             {'username': 'test_tippee2', 'platform': 'gratipay', 'amount': '2.00'}
         ]
 
-        response = self.client.POST( '/test_tipper/tips.json'
+        response = self.client.POST( '/~test_tipper/tips.json'
                                    , body=json.dumps(data)
                                    , content_type='application/json'
                                    , auth_as='test_tipper'
@@ -29,7 +29,7 @@ class TestTipsJson(Harness):
         assert response.code == 200
         assert len(json.loads(response.body)) == 2
 
-        response = self.client.POST( '/test_tipper/tips.json?also_prune=' + also_prune
+        response = self.client.POST( '/~test_tipper/tips.json?also_prune=' + also_prune
                                    , body=json.dumps([{ 'username': 'test_tippee2'
                                                       , 'platform': 'gratipay'
                                                       , 'amount': '1.00'
@@ -40,7 +40,7 @@ class TestTipsJson(Harness):
 
         assert response.code == 200
 
-        response = self.client.GET('/test_tipper/tips.json', auth_as='test_tipper')
+        response = self.client.GET('/~test_tipper/tips.json', auth_as='test_tipper')
         assert response.code == 200
         assert len(json.loads(response.body)) == tippees
 
@@ -48,7 +48,7 @@ class TestTipsJson(Harness):
         now = utcnow()
         self.make_participant("test_tipper", claimed_time=now)
 
-        response = self.client.GET('/test_tipper/tips.json', auth_as='test_tipper')
+        response = self.client.GET('/~test_tipper/tips.json', auth_as='test_tipper')
 
         assert response.code == 200
         assert len(json.loads(response.body)) == 0 # empty array
@@ -58,7 +58,7 @@ class TestTipsJson(Harness):
         self.make_participant("test_tippee1", claimed_time=now)
         self.make_participant("test_tipper", claimed_time=now)
 
-        response = self.client.POST( '/test_tippee1/tip.json'
+        response = self.client.POST( '/~test_tippee1/tip.json'
                                    , {'amount': '1.00'}
                                    , auth_as='test_tipper'
                                     )
@@ -66,7 +66,7 @@ class TestTipsJson(Harness):
         assert response.code == 200
         assert json.loads(response.body)['amount'] == '1.00'
 
-        response = self.client.GET('/test_tipper/tips.json', auth_as='test_tipper')
+        response = self.client.GET('/~test_tipper/tips.json', auth_as='test_tipper')
         data = json.loads(response.body)[0]
 
         assert response.code == 200
@@ -78,7 +78,7 @@ class TestTipsJson(Harness):
         self.make_participant("test_tippee1", claimed_time=now)
         self.make_participant("test_tipper", claimed_time=now)
 
-        response = self.client.POST( '/test_tipper/tips.json'
+        response = self.client.POST( '/~test_tipper/tips.json'
                                    , body=json.dumps([{ 'username': 'test_tippee1'
                                                  , 'platform': 'badname'
                                                  , 'amount': '1.00'
@@ -99,7 +99,7 @@ class TestTipsJson(Harness):
         self.make_participant("test_tippee1", claimed_time=now)
         self.make_participant("test_tipper", claimed_time=now)
 
-        response = self.client.POST( '/test_tipper/tips.json'
+        response = self.client.POST( '/~test_tipper/tips.json'
                                    , body=json.dumps([{ 'username': 'test_tippee1'
                                                       , 'platform': 'gittip'
                                                       , 'amount': '1.00'

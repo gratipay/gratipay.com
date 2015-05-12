@@ -1,0 +1,4 @@
+[---]
+qs = '?' + request.qs.raw if request.qs.raw else ''
+request.redirect('/~' + request.path.raw[1:] + qs)
+[---] text/html

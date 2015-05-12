@@ -17,7 +17,7 @@ class Tests(Harness):
 
     def test_get_participant_gets_participant(self):
         expected = self.make_participant('alice', claimed_time='now')
-        state = self.client.GET( '/alice/'
+        state = self.client.GET( '/~alice/'
                                , return_after='dispatch_request_to_filesystem'
                                , want='state'
                                 )
@@ -26,16 +26,15 @@ class Tests(Harness):
 
     def test_get_participant_canonicalizes(self):
         self.make_participant('alice', claimed_time='now')
-        state = self.client.GET( '/Alice/'
+        state = self.client.GET( '/~Alice/'
                                , return_after='dispatch_request_to_filesystem'
                                , want='state'
                                 )
 
         with self.assertRaises(Response) as cm:
             utils.get_participant(state, restrict=False)
-        actual = cm.exception.code
-
-        assert actual == 302
+        assert cm.exception.code
+        assert cm.exception.headers['Location'] == '/~/alice/'
 
     def test_dict_to_querystring_converts_dict_to_querystring(self):
         expected = "?foo=bar"

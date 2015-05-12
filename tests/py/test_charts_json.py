@@ -34,11 +34,11 @@ class TestChartsJson(Harness):
 
 
     def test_no_payday_returns_empty_list(self):
-        assert json.loads(self.client.GET('/carl/charts.json').body) == []
+        assert json.loads(self.client.GET('/~carl/charts.json').body) == []
 
     def test_zeroth_payday_is_ignored(self):
         self.run_payday()   # zeroeth
-        assert json.loads(self.client.GET('/carl/charts.json').body) == []
+        assert json.loads(self.client.GET('/~carl/charts.json').body) == []
 
     def test_first_payday_comes_through(self):
         self.run_payday()   # zeroeth, ignored
@@ -49,7 +49,7 @@ class TestChartsJson(Harness):
                      , "receipts": 3.00
                       }
                     ]
-        actual = json.loads(self.client.GET('/carl/charts.json').body)
+        actual = json.loads(self.client.GET('/~carl/charts.json').body)
 
         assert actual == expected
 
@@ -71,7 +71,7 @@ class TestChartsJson(Harness):
                      , "receipts": 3.00
                       }
                     ]
-        actual = json.loads(self.client.GET('/carl/charts.json').body)
+        actual = json.loads(self.client.GET('/~carl/charts.json').body)
 
         assert actual == expected
 
@@ -101,7 +101,7 @@ class TestChartsJson(Harness):
                      , "receipts": 3.00
                       }
                     ]
-        actual = json.loads(self.client.GET('/carl/charts.json').body)
+        actual = json.loads(self.client.GET('/~carl/charts.json').body)
 
         assert actual == expected
 
@@ -131,7 +131,7 @@ class TestChartsJson(Harness):
                      , "receipts": 3.00
                       }
                     ]
-        actual = json.loads(self.client.GET('/carl/charts.json').body)
+        actual = json.loads(self.client.GET('/~carl/charts.json').body)
 
         assert actual == expected
 
@@ -142,7 +142,7 @@ class TestChartsJson(Harness):
         self.run_payday()   # third
 
         expected = []
-        actual = json.loads(self.client.GET('/alice/charts.json').body)
+        actual = json.loads(self.client.GET('/~alice/charts.json').body)
 
         assert actual == expected
 
@@ -166,12 +166,12 @@ class TestChartsJson(Harness):
     def test_anonymous_receiver(self):
         self.run_payday()
         self.run_payday()
-        self.client.POST('/carl/privacy.json',
+        self.client.POST('/~carl/privacy.json',
                          {'toggle': 'anonymous_receiving'},
                          auth_as='carl')
 
-        r = self.client.GxT('/carl/charts.json')
+        r = self.client.GxT('/~carl/charts.json')
         assert r.code == 401
 
-        r = self.client.GxT('/carl/charts.json', auth_as='alice')
+        r = self.client.GxT('/~carl/charts.json', auth_as='alice')
         assert r.code == 403

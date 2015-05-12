@@ -11,7 +11,7 @@ class Tests(Harness):
         self.make_participant('alice', claimed_time='now')
 
     def hit_privacy(self, method='GET', expected_code=200, **kw):
-        response = self.client.hit(method, "/alice/privacy.json", auth_as='alice', **kw)
+        response = self.client.hit(method, "/~alice/privacy.json", auth_as='alice', **kw)
         if response.code != expected_code:
             print(response.body)
         return response
@@ -63,7 +63,7 @@ class Tests(Harness):
     def test_meta_robots_tag_added_on_opt_out(self):
         self.hit_privacy('POST', data={'toggle': 'is_searchable'})
         expected = '<meta name="robots" content="noindex,nofollow" />'
-        assert expected in self.client.GET("/alice/").body
+        assert expected in self.client.GET("/~alice/").body
 
     def test_participant_does_show_up_on_search(self):
         assert 'alice' in self.client.GET("/search?q=alice").body
@@ -87,7 +87,7 @@ class Tests(Harness):
     def test_team_cannot_toggle_anonymous_receiving(self):
         self.make_participant('team', claimed_time='now', number='plural')
         response = self.client.PxST(
-            '/team/privacy.json',
+            '/~team/privacy.json',
             auth_as='team',
             data={'toggle': 'anonymous_receiving'}
         )

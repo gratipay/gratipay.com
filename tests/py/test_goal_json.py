@@ -13,7 +13,7 @@ class Tests(Harness):
 
     def change_goal(self, goal, goal_custom="", auth_as="alice", expecting_error=False):
         method = self.client.POST if not expecting_error else self.client.PxST
-        response = method( "/alice/goal.json"
+        response = method( "/~alice/goal.json"
                          , {'goal': goal, 'goal_custom': goal_custom}
                          , auth_as=auth_as
                           )

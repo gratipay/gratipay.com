@@ -11,7 +11,7 @@ class Tests(Harness):
         self.make_participant('alice', claimed_time='now')
 
         method = self.client.POST if not expecting_error else self.client.PxST
-        response = method( "/alice/number.json"
+        response = method( "/~alice/number.json"
                          , {'number': number}
                          , auth_as=auth_as
                           )

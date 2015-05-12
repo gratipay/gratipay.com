@@ -14,7 +14,7 @@ class TestTransactionalEmails(EmailHarness):
     def test_opt_in_sends_notifications_to_patrons(self):
         carl_twitter = self.make_elsewhere('twitter', 1, 'carl')
         roy = self.make_participant('roy', claimed_time='now', email_address='roy@example.com')
-        self.client.POST( '/roy/emails/notifications.json'
+        self.client.POST( '/~roy/emails/notifications.json'
                         , data={'toggle': 'notify_on_opt_in'}
                         , auth_as='roy'
                          )

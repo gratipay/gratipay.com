@@ -546,7 +546,7 @@ class Participant(Model, MixinTeam):
         host = gratipay.canonical_host
         username = self.username_lower
         quoted_email = quote(email)
-        link = "{scheme}://{host}/{username}/emails/verify.html?email={quoted_email}&nonce={nonce}"
+        link = "{scheme}://{host}/~{username}/emails/verify.html?email={quoted_email}&nonce={nonce}"
         r = self.send_email('verification',
                         email=email,
                         link=link.format(**locals()),

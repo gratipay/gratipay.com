@@ -26,7 +26,8 @@ class TestPages(Harness):
         i = len(self.client.www_root)
         urls = []
         for spt in find_files(self.client.www_root, '*.spt'):
-            url = spt[i:-4].replace('/%username/', '/alice/') \
+            url = spt[i:-4].replace('/%team/%sub', '/alice/') \
+                           .replace('/~/%username/', '/~alice/') \
                            .replace('/for/%slug/', '/for/wonderland/') \
                            .replace('/%platform/', '/github/') \
                            .replace('/%user_name/', '/gratipay/') \
@@ -75,24 +76,24 @@ class TestPages(Harness):
     def test_profile(self):
         self.make_participant('cheese', claimed_time='now')
         expected = "I&#39;m grateful for gifts"
-        actual = self.client.GET('/cheese/').body.decode('utf8') # deal with cent sign
+        actual = self.client.GET('/~cheese/').body.decode('utf8') # deal with cent sign
         assert expected in actual
 
     def test_username_is_in_button(self):
         self.make_participant('alice', claimed_time='now')
         self.make_participant('bob', claimed_time='now')
-        body = self.client.GET('/alice/', auth_as='bob').body
+        body = self.client.GET('/~alice/', auth_as='bob').body
         assert '<span class="zero">Give to alice</span>' in body
 
     def test_username_is_in_unauth_giving_cta(self):
         self.make_participant('alice', claimed_time='now')
-        body = self.client.GET('/alice/').body
+        body = self.client.GET('/~alice/').body
         assert 'give to alice' in body
 
     def test_widget(self):
         self.make_participant('cheese', claimed_time='now')
         expected = "javascript: window.open"
-        actual = self.client.GET('/cheese/widget.html').body
+        actual = self.client.GET('/~cheese/widget.html').body
         assert expected in actual
 
     def test_github_associate(self):
@@ -159,7 +160,7 @@ class TestPages(Harness):
     def test_settings_page_available_balance(self):
         self.make_participant('alice', claimed_time='now')
         self.db.run("UPDATE participants SET balance = 123.00 WHERE username = 'alice'")
-        actual = self.client.GET("/alice/settings/", auth_as="alice").body
+        actual = self.client.GET("/~alice/settings/", auth_as="alice").body
         expected = "123"
         assert expected in actual
 
@@ -167,7 +168,7 @@ class TestPages(Harness):
         alice = self.make_participant('alice', claimed_time='now')
         bob = self.make_participant('bob', claimed_time='now')
         alice.set_tip_to(bob, "1.00")
-        actual = self.client.GET("/alice/giving/", auth_as="alice").body
+        actual = self.client.GET("/~alice/giving/", auth_as="alice").body
         expected = "bob"
         assert expected in actual
 
@@ -175,7 +176,7 @@ class TestPages(Harness):
         alice = self.make_participant('alice', claimed_time='now')
         emma = self.make_elsewhere('github', 58946, 'emma').participant
         alice.set_tip_to(emma, "1.00")
-        actual = self.client.GET("/alice/giving/", auth_as="alice").body
+        actual = self.client.GET("/~alice/giving/", auth_as="alice").body
         expected1 = "emma"
         expected2 = "Unclaimed"
         assert expected1 in actual
@@ -186,15 +187,39 @@ class TestPages(Harness):
         bob = self.make_participant('bob', claimed_time='now')
         alice.set_tip_to(bob, "1.00")
         alice.set_tip_to(bob, "0.00")
-        actual = self.client.GET("/alice/giving/", auth_as="alice").body
+        actual = self.client.GET("/~alice/giving/", auth_as="alice").body
         assert "bob" in actual
         assert "Cancelled" in actual
 
     def test_new_participant_can_edit_profile(self):
         self.make_participant('alice', claimed_time='now')
-        body = self.client.GET("/alice/", auth_as="alice").body
+        body = self.client.GET("/~alice/", auth_as="alice").body
         assert b'Edit' in body
 
+    def test_tilde_slash_redirects_to_tilde(self):
+        self.make_participant('alice', claimed_time='now')
+        response = self.client.GxT("/~/alice/", auth_as="alice")
+        assert response.code == 302
+        assert response.headers['Location'] == '/~alice/'
+
+    def test_tilde_slash_redirects_subpages_with_querystring_to_tilde(self):
+        self.make_participant('alice', claimed_time='now')
+        response = self.client.GxT("/~/alice/foo/bar?baz=buz", auth_as="alice")
+        assert response.code == 302
+        assert response.headers['Location'] == '/~alice/foo/bar?baz=buz'
+
+    def test_username_redirected_to_tilde(self):
+        self.make_participant('alice', claimed_time='now')
+        response = self.client.GxT("/alice/", auth_as="alice")
+        assert response.code == 302
+        assert response.headers['Location'] == '/~alice/'
+
+    def test_username_redirects_everything_to_tilde(self):
+        self.make_participant('alice', claimed_time='now')
+        response = self.client.GxT("/alice/foo/bar?baz=buz", auth_as="alice")
+        assert response.code == 302
+        assert response.headers['Location'] == '/~alice/foo/bar?baz=buz'
+
     def test_anon_bank_acc_page(self):
-        body = self.client.GET("/alice/routes/bank-account.html").body
+        body = self.client.GET("/~alice/routes/bank-account.html").body
         assert "<h1>Bank Account</h1>" in body

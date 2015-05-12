@@ -123,7 +123,7 @@ class TestHistoryPage(Harness):
         make_history(self)
 
     def test_participant_can_view_history(self):
-        assert self.client.GET('/alice/history/', auth_as='alice').code == 200
+        assert self.client.GET('/~alice/history/', auth_as='alice').code == 200
 
     def test_admin_can_view_closed_participant_history(self):
         self.make_participant('bob', claimed_time='now', is_admin=True)
@@ -131,7 +131,7 @@ class TestHistoryPage(Harness):
         self.alice.set_tip_to('bob', '1')
         self.alice.close('downstream')
 
-        response = self.client.GET('/alice/history/?year=%s' % self.past_year, auth_as='bob')
+        response = self.client.GET('/~alice/history/?year=%s' % self.past_year, auth_as='bob')
         assert "automatic charge" in response.body
 
 class TestExport(Harness):
@@ -141,17 +141,17 @@ class TestExport(Harness):
         make_history(self)
 
     def test_export_json(self):
-        r = self.client.GET('/alice/history/export.json', auth_as='alice')
+        r = self.client.GET('/~alice/history/export.json', auth_as='alice')
         assert json.loads(r.body)
 
     def test_export_json_aggregate(self):
-        r = self.client.GET('/alice/history/export.json?mode=aggregate', auth_as='alice')
+        r = self.client.GET('/~alice/history/export.json?mode=aggregate', auth_as='alice')
         assert json.loads(r.body)
 
     def test_export_json_past_year(self):
-        r = self.client.GET('/alice/history/export.json?year=%s' % self.past_year, auth_as='alice')
+        r = self.client.GET('/~alice/history/export.json?year=%s' % self.past_year, auth_as='alice')
         assert len(json.loads(r.body)['exchanges']) == 4
 
     def test_export_csv(self):
-        r = self.client.GET('/alice/history/export.csv?key=exchanges', auth_as='alice')
+        r = self.client.GET('/~alice/history/export.csv?key=exchanges', auth_as='alice')
         assert r.body.count('\n') == 5
