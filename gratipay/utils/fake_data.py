@@ -253,7 +253,7 @@ def clean_db(db):
     """)
 
 
-def populate_db(db, nparticipants=100, ntips=200, nteams=5, ntransfers=5000, ncommunities=20):
+def populate_db(db, nparticipants=100, ntips=200, nteams=33, ntransfers=5000, ncommunities=20):
     """Populate DB with fake data.
     """
     print("Making Participants")
@@ -263,8 +263,8 @@ def populate_db(db, nparticipants=100, ntips=200, nteams=5, ntransfers=5000, nco
 
     print("Making Teams")
     for i in xrange(nteams):
-        #Add 1 to 3 participants to the team's payroll
-        payroll = random.sample(participants, random.randint(1, 3))
+        #Add 1 to 20 participants to the team's payroll
+        payroll = random.sample(participants, random.randint(1, 20))
         team = fake_team(db, owner=payroll[0])
         for p in payroll[1:]:
             team.add_member(p)
