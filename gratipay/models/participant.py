@@ -372,7 +372,7 @@ class Participant(Model, MixinTeam):
         if self.balance == 0:
             return
 
-        claimed_tips, claimed_total, _, _= self.get_giving_for_profile()
+        claimed_tips, claimed_total = self.get_giving_for_profile()
         transfers = []
         distributed = Decimal('0.00')
 
@@ -1210,51 +1210,16 @@ class Participant(Model, MixinTeam):
         """
         tips = self.db.all(TIPS, (self.username,))
 
-        UNCLAIMED_TIPS = """\
-
-            SELECT * FROM (
-                SELECT DISTINCT ON (tippee)
-                       amount
-                     , tippee
-                     , t.ctime
-                     , t.mtime
-                     , p.claimed_time
-                     , e.platform
-                     , e.user_name
-                  FROM tips t
-                  JOIN participants p ON p.username = t.tippee
-                  JOIN elsewhere e ON e.participant = t.tippee
-                 WHERE tipper = %s
-                   AND p.is_suspicious IS NOT true
-                   AND p.claimed_time IS NULL
-              ORDER BY tippee
-                     , t.mtime DESC
-            ) AS foo
-            ORDER BY amount DESC
-                   , lower(user_name)
-
-        """
-        unclaimed_tips = self.db.all(UNCLAIMED_TIPS, (self.username,))
-
 
         # Compute the total.
         # ==================
-        # For payday we only want to process payments to tippees who have
-        # themselves opted into Gratipay. For the tipper's profile page we want
-        # to show the total amount they've pledged (so they're not surprised
-        # when someone *does* start accepting tips and all of a sudden they're
-        # hit with bigger charges.
 
         total = sum([t.amount for t in tips])
         if not total:
             # If tips is an empty list, total is int 0. We want a Decimal.
             total = Decimal('0.00')
 
-        unclaimed_total = sum([t.amount for t in unclaimed_tips])
-        if not unclaimed_total:
-            unclaimed_total = Decimal('0.00')
-
-        return tips, total, unclaimed_tips, unclaimed_total
+        return tips, total
 
     def get_tips_receiving(self):
         return self.db.all("""

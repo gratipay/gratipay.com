@@ -19,7 +19,7 @@ from gratipay.elsewhere._extractors import not_available
 from gratipay.utils import LazyResponse
 
 
-ACTIONS = {'opt-in', 'connect', 'lock', 'unlock'}
+ACTIONS = {'opt-in', 'connect'}
 PLATFORMS = 'facebook google bitbucket bountysource github openstreetmap twitter venmo'.split()
 
 
