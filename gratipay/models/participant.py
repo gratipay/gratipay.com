@@ -1192,14 +1192,6 @@ class Participant(Model, MixinTeam):
 
         return tips, total
 
-    def get_tips_receiving(self):
-        return self.db.all("""
-            SELECT *
-              FROM current_tips
-             WHERE tippee=%s
-               AND amount>0
-        """, (self.username,))
-
     def get_current_tips(self):
         """Get the tips this participant is currently sending to others.
         """
