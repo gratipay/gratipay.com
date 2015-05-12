@@ -387,3 +387,7 @@ ALTER TABLE participants
     ALTER COLUMN notify_on_opt_in DROP DEFAULT,
     ALTER COLUMN notify_on_opt_in TYPE int USING notify_on_opt_in::int,
     ALTER COLUMN notify_on_opt_in SET DEFAULT 1;
+ALTER TYPE payment_net ADD VALUE 'braintree-cc';
+
+-- https://github.com/gratipay/gratipay.com/pull/3389
+ALTER TABLE participants ADD COLUMN braintree_customer_id text DEFAULT NULL;
