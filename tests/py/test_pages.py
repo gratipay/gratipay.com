@@ -172,16 +172,6 @@ class TestPages(Harness):
         expected = "bob"
         assert expected in actual
 
-    def test_giving_page_shows_unclaimed(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        emma = self.make_elsewhere('github', 58946, 'emma').participant
-        alice.set_tip_to(emma, "1.00")
-        actual = self.client.GET("/~alice/giving/", auth_as="alice").body
-        expected1 = "emma"
-        expected2 = "Unclaimed"
-        assert expected1 in actual
-        assert expected2 in actual
-
     def test_giving_page_shows_cancelled(self):
         alice = self.make_participant('alice', claimed_time='now')
         bob = self.make_participant('bob', claimed_time='now')

@@ -617,7 +617,7 @@ class Payday(object):
             if participant.is_suspicious is None:
                 log("UNREVIEWED: %s" % participant.username)
                 return
-            withhold = participant.giving + participant.pledging
+            withhold = participant.giving
             error = ach_credit(self.db, participant, withhold)
             if error:
                 self.mark_ach_failed()

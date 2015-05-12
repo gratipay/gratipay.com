@@ -11,7 +11,6 @@ from aspen.utils import utcnow
 from gratipay import NotSane
 from gratipay.exceptions import (
     HasBigTips,
-    UserDoesntAcceptTips,
     UsernameIsEmpty,
     UsernameTooLong,
     UsernameAlreadyTaken,
@@ -624,28 +623,6 @@ class Tests(Harness):
         assert bob.npatrons == 0
         alice = Participant.from_id(alice.id)
         assert alice.giving == 0
-
-
-    # pledging
-
-    def test_pledging_only_counts_latest_tip(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_elsewhere('github', 58946, 'bob').participant
-        alice.set_tip_to(bob, '12.00')
-        alice.set_tip_to(bob, '3.00')
-        assert alice.pledging == Decimal('3.00')
-
-    def test_cant_pledge_to_locked_accounts(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', goal=-1)
-        with self.assertRaises(UserDoesntAcceptTips):
-            alice.set_tip_to(bob, '3.00')
-
-    def test_pledging_isnt_giving(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_elsewhere('github', 58946, 'bob').participant
-        alice.set_tip_to(bob, '3.00')
-        assert alice.giving == Decimal('0.00')
 
 
     # get_age_in_seconds - gais

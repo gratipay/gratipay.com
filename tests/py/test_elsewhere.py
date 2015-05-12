@@ -116,17 +116,6 @@ class TestElsewhere(Harness):
             expected = error % (user_name, platform.display_name)
             assert expected in r.body
 
-    def test_user_name_is_in_button(self):
-        self.make_participant('bob', claimed_time='now')
-        self.make_participant('alice', elsewhere='twitter')
-        body = self.client.GET('/on/twitter/alice/', auth_as='bob').body
-        assert '<span class="zero">Pledge to alice</span>' in body
-
-    def test_user_name_is_in_pledge_cta(self):
-        self.make_participant('alice', elsewhere='twitter')
-        body = self.client.GET('/on/twitter/alice/').body
-        assert 'pledge to alice' in body
-
     def test_failure_page_accepts_valid_username(self):
         self.client.GET('/on/twitter/Gratipay/')  # normal case will have the db primed
         response = self.client.GET('/on/twitter/Gratipay/failure.html')

@@ -37,7 +37,7 @@ if request.method == 'POST':
                 participant.set_tip_to(tip['tippee'], '0.00')
 
 else:
-    tips, total, unclaimed_tips, unclaimed_total = participant.get_giving_for_profile()
+    tips, total = participant.get_giving_for_profile()
 
     out = []
     for tip in tips:

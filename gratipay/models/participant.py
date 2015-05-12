@@ -267,7 +267,7 @@ class Participant(Model, MixinTeam):
 
     @property
     def usage(self):
-        return max(self.giving + self.pledging, self.receiving)
+        return max(self.giving, self.receiving)
 
     @property
     def suggested_payment(self):
@@ -296,8 +296,8 @@ class Participant(Model, MixinTeam):
 
     # Claiming
     # ========
-    # An unclaimed Participant is a stub that's created when someone pledges to
-    # give to an AccountElsewhere that's not been connected on Gratipay yet.
+    # An unclaimed Participant is a stub that's created when someone visits our
+    # page for an AccountElsewhere that's not been connected on Gratipay yet.
 
     def resolve_unclaimed(self):
         """Given a username, return an URL path.
@@ -372,7 +372,7 @@ class Participant(Model, MixinTeam):
         if self.balance == 0:
             return
 
-        claimed_tips, claimed_total, _, _= self.get_giving_for_profile()
+        claimed_tips, claimed_total = self.get_giving_for_profile()
         transfers = []
         distributed = Decimal('0.00')
 
@@ -482,7 +482,6 @@ class Participant(Model, MixinTeam):
                  , session_token=NULL
                  , session_expires=now()
                  , giving=0
-                 , pledging=0
                  , receiving=0
                  , npatrons=0
              WHERE username=%(username)s
@@ -658,19 +657,6 @@ class Participant(Model, MixinTeam):
 
         self._mailer.messages.send(message=message)
         return 1 # Sent
-
-    def notify_patrons(self, elsewhere, tips=None):
-        tips = self.get_tips_receiving() if tips is None else tips
-        for t in tips:
-            p = Participant.from_username(t.tipper)
-            if p.email_address and p.notify_on_opt_in:
-                p.queue_email(
-                    'notify_patron',
-                    user_name=elsewhere.user_name,
-                    platform=elsewhere.platform_data.display_name,
-                    amount=t.amount,
-                    profile_url=elsewhere.gratipay_url,
-                )
 
     def queue_email(self, spt_name, **context):
         self.db.run("""
@@ -966,8 +952,8 @@ class Participant(Model, MixinTeam):
                  RETURNING *
                 """, (is_funded, tip.id)))
 
-        # Update giving and pledging on participant
-        giving, pledging = (cursor or self.db).one("""
+        # Update giving on participant
+        giving = (cursor or self.db).one("""
             WITH our_tips AS (
                      SELECT amount, p2.claimed_time
                        FROM current_tips
@@ -983,15 +969,10 @@ class Participant(Model, MixinTeam):
                          FROM our_tips
                         WHERE claimed_time IS NOT NULL
                    ), 0)
-                 , pledging = COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                        WHERE claimed_time IS NULL
-                   ), 0)
              WHERE p.username = %(username)s
-         RETURNING giving, pledging
+         RETURNING giving
         """, dict(username=self.username))
-        self.set_attributes(giving=giving, pledging=pledging)
+        self.set_attributes(giving=giving)
 
         return updated
 
@@ -1088,7 +1069,7 @@ class Participant(Model, MixinTeam):
         t = (cursor or self.db).one(NEW_TIP, args)
 
         if update_self:
-            # Update giving/pledging amount of tipper
+            # Update giving amount of tipper
             self.update_giving(cursor)
         if update_tippee:
             # Update receiving amount of tippee
@@ -1210,51 +1191,16 @@ class Participant(Model, MixinTeam):
         """
         tips = self.db.all(TIPS, (self.username,))
 
-        UNCLAIMED_TIPS = """\
-
-            SELECT * FROM (
-                SELECT DISTINCT ON (tippee)
-                       amount
-                     , tippee
-                     , t.ctime
-                     , t.mtime
-                     , p.claimed_time
-                     , e.platform
-                     , e.user_name
-                  FROM tips t
-                  JOIN participants p ON p.username = t.tippee
-                  JOIN elsewhere e ON e.participant = t.tippee
-                 WHERE tipper = %s
-                   AND p.is_suspicious IS NOT true
-                   AND p.claimed_time IS NULL
-              ORDER BY tippee
-                     , t.mtime DESC
-            ) AS foo
-            ORDER BY amount DESC
-                   , lower(user_name)
-
-        """
-        unclaimed_tips = self.db.all(UNCLAIMED_TIPS, (self.username,))
-
 
         # Compute the total.
         # ==================
-        # For payday we only want to process payments to tippees who have
-        # themselves opted into Gratipay. For the tipper's profile page we want
-        # to show the total amount they've pledged (so they're not surprised
-        # when someone *does* start accepting tips and all of a sudden they're
-        # hit with bigger charges.
 
         total = sum([t.amount for t in tips])
         if not total:
             # If tips is an empty list, total is int 0. We want a Decimal.
             total = Decimal('0.00')
 
-        unclaimed_total = sum([t.amount for t in unclaimed_tips])
-        if not unclaimed_total:
-            unclaimed_total = Decimal('0.00')
-
-        return tips, total, unclaimed_tips, unclaimed_total
+        return tips, total
 
     def get_tips_receiving(self):
         return self.db.all("""
@@ -1429,7 +1375,6 @@ class Participant(Model, MixinTeam):
                      , session_token=NULL
                      , session_expires=now()
                      , giving = 0
-                     , pledging = 0
                      , receiving = 0
                      , taking = 0
                  WHERE username=%s
@@ -1460,8 +1405,7 @@ class Participant(Model, MixinTeam):
         This method associates an account on another platform (GitHub, Twitter,
         etc.) with the given Gratipay participant. Every account elsewhere has an
         associated Gratipay participant account, even if its only a stub
-        participant (it allows us to track pledges to that account should they
-        ever decide to join Gratipay).
+        participant.
 
         In certain circumstances, we want to present the user with a
         confirmation before proceeding to transfer the account elsewhere to
@@ -1645,8 +1589,6 @@ class Participant(Model, MixinTeam):
                 # this is a no op - trying to take over itself
                 return
 
-            # Save old tips so we can notify patrons that they've been claimed
-            old_tips = None if other.is_claimed else other.get_tips_receiving()
 
             # Make sure we have user confirmation if needed.
             # ==============================================
@@ -1782,9 +1724,6 @@ class Participant(Model, MixinTeam):
 
         if new_balance is not None:
             self.set_attributes(balance=new_balance)
-
-        if old_tips:
-            self.notify_patrons(elsewhere, tips=old_tips)
 
         self.update_avatar()
 
