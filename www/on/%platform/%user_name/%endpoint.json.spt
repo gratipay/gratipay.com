@@ -44,28 +44,7 @@ participant = account.participant
 
 out = { "on": request.path['platform']
       , "avatar": participant.avatar_url
-      , "npatrons": participant.npatrons
        }
-
-
-
-# Generate my_tip key
-# ===================
-# Display values:
-#
-#   undefined - user is not authenticated
-#   "self" - user == participant
-#   null - user has never tipped this person
-#   0.00 - user used to tip this person but now doesn't
-#   3.00 - user tips this person this amount
-
-if not user.ANON:
-    if user.participant.username == participant.username:
-        my_tip = "self"
-    else:
-        my_tip = user.participant.get_tip_to(participant.username)['amount']
-    out["my_tip"] = str(my_tip)
-
 
 # CORS - see https://github.com/gratipay/aspen-python/issues/138
 response.headers["Access-Control-Allow-Origin"] = "*"
