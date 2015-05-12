@@ -32,7 +32,7 @@ else:
         except (InvalidOperation, ValueError, BadAmount, NumberFormatError):
             raise Response(400, "bad amount")
     else:
-        out = supporter.get_tip_to(tippee.username)
+        out = supporter.get_tip_to(team.slug)
 
     amount = out['amount']
     total_giving = supporter.giving

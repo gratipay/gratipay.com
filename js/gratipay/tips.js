@@ -41,7 +41,7 @@ Gratipay.tips.initSupportGratipay = function() {
             $('.support-gratipay').slideUp();
 
             // If you're on your own giving page ...
-            var tip_on_giving = $('.your-tip[data-tippee="Gratipay"]');
+            var tip_on_giving = $('.your-tip[data-team="Gratipay"]');
             if (tip_on_giving.length > 0) {
                 tip_on_giving[0].defaultValue = amount;
                 tip_on_giving.attr('value', amount.toFixed(2));
@@ -60,11 +60,11 @@ Gratipay.tips.initSupportGratipay = function() {
 
 Gratipay.tips.afterTipChange = function(data) {
     $('.my-total-giving').text(data.total_giving_l);
-    $('.total-receiving[data-tippee="'+data.tippee_id+'"]').text(data.total_receiving_tippee_l);
+    $('.total-receiving[data-team="'+data.tippee_id+'"]').text(data.total_receiving_tippee_l);
     $('#payment-prompt').toggleClass('needed', data.amount > 0);
-    $('.npatrons[data-tippee="'+data.tippee_id+'"]').text(data.npatrons);
+    $('.npatrons[data-team="'+data.tippee_id+'"]').text(data.npatrons);
 
-    var $your_tip = $('.your-tip[data-tippee="'+data.tippee_id+'"]');
+    var $your_tip = $('.your-tip[data-team="'+data.tippee_id+'"]');
     if ($your_tip) {
         var $input = $your_tip.find('input');
         $input[0].defaultValue = $input.val();

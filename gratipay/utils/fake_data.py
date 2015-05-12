@@ -78,7 +78,7 @@ def fake_team(db, owner):
     """Create a fake Team.
     """
     display_name = faker.company()
-    slug = display_name.replace('.', '').replace(' ', '')
+    slug = display_name.replace('.', '').replace(' ', '').replace(',', '')
     try:
         _fake_thing( db
                    , "teams"

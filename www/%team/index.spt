@@ -14,6 +14,19 @@ title = team.display_name
 [---] text/html
 {% extends "templates/team.html" %}
 
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    Gratipay.tips.init()
+});
+</script>
+{{ super() }}
+{% endblock %}
+
+{% block sidebar %}
+{% include "templates/your-tip.html" %}
+{% endblock %}
+
 {% block content %}
 {% if user.participant == team.owner %}
     <div id="team-edit">
@@ -31,11 +44,3 @@ title = team.display_name
     </div>
 {% endif %}
 {% endblock %}
-
-{% block scripts %}
-{% if user.participant == participant %}
-<script>$(document).ready(Gratipay.profile.init);</script>
-{% endif %}
-{{ super() }}
-{% endblock %}
-
