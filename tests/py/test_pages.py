@@ -5,6 +5,7 @@ from decimal import Decimal as D
 
 from aspen import Response
 
+import pytest
 from gratipay.security.user import SESSION
 from gratipay.testing import Harness
 from gratipay.wireup import find_files
@@ -79,12 +80,14 @@ class TestPages(Harness):
         actual = self.client.GET('/~cheese/').body.decode('utf8') # deal with cent sign
         assert expected in actual
 
+    @pytest.mark.xfail(reason="migrating to Teams; #3399")
     def test_username_is_in_button(self):
         self.make_participant('alice', claimed_time='now')
         self.make_participant('bob', claimed_time='now')
         body = self.client.GET('/~alice/', auth_as='bob').body
         assert '<span class="zero">Give to alice</span>' in body
 
+    @pytest.mark.xfail(reason="migrating to Teams; #3399")
     def test_username_is_in_unauth_giving_cta(self):
         self.make_participant('alice', claimed_time='now')
         body = self.client.GET('/~alice/').body
