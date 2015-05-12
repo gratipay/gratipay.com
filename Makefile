@@ -41,7 +41,7 @@ schema-diff: test-schema
 	diff -uw prod.sql local.sql
 	rm prod.sql local.sql
 
-data:
+fake:
 	$(honcho_run) $(env_bin)/fake_data fake_data
 
 run: env
