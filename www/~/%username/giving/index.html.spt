@@ -5,7 +5,7 @@ from datetime import timedelta
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-tips, total, unclaimed_tips, unclaimed_total = participant.get_giving_for_profile()
+tips, total = participant.get_giving_for_profile()
 title = participant.username
 subhead = _("Giving")
 recently = utcnow() - timedelta(days=30)
@@ -13,7 +13,6 @@ cancelled_tips = [x for x in tips if x.amount == 0 and x.mtime >= recently]
 
 # don't filter until after cancelled are looked at
 tips = [t for t in tips if t.amount > 0]
-unclaimed_tips = [t for t in unclaimed_tips if t.amount > 0]
 
 
 tabs = {
@@ -23,13 +22,6 @@ tabs = {
         'name': _("Active"),
         'note': None,
         'total': total
-    },
-    'unclaimed': {
-        'tips': unclaimed_tips,
-        'ntips': len(unclaimed_tips),
-        'name': _("Unclaimed"),
-        'note': _("These are tips you've set to people who haven't joined Gratipay yet."),
-        'total': unclaimed_total
     },
     'cancelled': {
         'tips': cancelled_tips,
@@ -59,7 +51,7 @@ tabs = {
 <h2>{{ _("Tips") }}</h2>
 
 <ul class="nav" id="tab-nav">
-    {% for tab in ['active', 'unclaimed', 'cancelled'] %}
+    {% for tab in ['active', 'cancelled'] %}
         <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>
     {% endfor %}
 </ul>

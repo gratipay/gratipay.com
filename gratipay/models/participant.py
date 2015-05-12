@@ -356,7 +356,7 @@ class Participant(Model):
         if self.balance == 0:
             return
 
-        claimed_tips, claimed_total, _, _= self.get_giving_for_profile()
+        claimed_tips, claimed_total = self.get_giving_for_profile()
         transfers = []
         distributed = Decimal('0.00')
 
@@ -366,7 +366,7 @@ class Participant(Model):
             if pro_rated == 0:
                 continue
             distributed += pro_rated
-            transfers.append([tip.tippee, pro_rated])
+            transfers.append([tip.team, pro_rated])
 
         if not transfers:
             raise self.NoOneToGiveFinalGiftTo
@@ -1135,53 +1135,24 @@ class Participant(Model):
         TIPS = """\
 
             SELECT * FROM (
-                SELECT DISTINCT ON (tippee)
+                SELECT DISTINCT ON (team)
                        amount
-                     , tippee
-                     , t.ctime
-                     , t.mtime
-                     , p.claimed_time
-                     , p.username_lower
-                     , p.number
-                  FROM tips t
-                  JOIN participants p ON p.username = t.tippee
-                 WHERE tipper = %s
-                   AND p.is_suspicious IS NOT true
-                   AND p.claimed_time IS NOT NULL
-              ORDER BY tippee
-                     , t.mtime DESC
+                     , s.team
+                     , s.ctime
+                     , s.mtime
+                     , t.slug_lower
+                  FROM subscriptions s
+                  JOIN teams t
+                    ON t.slug = s.team
+                 WHERE subscriber = %s
+              ORDER BY team
+                     , s.mtime DESC
             ) AS foo
             ORDER BY amount DESC
-                   , username_lower
+                   , slug_lower
 
         """
         tips = self.db.all(TIPS, (self.username,))
-
-        UNCLAIMED_TIPS = """\
-
-            SELECT * FROM (
-                SELECT DISTINCT ON (tippee)
-                       amount
-                     , tippee
-                     , t.ctime
-                     , t.mtime
-                     , p.claimed_time
-                     , e.platform
-                     , e.user_name
-                  FROM tips t
-                  JOIN participants p ON p.username = t.tippee
-                  JOIN elsewhere e ON e.participant = t.tippee
-                 WHERE tipper = %s
-                   AND p.is_suspicious IS NOT true
-                   AND p.claimed_time IS NULL
-              ORDER BY tippee
-                     , t.mtime DESC
-            ) AS foo
-            ORDER BY amount DESC
-                   , lower(user_name)
-
-        """
-        unclaimed_tips = self.db.all(UNCLAIMED_TIPS, (self.username,))
 
 
         # Compute the total.
@@ -1197,11 +1168,7 @@ class Participant(Model):
             # If tips is an empty list, total is int 0. We want a Decimal.
             total = Decimal('0.00')
 
-        unclaimed_total = sum([t.amount for t in unclaimed_tips])
-        if not unclaimed_total:
-            unclaimed_total = Decimal('0.00')
-
-        return tips, total, unclaimed_tips, unclaimed_total
+        return tips, total
 
     def get_tips_receiving(self):
         return self.db.all("""
