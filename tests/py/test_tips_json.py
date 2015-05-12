@@ -2,6 +2,7 @@ from __future__ import print_function, unicode_literals
 
 import json
 
+import pytest
 from aspen.utils import utcnow
 from gratipay.testing import Harness
 
@@ -53,6 +54,7 @@ class TestTipsJson(Harness):
         assert response.code == 200
         assert len(json.loads(response.body)) == 0 # empty array
 
+    @pytest.mark.xfail(reason="migrating to Teams; #3399")
     def test_get_response_with_tips(self):
         now = utcnow()
         self.make_participant("test_tippee1", claimed_time=now)

@@ -2,12 +2,14 @@ from __future__ import print_function, unicode_literals
 
 import json
 
+import pytest
 from aspen.utils import utcnow
 from gratipay.testing import Harness
 
 
 class TestTipJson(Harness):
 
+    @pytest.mark.xfail(reason="migrating to Teams; #3399")
     def test_get_amount_and_total_back_from_api(self):
         "Test that we get correct amounts and totals back on POSTs to tip.json"
 
@@ -37,6 +39,7 @@ class TestTipJson(Harness):
         assert second_data['amount'] == "3.00"
         assert second_data['total_giving'] == "4.00"
 
+    @pytest.mark.xfail(reason="migrating to Teams; #3399")
     def test_set_tip_out_of_range(self):
         now = utcnow()
         self.make_participant("alice", claimed_time=now)
@@ -56,6 +59,7 @@ class TestTipJson(Harness):
         assert "bad amount" in response.body
         assert response.code == 400
 
+    @pytest.mark.xfail(reason="migrating to Teams; #3399")
     def test_set_tip_to_patron(self):
         now = utcnow()
         self.make_participant("alice", claimed_time=now, goal='-1')
@@ -68,6 +72,7 @@ class TestTipJson(Harness):
         assert "user doesn't accept tips" in response.body
         assert response.code == 400
 
+    @pytest.mark.xfail(reason="migrating to Teams; #3399")
     def test_tip_to_unclaimed(self):
         now = utcnow()
         alice = self.make_elsewhere('twitter', 1, 'alice')
