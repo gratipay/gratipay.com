@@ -11,7 +11,6 @@ from aspen.utils import utcnow
 from gratipay import NotSane
 from gratipay.exceptions import (
     HasBigTips,
-    UserDoesntAcceptTips,
     UsernameIsEmpty,
     UsernameTooLong,
     UsernameAlreadyTaken,
