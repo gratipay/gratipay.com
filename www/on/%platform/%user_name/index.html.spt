@@ -18,7 +18,6 @@ if participant.is_claimed or participant.is_closed:
 
 title = friendly_name = account.friendly_name
 user_id = account.user_id
-locked = participant.goal == -1
 is_team = account.is_team
 allow_pledges = not locked and (not is_team or platform.allows_team_connect)
 

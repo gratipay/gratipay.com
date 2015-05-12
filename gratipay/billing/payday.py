@@ -197,7 +197,6 @@ class Payday(object):
                  , balance AS old_balance
                  , balance AS new_balance
                  , is_suspicious
-                 , goal
                  , false AS card_hold_ok
                  , ( SELECT count(*)
                        FROM exchange_routes r
@@ -227,7 +226,6 @@ class Payday(object):
               JOIN payday_participants p ON p.username = t.tipper
               JOIN payday_participants p2 ON p2.username = t.tippee
              WHERE t.amount > 0
-               AND (p2.goal IS NULL or p2.goal >= 0)
                AND ( SELECT id
                        FROM payday_transfers_done t2
                       WHERE t.tipper = t2.tipper
@@ -738,7 +736,6 @@ class Payday(object):
                                 ) t
                            JOIN participants p ON p.username = t.tippee
                           WHERE t.amount > 0
-                            AND (p.goal IS NULL or p.goal >= 0)
                             AND p.is_suspicious IS NOT true
                             AND p.claimed_time < %(ts_start)s
                      )
