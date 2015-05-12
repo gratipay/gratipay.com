@@ -892,6 +892,9 @@ msgstr "Sie müssen zuerst Ihre Identität verifizieren."
 msgid "This is not a valid Bitcoin address."
 msgstr "Das ist keine valide Bitcoin Addresse."
 
+msgid "This is not a valid Dogecoin address."
+msgstr "Das ist keine valide Dogecoin Addresse."
+
 msgid "Your bank account is {0}not connected{1}"
 msgstr "Dein Bankkonto ist {0}nicht verbunden{1}"
 

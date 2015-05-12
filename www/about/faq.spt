@@ -87,6 +87,12 @@ subhead = _("Frequently Asked Questions")
             us</a> to request a one-time bitcoin payin (1% + 15&cent;
             fee).</li>
 
+            <li><a
+                href="mailto:support@gratipay.com?subject=dogecoin%20payin">Email
+            us</a> to request a one-time dogecoin payin (1% + 15&cent;
+            fee).</li>
+
+
         </ol>
 
         </dd>
@@ -115,6 +121,12 @@ subhead = _("Frequently Asked Questions")
                 href="mailto:support@gratipay.com?subject=bitcoin%20payout">Email
             us</a> to request a one-time bitcoin payout (1% + 15&cent;
             fee).</li>
+
+            <li><a
+                href="mailto:support@gratipay.com?subject=dogecoin%20payout">Email
+            us</a> to request a one-time dogecoin payout (1% + 15&cent;
+            fee).</li>
+
 
         </ol>
 

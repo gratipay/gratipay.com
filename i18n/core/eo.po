@@ -884,6 +884,9 @@ msgstr ""
 msgid "This is not a valid Bitcoin address."
 msgstr "Tiu Bitmonadreso estas malvalida."
 
+msgid "This is not a valid Bitcoin address."
+msgstr "Tiu Dogemonadreso estas malvalida."
+
 msgid "Your bank account is {0}not connected{1}"
 msgstr "Via bankokonto {0}ne estas konektitaj{1}"
 

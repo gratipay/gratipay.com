@@ -11,8 +11,10 @@ Gratipay changes:
  [x] Added self-test with remote Bitcoin dataset
  [x] Added cmdline interface for checking address
        utils.bitcoin.py -i [hash]
+ [x] Added support for altcoin validation
 
 https://github.com/gratipay/gratipay.com/pull/2886
+https://github.com/gratipay/gratipay.com/pull/2824
 
 """
 
@@ -82,11 +84,8 @@ def get_bcaddress_version(strAddress):
     return ord(version)
   return None
 
-def validate(address):
-  if get_bcaddress_version(address) == None:
-    return False
-  else:
-    return True
+def validate(address, version=0):
+  return get_bcaddress_version(address) == version
 
 if __name__ == '__main__':
   print("running self-tests.. (use -i [hash] for cmdline address check)")

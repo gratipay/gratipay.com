@@ -53,6 +53,11 @@ if change:
             raise Response(400, _("This is not a valid Bitcoin address."))
         ExchangeRoute.insert(participant, network, address)
 
+    elif network == 'dogecoin':
+        if not bitcoin.validate(address, version=0x1E):
+            raise Response(400, _("This is not a valid Dogecoin address."))
+        ExchangeRoute.insert(participant, network, address)
+
     else:
         raise Response(400, 'unknown network')
 

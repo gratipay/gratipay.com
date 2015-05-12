@@ -556,6 +556,9 @@ msgstr "Evet!"
 msgid "This is not a valid Bitcoin address."
 msgstr "Geçerli bir Bitcoin adresi değil."
 
+msgid "This is not a valid Dogecoin address."
+msgstr "Geçerli bir Dogecoin adresi değil."
+
 msgid ""
 "Warning: Doing this will remove all the tips you are currently receiving.\n"
 "\n"
