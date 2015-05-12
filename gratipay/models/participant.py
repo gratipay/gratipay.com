@@ -197,22 +197,9 @@ class Participant(Model):
         return self.number == 'plural'
 
     def update_number(self, number):
-        assert number in ('singular', 'plural')
-        if number == 'singular':
-            nbigtips = self.db.one("""\
-                SELECT count(*) FROM current_tips WHERE tippee=%s AND amount > %s
-            """, (self.username, gratipay.MAX_TIP_SINGULAR))
-            if nbigtips > 0:
-                raise HasBigTips
         with self.db.get_cursor() as c:
             add_event(c, 'participant', dict(action='set', id=self.id, values=dict(number=number)))
-            self.remove_all_members(c)
-            c.execute("""
-                UPDATE participants
-                   SET number=%s
-                     , anonymous_receiving=false
-                 WHERE id=%s
-            """, (number, self.id))
+            c.execute("UPDATE participants SET number=%s WHERE id=%s", (number, self.id))
         self.set_attributes(number=number)
 
 
@@ -424,24 +411,6 @@ class Participant(Model):
         """, (self.username,))
         for tippee in tippees:
             self.set_tip_to(tippee, '0.00', update_self=False, cursor=cursor)
-
-    def clear_tips_receiving(self, cursor):
-        """Zero out tips to a given user.
-        """
-        tippers = cursor.all("""
-
-            SELECT ( SELECT participants.*::participants
-                       FROM participants
-                      WHERE username=tipper
-                    ) AS tipper
-              FROM current_tips
-             WHERE tippee = %s
-               AND amount > 0
-
-        """, (self.username,))
-        for tipper in tippers:
-            tipper.set_tip_to(self, '0.00', update_tippee=False, cursor=cursor)
-
 
     def clear_takes(self, cursor):
         """Leave all teams by zeroing all takes.
@@ -944,21 +913,20 @@ class Participant(Model):
         # Update is_funded on tips
         if self.get_credit_card_error() == '':
             updated = (cursor or self.db).all("""
-                UPDATE current_tips
+                UPDATE current_subscriptions
                    SET is_funded = true
-                 WHERE tipper = %s
+                 WHERE subscriber = %s
                    AND is_funded IS NOT true
              RETURNING *
             """, (self.username,))
         else:
+            # Simulate payday.
             tips = (cursor or self.db).all("""
-                SELECT t.*
-                  FROM current_tips t
-                  JOIN participants p2 ON p2.username = t.tippee
-                 WHERE t.tipper = %s
-                   AND t.amount > 0
-                   AND p2.is_suspicious IS NOT true
-              ORDER BY p2.claimed_time IS NULL, t.ctime ASC
+                SELECT s.*
+                  FROM current_subscriptions s
+                 WHERE s.subscriber = %s
+                   AND s.amount > 0
+              ORDER BY s.ctime ASC
             """, (self.username,))
             fake_balance = self.balance + self.receiving
             updated = []
@@ -971,38 +939,31 @@ class Participant(Model):
                 if tip.is_funded == is_funded:
                     continue
                 updated.append((cursor or self.db).one("""
-                    UPDATE tips
+                    UPDATE subscriptions
                        SET is_funded = %s
                      WHERE id = %s
                  RETURNING *
                 """, (is_funded, tip.id)))
 
-        # Update giving and pledging on participant
-        giving, pledging = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount, p2.claimed_time
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tippee
-                      WHERE tipper = %(username)s
-                        AND p2.is_suspicious IS NOT true
+        # Update giving on participant
+        giving = (cursor or self.db).one("""
+            WITH our_subscriptions AS (
+                     SELECT amount
+                       FROM current_subscriptions
+                      WHERE subscriber = %(username)s
                         AND amount > 0
                         AND is_funded
                  )
             UPDATE participants p
                SET giving = COALESCE((
                        SELECT sum(amount)
-                         FROM our_tips
+                         FROM our_subscriptions
                         WHERE claimed_time IS NOT NULL
                    ), 0)
-                 , pledging = COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                        WHERE claimed_time IS NULL
-                   ), 0)
              WHERE p.username = %(username)s
-         RETURNING giving, pledging
+         RETURNING giving
         """, dict(username=self.username))
-        self.set_attributes(giving=giving, pledging=pledging)
+        self.set_attributes(giving=giving)
 
         return updated
 
@@ -1094,7 +1055,7 @@ class Participant(Model):
         t = (cursor or self.db).one(NEW_TIP, args)
 
         if update_self:
-            # Update giving/pledging amount of tipper
+            # Update giving amount of tipper
             self.update_giving(cursor)
         if update_team:
             # Update receiving amount of tippee

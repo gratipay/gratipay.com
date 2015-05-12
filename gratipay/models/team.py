@@ -80,13 +80,11 @@ class Team(Model):
     def get_take_last_week_for(self, member):
         """Get the user's nominal take last week. Used in throttling.
         """
-        assert self.IS_PLURAL
-        membername = member.username if hasattr(member, 'username') \
-                                                        else member['username']
+        membername = member.username if hasattr(member, 'username') else member['username']
         return self.db.one("""
 
             SELECT amount
-              FROM takes
+              FROM payroll
              WHERE team=%s AND member=%s
                AND mtime < (
                        SELECT ts_start
@@ -96,7 +94,7 @@ class Team(Model):
                    )
           ORDER BY mtime DESC LIMIT 1
 
-        """, (self.username, membername), default=Decimal('0.00'))
+        """, (self.slug, membername), default=Decimal('0.00'))
 
     def get_take_for(self, member):
         """Return a Decimal representation of the take for this member, or 0.
@@ -116,7 +114,6 @@ class Team(Model):
     def set_take_for(self, member, take, recorder, cursor=None):
         """Sets member's take from the team pool.
         """
-        assert self.IS_PLURAL
 
         # lazy import to avoid circular import
         from gratipay.security.user import User
@@ -166,6 +163,24 @@ class Team(Model):
             self.update_taking(old_takes, new_takes, cursor, member)
             # Update is_funded on member's tips
             member.update_giving(cursor)
+
+    def clear_tips_receiving(self, cursor):
+        """Zero out tips to a given team.
+        """
+        tippers = cursor.all("""
+
+            SELECT ( SELECT participants.*::participants
+                       FROM participants
+                      WHERE username=subscriber
+                    ) AS tipper
+              FROM current_subscriptions
+             WHERE tippee = %s
+               AND amount > 0
+
+        """, (self.username,))
+        for tipper in tippers:
+            tipper.set_tip_to(self, '0.00', update_team=False, cursor=cursor)
+
 
     def update_receiving(self, cursor=None):
         old_takes = self.compute_actual_takes(cursor=cursor)
