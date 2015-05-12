@@ -780,12 +780,14 @@ class Participant(Model):
         """
         return self.db.all("""
 
-            SELECT team AS slug
+            SELECT team AS slug, display_name
                  , ( SELECT count(*)
                        FROM current_payroll
                       WHERE team=x.team
                     ) AS nmembers
               FROM current_payroll x
+              JOIN teams
+                ON slug = teams.slug
              WHERE member=%s;
 
         """, (self.username,))

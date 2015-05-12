@@ -4,6 +4,10 @@
     <script>$(document).ready(Gratipay.tips.init)</script>
 {% endblock %}
 
+{% block sidebar %}
+{% include "templates/your-tip.html" %}
+{% endblock %}
+
 {% block subnav %}
 {% set current_page = request.path.raw %}
 {% set s = team.slug %}

@@ -282,7 +282,6 @@ class Team(Model):
     def get_members(self, current_participant=None):
         """Return a list of member dicts.
         """
-        assert self.IS_PLURAL
         takes = self.compute_actual_takes()
         members = []
         for take in takes.values():

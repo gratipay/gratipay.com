@@ -23,10 +23,6 @@ $(document).ready(function() {
 {{ super() }}
 {% endblock %}
 
-{% block sidebar %}
-{% include "templates/your-tip.html" %}
-{% endblock %}
-
 {% block content %}
 {% if user.participant == team.owner %}
     <div id="team-edit">
