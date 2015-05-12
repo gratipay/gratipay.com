@@ -96,7 +96,7 @@ else:
         out['take'] = unicode(out.pop('amount'))
     else:
         SQL = "SELECT ctime, mtime, member AS username, amount::text as take " \
-              "FROM current_takes WHERE team=%s AND member=%s"
+              "FROM current_payroll WHERE team=%s AND member=%s"
         out = website.db.one(SQL, (team.username, member.username))
 
 [---] application/json via json_dump

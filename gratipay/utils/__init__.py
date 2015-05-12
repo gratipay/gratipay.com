@@ -31,6 +31,16 @@ def dict_to_querystring(mapping):
     return u'?' + u'&'.join(arguments)
 
 
+def use_tildes_for_participants(request):
+    if request.path.raw.startswith('/~/'):
+        to = '/~' + request.path.raw[3:]
+        if request.qs.raw:
+            to += '?' + request.qs.raw
+        request.redirect(to)
+    elif request.path.raw.startswith('/~'):
+        request.path.__init__('/~/' + request.path.raw[2:])
+
+
 def canonicalize(path, base, canonical, given, arguments=None):
     if given != canonical:
         assert canonical.lower() == given.lower()  # sanity check
@@ -41,6 +51,34 @@ def canonicalize(path, base, canonical, given, arguments=None):
 
         newpath = base + canonical + remainder + arguments or ''
         raise Response(302, headers={"Location": newpath})
+
+
+def get_team(state, resolve_unclaimed=True):
+    """Given a Request, raise Response or return Team.
+    """
+    request = state['request']
+    user = state['user']
+    slug = request.line.uri.path['team']
+    qs = request.line.uri.querystring
+
+    from gratipay.models.team import Team # avoid circular import
+    team = Team.from_slug(slug)
+
+    if team is None:
+        # Try to redirect to a Participant.
+        from gratipay.models.participant import Participant # avoid circular import
+        participant = Participant.from_username(slug)
+        if participant is not None:
+            qs = '?' + request.qs.raw if request.qs.raw else ''
+            request.redirect('/~' + request.path.raw[1:] + qs)
+        raise Response(404)
+
+    canonicalize(request.line.uri.path.raw, '/', team.slug, slug, qs)
+
+    if team.is_closed and not user.ADMIN:
+        raise Response(410)
+
+    return team
 
 
 def get_participant(state, restrict=True, resolve_unclaimed=True):
@@ -65,7 +103,7 @@ def get_participant(state, restrict=True, resolve_unclaimed=True):
     if participant is None:
         raise Response(404)
 
-    canonicalize(request.line.uri.path.raw, '/', participant.username, slug, qs)
+    canonicalize(request.line.uri.path.raw, '/~/', participant.username, slug, qs)
 
     if participant.is_closed:
         if user.ADMIN:

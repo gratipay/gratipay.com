@@ -34,10 +34,8 @@ from gratipay.exceptions import (
     UsernameContainsInvalidCharacters,
     UsernameIsRestricted,
     UsernameAlreadyTaken,
-    NoSelfTipping,
-    NoTippee,
+    NoTeam,
     BadAmount,
-    UserDoesntAcceptTips,
     EmailAlreadyTaken,
     CannotRemovePrimaryEmail,
     EmailNotVerified,
@@ -45,9 +43,9 @@ from gratipay.exceptions import (
 )
 
 from gratipay.models import add_event
-from gratipay.models._mixin_team import MixinTeam
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.models.team import Team
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import i18n, is_card_expiring, emails, notifications, pricing
 from gratipay.utils.username import safely_reserve_a_username
@@ -63,7 +61,7 @@ EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 USERNAME_MAX_SIZE = 32
 
-class Participant(Model, MixinTeam):
+class Participant(Model):
     """Represent a Gratipay participant.
     """
 
@@ -199,22 +197,9 @@ class Participant(Model, MixinTeam):
         return self.number == 'plural'
 
     def update_number(self, number):
-        assert number in ('singular', 'plural')
-        if number == 'singular':
-            nbigtips = self.db.one("""\
-                SELECT count(*) FROM current_tips WHERE tippee=%s AND amount > %s
-            """, (self.username, gratipay.MAX_TIP_SINGULAR))
-            if nbigtips > 0:
-                raise HasBigTips
         with self.db.get_cursor() as c:
             add_event(c, 'participant', dict(action='set', id=self.id, values=dict(number=number)))
-            self.remove_all_members(c)
-            c.execute("""
-                UPDATE participants
-                   SET number=%s
-                     , anonymous_receiving=false
-                 WHERE id=%s
-            """, (number, self.id))
+            c.execute("UPDATE participants SET number=%s WHERE id=%s", (number, self.id))
         self.set_attributes(number=number)
 
 
@@ -322,7 +307,6 @@ class Participant(Model, MixinTeam):
 
             """, (self.username,))
             self.set_attributes(claimed_time=claimed_time)
-        self.update_goal(None)
 
 
     # Closing
@@ -372,7 +356,7 @@ class Participant(Model, MixinTeam):
         if self.balance == 0:
             return
 
-        claimed_tips, claimed_total, _, _= self.get_giving_for_profile()
+        claimed_tips, claimed_total = self.get_giving_for_profile()
         transfers = []
         distributed = Decimal('0.00')
 
@@ -382,7 +366,7 @@ class Participant(Model, MixinTeam):
             if pro_rated == 0:
                 continue
             distributed += pro_rated
-            transfers.append([tip.tippee, pro_rated])
+            transfers.append([tip.team, pro_rated])
 
         if not transfers:
             raise self.NoOneToGiveFinalGiftTo
@@ -427,24 +411,6 @@ class Participant(Model, MixinTeam):
         for tippee in tippees:
             self.set_tip_to(tippee, '0.00', update_self=False, cursor=cursor)
 
-    def clear_tips_receiving(self, cursor):
-        """Zero out tips to a given user.
-        """
-        tippers = cursor.all("""
-
-            SELECT ( SELECT participants.*::participants
-                       FROM participants
-                      WHERE username=tipper
-                    ) AS tipper
-              FROM current_tips
-             WHERE tippee = %s
-               AND amount > 0
-
-        """, (self.username,))
-        for tipper in tippers:
-            tipper.set_tip_to(self, '0.00', update_tippee=False, cursor=cursor)
-
-
     def clear_takes(self, cursor):
         """Leave all teams by zeroing all takes.
         """
@@ -454,7 +420,7 @@ class Participant(Model, MixinTeam):
 
 
     def clear_personal_information(self, cursor):
-        """Clear personal information such as statements and goal.
+        """Clear personal information such as statements.
         """
         if self.IS_PLURAL:
             self.remove_all_members(cursor)
@@ -472,8 +438,7 @@ class Participant(Model, MixinTeam):
             DELETE FROM statements WHERE participant=%(participant_id)s;
 
             UPDATE participants
-               SET goal=NULL
-                 , anonymous_giving=False
+               SET anonymous_giving=False
                  , anonymous_receiving=False
                  , number='singular'
                  , avatar_url=NULL
@@ -546,7 +511,7 @@ class Participant(Model, MixinTeam):
         host = gratipay.canonical_host
         username = self.username_lower
         quoted_email = quote(email)
-        link = "{scheme}://{host}/{username}/emails/verify.html?email={quoted_email}&nonce={nonce}"
+        link = "{scheme}://{host}/~{username}/emails/verify.html?email={quoted_email}&nonce={nonce}"
         r = self.send_email('verification',
                         email=email,
                         link=link.format(**locals()),
@@ -795,6 +760,14 @@ class Participant(Model, MixinTeam):
     # Random Junk
     # ===========
 
+    def on_payroll(self, team):
+        """Given a Team object, return a boolean.
+        """
+        for rec in team.get_current_payroll():
+            if rec['recipient'] == self.username:
+                return True
+        return False
+
     @property
     def profile_url(self):
         scheme = gratipay.canonical_scheme
@@ -807,19 +780,18 @@ class Participant(Model, MixinTeam):
         """
         return self.db.all("""
 
-            SELECT team AS name
-                 , ( SELECT count(*)
-                       FROM current_takes
-                      WHERE team=x.team
-                    ) AS nmembers
-              FROM current_takes x
-             WHERE member=%s;
+            SELECT t.*::teams
+              FROM teams t
+              JOIN current_payroll p
+                ON t.slug = p.team
+             WHERE p.member=%s;
 
         """, (self.username,))
 
-    @property
-    def accepts_tips(self):
-        return (self.goal is None) or (self.goal >= 0)
+    def member_of(self, team):
+        """Given a Participant object, return a boolean.
+        """
+        return team.slug in [t.slug for t in self.get_teams()]
 
 
     def insert_into_communities(self, is_member, name, slug):
@@ -899,18 +871,6 @@ class Participant(Model, MixinTeam):
         """, (self.username,))
         self.set_attributes(avatar_url=avatar_url)
 
-    def update_goal(self, goal):
-        with self.db.get_cursor() as c:
-            tmp = goal if goal is None else unicode(goal)
-            add_event(c, 'participant', dict(id=self.id, action='set', values=dict(goal=tmp)))
-            c.one( "UPDATE participants SET goal=%s WHERE username=%s RETURNING id"
-                 , (goal, self.username)
-                  )
-            self.set_attributes(goal=goal)
-            if not self.accepts_tips:
-                self.clear_tips_receiving(c)
-                self.update_receiving(c)
-
     def update_is_closed(self, is_closed, cursor=None):
         with self.db.get_cursor(cursor) as cursor:
             cursor.run( "UPDATE participants SET is_closed=%(is_closed)s "
@@ -933,21 +893,20 @@ class Participant(Model, MixinTeam):
         # Update is_funded on tips
         if self.get_credit_card_error() == '':
             updated = (cursor or self.db).all("""
-                UPDATE current_tips
+                UPDATE current_subscriptions
                    SET is_funded = true
-                 WHERE tipper = %s
+                 WHERE subscriber = %s
                    AND is_funded IS NOT true
              RETURNING *
             """, (self.username,))
         else:
+            # Simulate payday.
             tips = (cursor or self.db).all("""
-                SELECT t.*
-                  FROM current_tips t
-                  JOIN participants p2 ON p2.username = t.tippee
-                 WHERE t.tipper = %s
-                   AND t.amount > 0
-                   AND p2.is_suspicious IS NOT true
-              ORDER BY p2.claimed_time IS NULL, t.ctime ASC
+                SELECT s.*
+                  FROM current_subscriptions s
+                 WHERE s.subscriber = %s
+                   AND s.amount > 0
+              ORDER BY s.ctime ASC
             """, (self.username,))
             fake_balance = self.balance + self.receiving
             updated = []
@@ -960,38 +919,31 @@ class Participant(Model, MixinTeam):
                 if tip.is_funded == is_funded:
                     continue
                 updated.append((cursor or self.db).one("""
-                    UPDATE tips
+                    UPDATE subscriptions
                        SET is_funded = %s
                      WHERE id = %s
                  RETURNING *
                 """, (is_funded, tip.id)))
 
-        # Update giving and pledging on participant
-        giving, pledging = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount, p2.claimed_time
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tippee
-                      WHERE tipper = %(username)s
-                        AND p2.is_suspicious IS NOT true
+        # Update giving on participant
+        giving = (cursor or self.db).one("""
+            WITH our_subscriptions AS (
+                     SELECT amount
+                       FROM current_subscriptions
+                      WHERE subscriber = %(username)s
                         AND amount > 0
                         AND is_funded
                  )
             UPDATE participants p
                SET giving = COALESCE((
                        SELECT sum(amount)
-                         FROM our_tips
+                         FROM our_subscriptions
                         WHERE claimed_time IS NOT NULL
                    ), 0)
-                 , pledging = COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                        WHERE claimed_time IS NULL
-                   ), 0)
              WHERE p.username = %(username)s
-         RETURNING giving, pledging
+         RETURNING giving
         """, dict(username=self.username))
-        self.set_attributes(giving=giving, pledging=pledging)
+        self.set_attributes(giving=giving)
 
         return updated
 
@@ -1035,7 +987,7 @@ class Participant(Model, MixinTeam):
             self.set_attributes(is_free_rider=is_free_rider)
 
 
-    def set_tip_to(self, tippee, amount, update_self=True, update_tippee=True, cursor=None):
+    def set_tip_to(self, team, amount, update_self=True, update_team=True, cursor=None):
         """Given a Participant or username, and amount as str, returns a dict.
 
         We INSERT instead of UPDATE, so that we have history to explore. The
@@ -1052,68 +1004,63 @@ class Participant(Model, MixinTeam):
         """
         assert self.is_claimed  # sanity check
 
-        if not isinstance(tippee, Participant):
-            tippee, u = Participant.from_username(tippee), tippee
-            if not tippee:
-                raise NoTippee(u)
-
-        if self.username == tippee.username:
-            raise NoSelfTipping
+        if not isinstance(team, Team):
+            team, slug = Team.from_slug(team), team
+            if not team:
+                raise NoTeam(slug)
 
         amount = Decimal(amount)  # May raise InvalidOperation
-        max_tip = gratipay.MAX_TIP_PLURAL if tippee.IS_PLURAL else gratipay.MAX_TIP_SINGULAR
-        if (amount < gratipay.MIN_TIP) or (amount > max_tip):
+        if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
             raise BadAmount
-
-        if not tippee.accepts_tips and amount != 0:
-            raise UserDoesntAcceptTips
 
         # Insert tip
         NEW_TIP = """\
 
-            INSERT INTO tips
-                        (ctime, tipper, tippee, amount)
+            INSERT INTO subscriptions
+                        (ctime, subscriber, team, amount)
                  VALUES ( COALESCE (( SELECT ctime
-                                        FROM tips
-                                       WHERE (tipper=%(tipper)s AND tippee=%(tippee)s)
+                                        FROM subscriptions
+                                       WHERE (subscriber=%(subscriber)s AND team=%(team)s)
                                        LIMIT 1
                                       ), CURRENT_TIMESTAMP)
-                        , %(tipper)s, %(tippee)s, %(amount)s
+                        , %(subscriber)s, %(team)s, %(amount)s
                          )
               RETURNING *
-                      , ( SELECT count(*) = 0 FROM tips WHERE tipper=%(tipper)s ) AS first_time_tipper
+                      , ( SELECT count(*) = 0
+                            FROM subscriptions
+                           WHERE team=%(team)s ) AS first_time_tipper
 
         """
-        args = dict(tipper=self.username, tippee=tippee.username, amount=amount)
+        args = dict(subscriber=self.username, team=team.slug, amount=amount)
         t = (cursor or self.db).one(NEW_TIP, args)
 
         if update_self:
-            # Update giving/pledging amount of tipper
+            # Update giving amount of tipper
             self.update_giving(cursor)
-        if update_tippee:
+        if update_team:
             # Update receiving amount of tippee
-            tippee.update_receiving(cursor)
-        if tippee.username == 'Gratipay':
+            team.update_receiving(cursor)
+        if team.slug == 'Gratipay':
             # Update whether the tipper is using Gratipay for free
             self.update_is_free_rider(None if amount == 0 else False, cursor)
 
         return t._asdict()
 
 
-    def get_tip_to(self, tippee):
+    def get_tip_to(self, slug):
         """Given a username, returns a dict.
         """
         default = dict(amount=Decimal('0.00'), is_funded=False)
         return self.db.one("""\
 
             SELECT *
-              FROM tips
-             WHERE tipper=%s
-               AND tippee=%s
+              FROM subscriptions
+             WHERE subscriber=%s
+               AND team=%s
           ORDER BY mtime DESC
              LIMIT 1
 
-        """, (self.username, tippee), back_as=dict, default=default)
+        """, (self.username, slug), back_as=dict, default=default)
 
 
     def get_tip_distribution(self):
@@ -1188,53 +1135,24 @@ class Participant(Model, MixinTeam):
         TIPS = """\
 
             SELECT * FROM (
-                SELECT DISTINCT ON (tippee)
+                SELECT DISTINCT ON (team)
                        amount
-                     , tippee
-                     , t.ctime
-                     , t.mtime
-                     , p.claimed_time
-                     , p.username_lower
-                     , p.number
-                  FROM tips t
-                  JOIN participants p ON p.username = t.tippee
-                 WHERE tipper = %s
-                   AND p.is_suspicious IS NOT true
-                   AND p.claimed_time IS NOT NULL
-              ORDER BY tippee
-                     , t.mtime DESC
+                     , s.team
+                     , s.ctime
+                     , s.mtime
+                     , t.slug_lower
+                  FROM subscriptions s
+                  JOIN teams t
+                    ON t.slug = s.team
+                 WHERE subscriber = %s
+              ORDER BY team
+                     , s.mtime DESC
             ) AS foo
             ORDER BY amount DESC
-                   , username_lower
+                   , slug_lower
 
         """
         tips = self.db.all(TIPS, (self.username,))
-
-        UNCLAIMED_TIPS = """\
-
-            SELECT * FROM (
-                SELECT DISTINCT ON (tippee)
-                       amount
-                     , tippee
-                     , t.ctime
-                     , t.mtime
-                     , p.claimed_time
-                     , e.platform
-                     , e.user_name
-                  FROM tips t
-                  JOIN participants p ON p.username = t.tippee
-                  JOIN elsewhere e ON e.participant = t.tippee
-                 WHERE tipper = %s
-                   AND p.is_suspicious IS NOT true
-                   AND p.claimed_time IS NULL
-              ORDER BY tippee
-                     , t.mtime DESC
-            ) AS foo
-            ORDER BY amount DESC
-                   , lower(user_name)
-
-        """
-        unclaimed_tips = self.db.all(UNCLAIMED_TIPS, (self.username,))
 
 
         # Compute the total.
@@ -1250,11 +1168,7 @@ class Participant(Model, MixinTeam):
             # If tips is an empty list, total is int 0. We want a Decimal.
             total = Decimal('0.00')
 
-        unclaimed_total = sum([t.amount for t in unclaimed_tips])
-        if not unclaimed_total:
-            unclaimed_total = Decimal('0.00')
-
-        return tips, total, unclaimed_tips, unclaimed_total
+        return tips, total
 
     def get_tips_receiving(self):
         return self.db.all("""
@@ -1825,18 +1739,6 @@ class Participant(Model, MixinTeam):
 
         # Key: npatrons
         output['npatrons'] = self.npatrons
-
-        # Key: goal
-        # Values:
-        #   undefined - user is not here to receive tips, but will generally regift them
-        #   null - user has no funding goal
-        #   3.00 - user wishes to receive at least this amount
-        if self.goal != 0:
-            if self.goal > 0:
-                goal = str(self.goal)
-            else:
-                goal = None
-            output['goal'] = goal
 
         # Key: receiving
         # Values:

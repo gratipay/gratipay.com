@@ -142,7 +142,7 @@ If you haven't run Gratipay for a while, you can reinstall the dependencies:
 Add the necessary schemas and insert dummy data into postgres:
 
     $ make schema
-    $ make data
+    $ make fake
 
 
 Launching
@@ -310,7 +310,7 @@ $ docker logs [container_id]
 
 ```
 $ docker exec [container_id] make schema
-$ docker exec [container_id] make data
+$ docker exec [container_id] make fake
 ```
 
 Once you're done, kill the running container:
@@ -405,7 +405,7 @@ Which populates the database named by `DATABASE_URL` with the schema from `sql/s
 The gratipay database created in the last step is empty. To populate it with
 some fake data, so that more of the site is functional, run this command:
 
-    $ make data
+    $ make fake
 
 
 API
@@ -449,13 +449,6 @@ given user.
       - `null`&mdash;user has never tipped this participant
       - "0.00"&mdash;user used to tip this participant
       - "3.00"&mdash;user tips this participant the given amount
-      <br><br>
-
-  - "goal"&mdash;funding goal of the given participant; possible values are:
-
-      - `undefined` (key not present)&mdash;participant is a patron (or has 0 as the goal)
-      - `null`&mdash;participant is grateful for gifts, but doesn't have a specific funding goal
-      - "100.00"&mdash;participant's goal is to receive the given amount per week
       <br><br>
 
   - "elsewhere"&mdash;participant's connected accounts elsewhere; returns an object with these keys:

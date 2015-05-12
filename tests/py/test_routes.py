@@ -12,7 +12,7 @@ from gratipay.models.participant import Participant
 class TestRoutes(BillingHarness):
 
     def hit(self, username, action, network, address, expected=200):
-        r =  self.client.POST('/%s/routes/%s.json' % (username, action),
+        r =  self.client.POST('/~%s/routes/%s.json' % (username, action),
                               data=dict(network=network, address=address),
                               auth_as=username, raise_immediately=False)
         assert r.code == expected
@@ -100,25 +100,25 @@ class TestRoutes(BillingHarness):
 
     def test_bank_account(self):
         expected = "add or change your bank account"
-        actual = self.client.GET('/alice/routes/bank-account.html').body
+        actual = self.client.GET('/~alice/routes/bank-account.html').body
         assert expected in actual
 
     def test_bank_account_auth(self):
         self.make_participant('alice', claimed_time='now')
         expected = '<em id="status">not connected</em>'
-        actual = self.client.GET('/alice/routes/bank-account.html', auth_as='alice').body
+        actual = self.client.GET('/~alice/routes/bank-account.html', auth_as='alice').body
         assert expected in actual
 
     def test_credit_card(self):
         self.make_participant('alice', claimed_time='now')
         expected = "add or change your credit card"
-        actual = self.client.GET('/alice/routes/credit-card.html').body
+        actual = self.client.GET('/~alice/routes/credit-card.html').body
         assert expected in actual
 
     def test_credit_card_page_shows_card_missing(self):
         self.make_participant('alice', claimed_time='now')
         expected = 'Your credit card is <em id="status">missing'
-        actual = self.client.GET('/alice/routes/credit-card.html', auth_as='alice').body.decode('utf8')
+        actual = self.client.GET('/~alice/routes/credit-card.html', auth_as='alice').body.decode('utf8')
         assert expected in actual
 
     def test_credit_card_page_loads_when_there_is_a_braintree_card(self):
@@ -138,7 +138,7 @@ class TestRoutes(BillingHarness):
 
     def test_credit_card_page_loads_when_there_is_a_balanced_card(self):
         expected = 'Your credit card is <em id="status">working'
-        actual = self.client.GET('/janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
+        actual = self.client.GET('/~janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
         assert expected in actual
 
     def test_credit_card_page_shows_details_for_balanced_cards(self):
@@ -148,11 +148,11 @@ class TestRoutes(BillingHarness):
     def test_credit_card_page_shows_when_balanced_card_is_failing(self):
         ExchangeRoute.from_network(self.janet, 'balanced-cc').update_error('Some error')
         expected = 'Your credit card is <em id="status">failing'
-        actual = self.client.GET('/janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
+        actual = self.client.GET('/~janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
         assert expected in actual
 
     def test_receipt_page_loads_for_balanced_cards(self):
         ex_id = self.make_exchange('balanced-cc', 113, 30, self.janet)
-        url_receipt = '/janet/receipts/{}.html'.format(ex_id)
+        url_receipt = '/~janet/receipts/{}.html'.format(ex_id)
         actual = self.client.GET(url_receipt, auth_as='janet').body.decode('utf8')
         assert 'Visa' in actual

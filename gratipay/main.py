@@ -93,6 +93,7 @@ algorithm.functions = [
     algorithm['parse_body_into_request'],
     algorithm['raise_200_for_OPTIONS'],
 
+    utils.use_tildes_for_participants,
     canonize,
     i18n.set_up_i18n,
     authentication.start_user_as_anon,

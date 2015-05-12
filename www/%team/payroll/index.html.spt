@@ -1,19 +1,16 @@
 # encoding: utf8
 """Show information about a single participant. It might be you!
 """
-from gratipay.utils import get_participant
+from gratipay.utils import get_team
 
 [-----------------------------------------------------------------------------]
 
-participant = team = get_participant(state, restrict=False)
-if not team.show_as_team(user):
-  request.redirect('../')
-tip_or_pledge = "tip"
-title = team.username
-subhead = _("Team Members")
+participant = team = get_team(state)
+title = team.display_name
+subhead = _("Payroll")
 
 [-----------------------------------------------------------------------------]
-{% extends "templates/profile.html" %}
+{% extends "templates/team.html" %}
 
 {% block scripts %}
 <script>$(document).ready(Gratipay.team.init);</script>
@@ -37,7 +34,7 @@ subhead = _("Team Members")
       <td class="figure last_week"></td>
       <td class="figure this_week"></td>
       <td class="figure balance">
-        {{ team.balance + team.receiving - team.giving }}
+        {{ team.receiving }}
       </td>
       <td class="figure percentage"></td>
     </tr>

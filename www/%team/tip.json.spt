@@ -4,9 +4,9 @@ from decimal import InvalidOperation
 
 from aspen import Response
 from babel.numbers import NumberFormatError
-from gratipay.exceptions import BadAmount, UserDoesntAcceptTips
+from gratipay.exceptions import BadAmount
 from gratipay.models.participant import Participant
-from gratipay.utils import get_participant
+from gratipay.utils import get_team
 
 [-----------------------------------------------------------------------------]
 
@@ -16,50 +16,44 @@ if user.ANON:
 else:
     out = {}
 
-    # Get tipper and tippee.
-    # ======================
+    # Get subscriber and team.
+    # ========================
 
-    tipper = user.participant
-    tippee = get_participant(state, restrict=False, resolve_unclaimed=False)
+    supporter = user.participant
+    team = get_team(state)
 
 
     # Get and maybe set amount.
     # =========================
 
-    if request.method == 'POST' and 'amount' in request.body and tippee != tipper:
+    if request.method == 'POST' and 'amount' in request.body:
         try:
-            out = tipper.set_tip_to(tippee, parse_decimal(request.body['amount']))
+            out = supporter.set_tip_to(team, parse_decimal(request.body['amount']))
         except (InvalidOperation, ValueError, BadAmount, NumberFormatError):
             raise Response(400, "bad amount")
-        except UserDoesntAcceptTips:
-            raise Response(400, "user doesn't accept tips")
     else:
-        out = tipper.get_tip_to(tippee.username)
+        out = supporter.get_tip_to(team.slug)
 
     amount = out['amount']
-    total_giving = tipper.giving
-    total_receiving = tipper.receiving
+    total_giving = supporter.giving
+    total_receiving = supporter.receiving
 
     out["amount"] = str(amount)
     out["amount_l"] = format_currency(amount, 'USD')
-    if tippee.username == 'Gratipay':
+    if team.slug == 'Gratipay':
         out["msg"] = _("Thank you so much for supporting Gratipay! :D")
     else:
         out["msg"] = _("Tip changed to {0} per week!", out["amount_l"])
-    out["npatrons"] = tippee.npatrons
-    out["tippee_id"] = tippee.id
+    out["nsupporters"] = team.nsupporters
+    out["supporter_id"] = supporter.id
     out["total_giving"] = str(total_giving)
     out["total_giving_l"] = format_currency(total_giving, 'USD')
     out["total_receiving"] = str(total_receiving)
     out["total_receiving_l"] = format_currency(total_receiving, 'USD')
 
-    if not tippee.anonymous_receiving:
-        total_receiving_tippee = tippee.receiving
-        out["total_receiving_tippee"] = str(total_receiving_tippee)
-        out["total_receiving_tippee_l"] = format_currency(total_receiving_tippee, 'USD')
-    else:
-        out["total_receiving_tippee"] = None
-        out["total_receiving_tippee_l"] = '[' + _("hidden") + ']'
+    total_receiving_team = team.receiving
+    out["total_receiving_team"] = str(total_receiving_team)
+    out["total_receiving_team_l"] = format_currency(total_receiving_team, 'USD')
 
     if 'ctime' in out:
         out["ctime"] = str(out['ctime'])
