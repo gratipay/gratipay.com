@@ -207,6 +207,18 @@ class TestPages(Harness):
         assert response.code == 302
         assert response.headers['Location'] == '/~alice/foo/bar?baz=buz'
 
+    def test_username_redirected_to_tilde(self):
+        self.make_participant('alice', claimed_time='now')
+        response = self.client.GxT("/alice/", auth_as="alice")
+        assert response.code == 302
+        assert response.headers['Location'] == '/~alice/'
+
+    def test_username_redirects_everything_to_tilde(self):
+        self.make_participant('alice', claimed_time='now')
+        response = self.client.GxT("/alice/foo/bar?baz=buz", auth_as="alice")
+        assert response.code == 302
+        assert response.headers['Location'] == '/~alice/foo/bar?baz=buz'
+
     def test_anon_bank_acc_page(self):
         body = self.client.GET("/~alice/routes/bank-account.html").body
         assert "<h1>Bank Account</h1>" in body
