@@ -65,17 +65,6 @@ msgstr ""
 msgid "Connect to {0} on Gratipay?"
 msgstr "Lier à {0} sur Gratipay ?"
 
-msgid "{0} from {1} has joined Gratipay!"
-msgstr "{0} ({1}) s'est inscrit sur Gratipay !"
-
-msgid ""
-"Your pledge to give {0} every week to {1} will be turned into action now "
-"that they have joined Gratipay. Huzzah!"
-msgstr "Votre promesse de donner {0} par semaine à {1} va muer en action maintenant que {1} s'est inscrit sur Gratipay. Hourra !"
-
-msgid "Follow this link to view {0}'s profile:"
-msgstr "Cliquez sur ce lien pour voir le profil de {0}:"
-
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
 "Sound familiar?"
@@ -352,9 +341,6 @@ msgstr "Événements"
 msgid "Search Gratipay"
 msgstr "Chercher dans Gratipay"
 
-msgid "{0} to pledge to {1}"
-msgstr "{0} pour faire une promesse de don à {1}"
-
 msgid "{0} to give to {1}"
 msgstr "{0} pour donner à {1}"
 
@@ -395,9 +381,6 @@ msgstr "Votre don"
 
 msgid "per week"
 msgstr "par semaine"
-
-msgid "Pledge to {0}"
-msgstr "Promettez de donner à {0}"
 
 msgid "Give to {0}"
 msgstr "Donnez à {0}"
@@ -688,22 +671,6 @@ msgstr "Membres de l'équipe"
 msgid "A Lot"
 msgstr "Beaucoup"
 
-msgid "Gifts Waiting"
-msgstr "Dons en attente"
-
-msgid ""
-"If you are an administrator of this {0} team account, you can unlock it to "
-"allow people to pledge tips to your team on Gratipay."
-msgstr "Si vous êtes un administrateur de cette équipe sur {0}, vous pouvez la déverrouiller pour autoriser les utilisateurs de Gratipay à vous faire des promesses de don."
-
-msgid ""
-"If you are {0} on {1}, you can unlock your account to allow people to pledge"
-" tips to you on Gratipay."
-msgstr "Si vous êtes {0} sur {1}, vous pouvez déverrouiller votre compte pour autoriser les utilisateurs de Gratipay à vous faire des promesses de don."
-
-msgid "Unlock"
-msgstr "Déverrouiller"
-
 msgid "{0} has not joined Gratipay."
 msgstr "{0} n'est pas inscrit sur Gratipay."
 
@@ -715,8 +682,8 @@ msgstr "Êtes-vous un administrateur de ce compte {0} ? Connectez-le à votre c
 msgid "Connect team account"
 msgstr "Connecter le compte"
 
-msgid "Is this you? We never collect money for you unless you join."
-msgstr "Est-ce vous ? Nous ne collectons pas de dons pour vous tant que vous n'êtes pas inscrit."
+msgid "Is this you? You can join Gratipay with a couple clicks:"
+msgstr ""
 
 msgid "Join Gratipay"
 msgstr "Créer mon compte"
@@ -730,21 +697,8 @@ msgstr "Connecter"
 msgid "What is Gratipay?"
 msgstr "Qu'est-ce que Gratipay ?"
 
-msgid ""
-"Gratipay is a way to thank and support your favorite artists, musicians, "
-"writers, programmers, etc. by setting up a small weekly cash gift to them."
-msgstr "Gratipay est un moyen de remercier et soutenir les artistes/musiciens/écrivains/programmeurs/etc que vous aimez en leur envoyant un peu d'argent chaque semaine."
-
-msgid "Don't like what you see?"
-msgstr "Ça ne vous plaît pas ?"
-
-msgid ""
-"If you are an owner of this {0} account, you can explicitly opt out of "
-"Gratipay by locking it. We don't allow new pledges to locked accounts."
-msgstr "Si vous êtes un propriétaire de ce compte {0}, vous pouvez verrouiller cette page pour empêcher les utilisateurs de Gratipay de vous faire des promesses de don."
-
-msgid "Lock"
-msgstr "Verrouiller"
+msgid "Gratipay provides payments and payroll for open work."
+msgstr ""
 
 msgid "Status"
 msgstr "État"
@@ -952,12 +906,6 @@ msgid "View your email addresses"
 msgstr "Gérer vos adresses courriel"
 
 msgid "Active"
-msgstr ""
-
-msgid "Unclaimed"
-msgstr "Promesses de dons"
-
-msgid "These are tips you've set to people who haven't joined Gratipay yet."
 msgstr ""
 
 msgid "Cancelled"
@@ -1382,9 +1330,6 @@ msgid "Notifications"
 msgstr "Notifications"
 
 msgid "Send me notifications via email:"
-msgstr ""
-
-msgid "When people I pledge to join Gratipay"
 msgstr ""
 
 msgid "When my credit card is charged:"

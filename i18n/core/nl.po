@@ -64,17 +64,6 @@ msgstr ""
 msgid "Connect to {0} on Gratipay?"
 msgstr "Verbind met {0} op Gratipay?"
 
-msgid "{0} from {1} has joined Gratipay!"
-msgstr "{0} van {1} is lid geworden van Gratipay!"
-
-msgid ""
-"Your pledge to give {0} every week to {1} will be turned into action now "
-"that they have joined Gratipay. Huzzah!"
-msgstr "Uw belofte om iedere week {0} te geven aan {1} zal ingaan zodra zij lid zijn geworden van Gratipay. Hoera!"
-
-msgid "Follow this link to view {0}'s profile:"
-msgstr "Volg deze link om het profiel van {0} te bekijken:"
-
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
 "Sound familiar?"
@@ -351,9 +340,6 @@ msgstr "Gebeurtenissen"
 msgid "Search Gratipay"
 msgstr "Doorzoek Gratipay"
 
-msgid "{0} to pledge to {1}"
-msgstr "{0} belofte aan {1}"
-
 msgid "{0} to give to {1}"
 msgstr "{0} gift aan {1}"
 
@@ -394,9 +380,6 @@ msgstr "Uw gift"
 
 msgid "per week"
 msgstr "per week"
-
-msgid "Pledge to {0}"
-msgstr "Beloof aan {0}"
 
 msgid "Give to {0}"
 msgstr "Geef aan {0}"
@@ -687,22 +670,6 @@ msgstr "Teamleden"
 msgid "A Lot"
 msgstr "Veel"
 
-msgid "Gifts Waiting"
-msgstr "Fooien staan klaar"
-
-msgid ""
-"If you are an administrator of this {0} team account, you can unlock it to "
-"allow people to pledge tips to your team on Gratipay."
-msgstr "Als u een administrator bent van dit {0} team account, dan kunt deze ontgrendelen zodat anderen giften kunnen beloven aan uw team op Gratipay."
-
-msgid ""
-"If you are {0} on {1}, you can unlock your account to allow people to pledge"
-" tips to you on Gratipay."
-msgstr "Als u {0} op {1} bent, dan kunt u uw account ontgrendelen zodat anderen u giften kunnen beloven op Gratipay."
-
-msgid "Unlock"
-msgstr "Ontgrendelen"
-
 msgid "{0} has not joined Gratipay."
 msgstr "{0} is geen lid geworden van Gratipay."
 
@@ -714,8 +681,8 @@ msgstr "Bent u een administrator van dit {0} team account? Verbind het met uw Gr
 msgid "Connect team account"
 msgstr "Verbind het team account"
 
-msgid "Is this you? We never collect money for you unless you join."
-msgstr "Bent u dit? We verzamelen geen giften voor u, behalve als u lid wordt."
+msgid "Is this you? You can join Gratipay with a couple clicks:"
+msgstr ""
 
 msgid "Join Gratipay"
 msgstr "Word lid van Gratipay"
@@ -729,21 +696,8 @@ msgstr "Verbinden"
 msgid "What is Gratipay?"
 msgstr "Wat is Gratipay?"
 
-msgid ""
-"Gratipay is a way to thank and support your favorite artists, musicians, "
-"writers, programmers, etc. by setting up a small weekly cash gift to them."
-msgstr "Gratipay is een manier om uw favoriete artiesten, muzikanten, schrijvers, programmeurs, etc te bedanken door middel van een kleine wekelijkse donatie."
-
-msgid "Don't like what you see?"
-msgstr "Niet tevreden?"
-
-msgid ""
-"If you are an owner of this {0} account, you can explicitly opt out of "
-"Gratipay by locking it. We don't allow new pledges to locked accounts."
-msgstr "Als u de eigenaar bent van deze account {0} account, dan kunt u deze Gratipay account vergrendelen via een opt-out. Het is niet toegestaan om te doneren aan vergrendelde accounts."
-
-msgid "Lock"
-msgstr "Vergrendelen"
+msgid "Gratipay provides payments and payroll for open work."
+msgstr ""
 
 msgid "Status"
 msgstr "Status"
@@ -951,12 +905,6 @@ msgid "View your email addresses"
 msgstr "Bekijk uw e-mailadressen."
 
 msgid "Active"
-msgstr ""
-
-msgid "Unclaimed"
-msgstr "Niet geclaimed"
-
-msgid "These are tips you've set to people who haven't joined Gratipay yet."
 msgstr ""
 
 msgid "Cancelled"
@@ -1381,9 +1329,6 @@ msgid "Notifications"
 msgstr "Notificaties"
 
 msgid "Send me notifications via email:"
-msgstr ""
-
-msgid "When people I pledge to join Gratipay"
 msgstr ""
 
 msgid "When my credit card is charged:"

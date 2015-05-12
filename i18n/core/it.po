@@ -62,17 +62,6 @@ msgstr "Segui questo link se vuoi vedere o modificare i tuoi pagamenti:"
 msgid "Connect to {0} on Gratipay?"
 msgstr "Connettersi a {0} su Gratipay?"
 
-msgid "{0} from {1} has joined Gratipay!"
-msgstr "{0} si è iscritto a Gratipay tramite {1}!"
-
-msgid ""
-"Your pledge to give {0} every week to {1} will be turned into action now "
-"that they have joined Gratipay. Huzzah!"
-msgstr "Il tuo impegno di dare {0} a settimana a {1} sarà realizzato ora che si è iscritto a Gratipay. Urrà!"
-
-msgid "Follow this link to view {0}'s profile:"
-msgstr "Segui questo link per vedere il profilo di {0}:"
-
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
 "Sound familiar?"
@@ -349,9 +338,6 @@ msgstr "Eventi"
 msgid "Search Gratipay"
 msgstr "Cerca su Gratipay"
 
-msgid "{0} to pledge to {1}"
-msgstr "{0} Per promettere di donare a {1}"
-
 msgid "{0} to give to {1}"
 msgstr "{0} Per donare a {1}"
 
@@ -392,9 +378,6 @@ msgstr "La tua donazione"
 
 msgid "per week"
 msgstr "per settimana"
-
-msgid "Pledge to {0}"
-msgstr "Prometti di donare a {0}"
 
 msgid "Give to {0}"
 msgstr "Dona a {0}"
@@ -685,22 +668,6 @@ msgstr "Membri del Team"
 msgid "A Lot"
 msgstr "Molti"
 
-msgid "Gifts Waiting"
-msgstr "Donazioni in attesa"
-
-msgid ""
-"If you are an administrator of this {0} team account, you can unlock it to "
-"allow people to pledge tips to your team on Gratipay."
-msgstr "Se sei un amministratore di questo {0} team account, puoi sbloccarlo per permettere ad altri di fare donazioni nei confronti del tuo team su Gratipay."
-
-msgid ""
-"If you are {0} on {1}, you can unlock your account to allow people to pledge"
-" tips to you on Gratipay."
-msgstr "Se sei {0} su {1}, puoi sbloccare il tuo account per permettere ad altri di fare donazioni nei tuoi confronti su Gratipay."
-
-msgid "Unlock"
-msgstr "Sblocca"
-
 msgid "{0} has not joined Gratipay."
 msgstr "{0} non si è iscritto a Gratipay"
 
@@ -712,8 +679,8 @@ msgstr "Sei un amministratore di questo {0} team account? Associalo al tuo accou
 msgid "Connect team account"
 msgstr "Associa team account"
 
-msgid "Is this you? We never collect money for you unless you join."
-msgstr "Sei tu? Non prendiamo mai denaro per te a meno che tu non ti iscriva."
+msgid "Is this you? You can join Gratipay with a couple clicks:"
+msgstr ""
 
 msgid "Join Gratipay"
 msgstr "Iscriviti a Gratipay"
@@ -727,21 +694,8 @@ msgstr "Collega"
 msgid "What is Gratipay?"
 msgstr "Cos'è Gratipay?"
 
-msgid ""
-"Gratipay is a way to thank and support your favorite artists, musicians, "
-"writers, programmers, etc. by setting up a small weekly cash gift to them."
-msgstr "Gratipay è un modo per ringraziare e supportare i tuoi artisti, musicisti, scrittori, programmatori, ecc. preferiti impostando una piccola donazione di denaro settimanale per loro."
-
-msgid "Don't like what you see?"
-msgstr "Non ti piace ciò che vedi?"
-
-msgid ""
-"If you are an owner of this {0} account, you can explicitly opt out of "
-"Gratipay by locking it. We don't allow new pledges to locked accounts."
-msgstr "Se sei il proprietario di questo {0} account, puoi esplicitamente uscire da Gratipay bloccandolo. Non permettiamo nuove donazioni ad account bloccati."
-
-msgid "Lock"
-msgstr "Blocca"
+msgid "Gratipay provides payments and payroll for open work."
+msgstr ""
 
 msgid "Status"
 msgstr "Stato"
@@ -950,12 +904,6 @@ msgstr "Guarda il tuo indirizzo email"
 
 msgid "Active"
 msgstr "Attivo"
-
-msgid "Unclaimed"
-msgstr "Non riscossi"
-
-msgid "These are tips you've set to people who haven't joined Gratipay yet."
-msgstr "Queste sono le donazioni che hai predisposto per persone che non si sono ancora iscritte a Gratipay."
 
 msgid "Cancelled"
 msgstr "Cancellati"
@@ -1380,9 +1328,6 @@ msgstr "Notifiche"
 
 msgid "Send me notifications via email:"
 msgstr "Mandami notifiche via email:"
-
-msgid "When people I pledge to join Gratipay"
-msgstr "Quando qualcuno a cui ho promesso di fare una donazione si iscrive su Gratipay"
 
 msgid "When my credit card is charged:"
 msgstr "Quando la mia carta di credito viene addebitata:"

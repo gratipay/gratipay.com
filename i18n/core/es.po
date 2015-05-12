@@ -66,17 +66,6 @@ msgstr ""
 msgid "Connect to {0} on Gratipay?"
 msgstr "¿Te quieres conectar a {0} en Gratipay?"
 
-msgid "{0} from {1} has joined Gratipay!"
-msgstr ""
-
-msgid ""
-"Your pledge to give {0} every week to {1} will be turned into action now "
-"that they have joined Gratipay. Huzzah!"
-msgstr ""
-
-msgid "Follow this link to view {0}'s profile:"
-msgstr ""
-
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
 "Sound familiar?"
@@ -353,9 +342,6 @@ msgstr "Eventos"
 msgid "Search Gratipay"
 msgstr "Búsqueda en Gratipay"
 
-msgid "{0} to pledge to {1}"
-msgstr "{0} para comprometerse con {1}"
-
 msgid "{0} to give to {1}"
 msgstr "{0} para dar a {1}"
 
@@ -395,9 +381,6 @@ msgid "Your Tip"
 msgstr "Su Propina"
 
 msgid "per week"
-msgstr ""
-
-msgid "Pledge to {0}"
 msgstr ""
 
 msgid "Give to {0}"
@@ -689,22 +672,6 @@ msgstr "Miembros del Equipo"
 msgid "A Lot"
 msgstr ""
 
-msgid "Gifts Waiting"
-msgstr ""
-
-msgid ""
-"If you are an administrator of this {0} team account, you can unlock it to "
-"allow people to pledge tips to your team on Gratipay."
-msgstr ""
-
-msgid ""
-"If you are {0} on {1}, you can unlock your account to allow people to pledge"
-" tips to you on Gratipay."
-msgstr ""
-
-msgid "Unlock"
-msgstr ""
-
 msgid "{0} has not joined Gratipay."
 msgstr ""
 
@@ -716,7 +683,7 @@ msgstr ""
 msgid "Connect team account"
 msgstr ""
 
-msgid "Is this you? We never collect money for you unless you join."
+msgid "Is this you? You can join Gratipay with a couple clicks:"
 msgstr ""
 
 msgid "Join Gratipay"
@@ -731,20 +698,7 @@ msgstr ""
 msgid "What is Gratipay?"
 msgstr ""
 
-msgid ""
-"Gratipay is a way to thank and support your favorite artists, musicians, "
-"writers, programmers, etc. by setting up a small weekly cash gift to them."
-msgstr ""
-
-msgid "Don't like what you see?"
-msgstr ""
-
-msgid ""
-"If you are an owner of this {0} account, you can explicitly opt out of "
-"Gratipay by locking it. We don't allow new pledges to locked accounts."
-msgstr ""
-
-msgid "Lock"
+msgid "Gratipay provides payments and payroll for open work."
 msgstr ""
 
 msgid "Status"
@@ -953,12 +907,6 @@ msgid "View your email addresses"
 msgstr "Ver tus correos electrónicos"
 
 msgid "Active"
-msgstr ""
-
-msgid "Unclaimed"
-msgstr ""
-
-msgid "These are tips you've set to people who haven't joined Gratipay yet."
 msgstr ""
 
 msgid "Cancelled"
@@ -1383,9 +1331,6 @@ msgid "Notifications"
 msgstr ""
 
 msgid "Send me notifications via email:"
-msgstr ""
-
-msgid "When people I pledge to join Gratipay"
 msgstr ""
 
 msgid "When my credit card is charged:"

@@ -65,17 +65,6 @@ msgstr ""
 msgid "Connect to {0} on Gratipay?"
 msgstr "Ligar-se a {0} no Gratipay?"
 
-msgid "{0} from {1} has joined Gratipay!"
-msgstr "{0} from {1} se juntou ao Gratipay!"
-
-msgid ""
-"Your pledge to give {0} every week to {1} will be turned into action now "
-"that they have joined Gratipay. Huzzah!"
-msgstr "Seu comprometimento em dar {0} toda semana para {1} vai acontecer agora que eles se juntaram ao Gratipay. Oba!"
-
-msgid "Follow this link to view {0}'s profile:"
-msgstr "Siga esse link para ver  o perfil de {0}:"
-
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
 "Sound familiar?"
@@ -352,9 +341,6 @@ msgstr "Eventos"
 msgid "Search Gratipay"
 msgstr "Procure no Gratipay"
 
-msgid "{0} to pledge to {1}"
-msgstr "{0} para contribuir para {1}"
-
 msgid "{0} to give to {1}"
 msgstr "{0} para doar para {1}"
 
@@ -395,9 +381,6 @@ msgstr "A sua gorjeta"
 
 msgid "per week"
 msgstr "por semana"
-
-msgid "Pledge to {0}"
-msgstr "Comprometa-se com {0}"
 
 msgid "Give to {0}"
 msgstr "Doe para {0}"
@@ -688,22 +671,6 @@ msgstr "Membros do Time"
 msgid "A Lot"
 msgstr "Muito"
 
-msgid "Gifts Waiting"
-msgstr "Presentes Aguardando"
-
-msgid ""
-"If you are an administrator of this {0} team account, you can unlock it to "
-"allow people to pledge tips to your team on Gratipay."
-msgstr "Se você é um adminstrador dessa conta do time {0}, você pode desbloquear para permitir pessoas se comprometam com gorjetas para o seu time no Gratipay."
-
-msgid ""
-"If you are {0} on {1}, you can unlock your account to allow people to pledge"
-" tips to you on Gratipay."
-msgstr "Se você é {0} em {1}, você pode desbloquear sua conta para permitir que pessoas se comprometam com gorjetas para você no Gratipay."
-
-msgid "Unlock"
-msgstr "Desbloquear"
-
 msgid "{0} has not joined Gratipay."
 msgstr "{0} não se juntou ao Gratipay."
 
@@ -715,8 +682,8 @@ msgstr "Você é um administrador dessa conta do time {0}? Conecte-a a sua conta
 msgid "Connect team account"
 msgstr "Conecte conta do time"
 
-msgid "Is this you? We never collect money for you unless you join."
-msgstr "Este é voce? Nós nunca coletamos dinheiro de você a não ser que você se afilie."
+msgid "Is this you? You can join Gratipay with a couple clicks:"
+msgstr ""
 
 msgid "Join Gratipay"
 msgstr "Junte-se ao Gratipay"
@@ -730,21 +697,8 @@ msgstr "Conecte"
 msgid "What is Gratipay?"
 msgstr "O que é o Gratipay?"
 
-msgid ""
-"Gratipay is a way to thank and support your favorite artists, musicians, "
-"writers, programmers, etc. by setting up a small weekly cash gift to them."
-msgstr "Gratipay é um jeito de agradecer e suportar seus favoritos artistas, músicos, escritores, programadores, etc. através da criação de um pequeno presente semanal em dinheiro para eles."
-
-msgid "Don't like what you see?"
-msgstr "Não gosta do que vê?"
-
-msgid ""
-"If you are an owner of this {0} account, you can explicitly opt out of "
-"Gratipay by locking it. We don't allow new pledges to locked accounts."
-msgstr "Se você é o dono dessa conta de {0}, você pode explicitamente optar sair do Gratipay bloqueando-o. Nós não aceitamos novos comprometimentos para contas bloqueadas."
-
-msgid "Lock"
-msgstr "Travar"
+msgid "Gratipay provides payments and payroll for open work."
+msgstr ""
 
 msgid "Status"
 msgstr "Situação"
@@ -952,12 +906,6 @@ msgid "View your email addresses"
 msgstr "Veja o seu endereço de email"
 
 msgid "Active"
-msgstr ""
-
-msgid "Unclaimed"
-msgstr "Não reclamado"
-
-msgid "These are tips you've set to people who haven't joined Gratipay yet."
 msgstr ""
 
 msgid "Cancelled"
@@ -1382,9 +1330,6 @@ msgid "Notifications"
 msgstr "Notificações"
 
 msgid "Send me notifications via email:"
-msgstr ""
-
-msgid "When people I pledge to join Gratipay"
 msgstr ""
 
 msgid "When my credit card is charged:"
