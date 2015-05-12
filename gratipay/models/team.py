@@ -272,12 +272,11 @@ class Team(Model):
 
     @property
     def nmembers(self):
-        assert self.IS_PLURAL
         return self.db.one("""
             SELECT COUNT(*)
               FROM current_payroll
              WHERE team=%s
-        """, (self.username, ))
+        """, (self.slug, )) + 1  # Owner
 
     def get_members(self, current_participant=None):
         """Return a list of member dicts.
