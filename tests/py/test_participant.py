@@ -10,7 +10,6 @@ import pytest
 from aspen.utils import utcnow
 from gratipay import NotSane
 from gratipay.exceptions import (
-    HasBigTips,
     UsernameIsEmpty,
     UsernameTooLong,
     UsernameAlreadyTaken,
@@ -429,15 +428,7 @@ class Tests(Harness):
 
     # number
 
-    def test_cant_go_singular_with_big_tips(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', number='plural')
-        carl = self.make_participant('carl', claimed_time='now')
-        carl.set_tip_to(bob, '100.00')
-        alice.set_tip_to(bob, '1000.00')
-        pytest.raises(HasBigTips, bob.update_number, 'singular')
-
-    def test_can_go_singular_without_big_tips(self):
+    def test_can_go_singular(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob', number='plural')
         alice.set_tip_to(bob, '100.00')
@@ -457,11 +448,6 @@ class Tests(Harness):
         alice.set_tip_to(bob, '100.00')
         bob.update_number('plural')
         assert Participant.from_username('bob').number == 'plural'
-
-    def test_going_plural_forces_public_receiving(self):
-        bob = self.make_participant('bob', claimed_time='now', anonymous_receiving=True)
-        bob.update_number('plural')
-        assert Participant.from_username('bob').anonymous_receiving == False
 
     # set_tip_to - stt
 
@@ -490,25 +476,19 @@ class Tests(Harness):
         assert actual['amount'] == 2
         assert actual['first_time_tipper'] is False
 
+    def test_stt_allows_up_to_a_thousand(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        self.make_participant('bob')
+        alice.set_tip_to('bob', '1000.00')
+
+    def test_stt_doesnt_allow_a_penny_more(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        self.make_participant('bob')
+        self.assertRaises(BadAmount, alice.set_tip_to, 'bob', '1000.01')
+
     def test_stt_doesnt_allow_self_tipping(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         self.assertRaises(NoSelfTipping, alice.set_tip_to, 'alice', '10.00')
-
-    def test_stt_doesnt_allow_just_any_ole_amount(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.make_participant('bob')
-        self.assertRaises(BadAmount, alice.set_tip_to, 'bob', '1000.00')
-
-    def test_stt_allows_higher_tip_to_plural_receiver(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', number='plural')
-        actual = alice.set_tip_to(bob, '1000.00')
-        assert actual['amount'] == 1000
-
-    def test_stt_still_caps_tips_to_plural_receivers(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.make_participant('bob', number='plural')
-        self.assertRaises(BadAmount, alice.set_tip_to, 'bob', '1000.01')
 
     def test_stt_fails_to_tip_unknown_people(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')

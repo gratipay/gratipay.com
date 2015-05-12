@@ -4,14 +4,6 @@ from gratipay.models.participant import Participant
 participant = Participant.from_username(request.path['username'])
 if participant is None:
     raise Response(404)
-if user.ANON:
-    button_text = "Gratipay"
-elif user.participant == participant:
-    button_text = "You!"
-else:
-    button_text = user.participant.get_tip_to(participant.username)['amount']
-    if button_text == 0:
-        button_text = "Gratipay"
 response.headers['X-Frame-Options'] = "ALLOWALL"
 [---]
 <!doctype html>
@@ -112,8 +104,6 @@ response.headers['X-Frame-Options'] = "ALLOWALL"
         </style>
     </head>
     <body>
-        <button class="small selected" onclick="javascript: window.open('./');">
-            {{ button_text }}
-        </button>
+        <button class="small selected" onclick="javascript: window.open('./');">Gratipay</button>
     </body>
 </html>

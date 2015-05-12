@@ -48,9 +48,6 @@ class ProblemChangingNumber(Exception):
     def __str__(self):
         return self.msg
 
-class HasBigTips(ProblemChangingNumber):
-    msg = "You receive tips too large for an individual. Please contact support@gratipay.com."
-
 
 class TooGreedy(Exception): pass
 class NoSelfTipping(Exception): pass

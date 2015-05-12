@@ -10,6 +10,8 @@ from gratipay.utils import get_participant
 
 [-----------------------------------------------------------------------------]
 
+raise Response(404)  # turn off while migrating to Teams (see #3399)
+
 if user.ANON:
     raise Response(403, _("Please sign in first"))
 
