@@ -1014,18 +1014,6 @@ msgstr "Om de verwerkingskosten te beperken, wordt je creditcard met minimaal $1
 msgid "Full Name on Card"
 msgstr "Volledige naam op de kaart"
 
-msgid "Address 1"
-msgstr "Adres 1"
-
-msgid "Address 2"
-msgstr "Adres 2"
-
-msgid "City or Town"
-msgstr "Gemeente"
-
-msgid "Select your country..."
-msgstr "Selecteer uw land..."
-
 msgid "Are you sure you want to disconnect your credit card?"
 msgstr "Weet u zeker dat u uw creditcard wilt ontkoppelen?"
 
@@ -1210,9 +1198,6 @@ msgstr "Of, als je een 'geef' widgets wilt invoegen, kan je het {0} attribuut to
 
 msgid "Frequently Asked Questions"
 msgstr "Veelgestelde vragen"
-
-msgid "Temporarily Disabled"
-msgstr ""
 
 msgid "The Delpan Incident"
 msgstr "Het Delpan incident"

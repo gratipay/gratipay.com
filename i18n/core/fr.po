@@ -1015,18 +1015,6 @@ msgstr "Afin de minimiser les frais de transaction, chaque transfert depuis votr
 msgid "Full Name on Card"
 msgstr "Nom complet sur la carte"
 
-msgid "Address 1"
-msgstr "Adresse 1"
-
-msgid "Address 2"
-msgstr "Adresse 2"
-
-msgid "City or Town"
-msgstr "Commune"
-
-msgid "Select your country..."
-msgstr "Sélectionnez votre pays…"
-
 msgid "Are you sure you want to disconnect your credit card?"
 msgstr "Êtes-vous sûr de vouloir déconnecter votre carte de crédit ?"
 
@@ -1211,9 +1199,6 @@ msgstr "Ou, si vous voulez un widget qui affiche combien vous donnez, vous pouve
 
 msgid "Frequently Asked Questions"
 msgstr "Foire Aux Questions"
-
-msgid "Temporarily Disabled"
-msgstr ""
 
 msgid "The Delpan Incident"
 msgstr "L'incident Delpan"

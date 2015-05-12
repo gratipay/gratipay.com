@@ -11,6 +11,7 @@
 # Loris Reiff <loris.reiff@hotmail.com>, 2014-2015
 # Paul Kreuzer <paulkreuzer@riseup.net>, 2015
 # Peter <trash@stadler.mobi>, 2014
+# plusyannik <yrk@gonevil.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
@@ -1018,18 +1019,6 @@ msgstr "Um die Bearbeitungskosten zu minimieren ziehen wir immer mindestens 10$ 
 msgid "Full Name on Card"
 msgstr "Name auf Karte"
 
-msgid "Address 1"
-msgstr "Adresse 1"
-
-msgid "Address 2"
-msgstr "Adresse 2"
-
-msgid "City or Town"
-msgstr "Stadt"
-
-msgid "Select your country..."
-msgstr "Wähle dein Land..."
-
 msgid "Are you sure you want to disconnect your credit card?"
 msgstr "Sind Sie sicher, dass Sie Ihre Kreditkarteninformationen löschen wollen?"
 
@@ -1214,9 +1203,6 @@ msgstr ""
 
 msgid "Frequently Asked Questions"
 msgstr "Oft gefragte Fragen"
-
-msgid "Temporarily Disabled"
-msgstr ""
 
 msgid "The Delpan Incident"
 msgstr ""

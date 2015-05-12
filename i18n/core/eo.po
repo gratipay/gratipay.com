@@ -1011,18 +1011,6 @@ msgstr ""
 msgid "Full Name on Card"
 msgstr "Plena nomo sur kreditkarto"
 
-msgid "Address 1"
-msgstr "Adreso 1"
-
-msgid "Address 2"
-msgstr "Adreso 2"
-
-msgid "City or Town"
-msgstr "Urbo aŭ urbeto"
-
-msgid "Select your country..."
-msgstr ""
-
 msgid "Are you sure you want to disconnect your credit card?"
 msgstr ""
 
@@ -1207,9 +1195,6 @@ msgstr "Aŭ, se vi ŝatus inkluzivas \"donado\" ilo, vi povas aldoni la {0} atri
 
 msgid "Frequently Asked Questions"
 msgstr "Oftaj demandoj"
-
-msgid "Temporarily Disabled"
-msgstr ""
 
 msgid "The Delpan Incident"
 msgstr "La okazintaĵo de Delpan"

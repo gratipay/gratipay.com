@@ -1015,18 +1015,6 @@ msgstr ""
 msgid "Full Name on Card"
 msgstr "Nome Completo no Cartão"
 
-msgid "Address 1"
-msgstr "Endereço 1"
-
-msgid "Address 2"
-msgstr "Endereço 2"
-
-msgid "City or Town"
-msgstr "CIdade ou Vila"
-
-msgid "Select your country..."
-msgstr ""
-
 msgid "Are you sure you want to disconnect your credit card?"
 msgstr ""
 
@@ -1211,9 +1199,6 @@ msgstr "Ou, se você quiser incluir um widget \"doando\", você pode adicionar o
 
 msgid "Frequently Asked Questions"
 msgstr "Perguntas Mais Frequentes"
-
-msgid "Temporarily Disabled"
-msgstr ""
 
 msgid "The Delpan Incident"
 msgstr "O incidente Delpan"

@@ -1012,18 +1012,6 @@ msgstr "Per minimizzare le commissioni di elaborazione, carichiamo la tua carta 
 msgid "Full Name on Card"
 msgstr "Nome Completo sulla Carta"
 
-msgid "Address 1"
-msgstr "Indirizzo 1"
-
-msgid "Address 2"
-msgstr "Indirizzo 2"
-
-msgid "City or Town"
-msgstr "Città"
-
-msgid "Select your country..."
-msgstr "Seleziona il tuo paese..."
-
 msgid "Are you sure you want to disconnect your credit card?"
 msgstr "Sei sicuro di voler dissociare la tua carta di credito?"
 
@@ -1208,9 +1196,6 @@ msgstr "O, se vorresti includere un widget \"Dona\", puoi aggiungere l'attributo
 
 msgid "Frequently Asked Questions"
 msgstr "FAQ - Domande Frequenti"
-
-msgid "Temporarily Disabled"
-msgstr ""
 
 msgid "The Delpan Incident"
 msgstr "L'Incidente Delpan"
