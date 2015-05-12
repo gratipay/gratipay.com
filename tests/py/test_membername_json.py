@@ -13,7 +13,7 @@ class TestMembernameJson(Harness):
         self.make_participant("alice", claimed_time=utcnow())
 
     def test_post_team_is_not_team_returns_404(self):
-        response = self.client.PxST('/~alice/members/~team.json', auth_as='alice')
+        response = self.client.PxST('/~alice/members/team.json', auth_as='alice')
         assert response.code == 404
 
     def test_post_participant_doesnt_exist_returns_404(self):
