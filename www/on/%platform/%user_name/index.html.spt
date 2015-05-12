@@ -126,8 +126,7 @@ if is_team:
 
     {% for member in members %}
         {% set on_gratipay = member.participant.is_claimed %}
-        {% set declines_gifts = not member.participant.accepts_tips %}
-        <tr class="{{ 'declines' if declines_gifts }} {{ 'not-on-gratipay' if not on_gratipay }}">
+        <tr class="{{ 'not-on-gratipay' if not on_gratipay }}">
             {% if on_gratipay %}
                 <td>
                     <a href="/{{ member.participant.username }}/">
@@ -136,11 +135,7 @@ if is_team:
                     </a>
                 </td>
                 <td>
-                    {% if declines_gifts %}
-                        {{ _("declines gifts") }}
-                    {% else %}
-                        {{ _("accepts gifts") }}
-                    {% endif %}
+                    {{ _("accepts gifts") }}
                 </td>
             {% else %}
                 <td>
@@ -150,11 +145,7 @@ if is_team:
                     </a>
                 </td>
                 <td>
-                    {% if not member.participant.accepts_tips %}
-                        {{ _("opted out of Gratipay") }}
-                    {% else %}
-                        {{ _("hasn't joined Gratipay yet") }}
-                    {% endif %}
+                    {{ _("hasn't joined Gratipay yet") }}
                 </td>
             {% endif %}
         </tr>

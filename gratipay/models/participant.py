@@ -36,7 +36,6 @@ from gratipay.exceptions import (
     NoSelfTipping,
     NoTippee,
     BadAmount,
-    UserDoesntAcceptTips,
     EmailAlreadyTaken,
     CannotRemovePrimaryEmail,
     EmailNotVerified,
@@ -1017,9 +1016,6 @@ class Participant(Model, MixinTeam):
         amount = Decimal(amount)  # May raise InvalidOperation
         if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
             raise BadAmount
-
-        if not tippee.accepts_tips and amount != 0:
-            raise UserDoesntAcceptTips
 
         # Insert tip
         NEW_TIP = """\
