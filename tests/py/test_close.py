@@ -277,7 +277,6 @@ class TestClosing(Harness):
     @mock.patch.object(Participant, '_mailer')
     def test_cpi_clears_personal_information(self, mailer):
         alice = self.make_participant( 'alice'
-                                     , goal=100
                                      , anonymous_giving=True
                                      , anonymous_receiving=True
                                      , avatar_url='img-url'
@@ -297,7 +296,6 @@ class TestClosing(Harness):
         new_alice = Participant.from_username('alice')
 
         assert alice.get_statement(['en']) == (None, None)
-        assert alice.goal == new_alice.goal == None
         assert alice.anonymous_giving == new_alice.anonymous_giving == False
         assert alice.anonymous_receiving == new_alice.anonymous_receiving == False
         assert alice.number == new_alice.number == 'singular'

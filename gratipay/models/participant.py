@@ -313,7 +313,6 @@ class Participant(Model, MixinTeam):
 
             """, (self.username,))
             self.set_attributes(claimed_time=claimed_time)
-        self.update_goal(None)
 
 
     # Closing
@@ -445,7 +444,7 @@ class Participant(Model, MixinTeam):
 
 
     def clear_personal_information(self, cursor):
-        """Clear personal information such as statements and goal.
+        """Clear personal information such as statements.
         """
         if self.IS_PLURAL:
             self.remove_all_members(cursor)
@@ -463,8 +462,7 @@ class Participant(Model, MixinTeam):
             DELETE FROM statements WHERE participant=%(participant_id)s;
 
             UPDATE participants
-               SET goal=NULL
-                 , anonymous_giving=False
+               SET anonymous_giving=False
                  , anonymous_receiving=False
                  , number='singular'
                  , avatar_url=NULL
@@ -794,10 +792,6 @@ class Participant(Model, MixinTeam):
 
         """, (self.username,))
 
-    @property
-    def accepts_tips(self):
-        return (self.goal is None) or (self.goal >= 0)
-
 
     def insert_into_communities(self, is_member, name, slug):
         participant_id = self.id
@@ -875,18 +869,6 @@ class Participant(Model, MixinTeam):
          RETURNING avatar_url
         """, (self.username,))
         self.set_attributes(avatar_url=avatar_url)
-
-    def update_goal(self, goal):
-        with self.db.get_cursor() as c:
-            tmp = goal if goal is None else unicode(goal)
-            add_event(c, 'participant', dict(id=self.id, action='set', values=dict(goal=tmp)))
-            c.one( "UPDATE participants SET goal=%s WHERE username=%s RETURNING id"
-                 , (goal, self.username)
-                  )
-            self.set_attributes(goal=goal)
-            if not self.accepts_tips:
-                self.clear_tips_receiving(c)
-                self.update_receiving(c)
 
     def update_is_closed(self, is_closed, cursor=None):
         with self.db.get_cursor(cursor) as cursor:
@@ -1746,18 +1728,6 @@ class Participant(Model, MixinTeam):
 
         # Key: npatrons
         output['npatrons'] = self.npatrons
-
-        # Key: goal
-        # Values:
-        #   undefined - user is not here to receive tips, but will generally regift them
-        #   null - user has no funding goal
-        #   3.00 - user wishes to receive at least this amount
-        if self.goal != 0:
-            if self.goal > 0:
-                goal = str(self.goal)
-            else:
-                goal = None
-            output['goal'] = goal
 
         # Key: receiving
         # Values:

@@ -593,17 +593,6 @@ class Tests(Harness):
         alice.set_tip_to(bob, '3.00')
         assert Participant.from_username('bob').receiving == bob.receiving == Decimal('45.00')
 
-    def test_receiving_is_zero_for_patrons(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', claimed_time='now')
-        alice.set_tip_to(bob, '3.00')
-
-        bob.update_goal(Decimal('-1'))
-        assert bob.receiving == 0
-        assert bob.npatrons == 0
-        alice = Participant.from_id(alice.id)
-        assert alice.giving == 0
-
 
     # get_age_in_seconds - gais
 
