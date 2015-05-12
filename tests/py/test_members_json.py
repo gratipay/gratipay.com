@@ -14,6 +14,7 @@ class Tests(Harness):
         return json.loads(response.body)
 
 
+    @pytest.mark.xfail(reason='migrating to Teams; see #3399')
     def test_team_has_members(self):
         team = self.make_participant('A-Team', number='plural', claimed_time='now')
         team.add_member(self.make_participant('alice', claimed_time='now'))
@@ -23,6 +24,7 @@ class Tests(Harness):
         actual = [x['username'] for x in self.hit_members_json()]
         assert actual == ['carl', 'bob', 'alice', 'A-Team']
 
+    @pytest.mark.xfail(reason='migrating to Teams; see #3399')
     def test_team_admin_can_get_bare_bones_list(self):
         self.make_participant('A-Team', number='plural', claimed_time='now')
         actual = [x['username'] for x in self.hit_members_json(auth_as='A-Team')]
