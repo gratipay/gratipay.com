@@ -28,7 +28,6 @@ from psycopg2 import IntegrityError
 import gratipay
 from gratipay import NotSane
 from gratipay.exceptions import (
-    HasBigTips,
     UsernameIsEmpty,
     UsernameTooLong,
     UsernameContainsInvalidCharacters,
@@ -199,20 +198,12 @@ class Participant(Model, MixinTeam):
         return self.number == 'plural'
 
     def update_number(self, number):
-        assert number in ('singular', 'plural')
-        if number == 'singular':
-            nbigtips = self.db.one("""\
-                SELECT count(*) FROM current_tips WHERE tippee=%s AND amount > %s
-            """, (self.username, gratipay.MAX_TIP_SINGULAR))
-            if nbigtips > 0:
-                raise HasBigTips
         with self.db.get_cursor() as c:
             add_event(c, 'participant', dict(action='set', id=self.id, values=dict(number=number)))
             self.remove_all_members(c)
             c.execute("""
                 UPDATE participants
                    SET number=%s
-                     , anonymous_receiving=false
                  WHERE id=%s
             """, (number, self.id))
         self.set_attributes(number=number)
@@ -1042,8 +1033,7 @@ class Participant(Model, MixinTeam):
             raise NoSelfTipping
 
         amount = Decimal(amount)  # May raise InvalidOperation
-        max_tip = gratipay.MAX_TIP_PLURAL if tippee.IS_PLURAL else gratipay.MAX_TIP_SINGULAR
-        if (amount < gratipay.MIN_TIP) or (amount > max_tip):
+        if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
             raise BadAmount
 
         if not tippee.accepts_tips and amount != 0:
