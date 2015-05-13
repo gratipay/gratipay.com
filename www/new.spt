@@ -6,7 +6,13 @@ from gratipay.models.team import Team
 request.allow('GET')
 
 if user.ANON:
-    raise Response(401, _("You must sign in to apply for a new team"))
+    raise Response(401, _("You must sign in to apply for a new team."))
+
+if user.participant.email_address is None:
+    raise Response(400, _("You must have a verified email address to apply for a new team."))
+
+if not user.participant.has_payout_route:
+    raise Response(400, _("You must attach a bank account or PayPal to apply for a new team."))
 
 
 title = _("Apply for a New Team")
