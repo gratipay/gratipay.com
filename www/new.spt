@@ -14,12 +14,24 @@ title = _("Apply for a New Team")
 {% block content %}
 <div class="col0">
 <form action="/new" method="POST">
-    <h2>Name</h2>
-    <h2>Homepage</h2>
-    <h2>What product or service does your team provide?</h2>
-    <h2>How can other people get involved with your team?</h2>
-    <h2>How do you share revenue with contributors?</h2>
-    <button>Apply</button>
+    <label><h2>{{ _("Name") }}</h2></label>
+    <input type="text" name="name" required />
+
+    <label><h2>{{ _("Homepage") }}</h2></label>
+    <input type="text" name="homepage" required />
+
+    <label><h2>{{ _("What product or service does your team provide?") }}</h2></label>
+    <textarea name="product_or_service" required></textarea>
+
+    <label><h2>{{ _("How can other people get involved with your team?") }}</h2></label>
+    <textarea name="getting_involved" required></textarea>
+
+    <label><h2>{{ _("How do you share revenue with contributors?") }}</h2></label>
+    <textarea name="getting_paid" required></textarea>
+
+    <div class="clear"></div>
+
+    <button type="submit">{{ _("Apply") }}</button>
 </form>
 </div>
 {% endblock %}
