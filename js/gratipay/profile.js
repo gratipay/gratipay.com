@@ -59,19 +59,6 @@ Gratipay.profile.init = function() {
         $('.statement button.edit').click();
     }
 
-    // Wire up goal knob.
-    // ==================
-
-    Gratipay.forms.jsEdit({
-        root: $('.goal.js-edit'),
-        success: function(d) {
-            var goal = $('input[name=goal]:checked');
-            var label = $('label[for=' + goal.attr('id') + ']');
-            var newtext = label.text().replace('$', d.goal_l);
-            $('.goal div.view').html(newtext);
-        },
-    });
-
 
     // Wire up cryptocoin inputs.
     // ==========================

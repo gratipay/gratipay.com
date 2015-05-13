@@ -70,21 +70,6 @@ class Tests(Harness):
 
         assert data['receiving'] == None
 
-    def test_anonymous_does_not_get_goal_if_user_regifts(self):
-        self.make_participant('alice', last_bill_result='', goal=0)
-        data = json.loads(self.client.GET('/~alice/public.json').body)
-        assert data.has_key('goal') == False
-
-    def test_anonymous_gets_null_goal_if_user_has_no_goal(self):
-        self.make_participant('alice', last_bill_result='')
-        data = json.loads(self.client.GET('/~alice/public.json').body)
-        assert data['goal'] == None
-
-    def test_anonymous_gets_user_goal_if_set(self):
-        self.make_participant('alice', last_bill_result='', goal=1)
-        data = json.loads(self.client.GET('/~alice/public.json').body)
-        assert data['goal'] == '1.00'
-
     def test_authenticated_user_gets_their_tip(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')
@@ -168,7 +153,6 @@ foo({
         }
     },
     "giving": "0.00",
-    "goal": null,
     "id": %(user_id)s,
     "my_tip": "self",
     "npatrons": 1,

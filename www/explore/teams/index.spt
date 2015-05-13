@@ -4,13 +4,7 @@ teams = website.db.all("""
 
     SELECT t.*
          , p.receiving
-         , p.goal
          , p.receiving / t.nmembers AS dollars_per_member 
-         , CASE p.goal
-           WHEN NULL THEN NULL
-           WHEN 0 THEN NULL
-           ELSE ((p.receiving / p.goal) * 100)::int
-            END                     AS pfunded
       FROM ( SELECT team            AS name
                   , count(member)   AS nmembers
                FROM current_takes
@@ -18,8 +12,7 @@ teams = website.db.all("""
             ) AS t
       JOIN participants p 
         ON p.username = t.name
-     WHERE (p.goal >= 0 OR p.goal IS NULL)
-       AND p.is_searchable
+     WHERE p.is_searchable
   ORDER BY dollars_per_member DESC, nmembers ASC
 
 """)
@@ -36,8 +29,6 @@ subhead = _("Teams")
     <tr>
         <th>{{ _("Team Name") }}</th>
         <th class="figure">{{ _("Receiving ($)") }}</th>
-        <th class="figure">{{ _("Goal ($)") }}</th>
-        <th class="figure">{{ _("% Funded") }}</th>
         <th class="figure">{{ _("Members") }}</th>
         <th class="figure">{{ _("Receiving{0} Per Member ($)", "<br>"|safe) }}</th>
     </tr>
@@ -45,8 +36,6 @@ subhead = _("Teams")
     <tr>
         <td class=""><a href="/{{ team.name }}/">{{ team.name }}</a></td>
         <td class="figure">{{ format_decimal(team.receiving, '#,##0.00') }}</td>
-        <td class="figure">{{ team.goal or '&mdash;'|safe }}</td>
-        <td class="figure">{{ team.pfunded if team.pfunded else '&mdash;'|safe }}</td>
         <td class="figure">{{ team.nmembers }}</td>
         <td class="figure">{{ format_decimal(team.dollars_per_member, '#,##0.00') }}</td>
     </tr>

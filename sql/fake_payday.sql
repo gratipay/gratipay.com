@@ -8,7 +8,6 @@ CREATE TEMPORARY TABLE temp_participants ON COMMIT DROP AS
          , 0::numeric(35,2) AS taking
          , 0::numeric(35,2) AS receiving
          , 0 as npatrons
-         , goal
          , ( SELECT count(*)
                FROM exchange_routes r
               WHERE r.participant = p.id
@@ -26,7 +25,6 @@ CREATE TEMPORARY TABLE temp_tips ON COMMIT DROP AS
       JOIN temp_participants p ON p.username = t.tipper
       JOIN temp_participants p2 ON p2.username = t.tippee
      WHERE t.amount > 0
-       AND (p2.goal IS NULL or p2.goal >= 0)
   ORDER BY p2.claimed_time IS NULL, p.claimed_time ASC, t.ctime ASC;
 
 CREATE INDEX ON temp_tips (tipper);
