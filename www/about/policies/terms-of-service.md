@@ -20,8 +20,9 @@ legal@gratipay.com
      complete and accurate registration information. You are responsible for
 keeping your account information, including your contact and payment
 information, up to date. Gratipay takes our Participants' privacy seriously. We
-will only use or share your information and Content as described in our Privacy
-Policy, which is incorporated into these Terms.
+will only use or share your information and Content as described in our
+[Privacy Policy](/about/policies/privacy), which is incorporated into these
+Terms.
 
   1. You are responsible for maintaining the security of your account
      information, including your password. You agree to notify Gratipay
@@ -88,8 +89,9 @@ contributing to the Team's work, and to be paid for their contribution.
      provided a working withdrawal mechanism for receiving payments (e.g. bank
 account information).
 
-  1. Teams and their Open Work must be consistent with Gratipay's Brand
-     Guidelines, Community Guidelines, and Acceptable Use Policy.
+  1. Teams and their Open Work must be consistent with Gratipay's [Brand
+     Guidelines](http://inside.gratipay.com/big-picture/brand/), Community
+Guidelines, and Acceptable Use Policy.
 
   1. Gratipay reserves the right to reject, suspend, or remove a Team at any
      time, and for any reason.
@@ -105,8 +107,8 @@ belong solely to Gratipay.
   1. Gratipay does not take any fee from payments made by Participants to
      Teams. Gratipay and the Service are funded through the Service itself, by
 voluntary contributions from Gratipay Participants and Teams who wish to fund
-our own Open Work. To contribute to Gratipay, please visit Gratipay's Team
-page.
+our own Open Work. To contribute to Gratipay, please [visit Gratipay's Team
+page](/Gratipay/).
 
   1. You are responsible for paying any third-party fees associated with your
      use of the Service, such as credit card and bank fees.
@@ -403,9 +405,10 @@ or unenforceable, then that provision will be limited or eliminated to the
 minimum extent necessary, and the remaining provisions of these Terms will
 remain in full force and effect.
 
-  1. Entire Agreement: These Terms and our Privacy Policy together form the
-     entire and exclusive agreement between you and Gratipay regarding the
-Service (excluding any service for which you have a separate agreement with
-Gratipay that is explicitly in addition to or in place of these Terms), and
-these Terms supersede and replace any prior agreements between you and Gratipay
-regarding the Service. There shall be third party beneficiaries to the Terms.
+  1. Entire Agreement: These Terms and our [Privacy
+     Policy](/about/policies/privacy) together form the entire and exclusive
+agreement between you and Gratipay regarding the Service (excluding any service
+for which you have a separate agreement with Gratipay that is explicitly in
+addition to or in place of these Terms), and these Terms supersede and replace
+any prior agreements between you and Gratipay regarding the Service. There
+shall be third party beneficiaries to the Terms.
