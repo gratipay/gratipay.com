@@ -21,7 +21,10 @@ Gratipay.new_team.submitForm = function (e) {
         data: data,
         dataType: 'json',
         success: function (d) {
-            Gratipay.notification("Success! Your application has been submitted.", "success")
+            $('form').html( "<p>Thank you! We will follow up shortly with an email to <b>"
+                          + d.email + "</b>. Please <a hef=\"mailto:support@gratipay.com\">email "
+                          + "us</a> with any questions.</p>"
+                           )
         },
         error: [Gratipay.error, function () { $input.prop('disable', false); }]
     });

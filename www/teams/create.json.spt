@@ -40,4 +40,4 @@ if request.method == 'POST':
         raise Response(400, _("Sorry, there is already a team using '{}'.", fields['slug']))
 
 [---] application/json via json_dump
-{}
+{'email': user.participant.email_address}
