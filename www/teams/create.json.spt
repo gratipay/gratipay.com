@@ -2,22 +2,23 @@ from aspen import Response
 
 from gratipay.models.community import slugize
 from gratipay.models.team import Team
+from psycopg2 import IntegrityError
 [---]
 request.allow('POST')
 
 field_names = {
-    'name': 'Name',
+    'name': 'Team Name',
     'homepage': 'Homepage',
     'product_or_service': 'Product or Service',
-    'getting_paid': 'How do you share revenue',
-    'getting_involved': 'How can other people get involved'
+    'getting_paid': 'How do you share revenue?',
+    'getting_involved': 'How can other people get involved?'
 }
 
 if user.ANON:
-    raise Response(401, _("You must sign in to apply for a new team"))
+    raise Response(401, _("You must sign in to apply for a new team."))
 
 if not request.body.get('agree_terms', False):
-    raise Response(400, _("Please agree to the terms and conditions"))
+    raise Response(400, _("Please agree to the terms of service."))
 
 if request.method == 'POST':
     fields = {}
@@ -25,10 +26,11 @@ if request.method == 'POST':
     # Validate inputs
 
     for field in field_names.keys():
-        if not request.body.get(field, ''):
-            raise Response(400, _("Please fill out the '{0}' field", field_names[field]))
+        value = request.body.get(field, '')
+        if not value:
+            raise Response(400, _("Please fill out the '{0}' field.", field_names[field]))
 
-        fields[field] = request.body.get(field, '')
+        fields[field] = value
 
     fields['slug'] = slugize(fields['name'])
 

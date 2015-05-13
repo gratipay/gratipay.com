@@ -55,7 +55,7 @@ class TestNewTeams(Harness):
         del data['agree_terms']
         r = self.post_new(data, expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
-        assert "Please agree to the terms and conditions" in r.body
+        assert "Please agree to the terms of service." in r.body
 
     def test_error_message_for_missing_fields(self):
         self.make_participant('alice')
@@ -63,7 +63,7 @@ class TestNewTeams(Harness):
         del data['name']
         r = self.post_new(data, expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
-        assert "Please fill out the 'Name' field" in r.body
+        assert "Please fill out the 'Team Name' field." in r.body
 
 class TestOldTeams(Harness):
 

@@ -20,11 +20,17 @@ title = _("Apply for a New Team")
 
 {% block content %}
 <div class="col0">
+<style>
+    textarea {
+        width: 100%;
+        height: 200px;
+    }
+</style>
 <form action="/teams/create.json" method="POST" id="new-team">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
-    <label><h2>{{ _("Name") }}</h2></label>
-    <input type="text" name="name" required />
+    <label><h2>{{ _("Team Name") }}</h2></label>
+    <input type="text" name="name" required autofocus />
 
     <label><h2>{{ _("Homepage") }}</h2></label>
     <input type="text" name="homepage" required />
@@ -38,10 +44,17 @@ title = _("Apply for a New Team")
     <label><h2>{{ _("How do you share revenue with contributors?") }}</h2></label>
     <textarea name="getting_paid" required></textarea>
 
-    <div class="clear"></div>
-    <input type="checkbox" value="true" name="agree_terms"> {{ _("I agree to the terms and conditions") }}
-    <div class="clear"></div>
-
+    <br>
+    <br>
+    <input type="checkbox" value="true" name="agree_terms" id="agree_terms">
+    <label for="agree_terms">
+        {{ _( "I agree to the {0}terms of service{1}"
+            , '<a href="/about/policies/terms-of-service">'|safe
+            , '</a>'|safe
+             ) }}
+    </label>
+    <br>
+    <br>
     <button type="submit">{{ _("Apply") }}</button>
 </form>
 </div>
