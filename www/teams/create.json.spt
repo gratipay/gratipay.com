@@ -5,20 +5,28 @@ from gratipay.models.team import Team
 [---]
 request.allow('POST')
 
+field_names = {
+    'name': 'Name',
+    'homepage': 'Homepage',
+    'product_or_service': 'Product or Service',
+    'getting_paid': 'How do you share revenue',
+    'getting_involved': 'How can other people get involved'
+}
+
 if user.ANON:
     raise Response(401, _("You must sign in to apply for a new team"))
 
 if not request.body.get('agree_terms', False):
-	raise Response(400, _("Please agree to the terms and conditions"))
+    raise Response(400, _("Please agree to the terms and conditions"))
 
 if request.method == 'POST':
     fields = {}
 
     # Validate inputs
 
-    for field in ['name', 'homepage', 'product_or_service', 'getting_paid', 'getting_involved']:
-    	if not request.body.get(field, ''):
-    		raise Response(400, _("Please fill out the '{0}' field", field))
+    for field in field_names.keys():
+        if not request.body.get(field, ''):
+            raise Response(400, _("Please fill out the '{0}' field", field_names[field]))
 
         fields[field] = request.body.get(field, '')
 

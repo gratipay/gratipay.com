@@ -63,7 +63,7 @@ class TestNewTeams(Harness):
         del data['name']
         r = self.post_new(data, expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
-        assert "Please fill out the 'name' field" in r.body
+        assert "Please fill out the 'Name' field" in r.body
 
 class TestOldTeams(Harness):
 
