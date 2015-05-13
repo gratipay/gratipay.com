@@ -289,9 +289,6 @@ msgstr "Wat is markdown?"
 msgid "View source."
 msgstr "Bekijk bron."
 
-msgid "Funding Goal"
-msgstr "Financierings doel"
-
 msgid "hidden"
 msgstr "verborgen"
 
@@ -300,9 +297,6 @@ msgstr "Geeft"
 
 msgid "Receives"
 msgstr "Ontvangt"
-
-msgid "Goal"
-msgstr "Doel"
 
 msgid "Joined"
 msgstr "Lid geworden"
@@ -437,13 +431,6 @@ msgstr ""
 msgid "You receive {0} per week."
 msgstr "Je ontvangt {0} per week."
 
-msgid ""
-"You are currently declining tips, you can change that {0}on your profile{1}."
-msgstr "Momenteel accepteer je geen giften, je kunt dit veranderen {0}op je profiel{1}."
-
-msgid "Congratulations, you have reached your goal of receiving {0} per week!"
-msgstr "Gefeliciteerd, je hebt je doel bereikt om {0} per week te ontvangen!"
-
 msgid "To receive money, do something awesome and then tell people about it:"
 msgstr "Om giften te ontvangen, doe iets geweldigs en vertel er iets over:"
 
@@ -489,6 +476,65 @@ msgstr "Ben je zeker dat je wil uitloggen?"
 msgid "Yes!"
 msgstr "Ja!"
 
+msgid "User not found."
+msgstr "Gebruiker is niet gevonden."
+
+msgid "That's not a valid number"
+msgstr "Dat is geen geldig nummer"
+
+msgid "A team can't take from itself"
+msgstr "Een team kan geen opbrengsten van zichzelf ontvangen"
+
+msgid ""
+"You're only allowed to add or remove members, you can't set their takes to "
+"specific amounts."
+msgstr "U bent alleen gemachtigd om leden toe te voegen of te verwijderen. Het is niet mogelijk om een specifiek bedrag aan opbrengsten aan een lid toe te wijzen. "
+
+msgid "Are you sure you want to remove {0} from this team?"
+msgstr "Weet je zeker dat je {0} uit het team wilt verwijderen?"
+
+msgid "{0} has been removed from the team."
+msgstr "{0} is uit het team verwijderd."
+
+msgid "{0} is already a member of this team."
+msgstr "{0} is al lid van dit team."
+
+msgid "{0} has been added to the team."
+msgstr "{0} is aan het team toegevoegd."
+
+msgid "Are you sure you want to leave this team?"
+msgstr "Weet je zeker dat je dit team wilt verlaten?"
+
+msgid "Your take is now {0} (you can't go higher this week)."
+msgstr "Uw deel van de opbrengst is {0} (het is niet mogelijk om deze week meer te ontvangen)."
+
+msgid "Your take is now {0}."
+msgstr "Uw deel van de opbrengst is {0}."
+
+msgid "Team Members"
+msgstr "Teamleden"
+
+msgid "Updating…"
+msgstr "Bijwerken..."
+
+msgid "Last{0} Week ($)"
+msgstr "Afgelopen{0} week ($)"
+
+msgid "This{0} Week ($)"
+msgstr "Deze{0} week ($)"
+
+msgid "Team{0} Balance ($)"
+msgstr "Team{0} balans ($)"
+
+msgid "This{0} Week (%)"
+msgstr "Deze{0} week (%)"
+
+msgid "Enter a Gratipay username"
+msgstr "Geef een Gratipay gebruikersnaam op"
+
+msgid "Add"
+msgstr "Toevoegen"
+
 msgid "Frequently Asked Questions"
 msgstr "Veelgestelde vragen"
 
@@ -525,13 +571,6 @@ msgstr "Team naam"
 
 msgid "Receiving ($)"
 msgstr "Ontvangt ($)"
-
-msgid "Goal ($)"
-msgstr "Doel ($)"
-
-#, python-format
-msgid "% Funded"
-msgstr "% Gefinancierd"
 
 msgid "Receiving{0} Per Member ($)"
 msgstr "Ontvangt {0} per lid ($)"
@@ -664,9 +703,6 @@ msgid_plural "{0} is a team with {n} public members"
 msgstr[0] "{0} is een team met {n} publiek lid"
 msgstr[1] "{0} is een team met {n} publieke leden"
 
-msgid "Team Members"
-msgstr "Teamleden"
-
 msgid "A Lot"
 msgstr "Veel"
 
@@ -702,23 +738,11 @@ msgstr ""
 msgid "Status"
 msgstr "Status"
 
-msgid "declines gifts"
-msgstr "donaties weigeren"
-
 msgid "accepts gifts"
 msgstr "donaties accepteren"
 
-msgid "opted out of Gratipay"
-msgstr "opted out uit Gratipay"
-
 msgid "hasn't joined Gratipay yet"
 msgstr "is nog geen lid geworden van Gratipay"
-
-msgid ""
-"Warning: Doing this will remove all the tips you are currently receiving.\n"
-"\n"
-"That cannot be undone!"
-msgstr "Let op: als je dit doet, dan worden alle giften die je momenteel ontvangt verwijderd.\n\nDit kan niet ongedaan worden gemaakt!"
 
 msgid "Identity Verification"
 msgstr "Identiteits controle"
@@ -777,30 +801,6 @@ msgstr "Je hebt nog geen profiel verklaring in deze taal."
 
 msgid "You haven't saved your changes, are you sure you want to discard them?"
 msgstr "Je hebt je veranderingen niet opgeslagen, weet je het zeker dat je deze wilt negeren?"
-
-msgid "I'm grateful for gifts, but don't have a specific funding goal."
-msgstr "Ik ben dankbaar voor giften, maar heb geen specifiek financieringsdoel."
-
-msgid "I'm here as a patron."
-msgstr "Ik ben hier als patroon."
-
-msgid "I'm here as a patron, and politely decline to receive gifts."
-msgstr "Ik ben hier als patroon, en zie respectvol af om giften te ontvangen."
-
-msgid "My goal is to receive {0} per week on Gratipay."
-msgstr "Mijn doel is om {0} per week te ontvangen op Gratipay."
-
-msgid "We're grateful for gifts, but don't have a specific funding goal."
-msgstr "We zijn dankbaar voor giften, maar we hebben geen specifiek financieringsdoel."
-
-msgid "We're here as a patron."
-msgstr "We zijn hier als patroon."
-
-msgid "We're here as a patron, and politely decline to receive gifts."
-msgstr "We zijn hier als patroon, en zien respectvol af van giften te ontvangen."
-
-msgid "Our goal is to receive {0} per week on Gratipay."
-msgstr "Ons doel is om {0} per week te ontvangen op Gratipay."
 
 msgid "with {n} other"
 msgid_plural "with {n} others"
@@ -993,62 +993,6 @@ msgstr "Ontvangstbewijs"
 
 msgid "No transactions to show."
 msgstr "Er zijn geen overboekingen aanwezig in het systeem."
-
-msgid "User not found."
-msgstr "Gebruiker is niet gevonden."
-
-msgid "That's not a valid number"
-msgstr "Dat is geen geldig nummer"
-
-msgid "A team can't take from itself"
-msgstr "Een team kan geen opbrengsten van zichzelf ontvangen"
-
-msgid ""
-"You're only allowed to add or remove members, you can't set their takes to "
-"specific amounts."
-msgstr "U bent alleen gemachtigd om leden toe te voegen of te verwijderen. Het is niet mogelijk om een specifiek bedrag aan opbrengsten aan een lid toe te wijzen. "
-
-msgid "Are you sure you want to remove {0} from this team?"
-msgstr "Weet je zeker dat je {0} uit het team wilt verwijderen?"
-
-msgid "{0} has been removed from the team."
-msgstr "{0} is uit het team verwijderd."
-
-msgid "{0} is already a member of this team."
-msgstr "{0} is al lid van dit team."
-
-msgid "{0} has been added to the team."
-msgstr "{0} is aan het team toegevoegd."
-
-msgid "Are you sure you want to leave this team?"
-msgstr "Weet je zeker dat je dit team wilt verlaten?"
-
-msgid "Your take is now {0} (you can't go higher this week)."
-msgstr "Uw deel van de opbrengst is {0} (het is niet mogelijk om deze week meer te ontvangen)."
-
-msgid "Your take is now {0}."
-msgstr "Uw deel van de opbrengst is {0}."
-
-msgid "Updating…"
-msgstr "Bijwerken..."
-
-msgid "Last{0} Week ($)"
-msgstr "Afgelopen{0} week ($)"
-
-msgid "This{0} Week ($)"
-msgstr "Deze{0} week ($)"
-
-msgid "Team{0} Balance ($)"
-msgstr "Team{0} balans ($)"
-
-msgid "This{0} Week (%)"
-msgstr "Deze{0} week (%)"
-
-msgid "Enter a Gratipay username"
-msgstr "Geef een Gratipay gebruikersnaam op"
-
-msgid "Add"
-msgstr "Toevoegen"
 
 msgid "You receive {0} per week"
 msgstr "Je ontvangt {0} per week"

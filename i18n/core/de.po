@@ -294,9 +294,6 @@ msgstr "Was ist Markdown?"
 msgid "View source."
 msgstr "Quelltext"
 
-msgid "Funding Goal"
-msgstr "Finanzierungsziel "
-
 msgid "hidden"
 msgstr "versteckt"
 
@@ -305,9 +302,6 @@ msgstr "gibt"
 
 msgid "Receives"
 msgstr "erhält"
-
-msgid "Goal"
-msgstr "Ziel"
 
 msgid "Joined"
 msgstr "Beigetreten"
@@ -442,13 +436,6 @@ msgstr ""
 msgid "You receive {0} per week."
 msgstr "Du erhältst {0} pro Woche."
 
-msgid ""
-"You are currently declining tips, you can change that {0}on your profile{1}."
-msgstr "Zurzeit lehnst du Trinkgelder ab. Die kannst du {0}auf deinem Profil{1} ändern."
-
-msgid "Congratulations, you have reached your goal of receiving {0} per week!"
-msgstr "Gratulation, Sie haben Ihr Ziel {0} pro Woche zu erhalten erreicht!"
-
 msgid "To receive money, do something awesome and then tell people about it:"
 msgstr "Um Geld zu erhalten machen Sie etwas großartiges und erzählen Sie davon:"
 
@@ -494,6 +481,65 @@ msgstr "Bist du sicher, dass du dich abmelden möchtest?"
 msgid "Yes!"
 msgstr "Ja!"
 
+msgid "User not found."
+msgstr "Der Benutzer wurde nicht gefunden."
+
+msgid "That's not a valid number"
+msgstr "Diese Nummer ist ungültig"
+
+msgid "A team can't take from itself"
+msgstr "Ein Team kann keine Spenden von sich selbst erhalten"
+
+msgid ""
+"You're only allowed to add or remove members, you can't set their takes to "
+"specific amounts."
+msgstr "Sie haben nur das Recht Mitglieder hinzuzufügen oder zu entfernen. Sie können keine speziefischen Beträge für einzelne Mitglieder festlegen."
+
+msgid "Are you sure you want to remove {0} from this team?"
+msgstr "Sind Sie sicher, dass Sie {0} von diesem Team entfernen möchten?"
+
+msgid "{0} has been removed from the team."
+msgstr "{0} wurde vom Team entfernt."
+
+msgid "{0} is already a member of this team."
+msgstr "{0} ist bereits Mitglied dieses Teams."
+
+msgid "{0} has been added to the team."
+msgstr "{0} wurde dem Team hinzugefügt."
+
+msgid "Are you sure you want to leave this team?"
+msgstr "Sind Sie sicher, dass Sie dieses Team verlassen möchten?"
+
+msgid "Your take is now {0} (you can't go higher this week)."
+msgstr ""
+
+msgid "Your take is now {0}."
+msgstr ""
+
+msgid "Team Members"
+msgstr "Team Mitglieder"
+
+msgid "Updating…"
+msgstr "Lädt..."
+
+msgid "Last{0} Week ($)"
+msgstr ""
+
+msgid "This{0} Week ($)"
+msgstr ""
+
+msgid "Team{0} Balance ($)"
+msgstr ""
+
+msgid "This{0} Week (%)"
+msgstr ""
+
+msgid "Enter a Gratipay username"
+msgstr "Geben Sie einen Gratipay Usernamen ein"
+
+msgid "Add"
+msgstr "Hinzufügen"
+
 msgid "Frequently Asked Questions"
 msgstr "Oft gefragte Fragen"
 
@@ -529,13 +575,6 @@ msgid "Team Name"
 msgstr ""
 
 msgid "Receiving ($)"
-msgstr ""
-
-msgid "Goal ($)"
-msgstr ""
-
-#, python-format
-msgid "% Funded"
 msgstr ""
 
 msgid "Receiving{0} Per Member ($)"
@@ -669,9 +708,6 @@ msgid_plural "{0} is a team with {n} public members"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Team Members"
-msgstr "Team Mitglieder"
-
 msgid "A Lot"
 msgstr "Sehr viel"
 
@@ -707,23 +743,11 @@ msgstr ""
 msgid "Status"
 msgstr "Status"
 
-msgid "declines gifts"
-msgstr ""
-
 msgid "accepts gifts"
-msgstr ""
-
-msgid "opted out of Gratipay"
 msgstr ""
 
 msgid "hasn't joined Gratipay yet"
 msgstr ""
-
-msgid ""
-"Warning: Doing this will remove all the tips you are currently receiving.\n"
-"\n"
-"That cannot be undone!"
-msgstr "Achtung: Diese Aktion wir alle Trinkgelder, die du zurzeit erhältst löschen.\n\nDas kann NICHT rückgängig gemacht werden!"
 
 msgid "Identity Verification"
 msgstr "Identitätsüberprüfung"
@@ -782,30 +806,6 @@ msgstr "Sie haben noch kein Statement in dieser Sprache geschrieben"
 
 msgid "You haven't saved your changes, are you sure you want to discard them?"
 msgstr "Ihre Änderungen wurden noch nicht gespeichert. Sind Sie sicher, dass Sie diese verwerfen wollen?"
-
-msgid "I'm grateful for gifts, but don't have a specific funding goal."
-msgstr "Ich bin dankbar für Spenden, habe aber kein spezifisches Spendenziel."
-
-msgid "I'm here as a patron."
-msgstr "Ich bin hier als Förderer."
-
-msgid "I'm here as a patron, and politely decline to receive gifts."
-msgstr "Ich bin hier als Förderer und lehne Spenden höflichst ab."
-
-msgid "My goal is to receive {0} per week on Gratipay."
-msgstr "Mein Ziel ist es {0} pro Woche zu erhalten."
-
-msgid "We're grateful for gifts, but don't have a specific funding goal."
-msgstr "Wir sind dankbar für Spenden, aber haben kein spezielles Finanzziel."
-
-msgid "We're here as a patron."
-msgstr "Wir sind hier als Förderer"
-
-msgid "We're here as a patron, and politely decline to receive gifts."
-msgstr "Wir sind hier als Förderer und lehnen Spenden höflichst ab."
-
-msgid "Our goal is to receive {0} per week on Gratipay."
-msgstr "Unser Ziel ist es {0} pro Woche zu erhalten."
 
 msgid "with {n} other"
 msgid_plural "with {n} others"
@@ -998,62 +998,6 @@ msgstr "Rechnung"
 
 msgid "No transactions to show."
 msgstr "Es gibt keine Transaktionen zu anzeigen."
-
-msgid "User not found."
-msgstr "Der Benutzer wurde nicht gefunden."
-
-msgid "That's not a valid number"
-msgstr "Diese Nummer ist ungültig"
-
-msgid "A team can't take from itself"
-msgstr "Ein Team kann keine Spenden von sich selbst erhalten"
-
-msgid ""
-"You're only allowed to add or remove members, you can't set their takes to "
-"specific amounts."
-msgstr "Sie haben nur das Recht Mitglieder hinzuzufügen oder zu entfernen. Sie können keine speziefischen Beträge für einzelne Mitglieder festlegen."
-
-msgid "Are you sure you want to remove {0} from this team?"
-msgstr "Sind Sie sicher, dass Sie {0} von diesem Team entfernen möchten?"
-
-msgid "{0} has been removed from the team."
-msgstr "{0} wurde vom Team entfernt."
-
-msgid "{0} is already a member of this team."
-msgstr "{0} ist bereits Mitglied dieses Teams."
-
-msgid "{0} has been added to the team."
-msgstr "{0} wurde dem Team hinzugefügt."
-
-msgid "Are you sure you want to leave this team?"
-msgstr "Sind Sie sicher, dass Sie dieses Team verlassen möchten?"
-
-msgid "Your take is now {0} (you can't go higher this week)."
-msgstr ""
-
-msgid "Your take is now {0}."
-msgstr ""
-
-msgid "Updating…"
-msgstr "Lädt..."
-
-msgid "Last{0} Week ($)"
-msgstr ""
-
-msgid "This{0} Week ($)"
-msgstr ""
-
-msgid "Team{0} Balance ($)"
-msgstr ""
-
-msgid "This{0} Week (%)"
-msgstr ""
-
-msgid "Enter a Gratipay username"
-msgstr "Geben Sie einen Gratipay Usernamen ein"
-
-msgid "Add"
-msgstr "Hinzufügen"
 
 msgid "You receive {0} per week"
 msgstr "Du bekommst {0} pro Woche."

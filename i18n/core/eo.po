@@ -286,9 +286,6 @@ msgstr "Kio estas Markdown?"
 msgid "View source."
 msgstr "Montri fonton."
 
-msgid "Funding Goal"
-msgstr "Financadan celon"
-
 msgid "hidden"
 msgstr "malvidebla"
 
@@ -297,9 +294,6 @@ msgstr "Donas"
 
 msgid "Receives"
 msgstr "Ricevas"
-
-msgid "Goal"
-msgstr "Celo"
 
 msgid "Joined"
 msgstr "Aliĝita"
@@ -434,13 +428,6 @@ msgstr ""
 msgid "You receive {0} per week."
 msgstr "Vi ricevas {0} ĉiusemanje."
 
-msgid ""
-"You are currently declining tips, you can change that {0}on your profile{1}."
-msgstr ""
-
-msgid "Congratulations, you have reached your goal of receiving {0} per week!"
-msgstr ""
-
 msgid "To receive money, do something awesome and then tell people about it:"
 msgstr ""
 
@@ -486,6 +473,65 @@ msgstr "Ĉu vi certas ke vi volas elsaluti?"
 msgid "Yes!"
 msgstr "Jes!"
 
+msgid "User not found."
+msgstr "Uzanto ne trovita."
+
+msgid "That's not a valid number"
+msgstr "Tio estas malvalida numero."
+
+msgid "A team can't take from itself"
+msgstr ""
+
+msgid ""
+"You're only allowed to add or remove members, you can't set their takes to "
+"specific amounts."
+msgstr ""
+
+msgid "Are you sure you want to remove {0} from this team?"
+msgstr ""
+
+msgid "{0} has been removed from the team."
+msgstr ""
+
+msgid "{0} is already a member of this team."
+msgstr ""
+
+msgid "{0} has been added to the team."
+msgstr ""
+
+msgid "Are you sure you want to leave this team?"
+msgstr ""
+
+msgid "Your take is now {0} (you can't go higher this week)."
+msgstr ""
+
+msgid "Your take is now {0}."
+msgstr ""
+
+msgid "Team Members"
+msgstr "Teamaj Membroj"
+
+msgid "Updating…"
+msgstr ""
+
+msgid "Last{0} Week ($)"
+msgstr "Antaŭa{0} Semanjo ($)"
+
+msgid "This{0} Week ($)"
+msgstr "Tiu{0} Semanjo ($)"
+
+msgid "Team{0} Balance ($)"
+msgstr "Teama{0} Bilanco ($)"
+
+msgid "This{0} Week (%)"
+msgstr "Tiu{0} Semanjo (%)"
+
+msgid "Enter a Gratipay username"
+msgstr "Tajpu Gratipay-an uzantnomon"
+
+msgid "Add"
+msgstr "Aldoni"
+
 msgid "Frequently Asked Questions"
 msgstr "Oftaj demandoj"
 
@@ -522,13 +568,6 @@ msgstr "Teama nomo"
 
 msgid "Receiving ($)"
 msgstr "Ricevanta ($)"
-
-msgid "Goal ($)"
-msgstr "Celo ($)"
-
-#, python-format
-msgid "% Funded"
-msgstr "% kasita"
 
 msgid "Receiving{0} Per Member ($)"
 msgstr "Ricevanta{0} per membro ($)"
@@ -661,9 +700,6 @@ msgid_plural "{0} is a team with {n} public members"
 msgstr[0] "{0} estas teamo kun {n} publika membro"
 msgstr[1] "{0} estas teamo kun {n} publikaj membroj"
 
-msgid "Team Members"
-msgstr "Teamaj Membroj"
-
 msgid "A Lot"
 msgstr "Multe"
 
@@ -699,23 +735,11 @@ msgstr ""
 msgid "Status"
 msgstr "Stato"
 
-msgid "declines gifts"
-msgstr "malakceptas donacoj"
-
 msgid "accepts gifts"
 msgstr "akceptas donacoj"
 
-msgid "opted out of Gratipay"
-msgstr ""
-
 msgid "hasn't joined Gratipay yet"
 msgstr ""
-
-msgid ""
-"Warning: Doing this will remove all the tips you are currently receiving.\n"
-"\n"
-"That cannot be undone!"
-msgstr "Averto: Farado de tiu forigos ĉiom de trinkmonoj kiu vi estas ricevanta nuntempe.\n\nTio nepovas malfariĝi."
 
 msgid "Identity Verification"
 msgstr "Identokontrolo"
@@ -774,30 +798,6 @@ msgstr "Vi ne havas profilon en tiu lingvo ankoraŭ."
 
 msgid "You haven't saved your changes, are you sure you want to discard them?"
 msgstr "Vi ne konservis viajn ŝanĝojn. Ĉu vi estas certa ke vi volas nuligi ilin?"
-
-msgid "I'm grateful for gifts, but don't have a specific funding goal."
-msgstr "Mi estas dankema pro donacoj, sed ne havas specifan financadan celon."
-
-msgid "I'm here as a patron."
-msgstr "Mi estas ĉi tie kiel patrono."
-
-msgid "I'm here as a patron, and politely decline to receive gifts."
-msgstr "Mi estas ĉi tie kiel patrono, kaj malakceptas ĝentile ricevi donacojn."
-
-msgid "My goal is to receive {0} per week on Gratipay."
-msgstr "Mia celo estas ricevi {0} ĉiusemajne tra Gratipay."
-
-msgid "We're grateful for gifts, but don't have a specific funding goal."
-msgstr "Ni estas dankema pro donacoj, sed ne havas specifan financadan celon."
-
-msgid "We're here as a patron."
-msgstr "Ni estas ĉi tie kiel patrono."
-
-msgid "We're here as a patron, and politely decline to receive gifts."
-msgstr "Ni estas ĉi tie kiel patrono, kaj ĝentile malakceptu ricevi donacojn."
-
-msgid "Our goal is to receive {0} per week on Gratipay."
-msgstr "Nia celo estas ricevi {0} ĉiusemajne tra Gratipay."
 
 msgid "with {n} other"
 msgid_plural "with {n} others"
@@ -990,62 +990,6 @@ msgstr "Kvitanco"
 
 msgid "No transactions to show."
 msgstr ""
-
-msgid "User not found."
-msgstr "Uzanto ne trovita."
-
-msgid "That's not a valid number"
-msgstr "Tio estas malvalida numero."
-
-msgid "A team can't take from itself"
-msgstr ""
-
-msgid ""
-"You're only allowed to add or remove members, you can't set their takes to "
-"specific amounts."
-msgstr ""
-
-msgid "Are you sure you want to remove {0} from this team?"
-msgstr ""
-
-msgid "{0} has been removed from the team."
-msgstr ""
-
-msgid "{0} is already a member of this team."
-msgstr ""
-
-msgid "{0} has been added to the team."
-msgstr ""
-
-msgid "Are you sure you want to leave this team?"
-msgstr ""
-
-msgid "Your take is now {0} (you can't go higher this week)."
-msgstr ""
-
-msgid "Your take is now {0}."
-msgstr ""
-
-msgid "Updating…"
-msgstr ""
-
-msgid "Last{0} Week ($)"
-msgstr "Antaŭa{0} Semanjo ($)"
-
-msgid "This{0} Week ($)"
-msgstr "Tiu{0} Semanjo ($)"
-
-msgid "Team{0} Balance ($)"
-msgstr "Teama{0} Bilanco ($)"
-
-msgid "This{0} Week (%)"
-msgstr "Tiu{0} Semanjo (%)"
-
-msgid "Enter a Gratipay username"
-msgstr "Tajpu Gratipay-an uzantnomon"
-
-msgid "Add"
-msgstr "Aldoni"
 
 msgid "You receive {0} per week"
 msgstr "Vi ricevas {0} ĉiusemajne"
