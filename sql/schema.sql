@@ -395,3 +395,6 @@ ALTER TABLE participants ADD COLUMN braintree_customer_id text DEFAULT NULL;
 -- https://github.com/gratipay/gratipay.com/pull/3403
 ALTER TABLE participants DROP COLUMN pledging;
 ALTER TABLE participants DROP COLUMN notify_on_opt_in;
+
+-- https://github.com/gratipay/gratipay.com/pull/3405
+ALTER TABLE participants DROP COLUMN goal;
