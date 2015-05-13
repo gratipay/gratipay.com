@@ -40,7 +40,7 @@ class TestNewTeams(Harness):
 
     def test_can_create_new_team(self):
         self.make_participant('alice')
-        self.post_new(self.valid_data)
+        self.post_new(dict(self.valid_data))
         team = self.db.one("SELECT * FROM teams")
         assert team
         assert team.owner == 'alice'
@@ -51,7 +51,7 @@ class TestNewTeams(Harness):
 
     def test_error_message_for_terms(self):
         self.make_participant('alice')
-        data = self.valid_data
+        data = dict(self.valid_data)
         del data['agree_terms']
         r = self.post_new(data, expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
@@ -59,7 +59,7 @@ class TestNewTeams(Harness):
 
     def test_error_message_for_missing_fields(self):
         self.make_participant('alice')
-        data = self.valid_data
+        data = dict(self.valid_data)
         del data['name']
         r = self.post_new(data, expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
