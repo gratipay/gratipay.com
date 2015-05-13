@@ -39,6 +39,8 @@ title = _("Apply for a New Team")
     <textarea name="getting_paid" required></textarea>
 
     <div class="clear"></div>
+    <input type="checkbox" value="true" name="agree_terms"> {{ _("I agree to the terms and conditions") }}
+    <div class="clear"></div>
 
     <button type="submit">{{ _("Apply") }}</button>
 </form>
