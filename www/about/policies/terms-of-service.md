@@ -30,9 +30,9 @@ password. Gratipay shall not be liable for any loss or damage arising from your
 failure to keep your account secure.
 
   1. You may only use the Service if you are 13 years old or older, and you
-     represent to us that you 13 or older. If you are under the age of 18, your
-legal guardian must consent to your use and must agree to be bound by these
-Terms.
+     represent to us that you are 13 or older. If you are under the age of 18,
+your legal guardian must consent to your use and must agree to be bound by
+these Terms.
 
 1. The Gratipay Model and Rules
 
@@ -63,7 +63,7 @@ either party breaches the terms of the Agreement (e.g. if the Team fails to
 provide the promised services).
 
   1. Gratipay does not provide refunds. Teams are responsible for producing the
-     Open Work they offer. Gratipay does not hold funds on behalf of Teams,
+     Open Work they offer. Gratipay does not hold funds on behalf of Teams, and
 does not warrant or guarantee that Teams will provide the Open Work they
 promise.
 
@@ -120,7 +120,7 @@ and worker compensation insurance payments. Team Owners are also responsible
 for providing any required tax and other documentation to employees,
 independent contractors, tax authorities, or any other person.
 
-1. Content Accessible on the Services
+1. Content Accessible on the Service
 
   1. With the exception of content provided by Participants of the Service, the
      contents of Gratipay.com&mdash;including all text, images, data, software,
@@ -148,7 +148,7 @@ objectionable content by using the Service.
      When you access third-party websites linked to from the Service, you do so
 at your own risk. Gratipay does not review, control, or endorse those sites.
 
-1. License to Your content
+1. License to Your Content
 
   1. You retain your rights to any content you provide through the Service.
      When you provide content through the Service, you grant to Gratipay a
@@ -165,8 +165,8 @@ for the embedding of content on other services.
   1. You represent and warrant that you have all necessary rights and authority
      to grant this license to Gratipay. With regard to any third-party content
 that you submit, you represent and warrant that you have a license to provide
-the content according these Terms, or that your use is otherwise permissible,
-for example as fair use.
+the content according to these Terms, or that your use is otherwise
+permissible, for example as fair use.
 
 1. Acceptable Use Policy
 
@@ -358,10 +358,10 @@ defense or settlement of any such matters.
 
 1. Miscellaneous Terms
 
-  1. Assignment: You may not assign your rights rights and obligations under
-     these Terms to any other person. In the event of a merger, sale, or
-acquisition of substantially all of Gratipay's assets, Gratipay may assign its
-rights and obligations under these Terms to its successor.
+  1. Assignment: You may not assign your rights and obligations under these
+     Terms to any other person. In the event of a merger, sale, or acquisition
+of substantially all of Gratipay's assets, Gratipay may assign its rights and
+obligations under these Terms to its successor.
 
   1. Modifications to this Agreement: Gratipay may occasionally revise these
      Terms. You can find the most recent version at
@@ -406,6 +406,6 @@ remain in full force and effect.
   1. Entire Agreement: These Terms and our Privacy Policy together form the
      entire and exclusive agreement between you and Gratipay regarding the
 Service (excluding any Service for which you have a separate agreement with
-Gratipay that is explicitly in addition or in place of these Terms), and these
-Terms supersede and replace any prior agreements between you and Gratipay
+Gratipay that is explicitly in addition to or in place of these Terms), and
+these Terms supersede and replace any prior agreements between you and Gratipay
 regarding the Service. There shall be third party beneficiaries to the Terms.
