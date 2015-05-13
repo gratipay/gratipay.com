@@ -14,6 +14,7 @@ from gratipay.elsewhere import UserInfo
 from gratipay.main import website
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.models.participant import Participant
 from gratipay.security.user import User
 from gratipay.testing.vcr import use_cassette
 from psycopg2 import IntegrityError, InternalError
@@ -144,6 +145,20 @@ class Harness(unittest.TestCase):
         import balanced
         seq = next(cls.seq)
         return unicode(balanced.Customer(meta=dict(seq=seq)).save().href)
+
+
+    def make_team(self, name="The A Team", owner="hannibal"):
+        if Participant.from_username(owner) is None:
+            self.make_participant(owner, claimed_time='now')
+        slug = name.replace('.', '').replace(' ', '').replace(',', '')
+        team = self.db.one("""
+            INSERT INTO teams
+                        (slug, slug_lower, name, homepage, product_or_service,
+                         getting_involved, getting_paid, owner)
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+              RETURNING teams.*::teams
+        """, (slug, slug.lower(), name, '', '', '', '', owner))
+        return team
 
 
     def make_participant(self, username, **kw):

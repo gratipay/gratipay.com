@@ -3,9 +3,29 @@ from gratipay.models._mixin_team import StubParticipantAdded
 
 from gratipay.testing import Harness
 from gratipay.security.user import User
+from gratipay.models.team import Team
 
 
-class Tests(Harness):
+class TestNewTeams(Harness):
+
+    def test_harness_can_make_a_team(self):
+        team = self.make_team()
+        assert team.name == 'The A Team'
+        assert team.owner == 'hannibal'
+
+    def test_can_construct_from_slug(self):
+        self.make_team()
+        team = Team.from_slug('TheATeam')
+        assert team.name == 'The A Team'
+        assert team.owner == 'hannibal'
+
+    def test_can_construct_from_id(self):
+        team = Team.from_id(self.make_team().id)
+        assert team.name == 'The A Team'
+        assert team.owner == 'hannibal'
+
+
+class TestOldTeams(Harness):
 
     def setUp(self):
         Harness.setUp(self)
