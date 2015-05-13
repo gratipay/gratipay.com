@@ -1,4 +1,4 @@
-These Terms of Service (“Terms”) are an agreement between you, a user
+These Terms of Service ("Terms") are an agreement between you, a user
 ("Participant") of the Gratipay service (the "Service"), and Gratipay,
 LLC ("Gratipay"). They govern your use of the Service and your
 relationship with Gratipay. When you register as a Gratipay
@@ -197,7 +197,7 @@ that your use is otherwise permissible, for example as fair use.
   numbers, confidential ID numbers, or account passwords, without
   their permission.
 
-    * Account hijacking, including any access to or use of another Participant’s account without their permission.
+    * Account hijacking, including any access to or use of another Participant's account without their permission.
 
     * Child exploitation, including any content or activity that exploits or abuses children.
 
@@ -336,7 +336,7 @@ herein.
 
   1. Your access to and use of the Service or any content is at your
 own risk. YOU UNDERSTAND AND AGREE THAT THE SERVICE IS PROVIDED TO YOU
-ON AN “AS IS” AND “AS AVAILABLE” BASIS. WITHOUT LIMITING THE
+ON AN "AS IS" AND "AS AVAILABLE" BASIS. WITHOUT LIMITING THE
 FOREGOING, TO THE FULL EXTENT PERMITTED BY LAW, GRATIPAY DISCLAIMS ALL
 WARRANTIES, EXPRESS OR IMPLIED, OF MERCHANTABILITY, FITNESS FOR A
 PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
@@ -403,7 +403,7 @@ are authorized to do so.
 
   1. Export Controls: You hereby represent and warrant that (i) you are not located in a
 country that is subject to a U.S. Government embargo, or that has been
-designated by the U.S. Government as a “terrorist supporting” country;
+designated by the U.S. Government as a "terrorist supporting" country;
 and (ii) you are not listed on any U.S. Government list of prohibited
 or restricted parties.
 
