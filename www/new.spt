@@ -1,7 +1,13 @@
+from aspen import Response
+
 from gratipay.models.team import Team
 [---]
+if user.ANON:
+    raise Response(401, _("You must sign in to apply for a new team"))
+
 if request.method == 'POST':
     Team.create_new()
+
 title = _("Apply for a New Team")
 [---] text/html
 {% extends "templates/base.html" %}
