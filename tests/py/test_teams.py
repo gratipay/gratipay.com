@@ -65,6 +65,13 @@ class TestNewTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Please fill out the 'Team Name' field." in r.body
 
+    def test_error_message_for_slug_collision(self):
+        self.make_participant('alice')
+        self.post_new(dict(self.valid_data))
+        r = self.post_new(dict(self.valid_data), expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 1
+        assert "Sorry, there is already a team using 'gratiteam'." in r.body
+
 class TestOldTeams(Harness):
 
     def setUp(self):
