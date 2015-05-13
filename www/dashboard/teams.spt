@@ -71,6 +71,7 @@ title = _("Fraud Review Dashboard - (Teams)")
         <b>Product or Service</b>: {{ team.product_or_service }} <br />
         <b>Getting Paid</b>: {{ team.getting_paid }} <br />
         <b>Getting Involved</b>: {{ team.getting_involved }} <br />
+        <b>Owner</b>: <a href="/{{team.owner}}" target="_blank">{{ team.owner }}</a>
     </div>
     {% endfor %}
 </div>
