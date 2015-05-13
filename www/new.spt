@@ -12,9 +12,15 @@ if user.ANON:
 title = _("Apply for a New Team")
 [---] text/html
 {% extends "templates/base.html" %}
+
+{% block scripts %}
+<script>$(document).ready(Gratipay.new_team.initForm);</script>
+{{ super() }}
+{% endblock %}
+
 {% block content %}
 <div class="col0">
-<form action="/new" method="POST">
+<form action="/teams/create.json" method="POST" id="new-team">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
     <label><h2>{{ _("Name") }}</h2></label>
