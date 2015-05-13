@@ -37,7 +37,7 @@ Gratipay.initNotifications = function(notifs) {
     jQuery.each(notifs, function(k, notif) {
         Gratipay.notification(notif.jsonml, notif.type, -1, function() {
             jQuery.ajax({
-                url: '/'+Gratipay.username+'/notifications.json',
+                url: '/~'+Gratipay.username+'/notifications.json',
                 type: 'POST',
                 data: {remove: notif.name},
                 dataType: 'json',
