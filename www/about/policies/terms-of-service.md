@@ -1,3 +1,5 @@
+# Gratipay Terms of Service
+
 These Terms of Service ("Terms") are an agreement between you, a user
 ("Participant") of the Gratipay service (the "Service"), and Gratipay, LLC
 ("Gratipay"). They govern your use of the Service and your relationship with

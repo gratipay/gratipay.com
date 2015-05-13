@@ -3,6 +3,7 @@ from gratipay.utils import markdown
 
 terms_path = os.path.join(os.path.dirname(__file__), 'terms-of-service.md')
 terms = open(terms_path).read().decode('ascii')
+terms = '\n'.join(terms.splitlines()[2:])
 
 [---]
 title = _("Policies")
