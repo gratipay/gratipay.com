@@ -34,7 +34,7 @@ failure to keep your account secure.
 your legal guardian must consent to your use and must agree to be bound by
 these Terms.
 
-1. The Gratipay Model and Rules
+1. The Gratipay Model and General Rules
 
   1. The Service is a platform to enable Teams of Gratipay Participants to
      receive payments to fund Open Work. Open Work means that the Team provides
@@ -59,7 +59,7 @@ unless the Team explicitly offers those things to Participants.
      that Participant to perform the Open Work described in its profile. The
 Service is a platform to facilitate this agreement. Gratipay is not a party to
 the agreement, and is not responsible to either the Team or the Participant if
-either party breaches the terms of the Agreement (e.g. if the Team fails to
+either party breaches the terms of the agreement (e.g. if the Team fails to
 provide the promised services).
 
   1. Gratipay does not provide refunds. Teams are responsible for producing the
@@ -180,7 +180,7 @@ permissible, for example as fair use.
 activity intended to harm or disrupt the hardware, networks, or infrastructure
 of Gratipay or any third parties.
 
-    * Unauthorized Access, including: accessing or attempting to access any
+    * Unauthorized access, including: accessing or attempting to access any
       non-public interface, system, or functionality of the Service, or testing
 the Service for vulnerabilities.
 
@@ -189,7 +189,7 @@ the Service for vulnerabilities.
 
     * Posting personal or confidential information, such as social security
       numbers, credit card numbers, street addresses, phone numbers,
-confidential ID numbers, or account passwords, without their permission.
+confidential ID numbers, or account passwords, without permission.
 
     * Account hijacking, including any access to or use of another
       Participant's account without their permission.
@@ -284,7 +284,7 @@ notice to you.
 1. Service Changes and Limitations
 
   1. Gratipay may change the Service at any time, without notice to you.
-     Gratipay may also stop providing one or more service or features,
+     Gratipay may also stop providing one or more services or features,
 introduce new limits on use of the Service, or change the terms upon which the
 Service is available.
 
@@ -373,12 +373,12 @@ thereby agree to be bound by the revised Terms.
 
   1. Choice of Law: These Terms and the relationship between you and Gratipay
      shall be governed by the laws of the State of Pennsylvania without regard
-to its conflict of law provisions and that any and all claims, causes of
-action, or disputes (regardless of theory) arising out of or relating to the
-Service, shall be brought exclusively in the courts located in Allegheny
-County, Pennsylvania, or the U.S. District Court for the Southern District of
-New York. You consent and waive any objection to the jurisdiction of and venue
-in these courts.
+to its conflict of law provisions and any and all claims, causes of action, or
+disputes (regardless of theory) arising out of or relating to the Service,
+shall be brought exclusively in the courts located in Allegheny County,
+Pennsylvania, or the U.S. District Court for the Southern District of New York.
+You consent and waive any objection to the jurisdiction of and venue in these
+courts.
 
   1. Authority to Enter Into Agreement: You represent and warrant that you have
      the legal authority to enter into this agreement and that the performance
@@ -405,7 +405,7 @@ remain in full force and effect.
 
   1. Entire Agreement: These Terms and our Privacy Policy together form the
      entire and exclusive agreement between you and Gratipay regarding the
-Service (excluding any Service for which you have a separate agreement with
+Service (excluding any service for which you have a separate agreement with
 Gratipay that is explicitly in addition to or in place of these Terms), and
 these Terms supersede and replace any prior agreements between you and Gratipay
 regarding the Service. There shall be third party beneficiaries to the Terms.
