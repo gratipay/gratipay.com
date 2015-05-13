@@ -187,9 +187,9 @@ the Service for vulnerabilities.
     * Abuse, including threats of violence or harassment of a Participant
       through repeated unwanted contact.
 
-    * Posting personal or confidential information, such as social security
-      numbers, credit card numbers, street addresses, phone numbers,
-confidential ID numbers, or account passwords, without permission.
+    * Posting anyone's personal or confidential information, such as social
+      security numbers, credit card numbers, street addresses, phone numbers,
+confidential ID numbers, or account passwords, without their permission.
 
     * Account hijacking, including any access to or use of another
       Participant's account without their permission.
@@ -373,12 +373,12 @@ thereby agree to be bound by the revised Terms.
 
   1. Choice of Law: These Terms and the relationship between you and Gratipay
      shall be governed by the laws of the State of Pennsylvania without regard
-to its conflict of law provisions and any and all claims, causes of action, or
+to its conflict of law provisions. Any and all claims, causes of action, or
 disputes (regardless of theory) arising out of or relating to the Service,
 shall be brought exclusively in the courts located in Allegheny County,
-Pennsylvania, or the U.S. District Court for the Southern District of New York.
-You consent and waive any objection to the jurisdiction of and venue in these
-courts.
+Pennsylvania, or the U.S. District Court for the Western District of
+Pennsylvania. You consent and waive any objection to the jurisdiction of and
+venue in these courts.
 
   1. Authority to Enter Into Agreement: You represent and warrant that you have
      the legal authority to enter into this agreement and that the performance
