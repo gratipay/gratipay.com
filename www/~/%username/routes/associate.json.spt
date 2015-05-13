@@ -46,7 +46,7 @@ if change:
         if result.is_success:
             ExchangeRoute.insert(participant, network, result.payment_method.token)
         else:
-            raise Response(400, result.errors.deep_errors[0].message)
+            raise Response(400, result.message)
 
     elif network == 'bitcoin':
         if not bitcoin.validate(address):
