@@ -9,11 +9,16 @@ from gratipay.models.team import Team
 class TestNewTeams(Harness):
 
     valid_data = {
-        'name': 'Gratiteam'
+        'name': 'Gratiteam',
+        'homepage': 'http://gratipay.com/',
+        'agree_terms': 'true',
+        'product_or_service': 'Sample Product',
+        'getting_paid': 'Getting Paid',
+        'getting_involved': 'Getting Involved'
     }
 
     def post_new(self, data, auth_as='alice', expected=200):
-        r =  self.client.POST('/new', data=data, auth_as=auth_as, raise_immediately=False)
+        r =  self.client.POST('/teams/create.json', data=data, auth_as=auth_as, raise_immediately=False)
         assert r.code == expected
         return r
 
@@ -44,6 +49,21 @@ class TestNewTeams(Harness):
         self.post_new(self.valid_data, auth_as=None, expected=401)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
 
+    def test_error_message_for_terms(self):
+        self.make_participant('alice')
+        data = self.valid_data
+        del data['agree_terms']
+        r = self.post_new(data, expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Please agree to the terms and conditions" in r.body
+
+    def test_error_message_for_missing_fields(self):
+        self.make_participant('alice')
+        data = self.valid_data
+        del data['name']
+        r = self.post_new(data, expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Please fill out the 'name' field" in r.body
 
 class TestOldTeams(Harness):
 

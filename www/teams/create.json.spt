@@ -1,0 +1,29 @@
+from aspen import Response
+
+from gratipay.models.community import slugize
+from gratipay.models.team import Team
+[---]
+request.allow('POST')
+
+if user.ANON:
+    raise Response(401, _("You must sign in to apply for a new team"))
+
+if not request.body.get('agree_terms', False):
+	raise Response(400, _("Please agree to the terms and conditions"))
+
+if request.method == 'POST':
+    fields = {}
+
+    # Validate inputs
+
+    for field in ['name', 'homepage', 'product_or_service', 'getting_paid', 'getting_involved']:
+    	if not request.body.get(field, ''):
+    		raise Response(400, _("Please fill out the '{0}' field", field))
+
+        fields[field] = request.body.get(field, '')
+
+    fields['slug'] = slugize(fields['name'])
+
+    Team.create_new(user.participant, fields)
+[---] application/json via json_dump
+{}
