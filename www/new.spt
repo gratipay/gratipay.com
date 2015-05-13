@@ -1,0 +1,13 @@
+from gratipay.models.team import Team
+[---]
+if request.method == 'POST':
+    Team.create_new()
+title = _("New Team")
+[---] text/html
+{% extends "templates/base.html" %}
+{% block content %}
+<div class="col0">
+<form action="/new" method="POST">
+</form>
+</div>
+{% endblock %}
