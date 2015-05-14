@@ -339,6 +339,17 @@ class Participant(Model, MixinTeam):
             self.final_check(cursor)
             self.update_is_closed(True, cursor)
 
+    def update_is_closed(self, is_closed, cursor=None):
+        with self.db.get_cursor(cursor) as cursor:
+            cursor.run( "UPDATE participants SET is_closed=%(is_closed)s "
+                        "WHERE username=%(username)s"
+                      , dict(username=self.username, is_closed=is_closed)
+                       )
+            add_event( cursor
+                     , 'participant'
+                     , dict(id=self.id, action='set', values=dict(is_closed=is_closed))
+                      )
+            self.set_attributes(is_closed=is_closed)
 
     class BankWithdrawalFailed(Exception): pass
 
@@ -766,6 +777,135 @@ class Participant(Model, MixinTeam):
         return {r.network: r.address for r in routes}
 
 
+    def get_balanced_account(self):
+        """Fetch or create the balanced account for this participant.
+        """
+        if not self.balanced_customer_href:
+            customer = balanced.Customer(meta={
+                'username': self.username,
+                'participant_id': self.id,
+            }).save()
+            r = self.db.one("""
+                UPDATE participants
+                   SET balanced_customer_href=%s
+                 WHERE id=%s
+                   AND balanced_customer_href IS NULL
+             RETURNING id
+            """, (customer.href, self.id))
+            if not r:
+                return self.get_balanced_account()
+        else:
+            customer = balanced.Customer.fetch(self.balanced_customer_href)
+        return customer
+
+    def get_braintree_account(self):
+        """Fetch or create a braintree account for this participant.
+        """
+        if not self.braintree_customer_id:
+            customer = braintree.Customer.create({
+                'custom_fields': {'participant_id': self.id}
+            }).customer
+
+            r = self.db.one("""
+                UPDATE participants
+                   SET braintree_customer_id=%s
+                 WHERE id=%s
+                   AND braintree_customer_id IS NULL
+             RETURNING id
+            """, (customer.id, self.id))
+
+            if not r:
+                return self.get_braintree_account()
+        else:
+            customer = braintree.Customer.find(self.braintree_customer_id)
+        return customer
+
+    def get_braintree_token(self):
+        account = self.get_braintree_account()
+
+        token = braintree.ClientToken.generate({'customer_id': account.id})
+        return token
+
+    # Elsewhere-related stuff
+    # =======================
+
+    def get_account_elsewhere(self, platform):
+        """Return an AccountElsewhere instance.
+        """
+        return self.db.one("""
+
+            SELECT elsewhere.*::elsewhere_with_participant
+              FROM elsewhere
+             WHERE participant=%s
+               AND platform=%s
+
+        """, (self.username, platform))
+
+
+    def get_accounts_elsewhere(self):
+        """Return a dict of AccountElsewhere instances.
+        """
+        accounts = self.db.all("""
+
+            SELECT elsewhere.*::elsewhere_with_participant
+              FROM elsewhere
+             WHERE participant=%s
+
+        """, (self.username,))
+        accounts_dict = {account.platform: account for account in accounts}
+        return accounts_dict
+
+
+    def get_elsewhere_logins(self, cursor):
+        """Return the list of (platform, user_id) tuples that the participant
+        can log in with.
+        """
+        return cursor.all("""
+            SELECT platform, user_id
+              FROM elsewhere
+             WHERE participant=%s
+               AND platform IN %s
+               AND NOT is_team
+        """, (self.username, AccountElsewhere.signin_platforms_names))
+
+    def delete_elsewhere(self, platform, user_id):
+        """Deletes account elsewhere unless the user would not be able
+        to log in anymore.
+        """
+        user_id = unicode(user_id)
+        with self.db.get_cursor() as c:
+            accounts = self.get_elsewhere_logins(c)
+            assert len(accounts) > 0
+            if len(accounts) == 1 and accounts[0] == (platform, user_id):
+                raise LastElsewhere()
+            c.one("""
+                DELETE FROM elsewhere
+                WHERE participant=%s
+                AND platform=%s
+                AND user_id=%s
+                RETURNING participant
+            """, (self.username, platform, user_id), default=NonexistingElsewhere)
+            add_event(c, 'participant', dict(id=self.id, action='disconnect', values=dict(platform=platform, user_id=user_id)))
+        self.update_avatar()
+
+    def update_avatar(self):
+        avatar_url = self.db.run("""
+            UPDATE participants p
+               SET avatar_url = (
+                       SELECT avatar_url
+                         FROM elsewhere
+                        WHERE participant = p.username
+                     ORDER BY platform = 'github' DESC,
+                              avatar_url LIKE '%%gravatar.com%%' DESC
+                        LIMIT 1
+                   )
+             WHERE p.username = %s
+         RETURNING avatar_url
+        """, (self.username,))
+        self.set_attributes(avatar_url=avatar_url)
+
+
+
     # Random Junk
     # ===========
 
@@ -852,34 +992,6 @@ class Participant(Model, MixinTeam):
             self.set_attributes(username=suggested, username_lower=lowercased)
 
         return suggested
-
-    def update_avatar(self):
-        avatar_url = self.db.run("""
-            UPDATE participants p
-               SET avatar_url = (
-                       SELECT avatar_url
-                         FROM elsewhere
-                        WHERE participant = p.username
-                     ORDER BY platform = 'github' DESC,
-                              avatar_url LIKE '%%gravatar.com%%' DESC
-                        LIMIT 1
-                   )
-             WHERE p.username = %s
-         RETURNING avatar_url
-        """, (self.username,))
-        self.set_attributes(avatar_url=avatar_url)
-
-    def update_is_closed(self, is_closed, cursor=None):
-        with self.db.get_cursor(cursor) as cursor:
-            cursor.run( "UPDATE participants SET is_closed=%(is_closed)s "
-                        "WHERE username=%(username)s"
-                      , dict(username=self.username, is_closed=is_closed)
-                       )
-            add_event( cursor
-                     , 'participant'
-                     , dict(id=self.id, action='set', values=dict(is_closed=is_closed))
-                      )
-            self.set_attributes(is_closed=is_closed)
 
     def update_giving_and_tippees(self):
         with self.db.get_cursor() as cursor:
@@ -1213,95 +1325,6 @@ class Participant(Model, MixinTeam):
             out = (now - self.claimed_time).total_seconds()
         return out
 
-
-    def get_account_elsewhere(self, platform):
-        """Return an AccountElsewhere instance.
-        """
-        return self.db.one("""
-
-            SELECT elsewhere.*::elsewhere_with_participant
-              FROM elsewhere
-             WHERE participant=%s
-               AND platform=%s
-
-        """, (self.username, platform))
-
-
-    def get_accounts_elsewhere(self):
-        """Return a dict of AccountElsewhere instances.
-        """
-        accounts = self.db.all("""
-
-            SELECT elsewhere.*::elsewhere_with_participant
-              FROM elsewhere
-             WHERE participant=%s
-
-        """, (self.username,))
-        accounts_dict = {account.platform: account for account in accounts}
-        return accounts_dict
-
-
-    def get_elsewhere_logins(self, cursor):
-        """Return the list of (platform, user_id) tuples that the participant
-        can log in with.
-        """
-        return cursor.all("""
-            SELECT platform, user_id
-              FROM elsewhere
-             WHERE participant=%s
-               AND platform IN %s
-               AND NOT is_team
-        """, (self.username, AccountElsewhere.signin_platforms_names))
-
-
-    def get_balanced_account(self):
-        """Fetch or create the balanced account for this participant.
-        """
-        if not self.balanced_customer_href:
-            customer = balanced.Customer(meta={
-                'username': self.username,
-                'participant_id': self.id,
-            }).save()
-            r = self.db.one("""
-                UPDATE participants
-                   SET balanced_customer_href=%s
-                 WHERE id=%s
-                   AND balanced_customer_href IS NULL
-             RETURNING id
-            """, (customer.href, self.id))
-            if not r:
-                return self.get_balanced_account()
-        else:
-            customer = balanced.Customer.fetch(self.balanced_customer_href)
-        return customer
-
-    def get_braintree_account(self):
-        """Fetch or create a braintree account for this participant.
-        """
-        if not self.braintree_customer_id:
-            customer = braintree.Customer.create({
-                'custom_fields': {'participant_id': self.id}
-            }).customer
-
-            r = self.db.one("""
-                UPDATE participants
-                   SET braintree_customer_id=%s
-                 WHERE id=%s
-                   AND braintree_customer_id IS NULL
-             RETURNING id
-            """, (customer.id, self.id))
-
-            if not r:
-                return self.get_braintree_account()
-        else:
-            customer = braintree.Customer.find(self.braintree_customer_id)
-        return customer
-
-    def get_braintree_token(self):
-        account = self.get_braintree_account()
-
-        token = braintree.ClientToken.generate({'customer_id': account.id})
-        return token
 
     class StillReceivingTips(Exception): pass
     class BalanceIsNotZero(Exception): pass
@@ -1690,26 +1713,6 @@ class Participant(Model, MixinTeam):
         # Note: the order matters here, receiving needs to be updated before giving
         self.update_receiving()
         self.update_giving()
-
-    def delete_elsewhere(self, platform, user_id):
-        """Deletes account elsewhere unless the user would not be able
-        to log in anymore.
-        """
-        user_id = unicode(user_id)
-        with self.db.get_cursor() as c:
-            accounts = self.get_elsewhere_logins(c)
-            assert len(accounts) > 0
-            if len(accounts) == 1 and accounts[0] == (platform, user_id):
-                raise LastElsewhere()
-            c.one("""
-                DELETE FROM elsewhere
-                WHERE participant=%s
-                AND platform=%s
-                AND user_id=%s
-                RETURNING participant
-            """, (self.username, platform, user_id), default=NonexistingElsewhere)
-            add_event(c, 'participant', dict(id=self.id, action='disconnect', values=dict(platform=platform, user_id=user_id)))
-        self.update_avatar()
 
     def to_dict(self, details=False, inquirer=None):
         output = { 'id': self.id
