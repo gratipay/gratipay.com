@@ -119,7 +119,7 @@ class TestNewTeams(Harness):
     def test_migrate_tips_to_subscriptions(self):
         alice = self.make_participant('alice', claimed_time='now')
         bob = self.make_participant('bob', claimed_time='now')
-        old_team = self.make_participant('old_team')
+        self.make_participant('old_team')
         alice.set_tip_to('old_team', '1.00')
         bob.set_tip_to('old_team', '2.00')
         new_team = self.make_team('new_team', owner='old_team')
@@ -128,7 +128,12 @@ class TestNewTeams(Harness):
 
         subscriptions = self.db.all("SELECT * FROM subscriptions")
         assert len(subscriptions) == 2
-        # Check for details
+        assert subscriptions[0].subscriber == 'alice'
+        assert subscriptions[0].team == 'new_team'
+        assert subscriptions[0].amount == 1
+        assert subscriptions[1].subscriber == 'bob'
+        assert subscriptions[1].team == 'new_team'
+        assert subscriptions[1].amount == 2
 
 
 class TestOldTeams(Harness):
