@@ -344,26 +344,10 @@ class Payday(object):
         -- Create a function to settle whole tip graph
 
         CREATE OR REPLACE FUNCTION settle_tip_graph() RETURNS void AS $$
-            DECLARE
-                count integer NOT NULL DEFAULT 0;
-                i integer := 0;
             BEGIN
-                LOOP
-                    i := i + 1;
-                    WITH updated_rows AS (
-                         UPDATE payday_tips
-                            SET is_funded = true
-                          WHERE is_funded IS NOT true
-                      RETURNING *
-                    )
-                    SELECT COUNT(*) FROM updated_rows INTO count;
-                    IF (count = 0) THEN
-                        EXIT;
-                    END IF;
-                    IF (i > 50) THEN
-                        RAISE 'Reached the maximum number of iterations';
-                    END IF;
-                END LOOP;
+                 UPDATE payday_tips
+                    SET is_funded = true
+                  WHERE is_funded IS NOT true;
             END;
         $$ LANGUAGE plpgsql;
 
