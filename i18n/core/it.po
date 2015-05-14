@@ -156,9 +156,6 @@ msgstr "Team"
 msgid "Do Not Track"
 msgstr "Non tracciare"
 
-msgid "Terms and Conditions"
-msgstr "Termini e Condizioni"
-
 msgid "Terms of Service"
 msgstr "Termini di Servizio"
 
@@ -404,9 +401,9 @@ msgid "Or sign in with:"
 msgstr "O accedi con:"
 
 msgid ""
-"By signing in, you indicate that you have read and agree to our {0}Terms and"
-" Conditions{1}."
-msgstr "Registrandoti, dichiari di aver letto e accettato i nostri {0}Termini e Condizioni{1}."
+"By signing in, you indicate that you have read and agree to our {0}Terms of "
+"Service{1}."
+msgstr ""
 
 msgid "You'll be joining {0} active users, who exchanged {1} {2}last week{3}."
 msgstr "Ti unirai a {0} utenti attivi, che hanno scambiato {1} {2}settimana scorsa{3}."
@@ -438,6 +435,49 @@ msgstr "{0}Completa il tuo profilo{1} per far sapere agli altri di te."
 msgid ""
 "Reach a wider audience by {0}embedding our widgets{1} on your blog/website."
 msgstr "Raggiungi un pubblico più vasto {0}inserendo i nostri widget{1} sul tuo sito/blog."
+
+msgid "You must sign in to apply for a new team."
+msgstr ""
+
+msgid "You must have a verified email address to apply for a new team."
+msgstr ""
+
+msgid "You must attach a bank account or PayPal to apply for a new team."
+msgstr ""
+
+msgid "Apply for a New Team"
+msgstr ""
+
+msgid "Team Name"
+msgstr "Nome del Team"
+
+msgid "Homepage"
+msgstr ""
+
+msgid "Product or Service"
+msgstr ""
+
+msgid "What product or service does your team provide?"
+msgstr ""
+
+msgid "Contributing"
+msgstr ""
+
+msgid "How can other people get involved with your team?"
+msgstr ""
+
+msgid "Revenue"
+msgstr ""
+
+msgid ""
+"What is your revenue model? How do you share revenue with contributors?"
+msgstr ""
+
+msgid "I agree to the {0}terms of service{1}"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
@@ -563,9 +603,6 @@ msgstr "Comunità Popolari"
 
 msgid "Teams (N={0})"
 msgstr "Team (N={0})"
-
-msgid "Team Name"
-msgstr "Nome del Team"
 
 msgid "Receiving ($)"
 msgstr "Riceve ($)"
@@ -741,6 +778,18 @@ msgstr "accetta le donazioni"
 
 msgid "hasn't joined Gratipay yet"
 msgstr "non si è ancora iscritto a Gratipay"
+
+msgid "How are you applying for a team!?"
+msgstr ""
+
+msgid "Please agree to the terms of service."
+msgstr ""
+
+msgid "Please fill out the '{0}' field."
+msgstr ""
+
+msgid "Sorry, there is already a team using '{}'."
+msgstr ""
 
 msgid "Identity Verification"
 msgstr "Verifica Identità"
