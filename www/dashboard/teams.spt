@@ -48,6 +48,37 @@ title = _("Fraud Review Dashboard - (Teams)")
                 $parent.data('slug') == $(this).data('slug') ? $(this).show() : $(this).hide();
             });
         });
+
+        Gratipay.forms.initCSRF();
+
+        function error(a,b,c)
+        {
+            console.log(a,b,c);
+            alert("Failed!");
+        }
+
+        // Wireup buttons
+
+        $('button').click(function()
+        {
+            var row = $(this).parent();
+            var to = $(this).text() !== 'Good';
+            var slug = row.data('slug');
+            var url = "/" + slug + "/toggle-is-approved.json";
+
+            function success()
+            {
+                row.remove();
+            }
+
+            jQuery.ajax({ url: url
+                        , type: "POST"
+                        , dataType: "json"
+                        , data: {to: to}
+                        , success: success
+                        , error: error
+                         })
+        });
     });
 </script>
 <h3>Unreviewed Accounts (N = {{ len(unreviewed) }})</h3>
