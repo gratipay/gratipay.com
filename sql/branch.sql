@@ -33,4 +33,51 @@ BEGIN;
     CREATE TRIGGER update_current_subscription INSTEAD OF UPDATE ON current_subscriptions
         FOR EACH ROW EXECUTE PROCEDURE update_subscription();
 
+
+    -- payroll - recurring payments from a team to participant
+    CREATE TABLE payroll
+    ( id                bigserial                   PRIMARY KEY
+    , ctime             timestamp with time zone    NOT NULL
+    , mtime             timestamp with time zone    NOT NULL
+                                                    DEFAULT CURRENT_TIMESTAMP
+    , member            text                        NOT NULL REFERENCES participants
+                                                        ON UPDATE CASCADE ON DELETE RESTRICT
+    , team              text                        NOT NULL REFERENCES teams
+                                                        ON UPDATE CASCADE ON DELETE RESTRICT
+    , amount            numeric(35,2)               NOT NULL DEFAULT 0.0
+    , recorder          text                        NOT NULL REFERENCES participants
+                                                        ON UPDATE CASCADE ON DELETE RESTRICT
+    , CONSTRAINT not_negative CHECK ((amount >= (0)::numeric))
+     );
+
+    CREATE VIEW current_payroll AS
+        SELECT * FROM (
+             SELECT DISTINCT ON (member, team) payroll.*
+               FROM payroll
+               JOIN participants p ON p.username = payroll.member
+              WHERE p.is_suspicious IS NOT TRUE
+           ORDER BY member
+                  , team
+                  , mtime DESC
+        ) AS anon WHERE amount > 0;
+
+
+    -- payments - movements of money back and forth between participants and teams
+
+    CREATE TYPE payment_direction AS ENUM
+        ('to-team', 'to-participant');
+
+    CREATE TABLE payments
+    ( id                    bigserial                   PRIMARY KEY
+    , timestamp             timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    , participant           text                        NOT NULL REFERENCES participants
+                                                            ON UPDATE CASCADE ON DELETE RESTRICT
+    , team                  text                        NOT NULL REFERENCES teams
+                                                            ON UPDATE CASCADE ON DELETE RESTRICT
+    , amount                numeric(35,2)               NOT NULL
+    , direction             payment_direction           NOT NULL
+    , payday                int                         DEFAULT NULL REFERENCES paydays
+                                                            ON UPDATE RESTRICT ON DELETE RESTRICT
+     );
+
 END;
