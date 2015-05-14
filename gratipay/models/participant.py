@@ -1173,7 +1173,7 @@ class Participant(Model, MixinTeam):
 
         if not isinstance(team, Team):
             team, slug = Team.from_slug(team), team
-            if not slug:
+            if not team:
                 raise NoTeam(slug)
 
         default = dict(amount=Decimal('0.00'), is_funded=False)
