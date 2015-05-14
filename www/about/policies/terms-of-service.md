@@ -98,11 +98,11 @@ Use Policy.
   1. Gratipay reserves the right to reject, suspend, or remove a Team at any
      time, and for any reason.
 
-  1. When a new Team is established, the Gratipay community will have the
-     opportunity to evaluate and provide commentary about the Team on
-Gratipay's Github repository. However, all decisions regarding whether to
-accept, reject, suspend, remove, or take any other action regarding a Team
-belong solely to Gratipay.
+  1. Establishing a Team on Gratipay involves an application and approval
+     process. As part of this process, the Gratipay community will have the
+opportunity to publicly evaluate and provide commentary about the Team.
+However, all decisions regarding whether to accept, reject, suspend, remove, or
+take any other action regarding a Team belong solely to Gratipay.
 
 1. Fees and Taxes
 
