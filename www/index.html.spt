@@ -73,7 +73,7 @@ if not user.ANON:
         </div>
 
         <p class="other">{{
-            _("By signing in, you indicate that you have read and agree to our {0}Terms and Conditions{1}.",
+            _("By signing in, you indicate that you have read and agree to our {0}Terms of Service{1}.",
               "<a href='/about/terms/'>"|safe, "</a>"|safe) + " " +
             _("You'll be joining {0} active users, who exchanged {1} {2}last week{3}.",
               format_number(website.gnactive),
