@@ -10,8 +10,8 @@ field_names = {
     'name': 'Team Name',
     'homepage': 'Homepage',
     'product_or_service': 'Product or Service',
-    'getting_paid': 'How do you share revenue?',
-    'getting_involved': 'How can other people get involved?'
+    'getting_paid': 'Revenue',
+    'getting_involved': 'Contributing'
 }
 
 if user.ANON:
