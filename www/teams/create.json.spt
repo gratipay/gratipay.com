@@ -1,0 +1,54 @@
+from aspen import Response
+
+from gratipay.models.community import slugize
+from gratipay.models.team import Team
+from psycopg2 import IntegrityError
+[---]
+request.allow('POST')
+
+field_names = {
+    'name': 'Team Name',
+    'homepage': 'Homepage',
+    'product_or_service': 'Product or Service',
+    'getting_paid': 'Revenue',
+    'getting_involved': 'Contributing'
+}
+
+if user.ANON:
+    raise Response(401, _("You must sign in to apply for a new team."))
+
+if user.participant.email_address is None:
+    raise Response(400, _("You must have a verified email address to apply for a new team."))
+
+if not user.participant.has_payout_route:
+    raise Response(400, _("You must attach a bank account or PayPal to apply for a new team."))
+
+if user.participant.claimed_time is None \
+or user.participant.is_suspicious is True \
+or user.participant.is_closed:  # sanity checks
+    raise Response(400, _("How are you applying for a team!?"))
+
+if not request.body.get('agree_terms', False):
+    raise Response(400, _("Please agree to the terms of service."))
+
+if request.method == 'POST':
+    fields = {}
+
+    # Validate inputs
+
+    for field in field_names.keys():
+        value = request.body.get(field, '')
+        if not value:
+            raise Response(400, _("Please fill out the '{0}' field.", field_names[field]))
+
+        fields[field] = value
+
+    fields['slug'] = slugize(fields['name'])
+
+    try:
+        Team.create_new(user.participant, fields)
+    except IntegrityError:
+        raise Response(400, _("Sorry, there is already a team using '{}'.", fields['slug']))
+
+[---] application/json via json_dump
+{'email': user.participant.email_address}

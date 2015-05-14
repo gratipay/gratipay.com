@@ -8,6 +8,20 @@ from gratipay.models.team import Team
 
 class TestNewTeams(Harness):
 
+    valid_data = {
+        'name': 'Gratiteam',
+        'homepage': 'http://gratipay.com/',
+        'agree_terms': 'true',
+        'product_or_service': 'Sample Product',
+        'getting_paid': 'Getting Paid',
+        'getting_involved': 'Getting Involved'
+    }
+
+    def post_new(self, data, auth_as='alice', expected=200):
+        r =  self.client.POST('/teams/create.json', data=data, auth_as=auth_as, raise_immediately=False)
+        assert r.code == expected
+        return r
+
     def test_harness_can_make_a_team(self):
         team = self.make_team()
         assert team.name == 'The A Team'
@@ -23,6 +37,52 @@ class TestNewTeams(Harness):
         team = Team.from_id(self.make_team().id)
         assert team.name == 'The A Team'
         assert team.owner == 'hannibal'
+
+    def test_can_create_new_team(self):
+        self.make_participant('alice', claimed_time='now', email_address='', last_ach_result='')
+        self.post_new(dict(self.valid_data))
+        team = self.db.one("SELECT * FROM teams")
+        assert team
+        assert team.owner == 'alice'
+
+    def test_401_for_anon_creating_new_team(self):
+        self.post_new(self.valid_data, auth_as=None, expected=401)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+
+    def test_error_message_for_no_valid_email(self):
+        self.make_participant('alice', claimed_time='now')
+        r = self.post_new(dict(self.valid_data), expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "You must have a verified email address to apply for a new team." in r.body
+
+    def test_error_message_for_no_payout_route(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
+        r = self.post_new(dict(self.valid_data), expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "You must attach a bank account or PayPal to apply for a new team." in r.body
+
+    def test_error_message_for_terms(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_ach_result='')
+        data = dict(self.valid_data)
+        del data['agree_terms']
+        r = self.post_new(data, expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Please agree to the terms of service." in r.body
+
+    def test_error_message_for_missing_fields(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_ach_result='')
+        data = dict(self.valid_data)
+        del data['name']
+        r = self.post_new(data, expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Please fill out the 'Team Name' field." in r.body
+
+    def test_error_message_for_slug_collision(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_ach_result='')
+        self.post_new(dict(self.valid_data))
+        r = self.post_new(dict(self.valid_data), expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 1
+        assert "Sorry, there is already a team using 'gratiteam'." in r.body
 
 
 class TestOldTeams(Harness):

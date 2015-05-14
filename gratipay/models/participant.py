@@ -776,6 +776,14 @@ class Participant(Model, MixinTeam):
         """, (self.id,))
         return {r.network: r.address for r in routes}
 
+    @property
+    def has_payout_route(self):
+        for network in ('balanced-ba', 'paypal'):
+            route = ExchangeRoute.from_network(self, 'balanced-ba')
+            if route and not route.error:
+                return True
+        return False
+
 
     def get_balanced_account(self):
         """Fetch or create the balanced account for this participant.

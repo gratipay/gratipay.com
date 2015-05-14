@@ -69,6 +69,7 @@ class TestRoutes(BillingHarness):
         assert bank_accounts[0].href == bank_account.href
 
         assert self.david.get_bank_account_error() == ''
+        assert self.david.has_payout_route
 
         self.hit('david', 'delete', 'balanced-ba', bank_account.href)
 
@@ -80,12 +81,14 @@ class TestRoutes(BillingHarness):
         # Check that update_error doesn't update an invalidated route
         route.update_error('some error')
         assert route.error == david.get_bank_account_error() == 'invalidated'
+        assert not self.david.has_payout_route
 
     @mock.patch.object(Participant, 'get_balanced_account')
     def test_associate_bank_account_invalid(self, gba):
         gba.return_value.merchant_status = 'underwritten'
         self.hit('david', 'associate', 'balanced-ba', '/bank_accounts/BA123123123', expected=400)
         assert self.david.get_bank_account_error() is None
+        assert not self.david.has_payout_route
 
     def test_associate_bitcoin(self):
         addr = '17NdbrSGoUotzeGCcMMCqnFkEvLymoou9j'

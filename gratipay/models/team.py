@@ -35,3 +35,18 @@ class Team(Model):
              WHERE {}=%s
 
         """.format(thing), (value,))
+
+    @classmethod
+    def create_new(cls, owner, fields):
+        return cls.db.one("""
+
+            INSERT INTO teams
+                        (slug, slug_lower, name, homepage, product_or_service,
+                         getting_involved, getting_paid, owner)
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+              RETURNING teams.*::teams
+
+        """, (fields['slug'], fields['slug'].lower(), fields['name'], fields['homepage'],
+              fields['product_or_service'], fields['getting_involved'], fields['getting_paid'],
+              owner.username))
+

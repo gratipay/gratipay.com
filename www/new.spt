@@ -1,0 +1,93 @@
+from aspen import Response
+
+from gratipay.models.community import slugize
+from gratipay.models.team import Team
+[---]
+request.allow('GET')
+
+if user.ANON:
+    raise Response(401, _("You must sign in to apply for a new team."))
+
+if user.participant.email_address is None:
+    raise Response(400, _("You must have a verified email address to apply for a new team."))
+
+if not user.participant.has_payout_route:
+    raise Response(400, _("You must attach a bank account or PayPal to apply for a new team."))
+
+
+# We'll actually migrate *all* non-zero tips from non-closed, non-suspicious
+# users, in case someone responds to a "failing card" notification at some
+# point. But let's only tell them about the funded tips.
+
+receiving, ntips = website.db.one( """
+ SELECT sum(amount), count(amount)
+   FROM current_tips
+   JOIN participants p ON p.username = tipper
+  WHERE tippee = %s
+    AND p.claimed_time IS NOT null
+    AND p.is_suspicious IS NOT true
+    AND p.is_closed IS NOT true
+    AND is_funded
+    AND amount > 0
+""", (user.participant.username,))
+
+title = _("Apply for a New Team")
+[---] text/html
+{% extends "templates/base.html" %}
+
+{% block scripts %}
+<script>$(document).ready(Gratipay.new_team.initForm);</script>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="col0">
+<style>
+    textarea {
+        width: 100%;
+        height: 200px;
+    }
+</style>
+<form action="/teams/create.json" method="POST" id="new-team">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+
+    <label><h2>{{ _("Team Name") }}</h2></label>
+    <input type="text" name="name" required autofocus />
+
+    <label><h2>{{ _("Homepage") }}</h2></label>
+    <input type="text" name="homepage" required />
+
+    <label><h2>{{ _("Product or Service") }}</h2></label>
+    <p>{{ _("What product or service does your team provide?") }}</p>
+    <textarea name="product_or_service" required></textarea>
+
+    <label><h2>{{ _("Contributing") }}</h2></label>
+    <p>{{ _("How can other people get involved with your team?") }}</p>
+    <textarea name="getting_involved" required></textarea>
+
+    <label><h2>{{ _("Revenue") }}</h2></label>
+    <p>{{ _("What is your revenue model? How do you share revenue with contributors?") }}</p>
+    <textarea name="getting_paid" required></textarea>
+
+    <br>
+    <br>
+    <input type="checkbox" value="true" name="agree_terms" id="agree_terms">
+    <label for="agree_terms">
+        {{ _( "I agree to the {0}terms of service{1}"
+            , '<a href="/about/policies/terms-of-service">'|safe
+            , '</a>'|safe
+             ) }}
+    </label>
+    <br>
+    <br>
+
+    {% if ntips %}
+    <p>The {{ ntips }} weekly payments totalling ${{ receiving }} that
+    previously were directed at you will be <b>redirected to your new team</b>,
+    pending approval of your application.</p>
+    {% endif %}
+
+    <button type="submit">{{ _("Apply") }}</button>
+</form>
+</div>
+{% endblock %}
