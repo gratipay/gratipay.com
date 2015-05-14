@@ -779,7 +779,7 @@ class Participant(Model, MixinTeam):
     @property
     def has_payout_route(self):
         for network in ('balanced-ba', 'paypal'):
-            route = ExchangeRoute.from_network(self, 'balanced-ba')
+            route = ExchangeRoute.from_network(self, network)
             if route and not route.error:
                 return True
         return False
