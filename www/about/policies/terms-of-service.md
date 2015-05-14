@@ -25,10 +25,10 @@ will only use or share your information and Content as described in our
 Terms.
 
   1. You are responsible for maintaining the security of your account
-     information, including your password. You agree to notify Gratipay
-immediately of any actual or suspected loss, theft, or unauthorized use of your
-password. Gratipay shall not be liable for any loss or damage arising from your
-failure to keep your account secure.
+     information, including your authentication credentials. You agree to
+notify Gratipay immediately of any actual or suspected loss, theft, or
+unauthorized use of your credentials. Gratipay shall not be liable for any loss
+or damage arising from your failure to keep your account secure.
 
   1. You may only use the Service if you are 13 years old or older, and you
      represent to us that you are 13 or older. If you are under the age of 18,
@@ -40,9 +40,10 @@ these Terms.
   1. The Service is a platform to enable Teams of Gratipay Participants to
      receive payments to fund Open Work. Open Work means that the Team provides
 a clear path for any individual to voluntarily begin contributing to the Team's
-work and to be paid for their contribution. Some examples of Teams performing
-Open Work include an open source software project that pays contributors, or a
-hackerspace that pays individuals to teach classes or manage its operations.
+work and to share in any revenue the Team generates. Some examples of Teams
+performing Open Work include an open source software project that pays
+contributors, or a hackerspace that pays individuals to teach classes or manage
+its operations.
 
   1. The Participant who establishes a Team is its Owner. Teams may optionally
      have other Members.
@@ -72,7 +73,7 @@ promise.
 
   1. Teams can use the Service's Payroll feature to automatically divide
      incoming payments among Team Members, according to the allocation set by
-the Members.
+the Owner and/or Members.
 
   1. Gratipay does not determine how a Team's Payroll is allocated and is not
      responsible for how Teams internally distribute payments. The agreement
@@ -90,8 +91,8 @@ contributing to the Team's work, and to be paid for their contribution.
 account information).
 
   1. Teams and their Open Work must be consistent with Gratipay's [Brand
-     Guidelines](http://inside.gratipay.com/big-picture/brand/), Community
-Guidelines, and Acceptable Use Policy.
+     Guidelines](http://inside.gratipay.com/big-picture/brand/) and Acceptable
+Use Policy.
 
   1. Gratipay reserves the right to reject, suspend, or remove a Team at any
      time, and for any reason.
@@ -115,12 +116,12 @@ page](/Gratipay/).
 
   1. You are responsible for paying any taxes and withholdings associated with
      your use of the Service. Team Owners, and not Gratipay, are responsible
-for any taxes and withholdings required by applicable law with respect to
-payments made to Team Members (whether through the Payroll feature or
-otherwise), including without limitation payroll tax, unemployment insurance,
-and worker compensation insurance payments. Team Owners are also responsible
-for providing any required tax and other documentation to employees,
-independent contractors, tax authorities, or any other person.
+for compliance with all laws, as well as any taxes and withholding
+requirements, applicable to payments made to Team Members (whether through the
+Payroll feature or otherwise), including without limitation payroll tax,
+unemployment insurance, and worker compensation insurance payments. Team Owners
+are also responsible for providing any required tax and other documentation to
+employees, independent contractors, tax authorities, or any other person.
 
 1. Content Accessible on the Service
 
@@ -146,9 +147,10 @@ content. However, Gratipay has no obligation to monitor, filter, or disable
 access to any content, and shall not be responsible if you encounter
 objectionable content by using the Service.
 
-  1. The Service, including Team profiles, may contain links to other websites.
-     When you access third-party websites linked to from the Service, you do so
-at your own risk. Gratipay does not review, control, or endorse those sites.
+  1. The Service, including Participant and Team profiles, may contain links to
+     other websites. When you access third-party websites linked to from the
+Service, you do so at your own risk. Gratipay does not review, control, or
+endorse those sites.
 
 1. License to Your Content
 
@@ -184,7 +186,8 @@ of Gratipay or any third parties.
 
     * Unauthorized access, including: accessing or attempting to access any
       non-public interface, system, or functionality of the Service, or testing
-the Service for vulnerabilities.
+the Service for vulnerabilities, except as described in our [security
+disclosure policy](/about/security/).
 
     * Abuse, including threats of violence or harassment of a Participant
       through repeated unwanted contact.
@@ -210,15 +213,23 @@ content. We respond to reports of copyright infringement as described in the
 Copyright Policy.
 
     * Fraud or impersonation, including any use of the Service to impersonate
-      or deceive others (but excluding parody).  Contests or promotions that
-violate any applicable law or regulation, or that suggest in any way that
-Gratipay is involved in or responsible for the activity.
+      or deceive others. Contests or promotions that violate any applicable law
+or regulation, or that suggest in any way that Gratipay is involved in or
+responsible for the activity.
 
 1. Gratipay's Service Providers
 
-  1. Gratipay partners with third-party payment processors (such as Braintree)
-     for payment processing. When you use these partners' services to make or
-receive payments via the Service, you agree to their terms of service.
+  1. Gratipay uses Pound Payments Inc., DBA Balanced ("Balanced") as a third
+     party service provider for payment services (e.g. card acceptance,
+merchant settlement, and related services). By making use of some or all of
+these payment services on Gratipay you agree to be bound by Balanced's [terms
+and conditions](https://www.balancedpayments.com/terms) and [privacy
+policy](https://www.balancedpayments.com/privacy), and hereby consent and
+authorize us to delegate the authorizations and share the information you
+provide to us with Balanced to the extent required to provide the payment
+services to you.  Balanced may also be contacted directly for payments support
+either by email at support@balancedpayments.com or by phone at +1 (888)
+744-2622.
 
 1. Nonprofits and Charities using Gratipay
 
@@ -268,13 +279,13 @@ Gratipay by providing the following information: a) the specific location of
 the material that Gratipay has removed or disabled access to; b) your name,
 address, telephone number, and email address; c) a statement that you consent
 to the jurisdiction of Federal District Court for the judicial district in
-which your address is located (or the federal district courts located in New
-York County, New York if your address is outside of the United States), and
-that you will accept service of process from the person who provided the
-original notification of infringement (or an agent of that person); this
-statement: "I swear, under penalty of perjury, that I have a good faith belief
-that the material was removed or disabled as a result of a mistake or
-misidentification of the material to be removed or disabled"; and your
+which your address is located (or the federal district courts located in the
+Western District of Pennsylvania if your address is outside of the United
+States), and that you will accept service of process from the person who
+provided the original notification of infringement (or an agent of that
+person); this statement: "I swear, under penalty of perjury, that I have a good
+faith belief that the material was removed or disabled as a result of a mistake
+or misidentification of the material to be removed or disabled"; and your
 signature.
 
   1. Removal and Termination for Infringement: Gratipay will terminate, under
@@ -363,7 +374,8 @@ defense or settlement of any such matters.
   1. Assignment: You may not assign your rights and obligations under these
      Terms to any other person. In the event of a merger, sale, or acquisition
 of substantially all of Gratipay's assets, Gratipay may assign its rights and
-obligations under these Terms to its successor.
+obligations under these Terms to its successor except with Gratipay's express
+written agreement.
 
   1. Modifications to this Agreement: Gratipay may occasionally revise these
      Terms. You can find the most recent version at
@@ -377,7 +389,7 @@ thereby agree to be bound by the revised Terms.
      shall be governed by the laws of the State of Pennsylvania without regard
 to its conflict of law provisions. Any and all claims, causes of action, or
 disputes (regardless of theory) arising out of or relating to the Service,
-shall be brought exclusively in the courts located in Allegheny County,
+shall be brought exclusively in the courts located in Beaver County,
 Pennsylvania, or the U.S. District Court for the Western District of
 Pennsylvania. You consent and waive any objection to the jurisdiction of and
 venue in these courts.
@@ -395,9 +407,6 @@ has been designated by the U.S. Government as a "terrorist supporting" country;
 and (ii) you are not listed on any U.S. Government list of prohibited or
 restricted parties.
 
-  1. Third-Party Beneficiaries: There are no other third-party beneficiaries to
-     these Terms.
-
   1. Waiver and Severability: Failure by Gratipay to enforce any right or
      provision of these Terms will not be deemed a waiver of such right or
 provision. In the event that any provision of these Terms is held to be invalid
@@ -411,4 +420,4 @@ agreement between you and Gratipay regarding the Service (excluding any service
 for which you have a separate agreement with Gratipay that is explicitly in
 addition to or in place of these Terms), and these Terms supersede and replace
 any prior agreements between you and Gratipay regarding the Service. There
-shall be third party beneficiaries to the Terms.
+shall be no third-party beneficiaries to the Terms.
