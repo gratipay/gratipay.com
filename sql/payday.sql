@@ -21,6 +21,26 @@ CREATE TEMPORARY TABLE payday_participants ON COMMIT DROP AS
 CREATE UNIQUE INDEX ON payday_participants (id);
 CREATE UNIQUE INDEX ON payday_participants (username);
 
+CREATE TEMPORARY TABLE payday_teams ON COMMIT DROP AS
+    SELECT slug
+         , owner
+         , 0 AS balance
+      FROM teams t
+      JOIN participants p
+        ON t.owner = p.username
+     WHERE t.is_approved IS true
+       AND t.is_closed IS NOT true
+       AND p.claimed_time IS NOT null
+       AND p.is_closed IS NOT true
+       AND p.is_suspicious IS NOT true
+       AND (SELECT count(*)
+              FROM exchange_routes
+             WHERE participant = p.id
+               AND network IN ('balanced-ba', 'paypal')
+               AND error != ''
+            ) > 0
+    ;
+
 CREATE TEMPORARY TABLE payday_transfers_done ON COMMIT DROP AS
     SELECT *
       FROM transfers t
