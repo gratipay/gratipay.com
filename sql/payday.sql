@@ -26,6 +26,7 @@ CREATE TEMPORARY TABLE payday_teams ON COMMIT DROP AS
          , slug
          , owner
          , 0::numeric(35, 2) AS balance
+         , false AS is_drained
       FROM teams t
       JOIN participants p
         ON t.owner = p.username
@@ -169,6 +170,21 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER process_take AFTER INSERT ON payday_takes
     FOR EACH ROW EXECUTE PROCEDURE process_take();
+
+
+-- Create a trigger to process draws
+
+CREATE OR REPLACE FUNCTION process_draw() RETURNS trigger AS $$
+    BEGIN
+        EXECUTE pay(NEW.owner, NEW.slug, -NEW.balance, 'to-participant');
+        RETURN NULL;
+    END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER process_draw BEFORE UPDATE OF is_drained ON payday_teams
+    FOR EACH ROW
+    WHEN (NEW.is_drained IS true AND OLD.is_drained IS NOT true)
+    EXECUTE PROCEDURE process_draw();
 
 
 -- Save the stats we already have

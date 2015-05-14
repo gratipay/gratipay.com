@@ -75,6 +75,7 @@ class Payday(object):
                 create_card_holds
                 process_subscriptions
                 transfer_takes
+                process_draws
                 settle_card_holds
                 update_balances
                 take_over_balances
@@ -161,6 +162,7 @@ class Payday(object):
             holds = self.create_card_holds(cursor)
             self.process_subscriptions(cursor)
             self.transfer_takes(cursor, self.ts_start)
+            self.process_draws(cursor)
             transfers = cursor.all("""
                 SELECT * FROM transfers WHERE "timestamp" > %s
             """, (self.ts_start,))
@@ -178,9 +180,10 @@ class Payday(object):
         self.take_over_balances()
         # Clean up leftover functions
         self.db.run("""
+            DROP FUNCTION process_subscription();
             DROP FUNCTION process_take();
-            DROP FUNCTION process_tip();
-            DROP FUNCTION transfer(text, text, numeric, context_type);
+            DROP FUNCTION process_draw();
+            DROP FUNCTION pay(text, text, numeric, payment_direction);
         """)
 
 
@@ -280,6 +283,7 @@ class Payday(object):
 
     @staticmethod
     def transfer_takes(cursor, ts_start):
+        return  # XXX Bring me back!
         cursor.run("""
 
         INSERT INTO payday_takes
@@ -302,6 +306,13 @@ class Payday(object):
           ORDER BY t.team, t.ctime DESC;
 
         """, dict(ts_start=ts_start))
+
+
+    @staticmethod
+    def process_draws(cursor):
+        """Send whatever remains after payroll to the team owner.
+        """
+        cursor.run("UPDATE payday_teams SET is_drained=true;")
 
 
     def settle_card_holds(self, cursor, holds):

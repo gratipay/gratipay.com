@@ -171,7 +171,7 @@ class Harness(unittest.TestCase):
             _kw['is_approved'] = False
 
         if Participant.from_username(_kw['owner']) is None:
-            self.make_participant(_kw['owner'], claimed_time='now')
+            self.make_participant(_kw['owner'], claimed_time='now', last_ach_result='')
 
         team = self.db.one("""
             INSERT INTO teams
