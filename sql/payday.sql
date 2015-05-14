@@ -22,9 +22,10 @@ CREATE UNIQUE INDEX ON payday_participants (id);
 CREATE UNIQUE INDEX ON payday_participants (username);
 
 CREATE TEMPORARY TABLE payday_teams ON COMMIT DROP AS
-    SELECT slug
+    SELECT t.id
+         , slug
          , owner
-         , 0 AS balance
+         , 0::numeric(35, 2) AS balance
       FROM teams t
       JOIN participants p
         ON t.owner = p.username
@@ -34,115 +35,114 @@ CREATE TEMPORARY TABLE payday_teams ON COMMIT DROP AS
        AND p.is_closed IS NOT true
        AND p.is_suspicious IS NOT true
        AND (SELECT count(*)
-              FROM exchange_routes
-             WHERE participant = p.id
+              FROM exchange_routes er
+             WHERE er.participant = p.id
                AND network IN ('balanced-ba', 'paypal')
-               AND error != ''
+               AND error = ''
             ) > 0
     ;
 
-CREATE TEMPORARY TABLE payday_transfers_done ON COMMIT DROP AS
+CREATE TEMPORARY TABLE payday_payments_done ON COMMIT DROP AS
     SELECT *
-      FROM transfers t
-     WHERE t.timestamp > %(ts_start)s;
+      FROM payments p
+     WHERE p.timestamp > %(ts_start)s;
 
-CREATE TEMPORARY TABLE payday_tips ON COMMIT DROP AS
-    SELECT tipper, tippee, amount
-      FROM ( SELECT DISTINCT ON (tipper, tippee) *
-               FROM tips
+CREATE TEMPORARY TABLE payday_subscriptions ON COMMIT DROP AS
+    SELECT subscriber, team, amount
+      FROM ( SELECT DISTINCT ON (subscriber, team) *
+               FROM subscriptions
               WHERE mtime < %(ts_start)s
-           ORDER BY tipper, tippee, mtime DESC
-           ) t
-      JOIN payday_participants p ON p.username = t.tipper
-      JOIN payday_participants p2 ON p2.username = t.tippee
-     WHERE t.amount > 0
+           ORDER BY subscriber, team, mtime DESC
+           ) s
+      JOIN payday_participants p ON p.username = s.subscriber
+     WHERE s.amount > 0
        AND ( SELECT id
-               FROM payday_transfers_done t2
-              WHERE t.tipper = t2.tipper
-                AND t.tippee = t2.tippee
-                AND context = 'tip'
+               FROM payday_payments_done done
+              WHERE s.subscriber = done.participant
+                AND s.team = done.team
+                AND direction = 'to-team'
            ) IS NULL
-  ORDER BY p.claimed_time ASC, t.ctime ASC;
+  ORDER BY p.claimed_time ASC, s.ctime ASC;
 
-CREATE INDEX ON payday_tips (tipper);
-CREATE INDEX ON payday_tips (tippee);
-ALTER TABLE payday_tips ADD COLUMN is_funded boolean;
+CREATE INDEX ON payday_subscriptions (subscriber);
+CREATE INDEX ON payday_subscriptions (team);
+ALTER TABLE payday_subscriptions ADD COLUMN is_funded boolean;
 
 ALTER TABLE payday_participants ADD COLUMN giving_today numeric(35,2);
 UPDATE payday_participants
    SET giving_today = COALESCE((
            SELECT sum(amount)
-             FROM payday_tips
-            WHERE tipper = username
+             FROM payday_subscriptions
+            WHERE subscriber = username
        ), 0);
 
 CREATE TEMPORARY TABLE payday_takes
 ( team text
 , member text
 , amount numeric(35,2)
-) ON COMMIT DROP;
+ ) ON COMMIT DROP;
 
-CREATE TEMPORARY TABLE payday_transfers
-( timestamp timestamptz DEFAULT now()
-, tipper text
-, tippee text
-, amount numeric(35,2)
-, context context_type
-) ON COMMIT DROP;
+CREATE TEMPORARY TABLE payday_payments
+( timestamp timestamptz         DEFAULT now()
+, participant text              NOT NULL
+, team text                     NOT NULL
+, amount numeric(35,2)          NOT NULL
+, direction payment_direction   NOT NULL
+ ) ON COMMIT DROP;
 
 
--- Prepare a statement that makes and records a transfer
+-- Prepare a statement that makes and records a payment
 
-CREATE OR REPLACE FUNCTION transfer(text, text, numeric, context_type)
+CREATE OR REPLACE FUNCTION pay(text, text, numeric, payment_direction)
 RETURNS void AS $$
     BEGIN
         IF ($3 = 0) THEN RETURN; END IF;
         UPDATE payday_participants
            SET new_balance = (new_balance - $3)
          WHERE username = $1;
-        UPDATE payday_participants
-           SET new_balance = (new_balance + $3)
-         WHERE username = $2;
-        INSERT INTO payday_transfers
-                    (tipper, tippee, amount, context)
+        UPDATE payday_teams
+           SET balance = (balance + $3)
+         WHERE slug = $2;
+        INSERT INTO payday_payments
+                    (participant, team, amount, direction)
              VALUES ( ( SELECT p.username
                           FROM participants p
                           JOIN payday_participants p2 ON p.id = p2.id
                          WHERE p2.username = $1 )
-                    , ( SELECT p.username
-                          FROM participants p
-                          JOIN payday_participants p2 ON p.id = p2.id
-                         WHERE p2.username = $2 )
+                    , ( SELECT t.slug
+                          FROM teams t
+                          JOIN payday_teams t2 ON t.id = t2.id
+                         WHERE t2.slug = $2 )
                     , $3
                     , $4
-                    );
+                     );
     END;
 $$ LANGUAGE plpgsql;
 
 
--- Create a trigger to process tips
+-- Create a trigger to process subscriptions
 
-CREATE OR REPLACE FUNCTION process_tip() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION process_subscription() RETURNS trigger AS $$
     DECLARE
-        tipper payday_participants;
+        subscriber payday_participants;
     BEGIN
-        tipper := (
+        subscriber := (
             SELECT p.*::payday_participants
               FROM payday_participants p
-             WHERE username = NEW.tipper
+             WHERE username = NEW.subscriber
         );
-        IF (NEW.amount <= tipper.new_balance OR tipper.card_hold_ok) THEN
-            EXECUTE transfer(NEW.tipper, NEW.tippee, NEW.amount, 'tip');
+        IF (NEW.amount <= subscriber.new_balance OR subscriber.card_hold_ok) THEN
+            EXECUTE pay(NEW.subscriber, NEW.team, NEW.amount, 'to-team');
             RETURN NEW;
         END IF;
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER process_tip BEFORE UPDATE OF is_funded ON payday_tips
+CREATE TRIGGER process_subscription BEFORE UPDATE OF is_funded ON payday_subscriptions
     FOR EACH ROW
     WHEN (NEW.is_funded IS true AND OLD.is_funded IS NOT true)
-    EXECUTE PROCEDURE process_tip();
+    EXECUTE PROCEDURE process_subscription();
 
 
 -- Create a trigger to process takes

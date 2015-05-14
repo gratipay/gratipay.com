@@ -73,7 +73,7 @@ class Payday(object):
             payin
                 prepare
                 create_card_holds
-                transfer_tips
+                process_subscriptions
                 transfer_takes
                 settle_card_holds
                 update_balances
@@ -159,7 +159,7 @@ class Payday(object):
         with self.db.get_cursor() as cursor:
             self.prepare(cursor, self.ts_start)
             holds = self.create_card_holds(cursor)
-            self.transfer_tips(cursor)
+            self.process_subscriptions(cursor)
             self.transfer_takes(cursor, self.ts_start)
             transfers = cursor.all("""
                 SELECT * FROM transfers WHERE "timestamp" > %s
@@ -272,10 +272,10 @@ class Payday(object):
 
 
     @staticmethod
-    def transfer_tips(cursor):
-        """Trigger the process_tip function for each row in payday_tips.
+    def process_subscriptions(cursor):
+        """Trigger the process_subscription function for each row in payday_subscriptions.
         """
-        cursor.run("UPDATE payday_tips SET is_funded=true;")
+        cursor.run("UPDATE payday_subscriptions SET is_funded=true;")
 
 
     @staticmethod
@@ -348,8 +348,9 @@ class Payday(object):
                 log(p)
                 raise NegativeBalance()
         cursor.run("""
-            INSERT INTO transfers (timestamp, tipper, tippee, amount, context)
-                SELECT * FROM payday_transfers;
+            INSERT INTO payments (timestamp, participant, team, amount, direction, payday)
+                SELECT *, (SELECT id FROM paydays WHERE extract(year from ts_end) = 1970)
+                  FROM payday_payments;
         """)
         log("Updated the balances of %i participants." % len(participants))
 
