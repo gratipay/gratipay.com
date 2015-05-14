@@ -35,6 +35,7 @@ from gratipay.exceptions import (
     UsernameAlreadyTaken,
     NoSelfTipping,
     NoTippee,
+    NoTeam,
     BadAmount,
     EmailAlreadyTaken,
     CannotRemovePrimaryEmail,
@@ -46,6 +47,7 @@ from gratipay.models import add_event
 from gratipay.models._mixin_team import MixinTeam
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.models.team import Team
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import i18n, is_card_expiring, emails, notifications, pricing
 from gratipay.utils.username import safely_reserve_a_username
@@ -1107,6 +1109,87 @@ class Participant(Model, MixinTeam):
                       )
             self.set_attributes(is_free_rider=is_free_rider)
 
+
+    # New payday system
+
+    def set_subscription_to(self, team, amount, update_self=True, update_team=True, cursor=None):
+        """Given a Team or username, and amount as str, returns a dict.
+
+        We INSERT instead of UPDATE, so that we have history to explore. The
+        COALESCE function returns the first of its arguments that is not NULL.
+        The effect here is to stamp all tips with the timestamp of the first
+        tip from this user to that. I believe this is used to determine the
+        order of payments during payday.
+
+        The dict returned represents the row inserted in the subscriptions
+        table.
+
+        """
+        assert self.is_claimed  # sanity check
+
+        if not isinstance(team, Team):
+            team, slug = Team.from_slug(team), team
+            if not team:
+                raise NoTeam(slug)
+
+        amount = Decimal(amount)  # May raise InvalidOperation
+        if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
+            raise BadAmount
+
+        # Insert subscription
+        NEW_SUBSCRIPTION = """\
+
+            INSERT INTO subscriptions
+                        (ctime, subscriber, team, amount)
+                 VALUES ( COALESCE (( SELECT ctime
+                                        FROM subscriptions
+                                       WHERE (subscriber=%(subscriber)s AND team=%(team)s)
+                                       LIMIT 1
+                                      ), CURRENT_TIMESTAMP)
+                        , %(subscriber)s, %(team)s, %(amount)s
+                         )
+              RETURNING *
+
+        """
+        args = dict(subscriber=self.username, team=team.slug, amount=amount)
+        t = (cursor or self.db).one(NEW_SUBSCRIPTION, args)
+
+        if update_self:
+            # Update giving amount of subscriber
+            self.update_giving(cursor)
+        if update_team:
+            # Update receiving amount of team
+            team.update_receiving(cursor)
+        if team.slug == 'Gratipay':
+            # Update whether the subscriber is using Gratipay for free
+            self.update_is_free_rider(None if amount == 0 else False, cursor)
+
+        return t._asdict()
+
+
+    def get_subscription_to(self, team):
+        """Given a slug, returns a dict.
+        """
+
+        if not isinstance(team, Team):
+            team, slug = Team.from_slug(team), team
+            if not slug:
+                raise NoTeam(slug)
+
+        default = dict(amount=Decimal('0.00'), is_funded=False)
+        return self.db.one("""\
+
+            SELECT *
+              FROM subscriptions
+             WHERE subscriber=%s
+               AND team=%s
+          ORDER BY mtime DESC
+             LIMIT 1
+
+        """, (self.username, team.slug), back_as=dict, default=default)
+
+
+    # Old payday system, deprecated and going away ...
 
     def set_tip_to(self, tippee, amount, update_self=True, update_tippee=True, cursor=None):
         """Given a Participant or username, and amount as str, returns a dict.
