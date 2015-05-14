@@ -1160,7 +1160,7 @@ class Participant(Model, MixinTeam):
         if update_team:
             # Update receiving amount of team
             team.update_receiving(cursor)
-        if team.slug == 'Gratipay':
+        if team.slug == 'gratipay':
             # Update whether the subscriber is using Gratipay for free
             self.update_is_free_rider(None if amount == 0 else False, cursor)
 

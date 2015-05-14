@@ -499,7 +499,7 @@ class Tests(Harness):
 
     def test_sst_sets_is_free_rider_to_false(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        gratipay = self.make_team('Gratipay', owner=self.make_participant('Gratipay').username)
+        gratipay = self.make_team('gratipay', owner=self.make_participant('Gratipay').username)
         alice.set_subscription_to(gratipay, '0.01')
         assert alice.is_free_rider is False
         assert Participant.from_username('alice').is_free_rider is False
