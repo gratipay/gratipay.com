@@ -180,7 +180,6 @@ class Payday(object):
         self.db.run("""
             DROP FUNCTION process_take();
             DROP FUNCTION process_tip();
-            DROP FUNCTION settle_tip_graph();
             DROP FUNCTION transfer(text, text, numeric, context_type);
         """)
 
@@ -274,17 +273,9 @@ class Payday(object):
 
     @staticmethod
     def transfer_tips(cursor):
-        cursor.run("""
-
-        UPDATE payday_tips t
-           SET is_funded = true
-          FROM payday_participants p
-         WHERE p.username = t.tipper
-           AND p.card_hold_ok;
-
-        SELECT settle_tip_graph();
-
-        """)
+        """Trigger the process_tip function for each row in payday_tips.
+        """
+        cursor.run("UPDATE payday_tips SET is_funded=true;")
 
 
     @staticmethod
@@ -309,8 +300,6 @@ class Payday(object):
                         AND context = 'take'
                    ) IS NULL
           ORDER BY t.team, t.ctime DESC;
-
-        SELECT settle_tip_graph();
 
         """, dict(ts_start=ts_start))
 

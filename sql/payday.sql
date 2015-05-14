@@ -151,17 +151,6 @@ CREATE TRIGGER process_take AFTER INSERT ON payday_takes
     FOR EACH ROW EXECUTE PROCEDURE process_take();
 
 
--- Create a function to settle whole tip graph
-
-CREATE OR REPLACE FUNCTION settle_tip_graph() RETURNS void AS $$
-    BEGIN
-         UPDATE payday_tips
-            SET is_funded = true
-          WHERE is_funded IS NOT true;
-    END;
-$$ LANGUAGE plpgsql;
-
-
 -- Save the stats we already have
 
 UPDATE paydays
