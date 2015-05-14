@@ -25,11 +25,20 @@ these Terms.</p>
 
 <p>If you have any questions about these terms, please contact us:</p>
 
-<p>Gratipay, LLC
-716 Park Road
-Ambridge, PA 15003
-USA
+<p>Gratipay, LLC<br>
+716 Park Road<br>
+Ambridge, PA 15003<br>
+USA<br>
 <a href="mailto:legal@gratipay.com">legal@gratipay.com</a>  </p>
+
+<br>
+
+<style>
+    ol li { list-style-type: decimal; }
+    ol ol li { list-style-type: lower-roman; }
+    ol ol ol li { list-style-type: lower-alpha; }
+    ol ol ul li { list-style-type: disc; }
+</style>
 
 <ol>
 <li><p>Registration, Security, and Privacy</p>
@@ -182,64 +191,50 @@ permissible, for example as fair use.</li>
 <li><p>Acceptable Use Policy</p>
 
 <ol>
-<li>The following conduct is prohibited on the Service:</li>
-</ol></li>
-</ol>
+<li><p>The following conduct is prohibited on the Service:</p>
 
-<pre><code>* Illegal activities, including the promotion or solicitation of illegal
-  acts.
+<ul>
+    <li>Illegal activities, including the promotion or solicitation of illegal acts.</li>
 
-* Malicious activity or content, such as the transmission of viruses,
+    <li>Malicious activity or content, such as the transmission of viruses,
   malware, or any other malicious or destructive code, or content or
-</code></pre>
+activity intended to harm or disrupt the hardware, networks, or infrastructure
+of Gratipay or any third parties.</li>
 
-<p>activity intended to harm or disrupt the hardware, networks, or infrastructure
-of Gratipay or any third parties.</p>
-
-<pre><code>* Unauthorized access, including: accessing or attempting to access any
+<li>Unauthorized access, including: accessing or attempting to access any
   non-public interface, system, or functionality of the Service, or testing
-</code></pre>
+the Service for vulnerabilities, except as described in our <a href="/about/security/">security
+disclosure policy</a>.</li>
 
-<p>the Service for vulnerabilities, except as described in our <a href="/about/security/">security
-disclosure policy</a>.</p>
+<li>Abuse, including threats of violence or harassment of a Participant
+  through repeated unwanted contact.</li>
 
-<pre><code>* Abuse, including threats of violence or harassment of a Participant
-  through repeated unwanted contact.
-
-* Posting anyone&#39;s personal or confidential information, such as social
+<li>Posting anyone&#39;s personal or confidential information, such as social
   security numbers, credit card numbers, street addresses, phone numbers,
-</code></pre>
+confidential ID numbers, or account passwords, without their permission.</li>
 
-<p>confidential ID numbers, or account passwords, without their permission.</p>
+<li>Account hijacking, including any access to or use of another
+  Participant&#39;s account without their permission.</li>
 
-<pre><code>* Account hijacking, including any access to or use of another
-  Participant&#39;s account without their permission.
+<li>Child exploitation, including any content or activity that exploits or
+  abuses children.</li>
 
-* Child exploitation, including any content or activity that exploits or
-  abuses children.
-
-* Spam, including posting unsolicited promotional or commercial content in
+<li>Spam, including posting unsolicited promotional or commercial content in
   comments, sending invitations for the purpose of advertising to the
-</code></pre>
+recipients, or posting content or links for the purpose of manipulating search
+or other algorithms.</li>
 
-<p>recipients, or posting content or links for the purpose of manipulating search
-or other algorithms.</p>
-
-<pre><code>* Intellectual property infringement, including the infringing use of third
+<li>Intellectual property infringement, including the infringing use of third
   party trademarks or the unauthorized and unlawful posting of copyrighted
-</code></pre>
+content. We respond to reports of copyright infringement as described in the
+Copyright Policy.</li>
 
-<p>content. We respond to reports of copyright infringement as described in the
-Copyright Policy.</p>
-
-<pre><code>* Fraud or impersonation, including any use of the Service to impersonate
+<li>Fraud or impersonation, including any use of the Service to impersonate
   or deceive others. Contests or promotions that violate any applicable law
-</code></pre>
+or regulation, or that suggest in any way that Gratipay is involved in or
+responsible for the activity.</li>
+</ul></li></ol></li>
 
-<p>or regulation, or that suggest in any way that Gratipay is involved in or
-responsible for the activity.</p>
-
-<ol>
 <li><p>Gratipay&#39;s Service Providers</p>
 
 <ol>
@@ -275,7 +270,8 @@ notice-and-takedown procedure provided by the Digital Millennium Copyright
 Act (&ldquo;DMCA&rdquo;). You can contact our designated agent for copyright infringement
 notifications and counter-notifications at: Copyright Agent, Gratipay, LLC, 716
 Park Road, Ambridge, PA 15003, USA, <a href="mailto:legal@gratipay.com">legal@gratipay.com</a>.</li>
-<li>Reporting Instances of Copyright Infringement </li>
+<li>Reporting Instances of Copyright Infringement
+<ol>
 <li>If you believe that any content on the Service infringes your copyright,
 please send us a notice containing the following information: a)
 identification of the work or material being infringed; b) identification of
@@ -288,11 +284,13 @@ law; e) a statement made under penalty of perjury that the information provided
 in the notice is accurate and that you are authorized to make the complaint on
 behalf of the copyright owner; f) a physical or electronic signature of a
 person authorized to act on behalf of the owner of the copyright that has been
-allegedly infringed.</li>
+allegedly infringed.</li></ol>
+ </li>
 <li>Infringement notices are not confidential. Gratipay may provide the
 information contained in a notice to the Participant who posted the
 allegedly infringing content, or to other parties.</li>
-<li>Submitting a DMCA Counter-Notification</li>
+<li>Submitting a DMCA Counter-Notification
+<ol>
 <li>If you believe that content you posted was wrongfully removed or
 disabled as a result of a copyright infringement notice, you may notify
 Gratipay by providing the following information: a) the specific location of
@@ -307,6 +305,8 @@ person); this statement: &ldquo;I swear, under penalty of perjury, that I have a
 faith belief that the material was removed or disabled as a result of a mistake
 or misidentification of the material to be removed or disabled&rdquo;; and your
 signature.</li>
+</ol>
+</li>
 <li>Removal and Termination for Infringement: Gratipay will terminate, under
 appropriate circumstances, the accounts of Participants who repeatedly use
 the Service to infringe copyrights. Gratipay also reserves the right, in its
