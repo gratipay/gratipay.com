@@ -77,16 +77,19 @@ def payday(participants, teams):
     p_balances = defaultdict(int)
     p_holding = defaultdict(int)
 
+    # Transfer Tips
     for p in participants:
         for t, amount in p.values:
             t_balances[t] += amount
             p_holding[p] += amount
 
+    # Transfer Takes
     for t in teams:
         for p, amount in t.values:
             t_balances[t] -= amount
             p_balances[p] += amount
 
+    # Drain balance to owner
     for t in teams:
         p_balances[t.owner] += t_balances[t]
         t_balances[t] -= t_balances[t]
