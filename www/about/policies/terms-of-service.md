@@ -64,10 +64,10 @@ the agreement, and is not responsible to either the Team or the Participant if
 either party breaches the terms of the agreement (e.g. if the Team fails to
 provide the promised services).
 
-  1. Gratipay does not provide refunds. Teams are responsible for producing the
-     Open Work they offer. Gratipay does not hold funds on behalf of Teams, and
-does not warrant or guarantee that Teams will provide the Open Work they
-promise.
+  1. Gratipay is not obligated to provide refunds under any circumstance. Teams
+     are responsible for producing the Open Work they offer. Gratipay does not
+hold funds on behalf of Teams, and does not warrant or guarantee that Teams
+will provide the Open Work they promise.
 
 1. Payroll Rules
 
@@ -84,7 +84,8 @@ between those parties.
 
   1. Teams may accept payments on the Service only for Open Work, meaning that
      they provide a clear path for any individual to voluntarily begin
-contributing to the Team's work, and to be paid for their contribution.
+contributing to the Team's work, and to share in any revenue the Team
+generates.
 
   1. A Team can only begin receiving payments from Participants once it has
      provided a working withdrawal mechanism for receiving payments (e.g. bank
