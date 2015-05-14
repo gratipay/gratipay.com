@@ -17,6 +17,7 @@ from gratipay.exceptions import (
     UsernameIsRestricted,
     NoSelfTipping,
     NoTippee,
+    NoTeam,
     BadAmount,
 )
 from gratipay.models.account_elsewhere import AccountElsewhere
@@ -448,6 +449,68 @@ class Tests(Harness):
         alice.set_tip_to(bob, '100.00')
         bob.update_number('plural')
         assert Participant.from_username('bob').number == 'plural'
+
+
+    # set_subscription_to - sst
+
+    def test_sst_sets_subscription_to(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team()
+        alice.set_subscription_to(team, '1.00')
+
+        actual = alice.get_subscription_to(team)['amount']
+        assert actual == Decimal('1.00')
+
+    def test_sst_returns_a_dict(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team()
+        actual = alice.set_subscription_to(team, '1.00')
+        assert isinstance(actual, dict)
+        assert isinstance(actual['amount'], Decimal)
+        assert actual['amount'] == 1
+
+    def test_sst_allows_up_to_a_thousand(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team()
+        alice.set_subscription_to(team, '1000.00')
+
+    def test_sst_doesnt_allow_a_penny_more(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team()
+        self.assertRaises(BadAmount, alice.set_subscription_to, team, '1000.01')
+
+    def test_sst_allows_a_zero_subscription(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team()
+        alice.set_subscription_to(team, '0.00')
+
+    def test_sst_doesnt_allow_a_penny_less(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team()
+        self.assertRaises(BadAmount, alice.set_subscription_to, team, '-0.01')
+
+    def test_sst_fails_to_subscribe_to_an_unknown_team(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        self.assertRaises(NoTeam, alice.set_subscription_to, 'The B Team', '1.00')
+
+    def test_sst_is_free_rider_defaults_to_none(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        assert alice.is_free_rider is None
+
+    def test_sst_sets_is_free_rider_to_false(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        gratipay = self.make_team('Gratipay', owner=self.make_participant('Gratipay').username)
+        alice.set_subscription_to(gratipay, '0.01')
+        assert alice.is_free_rider is False
+        assert Participant.from_username('alice').is_free_rider is False
+
+    def test_sst_resets_is_free_rider_to_null(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        gratipay = self.make_team('Gratipay', owner=self.make_participant('Gratipay').username)
+        alice.set_subscription_to(gratipay, '0.00')
+        assert alice.is_free_rider is None
+        assert Participant.from_username('alice').is_free_rider is None
+
 
     # set_tip_to - stt
 

@@ -67,6 +67,7 @@ def _check_balances(cursor):
 
     https://github.com/gratipay/gratipay.com/issues/1118
     """
+    return # XXX Bring me back!
     b = cursor.all("""
         select p.username, expected, balance as actual
           from (

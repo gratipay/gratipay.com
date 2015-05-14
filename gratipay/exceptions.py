@@ -52,6 +52,7 @@ class ProblemChangingNumber(Exception):
 class TooGreedy(Exception): pass
 class NoSelfTipping(Exception): pass
 class NoTippee(Exception): pass
+class NoTeam(Exception): pass
 class BadAmount(Exception): pass
 
 class FailedToReserveUsername(Exception): pass

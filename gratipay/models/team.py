@@ -50,3 +50,7 @@ class Team(Model):
               fields['product_or_service'], fields['getting_involved'], fields['getting_paid'],
               owner.username))
 
+
+    def update_receiving(self, cursor=None):
+        # Stubbed out for now. Migrate this over from Participant.
+        pass
