@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import itertools
 import unittest
+from collections import defaultdict
 from os.path import dirname, join, realpath
 
 from aspen import resources
@@ -147,17 +148,41 @@ class Harness(unittest.TestCase):
         return unicode(balanced.Customer(meta=dict(seq=seq)).save().href)
 
 
-    def make_team(self, name="The A Team", owner="hannibal"):
-        if Participant.from_username(owner) is None:
-            self.make_participant(owner, claimed_time='now')
-        slug = name.replace('.', '').replace(' ', '').replace(',', '')
+    def make_team(self, *a, **kw):
+
+        _kw = defaultdict(str)
+        _kw.update(kw)
+
+        if a:
+            _kw['name'] = a[0]
+            try: _kw['owner'] = a[1]
+            except IndexError: pass
+        if 'name' not in _kw:
+            _kw['name'] = "The A Team"
+        if 'owner' not in _kw:
+            _kw['owner'] = "hannibal"
+        elif isinstance(_kw['owner'], Participant):
+            _kw['owner'] = _kw['owner'].username
+        if 'slug' not in _kw:
+            _kw['slug'] = _kw['name'].replace('.', '').replace(' ', '').replace(',', '')
+        if 'slug_lower' not in _kw:
+            _kw['slug_lower'] = _kw['slug'].lower()
+        if 'is_approved' not in _kw:
+            _kw['is_approved'] = False
+
+        if Participant.from_username(_kw['owner']) is None:
+            self.make_participant(_kw['owner'], claimed_time='now')
+
         team = self.db.one("""
             INSERT INTO teams
                         (slug, slug_lower, name, homepage, product_or_service,
-                         getting_involved, getting_paid, owner)
-                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                         getting_involved, getting_paid, owner, is_approved)
+                 VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s,
+                         %(product_or_service)s, %(getting_involved)s, %(getting_paid)s,
+                         %(owner)s, %(is_approved)s)
               RETURNING teams.*::teams
-        """, (slug, slug.lower(), name, '', '', '', '', owner))
+        """, _kw)
+
         return team
 
 
