@@ -69,7 +69,8 @@ class TestPayday(BillingHarness):
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_moves_money_with_balanced(self, fch):
-        self.janet.set_tip_to(self.homer, '15.00')
+        team = self.make_team(owner=self.homer, is_approved=True)
+        self.janet.set_subscription_to(team, '15.00')
         fch.return_value = {}
         Payday.start().run()
 
@@ -277,7 +278,8 @@ class TestPayin(BillingHarness):
         assert cch.call_args[0][-1] == 35
 
     def test_payin_fetches_and_uses_existing_holds(self):
-        self.janet.set_tip_to(self.homer, 20)
+        team = self.make_team(owner=self.homer, is_approved=True)
+        self.janet.set_subscription_to(team, '20.00')
         hold, error = create_card_hold(self.db, self.janet, D(20))
         assert hold is not None
         assert not error
@@ -286,10 +288,10 @@ class TestPayin(BillingHarness):
             self.create_card_holds()
             assert not cch.called, cch.call_args_list
 
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payin_cancels_existing_holds_of_insufficient_amounts(self, fch):
-        self.janet.set_tip_to(self.homer, 30)
+        team = self.make_team(owner=self.homer, is_approved=True)
+        self.janet.set_subscription_to(team, '30.00')
         hold, error = create_card_hold(self.db, self.janet, D(10))
         assert not error
         fch.return_value = {self.janet.id: hold}
@@ -350,11 +352,11 @@ class TestPayin(BillingHarness):
             with self.assertRaises(NegativeBalance):
                 payday.update_balances(cursor)
 
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
     @mock.patch('gratipay.billing.exchanges.thing_from_href')
     def test_card_hold_error(self, tfh, fch):
-        self.janet.set_tip_to(self.homer, 17)
+        team = self.make_team(owner=self.homer, is_approved=True)
+        self.janet.set_subscription_to(team, '17.00')
         tfh.side_effect = Foobar
         fch.return_value = {}
         Payday.start().payin()
