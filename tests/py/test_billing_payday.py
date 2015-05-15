@@ -523,8 +523,8 @@ class TestPayout(Harness):
         Payday.start().payout()
 
         assert ach.call_count == 1
-        assert ach.call_args_list[0][1].id == alice.id
-        assert ach.call_args_list[0][2] == 0
+        assert ach.call_args_list[0][0][1].id == alice.id
+        assert ach.call_args_list[0][0][2] == 0
 
     @mock.patch('gratipay.billing.payday.log')
     def test_payout_skips_unreviewed(self, log):
