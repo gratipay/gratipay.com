@@ -9,7 +9,7 @@ class TestIsApproved(Harness):
         Harness.setUp(self)
         self.admin = self.make_participant('admin', is_admin=True)
         self.alice = self.make_participant('alice')
-        self.gratiteam = self.make_team('gratiteam', owner='alice')
+        self.gratiteam = self.make_team('gratiteam', owner='alice', is_approved=None)
 
     def hit(self, data, auth_as='admin', expected=200):
         r = self.client.POST('/gratiteam/toggle-is-approved.json',
