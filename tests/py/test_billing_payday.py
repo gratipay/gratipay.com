@@ -491,11 +491,11 @@ class TestPayin(BillingHarness):
         assert Participant.from_id(bruce.id).balance == 0
         assert Participant.from_id(billy.id).balance == 18
 
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
     @mock.patch('gratipay.billing.payday.capture_card_hold')
     def test_payin_dumps_transfers_for_debugging(self, cch, fch):
-        self.janet.set_tip_to(self.homer, 10)
+        team = self.make_team(owner=self.homer, is_approved=True)
+        self.janet.set_subscription_to(team, '10.00')
         fake_hold = mock.MagicMock()
         fake_hold.amount = 1500
         fch.return_value = {self.janet.id: fake_hold}
@@ -506,7 +506,7 @@ class TestPayin(BillingHarness):
             with self.assertRaises(Foobar):
                 Payday.start().payin()
         filename = open_.call_args_list[-1][0][0]
-        assert filename.endswith('_transfers.csv')
+        assert filename.endswith('_payments.csv')
         os.unlink(filename)
 
 
