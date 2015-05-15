@@ -514,6 +514,17 @@ class TestPayout(Harness):
         Payday.start().payout()
 
     @mock.patch('gratipay.billing.payday.log')
+    @mock.patch('gratipay.billing.exchanges.thing_from_href')
+    def test_payout_can_pay_out(self, tfh, log):
+        self.make_participant('alice', claimed_time='now', is_suspicious=False,
+                              balance=20, balanced_customer_href='foo',
+                              last_ach_result='')
+        self.make_team(owner='alice', is_approved=True)
+        Payday.start().payout()
+        log.assert_any_call('Crediting alice 2000 cents ($20.00 - $0.00 fee = $20.00) on Balanced '
+                            '... succeeded.')
+
+    @mock.patch('gratipay.billing.payday.log')
     def test_payout_skips_unreviewed(self, log):
         self.make_participant('alice', claimed_time='now', is_suspicious=None,
                               balance=20, balanced_customer_href='foo',
