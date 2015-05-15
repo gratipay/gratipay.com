@@ -282,6 +282,7 @@ class Payday(object):
     def process_subscriptions(cursor):
         """Trigger the process_subscription function for each row in payday_subscriptions.
         """
+        log("Processing subscriptions.")
         cursor.run("UPDATE payday_subscriptions SET is_funded=true;")
 
 
@@ -316,10 +317,12 @@ class Payday(object):
     def process_draws(cursor):
         """Send whatever remains after payroll to the team owner.
         """
+        log("Processing draws.")
         cursor.run("UPDATE payday_teams SET is_drained=true;")
 
 
     def settle_card_holds(self, cursor, holds):
+        log("Settling card holds.")
         participants = cursor.all("""
             SELECT *
               FROM payday_participants
@@ -341,6 +344,7 @@ class Payday(object):
 
     @staticmethod
     def update_balances(cursor):
+        log("Updating balances.")
         participants = cursor.all("""
 
             UPDATE participants p
@@ -374,6 +378,7 @@ class Payday(object):
         """If an account that receives money is taken over during payin we need
         to transfer the balance to the absorbing account.
         """
+        log("Taking over balances.")
         for i in itertools.count():
             if i > 10:
                 raise Exception('possible infinite loop')
@@ -440,6 +445,7 @@ class Payday(object):
 
 
     def update_stats(self):
+        log("Updating stats.")
         self.db.run("""\
 
             WITH our_transfers AS (
@@ -520,6 +526,7 @@ class Payday(object):
 
 
     def notify_participants(self):
+        log("Notifying participants.")
         ts_start, ts_end = self.ts_start, self.ts_end
         exchanges = self.db.all("""
             SELECT e.id, amount, fee, note, status, p.*::participants AS participant
