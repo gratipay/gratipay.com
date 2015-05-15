@@ -1,6 +1,7 @@
--- Create the necessary temporary tables and indexes
+-- Recreate the necessary tables and indexes
 
-CREATE TEMPORARY TABLE payday_participants ON COMMIT DROP AS
+DROP TABLE IF EXISTS payday_participants;
+CREATE TABLE payday_participants AS
     SELECT id
          , username
          , claimed_time
@@ -21,7 +22,8 @@ CREATE TEMPORARY TABLE payday_participants ON COMMIT DROP AS
 CREATE UNIQUE INDEX ON payday_participants (id);
 CREATE UNIQUE INDEX ON payday_participants (username);
 
-CREATE TEMPORARY TABLE payday_teams ON COMMIT DROP AS
+DROP TABLE IF EXISTS payday_teams;
+CREATE TABLE payday_teams AS
     SELECT t.id
          , slug
          , owner
@@ -43,12 +45,14 @@ CREATE TEMPORARY TABLE payday_teams ON COMMIT DROP AS
             ) > 0
     ;
 
-CREATE TEMPORARY TABLE payday_payments_done ON COMMIT DROP AS
+DROP TABLE IF EXISTS payday_payments_done;
+CREATE TABLE payday_payments_done AS
     SELECT *
       FROM payments p
      WHERE p.timestamp > %(ts_start)s;
 
-CREATE TEMPORARY TABLE payday_subscriptions ON COMMIT DROP AS
+DROP TABLE IF EXISTS payday_subscriptions;
+CREATE TABLE payday_subscriptions AS
     SELECT subscriber, team, amount
       FROM ( SELECT DISTINCT ON (subscriber, team) *
                FROM subscriptions
@@ -78,19 +82,21 @@ UPDATE payday_participants
             WHERE subscriber = username
        ), 0);
 
-CREATE TEMPORARY TABLE payday_takes
+DROP TABLE IF EXISTS payday_takes;
+CREATE TABLE payday_takes
 ( team text
 , member text
 , amount numeric(35,2)
- ) ON COMMIT DROP;
+ );
 
-CREATE TEMPORARY TABLE payday_payments
+DROP TABLE IF EXISTS payday_payments;
+CREATE TABLE payday_payments
 ( timestamp timestamptz         DEFAULT now()
 , participant text              NOT NULL
 , team text                     NOT NULL
 , amount numeric(35,2)          NOT NULL
 , direction payment_direction   NOT NULL
- ) ON COMMIT DROP;
+ );
 
 
 -- Prepare a statement that makes and records a payment
