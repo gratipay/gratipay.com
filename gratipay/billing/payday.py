@@ -197,8 +197,11 @@ class Payday(object):
 
     @staticmethod
     def fetch_card_holds(participant_ids):
+        log('Fetching card holds.')
         holds = {}
         for hold in CardHold.query.filter(CardHold.f.meta.state == 'new'):
+            log_amount = hold.amount / 100.0
+            p_id = int(hold.meta['participant_id'])
             state = 'new'
             if hold.status == 'failed' or hold.failure_reason:
                 state = 'failed'
@@ -209,9 +212,10 @@ class Payday(object):
             if state != 'new':
                 hold.meta['state'] = state
                 hold.save()
+                log('Set state to {} on a ${:.2f} hold for {}.'.format(state, log_amount, p_id))
                 continue
-            p_id = int(hold.meta['participant_id'])
             if p_id in participant_ids:
+                log('Reusing a ${:.2f} hold for {}.'.format(log_amount, p_id))
                 holds[p_id] = hold
             else:
                 cancel_card_hold(hold)

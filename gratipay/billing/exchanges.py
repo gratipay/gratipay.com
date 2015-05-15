@@ -240,7 +240,7 @@ def cancel_card_hold(hold):
 
     amount = hold.amount / 100.0
     participant_id = hold.meta['participant_id']
-    log("Canceled a ${:.2f} hold on Balanced for participant with id {}".format(amount, participant_id))
+    log("Canceled a ${:.2f} hold for {}.".format(amount, participant_id))
 
 
 def _prep_hit(unrounded):

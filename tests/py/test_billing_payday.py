@@ -308,6 +308,7 @@ class TestPayin(BillingHarness):
     def test_fetch_card_holds_handles_extra_holds(self, cancel, CardHold):
         fake_hold = mock.MagicMock()
         fake_hold.meta = {'participant_id': 0}
+        fake_hold.amount = 1061
         fake_hold.save = mock.MagicMock()
         CardHold.query.filter.return_value = [fake_hold]
         for attr, state in (('failure_reason', 'failed'),
