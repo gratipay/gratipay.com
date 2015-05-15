@@ -518,6 +518,7 @@ class TestPayout(Harness):
         self.make_participant('alice', claimed_time='now', is_suspicious=None,
                               balance=20, balanced_customer_href='foo',
                               last_ach_result='')
+        self.make_team(owner='alice', is_approved=True)
         Payday.start().payout()
         log.assert_any_call('UNREVIEWED: alice')
 
@@ -526,6 +527,7 @@ class TestPayout(Harness):
         self.make_participant('alice', claimed_time='now', is_suspicious=False,
                               balance=20, balanced_customer_href='foo',
                               last_ach_result='')
+        self.make_team(owner='alice', is_approved=True)
         ach_credit.return_value = 'some error'
         Payday.start().payout()
         payday = self.fetch_payday()
