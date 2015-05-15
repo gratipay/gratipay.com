@@ -38,7 +38,8 @@ class TestPayday(BillingHarness):
                SET is_suspicious = true
              WHERE username = 'janet'
         """)
-        self.janet.set_tip_to(self.homer, '6.00')  # under $10!
+        team = self.make_team(owner=self.homer, is_approved=True)
+        self.janet.set_subscription_to(team, '6.00')  # under $10!
         fch.return_value = {}
         Payday.start().run()
 
@@ -55,7 +56,8 @@ class TestPayday(BillingHarness):
                SET is_suspicious = true
              WHERE username = 'homer'
         """)
-        self.janet.set_tip_to(self.homer, '6.00')  # under $10!
+        team = self.make_team(owner=self.homer, is_approved=True)
+        self.janet.set_subscription_to(team, '6.00')  # under $10!
         fch.return_value = {}
         Payday.start().run()
 
