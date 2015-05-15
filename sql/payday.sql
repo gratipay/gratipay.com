@@ -56,6 +56,7 @@ CREATE TEMPORARY TABLE payday_subscriptions ON COMMIT DROP AS
            ORDER BY subscriber, team, mtime DESC
            ) s
       JOIN payday_participants p ON p.username = s.subscriber
+      JOIN payday_teams t ON t.slug = s.team
      WHERE s.amount > 0
        AND ( SELECT id
                FROM payday_payments_done done
