@@ -73,7 +73,7 @@ subhead = _("Frequently Asked Questions")
             </a>
         </dt>
 
-        <dd>There are two ways to add funds to Gratipay:
+        <dd>To add funds to Gratipay:
 
         <ol>
 
@@ -81,11 +81,6 @@ subhead = _("Frequently Asked Questions")
             charge you every Thursday to fund the gifts you have set up ($10
             minimum; we upcharge to cover a processing fee of 2.9% + 30&cent;;
             expect additional fees from non-U.S. banks).</li>
-
-            <li><a
-                href="mailto:support@gratipay.com?subject=bitcoin%20payin">Email
-            us</a> to request a one-time bitcoin payin (1% + 15&cent;
-            fee).</li>
 
         </ol>
 
@@ -98,7 +93,7 @@ subhead = _("Frequently Asked Questions")
             </a>
         </dt>
 
-        <dd>There are three ways to withdraw funds from Gratipay:
+        <dd>There are two ways to withdraw funds from Gratipay:
 
         <ol>
 
@@ -110,11 +105,6 @@ subhead = _("Frequently Asked Questions")
                 href="mailto:support@gratipay.com?subject=configuring%20PayPal">Email
             us</a> to set up a weekly PayPal payout (unlimited payout; 2% fee capped at
             $20).</li>
-
-            <li><a
-                href="mailto:support@gratipay.com?subject=bitcoin%20payout">Email
-            us</a> to request a one-time bitcoin payout (1% + 15&cent;
-            fee).</li>
 
         </ol>
 
