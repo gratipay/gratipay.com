@@ -163,19 +163,19 @@ class Payday(object):
             self.process_subscriptions(cursor)
             self.transfer_takes(cursor, self.ts_start)
             self.process_draws(cursor)
-            transfers = cursor.all("""
-                SELECT * FROM transfers WHERE "timestamp" > %s
+            payments = cursor.all("""
+                SELECT * FROM payments WHERE "timestamp" > %s
             """, (self.ts_start,))
             try:
                 self.settle_card_holds(cursor, holds)
                 self.update_balances(cursor)
                 check_db(cursor)
             except:
-                # Dump transfers for debugging
+                # Dump payments for debugging
                 import csv
                 from time import time
-                with open('%s_transfers.csv' % time(), 'wb') as f:
-                    csv.writer(f).writerows(transfers)
+                with open('%s_payments.csv' % time(), 'wb') as f:
+                    csv.writer(f).writerows(payments)
                 raise
         self.take_over_balances()
         # Clean up leftover functions
