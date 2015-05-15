@@ -97,21 +97,24 @@ CREATE TEMPORARY TABLE payday_payments
 CREATE OR REPLACE FUNCTION pay(text, text, numeric, payment_direction)
 RETURNS void AS $$
     DECLARE
-        delta numeric;
+        participant_delta numeric;
+        team_delta numeric;
     BEGIN
         IF ($3 = 0) THEN RETURN; END IF;
 
         IF ($4 = 'to-team') THEN
-            delta := -$3;
+            participant_delta := -$3;
+            team_delta := $3;
         ELSE
-            delta := $3;
+            participant_delta := $3;
+            team_delta := -$3;
         END IF;
 
         UPDATE payday_participants
-           SET new_balance = (new_balance + delta)
+           SET new_balance = (new_balance + participant_delta)
          WHERE username = $1;
         UPDATE payday_teams
-           SET balance = (balance - delta)
+           SET balance = (balance + team_delta)
          WHERE slug = $2;
         INSERT INTO payday_payments
                     (participant, team, amount, direction)
