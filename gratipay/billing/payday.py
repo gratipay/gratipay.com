@@ -323,6 +323,7 @@ class Payday(object):
         """)
         participants = [p for p in participants if p.id in holds]
 
+        log("Capturing card holds.")
         # Capture holds to bring balances back up to (at least) zero
         def capture(p):
             amount = -p.new_balance
@@ -330,6 +331,7 @@ class Payday(object):
         threaded_map(capture, participants)
         log("Captured %i card holds." % len(participants))
 
+        log("Canceling card holds.")
         # Cancel the remaining holds
         threaded_map(cancel_card_hold, holds.values())
         log("Canceled %i card holds." % len(holds))
