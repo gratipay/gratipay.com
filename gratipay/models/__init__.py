@@ -67,7 +67,6 @@ def _check_balances(cursor):
 
     https://github.com/gratipay/gratipay.com/issues/1118
     """
-    return # XXX Bring me back!
     b = cursor.all("""
         select p.username, expected, balance as actual
           from (
@@ -92,6 +91,20 @@ def _check_balances(cursor):
                       select tipper as username, sum(-amount) as a
                         from transfers
                     group by tipper
+
+                       union all
+
+                      select participant as username, sum(amount) as a
+                        from payments
+                       where direction='to-participant'
+                    group by participant
+
+                       union all
+
+                      select participant as username, sum(-amount) as a
+                        from payments
+                       where direction='to-team'
+                    group by participant
 
                        union all
 
