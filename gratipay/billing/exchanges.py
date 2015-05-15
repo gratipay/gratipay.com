@@ -238,6 +238,10 @@ def cancel_card_hold(hold):
     hold.meta['state'] = 'cancelled'
     hold.save()
 
+    amount = hold.amount / 100.0
+    participant_id = hold.meta['participant_id']
+    log("Canceled a ${:.2f} hold on Balanced for participant with id {}".format(amount, participant_id))
+
 
 def _prep_hit(unrounded):
     """Takes an amount in dollars. Returns cents, etc.
