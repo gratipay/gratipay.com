@@ -96,13 +96,25 @@ CREATE TEMPORARY TABLE payday_payments
 
 CREATE OR REPLACE FUNCTION pay(text, text, numeric, payment_direction)
 RETURNS void AS $$
+    DECLARE
+        participant_delta numeric;
+        team_delta numeric;
     BEGIN
         IF ($3 = 0) THEN RETURN; END IF;
+
+        IF ($4 = 'to-team') THEN
+            participant_delta := -$3;
+            team_delta := $3;
+        ELSE
+            participant_delta := $3;
+            team_delta := -$3;
+        END IF;
+
         UPDATE payday_participants
-           SET new_balance = (new_balance - $3)
+           SET new_balance = (new_balance + participant_delta)
          WHERE username = $1;
         UPDATE payday_teams
-           SET balance = (balance + $3)
+           SET balance = (balance + team_delta)
          WHERE slug = $2;
         INSERT INTO payday_payments
                     (participant, team, amount, direction)
@@ -176,7 +188,7 @@ CREATE TRIGGER process_take AFTER INSERT ON payday_takes
 
 CREATE OR REPLACE FUNCTION process_draw() RETURNS trigger AS $$
     BEGIN
-        EXECUTE pay(NEW.owner, NEW.slug, -NEW.balance, 'to-participant');
+        EXECUTE pay(NEW.owner, NEW.slug, NEW.balance, 'to-participant');
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;

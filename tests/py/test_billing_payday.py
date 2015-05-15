@@ -359,15 +359,16 @@ class TestPayin(BillingHarness):
         payday = self.fetch_payday()
         assert payday['ncc_failing'] == 1
 
-    def test_payin_doesnt_make_null_transfers(self):
+    def test_payin_doesnt_make_null_payments(self):
+        team = self.make_team('Gratiteam', is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_tip_to(self.homer, 1)
-        alice.set_tip_to(self.homer, 0)
+        alice.set_subscription_to(team, 1)
+        alice.set_subscription_to(team, 0)
         a_team = self.make_participant('a_team', claimed_time='now', number='plural')
         a_team.add_member(alice)
         Payday.start().payin()
-        transfers0 = self.db.all("SELECT * FROM transfers WHERE amount = 0")
-        assert not transfers0
+        payments = self.db.all("SELECT * FROM payments WHERE amount = 0")
+        assert not payments
 
     def test_process_subscriptions(self):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
@@ -389,6 +390,10 @@ class TestPayin(BillingHarness):
         assert Participant.from_id(alice.id).balance == D('0.49')
         assert Participant.from_username('hannibal').balance == 0
         assert Participant.from_username('lecter').balance == 0
+
+        payment = self.db.one("SELECT * FROM payments")
+        assert payment.amount == D('0.51')
+        assert payment.direction == 'to-team'
 
     @pytest.mark.xfail(reason="haven't migrated_transfer_takes yet")
     def test_transfer_takes(self):
@@ -442,6 +447,9 @@ class TestPayin(BillingHarness):
 
         assert Participant.from_id(alice.id).balance == D('0.49')
         assert Participant.from_username('hannibal').balance == D('0.51')
+
+        payment = self.db.one("SELECT * FROM payments WHERE direction='to-participant'")
+        assert payment.amount == D('0.51')
 
     @pytest.mark.xfail(reason="haven't migrated_transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
