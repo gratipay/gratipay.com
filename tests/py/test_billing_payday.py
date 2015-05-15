@@ -512,24 +512,39 @@ class TestPayin(BillingHarness):
 
 class TestPayout(Harness):
 
-    def test_payout_no_balanced_href(self):
+    def test_payout_no_balanced_href_does_________what_question_mark(self):
         self.make_participant('alice', claimed_time='now', is_suspicious=False,
                               balance=20)
         Payday.start().payout()
 
+    @mock.patch('gratipay.billing.payday.ach_credit')
+    def test_payout_can_pay_out(self, ach):
+        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
+                              balanced_customer_href='foo',
+                              last_ach_result='')
+        self.make_exchange('balanced-cc', 20, 0, alice)
+        self.make_team(owner='alice', is_approved=True)
+        Payday.start().payout()
+
+        assert ach.call_count == 1
+        assert ach.call_args_list[0][0][1].id == alice.id
+        assert ach.call_args_list[0][0][2] == 0
+
     @mock.patch('gratipay.billing.payday.log')
-    def test_payout_unreviewed(self, log):
+    def test_payout_skips_unreviewed(self, log):
         self.make_participant('alice', claimed_time='now', is_suspicious=None,
                               balance=20, balanced_customer_href='foo',
                               last_ach_result='')
+        self.make_team(owner='alice', is_approved=True)
         Payday.start().payout()
         log.assert_any_call('UNREVIEWED: alice')
 
     @mock.patch('gratipay.billing.payday.ach_credit')
-    def test_payout_ach_error(self, ach_credit):
+    def test_payout_ach_error_gets_recorded(self, ach_credit):
         self.make_participant('alice', claimed_time='now', is_suspicious=False,
                               balance=20, balanced_customer_href='foo',
                               last_ach_result='')
+        self.make_team(owner='alice', is_approved=True)
         ach_credit.return_value = 'some error'
         Payday.start().payout()
         payday = self.fetch_payday()
