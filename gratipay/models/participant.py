@@ -1022,60 +1022,29 @@ class Participant(Model, MixinTeam):
                 Participant.from_username(tip.tippee).update_receiving(cursor)
 
     def update_giving(self, cursor=None):
+        updated = []
         # Update is_funded on tips
         if self.get_credit_card_error() == '':
             updated = (cursor or self.db).all("""
-                UPDATE current_tips
+                UPDATE current_subscriptions
                    SET is_funded = true
-                 WHERE tipper = %s
+                 WHERE subscriber = %s
                    AND is_funded IS NOT true
              RETURNING *
             """, (self.username,))
-        else:
-            tips = (cursor or self.db).all("""
-                SELECT t.*
-                  FROM current_tips t
-                  JOIN participants p2 ON p2.username = t.tippee
-                 WHERE t.tipper = %s
-                   AND t.amount > 0
-                   AND p2.is_suspicious IS NOT true
-              ORDER BY p2.claimed_time IS NULL, t.ctime ASC
-            """, (self.username,))
-            fake_balance = self.balance + self.receiving
-            updated = []
-            for tip in tips:
-                if tip.amount > fake_balance:
-                    is_funded = False
-                else:
-                    fake_balance -= tip.amount
-                    is_funded = True
-                if tip.is_funded == is_funded:
-                    continue
-                updated.append((cursor or self.db).one("""
-                    UPDATE tips
-                       SET is_funded = %s
-                     WHERE id = %s
-                 RETURNING *
-                """, (is_funded, tip.id)))
 
-        # Update giving on participant
         giving = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount, p2.claimed_time
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tippee
-                      WHERE tipper = %(username)s
-                        AND p2.is_suspicious IS NOT true
-                        AND amount > 0
-                        AND is_funded
-                 )
             UPDATE participants p
                SET giving = COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                        WHERE claimed_time IS NOT NULL
+                      SELECT sum(amount)
+                        FROM current_subscriptions s
+                        JOIN teams t ON t.slug=s.team
+                       WHERE subscriber=%(username)s
+                         AND amount > 0
+                         AND is_funded
+                         AND t.is_approved
                    ), 0)
-             WHERE p.username = %(username)s
+             WHERE p.username=%(username)s
          RETURNING giving
         """, dict(username=self.username))
         self.set_attributes(giving=giving)
