@@ -128,6 +128,17 @@ def compute_input_csv():
           JOIN participants p ON p.id = r.participant
          WHERE r.network = 'paypal'
            AND p.balance > 0
+
+          ---- Only include team owners
+          ---- TODO: Include members on payroll once process_payroll is implemented
+
+               AND ( SELECT count(*)
+                       FROM teams t
+                      WHERE t.owner = p.username
+                        AND t.is_approved IS TRUE
+                        AND t.is_closed IS NOT TRUE
+                   ) > 0
+
       ORDER BY p.balance DESC
 
     """)
@@ -215,7 +226,7 @@ def post_back_to_gratipay():
 
     nposts = 0
     for username, email, gross, fee, net, additional_note in csv.reader(open(GRATIPAY_CSV)):
-        url = '{}/{}/history/record-an-exchange'.format(gratipay_base_url, username)
+        url = '{}/~{}/history/record-an-exchange'.format(gratipay_base_url, username)
         note = 'PayPal MassPay to {}.'.format(email)
         if additional_note:
             note += " " + additional_note
