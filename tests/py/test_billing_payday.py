@@ -107,6 +107,7 @@ class TestPayday(BillingHarness):
         after = self.fetch_payday()
         assert after['ncc_failing'] == 1
 
+    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     def test_update_cached_amounts(self):
         team = self.make_participant('team', claimed_time='now', number='plural')
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
@@ -164,6 +165,7 @@ class TestPayday(BillingHarness):
         Payday.start().update_cached_amounts()
         check()
 
+    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     def test_update_cached_amounts_depth(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         usernames = ('bob', 'carl', 'dana', 'emma', 'fred', 'greg')
@@ -369,8 +371,10 @@ class TestPayin(BillingHarness):
         alice = self.make_participant('alice', claimed_time='now')
         alice.set_subscription_to(team, 1)
         alice.set_subscription_to(team, 0)
-        a_team = self.make_participant('a_team', claimed_time='now', number='plural')
+
+        a_team = self.make_team('a_team', is_approved=True)
         a_team.add_member(alice)
+
         Payday.start().payin()
         payments = self.db.all("SELECT * FROM payments WHERE amount = 0")
         assert not payments

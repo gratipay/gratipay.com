@@ -18,7 +18,7 @@ class TestClosing(Harness):
     # close
 
     def test_close_closes(self):
-        team = self.make_participant('team', claimed_time='now', number='plural', balance=50)
+        team = self.make_team(is_approved=True)
         alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
         bob = self.make_participant('bob', claimed_time='now')
         carl = self.make_participant('carl', claimed_time='now')

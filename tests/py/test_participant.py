@@ -436,13 +436,6 @@ class Tests(Harness):
         bob.update_number('singular')
         assert Participant.from_username('bob').number == 'singular'
 
-    def test_going_singular_clears_takes(self):
-        team = self.make_participant('team', number='plural')
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        team.set_take_for(alice, Decimal('10'), alice)
-        team.update_number('singular')
-        assert Participant.from_username('alice').get_teams() == []
-
     def test_can_go_plural(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob')
@@ -578,83 +571,31 @@ class Tests(Harness):
 
     # giving, npatrons and receiving
 
-    def test_only_funded_tips_count(self):
+    def test_only_funded_tips_count_for_giving(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob', claimed_time='now')
         carl = self.make_participant('carl', claimed_time='now', last_bill_result="Fail!")
-        dana = self.make_participant('dana', claimed_time='now')
-        alice.set_tip_to(dana, '3.00')
-        alice.set_tip_to(bob, '6.00')
-        bob.set_tip_to(alice, '5.00')
-        bob.set_tip_to(dana, '2.00')
-        carl.set_tip_to(dana, '2.08')
+        team = self.make_team(is_approved=True)
 
-        assert alice.giving == Decimal('9.00')
-        assert alice.receiving == Decimal('5.00')
-        assert bob.giving == Decimal('5.00')
-        assert bob.receiving == Decimal('6.00')
+        alice.set_subscription_to(team, '3.00') # The only funded tip
+        bob.set_subscription_to(team, '5.00')
+        carl.set_subscription_to(team, '7.00')
+
+        assert alice.giving == Decimal('3.00')
+        assert bob.giving == Decimal('0.00')
         assert carl.giving == Decimal('0.00')
-        assert carl.receiving == Decimal('0.00')
-        assert dana.receiving == Decimal('3.00')
-        assert dana.npatrons == 1
 
-        funded_tips = self.db.all("SELECT amount FROM tips WHERE is_funded ORDER BY id")
-        assert funded_tips == [3, 6, 5]
+        funded_tip = self.db.one("SELECT * FROM subscriptions WHERE is_funded ORDER BY id")
+        assert funded_tip.subscriber == alice.username
 
     def test_only_latest_tip_counts(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', claimed_time='now', last_bill_result='')
-        carl = self.make_participant('carl', claimed_time='now')
-        alice.set_tip_to(carl, '12.00')
-        alice.set_tip_to(carl, '3.00')
-        bob.set_tip_to(carl, '2.00')
-        bob.set_tip_to(carl, '0.00')
-        assert alice.giving == Decimal('3.00')
-        assert bob.giving == Decimal('0.00')
-        assert carl.receiving == Decimal('3.00')
-        assert carl.npatrons == 1
+        team = self.make_team(is_approved=True)
 
-    def test_receiving_includes_tips_from_whitelisted_accounts(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=False
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
+        alice.set_subscription_to(team, '12.00')
+        alice.set_subscription_to(team, '4.00')
 
-        assert bob.receiving == Decimal('3.00')
-        assert bob.npatrons == 1
-
-    def test_receiving_includes_tips_from_unreviewed_accounts(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=None
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        assert bob.receiving == Decimal('3.00')
-        assert bob.npatrons == 1
-
-    def test_receiving_ignores_tips_from_blacklisted_accounts(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=True
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        assert bob.receiving == Decimal('0.00')
-        assert bob.npatrons == 0
-
-    def test_receiving_includes_taking_when_updated_from_set_tip_to(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', claimed_time='now', taking=Decimal('42.00'))
-        alice.set_tip_to(bob, '3.00')
-        assert Participant.from_username('bob').receiving == bob.receiving == Decimal('45.00')
+        assert alice.giving == Decimal('4.00')
 
 
     # get_age_in_seconds - gais

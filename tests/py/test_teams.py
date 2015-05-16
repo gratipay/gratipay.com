@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
-from gratipay.models._mixin_team import StubParticipantAdded
 
+from decimal import Decimal
+
+from gratipay.models.team import StubParticipantAdded
 from gratipay.testing import Harness
 from gratipay.security.user import User
 from gratipay.models.team import Team
@@ -84,6 +86,93 @@ class TestNewTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 1
         assert "Sorry, there is already a team using 'gratiteam'." in r.body
 
+    def test_can_add_members(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        team = self.make_team()
+        team.add_member(alice)
+        assert alice.member_of(team) == True
+
+    def test_get_teams_for_member(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        bob = self.make_participant('bob', claimed_time='now')
+        team = self.make_team()
+        team.add_member(alice)
+        team.add_member(bob)
+
+        alice_teams = alice.get_teams()
+        assert len(alice_teams) == 1
+        assert alice_teams[0].nmembers == 2
+
+    def test_preclude_adding_stub_participant(self):
+        team = self.make_team()
+        stub_participant = self.make_participant('stub')
+        with self.assertRaises(StubParticipantAdded):
+            team.add_member(stub_participant)
+
+    def test_remove_all_members(self):
+        team = self.make_team()
+        alice = self.make_participant('alice', claimed_time='now')
+        team.add_member(alice)
+        bob = self.make_participant('bob', claimed_time='now')
+        team.add_member(bob)
+
+        assert len(team.get_current_takes()) == 2  # sanity check
+        team.remove_all_members()
+        assert len(team.get_current_takes()) == 0
+
+    # receiving, nsupporters and payroll
+
+    def test_only_funded_subscriptions_count(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        bob = self.make_participant('bob', claimed_time='now')
+        carl = self.make_participant('carl', claimed_time='now', last_bill_result="Fail!")
+        team = self.make_team(is_approved=True)
+
+        alice.set_subscription_to(team, '3.00') # The only funded tip
+        bob.set_subscription_to(team, '5.00')
+        carl.set_subscription_to(team, '7.00')
+
+        assert team.receiving == Decimal('3.00')
+        assert team.nsupporters == 1
+
+        funded_tip = self.db.one("SELECT * FROM subscriptions WHERE is_funded ORDER BY id")
+        assert funded_tip.subscriber == alice.username
+
+    def test_receiving_includes_tips_from_whitelisted_accounts(self):
+        alice = self.make_participant( 'alice'
+                                     , claimed_time='now'
+                                     , last_bill_result=''
+                                     , is_suspicious=False
+                                      )
+        team = self.make_team(is_approved=True)
+        alice.set_subscription_to(team, '3.00')
+
+        assert team.receiving == Decimal('3.00')
+        assert team.nsupporters == 1
+
+    def test_receiving_includes_tips_from_unreviewed_accounts(self):
+        alice = self.make_participant( 'alice'
+                                     , claimed_time='now'
+                                     , last_bill_result=''
+                                     , is_suspicious=None
+                                      )
+        team = self.make_team(is_approved=True)
+        alice.set_subscription_to(team, '3.00')
+
+        assert team.receiving == Decimal('3.00')
+        assert team.nsupporters == 1
+
+    def test_receiving_ignores_tips_from_blacklisted_accounts(self):
+        alice = self.make_participant( 'alice'
+                                     , claimed_time='now'
+                                     , last_bill_result=''
+                                     , is_suspicious=True
+                                      )
+        team = self.make_team(is_approved=True)
+        alice.set_subscription_to(team, '3.00')
+
+        assert team.receiving == Decimal('0.00')
+        assert team.nsupporters == 0
 
 class TestOldTeams(Harness):
 
@@ -96,78 +185,9 @@ class TestOldTeams(Harness):
         actual = self.team.IS_PLURAL
         assert actual == expeted
 
-    def test_show_as_team_to_admin(self):
+    def test_show_as_team_always_returns_false(self):
         self.make_participant('alice', is_admin=True)
         user = User.from_username('alice')
-        assert self.team.show_as_team(user)
+        assert self.team.show_as_team(user) == False
 
-    def test_show_as_team_to_team_member(self):
-        self.make_participant('alice')
-        self.team.add_member(self.make_participant('bob', claimed_time='now'))
-        user = User.from_username('bob')
-        assert self.team.show_as_team(user)
 
-    def test_show_as_team_to_non_team_member(self):
-        self.make_participant('alice')
-        self.team.add_member(self.make_participant('bob', claimed_time='now'))
-        user = User.from_username('alice')
-        assert self.team.show_as_team(user)
-
-    def test_show_as_team_to_anon(self):
-        self.make_participant('alice')
-        self.team.add_member(self.make_participant('bob', claimed_time='now'))
-        assert self.team.show_as_team(User())
-
-    def test_dont_show_individuals_as_team(self):
-        alice = self.make_participant('alice', number='singular')
-        assert not alice.show_as_team(User())
-
-    def test_dont_show_plural_no_members_as_team_to_anon(self):
-        group = self.make_participant('Group', number='plural')
-        assert not group.show_as_team(User())
-
-    def test_dont_show_plural_no_members_as_team_to_auth(self):
-        group = self.make_participant('Group', number='plural')
-        self.make_participant('alice')
-        assert not group.show_as_team(User.from_username('alice'))
-
-    def test_show_plural_no_members_as_team_to_self(self):
-        group = self.make_participant('Group', number='plural')
-        assert group.show_as_team(User.from_username('Group'))
-
-    def test_show_plural_no_members_as_team_to_admin(self):
-        group = self.make_participant('Group', number='plural')
-        self.make_participant('Admin', is_admin=True)
-        assert group.show_as_team(User.from_username('Admin'))
-
-    def test_can_add_members(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        expected = True
-        self.team.add_member(alice)
-        actual = alice.member_of(self.team)
-        assert actual == expected
-
-    def test_get_teams_for_member(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        bob = self.make_participant('bob', claimed_time='now')
-        team = self.make_participant('B-Team', number='plural')
-        self.team.add_member(alice)
-        team.add_member(bob)
-        expected = 1
-        actual = alice.get_teams().pop().nmembers
-        assert actual == expected
-
-    def test_preclude_adding_stub_participant(self):
-        stub_participant = self.make_participant('stub')
-        with self.assertRaises(StubParticipantAdded):
-            self.team.add_member(stub_participant)
-
-    def test_remove_all_members(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        self.team.add_member(alice)
-        bob = self.make_participant('bob', claimed_time='now')
-        self.team.add_member(bob)
-
-        assert len(self.team.get_current_takes()) == 2  # sanity check
-        self.team.remove_all_members()
-        assert len(self.team.get_current_takes()) == 0

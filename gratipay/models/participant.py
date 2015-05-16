@@ -201,7 +201,6 @@ class Participant(Model, MixinTeam):
     def update_number(self, number):
         with self.db.get_cursor() as c:
             add_event(c, 'participant', dict(action='set', id=self.id, values=dict(number=number)))
-            self.remove_all_members(c)
             c.execute("""
                 UPDATE participants
                    SET number=%s
@@ -451,15 +450,13 @@ class Participant(Model, MixinTeam):
         """Leave all teams by zeroing all takes.
         """
         for team, nmembers in self.get_teams():
-            t = Participant.from_username(team)
+            t = Team.from_slug(team)
             t.set_take_for(self, Decimal(0), self, cursor)
 
 
     def clear_personal_information(self, cursor):
         """Clear personal information such as statements.
         """
-        if self.IS_PLURAL:
-            self.remove_all_members(cursor)
         self.clear_takes(cursor)
         r = cursor.one("""
 
@@ -933,10 +930,10 @@ class Participant(Model, MixinTeam):
 
             SELECT team AS name
                  , ( SELECT count(*)
-                       FROM current_takes
+                       FROM current_payroll
                       WHERE team=x.team
                     ) AS nmembers
-              FROM current_takes x
+              FROM current_payroll x
              WHERE member=%s;
 
         """, (self.username,))
@@ -1010,60 +1007,29 @@ class Participant(Model, MixinTeam):
                 Participant.from_username(tip.tippee).update_receiving(cursor)
 
     def update_giving(self, cursor=None):
+        updated = []
         # Update is_funded on tips
         if self.get_credit_card_error() == '':
             updated = (cursor or self.db).all("""
-                UPDATE current_tips
+                UPDATE current_subscriptions
                    SET is_funded = true
-                 WHERE tipper = %s
+                 WHERE subscriber = %s
                    AND is_funded IS NOT true
              RETURNING *
             """, (self.username,))
-        else:
-            tips = (cursor or self.db).all("""
-                SELECT t.*
-                  FROM current_tips t
-                  JOIN participants p2 ON p2.username = t.tippee
-                 WHERE t.tipper = %s
-                   AND t.amount > 0
-                   AND p2.is_suspicious IS NOT true
-              ORDER BY p2.claimed_time IS NULL, t.ctime ASC
-            """, (self.username,))
-            fake_balance = self.balance + self.receiving
-            updated = []
-            for tip in tips:
-                if tip.amount > fake_balance:
-                    is_funded = False
-                else:
-                    fake_balance -= tip.amount
-                    is_funded = True
-                if tip.is_funded == is_funded:
-                    continue
-                updated.append((cursor or self.db).one("""
-                    UPDATE tips
-                       SET is_funded = %s
-                     WHERE id = %s
-                 RETURNING *
-                """, (is_funded, tip.id)))
 
-        # Update giving on participant
         giving = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount, p2.claimed_time
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tippee
-                      WHERE tipper = %(username)s
-                        AND p2.is_suspicious IS NOT true
-                        AND amount > 0
-                        AND is_funded
-                 )
             UPDATE participants p
                SET giving = COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                        WHERE claimed_time IS NOT NULL
+                      SELECT sum(amount)
+                        FROM current_subscriptions s
+                        JOIN teams t ON t.slug=s.team
+                       WHERE subscriber=%(username)s
+                         AND amount > 0
+                         AND is_funded
+                         AND t.is_approved
                    ), 0)
-             WHERE p.username = %(username)s
+             WHERE p.username=%(username)s
          RETURNING giving
         """, dict(username=self.username))
         self.set_attributes(giving=giving)
@@ -1071,31 +1037,10 @@ class Participant(Model, MixinTeam):
         return updated
 
     def update_receiving(self, cursor=None):
-        if self.IS_PLURAL:
-            old_takes = self.compute_actual_takes(cursor=cursor)
-        r = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tipper
-                      WHERE tippee = %(username)s
-                        AND p2.is_suspicious IS NOT true
-                        AND amount > 0
-                        AND is_funded
-                 )
-            UPDATE participants p
-               SET receiving = (COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                   ), 0) + taking)
-                 , npatrons = COALESCE((SELECT count(*) FROM our_tips), 0)
-             WHERE p.username = %(username)s
-         RETURNING receiving, npatrons
-        """, dict(username=self.username))
-        self.set_attributes(receiving=r.receiving, npatrons=r.npatrons)
-        if self.IS_PLURAL:
-            new_takes = self.compute_actual_takes(cursor=cursor)
-            self.update_taking(old_takes, new_takes, cursor=cursor)
+        # After our pivot, participants don't have receiving (from tips) at all.
+        # taking is updated by the team
+        pass
+
 
     def update_is_free_rider(self, is_free_rider, cursor=None):
         with self.db.get_cursor(cursor) as cursor:
