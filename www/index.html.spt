@@ -1,5 +1,8 @@
 [---]
 
+if user.ANON:
+    request.redirect('/about/')
+
 if not user.ANON:
     participant = user.participant
     title = participant.username
