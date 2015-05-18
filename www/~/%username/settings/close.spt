@@ -30,7 +30,21 @@ if request.method == 'POST':
 
 {% block content %}
 <div class="col0">
-    {% if payday_is_running %}
+    {% if 1 %}
+
+        <form><div>
+
+            <h2>Try Again Later</h2>
+
+            <p>Sorry, we're in the midst of <a
+                href="https://medium.com/gratipay-blog/gratipocalypse-42fd0ec0d9e8">a
+            major transition</a> right now, during which we're not able to
+            support closing accounts. Please check back in a few days. Thanks for
+            your patience.</p>
+
+        </div></form>
+
+    {% elif payday_is_running %}
 
         <form><div>
 
