@@ -327,11 +327,12 @@ class Participant(Model, MixinTeam):
         with self.db.get_cursor() as cursor:
             if disbursement_strategy == None:
                 pass  # No balance, supposedly. final_check will make sure.
-            elif disbursement_strategy == 'bank':
-                self.withdraw_balance_to_bank_account()
-            elif disbursement_strategy == 'downstream':
-                # This in particular needs to come before clear_tips_giving.
-                self.distribute_balance_as_final_gift(cursor)
+            # XXX Bring me back!
+            #elif disbursement_strategy == 'bank':
+            #    self.withdraw_balance_to_bank_account()
+            #elif disbursement_strategy == 'downstream':
+            #    # This in particular needs to come before clear_tips_giving.
+            #    self.distribute_balance_as_final_gift(cursor)
             else:
                 raise self.UnknownDisbursementStrategy
 
