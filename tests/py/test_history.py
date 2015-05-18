@@ -127,6 +127,7 @@ class TestHistoryPage(Harness):
     def test_participant_can_view_history(self):
         assert self.client.GET('/~alice/history/', auth_as='alice').code == 200
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     def test_admin_can_view_closed_participant_history(self):
         self.make_participant('bob', claimed_time='now', is_admin=True)
 

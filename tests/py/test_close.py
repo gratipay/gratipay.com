@@ -17,6 +17,7 @@ class TestClosing(Harness):
 
     # close
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     def test_close_closes(self):
         team = self.make_participant('team', claimed_time='now', number='plural', balance=50)
         alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
@@ -41,6 +42,7 @@ class TestClosing(Harness):
         with pytest.raises(alice.UnknownDisbursementStrategy):
             alice.close('cheese')
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     def test_close_page_is_usually_available(self):
         self.make_participant('alice', claimed_time='now')
         body = self.client.GET('/~alice/settings/close', auth_as='alice').body
@@ -53,6 +55,7 @@ class TestClosing(Harness):
         assert 'Personal Information' not in body
         assert 'Try Again Later' in body
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     def test_can_post_to_close_page(self):
         alice = self.make_participant('alice', claimed_time='now', balance=7)
         bob = self.make_participant('bob', claimed_time='now')
@@ -71,6 +74,7 @@ class TestClosing(Harness):
         body = self.client.POST('/~alice/settings/close', auth_as='alice').body
         assert 'Try Again Later' in body
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     @mock.patch('gratipay.billing.exchanges.ach_credit')
     def test_ach_credit_failure_doesnt_cause_500(self, ach_credit):
         ach_credit.side_effect = 'some error'
@@ -82,6 +86,7 @@ class TestClosing(Harness):
 
     # wbtba - withdraw_balance_to_bank_account
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     @mock.patch('gratipay.billing.exchanges.thing_from_href')
     def test_wbtba_withdraws_balance_to_bank_account(self, tfh):
         alice = self.make_participant( 'alice'
