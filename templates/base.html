@@ -63,6 +63,19 @@
         <div id="main">
             <div id="sidebar">{% block sidebar %}{% endblock %}</div>
             <div id="content" class="clearfix">
+
+                <div style="padding: 5px 10px; margin: 40px 0 20px; border: 4px
+                    solid gold;"> <b>Gratipay is currently in the midst of <a
+                    href="https://medium.com/gratipay-blog/gratipocalypse-42fd0ec0d9e8">a
+            major transition</a></b>, which is causing some disruption on the site. Here
+    is a list of <a
+    href="https://github.com/gratipay/gratipay.com/milestones/Pivot"> known
+issues</a>.  Sorry for the trouble, and thanks for your patience as we work to
+stabilize Gratipay as quickly as possible. As always, feel free to get in touch
+privately via <a href="mailto:support@gratipay.com">email</a> or publicly via <a
+href="https://github.com/gratipay/gratipay.com/issues/new">GitHub</a>.</div>
+
+
                 {% block heading %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
                 {% block subnav %}{% endblock %}
                 {% block content %}{% endblock %}

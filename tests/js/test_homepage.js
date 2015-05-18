@@ -1,6 +1,8 @@
 var assert = require('assert');
 
 describe('homepage', function() {
+    /*
+     * https://github.com/gratipay/gratipay.com/pull/3452
     it('should render copy correctly', function(done) {
         browser
             .url('http://localhost:8537')
@@ -12,4 +14,5 @@ describe('homepage', function() {
             })
             .call(done);
     });
+    */
 });

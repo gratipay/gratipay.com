@@ -130,7 +130,7 @@ class Tests2(Harness):
         assert not r.headers.cookie
 
     def test_caching_of_simplates(self):
-        r = self.client.GET('/')
+        r = self.client.GET('/about/')
         assert r.headers['Cache-Control'] == 'no-cache'
         assert 'Vary' not in r.headers
 
@@ -147,7 +147,7 @@ class Tests2(Harness):
         assert r.headers.cookie[b'csrf_token'].value != 'bad_token'
 
     def test_csrf_cookie_set_for_most_requests(self):
-        r = self.client.GET('/')
+        r = self.client.GET('/about/')
         assert b'csrf_token' in r.headers.cookie
 
     def test_no_csrf_cookie_set_for_assets(self):
