@@ -62,7 +62,7 @@ title = _("Fraud Review Dashboard - (Teams)")
         $('button').click(function()
         {
             var row = $(this).parent();
-            var to = $(this).text() !== 'Good';
+            var to = $(this).text() === 'Good';
             var slug = row.data('slug');
             var url = "/" + slug + "/toggle-is-approved.json";
 
