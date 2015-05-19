@@ -787,7 +787,6 @@ class Participant(Model, MixinTeam):
                 return True
         return False
 
-
     def get_balanced_account(self):
         """Fetch or create the balanced account for this participant.
         """
@@ -914,7 +913,6 @@ class Participant(Model, MixinTeam):
          RETURNING avatar_url
         """, (self.username,))
         self.set_attributes(avatar_url=avatar_url)
-
 
 
     # Random Junk
