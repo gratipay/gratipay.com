@@ -10,7 +10,7 @@ for root, dirs, files in os.walk(js_root):
             catted.append('/*' + (base + '/' + filename).center(68) + '*/\n')
             catted.append('/' + ('*'*70) + '/' + '\n\n')
             content = open(os.path.join(root, filename)).read()
-            content = content.decode('ascii')
+            content = content.decode('utf8')
             catted.append(content + '\n')
 js = "".join(catted)
 [---] via stdlib_format

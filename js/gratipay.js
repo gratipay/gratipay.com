@@ -15,6 +15,7 @@ Gratipay.init = function() {
     Gratipay.signIn();
     Gratipay.signOut();
     Gratipay.tips.initSupportGratipay();
+    Gratipay.table.init();
 };
 
 Gratipay.error = function(jqXHR, textStatus, errorThrown) {

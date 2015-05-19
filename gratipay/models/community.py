@@ -53,16 +53,27 @@ class Community(Model):
 
     def get_members(self, limit=None, offset=None):
         return self.db.all("""
-            SELECT p.*::participants
-              FROM current_community_members c
-              JOIN participants p ON p.id = c.participant
-             WHERE c.slug = %s
-               AND c.is_member
-               AND p.is_suspicious IS NOT true
-          ORDER BY c.ctime
-             LIMIT %s
-            OFFSET %s;
-        """, (self.slug, limit, offset))
+        SELECT row_number() OVER () AS n
+             , *
+          FROM ( SELECT p.username
+                      , (CASE p.anonymous_giving WHEN true THEN p.giving ELSE NULL END) AS giving
+                      , (CASE p.anonymous_receiving WHEN true THEN p.receiving ELSE NULL END) AS receiving
+                      , p.goal
+                      , p.number
+                      , c.ctime AS first_tagged
+                   FROM current_community_members c
+                   JOIN participants p ON p.id = c.participant
+                  WHERE c.slug = %s
+                    AND c.is_member
+                    AND p.is_suspicious IS NOT true
+                    AND p.is_searchable
+                    AND p.claimed_time IS NOT NULL
+               ORDER BY c.ctime
+                  LIMIT %s
+                 OFFSET %s
+               ) AS foo
+      ORDER BY first_tagged DESC;
+        """, (self.slug, limit, offset), back_as=dict)
 
     def check_membership(self, participant):
         return self.db.one("""
