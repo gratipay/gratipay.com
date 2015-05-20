@@ -592,6 +592,9 @@ msgstr ""
 msgid "Fraud Review Dashboard"
 msgstr ""
 
+msgid "Fraud Review Dashboard - (Teams)"
+msgstr ""
+
 msgid "There is {n} community on Gratipay."
 msgid_plural "There are {n} communities on Gratipay."
 msgstr[0] ""

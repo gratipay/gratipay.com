@@ -588,6 +588,9 @@ msgstr "Iniciar sessão"
 msgid "Fraud Review Dashboard"
 msgstr "Painel de revisão de fraude"
 
+msgid "Fraud Review Dashboard - (Teams)"
+msgstr ""
+
 msgid "There is {n} community on Gratipay."
 msgid_plural "There are {n} communities on Gratipay."
 msgstr[0] "Existe {n} comunidade no Gratipay."
