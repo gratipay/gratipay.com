@@ -48,6 +48,12 @@ if change:
         else:
             raise Response(400, result.message)
 
+    elif network == 'paypal':
+        verified_emails = [x.address for x in participant.get_emails() if x.verified]
+        if address not in verified_emails:
+            raise Response(400, _("Only verified email addresses allowed."))
+        ExchangeRoute.insert(participant, network, address)
+
     elif network == 'bitcoin':
         if not bitcoin.validate(address):
             raise Response(400, _("This is not a valid Bitcoin address."))
