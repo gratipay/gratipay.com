@@ -18,19 +18,6 @@ class TestRoutes(BillingHarness):
         assert r.code == expected
         return r
 
-    # Remove this once we've dumped 'balanced-cc' altogether
-    def test_associate_balanced_card_should_fail(self):
-        card = balanced.Card(
-            number='4242424242424242',
-            expiration_year=2020,
-            expiration_month=12
-        ).save()
-        customer = self.david.get_balanced_account()
-        self.hit('david', 'associate', 'balanced-cc', card.href, expected=400)
-
-        cards = customer.cards.all()
-        assert len(cards) == 0
-
     def test_associate_and_delete_valid_card(self):
         self.hit('roman', 'associate', 'braintree-cc', Nonces.Transactable)
 
@@ -90,6 +77,21 @@ class TestRoutes(BillingHarness):
         assert self.david.get_bank_account_error() is None
         assert not self.david.has_payout_route
 
+    @mock.patch.object(Participant, 'send_email')
+    def test_associate_paypal(self, mailer):
+        mailer.return_value = 1 # Email successfully sent
+        self.david.add_email('david@gmail.com')
+        self.db.run("UPDATE emails SET verified=true WHERE address='david@gmail.com'")
+        self.hit('david', 'associate', 'paypal', 'david@gmail.com')
+        assert ExchangeRoute.from_network(self.david, 'paypal')
+        assert self.david.has_payout_route
+
+    def test_associate_paypal_invalid(self):
+        r = self.hit('david', 'associate', 'paypal', 'alice@gmail.com', expected=400)
+        assert not ExchangeRoute.from_network(self.david, 'paypal')
+        assert not self.david.has_payout_route
+        assert "Only verified email addresses allowed." in r.body
+
     def test_associate_bitcoin(self):
         addr = '17NdbrSGoUotzeGCcMMCqnFkEvLymoou9j'
         self.hit('david', 'associate', 'bitcoin', addr)
@@ -101,18 +103,18 @@ class TestRoutes(BillingHarness):
         self.hit('david', 'associate', 'bitcoin', '12345', expected=400)
         assert not ExchangeRoute.from_network(self.david, 'bitcoin')
 
-    def test_bank_account(self):
+    def test_bank_account_page(self):
         expected = "add or change your bank account"
         actual = self.client.GET('/~alice/routes/bank-account.html').body
         assert expected in actual
 
-    def test_bank_account_auth(self):
+    def test_bank_account_page_auth(self):
         self.make_participant('alice', claimed_time='now')
         expected = '<em id="status">not connected</em>'
         actual = self.client.GET('/~alice/routes/bank-account.html', auth_as='alice').body
         assert expected in actual
 
-    def test_credit_card(self):
+    def test_credit_card_page(self):
         self.make_participant('alice', claimed_time='now')
         expected = "add or change your credit card"
         actual = self.client.GET('/~alice/routes/credit-card.html').body
@@ -138,6 +140,19 @@ class TestRoutes(BillingHarness):
         url_receipt = '/~obama/receipts/{}.html'.format(ex_id)
         actual = self.client.GET(url_receipt, auth_as='obama').body.decode('utf8')
         assert self.bt_card.card_type in actual
+
+    # Remove once we've moved off balanced
+    def test_associate_balanced_card_should_fail(self):
+        card = balanced.Card(
+            number='4242424242424242',
+            expiration_year=2020,
+            expiration_month=12
+        ).save()
+        customer = self.david.get_balanced_account()
+        self.hit('david', 'associate', 'balanced-cc', card.href, expected=400)
+
+        cards = customer.cards.all()
+        assert len(cards) == 0
 
     def test_credit_card_page_loads_when_there_is_a_balanced_card(self):
         expected = 'Your credit card is <em id="status">working'
