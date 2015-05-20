@@ -1,6 +1,5 @@
 env/
 gratipay.egg-info/
-*~
 *.pyc
 local.env
 tests/env
