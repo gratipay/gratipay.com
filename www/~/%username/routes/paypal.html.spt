@@ -28,8 +28,10 @@ title = _("PayPal Account")
 
     <p>{{ _("When you receive money on Gratipay we'll automatically send it to your PayPal account "
             "if you don't have a bank account attached.") }}
-    {{ _("Deposits are initiated every Thursday, but only if you have more than {0} in your balance.",
-         format_currency(0.5, 'USD')) }}</p>
+    {{ _("Deposits are initiated every Thursday when you accumulate at least {0} in your balance.",
+         format_currency(0.5, 'USD')) }}
+    {{ _("PayPal's fee is 2%, but not more than $1 for U.S. PayPal accounts, or $20 for non-U.S. PayPal accounts.") }}</p>
+
 
 {% endblock %}
 
