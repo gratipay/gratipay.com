@@ -49,8 +49,7 @@ if change:
             raise Response(400, result.message)
 
     elif network == 'paypal':
-        verified_emails = [x.address for x in participant.get_emails() if x.verified]
-        if address not in verified_emails:
+        if address not in participant.get_verified_email_addresses():
             raise Response(400, _("Only verified email addresses allowed."))
         ExchangeRoute.insert(participant, network, address)
 

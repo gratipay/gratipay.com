@@ -617,8 +617,8 @@ class Participant(Model, MixinTeam):
           ORDER BY id
         """, (self.username,))
 
-    def get_verified_emails(self):
-        [email for email in self.get_emails() if email.verified]
+    def get_verified_email_addresses(self):
+        return [email.address for email in self.get_emails() if email.verified]
 
     def remove_email(self, address):
         if address == self.email_address:
