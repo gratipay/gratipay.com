@@ -82,7 +82,12 @@ class ExchangeRoute(Model):
         elif self.network == 'braintree-cc':
             braintree.PaymentMethod.delete(self.address)
 
-        self.update_error('invalidated')
+        # For Paypal, we remove the record entirely to prevent
+        # an integrity error if the user tries to add the route again
+        if self.network == 'paypal':
+            self.db.run("DELETE FROM exchange_routes WHERE id=%s", (self.id,))
+        else:
+            self.update_error('invalidated')
 
     def update_error(self, new_error, propagate=True):
         id = self.id
