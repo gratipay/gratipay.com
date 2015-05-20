@@ -33,7 +33,7 @@ Gratipay.payments.deleteRoute = function(e) {
         return false;
     }
     jQuery.ajax(
-        { url: "/" + Gratipay.username + "/routes/delete.json"
+        { url: "/~" + Gratipay.username + "/routes/delete.json"
         , data: {network: $this.data('network'), address: $this.data('address')}
         , type: "POST"
         , success: function() { window.location.reload(); }
