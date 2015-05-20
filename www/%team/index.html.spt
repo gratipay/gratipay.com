@@ -1,0 +1,63 @@
+"""Show information about a single Team. It might be your team!
+"""
+from collections import OrderedDict
+
+from gratipay.utils import excerpt_intro, get_team, markdown
+
+LONG_STATEMENT = 256
+
+[-----------------------------------------------------------------------------]
+
+team = get_team(state, restrict=False)
+title = name = team.name
+
+statement = team.product_or_service
+
+def with_others(obj):
+    others = obj.nmembers - 1
+    return ngettext("with {n} other", "with {n} others", others)
+
+[-----------------------------------------------------------------------------]
+{% extends "templates/profile.html" %}
+
+{% block head %}
+    <link rel="payment" type="text/html" title="Give weekly gift on Gratipay"
+        href="https://gratipay.com/{{ name }}/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="og:url" content="https://gratipay.com/{{ name }}/" />
+    <meta name="og:type" content="profile" />
+    <meta name="og:title" content="{{ team.get_og_title() }}" />
+    {% if product_or_service %}
+    <meta name="og:description" content="{{ excerpt_intro(statement) }}" />
+    {% else %}
+    <meta name="og:description" content="Gratipay is a weekly gift exchange" />
+    {% endif %}
+    <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
+{% endblock %}
+
+{% block content %}
+{% if user.participant == team.owner %}
+    <div id="profile-edit">
+        {% include "templates/profile-edit.html" %}
+    </div>
+{% else %}
+    <div class="clearfix">
+        <div class="col0">
+            {% if statement %}
+            <h2>{{ _("Statement") }}</h2>
+            <div class="statement profile-statement">
+                {{ markdown.render(statement) }}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if user.participant == team.owner %}
+<script>$(document).ready(Gratipay.profile.init);</script>
+{% endif %}
+{{ super() }}
+{% endblock %}

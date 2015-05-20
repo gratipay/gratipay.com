@@ -50,6 +50,15 @@ class Team(Model):
               fields['product_or_service'], fields['getting_involved'], fields['getting_paid'],
               owner.username))
 
+    def get_og_title(self):
+        out = self.name
+        receiving = self.receiving
+        if receiving > 0:
+            out += " receives $%.2f/wk" % receiving
+        else:
+            out += " is"
+        return out + " on Gratipay"
+
 
     def update_receiving(self, cursor=None):
         # Stubbed out for now. Migrate this over from Participant.
