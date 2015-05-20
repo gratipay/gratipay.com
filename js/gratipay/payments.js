@@ -303,3 +303,22 @@ Gratipay.payments.cc.submit = function(e) {
 
     return false;
 };
+
+// PayPal
+// ======
+
+Gratipay.payments.pp = {};
+
+Gratipay.payments.pp.init = function () {
+    Gratipay.payments.init();
+    $('form#paypal').submit(Gratipay.payments.pp.submit);
+}
+
+Gratipay.payments.pp.submit = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    $('button#save').prop('disabled', true);
+    var paypal_email = $('form#paypal #email').val();
+
+    Gratipay.payments.associate('paypal', paypal_email);
+}
