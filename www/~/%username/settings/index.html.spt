@@ -120,18 +120,21 @@ emails = participant.get_emails()
                         }}</a>
                     </td>
                 </tr>
-                {% set paypal = ExchangeRoute.from_network(participant, 'paypal') %}
-                {% if paypal %}
                 <tr>
+                    {% set paypal = ExchangeRoute.from_network(participant, 'paypal') %}
                     <td class="account-type">
                         <img src="{{ website.asset('paypal.png') }}" />
                     </td>
-                    <td colspan="2" class="account-details">
-                        <div class="account-type">Paypal</div>
+                    <td class="account-details">
+                        <div class="account-type">PayPal</div>
                         <span>{{ paypal.address }}</span>
                     </td>
+                    <td class="account-action">
+                        <a class="button auth-button" href="../routes/paypal.html">{{
+                            _("Edit") if paypal else _("+ Add")
+                        }}</a>
+                    </td>
                 </tr>
-                {% endif %}
             </table>
         {% endif %}
 
