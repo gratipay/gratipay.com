@@ -8,7 +8,7 @@ import braintree
 import mock
 import pytest
 
-from gratipay.billing.exchanges import create_card_hold, cancel_card_hold
+from gratipay.billing.exchanges import create_card_hold
 from gratipay.billing.payday import NoPayday, Payday
 from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
