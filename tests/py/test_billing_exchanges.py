@@ -3,6 +3,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from decimal import Decimal as D
 
 import balanced
+import braintree
+from braintree.test.nonces import Nonces
 import mock
 import pytest
 
@@ -69,10 +71,10 @@ class TestCardHolds(BillingHarness):
         with self.assertRaises(NotWhitelisted):
             create_card_hold(self.db, bob, D('1.00'))
 
-    @mock.patch('gratipay.billing.exchanges.thing_from_href')
-    def test_create_card_hold_failure(self, tfh):
-        tfh.side_effect = Foobar
-        hold, error = create_card_hold(self.db, self.janet, D('1.00'))
+    @mock.patch('braintree.Transaction.sale')
+    def test_create_card_hold_failure(self, btsale):
+        btsale.side_effect = Foobar
+        hold, error = create_card_hold(self.db, self.obama, D('1.00'))
         assert hold is None
         assert error == "Foobar()"
         exchange = self.db.one("SELECT * FROM exchanges")
@@ -80,22 +82,21 @@ class TestCardHolds(BillingHarness):
         assert exchange.amount == D('9.41')
         assert exchange.fee == D('0.59')
         assert exchange.status == 'failed'
-        janet = Participant.from_id(self.janet.id)
-        assert self.janet.get_credit_card_error() == 'Foobar()'
-        assert self.janet.balance == janet.balance == 0
+        obama = Participant.from_id(self.obama.id)
+        assert self.obama.get_credit_card_error() == 'Foobar()'
+        assert self.obama.balance == obama.balance == 0
 
     def test_create_card_hold_success(self):
-        hold, error = create_card_hold(self.db, self.janet, D('1.00'))
-        janet = Participant.from_id(self.janet.id)
-        assert isinstance(hold, balanced.CardHold)
-        assert hold.failure_reason is None
-        assert hold.amount == 1000
-        assert hold.meta['state'] == 'new'
+        hold, error = create_card_hold(self.db, self.obama, D('1.00'))
+        obama = Participant.from_id(self.obama.id)
+        assert isinstance(hold, braintree.Transaction)
+        assert hold.status == 'authorized'
+        assert hold.amount == D('10.00')
         assert error == ''
-        assert self.janet.balance == janet.balance == 0
+        assert self.obama.balance == obama.balance == 0
 
-        # Clean up
-        cancel_card_hold(hold)
+        # TODO: Clean up
+        # cancel_card_hold(hold)
 
     def test_capture_card_hold_full_amount(self):
         hold, error = create_card_hold(self.db, self.janet, D('20.00'))
@@ -140,39 +141,33 @@ class TestCardHolds(BillingHarness):
         assert self.janet.get_credit_card_error() == ''
 
     def test_create_card_hold_bad_card(self):
-        bob = self.make_participant('bob', balanced_customer_href='new',
-                                    is_suspicious=False)
-        card = balanced.Card(
-            number='4444444444444448',
-            expiration_year=2020,
-            expiration_month=12
-        ).save()
-        card.associate_to_customer(bob.balanced_customer_href)
-        ExchangeRoute.insert(bob, 'balanced-cc', card.href)
+        bob = self.make_participant('bob', is_suspicious=False)
+        customer_id = bob.get_braintree_account().id
+        result = braintree.PaymentMethod.create({
+            "customer_id": customer_id,
+            "payment_method_nonce": Nonces.Transactable
+        })
+        assert result.is_success
+        ExchangeRoute.insert(bob, 'braintree-cc', result.payment_method.token)
 
-        hold, error = create_card_hold(self.db, bob, D('10.00'))
-        assert error.startswith('402 Payment Required, ')
+        # https://developers.braintreepayments.com/ios+python/reference/general/testing#test-amounts
+        # $2002 is upcharged to $2062, which corresponds to 'Invalid Tax Amount'
+        hold, error = create_card_hold(self.db, bob, D('2002.00'))
+        assert error.startswith('Invalid Tax Amount')
 
     def test_create_card_hold_multiple_cards(self):
-        bob = self.make_participant('bob', balanced_customer_href='new',
-                                    is_suspicious=False)
-        card = balanced.Card(
-            number='4242424242424242',
-            expiration_year=2020,
-            expiration_month=12
-        ).save()
-        card.associate_to_customer(bob.balanced_customer_href)
-        ExchangeRoute.insert(bob, 'balanced-cc', card.href)
+        bob = self.make_participant('bob', is_suspicious=False)
+        customer_id = bob.get_braintree_account().id
 
-        card = balanced.Card(
-            number='4242424242424242',
-            expiration_year=2030,
-            expiration_month=12
-        ).save()
-        card.associate_to_customer(bob.balanced_customer_href)
-        ExchangeRoute.insert(bob, 'balanced-cc', card.href)
+        for i in range(2):
+            result = braintree.PaymentMethod.create({
+                "customer_id": customer_id,
+                "payment_method_nonce": Nonces.Transactable
+            })
+            assert result.is_success
+            ExchangeRoute.insert(bob, 'braintree-cc', result.payment_method.token)
 
-        hold, error = create_card_hold(self.db, bob, D('10.00'))
+        hold, error = create_card_hold(self.db, bob, D('100.00'))
         assert error == ''
 
     def test_create_card_hold_no_card(self):
@@ -181,7 +176,8 @@ class TestCardHolds(BillingHarness):
         assert error == 'No credit card'
 
     def test_create_card_hold_invalidated_card(self):
-        bob = self.make_participant('bob', is_suspicious=False, last_bill_result='invalidated')
+        bob = self.make_participant('bob', is_suspicious=False)
+        ExchangeRoute.insert(bob, 'braintree-cc', 'foo', error='invalidated')
         hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
