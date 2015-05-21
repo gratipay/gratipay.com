@@ -2,11 +2,13 @@ from __future__ import unicode_literals
 
 import json
 
+import pytest
 from gratipay.testing import Harness
 
 
 class Tests(Harness):
 
+    @pytest.mark.xfail(reason="#3399")
     def test_tip_distribution_json_gives_tip_distribution(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob', claimed_time='now', number='plural')

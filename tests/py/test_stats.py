@@ -4,6 +4,7 @@ import datetime
 from decimal import Decimal
 import json
 
+import pytest
 from mock import patch
 
 from gratipay import wireup
@@ -38,6 +39,7 @@ class TestChartOfReceiving(Harness):
             p = self.make_participant(participant, claimed_time='now', last_bill_result='')
             setattr(self, participant, p)
 
+    @pytest.mark.xfail(reason="#3399")
     def test_get_tip_distribution_handles_a_tip(self):
         self.alice.set_tip_to(self.bob, '3.00')
         expected = ([[Decimal('3.00'), 1, Decimal('3.00'), 1.0, Decimal('1')]],
@@ -50,6 +52,7 @@ class TestChartOfReceiving(Harness):
         actual = self.alice.get_tip_distribution()
         assert actual == expected
 
+    @pytest.mark.xfail(reason="#3399")
     def test_get_tip_distribution_handles_multiple_tips(self):
         carl = self.make_participant('carl', claimed_time='now', last_bill_result='')
         self.alice.set_tip_to(self.bob, '1.00')
@@ -61,6 +64,7 @@ class TestChartOfReceiving(Harness):
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 
+    @pytest.mark.xfail(reason="#3399")
     def test_get_tip_distribution_handles_big_tips(self):
         self.bob.update_number('plural')
         carl = self.make_participant('carl', claimed_time='now', last_bill_result='')
@@ -73,6 +77,7 @@ class TestChartOfReceiving(Harness):
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 
+    @pytest.mark.xfail(reason="#3399")
     def test_get_tip_distribution_ignores_bad_cc(self):
         bad_cc = self.make_participant('bad_cc', claimed_time='now', last_bill_result='Failure!')
         self.alice.set_tip_to(self.bob, '1.00')
@@ -82,6 +87,7 @@ class TestChartOfReceiving(Harness):
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 
+    @pytest.mark.xfail(reason="#3399")
     def test_get_tip_distribution_ignores_missing_cc(self):
         missing_cc = self.make_participant('missing_cc', claimed_time='now')
         self.alice.set_tip_to(self.bob, '1.00')
