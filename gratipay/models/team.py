@@ -73,3 +73,11 @@ class Team(Model):
     def update_receiving(self, cursor=None):
         # Stubbed out for now. Migrate this over from Participant.
         pass
+
+
+    @property
+    def status(self):
+        return { None: 'unreviewed'
+               , False: 'rejected'
+               , True: 'approved'
+                }[self.is_approved]
