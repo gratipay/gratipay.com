@@ -190,7 +190,8 @@ def create_card_hold(db, participant, amount):
             'amount': str(cents/100.0),
             'customer_id': route.participant.braintree_customer_id,
             'payment_method_token': route.address,
-            'options': { 'submit_for_settlement': False }
+            'options': { 'submit_for_settlement': False },
+            'custom_fields': {'participant_id': participant.id}
         })
 
         if result.is_success and result.transaction.status == 'authorized':
@@ -219,44 +220,49 @@ def create_card_hold(db, participant, amount):
 def capture_card_hold(db, participant, amount, hold):
     """Capture the previously created hold on the participant's credit card.
     """
-    typecheck( hold, balanced.CardHold
+    typecheck( hold, braintree.Transaction
              , amount, Decimal
               )
 
     username = participant.username
-    assert participant.id == int(hold.meta['participant_id'])
+    assert participant.id == int(hold.custom_fields['participant_id'])
 
-    route = ExchangeRoute.from_address(participant, 'balanced-cc', hold.card_href)
+    route = ExchangeRoute.from_address(participant, 'braintree-cc', hold.credit_card['token'])
     assert isinstance(route, ExchangeRoute)
 
     cents, amount_str, charge_amount, fee = _prep_hit(amount)
     amount = charge_amount - fee  # account for possible rounding
     e_id = record_exchange(db, route, amount, fee, participant, 'pre')
 
-    meta = dict(participant_id=participant.id, exchange_id=e_id)
+    # TODO: Find a way to link transactions and corresponding exchanges
+    # meta = dict(participant_id=participant.id, exchange_id=e_id)
+
+    error = ''
     try:
-        hold.capture(amount=cents, description=username, meta=meta)
-        record_exchange_result(db, e_id, 'succeeded', None, participant)
+        result = braintree.Transaction.submit_for_settlement(hold.id, str(cents/100.00))
+        #import pdb;pdb.set_trace()
+        assert result.is_success
+        if result.transaction.status != 'submitted_for_settlement':
+            error = result.transaction.status
     except Exception as e:
         error = repr_exception(e)
+
+    if error == '':
+        record_exchange_result(db, e_id, 'succeeded', None, participant)
+        log("Captured " + amount_str + " on Balanced for " + username)
+    else:
         record_exchange_result(db, e_id, 'failed', error, participant)
-        raise
-
-    hold.meta['state'] = 'captured'
-    hold.save()
-
-    log("Captured " + amount_str + " on Balanced for " + username)
+        raise Exception(error)
 
 
 def cancel_card_hold(hold):
     """Cancel the previously created hold on the participant's credit card.
     """
-    hold.is_void = True
-    hold.meta['state'] = 'cancelled'
-    hold.save()
+    result = braintree.Transaction.void(hold.id)
+    assert result.is_success
 
-    amount = hold.amount / 100.0
-    participant_id = hold.meta['participant_id']
+    amount = hold.amount
+    participant_id = hold.custom_fields['participant_id']
     log("Canceled a ${:.2f} hold for {}.".format(amount, participant_id))
 
 
