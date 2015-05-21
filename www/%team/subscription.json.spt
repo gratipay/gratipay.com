@@ -1,0 +1,63 @@
+"""Get or change the authenticated user's subscription to this team.
+"""
+from decimal import InvalidOperation
+
+from aspen import Response
+from babel.numbers import NumberFormatError
+from gratipay.exceptions import BadAmount
+from gratipay.utils import get_team
+
+[-----------------------------------------------------------------------------]
+
+if user.ANON:
+    raise Response(403, _("Please sign in first"))
+
+else:
+    out = {}
+
+    # Get team.
+    # =========
+
+    team = get_team(state)
+    if team.is_closed or not team.is_approved:
+        raise Response(400, "unapproved team")
+
+
+    # Get and maybe set amount.
+    # =========================
+
+    if request.method == 'POST' and 'amount' in request.body:
+        try:
+            out = user.participant.set_subscription_to(team, parse_decimal(request.body['amount']))
+        except (InvalidOperation, ValueError, BadAmount, NumberFormatError):
+            raise Response(400, "bad amount")
+    else:
+        out = user.participant.get_subscription_to(team)
+
+    amount = out['amount']
+    total_giving = user.participant.giving
+    total_receiving = user.participant.receiving
+
+    out["amount"] = str(amount)
+    out["amount_l"] = format_currency(amount, 'USD')
+    out["msg"] = _("Payment changed to {0} per week. ", out["amount_l"])
+    out["msg"] += _("Thank you so much for supporting {0}!", team.name)
+    out["nsupporters"] = team.nsupporters
+    out["team_id"] = team.id
+    out["total_giving"] = str(total_giving)
+    out["total_giving_l"] = format_currency(total_giving, 'USD')
+    out["total_receiving"] = str(total_receiving)
+    out["total_receiving_l"] = format_currency(total_receiving, 'USD')
+
+    total_receiving_team = team.receiving
+    out["total_receiving_team"] = str(total_receiving_team)
+    out["total_receiving_team_l"] = format_currency(total_receiving_team, 'USD')
+
+    if 'ctime' in out:
+        out["ctime"] = str(out['ctime'])
+        out["mtime"] = str(out['mtime'])
+    else:
+        out["ctime"] = out["mtime"] = None
+
+[---] application/json via json_dump
+out

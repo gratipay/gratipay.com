@@ -602,37 +602,32 @@ class Tests(Harness):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob', claimed_time='now')
         carl = self.make_participant('carl', claimed_time='now', last_bill_result="Fail!")
-        dana = self.make_participant('dana', claimed_time='now')
-        alice.set_tip_to(dana, '3.00')
-        alice.set_tip_to(bob, '6.00')
-        bob.set_tip_to(alice, '5.00')
-        bob.set_tip_to(dana, '2.00')
-        carl.set_tip_to(dana, '2.08')
+        team = self.make_team(is_approved=True)
 
-        assert alice.giving == Decimal('9.00')
-        assert alice.receiving == Decimal('5.00')
-        assert bob.giving == Decimal('5.00')
-        assert bob.receiving == Decimal('6.00')
+        alice.set_subscription_to(team, '3.00') # The only funded tip
+        bob.set_subscription_to(team, '5.00')
+        carl.set_subscription_to(team, '7.00')
+
+        # TODO - Add team payroll and check receiving values
+
+        assert alice.giving == Decimal('3.00')
+        assert bob.giving == Decimal('0.00')
         assert carl.giving == Decimal('0.00')
-        assert carl.receiving == Decimal('0.00')
-        assert dana.receiving == Decimal('3.00')
-        assert dana.npatrons == 1
 
-        funded_tips = self.db.all("SELECT amount FROM tips WHERE is_funded ORDER BY id")
-        assert funded_tips == [3, 6, 5]
+        funded_tip = self.db.one("SELECT * FROM subscriptions WHERE is_funded ORDER BY id")
+        assert funded_tip.subscriber == alice.username
 
     def test_only_latest_tip_counts(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', claimed_time='now', last_bill_result='')
-        carl = self.make_participant('carl', claimed_time='now')
-        alice.set_tip_to(carl, '12.00')
-        alice.set_tip_to(carl, '3.00')
-        bob.set_tip_to(carl, '2.00')
-        bob.set_tip_to(carl, '0.00')
-        assert alice.giving == Decimal('3.00')
-        assert bob.giving == Decimal('0.00')
-        assert carl.receiving == Decimal('3.00')
-        assert carl.npatrons == 1
+        team = self.make_team(is_approved=True)
+
+        alice.set_subscription_to(team, '12.00')
+        alice.set_subscription_to(team, '4.00')
+
+        # TODO - Add team payroll and check receiving values
+
+        assert alice.giving == Decimal('4.00')
+
 
     def test_receiving_includes_tips_from_whitelisted_accounts(self):
         alice = self.make_participant( 'alice'

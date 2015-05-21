@@ -39,7 +39,7 @@ title = _("PayPal Account")
 
 {% if not user.ANON %}
 <script>
-    $(document).ready(function() { Gratipay.payments.pp.init(); });
+    $(document).ready(function() { Gratipay.routes.pp.init(); });
 </script>
 {% endif %}
 
