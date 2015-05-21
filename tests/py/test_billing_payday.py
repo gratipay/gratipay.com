@@ -4,10 +4,11 @@ from decimal import Decimal as D
 import os
 
 import balanced
+import braintree
 import mock
 import pytest
 
-from gratipay.billing.exchanges import create_card_hold
+from gratipay.billing.exchanges import create_card_hold, cancel_card_hold
 from gratipay.billing.payday import NoPayday, Payday
 from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
@@ -21,15 +22,16 @@ class TestPayday(BillingHarness):
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_moves_money(self, fch):
         A = self.make_team(is_approved=True)
-        self.janet.set_subscription_to(A, '6.00')  # under $10!
+        self.obama.set_subscription_to(A, '6.00')  # under $10!
         fch.return_value = {}
         Payday.start().run()
 
-        janet = Participant.from_username('janet')
+        obama = Participant.from_username('obama')
         hannibal = Participant.from_username('hannibal')
 
+        #import pdb; pdb.set_trace()
         assert hannibal.balance == D('6.00')
-        assert janet.balance == D('3.41')
+        assert obama.balance == D('3.41')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_doesnt_move_money_from_a_suspicious_account(self, fch):
@@ -57,30 +59,30 @@ class TestPayday(BillingHarness):
              WHERE username = 'homer'
         """)
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.janet.set_subscription_to(team, '6.00')  # under $10!
+        self.obama.set_subscription_to(team, '6.00')  # under $10!
         fch.return_value = {}
         Payday.start().run()
 
-        janet = Participant.from_username('janet')
+        obama = Participant.from_username('obama')
         homer = Participant.from_username('homer')
 
-        assert janet.balance == D('0.00')
+        assert obama.balance == D('0.00')
         assert homer.balance == D('0.00')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_moves_money_with_balanced(self, fch):
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.janet.set_subscription_to(team, '15.00')
+        self.obama.set_subscription_to(team, '15.00')
         fch.return_value = {}
         Payday.start().run()
 
-        janet = Participant.from_username('janet')
+        obama = Participant.from_username('obama')
         homer = Participant.from_username('homer')
 
-        assert janet.balance == D('0.00')
+        assert obama.balance == D('0.00')
         assert homer.balance == D('0.00')
 
-        janet_customer = balanced.Customer.fetch(janet.balanced_customer_href)
+        #janet_customer = balanced.Customer.fetch(obama.balanced_customer_href)
         homer_customer = balanced.Customer.fetch(homer.balanced_customer_href)
 
         created_at = balanced.Transaction.f.created_at
@@ -89,9 +91,9 @@ class TestPayday(BillingHarness):
         assert credit.amount == 1500
         assert credit.description == 'homer'
 
-        debit = janet_customer.debits.sort(created_at.desc()).first()
-        assert debit.amount == 1576  # base amount + fee
-        assert debit.description == 'janet'
+        #debit = janet_customer.debits.sort(created_at.desc()).first()
+        #assert debit.amount == 1576  # base amount + fee
+        #assert debit.description == 'obama'
 
     @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
@@ -275,19 +277,26 @@ class TestPayin(BillingHarness):
     @mock.patch('gratipay.billing.payday.create_card_hold')
     def test_hold_amount_includes_negative_balance(self, cch, fch):
         self.db.run("""
-            UPDATE participants SET balance = -10 WHERE username='janet'
+            UPDATE participants SET balance = -10 WHERE username='obama'
         """)
         team = self.make_team('The A Team', is_approved=True)
-        self.janet.set_subscription_to(team, 25)
+        self.obama.set_subscription_to(team, 25)
         fch.return_value = {}
         cch.return_value = (None, 'some error')
         self.create_card_holds()
         assert cch.call_args[0][-1] == 35
 
     def test_payin_fetches_and_uses_existing_holds(self):
+        # Braintree Cleanup
+        existing_holds = braintree.Transaction.search(
+            braintree.TransactionSearch.status == 'authorized'
+        )
+        for hold in existing_holds.items:
+            cancel_card_hold(hold)
+
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.janet.set_subscription_to(team, '20.00')
-        hold, error = create_card_hold(self.db, self.janet, D(20))
+        self.obama.set_subscription_to(team, '20.00')
+        hold, error = create_card_hold(self.db, self.obama, D(20))
         assert hold is not None
         assert not error
         with mock.patch('gratipay.billing.payday.create_card_hold') as cch:
@@ -298,18 +307,21 @@ class TestPayin(BillingHarness):
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payin_cancels_existing_holds_of_insufficient_amounts(self, fch):
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.janet.set_subscription_to(team, '30.00')
-        hold, error = create_card_hold(self.db, self.janet, D(10))
+        self.obama.set_subscription_to(team, '30.00')
+        hold, error = create_card_hold(self.db, self.obama, D(10))
         assert not error
-        fch.return_value = {self.janet.id: hold}
+        fch.return_value = {self.obama.id: hold}
         with mock.patch('gratipay.billing.payday.create_card_hold') as cch:
             fake_hold = object()
             cch.return_value = (fake_hold, None)
             holds = self.create_card_holds()
+            hold = braintree.Transaction.find(hold.id)
             assert len(holds) == 1
-            assert holds[self.janet.id] is fake_hold
-            assert hold.voided_at is not None
+            assert holds[self.obama.id] is fake_hold
+            assert hold.status == 'voided'
 
+    @pytest.mark.xfail(reason="Don't think we'll need this anymore since we aren't using balanced, "
+                              "leaving it here till I'm sure.")
     @mock.patch('gratipay.billing.payday.CardHold')
     @mock.patch('gratipay.billing.payday.cancel_card_hold')
     def test_fetch_card_holds_handles_extra_holds(self, cancel, CardHold):
@@ -361,11 +373,11 @@ class TestPayin(BillingHarness):
                 payday.update_balances(cursor)
 
     @mock.patch.object(Payday, 'fetch_card_holds')
-    @mock.patch('gratipay.billing.exchanges.thing_from_href')
-    def test_card_hold_error(self, tfh, fch):
+    @mock.patch('braintree.Transaction.sale')
+    def test_card_hold_error(self, bt_sale, fch):
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.janet.set_subscription_to(team, '17.00')
-        tfh.side_effect = Foobar
+        self.obama.set_subscription_to(team, '17.00')
+        bt_sale.side_effect = Foobar
         fch.return_value = {}
         Payday.start().payin()
         payday = self.fetch_payday()
@@ -503,10 +515,10 @@ class TestPayin(BillingHarness):
     @mock.patch('gratipay.billing.payday.capture_card_hold')
     def test_payin_dumps_transfers_for_debugging(self, cch, fch):
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.janet.set_subscription_to(team, '10.00')
+        self.obama.set_subscription_to(team, '10.00')
         fake_hold = mock.MagicMock()
         fake_hold.amount = 1500
-        fch.return_value = {self.janet.id: fake_hold}
+        fch.return_value = {self.obama.id: fake_hold}
         cch.side_effect = Foobar
         open_ = mock.MagicMock()
         open_.side_effect = open
