@@ -264,6 +264,15 @@ class TestPayin(BillingHarness):
             payday.prepare(cursor, payday.ts_start)
             return payday.create_card_holds(cursor)
 
+
+    # fetch_card_holds - fch
+
+    def test_fch_fetches_card_holds(self):
+        holds = Payday.start().fetch_card_holds([])
+        import pdb; pdb.set_trace()
+
+
+
     @mock.patch.object(Payday, 'fetch_card_holds')
     @mock.patch('gratipay.billing.payday.create_card_hold')
     def test_hold_amount_includes_negative_balance(self, cch, fch):
