@@ -1074,6 +1074,9 @@ msgstr "L'adresse ne peut pas être vide."
 msgid "You need to verify your identity first."
 msgstr "Vous devez d'abord vérifier votre identité."
 
+msgid "Only verified email addresses allowed."
+msgstr ""
+
 msgid "This is not a valid Bitcoin address."
 msgstr "Ce n'est pas une adresse Bitcoin valide."
 
@@ -1212,6 +1215,45 @@ msgstr "Déconnecter ma carte de crédit"
 
 msgid "It seems you're trying to delete something that doesn't exist."
 msgstr "Ce que vous avez tenté de supprimer ne semble pas exister."
+
+msgid "Your PayPal account is {0}not connected{1}"
+msgstr ""
+
+msgid "Your PayPal account is {0}connected{1}"
+msgstr ""
+
+msgid "PayPal Account"
+msgstr ""
+
+msgid ""
+"When you receive money on Gratipay we'll automatically send it to your "
+"PayPal account if you don't have a bank account attached."
+msgstr ""
+
+msgid ""
+"Deposits are initiated every Thursday when you accumulate at least {0} in "
+"your balance."
+msgstr ""
+
+msgid ""
+"PayPal's fee is 2%, but not more than $1 for U.S. PayPal accounts, or $20 "
+"for non-U.S. PayPal accounts."
+msgstr ""
+
+msgid "Choose from one of your verified emails below:"
+msgstr ""
+
+msgid "Can't find your PayPal email? {0}Add it here{1}."
+msgstr ""
+
+msgid "You must {0}add and verify{1} your PayPal email first."
+msgstr ""
+
+msgid "Are you sure you want to disconnect your PayPal account?"
+msgstr ""
+
+msgid "Disconnect {0}"
+msgstr ""
 
 msgid "Close Account"
 msgstr "Fermer mon compte"
