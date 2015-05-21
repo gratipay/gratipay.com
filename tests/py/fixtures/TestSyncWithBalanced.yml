@@ -62,4 +62,23 @@ interactions:
       content-length: ['356']
       content-type: [application/json]
     status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<search><status type="array"><item>authorized</item></status></search>'
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions/advanced_search_ids
+  response:
+    body:
+      string: !!binary |
+        H4sIAOhXXlUAA7IpTk0sSs7QLUotLs0pKbbjUlCwKUhMT9UtzqxKVSipLEi1VcrMK0lNTy1SsjM1
+        sNGHS4KVZqYUQxUlFhUlViqBBfWBonZcNvroRgMAAAD//wMA9crnoGwAAAA=
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: ['"cf5ca7c90144bdee5e83d6dc77c7c452"']
+      strict-transport-security: [max-age=31536000, max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 200, message: OK}
 version: 1
