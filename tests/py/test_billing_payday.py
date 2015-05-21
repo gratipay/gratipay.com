@@ -287,13 +287,6 @@ class TestPayin(BillingHarness):
         assert cch.call_args[0][-1] == 35
 
     def test_payin_fetches_and_uses_existing_holds(self):
-        # Braintree Cleanup
-        existing_holds = braintree.Transaction.search(
-            braintree.TransactionSearch.status == 'authorized'
-        )
-        for hold in existing_holds.items:
-            cancel_card_hold(hold)
-
         team = self.make_team(owner=self.homer, is_approved=True)
         self.obama.set_subscription_to(team, '20.00')
         hold, error = create_card_hold(self.db, self.obama, D(20))
