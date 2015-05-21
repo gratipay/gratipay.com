@@ -267,10 +267,8 @@ class TestPayin(BillingHarness):
 
     # fetch_card_holds - fch
 
-    def test_fch_fetches_card_holds(self):
-        holds = Payday.start().fetch_card_holds([])
-        import pdb; pdb.set_trace()
-
+    def test_fch_returns_an_empty_dict_when_there_are_no_card_holds(self):
+        assert Payday.start().fetch_card_holds([]) == {}
 
 
     @mock.patch.object(Payday, 'fetch_card_holds')
