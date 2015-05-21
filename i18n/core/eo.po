@@ -233,18 +233,6 @@ msgstr ""
 msgid "Edit"
 msgstr "Redakti"
 
-msgid "Recipient"
-msgstr "Ricevanto"
-
-msgid "Amount ($)"
-msgstr ""
-
-msgid "Last Set"
-msgstr "Agordigi pasinte"
-
-msgid "First Set"
-msgstr "Agordigi unue"
-
 msgid "Jump to {0} from {1}"
 msgstr "Migri al {0} de {1}"
 
@@ -301,14 +289,8 @@ msgstr ""
 msgid "Profile"
 msgstr "Profilo"
 
-msgid "Members"
-msgstr "Membroj"
-
-msgid "Receiving"
-msgstr "Ricevanta"
-
-msgid "Giving"
-msgstr "Donado"
+msgid "Subscriptions"
+msgstr ""
 
 msgid "History"
 msgstr "Historio"
@@ -333,6 +315,18 @@ msgstr "{0} doni al {1}"
 
 msgid "Sign in"
 msgstr "Ensaluti"
+
+msgid "Team"
+msgstr "Teama"
+
+msgid "Amount ($)"
+msgstr ""
+
+msgid "Last Set"
+msgstr "Agordigi pasinte"
+
+msgid "First Set"
+msgstr "Agordigi unue"
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -363,14 +357,14 @@ msgstr "Lernu pli"
 msgid "Learn more about how teams work"
 msgstr "Lernu pli pri kiel teamoj funkcias"
 
-msgid "Your Tip"
-msgstr "Via trinkmono"
+msgid "Your Payment"
+msgstr ""
 
 msgid "per week"
 msgstr "ĉiusemajne"
 
-msgid "Give to {0}"
-msgstr "Donu al {0}"
+msgid "Support {0}"
+msgstr ""
 
 msgid "Stop Giving"
 msgstr "Ĉesi donado"
@@ -413,6 +407,9 @@ msgstr "Ĉu vi volas vidi kiu estas? Foliumu {0}niajn komunumojn{1}."
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Ĉu vi volas labori por Gratipay? Ni estas {0}malferma firmo{1}."
 
+msgid "Giving"
+msgstr "Donado"
+
 msgid "You give {0} per week."
 msgstr "Vi donas {0} ĉiusemanje."
 
@@ -421,6 +418,9 @@ msgstr "Kiu inspiras vin? Trovu ilin en Gratipay:"
 
 msgid "Find your friends from social networks:"
 msgstr ""
+
+msgid "Receiving"
+msgstr "Ricevanta"
 
 msgid "You receive {0} per week."
 msgstr "Vi ricevas {0} ĉiusemanje."
@@ -522,6 +522,15 @@ msgid "How to Get Involved"
 msgstr ""
 
 msgid "How Revenue Is Shared"
+msgstr ""
+
+msgid "Please sign in first"
+msgstr "Bonvolu ensaluti unue"
+
+msgid "Payment changed to {0} per week. "
+msgstr ""
+
+msgid "Thank you so much for supporting {0}!"
 msgstr ""
 
 msgid "User not found."
@@ -885,15 +894,6 @@ msgstr ""
 msgid "Your privacy setting has been changed."
 msgstr ""
 
-msgid "Please sign in first"
-msgstr "Bonvolu ensaluti unue"
-
-msgid "Thank you so much for supporting Gratipay! :D"
-msgstr "Dankon por via subtenado de Gratipay! :D"
-
-msgid "Tip changed to {0} per week!"
-msgstr "Tipo ŝanĝis al {0} ĉiusemajne!"
-
 msgid "Invalid email address."
 msgstr "Malvalida retpoŝtadreso."
 
@@ -960,24 +960,6 @@ msgstr "Resendi retpoŝton por kontrolo"
 
 msgid "View your email addresses"
 msgstr "Montri viajn Retpoŝtadresojn"
-
-msgid "Active"
-msgstr ""
-
-msgid "Cancelled"
-msgstr "Nuligita"
-
-msgid "These are tips that you recently cancelled."
-msgstr ""
-
-msgid "You give {0} every week."
-msgstr ""
-
-msgid "Tips"
-msgstr "Trinkmonoj"
-
-msgid "No tips to show"
-msgstr ""
 
 msgid "Export History"
 msgstr ""
@@ -1287,9 +1269,6 @@ msgstr "Tipo de konto"
 msgid "Individual"
 msgstr "Individua"
 
-msgid "Team"
-msgstr "Teama"
-
 msgid "Available Money"
 msgstr "Disponebla Mono"
 
@@ -1385,6 +1364,21 @@ msgstr ""
 
 msgid "Close"
 msgstr "Fermi"
+
+msgid "Active"
+msgstr ""
+
+msgid "Cancelled"
+msgstr "Nuligita"
+
+msgid "These are subscriptions that you recently cancelled."
+msgstr ""
+
+msgid "You pay {0} every week."
+msgstr ""
+
+msgid "No subscriptions to show"
+msgstr ""
 
 msgid "Button"
 msgstr "Butono"

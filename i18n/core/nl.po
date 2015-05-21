@@ -236,18 +236,6 @@ msgstr "Verwijderen"
 msgid "Edit"
 msgstr "Verander"
 
-msgid "Recipient"
-msgstr "Ontvanger"
-
-msgid "Amount ($)"
-msgstr ""
-
-msgid "Last Set"
-msgstr "Laatste serie"
-
-msgid "First Set"
-msgstr "Eerste serie"
-
 msgid "Jump to {0} from {1}"
 msgstr "Ga naal {0} van {1}"
 
@@ -304,14 +292,8 @@ msgstr "Dashboard"
 msgid "Profile"
 msgstr "Profiel"
 
-msgid "Members"
-msgstr "Leden"
-
-msgid "Receiving"
-msgstr "Ontvangt"
-
-msgid "Giving"
-msgstr "Geven"
+msgid "Subscriptions"
+msgstr ""
 
 msgid "History"
 msgstr "Geschiedenis"
@@ -336,6 +318,18 @@ msgstr "{0} gift aan {1}"
 
 msgid "Sign in"
 msgstr "Log in"
+
+msgid "Team"
+msgstr "Team"
+
+msgid "Amount ($)"
+msgstr ""
+
+msgid "Last Set"
+msgstr "Laatste serie"
+
+msgid "First Set"
+msgstr "Eerste serie"
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -366,14 +360,14 @@ msgstr "Leer meer"
 msgid "Learn more about how teams work"
 msgstr "Leer meer over hoe teams werken"
 
-msgid "Your Tip"
-msgstr "Uw gift"
+msgid "Your Payment"
+msgstr ""
 
 msgid "per week"
 msgstr "per week"
 
-msgid "Give to {0}"
-msgstr "Geef aan {0}"
+msgid "Support {0}"
+msgstr ""
 
 msgid "Stop Giving"
 msgstr "Stop met geven"
@@ -416,6 +410,9 @@ msgstr "Wil je zien wie ze zijn? Bezoek {0}onze gemeenschappen{1}."
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Wil je voor Gratipay werken? We zijn een {0}open bedrijf{1}."
 
+msgid "Giving"
+msgstr "Geven"
+
 msgid "You give {0} per week."
 msgstr "Je geeft {0} per week."
 
@@ -424,6 +421,9 @@ msgstr "Wie inspireert u? Kijk of ze ook lid zijn van Gratipay: "
 
 msgid "Find your friends from social networks:"
 msgstr ""
+
+msgid "Receiving"
+msgstr "Ontvangt"
 
 msgid "You receive {0} per week."
 msgstr "Je ontvangt {0} per week."
@@ -525,6 +525,15 @@ msgid "How to Get Involved"
 msgstr ""
 
 msgid "How Revenue Is Shared"
+msgstr ""
+
+msgid "Please sign in first"
+msgstr "Logt u alstublieft eerst in"
+
+msgid "Payment changed to {0} per week. "
+msgstr ""
+
+msgid "Thank you so much for supporting {0}!"
 msgstr ""
 
 msgid "User not found."
@@ -888,15 +897,6 @@ msgstr "Het is voor teams niet toegestaan om hun te ontvangen bedrag te verberge
 msgid "Your privacy setting has been changed."
 msgstr "Uw privacy instellingen zijn gewijzigd."
 
-msgid "Please sign in first"
-msgstr "Logt u alstublieft eerst in"
-
-msgid "Thank you so much for supporting Gratipay! :D"
-msgstr "Hartelijk dank voor het steunen van Gratipay! :D"
-
-msgid "Tip changed to {0} per week!"
-msgstr "Fooi is veranderd naar {0} per week!"
-
 msgid "Invalid email address."
 msgstr "Ongeldig e-mailadres"
 
@@ -963,24 +963,6 @@ msgstr "Verficatie e-mail opnieuw versturen"
 
 msgid "View your email addresses"
 msgstr "Bekijk uw e-mailadressen."
-
-msgid "Active"
-msgstr ""
-
-msgid "Cancelled"
-msgstr "Geannuleerd"
-
-msgid "These are tips that you recently cancelled."
-msgstr ""
-
-msgid "You give {0} every week."
-msgstr ""
-
-msgid "Tips"
-msgstr "Fooien"
-
-msgid "No tips to show"
-msgstr ""
 
 msgid "Export History"
 msgstr "Exporteer geschiedenis"
@@ -1290,9 +1272,6 @@ msgstr "Type account"
 msgid "Individual"
 msgstr "Individu"
 
-msgid "Team"
-msgstr "Team"
-
 msgid "Available Money"
 msgstr "Beschikbaar geld."
 
@@ -1388,6 +1367,21 @@ msgstr ""
 
 msgid "Close"
 msgstr "Sluit"
+
+msgid "Active"
+msgstr ""
+
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+msgid "These are subscriptions that you recently cancelled."
+msgstr ""
+
+msgid "You pay {0} every week."
+msgstr ""
+
+msgid "No subscriptions to show"
+msgstr ""
 
 msgid "Button"
 msgstr "Knop"

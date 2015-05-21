@@ -237,18 +237,6 @@ msgstr ""
 msgid "Edit"
 msgstr "Editar"
 
-msgid "Recipient"
-msgstr "Destinatário"
-
-msgid "Amount ($)"
-msgstr ""
-
-msgid "Last Set"
-msgstr "Definido pela última vez."
-
-msgid "First Set"
-msgstr "Definido pela primeira vez."
-
 msgid "Jump to {0} from {1}"
 msgstr "Pule para {0} de {1}"
 
@@ -305,14 +293,8 @@ msgstr "Painel de Informações"
 msgid "Profile"
 msgstr "Perfil"
 
-msgid "Members"
-msgstr "Membros"
-
-msgid "Receiving"
-msgstr "Recebendo"
-
-msgid "Giving"
-msgstr "Doando"
+msgid "Subscriptions"
+msgstr ""
 
 msgid "History"
 msgstr "Histórico"
@@ -337,6 +319,18 @@ msgstr "{0} para doar para {1}"
 
 msgid "Sign in"
 msgstr "Logar"
+
+msgid "Team"
+msgstr "Equipe"
+
+msgid "Amount ($)"
+msgstr ""
+
+msgid "Last Set"
+msgstr "Definido pela última vez."
+
+msgid "First Set"
+msgstr "Definido pela primeira vez."
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -367,14 +361,14 @@ msgstr "Aprenda mais"
 msgid "Learn more about how teams work"
 msgstr "Aprenda mais sobre como os times funcionam"
 
-msgid "Your Tip"
-msgstr "A sua gorjeta"
+msgid "Your Payment"
+msgstr ""
 
 msgid "per week"
 msgstr "por semana"
 
-msgid "Give to {0}"
-msgstr "Doe para {0}"
+msgid "Support {0}"
+msgstr ""
 
 msgid "Stop Giving"
 msgstr "Pare de Doar"
@@ -417,6 +411,9 @@ msgstr "Quer saber quem eles são? Procure {0}nossas comunidades{1}."
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Quer trabalhar para o Gratipay? Nós somos uma {0}empresa aberta{1}."
 
+msgid "Giving"
+msgstr "Doando"
+
 msgid "You give {0} per week."
 msgstr "Você doa {0} por semana."
 
@@ -425,6 +422,9 @@ msgstr "Quem lhe inspira? Veja se eles estão no Gratipay:"
 
 msgid "Find your friends from social networks:"
 msgstr ""
+
+msgid "Receiving"
+msgstr "Recebendo"
 
 msgid "You receive {0} per week."
 msgstr "Você recebe {0} por semana."
@@ -526,6 +526,15 @@ msgid "How to Get Involved"
 msgstr ""
 
 msgid "How Revenue Is Shared"
+msgstr ""
+
+msgid "Please sign in first"
+msgstr "Por favor inicie a sessão primeiro"
+
+msgid "Payment changed to {0} per week. "
+msgstr ""
+
+msgid "Thank you so much for supporting {0}!"
 msgstr ""
 
 msgid "User not found."
@@ -889,15 +898,6 @@ msgstr "Times não são permitidos escoder a quantidade que recebem."
 msgid "Your privacy setting has been changed."
 msgstr ""
 
-msgid "Please sign in first"
-msgstr "Por favor inicie a sessão primeiro"
-
-msgid "Thank you so much for supporting Gratipay! :D"
-msgstr "Muito obrigado por suportar o Gratipay! :D"
-
-msgid "Tip changed to {0} per week!"
-msgstr "Gorjeta alterada para {0} por semana!"
-
 msgid "Invalid email address."
 msgstr "Endereço de email inválido."
 
@@ -964,24 +964,6 @@ msgstr "Reenvie a verificação de email"
 
 msgid "View your email addresses"
 msgstr "Veja o seu endereço de email"
-
-msgid "Active"
-msgstr ""
-
-msgid "Cancelled"
-msgstr "Cancelado"
-
-msgid "These are tips that you recently cancelled."
-msgstr ""
-
-msgid "You give {0} every week."
-msgstr ""
-
-msgid "Tips"
-msgstr "Gorjetas"
-
-msgid "No tips to show"
-msgstr ""
 
 msgid "Export History"
 msgstr "Exporte o Histórico"
@@ -1291,9 +1273,6 @@ msgstr "Tipo de conta"
 msgid "Individual"
 msgstr "Individual"
 
-msgid "Team"
-msgstr "Equipe"
-
 msgid "Available Money"
 msgstr "Dinheiro Disponível"
 
@@ -1389,6 +1368,21 @@ msgstr ""
 
 msgid "Close"
 msgstr "Fechar"
+
+msgid "Active"
+msgstr ""
+
+msgid "Cancelled"
+msgstr "Cancelado"
+
+msgid "These are subscriptions that you recently cancelled."
+msgstr ""
+
+msgid "You pay {0} every week."
+msgstr ""
+
+msgid "No subscriptions to show"
+msgstr ""
 
 msgid "Button"
 msgstr "Botão"
