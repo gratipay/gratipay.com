@@ -15,7 +15,6 @@ import itertools
 from multiprocessing.dummy import Pool as ThreadPool
 
 import braintree
-from balanced import CardHold
 
 import aspen.utils
 from aspen import log
