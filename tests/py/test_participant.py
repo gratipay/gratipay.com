@@ -576,6 +576,26 @@ class Tests(Harness):
         assert Participant.from_username('alice').is_free_rider is None
 
 
+    # get_teams - gt
+
+    def test_get_teams_gets_teams(self):
+        self.make_team(is_approved=True)
+        hannibal = Participant.from_username('hannibal')
+        assert [t.slug for t in hannibal.get_teams()] == ['TheATeam']
+
+    def test_get_teams_can_get_only_approved_teams(self):
+        self.make_team(is_approved=True)
+        hannibal = Participant.from_username('hannibal')
+        self.make_team('The B Team', owner=hannibal, is_approved=False)
+        assert [t.slug for t in hannibal.get_teams(only_approved=True)] == ['TheATeam']
+
+    def test_get_teams_can_get_all_teams(self):
+        self.make_team(is_approved=True)
+        hannibal = Participant.from_username('hannibal')
+        self.make_team('The B Team', owner=hannibal, is_approved=False)
+        assert [t.slug for t in hannibal.get_teams()] == ['TheATeam', 'TheBTeam']
+
+
     # giving, npatrons and receiving
 
     def test_only_funded_tips_count(self):
