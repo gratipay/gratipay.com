@@ -345,7 +345,7 @@ class TestRecordExchange(Harness):
 
 
 class TestSyncWithBalanced(BillingHarness):
-
+    @pytest.mark.xfail(reason="We don't use balanced for debits anymore")
     def test_sync_with_balanced(self):
         with mock.patch('gratipay.billing.exchanges.record_exchange_result') as rer:
             rer.side_effect = Foobar()
@@ -360,6 +360,7 @@ class TestSyncWithBalanced(BillingHarness):
         assert exchange.status == 'succeeded'
         assert Participant.from_username('janet').balance == 10
 
+    @pytest.mark.xfail(reason="We don't use balanced for debits anymore")
     def test_sync_with_balanced_deletes_charges_that_didnt_happen(self):
         with mock.patch('gratipay.billing.exchanges.record_exchange_result') as rer \
            , mock.patch('balanced.CardHold.capture') as capture:
