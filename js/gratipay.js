@@ -14,7 +14,7 @@ Gratipay.init = function() {
     Gratipay.forms.initCSRF();
     Gratipay.signIn();
     Gratipay.signOut();
-    Gratipay.tips.initSupportGratipay();
+    Gratipay.payments.initSupportGratipay();
 };
 
 Gratipay.error = function(jqXHR, textStatus, errorThrown) {
