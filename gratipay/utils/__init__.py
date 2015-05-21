@@ -101,42 +101,34 @@ def get_participant(state, restrict=True, resolve_unclaimed=True):
 
     return participant
 
-def get_team(state, restrict=True, resolve_unclaimed=True):
+
+def get_team(state):
     """Given a Request, raise Response or return Team.
-
-    If restrict is True then we'll restrict access to owners and admins.
-
     """
     request = state['request']
     user = state['user']
     slug = request.line.uri.path['team']
     qs = request.line.uri.querystring
-    _ = state['_']
-
-    if restrict:
-        if user.ANON:
-            raise Response(403, _("You need to log in to access this page."))
 
     from gratipay.models.team import Team  # avoid circular import
     team = Team.from_slug(slug)
 
     if team is None:
+        # Try to redirect to a Participant.
+        from gratipay.models.participant import Participant # avoid circular import
+        participant = Participant.from_username(slug)
+        if participant is not None:
+            qs = '?' + request.qs.raw if request.qs.raw else ''
+            request.redirect('/~' + request.path.raw[1:] + qs)
         raise Response(404)
 
-    canonicalize(request.line.uri.path.raw, '/', team.name, slug, qs)
+    canonicalize(request.line.uri.path.raw, '/', team.slug, slug, qs)
 
-    if participant.is_closed:
-        if user.ADMIN:
-            return team
+    if team.is_closed and not user.ADMIN:
         raise Response(410)
 
-    if team.is_closed:
-        # This is an archived account (result of take_over)
-        if user.ADMIN:
-            return participant
-        raise Response(404)
+    return team
 
-    return participant
 
 def update_global_stats(website):
     stats = website.db.one("""

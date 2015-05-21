@@ -8,7 +8,7 @@ LONG_STATEMENT = 256
 
 [-----------------------------------------------------------------------------]
 
-team = get_team(state, restrict=False)
+team = get_team(state)
 title = name = team.name
 
 statement = team.product_or_service
