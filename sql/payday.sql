@@ -12,7 +12,7 @@ CREATE TABLE payday_participants AS
          , ( SELECT count(*)
                FROM exchange_routes r
               WHERE r.participant = p.id
-                AND network = 'balanced-cc'
+                AND network = 'braintree-cc'
            ) > 0 AS has_credit_card
       FROM participants p
      WHERE is_suspicious IS NOT true
