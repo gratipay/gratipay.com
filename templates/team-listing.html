@@ -4,7 +4,7 @@
     <ul class="team memberships">
         {% for team in teams %}
         <li>
-            <a href="/{{ team.name }}/">{{ team.name }}</a>
+            <a href="/{{ team.slug }}/">{{ team.name }}</a>
             <div class="fine">{{ with_others(team) }}</div>
         </li>
         {% endfor %}
