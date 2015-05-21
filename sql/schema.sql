@@ -506,3 +506,7 @@ CREATE TABLE payments
 
 -- https://github.com/gratipay/gratipay.com/pull/3434
 ALTER TABLE payments ADD CONSTRAINT positive CHECK (amount > 0);
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3469
+ALTER TABLE teams ADD COLUMN revenue_model text NOT NULL DEFAULT '';
