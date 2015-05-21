@@ -372,6 +372,7 @@ class Participant(Model, MixinTeam):
     def distribute_balance_as_final_gift(self, cursor):
         """Distribute a balance as a final gift.
         """
+        raise NotImplementedError # XXX Bring me back!
         if self.balance == 0:
             return
 
@@ -1310,49 +1311,43 @@ class Participant(Model, MixinTeam):
         return tip_amounts, npatrons, contributed
 
 
-    def get_giving_for_profile(self):
-        """Given a participant id and a date, return a list and a Decimal.
-
-        This function is used to populate a participant's page for their own
-        viewing pleasure.
-
+    def get_subscriptions_for_profile(self):
+        """Return a list and a Decimal.
         """
 
-        TIPS = """\
+        SUBSCRIPTIONS = """\
 
             SELECT * FROM (
-                SELECT DISTINCT ON (tippee)
-                       amount
-                     , tippee
-                     , t.ctime
-                     , t.mtime
-                     , p.claimed_time
-                     , p.username_lower
-                     , p.number
-                  FROM tips t
-                  JOIN participants p ON p.username = t.tippee
-                 WHERE tipper = %s
-                   AND p.is_suspicious IS NOT true
-                   AND p.claimed_time IS NOT NULL
-              ORDER BY tippee
-                     , t.mtime DESC
+                SELECT DISTINCT ON (s.team)
+                       s.team   as team_slug
+                     , s.amount
+                     , s.ctime
+                     , s.mtime
+                     , t.name   as team_name
+                  FROM subscriptions s
+                  JOIN teams t ON s.team = t.slug
+                 WHERE subscriber = %s
+                   AND t.is_approved is true
+                   AND t.is_closed is not true
+              ORDER BY s.team
+                     , s.mtime DESC
             ) AS foo
             ORDER BY amount DESC
-                   , username_lower
+                   , team_slug
 
         """
-        tips = self.db.all(TIPS, (self.username,))
+        subscriptions = self.db.all(SUBSCRIPTIONS, (self.username,))
 
 
         # Compute the total.
         # ==================
 
-        total = sum([t.amount for t in tips])
+        total = sum([s.amount for s in subscriptions])
         if not total:
             # If tips is an empty list, total is int 0. We want a Decimal.
             total = Decimal('0.00')
 
-        return tips, total
+        return subscriptions, total
 
     def get_current_tips(self):
         """Get the tips this participant is currently sending to others.
