@@ -109,6 +109,7 @@ class TestClosing(Harness):
 
     # dbafg - distribute_balance_as_final_gift
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
     def test_dbafg_distributes_balance_as_final_gift(self):
         alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
         bob = self.make_participant('bob', claimed_time='now')
@@ -121,6 +122,7 @@ class TestClosing(Harness):
         assert Participant.from_username('carl').balance == D('4.00')
         assert Participant.from_username('alice').balance == D('0.00')
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
     def test_dbafg_needs_claimed_tips(self):
         alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
         bob = self.make_participant('bob')
@@ -134,6 +136,7 @@ class TestClosing(Harness):
         assert Participant.from_username('carl').balance == D('0.00')
         assert Participant.from_username('alice').balance == D('10.00')
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
     def test_dbafg_gives_all_to_claimed(self):
         alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
         bob = self.make_participant('bob', claimed_time='now')
@@ -146,6 +149,7 @@ class TestClosing(Harness):
         assert Participant.from_username('carl').balance == D('0.00')
         assert Participant.from_username('alice').balance == D('0.00')
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
     def test_dbafg_skips_zero_tips(self):
         alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
         bob = self.make_participant('bob', claimed_time='now')
@@ -159,6 +163,7 @@ class TestClosing(Harness):
         assert Participant.from_username('carl').balance == D('10.00')
         assert Participant.from_username('alice').balance == D('0.00')
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
     def test_dbafg_favors_highest_tippee_in_rounding_errors(self):
         alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
         bob = self.make_participant('bob', claimed_time='now')
@@ -171,6 +176,7 @@ class TestClosing(Harness):
         assert Participant.from_username('carl').balance == D('6.67')
         assert Participant.from_username('alice').balance == D('0.00')
 
+    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
     def test_dbafg_with_zero_balance_is_a_noop(self):
         alice = self.make_participant('alice', claimed_time='now', balance=D('0.00'))
         bob = self.make_participant('bob', claimed_time='now')

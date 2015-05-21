@@ -162,22 +162,18 @@ class TestPages(Harness):
         expected = "123"
         assert expected in actual
 
-    def test_giving_page(self):
+    def test_subscriptions_page(self):
+        self.make_team(is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        bob = self.make_participant('bob', claimed_time='now')
-        alice.set_tip_to(bob, "1.00")
-        actual = self.client.GET("/~alice/giving/", auth_as="alice").body
-        expected = "bob"
-        assert expected in actual
+        alice.set_subscription_to('TheATeam', "1.00")
+        assert "The A Team" in self.client.GET("/~alice/subscriptions/", auth_as="alice").body
 
     def test_giving_page_shows_cancelled(self):
+        self.make_team(is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        bob = self.make_participant('bob', claimed_time='now')
-        alice.set_tip_to(bob, "1.00")
-        alice.set_tip_to(bob, "0.00")
-        actual = self.client.GET("/~alice/giving/", auth_as="alice").body
-        assert "bob" in actual
-        assert "Cancelled" in actual
+        alice.set_subscription_to('TheATeam', "1.00")
+        alice.set_subscription_to('TheATeam', "0.00")
+        assert "Cancelled" in self.client.GET("/~alice/subscriptions/", auth_as="alice").body
 
     def test_new_participant_can_edit_profile(self):
         self.make_participant('alice', claimed_time='now')

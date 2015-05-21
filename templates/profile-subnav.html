@@ -6,6 +6,7 @@
 {% set u = participant.username %}
 {% set pages = [ ('/',                  _('Dashboard'), True,           False)
                , ('/~'+u+'/',           _('Profile'),   True,           show_profile)
+               , ('/~'+u+'/subscriptions/', _('Subscriptions'), True,       False)
                , ('/~'+u+'/history/',   _('History'),   True,           False)
                , ('/~'+u+'/widgets/',   _('Widgets'),   True,           False)
                , ('/~'+u+'/identity',   _('Identity'),  True,           False)
