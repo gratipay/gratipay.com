@@ -147,14 +147,14 @@ class TestOldTeams(Harness):
         actual = alice.member_of(self.team)
         assert actual == expected
 
-    def test_get_teams_for_member(self):
+    def test_get_old_teams_for_member(self):
         alice = self.make_participant('alice', claimed_time='now')
         bob = self.make_participant('bob', claimed_time='now')
         team = self.make_participant('B-Team', number='plural')
         self.team.add_member(alice)
         team.add_member(bob)
         expected = 1
-        actual = alice.get_teams().pop().nmembers
+        actual = alice.get_old_teams().pop().nmembers
         assert actual == expected
 
     def test_preclude_adding_stub_participant(self):

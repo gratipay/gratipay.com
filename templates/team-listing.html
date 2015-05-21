@@ -1,4 +1,4 @@
-{% set teams = participant.get_teams() %}
+{% set teams = participant.get_old_teams() %}
 {% if teams or user.participant == participant %}
     <h2>{{ _("Teams") }}</h2>
     <ul class="team memberships">

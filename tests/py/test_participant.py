@@ -441,7 +441,7 @@ class Tests(Harness):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team.set_take_for(alice, Decimal('10'), alice)
         team.update_number('singular')
-        assert Participant.from_username('alice').get_teams() == []
+        assert Participant.from_username('alice').get_old_teams() == []
 
     def test_can_go_plural(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
