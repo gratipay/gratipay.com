@@ -9,6 +9,16 @@ class Team(Model):
 
     typname = 'teams'
 
+    def __eq__(self, other):
+        if not isinstance(other, Team):
+            return False
+        return self.id == other.id
+
+    def __ne__(self, other):
+        if not isinstance(other, Team):
+            return True
+        return self.id != other.id
+
 
     # Constructors
     # ============

@@ -15,6 +15,26 @@ from psycopg2 import IntegrityError
 
 class Tests(Harness):
 
+    def test_get_team_gets_team(self):
+        team = self.make_team()
+        state = self.client.GET( '/TheATeam/'
+                               , return_after='dispatch_request_to_filesystem'
+                               , want='state'
+                                )
+        assert utils.get_team(state) == team
+
+    def test_get_team_canonicalizes(self):
+        self.make_team()
+        state = self.client.GET( '/theateam/'
+                               , return_after='dispatch_request_to_filesystem'
+                               , want='state'
+                                )
+
+        with self.assertRaises(Response) as cm:
+            utils.get_team(state)
+        assert cm.exception.code == 302
+        assert cm.exception.headers['Location'] == '/TheATeam/'
+
     def test_get_participant_gets_participant(self):
         expected = self.make_participant('alice', claimed_time='now')
         state = self.client.GET( '/~alice/'
@@ -33,7 +53,7 @@ class Tests(Harness):
 
         with self.assertRaises(Response) as cm:
             utils.get_participant(state, restrict=False)
-        assert cm.exception.code
+        assert cm.exception.code == 302
         assert cm.exception.headers['Location'] == '/~/alice/'
 
     def test_dict_to_querystring_converts_dict_to_querystring(self):
