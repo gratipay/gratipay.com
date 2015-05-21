@@ -29,6 +29,10 @@ title = name = team.name
     <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
 {% endblock %}
 
+{% block sidebar %}
+{% include "templates/your-payment.html" %}
+{% endblock %}
+
 {% block content %}
 <div class="col0">
     {% if team.is_approved in (None, False) %}
@@ -63,8 +67,6 @@ title = name = team.name
 {% endblock %}
 
 {% block scripts %}
-{% if user.participant == team.owner %}
-<script>$(document).ready(Gratipay.profile.init);</script>
-{% endif %}
+<script>$(document).ready(Gratipay.payments.init);</script>
 {{ super() }}
 {% endblock %}

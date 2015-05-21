@@ -2,6 +2,7 @@ from __future__ import print_function, unicode_literals
 
 import json
 
+import pytest
 from aspen.utils import utcnow
 from gratipay.testing import Harness
 
@@ -18,6 +19,7 @@ class Tests(Harness):
 
         assert data['on'] == 'gratipay'
 
+    @pytest.mark.xfail(reason="#3399")
     def test_anonymous_gets_receiving(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')
@@ -38,6 +40,7 @@ class Tests(Harness):
 
         assert data.has_key('my_tip') == False
 
+    @pytest.mark.xfail(reason="#3399")
     def test_anonymous_gets_giving(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')
@@ -70,6 +73,7 @@ class Tests(Harness):
 
         assert data['receiving'] == None
 
+    @pytest.mark.xfail(reason="#3399")
     def test_authenticated_user_gets_their_tip(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')
@@ -83,6 +87,7 @@ class Tests(Harness):
         assert data['receiving'] == '1.00'
         assert data['my_tip'] == '1.00'
 
+    @pytest.mark.xfail(reason="#3399")
     def test_authenticated_user_doesnt_get_other_peoples_tips(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob', last_bill_result='')
@@ -100,6 +105,7 @@ class Tests(Harness):
         assert data['receiving'] == '16.00'
         assert data['my_tip'] == '1.00'
 
+    @pytest.mark.xfail(reason="#3399")
     def test_authenticated_user_gets_zero_if_they_dont_tip(self):
         self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob', last_bill_result='')
@@ -114,6 +120,7 @@ class Tests(Harness):
         assert data['receiving'] == '3.00'
         assert data['my_tip'] == '0.00'
 
+    @pytest.mark.xfail(reason="#3399")
     def test_authenticated_user_gets_self_for_self(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')
@@ -133,6 +140,7 @@ class Tests(Harness):
 
         assert response.headers['Access-Control-Allow-Origin'] == '*'
 
+    @pytest.mark.xfail(reason="#3399")
     def test_jsonp_works(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')

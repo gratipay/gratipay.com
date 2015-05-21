@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from decimal import Decimal as D
 
+import pytest
 from gratipay.testing import Harness
 from gratipay.models.participant import Participant
 
@@ -81,6 +82,7 @@ class Tests(Harness):
         actual = team.set_take_for(alice, D('42.00'), team)
         assert actual == 1
 
+    @pytest.mark.xfail(reason="#3399")
     def test_get_members(self):
         team = self.make_team()
         alice = self.make_participant('alice', claimed_time='now')
@@ -92,6 +94,7 @@ class Tests(Harness):
         assert members[0]['take'] == 42
         assert members[0]['balance'] == 58
 
+    @pytest.mark.xfail(reason="#3399")
     def test_compute_actual_takes_counts_the_team_balance(self):
         team = self.make_team(balance=D('59.46'), giving=D('7.15'))
         alice = self.make_participant('alice', claimed_time='now')
@@ -106,6 +109,7 @@ class Tests(Harness):
         assert takes[1]['actual_amount'] == 0
         assert takes[1]['balance'] == D('10.31')
 
+    @pytest.mark.xfail(reason="#3399")
     def test_compute_actual_takes_gives_correct_final_balance(self):
         team = self.make_team(balance=D('53.72'))
         alice = self.make_participant('alice', claimed_time='now')
@@ -120,6 +124,7 @@ class Tests(Harness):
         assert takes[1]['actual_amount'] == 14
         assert takes[1]['balance'] == D('67.72')
 
+    @pytest.mark.xfail(reason="#3399")
     def test_taking_and_receiving_are_updated_correctly(self):
         team = self.make_team()
         alice = self.make_participant('alice', claimed_time='now')
@@ -134,6 +139,7 @@ class Tests(Harness):
         assert alice.taking == 50
         assert alice.receiving == 60
 
+    @pytest.mark.xfail(reason="#3399")
     def test_taking_is_zero_for_team(self):
         team = self.make_team()
         alice = self.make_participant('alice', claimed_time='now')
@@ -142,6 +148,7 @@ class Tests(Harness):
         assert team.taking == 0
         assert team.receiving == 100
 
+    @pytest.mark.xfail(reason="#3399")
     def test_but_team_can_take_from_other_team(self):
         a_team = self.make_team('A Team', claimed_time='now')
         b_team = self.make_team('B Team', claimed_time='now')
@@ -152,6 +159,7 @@ class Tests(Harness):
         assert b_team.taking == 1
         assert b_team.receiving == 101
 
+    @pytest.mark.xfail(reason="#3399")
     def test_changes_to_team_receiving_affect_members_take(self):
         team = self.make_team()
         alice = self.make_participant('alice', claimed_time='now')
@@ -162,6 +170,7 @@ class Tests(Harness):
         alice = Participant.from_username('alice')
         assert alice.receiving == alice.taking == 10
 
+    @pytest.mark.xfail(reason="#3399")
     def test_changes_to_others_take_affects_members_take(self):
         team = self.make_team()
 
@@ -179,6 +188,7 @@ class Tests(Harness):
         # But get_members still uses nominal amount
         assert [m['take'] for m in  team.get_members(alice)] == [60, 42, 0]
 
+    @pytest.mark.xfail(reason="#3399")
     def test_changes_to_others_take_can_increase_members_take(self):
         team = self.make_team()
 

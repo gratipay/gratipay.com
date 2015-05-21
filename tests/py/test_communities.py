@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import pytest
 from gratipay.testing import Harness
 
 
@@ -19,6 +20,7 @@ class Tests(Harness):
         html = self.client.GET('/for/something/', want='response.body')
         assert html.count('alice') == 2  # entry in New Participants
 
+    @pytest.mark.xfail(reason="#3399")
     def test_givers_show_up_on_community_page(self):
 
         # Alice tips bob.
@@ -40,6 +42,7 @@ class Tests(Harness):
         assert html.count('alice') == 2  # entry in New Participants only
         assert 'bob' not in html
 
+    @pytest.mark.xfail(reason="#3399")
     def test_receivers_show_up_on_community_page(self):
 
         # Bob tips alice.

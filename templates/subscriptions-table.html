@@ -1,8 +1,8 @@
-{% macro giving_table(state, tips, total) %}
+{% macro subscriptions_table(state, subscriptions, total) %}
     <table class="table">
         <thead>
             <tr>
-                <th>{{ _("Recipient") }}</th>
+                <th>{{ _("Team") }}</th>
                 {% if state != 'cancelled' %}
                     <th class="figure">{{ _("Amount ($)") }}</th>
                 {% endif %}
@@ -21,21 +21,16 @@
             </tr>
         </tfoot>
         <tbody>
-        {% for tip in tips %}
+        {% for subscription in subscriptions %}
         <tr>
-            <td class="recipient">
-                {% if state == 'unclaimed' %}
-                    <img class="platform-icon" src="{{ website.asset('platforms/%s.12.png' % tip.platform) }}" />
-                    <a href="/{{ tip.tippee }}/">{{ tip.user_name }}</a>
-                {% else %}
-                    <a href="/{{ tip.tippee }}/">{{ tip.tippee }}</a>
-                {% endif %}
+            <td class="team">
+                <a href="/{{ subscription.team_slug }}/">{{ subscription.team_name }}</a>
             </td>
             {% if state != 'cancelled' %}
-                <td class="figure">{{ tip.amount }}</td>
+                <td class="figure">{{ subscription.amount }}</td>
             {% endif %}
-            <td class="figure">{{ to_age(tip.mtime) }}</td>
-            <td class="figure">{{ to_age(tip.ctime) }}</td>
+            <td class="figure">{{ to_age(subscription.mtime) }}</td>
+            <td class="figure">{{ to_age(subscription.ctime) }}</td>
         </tr>
         {% endfor %}
         </tbody>

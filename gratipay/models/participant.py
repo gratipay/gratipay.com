@@ -372,6 +372,7 @@ class Participant(Model, MixinTeam):
     def distribute_balance_as_final_gift(self, cursor):
         """Distribute a balance as a final gift.
         """
+        raise NotImplementedError # XXX Bring me back!
         if self.balance == 0:
             return
 
@@ -1022,60 +1023,29 @@ class Participant(Model, MixinTeam):
                 Participant.from_username(tip.tippee).update_receiving(cursor)
 
     def update_giving(self, cursor=None):
+        updated = []
         # Update is_funded on tips
         if self.get_credit_card_error() == '':
             updated = (cursor or self.db).all("""
-                UPDATE current_tips
+                UPDATE current_subscriptions
                    SET is_funded = true
-                 WHERE tipper = %s
+                 WHERE subscriber = %s
                    AND is_funded IS NOT true
              RETURNING *
             """, (self.username,))
-        else:
-            tips = (cursor or self.db).all("""
-                SELECT t.*
-                  FROM current_tips t
-                  JOIN participants p2 ON p2.username = t.tippee
-                 WHERE t.tipper = %s
-                   AND t.amount > 0
-                   AND p2.is_suspicious IS NOT true
-              ORDER BY p2.claimed_time IS NULL, t.ctime ASC
-            """, (self.username,))
-            fake_balance = self.balance + self.receiving
-            updated = []
-            for tip in tips:
-                if tip.amount > fake_balance:
-                    is_funded = False
-                else:
-                    fake_balance -= tip.amount
-                    is_funded = True
-                if tip.is_funded == is_funded:
-                    continue
-                updated.append((cursor or self.db).one("""
-                    UPDATE tips
-                       SET is_funded = %s
-                     WHERE id = %s
-                 RETURNING *
-                """, (is_funded, tip.id)))
 
-        # Update giving on participant
         giving = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount, p2.claimed_time
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tippee
-                      WHERE tipper = %(username)s
-                        AND p2.is_suspicious IS NOT true
-                        AND amount > 0
-                        AND is_funded
-                 )
             UPDATE participants p
                SET giving = COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                        WHERE claimed_time IS NOT NULL
+                      SELECT sum(amount)
+                        FROM current_subscriptions s
+                        JOIN teams t ON t.slug=s.team
+                       WHERE subscriber=%(username)s
+                         AND amount > 0
+                         AND is_funded
+                         AND t.is_approved
                    ), 0)
-             WHERE p.username = %(username)s
+             WHERE p.username=%(username)s
          RETURNING giving
         """, dict(username=self.username))
         self.set_attributes(giving=giving)
@@ -1341,49 +1311,43 @@ class Participant(Model, MixinTeam):
         return tip_amounts, npatrons, contributed
 
 
-    def get_giving_for_profile(self):
-        """Given a participant id and a date, return a list and a Decimal.
-
-        This function is used to populate a participant's page for their own
-        viewing pleasure.
-
+    def get_subscriptions_for_profile(self):
+        """Return a list and a Decimal.
         """
 
-        TIPS = """\
+        SUBSCRIPTIONS = """\
 
             SELECT * FROM (
-                SELECT DISTINCT ON (tippee)
-                       amount
-                     , tippee
-                     , t.ctime
-                     , t.mtime
-                     , p.claimed_time
-                     , p.username_lower
-                     , p.number
-                  FROM tips t
-                  JOIN participants p ON p.username = t.tippee
-                 WHERE tipper = %s
-                   AND p.is_suspicious IS NOT true
-                   AND p.claimed_time IS NOT NULL
-              ORDER BY tippee
-                     , t.mtime DESC
+                SELECT DISTINCT ON (s.team)
+                       s.team   as team_slug
+                     , s.amount
+                     , s.ctime
+                     , s.mtime
+                     , t.name   as team_name
+                  FROM subscriptions s
+                  JOIN teams t ON s.team = t.slug
+                 WHERE subscriber = %s
+                   AND t.is_approved is true
+                   AND t.is_closed is not true
+              ORDER BY s.team
+                     , s.mtime DESC
             ) AS foo
             ORDER BY amount DESC
-                   , username_lower
+                   , team_slug
 
         """
-        tips = self.db.all(TIPS, (self.username,))
+        subscriptions = self.db.all(SUBSCRIPTIONS, (self.username,))
 
 
         # Compute the total.
         # ==================
 
-        total = sum([t.amount for t in tips])
+        total = sum([s.amount for s in subscriptions])
         if not total:
             # If tips is an empty list, total is int 0. We want a Decimal.
             total = Decimal('0.00')
 
-        return tips, total
+        return subscriptions, total
 
     def get_current_tips(self):
         """Get the tips this participant is currently sending to others.
