@@ -27,7 +27,7 @@ subhead = _("Teams")
     <tr>
         <td><a href="/{{ team.slug }}/">{{ team.name }}</a></td>
         <td><a href="/{{ team.owner }}/">{{ team.owner }}</a></td>
-        <td>{{ team.status }}</td>
+        {% if user.ADMIN %}<td>{{ team.status }}</td>{% endif %}
     </tr>
     {% endif %}
     {% endfor %}
