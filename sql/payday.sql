@@ -14,6 +14,7 @@ CREATE TABLE payday_participants AS
               WHERE r.participant = p.id
                 AND network = 'braintree-cc'
            ) > 0 AS has_credit_card
+          , braintree_customer_id
       FROM participants p
      WHERE is_suspicious IS NOT true
        AND claimed_time < %(ts_start)s
