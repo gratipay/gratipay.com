@@ -65,6 +65,17 @@ class TestCredits(BillingHarness):
 
 class TestCardHolds(BillingHarness):
 
+    # create_card_hold
+
+    def test_create_card_hold_success(self):
+        hold, error = create_card_hold(self.db, self.obama, D('1.00'))
+        obama = Participant.from_id(self.obama.id)
+        assert isinstance(hold, braintree.Transaction)
+        assert hold.status == 'authorized'
+        assert hold.amount == D('10.00')
+        assert error == ''
+        assert self.obama.balance == obama.balance == 0
+
     def test_create_card_hold_for_suspicious_raises_NotWhitelisted(self):
         bob = self.make_participant('bob', is_suspicious=True,
                                     balanced_customer_href='fake_href')
@@ -86,50 +97,8 @@ class TestCardHolds(BillingHarness):
         assert self.obama.get_credit_card_error() == 'Foobar()'
         assert self.obama.balance == obama.balance == 0
 
-    def test_create_card_hold_success(self):
-        hold, error = create_card_hold(self.db, self.obama, D('1.00'))
-        obama = Participant.from_id(self.obama.id)
-        assert isinstance(hold, braintree.Transaction)
-        assert hold.status == 'authorized'
-        assert hold.amount == D('10.00')
-        assert error == ''
-        assert self.obama.balance == obama.balance == 0
-
         # TODO: Clean up
         # cancel_card_hold(hold)
-
-    def test_capture_card_hold_full_amount(self):
-        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
-        assert error == ''  # sanity check
-        assert hold.meta['state'] == 'new'
-
-        capture_card_hold(self.db, self.janet, D('20.00'), hold)
-        janet = Participant.from_id(self.janet.id)
-        assert self.janet.balance == janet.balance == D('20.00')
-        assert self.janet.get_credit_card_error() == ''
-        assert hold.meta['state'] == 'captured'
-
-    def test_capture_card_hold_partial_amount(self):
-        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
-        assert error == ''  # sanity check
-
-        capture_card_hold(self.db, self.janet, D('15.00'), hold)
-        janet = Participant.from_id(self.janet.id)
-        assert self.janet.balance == janet.balance == D('15.00')
-        assert self.janet.get_credit_card_error() == ''
-
-    def test_capture_card_hold_too_high_amount(self):
-        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
-        assert error == ''  # sanity check
-
-        with self.assertRaises(balanced.exc.HTTPError):
-            capture_card_hold(self.db, self.janet, D('20.01'), hold)
-
-        janet = Participant.from_id(self.janet.id)
-        assert self.janet.balance == janet.balance == 0
-
-        # Clean up
-        cancel_card_hold(hold)
 
     def test_capture_card_hold_amount_under_minimum(self):
         hold, error = create_card_hold(self.db, self.janet, D('20.00'))
@@ -180,6 +149,41 @@ class TestCardHolds(BillingHarness):
         ExchangeRoute.insert(bob, 'braintree-cc', 'foo', error='invalidated')
         hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
+
+    # capture_card_hold
+
+    def test_capture_card_hold_full_amount(self):
+        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
+        assert error == ''  # sanity check
+        assert hold.meta['state'] == 'new'
+
+        capture_card_hold(self.db, self.janet, D('20.00'), hold)
+        janet = Participant.from_id(self.janet.id)
+        assert self.janet.balance == janet.balance == D('20.00')
+        assert self.janet.get_credit_card_error() == ''
+        assert hold.meta['state'] == 'captured'
+
+    def test_capture_card_hold_partial_amount(self):
+        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
+        assert error == ''  # sanity check
+
+        capture_card_hold(self.db, self.janet, D('15.00'), hold)
+        janet = Participant.from_id(self.janet.id)
+        assert self.janet.balance == janet.balance == D('15.00')
+        assert self.janet.get_credit_card_error() == ''
+
+    def test_capture_card_hold_too_high_amount(self):
+        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
+        assert error == ''  # sanity check
+
+        with self.assertRaises(balanced.exc.HTTPError):
+            capture_card_hold(self.db, self.janet, D('20.01'), hold)
+
+        janet = Participant.from_id(self.janet.id)
+        assert self.janet.balance == janet.balance == 0
+
+        # Clean up
+        cancel_card_hold(hold)
 
 
 class TestFees(Harness):
