@@ -6,9 +6,6 @@
 {% set u = participant.username %}
 {% set pages = [ ('/',                  _('Dashboard'), True,           False)
                , ('/~'+u+'/',           _('Profile'),   True,           show_profile)
-               , ('/~'+u+'/members/',   _('Members'),   show_members,   show_members)
-               , ('/~'+u+'/receiving/', _('Receiving'), True,           show_receiving)
-               , ('/~'+u+'/giving/',    _('Giving'),    True,           False)
                , ('/~'+u+'/history/',   _('History'),   True,           False)
                , ('/~'+u+'/widgets/',   _('Widgets'),   True,           False)
                , ('/~'+u+'/identity',   _('Identity'),  True,           False)
