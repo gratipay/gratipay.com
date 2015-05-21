@@ -463,17 +463,22 @@ msgstr ""
 msgid "What product or service does your team provide?"
 msgstr ""
 
+msgid "Revenue Model"
+msgstr ""
+
+msgid "How does your team make money?"
+msgstr ""
+
 msgid "Contributing"
 msgstr ""
 
 msgid "How can other people get involved with your team?"
 msgstr ""
 
-msgid "Revenue"
+msgid "Paying Contributors"
 msgstr ""
 
-msgid ""
-"What is your revenue model? How do you share revenue with contributors?"
+msgid "How do you share revenue with contributors?"
 msgstr ""
 
 msgid "I agree to the {0}terms of service{1}"
@@ -516,6 +521,12 @@ msgstr "Êtes-vous sûr de vouloir vous déconnecter?"
 
 msgid "Yes!"
 msgstr "Oui !"
+
+msgid "How to Get Involved"
+msgstr ""
+
+msgid "How Revenue Is Shared"
+msgstr ""
 
 msgid "User not found."
 msgstr "Utilisateur introuvable."
@@ -610,11 +621,14 @@ msgstr "Communautés populaires"
 msgid "Teams (N={0})"
 msgstr "Équipes (N={0})"
 
-msgid "Receiving ($)"
-msgstr "Revenu ($)"
+msgid "Name"
+msgstr "Nom"
 
-msgid "Receiving{0} Per Member ($)"
-msgstr "Revenu{0} par membre ($)"
+msgid "Owner"
+msgstr ""
+
+msgid "Status"
+msgstr "État"
 
 msgid "Member"
 msgid_plural "Members"
@@ -704,9 +718,6 @@ msgstr "Connectez votre compte {0}"
 msgid "No friends found."
 msgstr "Aucun ami trouvé."
 
-msgid "Name"
-msgstr "Nom"
-
 msgid "On Gratipay?"
 msgstr "Sur Gratipay?"
 
@@ -775,9 +786,6 @@ msgstr "Qu'est-ce que Gratipay ?"
 
 msgid "Gratipay provides payments and payroll for open work."
 msgstr ""
-
-msgid "Status"
-msgstr "État"
 
 msgid "accepts gifts"
 msgstr "accepte les dons"

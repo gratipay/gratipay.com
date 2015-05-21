@@ -460,17 +460,22 @@ msgstr ""
 msgid "What product or service does your team provide?"
 msgstr ""
 
+msgid "Revenue Model"
+msgstr ""
+
+msgid "How does your team make money?"
+msgstr ""
+
 msgid "Contributing"
 msgstr ""
 
 msgid "How can other people get involved with your team?"
 msgstr ""
 
-msgid "Revenue"
+msgid "Paying Contributors"
 msgstr ""
 
-msgid ""
-"What is your revenue model? How do you share revenue with contributors?"
+msgid "How do you share revenue with contributors?"
 msgstr ""
 
 msgid "I agree to the {0}terms of service{1}"
@@ -513,6 +518,12 @@ msgstr "Sei sicuro di voler uscire?"
 
 msgid "Yes!"
 msgstr "Sì!"
+
+msgid "How to Get Involved"
+msgstr ""
+
+msgid "How Revenue Is Shared"
+msgstr ""
 
 msgid "User not found."
 msgstr "Utente non trovato."
@@ -607,11 +618,14 @@ msgstr "Comunità Popolari"
 msgid "Teams (N={0})"
 msgstr "Team (N={0})"
 
-msgid "Receiving ($)"
-msgstr "Riceve ($)"
+msgid "Name"
+msgstr "Nome"
 
-msgid "Receiving{0} Per Member ($)"
-msgstr "Riceve{0} Per Membro ($)"
+msgid "Owner"
+msgstr ""
+
+msgid "Status"
+msgstr "Stato"
 
 msgid "Member"
 msgid_plural "Members"
@@ -701,9 +715,6 @@ msgstr "Collega il tuo {0} account"
 msgid "No friends found."
 msgstr "Nessun amico trovato."
 
-msgid "Name"
-msgstr "Nome"
-
 msgid "On Gratipay?"
 msgstr "Su Gratipay?"
 
@@ -772,9 +783,6 @@ msgstr "Cos'è Gratipay?"
 
 msgid "Gratipay provides payments and payroll for open work."
 msgstr "Gratipay permette pagamenti di lavori gratuiti."
-
-msgid "Status"
-msgstr "Stato"
 
 msgid "accepts gifts"
 msgstr "accetta le donazioni"

@@ -462,17 +462,22 @@ msgstr ""
 msgid "What product or service does your team provide?"
 msgstr ""
 
+msgid "Revenue Model"
+msgstr ""
+
+msgid "How does your team make money?"
+msgstr ""
+
 msgid "Contributing"
 msgstr ""
 
 msgid "How can other people get involved with your team?"
 msgstr ""
 
-msgid "Revenue"
+msgid "Paying Contributors"
 msgstr ""
 
-msgid ""
-"What is your revenue model? How do you share revenue with contributors?"
+msgid "How do you share revenue with contributors?"
 msgstr ""
 
 msgid "I agree to the {0}terms of service{1}"
@@ -515,6 +520,12 @@ msgstr "Ben je zeker dat je wil uitloggen?"
 
 msgid "Yes!"
 msgstr "Ja!"
+
+msgid "How to Get Involved"
+msgstr ""
+
+msgid "How Revenue Is Shared"
+msgstr ""
 
 msgid "User not found."
 msgstr "Gebruiker is niet gevonden."
@@ -609,11 +620,14 @@ msgstr "Populaire gemeenschappen"
 msgid "Teams (N={0})"
 msgstr "Teams (N={0})"
 
-msgid "Receiving ($)"
-msgstr "Ontvangt ($)"
+msgid "Name"
+msgstr "Naam"
 
-msgid "Receiving{0} Per Member ($)"
-msgstr "Ontvangt {0} per lid ($)"
+msgid "Owner"
+msgstr ""
+
+msgid "Status"
+msgstr "Status"
 
 msgid "Member"
 msgid_plural "Members"
@@ -703,9 +717,6 @@ msgstr "Verbind uw {0} account"
 msgid "No friends found."
 msgstr "Geen vrienden gevonden."
 
-msgid "Name"
-msgstr "Naam"
-
 msgid "On Gratipay?"
 msgstr "Op Gratipay?"
 
@@ -774,9 +785,6 @@ msgstr "Wat is Gratipay?"
 
 msgid "Gratipay provides payments and payroll for open work."
 msgstr ""
-
-msgid "Status"
-msgstr "Status"
 
 msgid "accepts gifts"
 msgstr "donaties accepteren"
