@@ -9,6 +9,16 @@ class Team(Model):
 
     typname = 'teams'
 
+    def __eq__(self, other):
+        if not isinstance(other, Team):
+            return False
+        return self.id == other.id
+
+    def __ne__(self, other):
+        if not isinstance(other, Team):
+            return True
+        return self.id != other.id
+
 
     # Constructors
     # ============
@@ -49,6 +59,15 @@ class Team(Model):
         """, (fields['slug'], fields['slug'].lower(), fields['name'], fields['homepage'],
               fields['product_or_service'], fields['getting_involved'], fields['getting_paid'],
               owner.username))
+
+    def get_og_title(self):
+        out = self.name
+        receiving = self.receiving
+        if receiving > 0:
+            out += " receives $%.2f/wk" % receiving
+        else:
+            out += " is"
+        return out + " on Gratipay"
 
 
     def update_receiving(self, cursor=None):

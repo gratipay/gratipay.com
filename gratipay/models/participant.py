@@ -451,7 +451,7 @@ class Participant(Model, MixinTeam):
     def clear_takes(self, cursor):
         """Leave all teams by zeroing all takes.
         """
-        for team, nmembers in self.get_teams():
+        for team, nmembers in self.get_old_teams():
             t = Participant.from_username(team)
             t.set_take_for(self, Decimal(0), self, cursor)
 
@@ -928,8 +928,18 @@ class Participant(Model, MixinTeam):
         username = self.username
         return '{scheme}://{host}/{username}/'.format(**locals())
 
-    def get_teams(self):
-        """Return a list of teams this user is a member of.
+
+    def get_teams(self, only_approved=False):
+        """Return a list of teams this user is a member or owner of.
+        """
+        teams = self.db.all("SELECT teams.*::teams FROM teams WHERE owner=%s", (self.username,))
+        if only_approved:
+            teams = [t for t in teams if t.is_approved]
+        return teams
+
+
+    def get_old_teams(self):
+        """Return a list of old-style teams this user was a member of.
         """
         return self.db.all("""
 

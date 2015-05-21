@@ -208,6 +208,11 @@ class TestPages(Harness):
         assert response.code == 302
         assert response.headers['Location'] == '/~alice/foo/bar?baz=buz'
 
+    def test_team_slug__not__redirected_from_tilde(self):
+        self.make_team(is_approved=True)
+        assert self.client.GET("/TheATeam/").code == 200
+        assert self.client.GxT("/~TheATeam/").code == 404
+
     def test_anon_bank_acc_page(self):
         body = self.client.GET("/~alice/routes/bank-account.html").body
         assert "<h1>Bank Account</h1>" in body
