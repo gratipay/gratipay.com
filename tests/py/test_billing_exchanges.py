@@ -97,17 +97,14 @@ class TestCardHolds(BillingHarness):
         assert self.obama.get_credit_card_error() == 'Foobar()'
         assert self.obama.balance == obama.balance == 0
 
-        # TODO: Clean up
-        # cancel_card_hold(hold)
-
     def test_capture_card_hold_amount_under_minimum(self):
-        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
+        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
-        capture_card_hold(self.db, self.janet, D('0.01'), hold)
-        janet = Participant.from_id(self.janet.id)
-        assert self.janet.balance == janet.balance == D('9.41')
-        assert self.janet.get_credit_card_error() == ''
+        capture_card_hold(self.db, self.obama, D('0.01'), hold)
+        obama = Participant.from_id(self.obama.id)
+        assert self.obama.balance == obama.balance == D('9.41')
+        assert self.obama.get_credit_card_error() == ''
 
     def test_create_card_hold_bad_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
@@ -122,6 +119,7 @@ class TestCardHolds(BillingHarness):
         # https://developers.braintreepayments.com/ios+python/reference/general/testing#test-amounts
         # $2002 is upcharged to $2062, which corresponds to 'Invalid Tax Amount'
         hold, error = create_card_hold(self.db, bob, D('2002.00'))
+        assert hold is None
         assert error.startswith('Invalid Tax Amount')
 
     def test_create_card_hold_multiple_cards(self):
@@ -139,6 +137,9 @@ class TestCardHolds(BillingHarness):
         hold, error = create_card_hold(self.db, bob, D('100.00'))
         assert error == ''
 
+        # Clean up
+        cancel_card_hold(hold)
+
     def test_create_card_hold_no_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
         hold, error = create_card_hold(self.db, bob, D('10.00'))
@@ -153,34 +154,42 @@ class TestCardHolds(BillingHarness):
     # capture_card_hold
 
     def test_capture_card_hold_full_amount(self):
-        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
+        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
-        assert hold.meta['state'] == 'new'
+        assert hold.status == 'authorized'
 
-        capture_card_hold(self.db, self.janet, D('20.00'), hold)
-        janet = Participant.from_id(self.janet.id)
-        assert self.janet.balance == janet.balance == D('20.00')
-        assert self.janet.get_credit_card_error() == ''
-        assert hold.meta['state'] == 'captured'
+        capture_card_hold(self.db, self.obama, D('20.00'), hold)
+        hold = braintree.Transaction.find(hold.id)
+        obama = Participant.from_id(self.obama.id)
+        assert self.obama.balance == obama.balance == D('20.00')
+        assert self.obama.get_credit_card_error() == ''
+        assert hold.status == 'submitted_for_settlement'
+
+        # Clean up
+        cancel_card_hold(hold)
 
     def test_capture_card_hold_partial_amount(self):
-        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
+        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
-        capture_card_hold(self.db, self.janet, D('15.00'), hold)
-        janet = Participant.from_id(self.janet.id)
-        assert self.janet.balance == janet.balance == D('15.00')
-        assert self.janet.get_credit_card_error() == ''
+        capture_card_hold(self.db, self.obama, D('15.00'), hold)
+        obama = Participant.from_id(self.obama.id)
+        assert self.obama.balance == obama.balance == D('15.00')
+        assert self.obama.get_credit_card_error() == ''
+
+        # Clean up
+        cancel_card_hold(hold)
 
     def test_capture_card_hold_too_high_amount(self):
-        hold, error = create_card_hold(self.db, self.janet, D('20.00'))
+        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
-        with self.assertRaises(balanced.exc.HTTPError):
-            capture_card_hold(self.db, self.janet, D('20.01'), hold)
+        with self.assertRaises(Exception):
+            # How do I check the exception's msg here?
+            capture_card_hold(self.db, self.obama, D('20.01'), hold)
 
-        janet = Participant.from_id(self.janet.id)
-        assert self.janet.balance == janet.balance == 0
+        obama = Participant.from_id(self.obama.id)
+        assert self.obama.balance == obama.balance == 0
 
         # Clean up
         cancel_card_hold(hold)
