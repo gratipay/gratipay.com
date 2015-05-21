@@ -36,7 +36,7 @@ title = name = team.name
     {% if team.is_approved == False %}rejected{% endif %} |
     {{ team.homepage }}
     {% else %}
-    <a href="/{{ team.homepage }}/">{{ team.homepage }}</a>
+    <a href="{{ team.homepage }}">{{ team.homepage }}</a>
     {% endif %} |
     owned by <a href="/~{{ team.owner }}/">{{ team.owner }}</a>
 
