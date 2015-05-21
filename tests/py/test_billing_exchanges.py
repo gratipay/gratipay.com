@@ -97,15 +97,6 @@ class TestCardHolds(BillingHarness):
         assert self.obama.get_credit_card_error() == 'Foobar()'
         assert self.obama.balance == obama.balance == 0
 
-    def test_capture_card_hold_amount_under_minimum(self):
-        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
-        assert error == ''  # sanity check
-
-        capture_card_hold(self.db, self.obama, D('0.01'), hold)
-        obama = Participant.from_id(self.obama.id)
-        assert self.obama.balance == obama.balance == D('9.41')
-        assert self.obama.get_credit_card_error() == ''
-
     def test_create_card_hold_bad_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
         customer_id = bob.get_braintree_account().id
@@ -193,6 +184,15 @@ class TestCardHolds(BillingHarness):
 
         # Clean up
         cancel_card_hold(hold)
+
+    def test_capture_card_hold_amount_under_minimum(self):
+        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
+        assert error == ''  # sanity check
+
+        capture_card_hold(self.db, self.obama, D('0.01'), hold)
+        obama = Participant.from_id(self.obama.id)
+        assert self.obama.balance == obama.balance == D('9.41')
+        assert self.obama.get_credit_card_error() == ''
 
 
 class TestFees(Harness):
