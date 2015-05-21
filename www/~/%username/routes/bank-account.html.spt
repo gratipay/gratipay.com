@@ -45,7 +45,7 @@ title = _("Bank Account")
 
 {% if not user.ANON %}
 <script>
-    $(document).ready(function() { Gratipay.payments.ba.init(); });
+    $(document).ready(function() { Gratipay.routes.ba.init(); });
 </script>
 {% endif %}
 

@@ -1,29 +1,28 @@
-/* Bank Account and Credit Card forms
+/* Payment route forms
  *
- * These two forms share some common wiring under the Gratipay.payments
- * namespace, and each has unique code under the Gratipay.payments.{cc,ba}
- * namespaces. Each form gets its own page so we only instantiate one of these
- * at a time.
+ * These forms share some common wiring under the Gratipay.routes namespace,
+ * and each has unique code under the Gratipay.routes.{cc,ba,pp} namespaces.
+ * Each form gets its own page, so we only instantiate one of these at a time.
  *
  */
 
-Gratipay.payments = {};
+Gratipay.routes = {};
 
 
 // Common code
 // ===========
 
-Gratipay.payments.init = function() {
-    $('#delete').submit(Gratipay.payments.deleteRoute);
+Gratipay.routes.init = function() {
+    $('#delete').submit(Gratipay.routes.deleteRoute);
 }
 
-Gratipay.payments.lazyLoad = function(script_url) {
+Gratipay.routes.lazyLoad = function(script_url) {
     jQuery.getScript(script_url, function() {
         $('input[type!="hidden"]').eq(0).focus();
     }).fail(Gratipay.error);
 }
 
-Gratipay.payments.deleteRoute = function(e) {
+Gratipay.routes.deleteRoute = function(e) {
     e.stopPropagation();
     e.preventDefault();
 
@@ -43,18 +42,18 @@ Gratipay.payments.deleteRoute = function(e) {
     return false;
 };
 
-Gratipay.payments.onSuccess = function(data) {
+Gratipay.routes.onSuccess = function(data) {
     $('button#save').prop('disabled', false);
     window.location.reload();
 };
 
-Gratipay.payments.associate = function (network, address) {
+Gratipay.routes.associate = function (network, address) {
     jQuery.ajax({
         url: "associate.json",
         type: "POST",
         data: {network: network, address: address},
         dataType: "json",
-        success: Gratipay.payments.onSuccess,
+        success: Gratipay.routes.onSuccess,
         error: [
             Gratipay.error,
             function() { $('button#save').prop('disabled', false); },
@@ -66,18 +65,18 @@ Gratipay.payments.associate = function (network, address) {
 // Bank Accounts
 // =============
 
-Gratipay.payments.ba = {};
+Gratipay.routes.ba = {};
 
-Gratipay.payments.ba.init = function() {
-    Gratipay.payments.init();
+Gratipay.routes.ba.init = function() {
+    Gratipay.routes.init();
 
     // Lazily depend on Balanced.
-    Gratipay.payments.lazyLoad("https://js.balancedpayments.com/1.1/balanced.min.js")
+    Gratipay.routes.lazyLoad("https://js.balancedroutes.com/1.1/balanced.min.js")
 
-    $('form#bank-account').submit(Gratipay.payments.ba.submit);
+    $('form#bank-account').submit(Gratipay.routes.ba.submit);
 };
 
-Gratipay.payments.ba.submit = function (e) {
+Gratipay.routes.ba.submit = function (e) {
     e.preventDefault();
 
     $('button#save').prop('disabled', true);
@@ -103,17 +102,17 @@ Gratipay.payments.ba.submit = function (e) {
     // Okay, send the data to Balanced.
     balanced.bankAccount.create(bankAccount, function (response) {
         if (response.status_code !== 201) {
-            return Gratipay.payments.ba.onError(response);
+            return Gratipay.routes.ba.onError(response);
         }
 
         /* The request to tokenize the thing succeeded. Now we need to associate it
          * to the Customer on Balanced and to the participant in our DB.
          */
-        Gratipay.payments.associate('balanced-ba', response.bank_accounts[0].href);
+        Gratipay.routes.associate('balanced-ba', response.bank_accounts[0].href);
     });
 };
 
-Gratipay.payments.ba.onError = function(response) {
+Gratipay.routes.ba.onError = function(response) {
     $('button#save').prop('disabled', false);
     var msg = response.status_code + ": " +
         $.map(response.errors, function(obj) { return obj.description }).join(', ');
@@ -125,16 +124,16 @@ Gratipay.payments.ba.onError = function(response) {
 // Credit Cards
 // ============
 
-Gratipay.payments.cc = {};
+Gratipay.routes.cc = {};
 
-Gratipay.payments.cc.init = function() {
-    Gratipay.payments.init();
+Gratipay.routes.cc.init = function() {
+    Gratipay.routes.init();
 
     // Lazily depend on Braintree.
-    Gratipay.payments.lazyLoad("https://js.braintreegateway.com/v2/braintree.js")
+    Gratipay.routes.lazyLoad("https://js.braintreegateway.com/v2/braintree.js")
 
-    $('form#credit-card').submit(Gratipay.payments.cc.submit);
-    Gratipay.payments.cc.formatInputs(
+    $('form#credit-card').submit(Gratipay.routes.cc.submit);
+    Gratipay.routes.cc.formatInputs(
         $('#card_number'),
         $('#expiration_month'),
         $('#expiration_year'),
@@ -145,7 +144,7 @@ Gratipay.payments.cc.init = function() {
 
 /* Most of the following code is taken from https://github.com/wangjohn/creditly */
 
-Gratipay.payments.cc.formatInputs = function (cardNumberInput, expirationMonthInput, expirationYearInput, cvvInput) {
+Gratipay.routes.cc.formatInputs = function (cardNumberInput, expirationMonthInput, expirationYearInput, cvvInput) {
     function getInputValue(e, element) {
         var inputValue = element.val().trim();
         inputValue = inputValue + String.fromCharCode(e.which);
@@ -266,7 +265,7 @@ Gratipay.payments.cc.formatInputs = function (cardNumberInput, expirationMonthIn
     });
 }
 
-Gratipay.payments.cc.submit = function(e) {
+Gratipay.routes.cc.submit = function(e) {
 
     e.stopPropagation();
     e.preventDefault();
@@ -297,28 +296,29 @@ Gratipay.payments.cc.submit = function(e) {
         if (err) {
             Gratipay.notification(err, 'error')
         } else {
-            Gratipay.payments.associate('braintree-cc', nonce);
+            Gratipay.routes.associate('braintree-cc', nonce);
         }
     });
 
     return false;
 };
 
+
 // PayPal
 // ======
 
-Gratipay.payments.pp = {};
+Gratipay.routes.pp = {};
 
-Gratipay.payments.pp.init = function () {
-    Gratipay.payments.init();
-    $('form#paypal').submit(Gratipay.payments.pp.submit);
+Gratipay.routes.pp.init = function () {
+    Gratipay.routes.init();
+    $('form#paypal').submit(Gratipay.routes.pp.submit);
 }
 
-Gratipay.payments.pp.submit = function (e) {
+Gratipay.routes.pp.submit = function (e) {
     e.stopPropagation();
     e.preventDefault();
     $('button#save').prop('disabled', true);
     var paypal_email = $('form#paypal #email').val();
 
-    Gratipay.payments.associate('paypal', paypal_email);
+    Gratipay.routes.associate('paypal', paypal_email);
 }

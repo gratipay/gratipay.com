@@ -55,7 +55,7 @@ title = _("Credit Card")
 {% if not user.ANON %}
 <script>
     $(document).ready(function() {
-        Gratipay.payments.cc.init();
+        Gratipay.routes.cc.init();
         $('#country').chosen();
     });
 </script>
