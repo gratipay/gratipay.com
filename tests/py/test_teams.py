@@ -85,6 +85,18 @@ class TestNewTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 1
         assert "Sorry, there is already a team using 'gratiteam'." in r.body
 
+    def test_approved_team_shows_up_on_explore_teams(self):
+        self.make_team(is_approved=True)
+        assert 'The A Team' in self.client.GET("/explore/teams/").body
+
+    def test_unreviewed_team_does_not_show_up_on_explore_teams(self):
+        self.make_team(is_approved=None)
+        assert 'The A Team' not in self.client.GET("/explore/teams/").body
+
+    def test_rejected_team_does_not_show_up_on_explore_teams(self):
+        self.make_team(is_approved=False)
+        assert 'The A Team' not in self.client.GET("/explore/teams/").body
+
 
 class TestOldTeams(Harness):
 

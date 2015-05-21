@@ -2,18 +2,9 @@
 
 teams = website.db.all("""
 
-    SELECT t.*
-         , p.receiving
-         , p.receiving / t.nmembers AS dollars_per_member 
-      FROM ( SELECT team            AS name
-                  , count(member)   AS nmembers
-               FROM current_takes
-           GROUP BY team
-            ) AS t
-      JOIN participants p 
-        ON p.username = t.name
-     WHERE p.is_searchable
-  ORDER BY dollars_per_member DESC, nmembers ASC
+    SELECT teams.*::teams
+      FROM teams
+  ORDER BY ctime DESC
 
 """)
 nteams = len(teams)
@@ -27,18 +18,18 @@ subhead = _("Teams")
 <h2>{{ _("Teams (N={0})", nteams) }}</h2>
 <table class="table">
     <tr>
-        <th>{{ _("Team Name") }}</th>
-        <th class="figure">{{ _("Receiving ($)") }}</th>
-        <th class="figure">{{ _("Members") }}</th>
-        <th class="figure">{{ _("Receiving{0} Per Member ($)", "<br>"|safe) }}</th>
+        <th>{{ _("Name") }}</th>
+        <th>{{ _("Owner") }}</th>
+        {% if user.ADMIN %}<th>{{ _("Status") }}</th>{% endif %}
     </tr>
     {% for team in teams %}
+    {% if team.is_approved or user.ADMIN %}
     <tr>
-        <td class=""><a href="/{{ team.name }}/">{{ team.name }}</a></td>
-        <td class="figure">{{ format_decimal(team.receiving, '#,##0.00') }}</td>
-        <td class="figure">{{ team.nmembers }}</td>
-        <td class="figure">{{ format_decimal(team.dollars_per_member, '#,##0.00') }}</td>
+        <td><a href="/{{ team.slug }}/">{{ team.name }}</a></td>
+        <td><a href="/{{ team.owner }}/">{{ team.owner }}</a></td>
+        {% if user.ADMIN %}<td>{{ team.status }}</td>{% endif %}
     </tr>
+    {% endif %}
     {% endfor %}
 </table>
 {% endblock %}
