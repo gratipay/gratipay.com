@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from decimal import Decimal, ROUND_UP
 
 import balanced
+import braintree
 
 from aspen import log
 from aspen.utils import typecheck
@@ -170,12 +171,12 @@ def create_card_hold(db, participant, amount):
     if participant.is_suspicious is not False:
         raise NotWhitelisted      # Participant not trusted.
 
-    route = ExchangeRoute.from_network(participant, 'balanced-cc')
+    route = ExchangeRoute.from_network(participant, 'braintree-cc')
     if not route:
         return None, 'No credit card'
 
 
-    # Go to Balanced.
+    # Go to Braintree.
     # ===============
 
     cents, amount_str, charge_amount, fee = _prep_hit(amount)
@@ -183,14 +184,30 @@ def create_card_hold(db, participant, amount):
     msg = "Holding " + amount_str + " on Balanced for " + username + " ... "
 
     hold = None
+    error = ""
     try:
-        card = thing_from_href('cards', route.address)
-        hold = card.hold( amount=cents
-                        , description=username
-                        , meta=dict(participant_id=participant.id, state='new')
-                         )
-        log(msg + "succeeded.")
-        error = ""
+        result = braintree.Transaction.sale({
+            'amount': str(cents/100.0),
+            'customer_id': route.participant.braintree_customer_id,
+            'payment_method_token': route.address,
+            'options': { 'submit_for_settlement': False }
+        })
+
+        if result.is_success and result.transaction.status == 'authorized':
+            log(msg + "succeeded.")
+            error = ""
+            hold = result.transaction
+        elif result.is_success:
+            error = "Transaction status was %s" % result.transaction.status
+        else:
+            error = result.message
+
+        if error == '':
+            log(msg + "succeeded.")
+        else:
+            log(msg + "failed: %s" % error)
+            record_exchange(db, route, amount, fee, participant, 'failed', error)
+
     except Exception as e:
         error = repr_exception(e)
         log(msg + "failed: %s" % error)
