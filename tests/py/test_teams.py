@@ -12,9 +12,10 @@ class TestNewTeams(Harness):
         'name': 'Gratiteam',
         'homepage': 'http://gratipay.com/',
         'agree_terms': 'true',
-        'product_or_service': 'Sample Product',
-        'getting_paid': 'Getting Paid',
-        'getting_involved': 'Getting Involved'
+        'product_or_service': 'We make widgets.',
+        'revenue_model': 'People pay us',
+        'getting_involved': 'People do stuff.',
+        'getting_paid': 'We pay people.'
     }
 
     def post_new(self, data, auth_as='alice', expected=200):
