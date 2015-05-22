@@ -40,8 +40,11 @@ else:
 
     out["amount"] = str(amount)
     out["amount_l"] = format_currency(amount, 'USD')
-    out["msg"] = _("Payment changed to {0} per week. ", out["amount_l"])
-    out["msg"] += _("Thank you so much for supporting {0}!", team.name)
+    if amount > 0:
+        out["msg"] = _("Payment changed to {0} per week. ", out["amount_l"])
+        out["msg"] += _("Thank you so much for supporting {0}!", team.name)
+    else:
+        out["msg"] = _("You have successfully canceled your payment to {0}.", team.name)
     out["nsupporters"] = team.nsupporters
     out["team_id"] = team.id
     out["total_giving"] = str(total_giving)
