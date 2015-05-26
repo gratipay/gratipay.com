@@ -11,8 +11,6 @@ team = get_team(state)
 if team.is_approved in (None, False):
     if user.ANON:
         raise Response(401)
-    if (not user.ADMIN) and (team.owner != user.participant.username):
-        raise Response(403)
 title = name = team.name
 
 [-----------------------------------------------------------------------------]
@@ -30,7 +28,9 @@ title = name = team.name
 {% endblock %}
 
 {% block sidebar %}
+{% if team.is_approved %}
 {% include "templates/your-payment.html" %}
+{% endif %}
 {% endblock %}
 
 {% block content %}
