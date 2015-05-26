@@ -415,7 +415,7 @@ msgstr "Quieres trabajar para Gratipay? Somos una {0}empresa abierta{1}."
 msgid "Giving"
 msgstr "Dando"
 
-msgid "You give {0} per week."
+msgid "You pay {0} per week."
 msgstr ""
 
 msgid "Who inspires you? See if they're on Gratipay:"
@@ -536,6 +536,9 @@ msgid "Payment changed to {0} per week. "
 msgstr ""
 
 msgid "Thank you so much for supporting {0}!"
+msgstr ""
+
+msgid "You have successfully canceled your payment to {0}."
 msgstr ""
 
 msgid "User not found."

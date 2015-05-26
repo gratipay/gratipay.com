@@ -291,7 +291,7 @@ msgid "Profile"
 msgstr "Profilo"
 
 msgid "Subscriptions"
-msgstr ""
+msgstr "Sottoscrizioni"
 
 msgid "History"
 msgstr "Storia"
@@ -359,13 +359,13 @@ msgid "Learn more about how teams work"
 msgstr "Scopri come funzionano i team"
 
 msgid "Your Payment"
-msgstr ""
+msgstr "Il Tuo Pagamento"
 
 msgid "per week"
 msgstr "per settimana"
 
 msgid "Support {0}"
-msgstr ""
+msgstr "Sostieni {0}"
 
 msgid "Stop Giving"
 msgstr "Smetti di donare"
@@ -397,7 +397,7 @@ msgstr "O accedi con:"
 msgid ""
 "By signing in, you indicate that you have read and agree to our {0}Terms of "
 "Service{1}."
-msgstr ""
+msgstr "Registrandoti, dichiari di aver letto e accetti i nostri {0}Termini di Servizio{1}."
 
 msgid "You'll be joining {0} active users, who exchanged {1} {2}last week{3}."
 msgstr "Ti unirai a {0} utenti attivi, che hanno scambiato {1} {2}settimana scorsa{3}."
@@ -411,8 +411,8 @@ msgstr "Vuoi lavorare per Gratipay? Siamo un'{0}azienda aperta{1}."
 msgid "Giving"
 msgstr "Donazioni"
 
-msgid "You give {0} per week."
-msgstr "Doni {0} a settimana."
+msgid "You pay {0} per week."
+msgstr ""
 
 msgid "Who inspires you? See if they're on Gratipay:"
 msgstr "Chi ti dona l'ispirazione? Guarda se sono su Gratipay:"
@@ -437,52 +437,52 @@ msgid ""
 msgstr "Raggiungi un pubblico più vasto {0}inserendo i nostri widget{1} sul tuo sito/blog."
 
 msgid "You must sign in to apply for a new team."
-msgstr ""
+msgstr "Devi registrarti per poterti proporre in un nuovo team."
 
 msgid "You must have a verified email address to apply for a new team."
-msgstr ""
+msgstr "Devi avere un indirizzo email verificato per poterti proporre in un nuovo team."
 
 msgid "You must attach a bank account or PayPal to apply for a new team."
-msgstr ""
+msgstr "Devi collegare un conto bancario o PayPal per poterti proporre in un nuovo team."
 
 msgid "Apply for a New Team"
-msgstr ""
+msgstr "Proponiti in un nuovo team."
 
 msgid "Team Name"
 msgstr "Nome del Team"
 
 msgid "Homepage"
-msgstr ""
+msgstr "Homepage"
 
 msgid "Product or Service"
-msgstr ""
+msgstr "Prodotto o Servizio"
 
 msgid "What product or service does your team provide?"
-msgstr ""
+msgstr "Quale prodotto o servizio è offerto dal tuo team?"
 
 msgid "Revenue Model"
-msgstr ""
+msgstr "Modello dei Ricavi"
 
 msgid "How does your team make money?"
-msgstr ""
+msgstr "Come fa il tuo team a guadagnare denaro?"
 
 msgid "Contributing"
-msgstr ""
+msgstr "Contributo"
 
 msgid "How can other people get involved with your team?"
-msgstr ""
+msgstr "In quale modo altre persono possono contribuire al tuo team?"
 
 msgid "Paying Contributors"
-msgstr ""
+msgstr "Contribuenti Paganti"
 
 msgid "How do you share revenue with contributors?"
-msgstr ""
+msgstr "Come dividete i ricavi fra i contribuenti?"
 
 msgid "I agree to the {0}terms of service{1}"
-msgstr ""
+msgstr "Accetto i {0}termini di servizio{1}"
 
 msgid "Apply"
-msgstr ""
+msgstr "Proponiti"
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
@@ -520,18 +520,21 @@ msgid "Yes!"
 msgstr "Sì!"
 
 msgid "How to Get Involved"
-msgstr ""
+msgstr "Come Partecipare"
 
 msgid "How Revenue Is Shared"
-msgstr ""
+msgstr "Come I Ricavi Vengono Divisi"
 
 msgid "Please sign in first"
 msgstr "Per favore, accedi prima di continuare"
 
 msgid "Payment changed to {0} per week. "
-msgstr ""
+msgstr "Donazioni cambiate a {0} a settimana."
 
 msgid "Thank you so much for supporting {0}!"
+msgstr "Grazie per aver sostenuto {0}!"
+
+msgid "You have successfully canceled your payment to {0}."
 msgstr ""
 
 msgid "User not found."
@@ -606,7 +609,7 @@ msgid "Fraud Review Dashboard"
 msgstr "Dashboard Recensione Rischio Frodi"
 
 msgid "Fraud Review Dashboard - (Teams)"
-msgstr ""
+msgstr "Dashboard Recensione Rischio Frodi - (Team)"
 
 msgid "There is {n} community on Gratipay."
 msgid_plural "There are {n} communities on Gratipay."
@@ -631,7 +634,7 @@ msgid "Name"
 msgstr "Nome"
 
 msgid "Owner"
-msgstr ""
+msgstr "Proprietario"
 
 msgid "Status"
 msgstr "Stato"
@@ -800,16 +803,16 @@ msgid "hasn't joined Gratipay yet"
 msgstr "non si è ancora iscritto a Gratipay"
 
 msgid "How are you applying for a team!?"
-msgstr ""
+msgstr "Come ti stai proponendo per un team!?"
 
 msgid "Please agree to the terms of service."
-msgstr ""
+msgstr "Per favore accetta i termini di servizio."
 
 msgid "Please fill out the '{0}' field."
-msgstr ""
+msgstr "Per favore inserisci il campo '{0}'."
 
 msgid "Sorry, there is already a team using '{}'."
-msgstr ""
+msgstr "Ci dispiace, un altro team sta già usando '{}'."
 
 msgid "Identity Verification"
 msgstr "Verifica Identità"
@@ -1062,7 +1065,7 @@ msgid "You need to verify your identity first."
 msgstr "Devi verificare la tua identità prima di poter proseguire."
 
 msgid "Only verified email addresses allowed."
-msgstr ""
+msgstr "Solo indirizzi email verificati sono permessi."
 
 msgid "This is not a valid Bitcoin address."
 msgstr "Questo non è un indirizzo Bitcoin valido."
@@ -1204,43 +1207,43 @@ msgid "It seems you're trying to delete something that doesn't exist."
 msgstr "Pare che tu stia cercando di cancellare qualcosa che non esiste."
 
 msgid "Your PayPal account is {0}not connected{1}"
-msgstr ""
+msgstr "Il tuo account PayPal {0}non è collegato{1}"
 
 msgid "Your PayPal account is {0}connected{1}"
-msgstr ""
+msgstr "Il tuo account PayPal é {0}collegato{1}"
 
 msgid "PayPal Account"
-msgstr ""
+msgstr "Account PayPal "
 
 msgid ""
 "When you receive money on Gratipay we'll automatically send it to your "
 "PayPal account if you don't have a bank account attached."
-msgstr ""
+msgstr "Se non hai un conto bancario collegato, quando ricevi denaro su Gratipay lo trasferiremo automaticamente sul tuo account PayPal."
 
 msgid ""
 "Deposits are initiated every Thursday when you accumulate at least {0} in "
 "your balance."
-msgstr ""
+msgstr "I depositi avvengono ogni giovedì una volta che il tuo saldo ammonta almeno a {0}."
 
 msgid ""
 "PayPal's fee is 2%, but not more than $1 for U.S. PayPal accounts, or $20 "
 "for non-U.S. PayPal accounts."
-msgstr ""
+msgstr "La commissione di PayPal é del 2%, ma non più di 1$ per account PayPal USA, o 20$ per account PayPal non USA."
 
 msgid "Choose from one of your verified emails below:"
-msgstr ""
+msgstr "Scegli una delle tue email verificate: "
 
 msgid "Can't find your PayPal email? {0}Add it here{1}."
-msgstr ""
+msgstr "Non trovi la tua email di PayPal? {0}Inseriscila qui{1}."
 
 msgid "You must {0}add and verify{1} your PayPal email first."
-msgstr ""
+msgstr "Prima devi {0}aggiungere e verificare{1} la tua email di PayPal."
 
 msgid "Are you sure you want to disconnect your PayPal account?"
-msgstr ""
+msgstr "Sei sicuro di voler scollegare il tuo account di PayPal?"
 
 msgid "Disconnect {0}"
-msgstr ""
+msgstr "Scollega {0}"
 
 msgid "Close Account"
 msgstr "Chiudi Account"
@@ -1367,19 +1370,19 @@ msgid "Close"
 msgstr "Chiudi"
 
 msgid "Active"
-msgstr "Attivo"
+msgstr "Attive"
 
 msgid "Cancelled"
-msgstr "Cancellati"
+msgstr "Cancellate"
 
 msgid "These are subscriptions that you recently cancelled."
-msgstr ""
+msgstr "Queste sono le donazioni che hai annullato recentemente."
 
 msgid "You pay {0} every week."
-msgstr ""
+msgstr "Doni {0} a settimana."
 
 msgid "No subscriptions to show"
-msgstr ""
+msgstr "Nessuna sottoscrizione da mostrare"
 
 msgid "Button"
 msgstr "Pulsante"
