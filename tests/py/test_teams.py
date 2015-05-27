@@ -13,7 +13,7 @@ class TestNewTeams(Harness):
         'homepage': 'http://gratipay.com/',
         'agree_terms': 'true',
         'product_or_service': 'We make widgets.',
-        'revenue_model': 'People pay us',
+        'revenue_model': 'People pay us.',
         'getting_involved': 'People do stuff.',
         'getting_paid': 'We pay people.'
     }
@@ -45,6 +45,17 @@ class TestNewTeams(Harness):
         team = self.db.one("SELECT * FROM teams")
         assert team
         assert team.owner == 'alice'
+
+    def test_all_fields_persist(self):
+        self.make_participant('alice', claimed_time='now', email_address='', last_ach_result='')
+        self.post_new(dict(self.valid_data))
+        team = Team.from_slug('gratiteam')
+        assert team.name == 'Gratiteam'
+        assert team.homepage == 'http://gratipay.com/'
+        assert team.product_or_service == 'We make widgets.'
+        assert team.revenue_model == 'People pay us.'
+        assert team.getting_involved == 'People do stuff.'
+        assert team.getting_paid == 'We pay people.'
 
     def test_401_for_anon_creating_new_team(self):
         self.post_new(self.valid_data, auth_as=None, expected=401)
