@@ -47,18 +47,21 @@ class Team(Model):
         """.format(thing), (value,))
 
     @classmethod
-    def create_new(cls, owner, fields):
+    def insert(cls, owner, **fields):
+        fields['slug_lower'] = fields['slug'].lower()
+        fields['owner'] = owner.username
         return cls.db.one("""
 
             INSERT INTO teams
-                        (slug, slug_lower, name, homepage, product_or_service,
-                         getting_involved, getting_paid, owner)
-                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                        (slug, slug_lower, name, homepage,
+                         product_or_service, getting_involved, getting_paid,
+                         owner)
+                 VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s,
+                         %(product_or_service)s, %(getting_involved)s, %(getting_paid)s,
+                         %(owner)s)
               RETURNING teams.*::teams
 
-        """, (fields['slug'], fields['slug'].lower(), fields['name'], fields['homepage'],
-              fields['product_or_service'], fields['getting_involved'], fields['getting_paid'],
-              owner.username))
+        """, fields)
 
     def get_og_title(self):
         out = self.name
