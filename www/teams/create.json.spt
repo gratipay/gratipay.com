@@ -38,7 +38,7 @@ if request.method == 'POST':
     # Validate inputs
 
     for field in field_names.keys():
-        value = request.body.get(field, '')
+        value = request.body.get(field, '').strip(' ')
         if not value:
             raise Response(400, _("Please fill out the '{0}' field.", field_names[field]))
 
