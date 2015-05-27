@@ -108,6 +108,13 @@ class TestNewTeams(Harness):
         self.make_team(is_approved=False)
         assert 'The A Team' not in self.client.GET("/explore/teams/").body
 
+    def test_stripping_required_inputs(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_ach_result='')
+        data = dict(self.valid_data)
+        data['name'] = "     "
+        r = self.post_new(data, expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Please fill out the 'Team Name' field." in r.body
 
 class TestOldTeams(Harness):
 
