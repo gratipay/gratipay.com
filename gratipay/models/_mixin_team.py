@@ -64,7 +64,6 @@ class MixinTeam(object):
     def member_of(self, team):
         """Given a Participant object, return a boolean.
         """
-        assert team.IS_PLURAL
         for take in team.get_current_takes():
             if take['member'] == self.username:
                 return True

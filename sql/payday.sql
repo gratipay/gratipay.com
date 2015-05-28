@@ -173,16 +173,16 @@ CREATE OR REPLACE FUNCTION process_take() RETURNS trigger AS $$
         team_balance numeric(35,2);
     BEGIN
         team_balance := (
-            SELECT new_balance
-              FROM payday_participants
-             WHERE username = NEW.team
+            SELECT balance
+              FROM payday_teams
+             WHERE slug = NEW.team
         );
         IF (team_balance <= 0) THEN RETURN NULL; END IF;
         actual_amount := NEW.amount;
         IF (team_balance < NEW.amount) THEN
             actual_amount := team_balance;
         END IF;
-        EXECUTE transfer(NEW.team, NEW.member, actual_amount, 'take');
+        EXECUTE pay(NEW.member, NEW.team, actual_amount, 'to-participant');
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;

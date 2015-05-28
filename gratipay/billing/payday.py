@@ -74,7 +74,7 @@ class Payday(object):
                 prepare
                 create_card_holds
                 process_subscriptions
-                transfer_takes
+                process_payroll
                 process_draws
                 settle_card_holds
                 update_balances
@@ -161,7 +161,7 @@ class Payday(object):
             self.prepare(cursor, self.ts_start)
             holds = self.create_card_holds(cursor)
             self.process_subscriptions(cursor)
-            self.transfer_takes(cursor, self.ts_start)
+            self.process_payroll(cursor, self.ts_start)
             self.process_draws(cursor)
             payments = cursor.all("""
                 SELECT * FROM payments WHERE "timestamp" > %s
@@ -280,28 +280,27 @@ class Payday(object):
 
 
     @staticmethod
-    def transfer_takes(cursor, ts_start):
-        return  # XXX Bring me back!
+    def process_payroll(cursor, ts_start):
         cursor.run("""
 
         INSERT INTO payday_takes
-            SELECT team, member, amount
-              FROM ( SELECT DISTINCT ON (team, member)
-                            team, member, amount, ctime
-                       FROM takes
-                      WHERE mtime < %(ts_start)s
-                   ORDER BY team, member, mtime DESC
-                   ) t
-             WHERE t.amount > 0
-               AND t.team IN (SELECT username FROM payday_participants)
-               AND t.member IN (SELECT username FROM payday_participants)
-               AND ( SELECT id
-                       FROM payday_transfers_done t2
-                      WHERE t.team = t2.tipper
-                        AND t.member = t2.tippee
-                        AND context = 'take'
-                   ) IS NULL
-          ORDER BY t.team, t.ctime DESC;
+             SELECT team, member, amount
+               FROM ( SELECT DISTINCT ON (team, member)
+                             team, member, amount, ctime
+                        FROM payroll
+                       WHERE mtime < %(ts_start)s
+                    ORDER BY team, member, mtime DESC
+                    ) pr
+              WHERE pr.amount > 0
+                AND pr.team IN (SELECT slug FROM payday_teams)
+                AND pr.member IN (SELECT username FROM payday_participants)
+                AND ( SELECT id
+                        FROM payday_payments_done done
+                       WHERE pr.team = done.team
+                         AND pr.member = done.participant
+                         AND direction = 'to-participant'
+                    ) IS NULL
+           ORDER BY pr.team, pr.ctime DESC;
 
         """, dict(ts_start=ts_start))
 
@@ -413,6 +412,8 @@ class Payday(object):
     def payout(self):
         """This is the second stage of payday in which we send money out to the
         bank accounts of participants.
+
+        We only payout to team owners/members.
         """
         log("Starting payout loop.")
         participants = self.db.all("""
@@ -424,15 +425,17 @@ class Payday(object):
                       WHERE r.participant = p.id
                         AND network = 'balanced-ba'
                    ) > 0
-
-          ---- Only include team owners
-          ---- TODO: Include members on payroll once process_payroll is implemented
-
                AND ( SELECT count(*)
                        FROM teams t
                       WHERE t.owner = p.username
                         AND t.is_approved IS TRUE
                         AND t.is_closed IS NOT TRUE
+                   ) + (
+                     SELECT count(*)
+                       FROM current_payroll pr
+                       JOIN teams t ON t.slug = pr.team
+                      WHERE pr.member = p.username
+                        AND t.is_approved IS TRUE
                    ) > 0
         """)
         def credit(participant):
