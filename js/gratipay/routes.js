@@ -71,7 +71,7 @@ Gratipay.routes.ba.init = function() {
     Gratipay.routes.init();
 
     // Lazily depend on Balanced.
-    Gratipay.routes.lazyLoad("https://js.balancedroutes.com/1.1/balanced.min.js")
+    Gratipay.routes.lazyLoad("https://js.balancedpayments.com/1.1/balanced.min.js")
 
     $('form#bank-account').submit(Gratipay.routes.ba.submit);
 };
