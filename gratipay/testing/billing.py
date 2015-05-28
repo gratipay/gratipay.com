@@ -6,6 +6,7 @@ import balanced
 import braintree
 from braintree.test.nonces import Nonces
 
+from gratipay.billing.exchanges import cancel_card_hold
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.testing import Harness
 from gratipay.testing.vcr import use_cassette
@@ -49,6 +50,12 @@ class BillingHarness(Harness):
         for t in itertools.chain(credits, debits):
             t.meta.pop('exchange_id')
             t.save()
+        # Braintree Cleanup
+        existing_holds = braintree.Transaction.search(
+            braintree.TransactionSearch.status == 'authorized'
+        )
+        for hold in existing_holds.items:
+            cancel_card_hold(hold)
         super(BillingHarness, cls).tearDownClass()
 
 
