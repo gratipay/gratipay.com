@@ -177,11 +177,11 @@ def create_card_hold(db, participant, amount):
 
 
     # Go to Braintree.
-    # ===============
+    # ================
 
     cents, amount_str, charge_amount, fee = _prep_hit(amount)
     amount = charge_amount - fee
-    msg = "Holding " + amount_str + " on Balanced for " + username + " ... "
+    msg = "Holding " + amount_str + " on Braintree for " + username + " ... "
 
     hold = None
     error = ""
@@ -248,7 +248,7 @@ def capture_card_hold(db, participant, amount, hold):
 
     if error == '':
         record_exchange_result(db, e_id, 'succeeded', None, participant)
-        log("Captured " + amount_str + " on Balanced for " + username)
+        log("Captured " + amount_str + " on Braintree for " + username)
     else:
         record_exchange_result(db, e_id, 'failed', error, participant)
         raise Exception(error)
