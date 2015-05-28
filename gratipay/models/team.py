@@ -97,14 +97,18 @@ class Team(Model):
 
             INSERT INTO subscriptions
                         (ctime, mtime, subscriber, team, amount, is_funded)
-                 SELECT ctime
-                      , mtime
-                      , tipper
+                 SELECT ct.ctime
+                      , ct.mtime
+                      , ct.tipper
                       , %(slug)s
-                      , amount
-                      , is_funded
-                   FROM current_tips
-                  WHERE tippee=%(owner)s
+                      , ct.amount
+                      , ct.is_funded
+                   FROM current_tips ct
+                   JOIN participants p ON p.username = tipper
+                  WHERE ct.tippee=%(owner)s
+                    AND p.claimed_time IS NOT NULL
+                    AND p.is_suspicious IS NOT TRUE
+                    AND p.is_closed IS NOT TRUE
 
         """, {'slug': self.slug, 'owner': self.owner})
 
