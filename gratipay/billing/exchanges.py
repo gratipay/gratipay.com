@@ -240,7 +240,6 @@ def capture_card_hold(db, participant, amount, hold):
     error = ''
     try:
         result = braintree.Transaction.submit_for_settlement(hold.id, str(cents/100.00))
-        #import pdb;pdb.set_trace()
         assert result.is_success
         if result.transaction.status != 'submitted_for_settlement':
             error = result.transaction.status

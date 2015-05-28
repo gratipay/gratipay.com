@@ -29,7 +29,6 @@ class TestPayday(BillingHarness):
         obama = Participant.from_username('obama')
         hannibal = Participant.from_username('hannibal')
 
-        #import pdb; pdb.set_trace()
         assert hannibal.balance == D('6.00')
         assert obama.balance == D('3.41')
 
