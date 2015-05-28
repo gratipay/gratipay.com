@@ -17,7 +17,13 @@ CHECK = 6
 db = db(env())
 
 
-for row in csv.reader(sys.stdin):
+try:
+    fp = open(sys.argv[1])
+except IndexError:
+    fp = sys.stdin
+
+
+for row in csv.reader(fp):
     if row[DETAILS] != 'customer':
         continue
     assert row[CUSTOMER_ID] == row[CHECK], row
@@ -53,7 +59,7 @@ for row in csv.reader(sys.stdin):
             continue
 
     except KeyboardInterrupt:
-        raise
+        raise SystemExit
     except:
         print("FAILURE FOR {} ({})".format(customer_id, card_id))
         print(traceback.format_exc())
