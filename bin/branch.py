@@ -46,8 +46,9 @@ for row in csv.reader(fp):
         p = p[0]
 
         if p.braintree_customer_id is not None:
-            print("SKIPPING ALREADY MIGRATED ACCOUNT: {} {}".format(p.username, customer_id))
-            continue
+            if ExchangeRoute.from_network(p, 'braintree-cc'):
+                print("SKIPPING ALREADY MIGRATED ACCOUNT: {} {}".format(p.username, customer_id))
+                continue
         if p.is_suspicious is True:
             print("SKIPPING SUSPICIOUS ACCOUNT: {} {}".format(p.username, customer_id))
             continue
@@ -67,8 +68,7 @@ for row in csv.reader(fp):
 
     if 0:
         er = ExchangeRoute.insert(p, 'braintree-cc', card_id)
-        db.run( "UPDATE participants SET braintree_customer_id=%s, balanced_customer_href=null"
-                "WHERE username=%s"
+        db.run( "UPDATE participants SET braintree_customer_id=%s WHERE username=%s"
               , (customer_id, p.username)
                )
 
