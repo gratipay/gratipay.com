@@ -4,7 +4,7 @@ from __future__ import print_function
 import csv
 import sys
 import traceback
-from postgres.cursors import TooFew, TooMany
+from postgres.cursors import TooMany
 from gratipay.wireup import db, env
 from gratipay.models.exchange_route import ExchangeRoute
 
@@ -15,10 +15,6 @@ CUSTOMER_ID = 1
 CARD_ID = -1
 CHECK = 6
 db = db(env())
-
-class Closed(Exception): pass
-class Suspicious(Exception): pass
-class Archived(Exception): pass
 
 
 for row in csv.reader(sys.stdin):
