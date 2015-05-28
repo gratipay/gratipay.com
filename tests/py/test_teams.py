@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
-from gratipay.models._mixin_team import StubParticipantAdded
 
+import pytest
+
+from gratipay.models._mixin_team import StubParticipantAdded
 from gratipay.testing import Harness
 from gratipay.security.user import User
-from gratipay.models.team import Team
+from gratipay.models.team import Team, AlreadyMigrated
 
 
 class TestNewTeams(Harness):
@@ -115,6 +117,43 @@ class TestNewTeams(Harness):
         r = self.post_new(data, expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Please fill out the 'Team Name' field." in r.body
+
+    def test_migrate_tips_to_subscriptions(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        bob = self.make_participant('bob', claimed_time='now')
+        self.make_participant('old_team')
+        alice.set_tip_to('old_team', '1.00')
+        bob.set_tip_to('old_team', '2.00')
+        new_team = self.make_team('new_team', owner='old_team')
+
+        new_team.migrate_tips()
+
+        subscriptions = self.db.all("SELECT * FROM subscriptions")
+        assert len(subscriptions) == 2
+        assert subscriptions[0].subscriber == 'alice'
+        assert subscriptions[0].team == 'new_team'
+        assert subscriptions[0].amount == 1
+        assert subscriptions[1].subscriber == 'bob'
+        assert subscriptions[1].team == 'new_team'
+        assert subscriptions[1].amount == 2
+
+    def test_migrate_tips_only_runs_once(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_participant('old_team')
+        alice.set_tip_to('old_team', '1.00')
+        new_team = self.make_team('new_team', owner='old_team')
+
+        self.db.run("""
+            INSERT INTO subscriptions
+                        (ctime, subscriber, team, amount)
+                 VALUES (CURRENT_TIMESTAMP, 'alice', 'new_team', 1)
+        """)
+
+        with pytest.raises(AlreadyMigrated):
+            new_team.migrate_tips()
+
+        subscriptions = self.db.all("SELECT * FROM subscriptions")
+        assert len(subscriptions) == 1
 
 class TestOldTeams(Harness):
 

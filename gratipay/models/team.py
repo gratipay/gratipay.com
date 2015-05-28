@@ -85,3 +85,31 @@ class Team(Model):
                , False: 'rejected'
                , True: 'approved'
                 }[self.is_approved]
+
+    def migrate_tips(self):
+        subscriptions = self.db.all("SELECT * FROM subscriptions WHERE team=%s", (self.slug,))
+
+        # Make sure the migration hasn't been done already
+        if subscriptions:
+            raise AlreadyMigrated
+
+        self.db.run("""
+
+            INSERT INTO subscriptions
+                        (ctime, mtime, subscriber, team, amount, is_funded)
+                 SELECT ct.ctime
+                      , ct.mtime
+                      , ct.tipper
+                      , %(slug)s
+                      , ct.amount
+                      , ct.is_funded
+                   FROM current_tips ct
+                   JOIN participants p ON p.username = tipper
+                  WHERE ct.tippee=%(owner)s
+                    AND p.claimed_time IS NOT NULL
+                    AND p.is_suspicious IS NOT TRUE
+                    AND p.is_closed IS NOT TRUE
+
+        """, {'slug': self.slug, 'owner': self.owner})
+
+class AlreadyMigrated(Exception): pass
