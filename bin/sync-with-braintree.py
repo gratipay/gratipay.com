@@ -12,6 +12,7 @@ from gratipay import wireup
 from gratipay.billing.payday import threaded_map
 from gratipay.models.exchange_route import ExchangeRoute
 from postgres.cursors import TooMany
+from braintree.util.http import NotFoundError
 
 
 env = wireup.env()
@@ -117,8 +118,14 @@ def process_record(rec):
         p = get_participant_from_customer_id(customer_id)
 
     if p is None:
-        braintree.PaymentMethod.delete(card_id)
-        log("DELETED CARD {} FOR {}".format(card_id, customer_id))
+        try:
+            braintree.PaymentMethod.delete(card_id)
+        except NotFoundError:
+            log("CARD {} ALREADY DELETED FOR {}".format(card_id, customer_id))
+        else:
+            log("DELETED CARD {} FOR {}".format(card_id, customer_id))
+    elif p.id == 11576:
+        log("ALREADY SYNCED {} WITH {}={} (CARD: {})".format(customer_id, p.id, p.username, card_id))
     else:
         braintree.Customer.update(customer_id, {'custom_fields': {'participant_id': p.id}})
         db.run( "UPDATE participants SET braintree_customer_id=%s WHERE username=%s"
