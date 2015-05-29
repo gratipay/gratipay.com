@@ -108,21 +108,23 @@ def process_record(rec):
     elif not (customer_id.startswith('AC') or customer_id.startswith('CU')):
         # a Balanced card that came with no customer_id -- can we find a participant anyway?
         log("ORPHANED CARD {} FOR {}".format(card_id, customer_id))
-        p = get_participant_from_card_id(card_id)
+        #p = get_participant_from_card_id(card_id)  It's no use. Don't waste the time. :-(
+        p = None
 
     else:
+        # a live card that came from Balanced with a proper customer_id -- yessss!
         log("GOOD CARD {} FOR {}".format(card_id, customer_id))
         p = get_participant_from_customer_id(customer_id)
 
     if p is None:
-        #raise NotImplementedErrorbraintree.PaymentMethod.delete(card_id)
+        braintree.PaymentMethod.delete(card_id)
         log("DELETED CARD {} FOR {}".format(card_id, customer_id))
     else:
-        #braintree.Customer.update(customer_id, {'custom_fields': {'participant_id': p.id}}))
-        #db.run( "UPDATE participants SET braintree_customer_id=%s WHERE username=%s"
-        #      , (customer_id, p.username)
-        #       )
-        #ExchangeRoute.insert(p, 'braintree-cc', card_id)
+        braintree.Customer.update(customer_id, {'custom_fields': {'participant_id': p.id}})
+        db.run( "UPDATE participants SET braintree_customer_id=%s WHERE username=%s"
+              , (customer_id, p.username)
+               )
+        ExchangeRoute.insert(p, 'braintree-cc', card_id)
         log("SYNCED {} WITH {}={} (CARD: {})".format(customer_id, p.id, p.username, card_id))
 
 
