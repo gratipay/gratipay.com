@@ -118,11 +118,11 @@ def process_record(rec):
         #raise NotImplementedErrorbraintree.PaymentMethod.delete(card_id)
         log("DELETED CARD {} FOR {}".format(card_id, customer_id))
     else:
+        #braintree.Customer.update(customer_id, {'custom_fields': {'participant_id': p.id}}))
         #db.run( "UPDATE participants SET braintree_customer_id=%s WHERE username=%s"
         #      , (customer_id, p.username)
         #       )
         #ExchangeRoute.insert(p, 'braintree-cc', card_id)
-        #braintree.Customer.update(customer_id, {'custom_fields': {'participant_id': p.id}}))
         log("SYNCED {} WITH {}={} (CARD: {})".format(customer_id, p.id, p.username, card_id))
 
 
