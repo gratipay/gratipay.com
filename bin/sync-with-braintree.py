@@ -4,10 +4,13 @@ from __future__ import print_function
 import csv
 import sys
 
+import braintree
 import requests
 import threading
 from gratipay import wireup
 from gratipay.billing.payday import threaded_map
+from gratipay.models.exchange_route import ExchangeRoute
+from postgres.cursors import TooMany
 
 
 env = wireup.env()
@@ -39,20 +42,46 @@ def is_removed(card_id):
     return cards[0]['can_debit'] == False
 
 
-nfresh = 0
-norphan = 0
-nremoved = 0
-ngood = 0
+def delete_from_braintree(customer_id, card_id):
+    #raise NotImplementedErrorbraintree.PaymentMethod.delete(card_id)
+    log("DELETED CARD {} FOR {}".format(card_id, customer_id))
+
+
+def get_participant(customer_id, card_id):
+    p = db.all( "SELECT p.*::participants FROM participants p "
+                "WHERE balanced_customer_href=%s "
+              , ("/customers/{}".format(customer_id),)
+               )
+    n = len(p)
+    if n < 1:
+        log("UNKNOWN CUSTOMER: {}".format(customer_id,))
+        return
+    elif n > 1:
+        p = [x for x in p if x.claimed_time is not None]
+        assert len(p) == 1, TooMany([x.username for x in p], 1, 1)
+    p = p[0]
+
+    def _delete(reason):
+        log("{}: {} {}".format(reason, p.username, customer_id))
+        return
+
+    if p.braintree_customer_id is not None:
+        if ExchangeRoute.from_network(p, 'braintree-cc'):
+            return _delete("MIGRATED THEMSELVES")
+    elif p.is_suspicious is True:
+        return _delete("SUSPICIOUS ACCOUNT")
+    elif p.is_closed:
+        return _delete("CLOSED ACCOUNT")
+    elif p.claimed_time is None:
+        return _delete("ARCHIVED ACCOUNT")
+
+    return p
+
 
 _log_lock = threading.Lock()
 def log(*a, **kw):
-    global nfresh, norphan, nremoved, ngood
     with _log_lock:
-        if a[0].startswith('FRESH'):        nfresh += 1
-        elif a[0].startswith('ORPHAN'):     norphan += 1
-        elif a[0].startswith('DELETED'):    nremoved += 1
-        else:                               ngood += 1
-        print(*a, **kw)
+        print("{:>2} ".format(threading.current_thread().ident), *a, **kw)
 
 
 def process_record(rec):
@@ -60,27 +89,28 @@ def process_record(rec):
     card_id = rec[8]
 
     if not card_id.startswith('CC'):
-        # a card vaulted directly at Braintree -- ensure they're already knit to a participant?
+        # a card freshly vaulted at Braintree -- ensure they're already knit to a participant?
         log("FRESH CARD {} FOR {}".format(card_id, customer_id))
-
-    elif not (customer_id.startswith('AC') or customer_id.startswith('CU')):
-        # a Balanced card that came with no customer_id -- how can we knit to a participant?
-        log("ORPHANED CARD {} FOR {}".format(card_id, customer_id))
 
     elif is_removed(card_id):
         # a Balanced card that never should've made it into Braintree -- get rid of it!
-        #braintree.PaymentMethod.delete(card_id)
-        log("DELETED {} FOR {}".format(card_id, customer_id))
+        delete_from_braintree(customer_id, card_id)
+
+    elif not (customer_id.startswith('AC') or customer_id.startswith('CU')):
+        # a Balanced card that came with no customer_id -- how can we knit to a participant? :(
+        log("ORPHANED CARD {} FOR {}".format(card_id, customer_id))
 
     else:
-        log("FINDING PARTICIPANT FOR {}".format(customer_id))
+        p = get_participant(customer_id, card_id)
+        if p is None:
+            delete_from_braintree(customer_id, card_id)
+        else:
+            #db.run( "UPDATE participants SET braintree_customer_id=%s WHERE username=%s"
+            #      , (customer_id, p.username)
+            #       )
+            #ExchangeRoute.insert(p, 'braintree-cc', card_id)
+            log("SYNCED {} WITH {} (CARD: {})".format(customer_id, p.username, card_id))
 
 
-threaded_map(process_record, reader, threads=10)
-
-
-print()
-print("{:<16} {:>5}".format("Freshly vaulted:", nfresh))
-print("{:<16} {:>5}".format("Orphaned:", norphan))
-print("{:<16} {:>5}".format("Removed:", nremoved))
-print("{:<16} {:>5}".format("Good:", ngood))
+if __name__ == '__main__':
+    threaded_map(process_record, reader, threads=10)
