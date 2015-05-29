@@ -43,19 +43,25 @@ def is_removed(card_id):
     return cards[0]['can_debit'] == False
 
 
-def delete_from_braintree(customer_id, card_id):
-    #raise NotImplementedErrorbraintree.PaymentMethod.delete(card_id)
-    log("DELETED CARD {} FOR {}".format(card_id, customer_id))
+def get_participant_from_card_id(card_id):
+    p = db.all( "SELECT p.*::participants FROM participants p "
+                "JOIN current_exchange_routes cer ON p.id = cer.participant "
+                "WHERE address=%s AND network='balanced-cc'"
+              , ("/cards/{}".format(card_id),)
+               )
+    return _get_participant(card_id, p)
 
-
-def get_participant(customer_id, card_id):
+def get_participant_from_customer_id(customer_id):
     p = db.all( "SELECT p.*::participants FROM participants p "
                 "WHERE balanced_customer_href=%s "
               , ("/customers/{}".format(customer_id),)
                )
+    return _get_participant(customer_id, p)
+
+def _get_participant(_id, p):
     n = len(p)
     if n < 1:
-        log("UNKNOWN CUSTOMER: {}".format(customer_id,))
+        log("UNKNOWN: {}".format(_id,))
         return
     elif n > 1:
         p = [x for x in p if x.claimed_time is not None]
@@ -63,7 +69,7 @@ def get_participant(customer_id, card_id):
     p = p[0]
 
     def _delete(reason):
-        log("{}: {} {}".format(reason, p.username, customer_id))
+        log("{}: {}={} {}".format(reason, p.id, p.username, _id))
         return
 
     if p.braintree_customer_id is not None:
@@ -91,28 +97,33 @@ def process_record(rec):
     card_id = rec[8]
 
     if not card_id.startswith('CC'):
-        # a card freshly vaulted at Braintree -- ensure they're already knit to a participant?
-        log("FRESH CARD {} FOR {}".format(card_id, customer_id))
+        # a card freshly vaulted at Braintree -- ignore it
+        return
 
     elif is_removed(card_id):
         # a Balanced card that never should've made it into Braintree -- get rid of it!
         log("CARD {} REMOVED AT BALANCED (CUSTOMER: {})".format(card_id, customer_id))
-        delete_from_braintree(customer_id, card_id)
+        p = None
 
     elif not (customer_id.startswith('AC') or customer_id.startswith('CU')):
-        # a Balanced card that came with no customer_id -- how can we knit to a participant? :(
+        # a Balanced card that came with no customer_id -- can we find a participant anyway?
         log("ORPHANED CARD {} FOR {}".format(card_id, customer_id))
+        p = get_participant_from_card_id(card_id)
 
     else:
-        p = get_participant(customer_id, card_id)
-        if p is None:
-            delete_from_braintree(customer_id, card_id)
-        else:
-            #db.run( "UPDATE participants SET braintree_customer_id=%s WHERE username=%s"
-            #      , (customer_id, p.username)
-            #       )
-            #ExchangeRoute.insert(p, 'braintree-cc', card_id)
-            log("SYNCED {} WITH {} (CARD: {})".format(customer_id, p.username, card_id))
+        log("GOOD CARD {} FOR {}".format(card_id, customer_id))
+        p = get_participant_from_customer_id(customer_id)
+
+    if p is None:
+        #raise NotImplementedErrorbraintree.PaymentMethod.delete(card_id)
+        log("DELETED CARD {} FOR {}".format(card_id, customer_id))
+    else:
+        #db.run( "UPDATE participants SET braintree_customer_id=%s WHERE username=%s"
+        #      , (customer_id, p.username)
+        #       )
+        #ExchangeRoute.insert(p, 'braintree-cc', card_id)
+        #braintree.Customer.update(customer_id, {'custom_fields': {'participant_id': p.id}}))
+        log("SYNCED {} WITH {}={} (CARD: {})".format(customer_id, p.id, p.username, card_id))
 
 
 if __name__ == '__main__':
