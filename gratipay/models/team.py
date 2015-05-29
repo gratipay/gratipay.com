@@ -87,7 +87,13 @@ class Team(Model):
                 }[self.is_approved]
 
     def migrate_tips(self):
-        subscriptions = self.db.all("SELECT * FROM subscriptions WHERE team=%s", (self.slug,))
+        subscriptions = self.db.all("""
+            SELECT s.*
+              FROM subscriptions s
+              JOIN teams t ON t.slug = s.team
+             WHERE team=%s
+               AND s.ctime < t.ctime
+        """, (self.slug,))
 
         # Make sure the migration hasn't been done already
         if subscriptions:

@@ -143,11 +143,7 @@ class TestNewTeams(Harness):
         alice.set_tip_to('old_team', '1.00')
         new_team = self.make_team('new_team', owner='old_team')
 
-        self.db.run("""
-            INSERT INTO subscriptions
-                        (ctime, subscriber, team, amount)
-                 VALUES (CURRENT_TIMESTAMP, 'alice', 'new_team', 1)
-        """)
+        new_team.migrate_tips()
 
         with pytest.raises(AlreadyMigrated):
             new_team.migrate_tips()
