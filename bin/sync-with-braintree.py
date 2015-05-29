@@ -6,6 +6,7 @@ import sys
 
 import braintree
 import requests
+import datetime
 import threading
 from gratipay import wireup
 from gratipay.billing.payday import threaded_map
@@ -81,7 +82,8 @@ def get_participant(customer_id, card_id):
 _log_lock = threading.Lock()
 def log(*a, **kw):
     with _log_lock:
-        print("{:>2} ".format(threading.current_thread().ident), *a, **kw)
+        ts = str(datetime.datetime.utcnow()).split()[1]
+        print("{} {}".format(threading.current_thread().ident, ts), *a, **kw)
 
 
 def process_record(rec):
@@ -94,6 +96,7 @@ def process_record(rec):
 
     elif is_removed(card_id):
         # a Balanced card that never should've made it into Braintree -- get rid of it!
+        log("CARD {} REMOVED AT BALANCED (CUSTOMER: {})".format(card_id, customer_id))
         delete_from_braintree(customer_id, card_id)
 
     elif not (customer_id.startswith('AC') or customer_id.startswith('CU')):
