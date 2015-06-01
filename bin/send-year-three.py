@@ -1,34 +1,17 @@
 #!/usr/bin/env python
-
-"""This is a one-off script to resend emails for #3355."""
-
-import sys
-
-from gratipay import wireup
-
-env = wireup.env()
-db = wireup.db(env)
-
-# Temporary, will fill with actual values when running script
-email_txt = """
-    rohitpaulk@live.com
-    abcd@gmail.com
+"""This is a one-off script to resend emails for #3510.
 """
+from gratipay.wireup import db, env
 
-emails = [email.strip() for email in email_txt.split()]
 
-assert len(emails) == 176
-
-participants = []
-
+db = db(env())
 participants = db.all("""
     SELECT p.*::participants
       FROM participants p
-     WHERE email_address IN %s
-""", (tuple(emails), ))
+     WHERE email_address is not null
+""")
+assert len(participants) == 1
 
 for p in participants:
-    p.queue_email('double_emails')
-
-print("Done")
-sys.exit()
+    assert p.email_address == 'chad@zetaweb.com'
+    p.queue_email('year_three')
