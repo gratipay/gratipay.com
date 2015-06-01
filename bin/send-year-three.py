@@ -3,17 +3,18 @@
 """
 from __future__ import print_function
 
-from gratipay.models.participant import Participant
-from gratipay.wireup import db, env
-
-def noop(*a, **kw): pass
-Participant._tell_sentry = noop
+import sys
+class DevNull:
+    def write(*a): pass
+    def flush(*a): pass
+sys.stdout = DevNull()
+from gratipay.main import Participant, db
+sys.stdout = sys.__stdout__
 
 
 # Fetch participants.
 # ===================
 
-db = db(env())
 participants = db.all("""
     SELECT p.*::participants
       FROM participants p
@@ -31,4 +32,4 @@ for p in participants:
     p.queue_email('year_three')
 
 nsent = Participant.dequeue_emails()
-print("Sent %s email%s".format(nsent, '' if nsent == 1 else 's'))
+print("Sent {} email{}.".format(nsent, '' if nsent == 1 else 's'))
