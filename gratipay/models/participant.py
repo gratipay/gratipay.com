@@ -672,13 +672,14 @@ class Participant(Model, MixinTeam):
         """, (self.id, spt_name, pickle.dumps(context)))
 
     @classmethod
-    def dequeue_emails(cls):
+    def dequeue_emails(cls, n=60):
         fetch_messages = lambda: cls.db.all("""
             SELECT *
               FROM email_queue
           ORDER BY id ASC
-             LIMIT 60
-        """)
+             LIMIT %s
+        """, (n,))
+        nsent = 0
         while True:
             messages = fetch_messages()
             if not messages:
@@ -689,6 +690,8 @@ class Participant(Model, MixinTeam):
                 cls.db.run("DELETE FROM email_queue WHERE id = %s", (msg.id,))
                 if r == 1:
                     sleep(1)
+                nsent += r
+        return nsent
 
     def set_email_lang(self, accept_lang):
         if not accept_lang:
