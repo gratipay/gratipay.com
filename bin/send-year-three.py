@@ -29,7 +29,7 @@ assert participants[0].email_address == 'chad@zetaweb.com'
 # ============
 
 for p in participants:
-    p.queue_email('year_three')
+    p.queue_email('year_three', include_unsubscribe=False)
 
 nsent = Participant.dequeue_emails()
 print("Sent {} email{}.".format(nsent, '' if nsent == 1 else 's'))
