@@ -918,17 +918,8 @@ class Participant(Model, MixinTeam):
         """, (self.username,))
         self.set_attributes(avatar_url=avatar_url)
 
-
-    # Random Junk
-    # ===========
-
-    @property
-    def profile_url(self):
-        scheme = gratipay.canonical_scheme
-        host = gratipay.canonical_host
-        username = self.username
-        return '{scheme}://{host}/{username}/'.format(**locals())
-
+    # Teams-related stuff
+    # ===================
 
     def get_teams(self, only_approved=False):
         """Return a list of teams this user is a member or owner of.
@@ -954,6 +945,34 @@ class Participant(Model, MixinTeam):
 
         """, (self.username,))
 
+    def accept_invitation_to(self, team):
+        updated = self._update_membership_status_for(team, True)
+        assert updated
+
+    def decline_invitation_to(self, team):
+        updated = self._update_membership_status_for(team, False)
+        assert updated
+
+    def _update_membership_status_for(self, team, status):
+        return self.db.one("""
+
+            UPDATE team_memberships
+               SET is_active=%s
+             WHERE member=%s
+               AND team=%s
+         RETURNING *
+
+        """, (status, self.username, team.slug))
+
+    # Random Junk
+    # ===========
+
+    @property
+    def profile_url(self):
+        scheme = gratipay.canonical_scheme
+        host = gratipay.canonical_host
+        username = self.username
+        return '{scheme}://{host}/{username}/'.format(**locals())
 
     def insert_into_communities(self, is_member, name, slug):
         participant_id = self.id

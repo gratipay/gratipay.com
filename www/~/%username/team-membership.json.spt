@@ -1,0 +1,28 @@
+from __future__ import print_function, unicode_literals
+
+from aspen import Response
+from gratipay.models.team import Team
+from gratipay.utils import get_participant
+
+[-----------------------------------------------------------------------------]
+
+request.allow('POST')
+participant = get_participant(state, restrict=True)
+
+action = request.body['action']
+
+if action not in ['accept', 'decline']:
+    raise Response(400, _("Action should be either accept or decline"))
+
+team = Team.from_slug(request.body['team'])
+
+if not team:
+    raise Response(400, _("Team doesn't exist"))
+
+if action == 'accept':
+    participant.accept_invitation_to(team)
+else:
+    participant.decline_invitation_to(team)
+
+[---] application/json via json_dump
+{}

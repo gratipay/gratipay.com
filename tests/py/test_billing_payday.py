@@ -94,11 +94,11 @@ class TestPayday(BillingHarness):
         #assert debit.amount == 1576  # base amount + fee
         #assert debit.description == 'obama'
 
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
     @mock.patch('gratipay.billing.payday.create_card_hold')
     def test_ncc_failing(self, cch, fch):
-        self.janet.set_tip_to(self.homer, 24)
+        team = self.make_team('gratiteam', owner=self.homer, is_approved=True)
+        self.obama.set_subscription_to(team, 24)
         fch.return_value = {}
         cch.return_value = (None, 'oops')
         payday = Payday.start()
@@ -336,20 +336,19 @@ class TestPayin(BillingHarness):
         cancel.assert_called_with(fake_hold)
         assert len(holds) == 0
 
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     @mock.patch('gratipay.billing.payday.log')
     def test_payin_cancels_uncaptured_holds(self, log):
-        self.janet.set_tip_to(self.homer, 42)
-        alice = self.make_participant('alice', claimed_time='now',
-                                      is_suspicious=False)
-        self.make_exchange('balanced-cc', 50, 0, alice)
-        alice.set_tip_to(self.janet, 50)
+        team = self.make_team(owner=self.homer, is_approved=True)
+        self.obama.set_subscription_to(team, '20.00')
+        team.add_member(self.obama)
+        self.obama.accept_invitation_to(team)
+        team._Team__set_take_for(self.obama, D('20.00'), self.obama)
         Payday.start().payin()
-        assert log.call_args_list[-3][0] == ("Captured 0 card holds.",)
-        assert log.call_args_list[-2][0] == ("Canceled 1 card holds.",)
-        assert Participant.from_id(alice.id).balance == 0
-        assert Participant.from_id(self.janet.id).balance == 8
-        assert Participant.from_id(self.homer.id).balance == 42
+
+        assert log.call_args_list[-6][0] == ("Captured 0 card holds.",)
+        assert log.call_args_list[-4][0] == ("Canceled 1 card holds.",)
+        assert Participant.from_id(self.obama.id).balance == 0
+        assert Participant.from_id(self.homer.id).balance == 0
 
     def test_payin_cant_make_balances_more_negative(self):
         self.db.run("""
@@ -413,36 +412,51 @@ class TestPayin(BillingHarness):
         assert payment.amount == D('0.51')
         assert payment.direction == 'to-team'
 
-    @pytest.mark.xfail(reason="haven't migrated_transfer_takes yet")
-    def test_transfer_takes(self):
-        a_team = self.make_participant('a_team', claimed_time='now', number='plural', balance=20)
+    def test_process_payroll(self):
+        team_owner = self.make_participant('team_owner', claimed_time='now', last_ach_result='')
+        team_funder = self.make_participant('team_funder', claimed_time='now', balance=50)
+        team = self.make_team(is_approved=True, owner=team_owner)
+        team_funder.set_subscription_to(team, D('20.00'))
         alice = self.make_participant('alice', claimed_time='now')
-        a_team.add_member(alice)
-        a_team.add_member(self.make_participant('bob', claimed_time='now'))
-        a_team.set_take_for(alice, D('1.00'), alice)
+        bob = self.make_participant('bob', claimed_time='now')
+        carl = self.make_participant('carl', claimed_time='now')
+        team.add_member(alice)
+        team.add_member(bob)
+        team.add_member(carl) # Invitation not accepted
+        alice.accept_invitation_to(team)
+        bob.accept_invitation_to(team)
+        team.set_take_for(alice, D('1.00'), alice)
+        team.set_take_for(bob, D('0.01'), bob)
+        team.set_take_for(carl, D('1.00'), carl)
 
         payday = Payday.start()
 
         # Test that payday ignores takes set after it started
-        a_team.set_take_for(alice, D('2.00'), alice)
+        team.set_take_for(alice, D('2.00'), alice)
 
         # Run the transfer multiple times to make sure we ignore takes that
         # have already been processed
         for i in range(3):
             with self.db.get_cursor() as cursor:
                 payday.prepare(cursor, payday.ts_start)
-                payday.transfer_takes(cursor, payday.ts_start)
+                payday.process_subscriptions(cursor)
+                payday.process_payroll(cursor, payday.ts_start)
+                payday.process_draws(cursor)
                 payday.update_balances(cursor)
 
         participants = self.db.all("SELECT username, balance FROM participants")
 
         for p in participants:
-            if p.username == 'a_team':
+            if p.username == 'team_owner':
                 assert p.balance == D('18.99')
             elif p.username == 'alice':
                 assert p.balance == D('1.00')
             elif p.username == 'bob':
                 assert p.balance == D('0.01')
+            elif p.username == 'carl':
+                assert p.balance == D('0.00')
+            elif p.username == 'team_funder':
+                assert p.balance == D('30.00')
             else:
                 assert p.balance == 0
 
@@ -456,7 +470,7 @@ class TestPayin(BillingHarness):
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor, payday.ts_start)
             payday.process_subscriptions(cursor)
-            payday.transfer_takes(cursor, payday.ts_start)
+            payday.process_payroll(cursor, payday.ts_start)
             payday.process_draws(cursor)
             assert cursor.one("select new_balance from payday_participants "
                               "where username='hannibal'") == D('0.51')
@@ -469,27 +483,29 @@ class TestPayin(BillingHarness):
         payment = self.db.one("SELECT * FROM payments WHERE direction='to-participant'")
         assert payment.amount == D('0.51')
 
-    @pytest.mark.xfail(reason="haven't migrated_transfer_takes yet")
-    @mock.patch.object(Payday, 'fetch_card_holds')
-    def test_transfer_takes_doesnt_make_negative_transfers(self, fch):
-        hold = balanced.CardHold(amount=1500, meta={'participant_id': self.janet.id},
-                                 card_href=self.card_href)
-        hold.capture = lambda *a, **kw: None
-        hold.save = lambda *a, **kw: None
-        fch.return_value = {self.janet.id: hold}
-        self.janet.update_number('plural')
-        self.janet.set_tip_to(self.homer, 10)
-        self.janet.add_member(self.david)
-        Payday.start().payin()
-        assert Participant.from_id(self.david.id).balance == 0
-        assert Participant.from_id(self.homer.id).balance == 10
-        assert Participant.from_id(self.janet.id).balance == 0
+    def test_transfer_takes_doesnt_make_negative_transfers(self):
+        self.make_exchange('braintree-cc', D('10.00'), D('0.00'), self.obama)
+        team = self.make_team('Gratiteam', self.homer, is_approved=True)
+        self.obama.set_subscription_to(team, D('0.5')) # Total team funds is $0.5
+        bob = self.make_participant('bob', claimed_time='now')
+        team.add_member(bob) # Bob should receive $0, coz the $0.5 is exhausted (kids first)
+        bob.accept_invitation_to(team)
+        team.add_member(self.david)
+        self.david.accept_invitation_to(team)
+        team.set_take_for(self.david, D('1.00'), self.david) # David should only receive $0.5
 
-    @pytest.mark.xfail(reason="haven't migrated take_over_balances yet")
+        Payday.start().payin()
+
+        assert Participant.from_id(bob.id).balance == 0
+        assert Participant.from_id(self.homer.id).balance == 0
+        assert Participant.from_id(self.david.id).balance == D('0.50')
+        assert Participant.from_id(self.obama.id).balance == D('9.50') # $10 - $0.5
+
     def test_take_over_during_payin(self):
         alice = self.make_participant('alice', claimed_time='now', balance=50)
-        bob = self.make_participant('bob', claimed_time='now', elsewhere='twitter')
-        alice.set_tip_to(bob, 18)
+        bob = self.make_participant('bob', claimed_time='now', elsewhere='twitter', last_ach_result='')
+        team = self.make_team('team', owner=bob, is_approved=True)
+        alice.set_subscription_to(team, D('18.00'))
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor, payday.ts_start)
@@ -499,6 +515,8 @@ class TestPayin(BillingHarness):
             bruce.delete_elsewhere('twitter', str(bob.id))
             billy = self.make_participant('billy', claimed_time='now')
             billy.take_over(('github', str(bruce.id)), have_confirmation=True)
+            payday.process_payroll(cursor, payday.ts_start)
+            payday.process_draws(cursor)
             payday.update_balances(cursor)
         payday.take_over_balances()
         assert Participant.from_id(bob.id).balance == 0
@@ -563,6 +581,27 @@ class TestPayout(Harness):
         Payday.start().payout()
         payday = self.fetch_payday()
         assert payday['nach_failing'] == 1
+
+    @mock.patch('gratipay.billing.payday.ach_credit')
+    def test_payout_is_constrained_to_owners_and_payroll(self, ach):
+        team_owner = self.make_participant('team_owner', claimed_time='now',
+                                           last_ach_result='', is_suspicious=False)
+        team = self.make_team('gratiteam', owner=team_owner, is_approved=True)
+        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
+                                      last_ach_result='')
+        bob = self.make_participant('bob', claimed_time='now', is_suspicious=False,
+                                      last_ach_result='')
+        team.add_member(bob)
+        self.make_exchange('balanced-cc', 20, 0, alice) # Alice shouldn't be paid out
+        self.make_exchange('balanced-cc', 30, 0, bob)
+        self.make_exchange('balanced-cc', 30, 0, team_owner)
+
+        Payday.start().payout()
+
+        assert ach.call_count == 2
+
+        # Check for specifics
+
 
 
 class TestNotifyParticipants(EmailHarness):
