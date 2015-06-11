@@ -557,7 +557,7 @@ class Payday(object):
                             AND t.is_approved IS true
                             AND t.is_closed IS NOT true
                             AND (SELECT count(*)
-                                   FROM exchange_routes er
+                                   FROM current_exchange_routes er
                                   WHERE er.participant = p.id
                                     AND network IN ('balanced-ba', 'paypal')
                                     AND error = ''
