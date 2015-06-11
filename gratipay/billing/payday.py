@@ -408,13 +408,10 @@ class Payday(object):
         log("Starting payout loop.")
         participants = self.db.all("""
             SELECT p.*::participants
-              FROM participants p
-             WHERE balance > 0
-               AND ( SELECT count(*)
-                       FROM exchange_routes r
-                      WHERE r.participant = p.id
-                        AND network = 'balanced-ba'
-                   ) > 0
+              FROM exchange_routes r
+              JOIN participants p ON p.id = r.participant
+             WHERE r.network = 'balanced-ba'
+               AND p.balance > 0
 
           ---- Only include team owners
           ---- TODO: Include members on payroll once process_payroll is implemented
