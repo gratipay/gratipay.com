@@ -10,8 +10,19 @@ from gratipay.utils import get_participant
 request.allow('POST')
 participant = get_participant(state, restrict=True)
 
+if 'network' not in request.body:
+    raise Response(400, "'network' param required.")
+
+if 'address' not in request.body:
+    raise Response(400, "'address' param required.")
+
+network = request.body['network']
+
+if network not in ['balanced-ba', 'balanced-cc', 'braintree-cc', 'paypal', 'bitcoin']:
+    raise Response(400, "invalid 'network' param.")
+
 route = ExchangeRoute.from_address(participant,
-                                   request.body['network'],
+                                   network,
                                    request.body['address'])
 if route:
     route.invalidate()
