@@ -58,7 +58,23 @@ emails = participant.get_emails()
                             <a class="account-username" href="/{{ participant.username }}/history/">{{ format_currency(participant.balance, "USD") }}</a>
                         </span>
                     </td>
-                </td>
+                  {% if user.ADMIN and participant.balance > 0 %}
+                    {% if participant.status_of_1_0_balance == 'pending-payout' %}
+                    <td class="account-action">
+                        Payout Pending
+                        <a class="button auth-button" href="">
+                            Undo
+                        </a>
+                    </td>
+                    {% elif participant.status_of_1_0_balance == 'unresolved' %}
+                    <td class="account-action">
+                        <a class="button auth-button" href="">
+                            Clear for Payout
+                        </a>
+                    </td>
+                    {% endif %}
+                  {% endif %}
+                </tr>
             </table>
             <h2>{{ _("Adding Money") }}
                 {% if user.ADMIN and participant.balanced_customer_href %}
