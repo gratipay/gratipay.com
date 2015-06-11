@@ -267,6 +267,44 @@ class TestPayin(BillingHarness):
             payday.prepare(cursor, payday.ts_start)
             return payday.create_card_holds(cursor)
 
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    @mock.patch('braintree.Transaction.submit_for_settlement')
+    @mock.patch('braintree.Transaction.sale')
+    def test_payin_pays_in(self, sale, sfs, fch):
+        fch.return_value = {}
+        team = self.make_team('Gratiteam', is_approved=True)
+        self.obama.set_subscription_to(team, 1)
+
+        txn_attrs = {
+            'amount': 1,
+            'tax_amount': 0,
+            'status': 'authorized',
+            'custom_fields': {'participant_id': self.obama.id},
+            'credit_card': {'token': self.obama_route.address},
+            'id': 'dummy_id'
+        }
+        submitted_txn_attrs = txn_attrs.copy()
+        submitted_txn_attrs.update(status='submitted_for_settlement')
+        authorized_txn = braintree.Transaction(None, txn_attrs)
+        submitted_txn = braintree.Transaction(None, submitted_txn_attrs)
+        sale.return_value.transaction = authorized_txn
+        sale.return_value.is_success = True
+        sfs.return_value.transaction = submitted_txn
+        sfs.return_value.is_success = True
+
+        Payday.start().payin()
+        payments = self.db.all("SELECT amount, direction FROM payments")
+        assert payments == [(1, 'to-team'), (1, 'to-participant')]
+
+    @mock.patch('braintree.Transaction.sale')
+    def test_payin_doesnt_try_failed_cards(self, sale):
+        team = self.make_team('Gratiteam', is_approved=True)
+        self.obama_route.update_error('error')
+        self.obama.set_subscription_to(team, 1)
+
+        Payday.start().payin()
+        assert not sale.called
+
 
     # fetch_card_holds - fch
 
