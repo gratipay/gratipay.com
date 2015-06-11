@@ -29,7 +29,7 @@ class CreditCard:
                 expiration_month=card.expiration_month,
                 expiration_year=card.expiration_year,
                 cardholder_name=card.cardholder_name,
-                address_postal_code=card.billing_address.postal_code
+                address_postal_code=getattr(card.billing_address, 'postal_code', '')
             )
         else:
             assert route.network == 'balanced-cc'
