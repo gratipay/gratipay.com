@@ -199,7 +199,10 @@ def compute_output_csvs():
 
 
 def load_statuses():
-    _status_map = {'Completed': 'succeeded', 'Denied': 'failed'} # PayPal -> Gratipay
+    _status_map = { 'Completed': 'succeeded'
+                  , 'Unclaimed': 'pending'
+                  , 'Denied': 'failed'
+                   } # PayPal -> Gratipay
     statuses = {}
     fp = open(REPORT_CSV)
     for line in fp:
