@@ -260,7 +260,7 @@ prerequisites (the process known as provisioning) and show welcome message.
 
 The next time you run `vagrant up`, it will reuse the VM. Vagrant uses SSH
 based authentication. To login into VM use `vagrant ssh` command. If you're
-prompted for a password when logging in please use `vagrant`. 
+prompted for a password when logging in please use `vagrant`.
 
 **Mac users:** If you're prompted for a password during initial installation, it's sudo and you should enter your Mac OS password.
 
@@ -375,7 +375,7 @@ Local Database Setup
 
 For the best development experience, you need a local
 installation of [Postgres](http://www.postgresql.org/download/). The best
-version of Postgres to use is 9.3.2, because that's what we're using in
+version of Postgres to use is 9.3.5, because that's what we're using in
 production at Heroku. You need at least 9.2, because we depend on being able to
 specify a URI to `psql`, and that was added in 9.2.
 
