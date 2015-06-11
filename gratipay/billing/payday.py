@@ -542,7 +542,7 @@ class Payday(object):
             if p.notify_charge & i == 0:
                 continue
             username = p.username
-            ntippees, top_tippee = self.db.one("""
+            nteams, top_team = self.db.one("""
                 WITH tippees AS (
                          SELECT t.slug, amount
                            FROM ( SELECT DISTINCT ON (team) team, amount
@@ -563,18 +563,18 @@ class Payday(object):
                                     AND error = ''
                                 ) > 0
                      )
-                SELECT ( SELECT count(*) FROM tippees ) AS ntippees
+                SELECT ( SELECT count(*) FROM tippees ) AS nteams
                      , ( SELECT slug
                            FROM tippees
                        ORDER BY amount DESC
                           LIMIT 1
-                       ) AS top_tippee
+                       ) AS top_team
             """, locals())
             p.queue_email(
                 'charge_'+e.status,
                 exchange=dict(id=e.id, amount=e.amount, fee=e.fee, note=e.note),
-                ntippees=ntippees,
-                top_tippee=top_tippee,
+                nteams=nteams,
+                top_team=top_team,
             )
 
 
