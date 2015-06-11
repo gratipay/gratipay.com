@@ -5,6 +5,8 @@ from gratipay.utils import get_participant
 if not user.ADMIN:
     raise Response(400)
 
+request.allow('POST')
+
 to = request.body.get('to')
 if not to in ('true', 'false', None):
     raise Response(400)
