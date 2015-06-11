@@ -294,6 +294,15 @@ class TestPayin(BillingHarness):
         payments = self.db.all("SELECT amount, direction FROM payments")
         assert payments == [(1, 'to-team'), (1, 'to-participant')]
 
+    @mock.patch('braintree.Transaction.sale')
+    def test_payin_doesnt_try_failed_cards(self, sale):
+        team = self.make_team('Gratiteam', is_approved=True)
+        self.db.run("UPDATE exchange_routes SET error='error' WHERE participant = %s", (self.obama.id, ))
+        self.obama.set_subscription_to(team, 1)
+
+        Payday.start().payin()
+        assert not sale.called
+
 
     # fetch_card_holds - fch
 
