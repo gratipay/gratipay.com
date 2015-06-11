@@ -544,20 +544,27 @@ class Payday(object):
             username = p.username
             ntippees, top_tippee = self.db.one("""
                 WITH tippees AS (
-                         SELECT p.username, amount
-                           FROM ( SELECT DISTINCT ON (tippee) tippee, amount
-                                    FROM tips
+                         SELECT t.slug, amount
+                           FROM ( SELECT DISTINCT ON (team) team, amount
+                                    FROM subscriptions
                                    WHERE mtime < %(ts_start)s
-                                     AND tipper = %(username)s
-                                ORDER BY tippee, mtime DESC
-                                ) t
-                           JOIN participants p ON p.username = t.tippee
-                          WHERE t.amount > 0
-                            AND p.is_suspicious IS NOT true
-                            AND p.claimed_time < %(ts_start)s
+                                     AND subscriber = %(username)s
+                                ORDER BY team, mtime DESC
+                                ) s
+                           JOIN teams t ON s.team = t.slug
+                           JOIN participants p ON t.owner = p.username
+                          WHERE s.amount > 0
+                            AND t.is_approved IS true
+                            AND t.is_closed IS NOT true
+                            AND (SELECT count(*)
+                                   FROM exchange_routes er
+                                  WHERE er.participant = p.id
+                                    AND network IN ('balanced-ba', 'paypal')
+                                    AND error = ''
+                                ) > 0
                      )
                 SELECT ( SELECT count(*) FROM tippees ) AS ntippees
-                     , ( SELECT username
+                     , ( SELECT slug
                            FROM tippees
                        ORDER BY amount DESC
                           LIMIT 1
