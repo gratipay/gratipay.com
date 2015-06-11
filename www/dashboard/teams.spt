@@ -26,7 +26,7 @@ title = _("Fraud Review Dashboard - (Teams)")
         text-align: left;
         vertical-align: top;
     }
-    #details {
+    iframe {
         width: 70%;
         height: 100%;
         position: fixed;
@@ -38,17 +38,6 @@ title = _("Fraud Review Dashboard - (Teams)")
 <script>
     $(document).ready(function()
     {
-        // Details Pane
-
-        $("#details div").hide();
-
-        $('.nav-link').click(function () {
-            $parent = $(this).parent()
-            $("#details div").each(function () {
-                $parent.data('slug') == $(this).data('slug') ? $(this).show() : $(this).hide();
-            });
-        });
-
         Gratipay.forms.initCSRF();
 
         function error(a,b,c)
@@ -56,8 +45,6 @@ title = _("Fraud Review Dashboard - (Teams)")
             console.log(a,b,c);
             alert("Failed!");
         }
-
-        // Wireup buttons
 
         $('button').click(function()
         {
@@ -82,27 +69,12 @@ title = _("Fraud Review Dashboard - (Teams)")
     });
 </script>
 <h3>Unreviewed Accounts (N = {{ len(unreviewed) }})</h3>
-
 {% for team in unreviewed %}
 <div data-slug="{{ team.slug }}">
     <button class="good small selected">Good</button>
     <button class="bad small">Bad</button>
     &nbsp;
-    <a href="#" class="nav-link">{{ team.name }}</a>
+    <a href="/{{ team.slug }}/" target="drill-down">{{ team.name }}</a>
 </div>
 {% endfor %}
-
-<div id="details">
-    <h2> Details </h2>
-    {% for team in unreviewed %}
-    <div data-slug="{{ team.slug }}">
-        <b>Name</b>: {{ team.name }} <br />
-        <b>Slug</b>: {{ team.slug }} <br />
-        <b>Homepage</b>: {{ team.homepage }} <br />
-        <b>Product or Service</b>: {{ team.product_or_service }} <br />
-        <b>Getting Paid</b>: {{ team.getting_paid }} <br />
-        <b>Getting Involved</b>: {{ team.getting_involved }} <br />
-        <b>Owner</b>: <a href="/{{team.owner}}" target="_blank">{{ team.owner }}</a>
-    </div>
-    {% endfor %}
-</div>
+<iframe name="drill-down"></iframe>
