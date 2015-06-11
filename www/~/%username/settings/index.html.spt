@@ -61,16 +61,20 @@ emails = participant.get_emails()
                   {% if user.ADMIN and participant.balance > 0 %}
                     {% if participant.status_of_1_0_balance == 'pending-payout' %}
                     <td class="account-action">
-                        Payout Pending
-                        <a class="button auth-button" href="">
-                            Undo
-                        </a>
+                        <form action='../old-balance-status' method='POST'>
+                            Payout Pending
+                            <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
+                            <input name="to" type="hidden" value="unresolved" />
+                            <button type='submit'>Undo</button>
+                        </form>
                     </td>
                     {% elif participant.status_of_1_0_balance == 'unresolved' %}
                     <td class="account-action">
-                        <a class="button auth-button" href="">
-                            Clear for Payout
-                        </a>
+                        <form action='../old-balance-status' method='POST'>
+                            <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
+                            <input name="to" type="hidden" value="pending-payout" />
+                            <button type='submit'>Clear for payout</button>
+                        </form>
                     </td>
                     {% endif %}
                   {% endif %}
