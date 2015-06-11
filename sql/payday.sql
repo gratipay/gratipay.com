@@ -10,7 +10,7 @@ CREATE TABLE payday_participants AS
          , is_suspicious
          , false AS card_hold_ok
          , ( SELECT count(*)
-               FROM exchange_routes r
+               FROM current_exchange_routes r
               WHERE r.participant = p.id
                 AND network = 'braintree-cc'
                 AND error = ''
