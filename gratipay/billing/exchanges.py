@@ -302,7 +302,7 @@ def get_ready_payout_routes_by_network(db, network):
            AND r.network = %s
            AND (
 
-                ---- Include team owners
+                ----- Include team owners
 
                 (SELECT count(*)
                    FROM teams t
@@ -312,14 +312,14 @@ def get_ready_payout_routes_by_network(db, network):
                  ) > 0
 
 
-                OR ---- Include green-lit Gratipay 1.0 balances
+                OR -- Include green-lit Gratipay 1.0 balances
 
                 p.status_of_1_0_balance='pending-payout'
 
 
-                ---- TODO: Include members on payroll once process_payroll is implemented
-               )
+                ----- TODO: Include members on payroll once process_payroll is implemented
 
+               )
     """, (network,))
 
     # Work around lack of proper nesting in postgres.orm.
