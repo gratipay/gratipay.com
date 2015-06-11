@@ -293,6 +293,44 @@ def _prep_hit(unrounded):
     return cents, amount_str, upcharged, fee
 
 
+def get_ready_payout_routes_by_network(db, network):
+    hack = db.all("""
+        SELECT p.*::participants, r.*::exchange_routes
+          FROM participants p
+          JOIN current_exchange_routes r ON p.id = r.participant
+         WHERE p.balance > 0
+           AND r.network = %s
+           AND (
+
+                ----- Include team owners
+
+                (SELECT count(*)
+                   FROM teams t
+                  WHERE t.owner = p.username
+                    AND t.is_approved IS TRUE
+                    AND t.is_closed IS NOT TRUE
+                 ) > 0
+
+
+                OR -- Include green-lit Gratipay 1.0 balances
+
+                p.status_of_1_0_balance='pending-payout'
+
+
+                ----- TODO: Include members on payroll once process_payroll is implemented
+
+               )
+    """, (network,))
+
+    # Work around lack of proper nesting in postgres.orm.
+    out = []
+    for participant, route in hack:
+        route.__dict__['participant'] = participant
+        out.append(route)
+
+    return out
+
+
 def record_exchange(db, route, amount, fee, participant, status, error=None):
     """Given a Bunch of Stuff, return an int (exchange_id).
 

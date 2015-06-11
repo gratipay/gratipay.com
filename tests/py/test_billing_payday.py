@@ -602,6 +602,42 @@ class TestPayout(Harness):
         payday = self.fetch_payday()
         assert payday['nach_failing'] == 1
 
+    @mock.patch('gratipay.billing.payday.ach_credit')
+    def test_payout_pays_out_Gratipay_1_0_balance(self, ach):
+        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
+                                      balanced_customer_href='foo', last_ach_result='',
+                                      balance=20, status_of_1_0_balance='pending-payout')
+        Payday.start().payout()
+
+        assert ach.call_count == 1
+        assert ach.call_args_list[0][0][1].id == alice.id
+        assert ach.call_args_list[0][0][2] == 0
+
+    @mock.patch('balanced.BankAccount.credit')
+    def test_paying_out_sets_1_0_status_to_resolved(self, credit):
+        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
+                                      balanced_customer_href='foo', last_ach_result='',
+                                      balance=0, status_of_1_0_balance='pending-payout')
+        self.make_exchange('balanced-cc', 20, 0, alice)  # sets balance, and satisfies self_check
+        Payday.start().payout()
+        alice = Participant.from_username('alice')
+        assert alice.status_of_1_0_balance == 'resolved'
+        assert alice.balance == 0
+
+    @mock.patch('balanced.BankAccount.credit')
+    def test_payout_ignores_unresolved(self, credit):
+        bob = self.make_participant('bob', claimed_time='now', is_suspicious=False,
+                                    balanced_customer_href='foo', last_ach_result='',
+                                    balance=13, status_of_1_0_balance='unresolved')
+        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
+                                      balanced_customer_href='foo', last_ach_result='',
+                                      balance=0, status_of_1_0_balance='pending-payout')
+        self.make_exchange('balanced-cc', 20, 0, alice)
+        Payday.start().payout()
+        bob = Participant.from_username('bob')
+        assert bob.status_of_1_0_balance == 'unresolved'
+        assert bob.balance == 13
+
 
 class TestNotifyParticipants(EmailHarness):
 
