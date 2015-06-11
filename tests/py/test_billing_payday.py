@@ -570,8 +570,8 @@ class TestNotifyParticipants(EmailHarness):
     def test_it_notifies_participants(self):
         kalel = self.make_participant('kalel', claimed_time='now', is_suspicious=False,
                                       email_address='kalel@example.net', notify_charge=3)
-        lily = self.make_participant('lily', claimed_time='now', is_suspicious=False)
-        kalel.set_tip_to(lily, 10)
+        team = self.make_team('Gratiteam', is_approved=True)
+        kalel.set_subscription_to(team, 10)
 
         for status in ('failed', 'succeeded'):
             payday = Payday.start()
@@ -584,3 +584,4 @@ class TestNotifyParticipants(EmailHarness):
 
             Participant.dequeue_emails()
             assert self.get_last_email()['to'][0]['email'] == 'kalel@example.net'
+            assert 'Gratiteam' in self.get_last_email()['text']
