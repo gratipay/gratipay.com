@@ -138,7 +138,7 @@ def compute_input_csv():
                     AND t.is_approved IS TRUE
                     AND t.is_closed IS NOT TRUE
                 ) > 0
-               OR p.status_of_1_0_balance='pending-release')
+               OR p.status_of_1_0_balance='pending-payday')
 
       ORDER BY p.balance DESC
 
