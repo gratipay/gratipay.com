@@ -268,6 +268,25 @@ class TestPayin(BillingHarness):
             return payday.create_card_holds(cursor)
 
 
+    @mock.patch('braintree.Transaction.sale')
+    def test_payin_pays_in(self, sale):
+        team = self.make_team('Gratiteam', is_approved=True)
+        self.obama.set_subscription_to(team, 1)
+
+        txn = braintree.Transaction(None, { 'amount': 1
+                                          , 'tax_amount': 0
+                                          , 'status': 'authorized'
+                                          , 'custom_fields': {'participant_id': self.obama.id}
+                                          , 'credit_card': {'token': self.obama_route.address}
+                                           })
+        sale.return_value.transaction = txn
+        sale.return_value.is_success = True
+
+        Payday.start().payin()
+        payments = self.db.all("SELECT amount FROM payments")
+        assert payments == [1]
+
+
     # fetch_card_holds - fch
 
     def test_fch_returns_an_empty_dict_when_there_are_no_card_holds(self):
