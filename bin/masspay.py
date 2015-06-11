@@ -132,12 +132,13 @@ def compute_input_csv():
           ---- Only include team owners
           ---- TODO: Include members on payroll once process_payroll is implemented
 
-           AND ( SELECT count(*)
+           AND (( SELECT count(*)
                    FROM teams t
                   WHERE t.owner = p.username
                     AND t.is_approved IS TRUE
                     AND t.is_closed IS NOT TRUE
-               ) > 0
+                ) > 0
+               OR p.status_of_1_0_balance='pending-release')
 
       ORDER BY p.balance DESC
 

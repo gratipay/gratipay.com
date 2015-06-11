@@ -567,8 +567,8 @@ class TestPayout(Harness):
     @mock.patch('gratipay.billing.payday.ach_credit')
     def test_payout_pays_out_Gratipay_1_0_balance(self, ach):
         alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                              balanced_customer_href='foo',
-                              last_ach_result='')
+                                      balanced_customer_href='foo', last_ach_result='',
+                                      balance=20, status_of_1_0_balance='pending-release')
         Payday.start().payout()
 
         assert ach.call_count == 1
