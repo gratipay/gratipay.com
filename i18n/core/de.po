@@ -239,7 +239,7 @@ msgid "Delete"
 msgstr ""
 
 msgid "Edit"
-msgstr "Edieren"
+msgstr "Editieren"
 
 msgid "Jump to {0} from {1}"
 msgstr "Springe von {1} zu {0}"
