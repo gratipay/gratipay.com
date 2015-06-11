@@ -5,7 +5,6 @@
 
 Route           | Provider   | Fee          | When       | Details
 ----------------+------------+--------------+------------+----------
-Credit Card     | Balanced   | 2.9% + 30¢   | At payday  | $10 min
 Bitcoin         | Coinbase   | 1% + 15¢     | On request |
 
 # https://gratipay.com/about/faq#how-add-funds
@@ -15,8 +14,15 @@ Bitcoin         | Coinbase   | 1% + 15¢     | On request |
 
 Route           | Provider   | Fee          | When       | Details
 ----------------+------------+--------------+------------+-----------
-Bank Account    | Balanced   | 0            | At payday  | U.S. only
 Paypal          |            | max(2%, $20) | At payday  |
 Bitcoin         |            | 1% + 15¢     | On request |
 
 # https://gratipay.com/about/faq#how-withdraw-funds
+
+
+#### Deserted
+
+What       | When       | Why
+-----------+------------+-----------------
+Balanced   | 2015-06-11 | Service shutdown
+
