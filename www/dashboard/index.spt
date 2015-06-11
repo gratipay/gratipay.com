@@ -54,7 +54,7 @@ title = _("Fraud Review Dashboard")
             var row = $(this).parent();
             var to = $(this).text() !== 'Good';
             var username = row.attr('username');
-            var url = "/" + username + "/toggle-is-suspicious.json";
+            var url = "/~" + username + "/toggle-is-suspicious.json";
 
             function success()
             {
