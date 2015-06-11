@@ -267,9 +267,11 @@ class TestPayin(BillingHarness):
             payday.prepare(cursor, payday.ts_start)
             return payday.create_card_holds(cursor)
 
+    @mock.patch.object(Payday, 'fetch_card_holds')
     @mock.patch('braintree.Transaction.submit_for_settlement')
     @mock.patch('braintree.Transaction.sale')
-    def test_payin_pays_in(self, sale, sfs):
+    def test_payin_pays_in(self, sale, sfs, fch):
+        fch.return_value = {}
         team = self.make_team('Gratiteam', is_approved=True)
         self.obama.set_subscription_to(team, 1)
 
