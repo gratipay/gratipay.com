@@ -40,7 +40,7 @@ CREATE TABLE payday_teams AS
        AND p.is_closed IS NOT true
        AND p.is_suspicious IS NOT true
        AND (SELECT count(*)
-              FROM exchange_routes er
+              FROM current_exchange_routes er
              WHERE er.participant = p.id
                AND network IN ('balanced-ba', 'paypal')
                AND error = ''
