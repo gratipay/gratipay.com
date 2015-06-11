@@ -19,7 +19,8 @@ import braintree
 import aspen.utils
 from aspen import log
 from gratipay.billing.exchanges import (
-    ach_credit, cancel_card_hold, capture_card_hold, create_card_hold, upcharge
+    ach_credit, cancel_card_hold, capture_card_hold, create_card_hold, upcharge,
+    get_ready_payout_routes_by_network
 )
 from gratipay.exceptions import NegativeBalance
 from gratipay.models import check_db
@@ -406,35 +407,17 @@ class Payday(object):
         bank accounts of participants.
         """
         log("Starting payout loop.")
-        participants = self.db.all("""
-            SELECT p.*::participants
-              FROM exchange_routes r
-              JOIN participants p ON p.id = r.participant
-             WHERE r.network = 'balanced-ba'
-               AND p.balance > 0
-
-          ---- Only include team owners
-          ---- TODO: Include members on payroll once process_payroll is implemented
-
-               AND (( SELECT count(*)
-                       FROM teams t
-                      WHERE t.owner = p.username
-                        AND t.is_approved IS TRUE
-                        AND t.is_closed IS NOT TRUE
-                    ) > 0
-                   OR p.status_of_1_0_balance='pending-payout')
-
-        """)
-        def credit(participant):
-            if participant.is_suspicious is None:
-                log("UNREVIEWED: %s" % participant.username)
+        routes = get_ready_payout_routes_by_network(self.db, 'balanced-ba')
+        def credit(route):
+            if route.participant.is_suspicious is None:
+                log("UNREVIEWED: %s" % route.participant.username)
                 return
-            withhold = participant.giving
-            error = ach_credit(self.db, participant, withhold)
+            withhold = route.participant.giving
+            error = ach_credit(self.db, route.participant, withhold)
             if error:
                 self.mark_ach_failed()
-        threaded_map(credit, participants)
-        log("Did payout for %d participants." % len(participants))
+        threaded_map(credit, routes)
+        log("Did payout for %d participants." % len(routes))
         self.db.self_check()
         log("Checked the DB.")
 

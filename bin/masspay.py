@@ -29,6 +29,7 @@ from decimal import Decimal as D, ROUND_HALF_UP
 
 import requests
 from gratipay import wireup
+from gratipay.billing.exchanges import get_ready_payout_routes_by_network
 from httplib import IncompleteRead
 
 
@@ -121,50 +122,29 @@ class Payee(object):
 
 def compute_input_csv():
     db = wireup.db(wireup.env())
-    participants = db.all("""
-
-        SELECT p.*, r.address AS paypal_email, r.fee_cap AS paypal_fee_cap
-          FROM exchange_routes r
-          JOIN participants p ON p.id = r.participant
-         WHERE r.network = 'paypal'
-           AND p.balance > 0
-
-          ---- Only include team owners
-          ---- TODO: Include members on payroll once process_payroll is implemented
-
-           AND (( SELECT count(*)
-                   FROM teams t
-                  WHERE t.owner = p.username
-                    AND t.is_approved IS TRUE
-                    AND t.is_closed IS NOT TRUE
-                ) > 0
-               OR p.status_of_1_0_balance='pending-payout')
-
-      ORDER BY p.balance DESC
-
-    """)
+    routes = get_ready_payout_routes_by_network(db, 'paypal')
     writer = csv.writer(open(INPUT_CSV, 'w+'))
     print_rule(88)
     headers = "username", "email", "fee cap", "balance", "tips", "amount"
     print("{:<24}{:<32} {:^7} {:^7} {:^7} {:^7}".format(*headers))
     print_rule(88)
     total_gross = 0
-    for participant in participants:
-        total = participant.giving
-        amount = participant.balance - total
+    for route in routes:
+        total = route.participant.giving
+        amount = route.participant.balance - total
         if amount < 0.50:
             # Minimum payout of 50 cents. I think that otherwise PayPal upcharges to a penny.
             # See https://github.com/gratipay/gratipay.com/issues/1958.
             continue
         total_gross += amount
-        print("{:<24}{:<32} {:>7} {:>7} {:>7} {:>7}".format( participant.username
-                                                           , participant.paypal_email
-                                                           , participant.paypal_fee_cap
-                                                           , participant.balance
+        print("{:<24}{:<32} {:>7} {:>7} {:>7} {:>7}".format( route.participant.username
+                                                           , route.address
+                                                           , route.fee_cap
+                                                           , route.participant.balance
                                                            , total
                                                            , amount
                                                             ))
-        row = (participant.username, participant.paypal_email, participant.paypal_fee_cap, amount)
+        row = (route.username, route.address, route.fee_cap, amount)
         writer.writerow(row)
     print(" "*80, "-"*7)
     print("{:>88}".format(total_gross))
