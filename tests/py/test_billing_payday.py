@@ -299,7 +299,7 @@ class TestPayin(BillingHarness):
     @mock.patch('braintree.Transaction.sale')
     def test_payin_doesnt_try_failed_cards(self, sale):
         team = self.make_team('Gratiteam', is_approved=True)
-        self.db.run("UPDATE exchange_routes SET error='error' WHERE participant = %s", (self.obama.id, ))
+        self.obama_route.update_error('error')
         self.obama.set_subscription_to(team, 1)
 
         Payday.start().payin()
