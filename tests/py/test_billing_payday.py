@@ -564,6 +564,17 @@ class TestPayout(Harness):
         payday = self.fetch_payday()
         assert payday['nach_failing'] == 1
 
+    @mock.patch('gratipay.billing.payday.ach_credit')
+    def test_payout_pays_out_Gratipay_1_0_balance(self, ach):
+        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
+                              balanced_customer_href='foo',
+                              last_ach_result='')
+        Payday.start().payout()
+
+        assert ach.call_count == 1
+        assert ach.call_args_list[0][0][1].id == alice.id
+        assert ach.call_args_list[0][0][2] == 0
+
 
 class TestNotifyParticipants(EmailHarness):
 
