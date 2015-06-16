@@ -24,6 +24,8 @@ subhead = _("Do Not Track")
     ('http://donottrack.us/images/safari_dnt.png', 'Safari'),
     ('https://support.google.com/chrome/answer/114836', 'Chrome'),
     ('http://www.opera.com/help/tutorials/security/control/#referrer', 'Opera'),
+    ('https://support.twitter.com/articles/20169453-twitter-supports-do-not-track', 'Twitter'),
+    ('https://en.gravatar.com/support/gravatar-locations/', 'Gravatar')
     ] %}
     {% for page in pages %}
         <a href="{{ page[0] }}">{{ page[1] }}</a>&nbsp;&nbsp;
