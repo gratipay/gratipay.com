@@ -22,6 +22,7 @@
     {% set giving_str = '[' + _('hidden') + ']' if anon_giving else format_currency(g, "USD") %}
     {% set receiving_str = '[' + _('hidden') + ']' if anon_receiving else format_currency(r, "USD") %}
 
+    <!--
     <table>
         <tr>
             <td class="left">{{ _('Gives') }}</td>
@@ -34,6 +35,7 @@
             </td>
         </tr>
     </table>
+    -->
 
     {% if participant.claimed_time %}
     <p>{{ _('Joined') }} {{ to_age(participant.claimed_time, add_direction=True) }}.</p>

@@ -7,6 +7,13 @@ subhead = _("Teams")
 {% block content %}
 <div class="col0">
 
+<div><img src="{{ website.asset('under-construction.png') }}"></div>
+
+<a href="https://github.com/gratipay/gratipay.com/issues/3433">More info ...</a>
+
+
+
+<!--
 <p>On Gratipay you will find users, communities and teams. Teams are sets of
 people working towards a common goal. A team can represent an open-source
 software project, a small time indie magazine publisher, a set of YouTubers
@@ -112,6 +119,7 @@ they need to be added back by the team owner. The team owner can drop members
 from the team as well, in the case of broken trust or stagnant membership.
 However, even the team owner can’t otherwise set takes. Only a member can change
 their own take.</p>
+-->
 
 </div>
 {% endblock %}
