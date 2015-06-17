@@ -1339,11 +1339,11 @@ msgstr "Documentation de l'API"
 msgid "Privacy"
 msgstr "Confidentialité"
 
-msgid "Hide total giving from others."
-msgstr "Ne pas publier la somme que je donne chaque semaine."
+msgid "Hide total giving to others."
+msgstr ""
 
-msgid "Hide total receiving from others."
-msgstr "Ne pas publier la somme que je reçois chaque semaine."
+msgid "Hide total received from others."
+msgstr ""
 
 msgid "Hide myself from search results."
 msgstr "Ne pas autoriser l'indexation de mon profil par les moteurs de recherches."

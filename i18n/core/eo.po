@@ -1335,11 +1335,11 @@ msgstr "API dokumentojn"
 msgid "Privacy"
 msgstr "Privateco"
 
-msgid "Hide total giving from others."
-msgstr "Kaŝi entute dankesprimas for de aliaj."
+msgid "Hide total giving to others."
+msgstr ""
 
-msgid "Hide total receiving from others."
-msgstr "Kaŝi entute ricevo for de aliaj."
+msgid "Hide total received from others."
+msgstr ""
 
 msgid "Hide myself from search results."
 msgstr "Kaŝi min mem disde serĉrezultoj."

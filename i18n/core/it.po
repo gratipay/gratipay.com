@@ -1336,11 +1336,11 @@ msgstr "Documenti API"
 msgid "Privacy"
 msgstr "Privacy"
 
-msgid "Hide total giving from others."
-msgstr "Nascondi agli altri il totale donato."
+msgid "Hide total giving to others."
+msgstr ""
 
-msgid "Hide total receiving from others."
-msgstr "Nascondi agli altri il totale ricevuto."
+msgid "Hide total received from others."
+msgstr ""
 
 msgid "Hide myself from search results."
 msgstr "Nascondimi dai risultati di ricerca."

@@ -1338,11 +1338,11 @@ msgstr "API docs"
 msgid "Privacy"
 msgstr "Privacy"
 
-msgid "Hide total giving from others."
-msgstr "Verberg totaal gegeven voor anderen."
+msgid "Hide total giving to others."
+msgstr ""
 
-msgid "Hide total receiving from others."
-msgstr "Verberg totaal ontvangen voor anderen."
+msgid "Hide total received from others."
+msgstr ""
 
 msgid "Hide myself from search results."
 msgstr "Verberg mijzelf in de zoekresultaten"

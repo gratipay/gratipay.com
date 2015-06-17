@@ -239,7 +239,7 @@ msgid "Delete"
 msgstr ""
 
 msgid "Edit"
-msgstr "Editieren"
+msgstr "Edieren"
 
 msgid "Jump to {0} from {1}"
 msgstr "Springe von {1} zu {0}"
@@ -1343,11 +1343,11 @@ msgstr "API Dokumentation"
 msgid "Privacy"
 msgstr "Datenschutz"
 
-msgid "Hide total giving from others."
-msgstr "Gesamtbetrag an gegebenem Geld verstecken"
+msgid "Hide total giving to others."
+msgstr ""
 
-msgid "Hide total receiving from others."
-msgstr "Gesamtbetrag an erhaltenem Geld verstecken"
+msgid "Hide total received from others."
+msgstr ""
 
 msgid "Hide myself from search results."
 msgstr ""
