@@ -198,14 +198,14 @@ emails = participant.get_emails()
             <label>
                 <input type="checkbox" data-field="anonymous_giving"
                     {% if participant.anonymous_giving %}checked="true"{% endif %} />
-                    {{ _("Hide total giving from others.") }}
+                    {{ _("Hide total giving to others.") }}
             </label>
             <br />
             {% if participant.IS_SINGULAR %}
             <label>
                 <input type="checkbox" data-field="anonymous_receiving"
                     {% if participant.anonymous_receiving %}checked="true"{% endif %} />
-                    {{ _("Hide total receiving from others.") }}
+                    {{ _("Hide total received from others.") }}
             </label>
             <br />
             {% endif %}
