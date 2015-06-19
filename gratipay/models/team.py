@@ -1,5 +1,6 @@
 """Teams on Gratipay receive payments and distribute payroll.
 """
+import requests
 from postgres.orm import Model
 
 status_icons = { "unreviewed": "&#9995;"
@@ -70,7 +71,25 @@ class Team(Model):
 
 
     def generate_review_url(self):
-        review_url = "https://github.com/gratipay/inside.gratipay.com/issues/270"
+
+        import json, os
+        auth = (os.environ['TEAM_REVIEW_USERNAME'], os.environ['TEAM_REVIEW_TOKEN'])
+        data = json.dumps({ "title": "review {}".format(self.name)
+                          , "body": "https://gratipay.com/{}/".format(self.slug)
+                          , "labels": ["Review"]
+                           })
+        r = requests.post( "https://api.github.com/repos/gratipay/inside.gratipay.com/issues"
+                         , auth=auth
+                         , data=data
+                          )
+        if r.status_code != 201:
+            raise
+
+        review_url = r.json()['html_url']
+        return self.update_review_url(review_url)
+
+
+    def update_review_url(self, review_url):
         self.db.run("UPDATE teams SET review_url=%s WHERE id=%s", (review_url, self.id))
         self.set_attributes(review_url=review_url)
         return review_url
