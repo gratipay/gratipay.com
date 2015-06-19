@@ -57,6 +57,7 @@ class TestTeams(Harness):
         assert team.product_or_service == 'We make widgets.'
         assert team.onboarding_url == 'http://inside.gratipay.com/'
         assert team.todo_url == 'https://github.com/gratipay'
+        assert team.review_url is None
 
     def test_casing_of_urls_survives(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
