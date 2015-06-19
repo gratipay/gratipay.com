@@ -76,9 +76,8 @@ class Team(Model):
         auth = (os.environ['TEAM_REVIEW_USERNAME'], os.environ['TEAM_REVIEW_TOKEN'])
         data = json.dumps({ "title": "review {}".format(self.name)
                           , "body": "https://gratipay.com/{}/".format(self.slug)
-                          , "labels": ["Review"]
                            })
-        r = requests.post( "https://api.github.com/repos/gratipay/inside.gratipay.com/issues"
+        r = requests.post( "https://api.github.com/repos/gratipay/review/issues"
                          , auth=auth
                          , data=data
                           )
