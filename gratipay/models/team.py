@@ -82,7 +82,9 @@ class Team(Model):
                          , data=data
                           )
         if r.status_code != 201:
-            raise
+            print(r.status_code)
+            print(r.text)
+            raise Heck
 
         review_url = r.json()['html_url']
         return self.update_review_url(review_url)
