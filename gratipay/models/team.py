@@ -73,7 +73,7 @@ class Team(Model):
     def generate_review_url(self):
 
         import json, os
-        auth = (os.environ['TEAM_REVIEW_USERNAME'], os.environ['TEAM_REVIEW_TOKEN'])
+        auth = (os.environ['REVIEW_USERNAME'], os.environ['REVIEW_TOKEN'])
         data = json.dumps({ "title": "review {}".format(self.name)
                           , "body": "https://gratipay.com/{}/".format(self.slug)
                            })
