@@ -1,0 +1,3 @@
+BEGIN;
+    ALTER TABLE teams ADD COLUMN review_url text DEFAULT NULL;
+END;
