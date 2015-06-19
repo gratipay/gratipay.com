@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import json
 import pytest
 from decimal import Decimal
 
@@ -50,7 +51,7 @@ class TestTeams(Harness):
         team = self.db.one("SELECT * FROM teams")
         assert team
         assert team.owner == 'alice'
-        assert r['review_url'] == team.review_url
+        assert json.loads(r.body)['review_url'] == team.review_url
 
     def test_all_fields_persist(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')

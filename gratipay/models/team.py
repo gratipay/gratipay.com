@@ -68,6 +68,14 @@ class Team(Model):
 
         """, fields)
 
+
+    def generate_review_url(self):
+        review_url = "https://github.com/gratipay/inside.gratipay.com/issues/270"
+        self.db.run("UPDATE teams SET review_url=%s WHERE id=%s", (review_url, self.id))
+        self.set_attributes(review_url=review_url)
+        return review_url
+
+
     def get_og_title(self):
         out = self.name
         receiving = self.receiving
