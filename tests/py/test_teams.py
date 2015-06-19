@@ -7,6 +7,9 @@ from gratipay.testing import Harness
 from gratipay.models.team import Team, AlreadyMigrated
 
 
+REVIEW_URL = "https://github.com/gratipay/inside.gratipay.com/issues/270"
+
+
 class TestTeams(Harness):
 
     valid_data = {
@@ -43,10 +46,11 @@ class TestTeams(Harness):
 
     def test_can_create_new_team(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
-        self.post_new(dict(self.valid_data))
+        r = self.post_new(dict(self.valid_data))
         team = self.db.one("SELECT * FROM teams")
         assert team
         assert team.owner == 'alice'
+        assert r['review_url'] == team.review_url
 
     def test_all_fields_persist(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
@@ -55,9 +59,7 @@ class TestTeams(Harness):
         assert team.name == 'Gratiteam'
         assert team.homepage == 'http://gratipay.com/'
         assert team.product_or_service == 'We make widgets.'
-        assert team.onboarding_url == 'http://inside.gratipay.com/'
-        assert team.todo_url == 'https://github.com/gratipay'
-        assert team.review_url is None
+        assert team.review_url == REVIEW_URL
 
     def test_casing_of_urls_survives(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
