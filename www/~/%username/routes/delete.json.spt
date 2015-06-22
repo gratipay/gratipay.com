@@ -18,7 +18,7 @@ if 'address' not in request.body:
 
 network = request.body['network']
 
-if network not in ['balanced-ba', 'balanced-cc', 'braintree-cc', 'paypal', 'bitcoin']:
+if network not in ['balanced-cc', 'braintree-cc', 'paypal', 'bitcoin']:
     raise Response(400, "invalid 'network' param.")
 
 route = ExchangeRoute.from_address(participant,

@@ -10,7 +10,6 @@ import pytest
 from aspen.utils import typecheck
 from gratipay.billing.exchanges import (
     _prep_hit,
-    ach_credit,
     cancel_card_hold,
     capture_card_hold,
     create_card_hold,
@@ -24,42 +23,6 @@ from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
 from gratipay.testing import Foobar, Harness
 from gratipay.testing.billing import BillingHarness
-
-
-class TestCredits(BillingHarness):
-
-    def test_ach_credit_withhold(self):
-        self.make_exchange('balanced-cc', 27, 0, self.homer)
-        withhold = D('1.00')
-        error = ach_credit(self.db, self.homer, withhold)
-        assert error == ''
-        homer = Participant.from_id(self.homer.id)
-        assert self.homer.balance == homer.balance == 1
-
-    def test_ach_credit_amount_under_minimum(self):
-        self.make_exchange('balanced-cc', 8, 0, self.homer)
-        r = ach_credit(self.db, self.homer, 0)
-        assert r is None
-
-    @mock.patch('gratipay.billing.exchanges.thing_from_href')
-    def test_ach_credit_failure(self, tfh):
-        tfh.side_effect = Foobar
-        self.make_exchange('balanced-cc', 20, 0, self.homer)
-        error = ach_credit(self.db, self.homer, D('1.00'))
-        homer = Participant.from_id(self.homer.id)
-        assert self.homer.get_bank_account_error() == error == "Foobar()"
-        assert self.homer.balance == homer.balance == 20
-
-    def test_ach_credit_no_bank_account(self):
-        self.make_exchange('balanced-cc', 20, 0, self.david)
-        error = ach_credit(self.db, self.david, D('1.00'))
-        assert error == 'No bank account'
-
-    def test_ach_credit_invalidated_bank_account(self):
-        bob = self.make_participant('bob', is_suspicious=False, balance=20,
-                                    last_ach_result='invalidated')
-        error = ach_credit(self.db, bob, D('1.00'))
-        assert error == 'No bank account'
 
 
 class TestCardHolds(BillingHarness):
@@ -289,7 +252,7 @@ class TestRecordExchange(Harness):
     def test_record_exchange_updates_balance_for_negative_amounts(self):
         alice = self.make_participant('alice', balance=50, last_ach_result='')
         record_exchange( self.db
-                       , ExchangeRoute.from_network(alice, 'balanced-ba')
+                       , ExchangeRoute.from_network(alice, 'paypal')
                        , amount=D('-35.84')
                        , fee=D('0.75')
                        , participant=alice
@@ -300,13 +263,13 @@ class TestRecordExchange(Harness):
 
     def test_record_exchange_fails_if_negative_balance(self):
         alice = self.make_participant('alice', last_ach_result='')
-        ba = ExchangeRoute.from_network(alice, 'balanced-ba')
+        ba = ExchangeRoute.from_network(alice, 'paypal')
         with pytest.raises(NegativeBalance):
             record_exchange(self.db, ba, D("-10.00"), D("0.41"), alice, 'pre')
 
     def test_record_exchange_result_restores_balance_on_error(self):
         alice = self.make_participant('alice', balance=30, last_ach_result='')
-        ba = ExchangeRoute.from_network(alice, 'balanced-ba')
+        ba = ExchangeRoute.from_network(alice, 'paypal')
         e_id = record_exchange(self.db, ba, D('-27.06'), D('0.81'), alice, 'pre')
         assert alice.balance == D('02.13')
         record_exchange_result(self.db, e_id, 'failed', 'SOME ERROR', alice)
@@ -315,7 +278,7 @@ class TestRecordExchange(Harness):
 
     def test_record_exchange_result_restores_balance_on_error_with_invalidated_route(self):
         alice = self.make_participant('alice', balance=37, last_ach_result='')
-        ba = ExchangeRoute.from_network(alice, 'balanced-ba')
+        ba = ExchangeRoute.from_network(alice, 'paypal')
         e_id = record_exchange(self.db, ba, D('-32.45'), D('0.86'), alice, 'pre')
         assert alice.balance == D('3.69')
         ba.update_error('invalidated')
@@ -326,7 +289,7 @@ class TestRecordExchange(Harness):
 
     def test_record_exchange_result_doesnt_restore_balance_on_success(self):
         alice = self.make_participant('alice', balance=50, last_ach_result='')
-        ba = ExchangeRoute.from_network(alice, 'balanced-ba')
+        ba = ExchangeRoute.from_network(alice, 'paypal')
         e_id = record_exchange(self.db, ba, D('-43.98'), D('1.60'), alice, 'pre')
         assert alice.balance == D('4.42')
         record_exchange_result(self.db, e_id, 'succeeded', None, alice)

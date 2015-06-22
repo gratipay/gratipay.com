@@ -203,10 +203,11 @@ class Harness(unittest.TestCase):
             """, (platform, participant.id, username, username))
 
         # Insert exchange routes
+        # XXX Refactor. We don't actually have last_{bill,ach}_result columns anymore.
         if 'last_bill_result' in kw:
             ExchangeRoute.insert(participant, 'balanced-cc', '/cards/foo', kw.pop('last_bill_result'))
         if 'last_ach_result' in kw:
-            ExchangeRoute.insert(participant, 'balanced-ba', '/bank_accounts/bar', kw.pop('last_ach_result'))
+            ExchangeRoute.insert(participant, 'paypal', 'foo@example.com', kw.pop('last_ach_result'))
 
         # Update participant
         if kw:

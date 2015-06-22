@@ -15,37 +15,6 @@ from gratipay.models.participant import Participant
 from gratipay.models.exchange_route import ExchangeRoute
 
 
-BALANCED_CLASSES = {
-    "bank_accounts": balanced.BankAccount,
-    "cards": balanced.Card,
-}
-
-BALANCED_LINKS = {
-    "bank_accounts": {
-        "bank_accounts.bank_account_verification": "/verifications/{bank_accounts.bank_account_verification}",
-        "bank_accounts.bank_account_verifications": "/bank_accounts/{bank_accounts.id}/verifications",
-        "bank_accounts.credits": "/bank_accounts/{bank_accounts.id}/credits",
-        "bank_accounts.customer": "/customers/{bank_accounts.customer}",
-        "bank_accounts.debits": "/bank_accounts/{bank_accounts.id}/debits",
-        "bank_accounts.settlements": "/bank_accounts/{bank_accounts.id}/settlements"
-    },
-    "cards": {
-        "cards.card_holds": "/cards/{cards.id}/card_holds",
-        "cards.customer": "/customers/{cards.customer}",
-        "cards.debits": "/cards/{cards.id}/debits",
-        "cards.disputes": "/cards/{cards.id}/disputes"
-    }
-}
-
-def thing_from_href(things, href):
-    """This is a temporary hack, we'll get rid of it when we migrate to Stripe.
-    """
-    id = href.rsplit('/', 1)[1]
-    d = {'href': href, 'id': id, 'links': {}, 'meta': {}}
-    C = BALANCED_CLASSES[things]
-    return C(**{things: [d], 'links': BALANCED_LINKS[things]})
-
-
 # Balanced has a $0.50 minimum. We go even higher to avoid onerous
 # per-transaction fees. See:
 # https://github.com/gratipay/gratipay.com/issues/167
@@ -83,74 +52,6 @@ def repr_exception(e):
         return '%s %s, %s' % (e.status_code, e.status, e.description)
     else:
         return repr(e)
-
-
-def ach_credit(db, participant, withhold, minimum_credit=MINIMUM_CREDIT):
-
-    # Compute the amount to credit them.
-    # ==================================
-    # Leave money in Gratipay to cover their obligations next week (as these
-    # currently stand).
-
-    balance = participant.balance
-    assert balance is not None, balance # sanity check
-    amount = balance - withhold
-
-    # Do some last-minute checks.
-    # ===========================
-
-    if amount <= 0:
-        return      # Participant not owed anything.
-
-    if amount < minimum_credit:
-        also_log = ""
-        if withhold > 0:
-            also_log = " ($%s balance - $%s in obligations)"
-            also_log %= (balance, withhold)
-        log("Minimum payout is $%s. %s is only due $%s%s."
-           % (minimum_credit, participant.username, amount, also_log))
-        return      # Participant owed too little.
-
-    if not participant.is_whitelisted:
-        raise NotWhitelisted      # Participant not trusted.
-
-    route = ExchangeRoute.from_network(participant, 'balanced-ba')
-    if not route:
-        return 'No bank account'
-
-
-    # Do final calculations.
-    # ======================
-
-    credit_amount, fee = skim_credit(amount)
-    cents = credit_amount * 100
-
-    if withhold > 0:
-        also_log = "$%s balance - $%s in obligations"
-        also_log %= (balance, withhold)
-    else:
-        also_log = "$%s" % amount
-    msg = "Crediting %s %d cents (%s - $%s fee = $%s) on Balanced ... "
-    msg %= (participant.username, cents, also_log, fee, credit_amount)
-
-
-    # Try to dance with Balanced.
-    # ===========================
-
-    e_id = record_exchange(db, route, -credit_amount, fee, participant, 'pre')
-    meta = dict(exchange_id=e_id, participant_id=participant.id)
-    try:
-        ba = thing_from_href('bank_accounts', route.address)
-        ba.credit(amount=cents, description=participant.username, meta=meta)
-        record_exchange_result(db, e_id, 'pending', None, participant)
-        log(msg + "succeeded.")
-        error = ""
-    except Exception as e:
-        error = repr_exception(e)
-        record_exchange_result(db, e_id, 'failed', error, participant)
-        log(msg + "failed: %s" % error)
-
-    return error
 
 
 def create_card_hold(db, participant, amount):

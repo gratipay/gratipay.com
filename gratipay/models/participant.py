@@ -328,8 +328,6 @@ class Participant(Model, MixinTeam):
             if disbursement_strategy == None:
                 pass  # No balance, supposedly. final_check will make sure.
             # XXX Bring me back!
-            #elif disbursement_strategy == 'bank':
-            #    self.withdraw_balance_to_bank_account()
             #elif disbursement_strategy == 'downstream':
             #    # This in particular needs to come before clear_tips_giving.
             #    self.distribute_balance_as_final_gift(cursor)
@@ -353,19 +351,6 @@ class Participant(Model, MixinTeam):
                      , dict(id=self.id, action='set', values=dict(is_closed=is_closed))
                       )
             self.set_attributes(is_closed=is_closed)
-
-    class BankWithdrawalFailed(Exception): pass
-
-    def withdraw_balance_to_bank_account(self):
-        from gratipay.billing.exchanges import ach_credit
-        error = ach_credit( self.db
-                          , self
-                          , Decimal('0.00') # don't withhold anything
-                          , Decimal('0.00') # send it all
-                           )
-        if error:
-            raise self.BankWithdrawalFailed(error)
-
 
     class NoOneToGiveFinalGiftTo(Exception): pass
 
@@ -718,8 +703,6 @@ class Participant(Model, MixinTeam):
     def add_signin_notifications(self):
         if not self.get_emails():
             self.add_notification('email_missing')
-        if self.get_bank_account_error():
-            self.add_notification('ba_withdrawal_failed')
         if self.get_credit_card_error():
             self.add_notification('credit_card_failed')
         elif self.credit_card_expiring():
@@ -763,9 +746,6 @@ class Participant(Model, MixinTeam):
     # Exchange-related stuff
     # ======================
 
-    def get_bank_account_error(self):
-        return getattr(ExchangeRoute.from_network(self, 'balanced-ba'), 'error', None)
-
     def get_credit_card_error(self):
         if self.braintree_customer_id:
             return getattr(ExchangeRoute.from_network(self, 'braintree-cc'), 'error', None)
@@ -785,32 +765,11 @@ class Participant(Model, MixinTeam):
 
     @property
     def has_payout_route(self):
-        for network in ('balanced-ba', 'paypal'):
+        for network in ('paypal',):
             route = ExchangeRoute.from_network(self, network)
             if route and not route.error:
                 return True
         return False
-
-    def get_balanced_account(self):
-        """Fetch or create the balanced account for this participant.
-        """
-        if not self.balanced_customer_href:
-            customer = balanced.Customer(meta={
-                'username': self.username,
-                'participant_id': self.id,
-            }).save()
-            r = self.db.one("""
-                UPDATE participants
-                   SET balanced_customer_href=%s
-                 WHERE id=%s
-                   AND balanced_customer_href IS NULL
-             RETURNING id
-            """, (customer.href, self.id))
-            if not r:
-                return self.get_balanced_account()
-        else:
-            customer = balanced.Customer.fetch(self.balanced_customer_href)
-        return customer
 
     def get_braintree_account(self):
         """Fetch or create a braintree account for this participant.
