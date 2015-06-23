@@ -37,17 +37,17 @@ class TestPayday(BillingHarness):
         self.db.run("""
             UPDATE participants
                SET is_suspicious = true
-             WHERE username = 'janet'
+             WHERE username = 'obama'
         """)
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.janet.set_subscription_to(team, '6.00')  # under $10!
+        self.obama.set_subscription_to(team, '6.00')  # under $10!
         fch.return_value = {}
         Payday.start().run()
 
-        janet = Participant.from_username('janet')
+        obama = Participant.from_username('obama')
         homer = Participant.from_username('homer')
 
-        assert janet.balance == D('0.00')
+        assert obama.balance == D('0.00')
         assert homer.balance == D('0.00')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
@@ -67,32 +67,6 @@ class TestPayday(BillingHarness):
 
         assert obama.balance == D('0.00')
         assert homer.balance == D('0.00')
-
-    @mock.patch.object(Payday, 'fetch_card_holds')
-    def test_payday_moves_money_with_balanced(self, fch):
-        team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_subscription_to(team, '15.00')
-        fch.return_value = {}
-        Payday.start().run()
-
-        obama = Participant.from_username('obama')
-        homer = Participant.from_username('homer')
-
-        assert obama.balance == D('0.00')
-        assert homer.balance == D('0.00')
-
-        #janet_customer = balanced.Customer.fetch(obama.balanced_customer_href)
-        homer_customer = balanced.Customer.fetch(homer.balanced_customer_href)
-
-        created_at = balanced.Transaction.f.created_at
-
-        credit = homer_customer.credits.sort(created_at.desc()).first()
-        assert credit.amount == 1500
-        assert credit.description == 'homer'
-
-        #debit = janet_customer.debits.sort(created_at.desc()).first()
-        #assert debit.amount == 1576  # base amount + fee
-        #assert debit.description == 'obama'
 
     @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
@@ -560,84 +534,6 @@ class TestPayin(BillingHarness):
         filename = open_.call_args_list[-1][0][0]
         assert filename.endswith('_payments.csv')
         os.unlink(filename)
-
-
-class TestPayout(Harness):
-
-    def test_payout_no_balanced_href_does_________what_question_mark(self):
-        self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                              balance=20)
-        Payday.start().payout()
-
-    @mock.patch('gratipay.billing.payday.ach_credit')
-    def test_payout_can_pay_out(self, ach):
-        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                              balanced_customer_href='foo',
-                              last_paypal_result='')
-        self.make_exchange('balanced-cc', 20, 0, alice)
-        self.make_team(owner='alice', is_approved=True)
-        Payday.start().payout()
-
-        assert ach.call_count == 1
-        assert ach.call_args_list[0][0][1].id == alice.id
-        assert ach.call_args_list[0][0][2] == 0
-
-    @mock.patch('gratipay.billing.payday.log')
-    def test_payout_skips_unreviewed(self, log):
-        self.make_participant('alice', claimed_time='now', is_suspicious=None,
-                              balance=20, balanced_customer_href='foo',
-                              last_paypal_result='')
-        self.make_team(owner='alice', is_approved=True)
-        Payday.start().payout()
-        log.assert_any_call('UNREVIEWED: alice')
-
-    @mock.patch('gratipay.billing.payday.ach_credit')
-    def test_payout_ach_error_gets_recorded(self, ach_credit):
-        self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                              balance=20, balanced_customer_href='foo',
-                              last_paypal_result='')
-        self.make_team(owner='alice', is_approved=True)
-        ach_credit.return_value = 'some error'
-        Payday.start().payout()
-        payday = self.fetch_payday()
-        assert payday['nach_failing'] == 1
-
-    @mock.patch('gratipay.billing.payday.ach_credit')
-    def test_payout_pays_out_Gratipay_1_0_balance(self, ach):
-        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                                      balanced_customer_href='foo', last_paypal_result='',
-                                      balance=20, status_of_1_0_balance='pending-payout')
-        Payday.start().payout()
-
-        assert ach.call_count == 1
-        assert ach.call_args_list[0][0][1].id == alice.id
-        assert ach.call_args_list[0][0][2] == 0
-
-    @mock.patch('balanced.BankAccount.credit')
-    def test_paying_out_sets_1_0_status_to_resolved(self, credit):
-        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                                      balanced_customer_href='foo', last_paypal_result='',
-                                      balance=0, status_of_1_0_balance='pending-payout')
-        self.make_exchange('balanced-cc', 20, 0, alice)  # sets balance, and satisfies self_check
-        Payday.start().payout()
-        alice = Participant.from_username('alice')
-        assert alice.status_of_1_0_balance == 'resolved'
-        assert alice.balance == 0
-
-    @mock.patch('balanced.BankAccount.credit')
-    def test_payout_ignores_unresolved(self, credit):
-        bob = self.make_participant('bob', claimed_time='now', is_suspicious=False,
-                                    balanced_customer_href='foo', last_paypal_result='',
-                                    balance=13, status_of_1_0_balance='unresolved')
-        alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                                      balanced_customer_href='foo', last_paypal_result='',
-                                      balance=0, status_of_1_0_balance='pending-payout')
-        self.make_exchange('balanced-cc', 20, 0, alice)
-        Payday.start().payout()
-        bob = Participant.from_username('bob')
-        assert bob.status_of_1_0_balance == 'unresolved'
-        assert bob.balance == 13
-
 
 class TestNotifyParticipants(EmailHarness):
 
