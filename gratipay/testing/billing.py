@@ -1,8 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import itertools
-
-import balanced
 import braintree
 from braintree.test.nonces import Nonces
 

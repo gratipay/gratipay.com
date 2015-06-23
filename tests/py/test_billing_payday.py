@@ -12,7 +12,7 @@ from gratipay.billing.exchanges import create_card_hold
 from gratipay.billing.payday import NoPayday, Payday
 from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
-from gratipay.testing import Foobar, Harness
+from gratipay.testing import Foobar
 from gratipay.testing.billing import BillingHarness
 from gratipay.testing.emails import EmailHarness
 

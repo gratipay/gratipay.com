@@ -10,14 +10,12 @@ import pytest
 from aspen.utils import typecheck
 from gratipay.billing.exchanges import (
     _prep_hit,
-    ach_credit,
     cancel_card_hold,
     capture_card_hold,
     create_card_hold,
     record_exchange,
     record_exchange_result,
-    skim_credit,
-    sync_with_balanced,
+    skim_credit
 )
 from gratipay.exceptions import NegativeBalance, NotWhitelisted
 from gratipay.models.exchange_route import ExchangeRoute
