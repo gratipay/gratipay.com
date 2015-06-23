@@ -39,44 +39,6 @@ class TestRoutes(BillingHarness):
         self.hit('roman', 'associate', 'braintree-cc', 'an-invalid-nonce', expected=400)
         assert self.roman.get_credit_card_error() is None
 
-    def test_associate_and_delete_bank_account_valid(self):
-        bank_account = balanced.BankAccount( name='Alice G. Krebs'
-                                           , routing_number='321174851'
-                                           , account_number='9900000001'
-                                           , account_type='checking'
-                                            ).save()
-        customer = self.david.get_balanced_account()
-        customer.merchant_status = 'underwritten'
-        with mock.patch.object(Participant, 'get_balanced_account') as gba:
-            gba.return_value = customer
-            self.hit('david', 'associate', 'balanced-ba', bank_account.href)
-
-        bank_accounts = customer.bank_accounts.all()
-        assert len(bank_accounts) == 1
-        assert bank_accounts[0].href == bank_account.href
-
-        assert self.david.get_bank_account_error() == ''
-        assert self.david.has_payout_route
-
-        self.hit('david', 'delete', 'balanced-ba', bank_account.href)
-
-        david = Participant.from_username('david')
-        route = ExchangeRoute.from_address(david, 'balanced-ba', bank_account.href)
-        assert route.error == david.get_bank_account_error() == 'invalidated'
-        assert david.balanced_customer_href
-
-        # Check that update_error doesn't update an invalidated route
-        route.update_error('some error')
-        assert route.error == david.get_bank_account_error() == 'invalidated'
-        assert not self.david.has_payout_route
-
-    @mock.patch.object(Participant, 'get_balanced_account')
-    def test_associate_bank_account_invalid(self, gba):
-        gba.return_value.merchant_status = 'underwritten'
-        self.hit('david', 'associate', 'balanced-ba', '/bank_accounts/BA123123123', expected=400)
-        assert self.david.get_bank_account_error() is None
-        assert not self.david.has_payout_route
-
     @mock.patch.object(Participant, 'send_email')
     def test_associate_paypal(self, mailer):
         mailer.return_value = 1 # Email successfully sent
@@ -102,17 +64,6 @@ class TestRoutes(BillingHarness):
     def test_associate_bitcoin_invalid(self):
         self.hit('david', 'associate', 'bitcoin', '12345', expected=400)
         assert not ExchangeRoute.from_network(self.david, 'bitcoin')
-
-    def test_bank_account_page(self):
-        expected = "add or change your bank account"
-        actual = self.client.GET('/~alice/routes/bank-account.html').body
-        assert expected in actual
-
-    def test_bank_account_page_auth(self):
-        self.make_participant('alice', claimed_time='now')
-        expected = '<em id="status">not connected</em>'
-        actual = self.client.GET('/~alice/routes/bank-account.html', auth_as='alice').body
-        assert expected in actual
 
     def test_credit_card_page(self):
         self.make_participant('alice', claimed_time='now')

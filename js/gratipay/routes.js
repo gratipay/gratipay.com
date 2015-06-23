@@ -62,65 +62,6 @@ Gratipay.routes.associate = function (network, address) {
 };
 
 
-// Bank Accounts
-// =============
-
-Gratipay.routes.ba = {};
-
-Gratipay.routes.ba.init = function() {
-    Gratipay.routes.init();
-
-    // Lazily depend on Balanced.
-    Gratipay.routes.lazyLoad("https://js.balancedpayments.com/1.1/balanced.min.js")
-
-    $('form#bank-account').submit(Gratipay.routes.ba.submit);
-};
-
-Gratipay.routes.ba.submit = function (e) {
-    e.preventDefault();
-
-    $('button#save').prop('disabled', true);
-    Gratipay.forms.clearInvalid($(this));
-
-    var bankAccount = {
-        name: $('#account_name').val(),
-        account_number: $('#account_number').val(),
-        account_type: $('#account_type').val(),
-        routing_number: $('#routing_number').val()
-    };
-
-    // Validate routing number.
-    if (bankAccount.routing_number) {
-        if (!balanced.bankAccount.validateRoutingNumber(bankAccount.routing_number)) {
-            Gratipay.forms.setInvalid($('#routing_number'));
-            Gratipay.forms.focusInvalid($(this));
-            $('button#save').prop('disabled', false);
-            return false
-        }
-    }
-
-    // Okay, send the data to Balanced.
-    balanced.bankAccount.create(bankAccount, function (response) {
-        if (response.status_code !== 201) {
-            return Gratipay.routes.ba.onError(response);
-        }
-
-        /* The request to tokenize the thing succeeded. Now we need to associate it
-         * to the Customer on Balanced and to the participant in our DB.
-         */
-        Gratipay.routes.associate('balanced-ba', response.bank_accounts[0].href);
-    });
-};
-
-Gratipay.routes.ba.onError = function(response) {
-    $('button#save').prop('disabled', false);
-    var msg = response.status_code + ": " +
-        $.map(response.errors, function(obj) { return obj.description }).join(', ');
-    Gratipay.notification(msg, 'error', -1);
-    return msg;
-};
-
-
 // Credit Cards
 // ============
 
