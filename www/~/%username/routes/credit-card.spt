@@ -114,9 +114,9 @@ else:
             and <a href="https://www.paypal.com/us/webapps/mpp/ua/privacy-full">Privacy Policy</a> (NB: The PayPal Privacy Policy applies to your usage of the Braintree Services).
         </p>
 
-        <a href="https://www.braintreegateway.com/merchants/ddnq29fv74cqxwkg/verified" target="_blank">
-  <img src="https://s3.amazonaws.com/braintree-badges/braintree-badge-dark.png" width="164px" height ="44px" border="0"/>
-</a>
+        <a href="https://www.braintreegateway.com/merchants/msjyyvtsvvnc4ny6/verified" target="_blank">
+            <img src="https://s3.amazonaws.com/braintree-badges/braintree-badge-dark.png" width="164px" height ="44px" border="0"/>
+        </a>
     </div>
     {% endif %}
 {% endblock %}
