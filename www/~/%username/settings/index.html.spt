@@ -122,25 +122,6 @@ emails = participant.get_emails()
             </h2>
             <table class="accounts">
                 <tr>
-                    {% set ba_error = participant.get_bank_account_error() %}
-                    <td class="account-type">
-                        <img src="{{ website.asset('bank_account_icon.jpg') }}" />
-                    </td>
-                    <td class="account-details">
-                        <div class="account-type">{{ _("Bank Account") }}</div>
-                        {% if ba_error == "" %}
-                            {{ _("Your bank account is {0}working{1}", "", "") }}
-                        {% elif ba_error %}
-                            {{ _("Your bank account is {0}failing{1}", "<b>"|safe, "</b>"|safe) }}
-                        {% endif %}
-                    </td>
-                    <td class="account-action">
-                        <a class="button auth-button" href="../routes/bank-account.html">{{
-                            _("+ Add") if ba_error is none else _("Edit")
-                        }}</a>
-                    </td>
-                </tr>
-                <tr>
                     {% set paypal = ExchangeRoute.from_network(participant, 'paypal') %}
                     <td class="account-type">
                         <img src="{{ website.asset('paypal.png') }}" />
