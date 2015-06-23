@@ -26,42 +26,6 @@ from gratipay.testing import Foobar, Harness
 from gratipay.testing.billing import BillingHarness
 
 
-class TestCredits(BillingHarness):
-
-    def test_ach_credit_withhold(self):
-        self.make_exchange('balanced-cc', 27, 0, self.homer)
-        withhold = D('1.00')
-        error = ach_credit(self.db, self.homer, withhold)
-        assert error == ''
-        homer = Participant.from_id(self.homer.id)
-        assert self.homer.balance == homer.balance == 1
-
-    def test_ach_credit_amount_under_minimum(self):
-        self.make_exchange('balanced-cc', 8, 0, self.homer)
-        r = ach_credit(self.db, self.homer, 0)
-        assert r is None
-
-    @mock.patch('gratipay.billing.exchanges.thing_from_href')
-    def test_ach_credit_failure(self, tfh):
-        tfh.side_effect = Foobar
-        self.make_exchange('balanced-cc', 20, 0, self.homer)
-        error = ach_credit(self.db, self.homer, D('1.00'))
-        homer = Participant.from_id(self.homer.id)
-        assert self.homer.get_bank_account_error() == error == "Foobar()"
-        assert self.homer.balance == homer.balance == 20
-
-    def test_ach_credit_no_bank_account(self):
-        self.make_exchange('balanced-cc', 20, 0, self.david)
-        error = ach_credit(self.db, self.david, D('1.00'))
-        assert error == 'No bank account'
-
-    def test_ach_credit_invalidated_bank_account(self):
-        bob = self.make_participant('bob', is_suspicious=False, balance=20,
-                                    last_ach_result='invalidated')
-        error = ach_credit(self.db, bob, D('1.00'))
-        assert error == 'No bank account'
-
-
 class TestCardHolds(BillingHarness):
 
     # create_card_hold
@@ -341,50 +305,3 @@ class TestRecordExchange(Harness):
         record_exchange_result(self.db, e_id, 'succeeded', None, alice)
         alice = Participant.from_username('alice')
         assert alice.balance == D('35.59')
-
-
-class TestSyncWithBalanced(BillingHarness):
-    @pytest.mark.xfail(reason="We don't use balanced for debits anymore")
-    def test_sync_with_balanced(self):
-        with mock.patch('gratipay.billing.exchanges.record_exchange_result') as rer:
-            rer.side_effect = Foobar()
-            hold, error = create_card_hold(self.db, self.janet, D('20.00'))
-            assert error == ''  # sanity check
-            with self.assertRaises(Foobar):
-                capture_card_hold(self.db, self.janet, D('10.00'), hold)
-        exchange = self.db.one("SELECT * FROM exchanges")
-        assert exchange.status == 'pre'
-        sync_with_balanced(self.db)
-        exchange = self.db.one("SELECT * FROM exchanges")
-        assert exchange.status == 'succeeded'
-        assert Participant.from_username('janet').balance == 10
-
-    @pytest.mark.xfail(reason="We don't use balanced for debits anymore")
-    def test_sync_with_balanced_deletes_charges_that_didnt_happen(self):
-        with mock.patch('gratipay.billing.exchanges.record_exchange_result') as rer \
-           , mock.patch('balanced.CardHold.capture') as capture:
-            rer.side_effect = capture.side_effect = Foobar
-            hold, error = create_card_hold(self.db, self.janet, D('33.67'))
-            assert error == ''  # sanity check
-            with self.assertRaises(Foobar):
-                capture_card_hold(self.db, self.janet, D('7.52'), hold)
-        exchange = self.db.one("SELECT * FROM exchanges")
-        assert exchange.status == 'pre'
-        sync_with_balanced(self.db)
-        exchanges = self.db.all("SELECT * FROM exchanges")
-        assert not exchanges
-        assert Participant.from_username('janet').balance == 0
-
-    def test_sync_with_balanced_reverts_credits_that_didnt_happen(self):
-        self.make_exchange('balanced-cc', 41, 0, self.homer)
-        with mock.patch('gratipay.billing.exchanges.record_exchange_result') as rer \
-           , mock.patch('gratipay.billing.exchanges.thing_from_href') as tfh:
-            rer.side_effect = tfh.side_effect = Foobar
-            with self.assertRaises(Foobar):
-                ach_credit(self.db, self.homer, 0, 0)
-        exchange = self.db.one("SELECT * FROM exchanges WHERE amount < 0")
-        assert exchange.status == 'pre'
-        sync_with_balanced(self.db)
-        exchanges = self.db.all("SELECT * FROM exchanges WHERE amount < 0")
-        assert not exchanges
-        assert Participant.from_username('homer').balance == 41
