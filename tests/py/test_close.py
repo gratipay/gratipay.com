@@ -92,7 +92,7 @@ class TestClosing(Harness):
         alice = self.make_participant( 'alice'
                                      , balance=D('10.00')
                                      , is_suspicious=False
-                                     , last_ach_result=''
+                                     , last_paypal_result=''
                                       )
         alice.close('bank')
 

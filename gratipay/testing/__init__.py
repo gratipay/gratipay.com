@@ -163,7 +163,7 @@ class Harness(unittest.TestCase):
             _kw['is_approved'] = False
 
         if Participant.from_username(_kw['owner']) is None:
-            self.make_participant(_kw['owner'], claimed_time='now', last_ach_result='')
+            self.make_participant(_kw['owner'], claimed_time='now', last_paypal_result='')
 
         team = self.db.one("""
             INSERT INTO teams
@@ -198,7 +198,7 @@ class Harness(unittest.TestCase):
         if 'last_bill_result' in kw:
             ExchangeRoute.insert(participant, 'braintree-cc', '/cards/foo', kw.pop('last_bill_result'))
         if 'last_paypal_result' in kw:
-            ExchangeRoute.insert(participant, 'paypal', 'abcd@gmail.com', kw.pop('last_ach_result'))
+            ExchangeRoute.insert(participant, 'paypal', 'abcd@gmail.com', kw.pop('last_paypal_result'))
 
         # Update participant
         if kw:

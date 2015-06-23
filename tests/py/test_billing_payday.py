@@ -428,8 +428,8 @@ class TestPayin(BillingHarness):
 
     def test_process_subscriptions(self):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
-        hannibal = self.make_participant('hannibal', claimed_time='now', last_ach_result='')
-        lecter = self.make_participant('lecter', claimed_time='now', last_ach_result='')
+        hannibal = self.make_participant('hannibal', claimed_time='now', last_paypal_result='')
+        lecter = self.make_participant('lecter', claimed_time='now', last_paypal_result='')
         A = self.make_team('The A Team', hannibal, is_approved=True)
         B = self.make_team('The B Team', lecter, is_approved=True)
         alice.set_subscription_to(A, D('0.51'))
@@ -486,7 +486,7 @@ class TestPayin(BillingHarness):
 
     def test_process_draws(self):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
-        hannibal = self.make_participant('hannibal', claimed_time='now', last_ach_result='')
+        hannibal = self.make_participant('hannibal', claimed_time='now', last_paypal_result='')
         A = self.make_team('The A Team', hannibal, is_approved=True)
         alice.set_subscription_to(A, D('0.51'))
 
@@ -573,7 +573,7 @@ class TestPayout(Harness):
     def test_payout_can_pay_out(self, ach):
         alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
                               balanced_customer_href='foo',
-                              last_ach_result='')
+                              last_paypal_result='')
         self.make_exchange('balanced-cc', 20, 0, alice)
         self.make_team(owner='alice', is_approved=True)
         Payday.start().payout()
@@ -586,7 +586,7 @@ class TestPayout(Harness):
     def test_payout_skips_unreviewed(self, log):
         self.make_participant('alice', claimed_time='now', is_suspicious=None,
                               balance=20, balanced_customer_href='foo',
-                              last_ach_result='')
+                              last_paypal_result='')
         self.make_team(owner='alice', is_approved=True)
         Payday.start().payout()
         log.assert_any_call('UNREVIEWED: alice')
@@ -595,7 +595,7 @@ class TestPayout(Harness):
     def test_payout_ach_error_gets_recorded(self, ach_credit):
         self.make_participant('alice', claimed_time='now', is_suspicious=False,
                               balance=20, balanced_customer_href='foo',
-                              last_ach_result='')
+                              last_paypal_result='')
         self.make_team(owner='alice', is_approved=True)
         ach_credit.return_value = 'some error'
         Payday.start().payout()
@@ -605,7 +605,7 @@ class TestPayout(Harness):
     @mock.patch('gratipay.billing.payday.ach_credit')
     def test_payout_pays_out_Gratipay_1_0_balance(self, ach):
         alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                                      balanced_customer_href='foo', last_ach_result='',
+                                      balanced_customer_href='foo', last_paypal_result='',
                                       balance=20, status_of_1_0_balance='pending-payout')
         Payday.start().payout()
 
@@ -616,7 +616,7 @@ class TestPayout(Harness):
     @mock.patch('balanced.BankAccount.credit')
     def test_paying_out_sets_1_0_status_to_resolved(self, credit):
         alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                                      balanced_customer_href='foo', last_ach_result='',
+                                      balanced_customer_href='foo', last_paypal_result='',
                                       balance=0, status_of_1_0_balance='pending-payout')
         self.make_exchange('balanced-cc', 20, 0, alice)  # sets balance, and satisfies self_check
         Payday.start().payout()
@@ -627,10 +627,10 @@ class TestPayout(Harness):
     @mock.patch('balanced.BankAccount.credit')
     def test_payout_ignores_unresolved(self, credit):
         bob = self.make_participant('bob', claimed_time='now', is_suspicious=False,
-                                    balanced_customer_href='foo', last_ach_result='',
+                                    balanced_customer_href='foo', last_paypal_result='',
                                     balance=13, status_of_1_0_balance='unresolved')
         alice = self.make_participant('alice', claimed_time='now', is_suspicious=False,
-                                      balanced_customer_href='foo', last_ach_result='',
+                                      balanced_customer_href='foo', last_paypal_result='',
                                       balance=0, status_of_1_0_balance='pending-payout')
         self.make_exchange('balanced-cc', 20, 0, alice)
         Payday.start().payout()
