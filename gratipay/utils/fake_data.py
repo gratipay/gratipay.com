@@ -10,6 +10,7 @@ from psycopg2 import IntegrityError
 from gratipay import wireup, MAX_TIP, MIN_TIP
 from gratipay.elsewhere import PLATFORMS
 from gratipay.models.participant import Participant
+from gratipay.models.team import Team
 from gratipay.models import community
 from gratipay.models import check_db
 
@@ -72,6 +73,49 @@ def fake_participant(db, number="singular", is_admin=False):
     #Call participant constructor to perform other DB initialization
     return Participant.from_username(username)
 
+
+def fake_team(db, teamowner):
+    """Create a fake team
+    """
+    isapproved = [True, False]
+    productorservice = ['Product','Service']
+
+    teamname = faker.first_name() + fake_text_id(3)
+    teamslugname = faker.city() 
+
+    try:
+        #using community.slugize
+        teamslug = community.slugize(teamslugname)
+        _fake_thing( db
+                   , "teams"
+                   , slug=teamslug
+                   , slug_lower=teamslug.lower()
+                   , name=teamname
+                   , homepage='www.example.org/' + fake_text_id(3)
+                   , product_or_service=random.sample(productorservice,1)[0]
+                   , getting_involved='build'
+                   , getting_paid='paypal'
+                   , owner=teamowner.username
+                   , is_approved=random.sample(isapproved,1)[0]
+                   , receiving=0.1
+                   , nmembers=3
+                   )
+    except IntegrityError:
+        return fake_team(db, teamowner)
+
+    return Team.from_slug(teamslug)
+
+def fake_subscription(db, subscriber, subscribee):
+    """Create a fake subscription
+    """
+    return _fake_thing( db
+                      , "subscriptions"
+                      , ctime=faker.date_time_this_year()
+                      , mtime=faker.date_time_this_month()
+                      , subscriber=subscriber.username
+                      , team=subscribee.slug
+                      , amount=fake_tip_amount()
+                       )
 
 def fake_community(db, creator):
     """Create a fake community
@@ -237,13 +281,24 @@ def populate_db(db, num_participants=100, num_tips=200, num_teams=5, num_transfe
         participants.append(fake_participant(db))
 
     print("Making Teams")
-    for i in xrange(num_teams):
-        team = fake_participant(db, number="plural")
-        #Add 1 to 3 members to the team
-        members = random.sample(participants, random.randint(1, 3))
-        for p in members:
-            team.add_member(p)
-        participants.append(team)
+    teams = []
+    teamowners = random.sample(participants, num_teams)
+    for teamowner in teamowners:
+        teams.append(fake_team(db, teamowner))
+
+    print("Making Subscriptions")
+    subscriptioncount = 0
+    for participant in participants:
+        for team in teams:
+            #eliminate self-subscription
+            if participant.username != team.owner:
+                subscriptioncount += 1
+                if subscriptioncount > num_tips:
+                    break
+                fake_subscription(db, participant, team)
+        if subscriptioncount > num_tips:
+            break
+     
 
     print("Making Elsewheres")
     for p in participants:
