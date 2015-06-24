@@ -12,7 +12,7 @@ Gratipay, LLC
 716 Park Road
 Ambridge, PA 15003
 USA
-legal@gratipay.com  
+legal@gratipay.com
 
 1. Registration, Security, and Privacy
 
@@ -160,7 +160,7 @@ endorse those sites.
 non-exclusive, worldwide, royalty-free, perpetual, license (including the right
 to sublicense) to use, host, store, cache, reproduce, publish, display,
 perform, distribute, transmit, adapt, and modify the content, in all media now
-known or later developed. 
+known or later developed.
 
   1. This license permits Gratipay to operate, promote, and improve the
      Service, and to develop new Service. It also permits Gratipay to provide,
@@ -220,17 +220,15 @@ responsible for the activity.
 
 1. Gratipay's Service Providers
 
-  1. Gratipay uses Pound Payments Inc., DBA Balanced ("Balanced") as a third
+  1. Gratipay uses Pound Payments Inc., Braintree Payments as a third
      party service provider for payment services (e.g. card acceptance,
 merchant settlement, and related services). By making use of some or all of
-these payment services on Gratipay you agree to be bound by Balanced's [terms
-and conditions](https://www.balancedpayments.com/terms) and [privacy
-policy](https://www.balancedpayments.com/privacy), and hereby consent and
+these payment services on Gratipay you agree to be bound by Braintree's [Braintree Payment Services Agreement](https://www.braintreepayments.com/legal/payment-services-agreement) and [privacy
+policy](https://www.paypal.com/us/webapps/mpp/ua/privacy-full), and hereby consent and
 authorize us to delegate the authorizations and share the information you
-provide to us with Balanced to the extent required to provide the payment
-services to you.  Balanced may also be contacted directly for payments support
-either by email at support@balancedpayments.com or by phone at +1 (888)
-744-2622.
+provide to us with Braintree to the extent required to provide the payment
+services to you.  Braintree may also be contacted directly for payments support
+either by email at support@braintreepayments.com or by phone at +1 (877) 434-2894.
 
 1. Nonprofits and Charities using Gratipay
 
@@ -252,7 +250,7 @@ Act ("DMCA"). You can contact our designated agent for copyright infringement
 notifications and counter-notifications at: Copyright Agent, Gratipay, LLC, 716
 Park Road, Ambridge, PA 15003, USA, legal@gratipay.com.
 
-  1. Reporting Instances of Copyright Infringement 
+  1. Reporting Instances of Copyright Infringement
 
     1. If you believe that any content on the Service infringes your copyright,
        please send us a notice containing the following information: a)
