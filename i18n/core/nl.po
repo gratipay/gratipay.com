@@ -301,9 +301,6 @@ msgstr "Geschiedenis"
 msgid "Widgets"
 msgstr "Widgets"
 
-msgid "Identity"
-msgstr "Identiteit"
-
 msgid "Settings"
 msgstr "Instellingen"
 
@@ -1072,66 +1069,6 @@ msgstr "Alleen geverifieerde e-mailadressen zijn toegestaan."
 msgid "This is not a valid Bitcoin address."
 msgstr "Dit is geen geldig Bitcoin adres."
 
-msgid "Your bank account is {0}not connected{1}"
-msgstr "Uw bank rekening is {0} niet gekoppeld{1}"
-
-msgid "Your bank account is {0}connected{1}"
-msgstr "Uw bank rekening is {0} gekoppeld{1}"
-
-msgid "Bank Account"
-msgstr "Bank rekening"
-
-msgid ""
-"When you receive money on Gratipay we'll automatically deposit it into your "
-"bank account."
-msgstr "Wanneer we geld ontvangen op Gratipay storten we automatish op je bank rekening."
-
-msgid ""
-"If you don't connect a bank account then your money will accumulate within "
-"Gratipay unless you regift it to others."
-msgstr "Als je geen bank rekening koppelt, dan stapelt het op in Gratipay, tenzij je giften doet aan anderen."
-
-msgid ""
-"Deposits are initiated every Thursday, but only if you have more than {0} in"
-" your balance."
-msgstr "Bedragen worden elke donderdag gestort, mits er meer dan {0} op je balans staat."
-
-msgid "and then you'll be able to add or change your bank account."
-msgstr "en dan kun je een bankrekening toevoegen of wijzigen."
-
-msgid "Routing Information"
-msgstr "Routing informatie"
-
-msgid "Name on Bank Account"
-msgstr "Naam op bankrekening"
-
-msgid "Routing Number"
-msgstr "Routing nummer"
-
-msgid "This routing number is invalid."
-msgstr "Dit banknummer is ongeldig."
-
-msgid "Bank Account Number"
-msgstr "Bank Rekening Nummer"
-
-msgid "Current: {0}"
-msgstr "Huidig: {0}"
-
-msgid "Bank Account Type"
-msgstr "Bank rekening type"
-
-msgid "checking"
-msgstr "zichtrekening"
-
-msgid "savings"
-msgstr "spaarrekening"
-
-msgid "Are you sure you want to disconnect your bank account?"
-msgstr "Weet u zeker dat u uw bankrekening wilt ontkoppelen?"
-
-msgid "Disconnect My Bank Account"
-msgstr "Koppel mijn bankrekening af."
-
 msgid "Your credit card is {0}missing{1}"
 msgstr "Uw kredietkaart {0}ontbreekt{1}"
 
@@ -1165,6 +1102,9 @@ msgstr "Kredietkaartnummer"
 
 msgid "This card number is invalid."
 msgstr "Dit kaartnummer is ongeldig."
+
+msgid "Current: {0}"
+msgstr "Huidig: {0}"
 
 msgid "Expiration"
 msgstr "Geldig tot"
@@ -1286,12 +1226,6 @@ msgstr "Geld toevoegen"
 
 msgid "Withdrawing Money"
 msgstr "Geld opvragen"
-
-msgid "Your bank account is {0}working{1}"
-msgstr "Je bankrekening is {0}actief{1}"
-
-msgid "Your bank account is {0}failing{1}"
-msgstr "Je bankrekening heeft {0}gefaald{1}"
 
 msgid "Email Addresses (Private)"
 msgstr "E-mailadres (privé)"

@@ -306,9 +306,6 @@ msgstr "Verlauf"
 msgid "Widgets"
 msgstr "Widgets"
 
-msgid "Identity"
-msgstr "Identität"
-
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -1077,66 +1074,6 @@ msgstr ""
 msgid "This is not a valid Bitcoin address."
 msgstr "Das ist keine valide Bitcoin Addresse."
 
-msgid "Your bank account is {0}not connected{1}"
-msgstr "Dein Bankkonto ist {0}nicht verbunden{1}"
-
-msgid "Your bank account is {0}connected{1}"
-msgstr "Dein Bankkonto ist {0}verbunden{1}"
-
-msgid "Bank Account"
-msgstr "Bankkonto"
-
-msgid ""
-"When you receive money on Gratipay we'll automatically deposit it into your "
-"bank account."
-msgstr "Wenn du Geld über Gratipay erhältst, werden wir es automatisch auf dein Bankkonto einzahlen."
-
-msgid ""
-"If you don't connect a bank account then your money will accumulate within "
-"Gratipay unless you regift it to others."
-msgstr "Solltest du kein Bankkonto verbinden, werden wir dein Geld auf Gratipay sammeln, außer du schenkst es anderen weiter."
-
-msgid ""
-"Deposits are initiated every Thursday, but only if you have more than {0} in"
-" your balance."
-msgstr "Überweisungen werden jeden Donnerstag getätigt, wenn du mehr als {0} an Guthaben hast."
-
-msgid "and then you'll be able to add or change your bank account."
-msgstr "und dann wird es dir möglich sein ein Konto hinzuzufügen oder zu ändern."
-
-msgid "Routing Information"
-msgstr "Weiterleitungsinformation"
-
-msgid "Name on Bank Account"
-msgstr "Name auf Bankkonto"
-
-msgid "Routing Number"
-msgstr ""
-
-msgid "This routing number is invalid."
-msgstr ""
-
-msgid "Bank Account Number"
-msgstr "Kontonummer"
-
-msgid "Current: {0}"
-msgstr ""
-
-msgid "Bank Account Type"
-msgstr ""
-
-msgid "checking"
-msgstr ""
-
-msgid "savings"
-msgstr ""
-
-msgid "Are you sure you want to disconnect your bank account?"
-msgstr "Sind Sie sicher, dass Sie Ihr Bankkonto trennen wollen?"
-
-msgid "Disconnect My Bank Account"
-msgstr "Mein Bankkonto entfernen"
-
 msgid "Your credit card is {0}missing{1}"
 msgstr "Deine Kreditkarte {0}fehlt{1}"
 
@@ -1170,6 +1107,9 @@ msgstr "Kreditkartennummer"
 
 msgid "This card number is invalid."
 msgstr "Die Kartennummer ist ungültig."
+
+msgid "Current: {0}"
+msgstr ""
 
 msgid "Expiration"
 msgstr "Ablaufdatum"
@@ -1291,12 +1231,6 @@ msgstr "Geld Hinzufügen"
 
 msgid "Withdrawing Money"
 msgstr "Geld anheben"
-
-msgid "Your bank account is {0}working{1}"
-msgstr ""
-
-msgid "Your bank account is {0}failing{1}"
-msgstr ""
 
 msgid "Email Addresses (Private)"
 msgstr "E-Mail Adressen (Privat)"

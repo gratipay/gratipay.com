@@ -298,9 +298,6 @@ msgstr "Historio"
 msgid "Widgets"
 msgstr "Umaĵoj"
 
-msgid "Identity"
-msgstr ""
-
 msgid "Settings"
 msgstr ""
 
@@ -1069,66 +1066,6 @@ msgstr ""
 msgid "This is not a valid Bitcoin address."
 msgstr "Tiu Bitmonadreso estas malvalida."
 
-msgid "Your bank account is {0}not connected{1}"
-msgstr "Via bankokonto {0}ne estas konektitaj{1}"
-
-msgid "Your bank account is {0}connected{1}"
-msgstr "Via bankokonto estas {0}konektitaj{1}"
-
-msgid "Bank Account"
-msgstr "Bankokonto"
-
-msgid ""
-"When you receive money on Gratipay we'll automatically deposit it into your "
-"bank account."
-msgstr "Kiam vi ricevas monon tra Gratipay, ni deponas ĝin aŭtomate en via konekita bankokonto."
-
-msgid ""
-"If you don't connect a bank account then your money will accumulate within "
-"Gratipay unless you regift it to others."
-msgstr "Se vi ne konektas bankokonton, tiam via mono amasigos ene Gratipay krom se vi donas ĝin laŭvice al aliaj."
-
-msgid ""
-"Deposits are initiated every Thursday, but only if you have more than {0} in"
-" your balance."
-msgstr "Deponoj iniciatigas ĉiu ĵaŭdo, sed sole se vi havas pli ol {0} en via bilanco."
-
-msgid "and then you'll be able to add or change your bank account."
-msgstr "kaj tiam vi eblos aldoni aŭ ŝanĝi vian bankokonto."
-
-msgid "Routing Information"
-msgstr "Enkursiga informo"
-
-msgid "Name on Bank Account"
-msgstr "Nomo sur bankokonto"
-
-msgid "Routing Number"
-msgstr "Enkursiga numero"
-
-msgid "This routing number is invalid."
-msgstr ""
-
-msgid "Bank Account Number"
-msgstr "Bankokonta numero"
-
-msgid "Current: {0}"
-msgstr ""
-
-msgid "Bank Account Type"
-msgstr ""
-
-msgid "checking"
-msgstr ""
-
-msgid "savings"
-msgstr ""
-
-msgid "Are you sure you want to disconnect your bank account?"
-msgstr ""
-
-msgid "Disconnect My Bank Account"
-msgstr "Malkonekti mia bankokonto"
-
 msgid "Your credit card is {0}missing{1}"
 msgstr "Via kreditkarto estas {0}mankanta{1}."
 
@@ -1161,6 +1098,9 @@ msgid "Credit Card Number"
 msgstr "Kreditkarta numero"
 
 msgid "This card number is invalid."
+msgstr ""
+
+msgid "Current: {0}"
 msgstr ""
 
 msgid "Expiration"
@@ -1283,12 +1223,6 @@ msgstr "Aldonanta monon"
 
 msgid "Withdrawing Money"
 msgstr "Forlasanta nonon"
-
-msgid "Your bank account is {0}working{1}"
-msgstr "Via bankokonto estas {0}funkcia{1}."
-
-msgid "Your bank account is {0}failing{1}"
-msgstr "Via bankokonto estas {0}malfunkcia{1]."
 
 msgid "Email Addresses (Private)"
 msgstr "Retpoŝtadreson (Privata)"
