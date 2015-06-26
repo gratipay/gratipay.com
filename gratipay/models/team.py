@@ -91,9 +91,10 @@ class Team(Model):
             SELECT s.*
               FROM subscriptions s
               JOIN teams t ON t.slug = s.team
-             WHERE team=%s
+              JOIN participants p ON t.owner = p.username
+             WHERE p.username = %s
                AND s.ctime < t.ctime
-        """, (self.slug,))
+        """, (self.owner, ))
 
         # Make sure the migration hasn't been done already
         if subscriptions:
