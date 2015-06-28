@@ -151,6 +151,21 @@ class TestNewTeams(Harness):
         subscriptions = self.db.all("SELECT * FROM subscriptions")
         assert len(subscriptions) == 1
 
+    def test_migrate_tips_checks_for_multiple_teams(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_participant('old_team')
+        alice.set_tip_to('old_team', '1.00')
+        new_team = self.make_team('new_team', owner='old_team')
+        new_team.migrate_tips()
+
+        newer_team = self.make_team('newer_team', owner='old_team')
+
+        with pytest.raises(AlreadyMigrated):
+            newer_team.migrate_tips()
+
+        subscriptions = self.db.all("SELECT * FROM subscriptions")
+        assert len(subscriptions) == 1
+
 class TestOldTeams(Harness):
 
     def setUp(self):
