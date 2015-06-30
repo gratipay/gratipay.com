@@ -14,7 +14,7 @@ platform, account = get_account_elsewhere(website, state)
 participant = account.participant
 
 if participant.is_claimed or participant.is_closed:
-    request.redirect('/%s/' % participant.username)
+    website.redirect('/%s/' % participant.username)
 
 title = friendly_name = account.friendly_name
 user_id = account.user_id

@@ -1,3 +1,3 @@
 [---]
-request.redirect('http://inside.gratipay.com/policies/train-new-contributors')
+website.redirect('http://inside.gratipay.com/policies/train-new-contributors')
 [---]

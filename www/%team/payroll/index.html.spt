@@ -4,10 +4,10 @@
 from gratipay.utils import get_participant
 
 [-----------------------------------------------------------------------------]
-request.redirect('..')  # XXX Migrating to Teams! Fix this up!
+website.redirect('..')  # XXX Migrating to Teams! Fix this up!
 participant = team = get_participant(state, restrict=False)
 if not team.show_as_team(user):
-  request.redirect('../')
+  website.redirect('../')
 title = team.username
 subhead = _("Team Members")
 

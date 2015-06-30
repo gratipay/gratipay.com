@@ -1,4 +1,4 @@
 [---]
-request.redirect('http://inside.gratipay.com/policies/build-gratipay')
+website.redirect('http://inside.gratipay.com/policies/build-gratipay')
 [---]
 

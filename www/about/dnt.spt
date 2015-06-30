@@ -1,3 +1,3 @@
 [---]
-request.redirect('/about/features/dnt')
+website.redirect('/about/features/dnt')
 [---] text/html

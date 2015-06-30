@@ -3,7 +3,7 @@ from aspen import Response
 [-----------------------------------------------------------------------------]
 
 if user.ANON:
-    request.redirect('/')
+    website.redirect('/')
 
 if request.method == 'POST':
     user.sign_out(response.headers.cookie)
