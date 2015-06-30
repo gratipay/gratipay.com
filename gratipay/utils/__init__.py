@@ -31,12 +31,12 @@ def dict_to_querystring(mapping):
     return u'?' + u'&'.join(arguments)
 
 
-def use_tildes_for_participants(request):
+def use_tildes_for_participants(website, request):
     if request.path.raw.startswith('/~/'):
         to = '/~' + request.path.raw[3:]
         if request.qs.raw:
             to += '?' + request.qs.raw
-        request.redirect(to)
+        website.redirect(to)
     elif request.path.raw.startswith('/~'):
         request.path.__init__('/~/' + request.path.raw[2:])
 
@@ -59,6 +59,7 @@ def get_participant(state, restrict=True, resolve_unclaimed=True):
     If restrict is True then we'll restrict access to owners and admins.
 
     """
+    redirect = state['website'].redirect
     request = state['request']
     user = state['user']
     slug = request.line.uri.path['username']
@@ -87,7 +88,7 @@ def get_participant(state, restrict=True, resolve_unclaimed=True):
         if to:
             # This is a stub account (someone on another platform who hasn't
             # actually registered with Gratipay yet)
-            request.redirect(to)
+            redirect(to)
         else:
             # This is an archived account (result of take_over)
             if user.ADMIN:
@@ -105,6 +106,7 @@ def get_participant(state, restrict=True, resolve_unclaimed=True):
 def get_team(state):
     """Given a Request, raise Response or return Team.
     """
+    redirect = state['website'].redirect
     request = state['request']
     user = state['user']
     slug = request.line.uri.path['team']
@@ -119,7 +121,7 @@ def get_team(state):
         participant = Participant.from_username(slug)
         if participant is not None:
             qs = '?' + request.qs.raw if request.qs.raw else ''
-            request.redirect('/~' + request.path.raw[1:] + qs)
+            redirect('/~' + request.path.raw[1:] + qs)
         raise Response(404)
 
     canonicalize(request.line.uri.path.raw, '/', team.slug, slug, qs)
