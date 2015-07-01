@@ -5,9 +5,7 @@ import json
 
 from aspen.http.request import Request
 from aspen.http.response import Response
-from environment import Environment
 
-from gratipay import wireup
 from gratipay.security import csrf
 from gratipay.security.user import SESSION
 from gratipay.testing import Harness
@@ -17,23 +15,13 @@ class Tests(Harness):
 
     def setUp(self):
         Harness.setUp(self)
-
-        # Grab configuration from the environment, storing for later.
-        env = wireup.env()
-        self.environ = env.environ
-
-        # Change env, doesn't change self.environ.
-        env.canonical_scheme = 'https'
-        env.canonical_host = 'gratipay.com'
-
-        wireup.canonical(env)
+        self._old_base_url = self.client.website.base_url
+        self.client.website.base_url = 'https://gratipay.com'
 
     def tearDown(self):
-        Harness.tearDown(self)
-        reset = Environment(CANONICAL_SCHEME=unicode, CANONICAL_HOST=unicode, environ=self.environ)
-        wireup.canonical(reset)
+        self.client.website.base_url = self._old_base_url
 
-    def test_canonize_canonizes(self):
+    def test_we_redirect_to_base_url(self):
         response = self.client.GxT( "/"
                                   , HTTP_HOST=b'gratipay.com'
                                   , HTTP_X_FORWARDED_PROTO=b'http'

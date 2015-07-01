@@ -206,7 +206,7 @@ def set_cookie(cookies, key, value, expires=None, httponly=True, path=b'/'):
         cookie[b'httponly'] = True
     if path:
         cookie[b'path'] = path
-    if gratipay.canonical_scheme == 'https':
+    if gratipay.use_secure_cookies:
         cookie[b'secure'] = True
 
 

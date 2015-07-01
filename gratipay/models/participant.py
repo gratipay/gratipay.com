@@ -544,11 +544,10 @@ class Participant(Model, MixinTeam):
             if not nonce:
                 return self.add_email(email)
 
-        scheme = gratipay.canonical_scheme
-        host = gratipay.canonical_host
+        base_url = gratipay.base_url
         username = self.username_lower
         quoted_email = quote(email)
-        link = "{scheme}://{host}/~{username}/emails/verify.html?email={quoted_email}&nonce={nonce}"
+        link = "{base_url}/~{username}/emails/verify.html?email={quoted_email}&nonce={nonce}"
         r = self.send_email('verification',
                         email=email,
                         link=link.format(**locals()),
@@ -927,10 +926,9 @@ class Participant(Model, MixinTeam):
 
     @property
     def profile_url(self):
-        scheme = gratipay.canonical_scheme
-        host = gratipay.canonical_host
+        base_url = gratipay.base_url
         username = self.username
-        return '{scheme}://{host}/{username}/'.format(**locals())
+        return '{base_url}/{username}/'.format(**locals())
 
 
     def get_teams(self, only_approved=False):

@@ -190,11 +190,10 @@ class AccountElsewhere(Model):
 
     @property
     def gratipay_url(self):
-        scheme = gratipay.canonical_scheme
-        host = gratipay.canonical_host
+        base_url = gratipay.base_url
         platform = self.platform
         slug = self.gratipay_slug
-        return "{scheme}://{host}/on/{platform}/{slug}/".format(**locals())
+        return "{base_url}/on/{platform}/{slug}/".format(**locals())
 
     @property
     def html_url(self):
