@@ -31,7 +31,8 @@ class TestBalancedCallbacks(Harness):
 
     @patch('gratipay.billing.exchanges.record_exchange_result')
     def test_credit_callback(self, rer):
-        alice = self.make_participant('alice', last_paypal_result='')
+        alice = self.make_participant('alice')
+        ExchangeRoute.insert(alice, 'balanced-ba', '/bank/foo', '')
         ba = ExchangeRoute.from_network(alice, 'balanced-ba')
         for status in ('succeeded', 'failed'):
             error = 'FOO' if status == 'failed' else None
