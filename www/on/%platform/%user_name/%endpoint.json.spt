@@ -34,10 +34,8 @@ platform, account = get_account_elsewhere(website, state)
 if account.participant.is_claimed:
     next_url = '/%s/%s.json' % (account.participant.username, endpoint)
     next_url += stringify_qs(request.qs)
-    headers = {}
-    headers["Access-Control-Allow-Origin"] = "*"
-    headers["Location"] = next_url
-    raise Response(302, body='*barrel roll*', headers=headers)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    website.redirect(next_url, response=response)
 
 
 participant = account.participant
