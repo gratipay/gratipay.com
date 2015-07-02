@@ -10,7 +10,7 @@ class HTMLRenderer(base.Renderer):
         # template authors shouldn't normally need to use this function, but
         # having it in the simplate context makes it easier to implement i18n.
 
-        context['state']['escape'] = htmlescape
+        context['state']['escape'] = context['escape'] = htmlescape
 
         return base.Renderer.render_content(self, context)
 
