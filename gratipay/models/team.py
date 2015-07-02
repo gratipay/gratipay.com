@@ -71,8 +71,9 @@ class Team(Model):
         """, fields)
 
 
-    def generate_review_url(self):
-
+    def create_github_review_issue(self):
+        """POST to GitHub, and return the URL of the new issue.
+        """
         api_url = "https://api.github.com/repos/{}/issues".format(self.review_repo)
         data = json.dumps({ "title": "review {}".format(self.name)
                           , "body": "https://gratipay.com/{}/".format(self.slug)
@@ -82,15 +83,12 @@ class Team(Model):
             print(r.status_code)
             print(r.text)
             raise Heck
-
-        review_url = r.json()['html_url']
-        return self.update_review_url(review_url)
+        return r.json()['html_url']
 
 
-    def update_review_url(self, review_url):
+    def set_review_url(self, review_url):
         self.db.run("UPDATE teams SET review_url=%s WHERE id=%s", (review_url, self.id))
         self.set_attributes(review_url=review_url)
-        return review_url
 
 
     def get_og_title(self):

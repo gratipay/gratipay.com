@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import json
+import mock
 import pytest
 from decimal import Decimal
 
@@ -45,7 +46,9 @@ class TestTeams(Harness):
         assert team.name == 'The Enterprise'
         assert team.owner == 'picard'
 
-    def test_can_create_new_team(self):
+    @mock.patch('gratipay.models.team.Team.create_github_review_issue')
+    def test_can_create_new_team(self, cgri):
+        cgri.return_value = REVIEW_URL
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
         r = self.post_new(dict(self.valid_data))
         team = self.db.one("SELECT * FROM teams")

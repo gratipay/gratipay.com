@@ -58,7 +58,8 @@ if request.method == 'POST':
     except IntegrityError:
         raise Response(400, _("Sorry, there is already a team using '{}'.", fields['slug']))
 
-    review_url = team.generate_review_url()
+    review_url = team.create_github_review_issue()
+    team.set_review_url(review_url)
 
 [---] application/json via json_dump
 {'review_url': review_url}
