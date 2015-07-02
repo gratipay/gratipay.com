@@ -411,7 +411,7 @@ msgid "Giving"
 msgstr "Geven"
 
 msgid "You pay {0} per week."
-msgstr ""
+msgstr "Je betaalt {0} per week."
 
 msgid "Who inspires you? See if they're on Gratipay:"
 msgstr "Wie inspireert u? Kijk of ze ook lid zijn van Gratipay: "
@@ -445,13 +445,13 @@ msgid "You must attach a bank account or PayPal to apply for a new team."
 msgstr "U moet een bankrekening of PayPal account aan uw account koppelen om u te kunnen aanmelden voor een nieuw team."
 
 msgid "Apply for a New Team"
-msgstr ""
+msgstr "Aanmelden voor een nieuw team"
 
 msgid "Team Name"
 msgstr "Team naam"
 
 msgid "Homepage"
-msgstr ""
+msgstr "Home pagina"
 
 msgid "Product or Service"
 msgstr "Product of service"
@@ -534,7 +534,7 @@ msgid "Thank you so much for supporting {0}!"
 msgstr "Hartelijk dank voor het steunen van {0}!"
 
 msgid "You have successfully canceled your payment to {0}."
-msgstr ""
+msgstr "U heeft uw betaling aan {0} succesvol geannuleerd."
 
 msgid "User not found."
 msgstr "Gebruiker is niet gevonden."
@@ -1273,10 +1273,10 @@ msgid "Privacy"
 msgstr "Privacy"
 
 msgid "Hide total giving to others."
-msgstr ""
+msgstr "Verberg totaal gegeven aan anderen."
 
 msgid "Hide total received from others."
-msgstr ""
+msgstr "Verberg totaal ontvangen van anderen."
 
 msgid "Hide myself from search results."
 msgstr "Verberg mijzelf in de zoekresultaten"
