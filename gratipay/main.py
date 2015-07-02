@@ -4,7 +4,7 @@ import base64
 
 import gratipay
 import gratipay.wireup
-from gratipay import canonize, utils
+from gratipay import utils
 from gratipay.cron import Cron
 from gratipay.models.participant import Participant
 from gratipay.security import authentication, csrf, x_frame_options
@@ -16,7 +16,7 @@ import aspen
 from aspen.website import Website
 
 
-website = Website([])
+website = Website()
 
 
 # Configure renderers
@@ -59,9 +59,10 @@ except Exception, e:
 
 env = website.env = gratipay.wireup.env()
 tell_sentry = website.tell_sentry = gratipay.wireup.make_sentry_teller(env)
-gratipay.wireup.canonical(env)
 website.db = gratipay.wireup.db(env)
 website.mailer = gratipay.wireup.mail(env, website.project_root)
+gratipay.wireup.base_url(website, env)
+gratipay.wireup.secure_cookies(env)
 gratipay.wireup.billing(env)
 gratipay.wireup.username_restrictions(website)
 gratipay.wireup.load_i18n(website.project_root, tell_sentry)
@@ -94,7 +95,7 @@ algorithm.functions = [
     algorithm['raise_200_for_OPTIONS'],
 
     utils.use_tildes_for_participants,
-    canonize,
+    algorithm['redirect_to_base_url'],
     i18n.set_up_i18n,
     authentication.start_user_as_anon,
     authentication.authenticate_user_if_possible,
@@ -133,14 +134,6 @@ algorithm.functions = [
 
 # Monkey patch aspen.Response
 # ===========================
-
-if hasattr(aspen.Response, 'redirect'):
-    raise Warning('aspen.Response.redirect() already exists')
-def _redirect(response, url):
-    response.code = 302
-    response.headers['Location'] = url
-    raise response
-aspen.Response.redirect = _redirect
 
 if hasattr(aspen.Response, 'set_cookie'):
     raise Warning('aspen.Response.set_cookie() already exists')

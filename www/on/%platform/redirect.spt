@@ -30,6 +30,6 @@ cookie_name = (platform.name+'_'+query_id).encode('ascii')
 cookie_value = b64encode(json.dumps([query_data, action, then, user_id]))
 response.set_cookie(cookie_name, cookie_value, expires=COOKIE_TIMEOUT)
 
-response.redirect(url)
+website.redirect(url, response=response)
 
 [-----------------------------] text/plain

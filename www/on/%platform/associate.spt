@@ -4,7 +4,6 @@ import json
 from aspen import log, resources, Response
 from requests_oauthlib.oauth1_session import TokenRequestDenied
 
-from gratipay import canonical_scheme, canonical_host
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.participant import NeedConfirmation
 
@@ -29,7 +28,7 @@ query_data, action, then, action_user_id = json.loads(b64decode(cookie_value))
 then = b64decode(then)  # double-b64encoded to avoid other encoding issues w/ qs
 
 # Finish the auth process, the returned session is ready to use
-url = canonical_scheme+'://'+canonical_host+request.line.uri.raw
+url = website.base_url+request.line.uri.raw
 try:
     sess = platform.handle_auth_callback(url, query_id, query_data)
 except TokenRequestDenied as e:
@@ -43,10 +42,10 @@ if action_user_id and account.user_id != action_user_id:
     claimed_account = AccountElsewhere.upsert(platform.get_user_info('user_id', action_user_id))
     if not claimed_account.is_team:
         then = '/on/%s/%s/failure.html'
-        request.redirect(then % (platform.name, claimed_account.gratipay_slug))
+        website.redirect(then % (platform.name, claimed_account.gratipay_slug))
     if not platform.is_team_admin(claimed_account.user_name, sess):
         then = '/on/%s/%s/failure.html?team=true'
-        request.redirect(then % (platform.name, claimed_account.gratipay_slug))
+        website.redirect(then % (platform.name, claimed_account.gratipay_slug))
     account = claimed_account
 
 log('%s user "%s" wants to %s' % (platform.name, account.user_id, action))
@@ -72,12 +71,12 @@ elif action == 'connect':
     except NeedConfirmation, obstacles:
         token, expires = account.make_connect_token()
         response.set_cookie(b'connect_%s' % account.id, token, expires)
-        response.redirect('/on/confirm.html?id=%s' % account.id)
+        website.redirect('/on/confirm.html?id=%s' % account.id, response=response)
 
 else:
     raise Response(400)
 
 response.erase_cookie(cookie_name)
-response.redirect(then)
+website.redirect(then, response=response)
 
 [-----------------------------] text/plain

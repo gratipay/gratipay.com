@@ -87,8 +87,8 @@ class TestUser(Harness):
         assert actual == 'alice'
 
     def test_session_cookie_is_secure_if_it_should_be(self):
-        canonical_scheme = gratipay.canonical_scheme
-        gratipay.canonical_scheme = 'https'
+        use_secure_cookies = gratipay.use_secure_cookies
+        gratipay.use_secure_cookies = True
         try:
             cookies = SimpleCookie()
             self.make_participant('alice')
@@ -96,7 +96,7 @@ class TestUser(Harness):
             user.sign_in(cookies)
             assert '; secure' in cookies[SESSION].output()
         finally:
-            gratipay.canonical_scheme = canonical_scheme
+            gratipay.use_secure_cookies = use_secure_cookies
 
     def test_session_is_regularly_refreshed(self):
         self.make_participant('alice')

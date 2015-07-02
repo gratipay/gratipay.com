@@ -41,10 +41,11 @@ from gratipay.utils.i18n import (
     get_function_from_rule, make_sorted_dict
 )
 
-def canonical(env):
-    gratipay.canonical_scheme = env.canonical_scheme
-    gratipay.canonical_host = env.canonical_host
+def base_url(website, env):
+    gratipay.base_url = website.base_url = env.base_url
 
+def secure_cookies(env):
+    gratipay.use_secure_cookies = env.base_url.startswith('https')
 
 def db(env):
     dburl = env.database_url
@@ -349,9 +350,8 @@ def other_stuff(website, env):
 
 def env():
     env = Environment(
+        BASE_URL                        = unicode,
         DATABASE_URL                    = unicode,
-        CANONICAL_HOST                  = unicode,
-        CANONICAL_SCHEME                = unicode,
         DATABASE_MAXCONN                = int,
         GRATIPAY_ASSET_URL              = unicode,
         GRATIPAY_CACHE_STATIC           = is_yesish,

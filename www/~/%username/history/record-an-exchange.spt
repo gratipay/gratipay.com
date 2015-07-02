@@ -52,7 +52,7 @@ if request.method == 'POST':
              RETURNING balance
             """, (balance_adjustment, participant.username))
 
-    request.redirect('/%s/history/' % participant.username)
+    website.redirect('/%s/history/' % participant.username)
 
 [---------------------------------------------] text/html
 {% extends "templates/profile.html" %}
