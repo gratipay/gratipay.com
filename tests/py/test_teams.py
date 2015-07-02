@@ -42,14 +42,14 @@ class TestNewTeams(Harness):
         assert team.owner == 'hannibal'
 
     def test_can_create_new_team(self):
-        self.make_participant('alice', claimed_time='now', email_address='', last_ach_result='')
+        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
         self.post_new(dict(self.valid_data))
         team = self.db.one("SELECT * FROM teams")
         assert team
         assert team.owner == 'alice'
 
     def test_all_fields_persist(self):
-        self.make_participant('alice', claimed_time='now', email_address='', last_ach_result='')
+        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
         self.post_new(dict(self.valid_data))
         team = Team.from_slug('gratiteam')
         assert team.name == 'Gratiteam'
@@ -76,7 +76,7 @@ class TestNewTeams(Harness):
         assert "You must attach a bank account or PayPal to apply for a new team." in r.body
 
     def test_error_message_for_terms(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_ach_result='')
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         data = dict(self.valid_data)
         del data['agree_terms']
         r = self.post_new(data, expected=400)
@@ -84,7 +84,7 @@ class TestNewTeams(Harness):
         assert "Please agree to the terms of service." in r.body
 
     def test_error_message_for_missing_fields(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_ach_result='')
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         data = dict(self.valid_data)
         del data['name']
         r = self.post_new(data, expected=400)
@@ -92,7 +92,7 @@ class TestNewTeams(Harness):
         assert "Please fill out the 'Team Name' field." in r.body
 
     def test_error_message_for_slug_collision(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_ach_result='')
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         self.post_new(dict(self.valid_data))
         r = self.post_new(dict(self.valid_data), expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 1
@@ -111,7 +111,7 @@ class TestNewTeams(Harness):
         assert 'The A Team' not in self.client.GET("/explore/teams/").body
 
     def test_stripping_required_inputs(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_ach_result='')
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         data = dict(self.valid_data)
         data['name'] = "     "
         r = self.post_new(data, expected=400)

@@ -140,14 +140,6 @@ class Harness(unittest.TestCase):
                 print("{0:{width}}".format(unicode(v), width=w), end=' | ')
             print()
 
-
-    @classmethod
-    def make_balanced_customer(cls):
-        import balanced
-        seq = next(cls.seq)
-        return unicode(balanced.Customer(meta=dict(seq=seq)).save().href)
-
-
     def make_team(self, *a, **kw):
 
         _kw = defaultdict(str)
@@ -171,7 +163,7 @@ class Harness(unittest.TestCase):
             _kw['is_approved'] = False
 
         if Participant.from_username(_kw['owner']) is None:
-            self.make_participant(_kw['owner'], claimed_time='now', last_ach_result='')
+            self.make_participant(_kw['owner'], claimed_time='now', last_paypal_result='')
 
         team = self.db.one("""
             INSERT INTO teams
@@ -204,16 +196,14 @@ class Harness(unittest.TestCase):
 
         # Insert exchange routes
         if 'last_bill_result' in kw:
-            ExchangeRoute.insert(participant, 'balanced-cc', '/cards/foo', kw.pop('last_bill_result'))
-        if 'last_ach_result' in kw:
-            ExchangeRoute.insert(participant, 'balanced-ba', '/bank_accounts/bar', kw.pop('last_ach_result'))
+            ExchangeRoute.insert(participant, 'braintree-cc', '/cards/foo', kw.pop('last_bill_result'))
+        if 'last_paypal_result' in kw:
+            ExchangeRoute.insert(participant, 'paypal', 'abcd@gmail.com', kw.pop('last_paypal_result'))
 
         # Update participant
         if kw:
             if kw.get('claimed_time') == 'now':
                 kw['claimed_time'] = utcnow()
-            if kw.get('balanced_customer_href') == 'new':
-                kw['balanced_customer_href'] = self.make_balanced_customer()
             cols, vals = zip(*kw.items())
             cols = ', '.join(cols)
             placeholders = ', '.join(['%s']*len(vals))

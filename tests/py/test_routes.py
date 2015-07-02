@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import balanced
 from braintree.test.nonces import Nonces
 import mock
 
@@ -42,28 +41,28 @@ class TestRoutes(BillingHarness):
     @mock.patch.object(Participant, 'send_email')
     def test_associate_paypal(self, mailer):
         mailer.return_value = 1 # Email successfully sent
-        self.david.add_email('david@gmail.com')
-        self.db.run("UPDATE emails SET verified=true WHERE address='david@gmail.com'")
-        self.hit('david', 'associate', 'paypal', 'david@gmail.com')
-        assert ExchangeRoute.from_network(self.david, 'paypal')
-        assert self.david.has_payout_route
+        self.roman.add_email('roman@gmail.com')
+        self.db.run("UPDATE emails SET verified=true WHERE address='roman@gmail.com'")
+        self.hit('roman', 'associate', 'paypal', 'roman@gmail.com')
+        assert ExchangeRoute.from_network(self.roman, 'paypal')
+        assert self.roman.has_payout_route
 
     def test_associate_paypal_invalid(self):
-        r = self.hit('david', 'associate', 'paypal', 'alice@gmail.com', expected=400)
-        assert not ExchangeRoute.from_network(self.david, 'paypal')
-        assert not self.david.has_payout_route
+        r = self.hit('roman', 'associate', 'paypal', 'alice@gmail.com', expected=400)
+        assert not ExchangeRoute.from_network(self.roman, 'paypal')
+        assert not self.roman.has_payout_route
         assert "Only verified email addresses allowed." in r.body
 
     def test_associate_bitcoin(self):
         addr = '17NdbrSGoUotzeGCcMMCqnFkEvLymoou9j'
-        self.hit('david', 'associate', 'bitcoin', addr)
-        route = ExchangeRoute.from_network(self.david, 'bitcoin')
+        self.hit('roman', 'associate', 'bitcoin', addr)
+        route = ExchangeRoute.from_network(self.roman, 'bitcoin')
         assert route.address == addr
         assert route.error == ''
 
     def test_associate_bitcoin_invalid(self):
-        self.hit('david', 'associate', 'bitcoin', '12345', expected=400)
-        assert not ExchangeRoute.from_network(self.david, 'bitcoin')
+        self.hit('roman', 'associate', 'bitcoin', '12345', expected=400)
+        assert not ExchangeRoute.from_network(self.roman, 'bitcoin')
 
     def test_credit_card_page(self):
         self.make_participant('alice', claimed_time='now')
@@ -91,37 +90,3 @@ class TestRoutes(BillingHarness):
         url_receipt = '/~obama/receipts/{}.html'.format(ex_id)
         actual = self.client.GET(url_receipt, auth_as='obama').body.decode('utf8')
         assert self.bt_card.card_type in actual
-
-    # Remove once we've moved off balanced
-    def test_associate_balanced_card_should_fail(self):
-        card = balanced.Card(
-            number='4242424242424242',
-            expiration_year=2020,
-            expiration_month=12
-        ).save()
-        customer = self.david.get_balanced_account()
-        self.hit('david', 'associate', 'balanced-cc', card.href, expected=400)
-
-        cards = customer.cards.all()
-        assert len(cards) == 0
-
-    def test_credit_card_page_loads_when_there_is_a_balanced_card(self):
-        expected = 'Your credit card is <em id="status">working'
-        actual = self.client.GET('/~janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
-        assert expected in actual
-
-    def test_credit_card_page_shows_details_for_balanced_cards(self):
-        response = self.client.GET('/~janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
-        assert self.card.number in response
-
-    def test_credit_card_page_shows_when_balanced_card_is_failing(self):
-        ExchangeRoute.from_network(self.janet, 'balanced-cc').update_error('Some error')
-        expected = 'Your credit card is <em id="status">failing'
-        actual = self.client.GET('/~janet/routes/credit-card.html', auth_as='janet').body.decode('utf8')
-        assert expected in actual
-
-    def test_receipt_page_loads_for_balanced_cards(self):
-        ex_id = self.make_exchange('balanced-cc', 113, 30, self.janet)
-        url_receipt = '/~janet/receipts/{}.html'.format(ex_id)
-        actual = self.client.GET(url_receipt, auth_as='janet').body.decode('utf8')
-        assert 'Visa' in actual

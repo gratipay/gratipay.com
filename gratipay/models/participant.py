@@ -766,6 +766,9 @@ class Participant(Model, MixinTeam):
     def get_bank_account_error(self):
         return getattr(ExchangeRoute.from_network(self, 'balanced-ba'), 'error', None)
 
+    def get_paypal_error(self):
+        return getattr(ExchangeRoute.from_network(self, 'paypal'), 'error', None)
+
     def get_credit_card_error(self):
         if self.braintree_customer_id:
             return getattr(ExchangeRoute.from_network(self, 'braintree-cc'), 'error', None)
