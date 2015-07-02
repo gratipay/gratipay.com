@@ -5,6 +5,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import atexit
 import fnmatch
 import os
+import urlparse
 from tempfile import mkstemp
 
 import aspen
@@ -270,7 +271,12 @@ def compile_assets(website):
             os.unlink(filepath)
         except:
             pass
-        content = client.GET(urlpath).body
+        headers = {}
+        if website.base_url:
+            url = urlparse.urlparse(website.base_url)
+            headers[b'HTTP_X_FORWARDED_PROTO'] = str(url.scheme)
+            headers[b'HTTP_HOST'] = str(url.netloc)
+        content = client.GET(urlpath, **headers).body
         tmpfd, tmpfpath = mkstemp(dir='.')
         os.write(tmpfd, content)
         os.close(tmpfd)
