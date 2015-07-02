@@ -79,12 +79,12 @@ module.exports = function(grunt) {
     grunt.registerTask('aspen:start', 'Start Aspen (if necessary)', function() {
         var done = this.async();
 
-        grunt.config.requires('env.CANONICAL_HOST');
-        var canonicalHost = grunt.config.get('env.CANONICAL_HOST') || 'localhost:8537';
+        grunt.config.requires('env.BASE_URL');
+        var baseURL = grunt.config.get('env.BASE_URL') || 'http://localhost:8537';
 
-        var port = parseInt(canonicalHost.split(':').pop());
+        var port = parseInt(baseURL.split(':').pop());
 
-        http.get('http://' + canonicalHost + '/', function(res) {
+        http.get(baseURL + '/', function(res) {
             grunt.log.writeln('Aspen seems to be running already. Doing nothing.');
             done();
         })
