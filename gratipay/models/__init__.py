@@ -121,6 +121,9 @@ def _check_balances(cursor):
     assert len(b) == 0, "conflicting balances: {}".format(b)
 
 def _check_no_team_balances(cursor):
+    if cursor.one("select exists (select * from paydays where ts_end < ts_start) as running"):
+        # payday is running
+        return
     teams = cursor.all("""
         SELECT t.slug, balance
           FROM (
