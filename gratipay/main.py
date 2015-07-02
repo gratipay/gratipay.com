@@ -135,14 +135,6 @@ algorithm.functions = [
 # Monkey patch aspen.Response
 # ===========================
 
-if hasattr(aspen.Response, 'redirect'):
-    raise Warning('aspen.Response.redirect() already exists')
-def _redirect(response, url):
-    response.code = 302
-    response.headers['Location'] = url
-    raise response
-aspen.Response.redirect = _redirect
-
 if hasattr(aspen.Response, 'set_cookie'):
     raise Warning('aspen.Response.set_cookie() already exists')
 def _set_cookie(response, *args, **kw):

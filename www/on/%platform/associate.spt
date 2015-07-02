@@ -71,12 +71,12 @@ elif action == 'connect':
     except NeedConfirmation, obstacles:
         token, expires = account.make_connect_token()
         response.set_cookie(b'connect_%s' % account.id, token, expires)
-        response.redirect('/on/confirm.html?id=%s' % account.id)
+        website.redirect('/on/confirm.html?id=%s' % account.id, response=response)
 
 else:
     raise Response(400)
 
 response.erase_cookie(cookie_name)
-response.redirect(then)
+website.redirect(then, response=response)
 
 [-----------------------------] text/plain
