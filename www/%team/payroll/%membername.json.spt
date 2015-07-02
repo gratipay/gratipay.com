@@ -11,7 +11,7 @@ ZERO = Decimal('0.00')
 A_PENNY = Decimal('0.01')
 
 [--------------------]
-website.redirect('..')  # XXX Migrating to Teams! Fix this up!
+website.redirect('..', base_url='')  # XXX Migrating to Teams! Fix this up!
 request.allow('GET', 'POST')
 team = get_participant(state, restrict=False)
 if not team.show_as_team(user):

@@ -4,7 +4,7 @@ from aspen import Response
 from gratipay.utils import get_participant
 
 [--------------------]
-website.redirect('..')  # XXX Migrating to Teams! Fix this up!
+website.redirect('..', base_url='')  # XXX Migrating to Teams! Fix this up!
 request.allow('GET')
 team = get_participant(state, restrict=False)
 if not team.show_as_team(user):
