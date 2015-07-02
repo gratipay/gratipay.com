@@ -1,3 +1,3 @@
 [---]
-website.redirect('http://inside.gratipay.com/')
+website.redirect('http://inside.gratipay.com/', base_url='')
 [---]
