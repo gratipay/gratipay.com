@@ -214,11 +214,10 @@ def fake_elsewhere(db, participant, platform):
 def fake_payment(db, participant, team):
     """Create fake payment
     """
-    direction = ['to-team','to-participant']
     if participant.username == team.owner:
         direction = 'to-participant'
     else:
-        direction = random.sample(['to-team','to-participant'],1)[0]
+        direction = 'to-team'
     return _fake_thing( db
                       , "payments"
                       , timestamp=faker.date_time_this_year()
@@ -416,13 +415,13 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
 
     # Paydays
     # First determine the boundaries - min and max date
-    min_date = min(min(x['ctime'] for x in subscriptions), \
-                   min(x['timestamp'] for x in payments), \
-                   min(x['ctime'] for x in tips), \
+    min_date = min(min(x['ctime'] for x in subscriptions), 
+                   min(x['timestamp'] for x in payments), 
+                   min(x['ctime'] for x in tips), 
                    min(x['timestamp'] for x in transfers))
-    max_date = max(max(x['ctime'] for x in subscriptions), \
-                   max(x['timestamp'] for x in payments), \
-                   max(x['ctime'] for x in tips), \
+    max_date = max(max(x['ctime'] for x in subscriptions), 
+                   max(x['timestamp'] for x in payments), 
+                   max(x['ctime'] for x in tips), 
                    max(x['timestamp'] for x in transfers))
     # iterate through min_date, max_date one week at a time
     payday_counter = 1
