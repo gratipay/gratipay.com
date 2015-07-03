@@ -917,11 +917,11 @@ class Participant(Model, MixinTeam):
 
         return suggested
 
-    def update_giving_and_tippees(self):
+    def update_giving_and_teams(self):
         with self.db.get_cursor() as cursor:
-            updated_tips = self.update_giving(cursor)
-            for tip in updated_tips:
-                Participant.from_username(tip.tippee).update_receiving(cursor)
+            updated_subs = self.update_giving(cursor)
+            for sub in updated_subs:
+                Team.from_slug(sub.team).update_receiving(cursor)
 
     def update_giving(self, cursor=None):
         updated = []
