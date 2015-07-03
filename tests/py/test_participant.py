@@ -499,7 +499,6 @@ class Tests(Harness):
 
     # giving, npatrons and receiving
 
-    @pytest.mark.xfail(reason="#3399")
     def test_only_funded_tips_count(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob', claimed_time='now')
@@ -519,7 +518,6 @@ class Tests(Harness):
         funded_tip = self.db.one("SELECT * FROM payment_instructions WHERE is_funded ORDER BY id")
         assert funded_tip.participant == alice.username
 
-    @pytest.mark.xfail(reason="#3399")
     def test_only_latest_tip_counts(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team(is_approved=True)
