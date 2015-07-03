@@ -219,9 +219,10 @@ class TestTeams(Harness):
         bob.set_subscription_to(team, '5.00')
 
         assert team.receiving == Decimal('3.00')
+        assert team.nsupporters == 1
 
         funded_subscription = self.db.one("SELECT * FROM subscriptions WHERE is_funded ORDER BY id")
-        assert funded_tip.subscriber == alice.username
+        assert funded_subscription.subscriber == alice.username
 
     def test_receiving_only_includes_latest_subs(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
@@ -231,6 +232,7 @@ class TestTeams(Harness):
         alice.set_subscription_to(team, '3.00')
 
         assert team.receiving == Decimal('3.00')
+        assert team.nsupporters == 1
 
 class TestOldTeams(Harness):
 
