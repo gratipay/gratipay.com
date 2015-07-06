@@ -34,7 +34,7 @@ if request.method == 'POST':
 
             <p>Sorry, we're running payday right now, and we're not set up
             to close accounts while payday is running. Please check back in
-            a few hours.</p>
+            an hour.</p>
 
         </div></form>
 
