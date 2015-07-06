@@ -840,10 +840,12 @@ class Participant(Model, MixinTeam):
         return '{base_url}/{username}/'.format(**locals())
 
 
-    def get_teams(self, only_approved=False):
+    def get_teams(self, only_approved=False, cursor=None):
         """Return a list of teams this user is the owner of.
         """
-        teams = self.db.all("SELECT teams.*::teams FROM teams WHERE owner=%s", (self.username,))
+        teams = (cursor or self.db).all( "SELECT teams.*::teams FROM teams WHERE owner=%s"
+                                       , (self.username,)
+                                        )
         if only_approved:
             teams = [t for t in teams if t.is_approved]
         return teams
@@ -1303,15 +1305,14 @@ class Participant(Model, MixinTeam):
         return out
 
 
-    class StillReceivingTips(Exception): pass
+    class StillATeamOwner(Exception): pass
     class BalanceIsNotZero(Exception): pass
 
     def final_check(self, cursor):
         """Sanity-check that balance and tips have been dealt with.
         """
-        INCOMING = "SELECT count(*) FROM current_tips WHERE tippee = %s AND amount > 0"
-        if cursor.one(INCOMING, (self.username,)) > 0:
-            raise self.StillReceivingTips
+        if self.get_teams(cursor=cursor):
+            raise self.StillATeamOwner
         if self.balance != 0:
             raise self.BalanceIsNotZero
 

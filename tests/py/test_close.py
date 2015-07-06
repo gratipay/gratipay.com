@@ -26,6 +26,12 @@ class TestClosing(Harness):
         with pytest.raises(alice.BalanceIsNotZero):
             alice.close()
 
+    def test_close_fails_if_still_owns_a_team(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_team(owner=alice)
+        with pytest.raises(alice.StillATeamOwner):
+            alice.close()
+
     def test_close_page_is_usually_available(self):
         self.make_participant('alice', claimed_time='now')
         body = self.client.GET('/~alice/settings/close', auth_as='alice').body
