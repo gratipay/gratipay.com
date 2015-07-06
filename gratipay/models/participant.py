@@ -372,7 +372,6 @@ class Participant(Model, MixinTeam):
         """
         if self.IS_PLURAL:
             self.remove_all_members(cursor)
-        self.clear_takes(cursor)
         r = cursor.one("""
 
             INSERT INTO community_members (slug, participant, ctime, name, is_member) (
