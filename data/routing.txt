@@ -14,7 +14,6 @@ Credit Card     | Braintree  | 2.9% + $0.30 | At payday  | https://www.braintree
 
 Route           | Provider   | Fee          | When       | Details
 ----------------+------------+--------------+------------+-----------
-Credit Card     | Braintree  | 2.9% + $0.30 | At payday  | https://www.braintreepayments.com/pricing
 Paypal          |            | max(2%, $20) | At payday  |
 
 # https://gratipay.com/about/faq#how-withdraw-funds
