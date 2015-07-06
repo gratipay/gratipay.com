@@ -14,7 +14,7 @@ Credit Card     | Braintree  | 2.9% + $0.30 | At payday  | https://www.braintree
 
 Route           | Provider   | Fee          | When       | Details
 ----------------+------------+--------------+------------+-----------
-Paypal          |            | max(2%, $20) | At payday  |
+PayPal          |            | min(2%, $20) | At payday  | The fee cap is $1 for U.S. PayPal accounts.
 
 # https://gratipay.com/about/faq#how-withdraw-funds
 
