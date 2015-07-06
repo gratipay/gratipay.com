@@ -324,7 +324,6 @@ class Participant(Model, MixinTeam):
         """
         with self.db.get_cursor() as cursor:
             self.clear_subscriptions(cursor)
-            self.clear_tips_receiving(cursor)
             self.clear_personal_information(cursor)
             self.final_check(cursor)
             self.update_is_closed(True, cursor)
@@ -358,23 +357,6 @@ class Participant(Model, MixinTeam):
         """, (self.username,))
         for team in teams:
             self.set_subscription_to(team, '0.00', update_self=False, cursor=cursor)
-
-    def clear_tips_receiving(self, cursor):
-        """Zero out tips to a given user.
-        """
-        tippers = cursor.all("""
-
-            SELECT ( SELECT participants.*::participants
-                       FROM participants
-                      WHERE username=tipper
-                    ) AS tipper
-              FROM current_tips
-             WHERE tippee = %s
-               AND amount > 0
-
-        """, (self.username,))
-        for tipper in tippers:
-            tipper.set_tip_to(self, '0.00', update_tippee=False, cursor=cursor)
 
 
     def clear_takes(self, cursor):

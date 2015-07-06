@@ -100,52 +100,6 @@ class TestClosing(Harness):
         assert nsubscriptions() == 0
 
 
-    # ctr - clear_tips_receiving
-
-    def test_ctr_clears_tips_receiving(self):
-        alice = self.make_participant('alice')
-        self.make_participant('bob', claimed_time='now').set_tip_to(alice, D('1.00'))
-        ntips = lambda: self.db.one("SELECT count(*) FROM current_tips "
-                                    "WHERE tippee='alice' AND amount > 0")
-        assert ntips() == 1
-        with self.db.get_cursor() as cursor:
-            alice.clear_tips_receiving(cursor)
-        assert ntips() == 0
-
-    def test_ctr_doesnt_duplicate_zero_tips(self):
-        alice = self.make_participant('alice')
-        bob = self.make_participant('bob', claimed_time='now')
-        bob.set_tip_to(alice, D('1.00'))
-        bob.set_tip_to(alice, D('0.00'))
-        ntips = lambda: self.db.one("SELECT count(*) FROM tips WHERE tippee='alice'")
-        assert ntips() == 2
-        with self.db.get_cursor() as cursor:
-            alice.clear_tips_receiving(cursor)
-        assert ntips() == 2
-
-    def test_ctr_doesnt_zero_when_theres_no_tip(self):
-        alice = self.make_participant('alice')
-        ntips = lambda: self.db.one("SELECT count(*) FROM tips WHERE tippee='alice'")
-        assert ntips() == 0
-        with self.db.get_cursor() as cursor:
-            alice.clear_tips_receiving(cursor)
-        assert ntips() == 0
-
-    def test_ctr_clears_multiple_tips_receiving(self):
-        alice = self.make_participant('alice')
-        self.make_participant('bob', claimed_time='now').set_tip_to(alice, D('1.00'))
-        self.make_participant('carl', claimed_time='now').set_tip_to(alice, D('2.00'))
-        self.make_participant('darcy', claimed_time='now').set_tip_to(alice, D('3.00'))
-        self.make_participant('evelyn', claimed_time='now').set_tip_to(alice, D('4.00'))
-        self.make_participant('francis', claimed_time='now').set_tip_to(alice, D('5.00'))
-        ntips = lambda: self.db.one("SELECT count(*) FROM current_tips "
-                                    "WHERE tippee='alice' AND amount > 0")
-        assert ntips() == 5
-        with self.db.get_cursor() as cursor:
-            alice.clear_tips_receiving(cursor)
-        assert ntips() == 0
-
-
     # cpi - clear_personal_information
 
     @mock.patch.object(Participant, '_mailer')
