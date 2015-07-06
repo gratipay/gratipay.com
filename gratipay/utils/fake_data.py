@@ -211,19 +211,15 @@ def fake_elsewhere(db, participant, platform):
                     , extra_info=None
                      )
 
-def fake_payment(db, participant, team):
+def fake_payment(db, participant, team, amount, direction):
     """Create fake payment
     """
-    if participant.username == team.owner:
-        direction = 'to-participant'
-    else:
-        direction = 'to-team'
     return _fake_thing( db
                       , "payments"
                       , timestamp=faker.date_time_this_year()
-                      , participant=participant.username
-                      , team=team.slug
-                      , amount=fake_tip_amount()	
+                      , participant=participant
+                      , team=team
+                      , amount=amount	
                       , direction=direction
                        )
 
@@ -391,17 +387,24 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
     # Payments
     payments = []
     paymentcount = 0
-    while paymentcount <= num_payments:
-        for participant in participants:
-            for team in teams:
-                paymentcount += 1
-                if paymentcount > num_payments:
-                    break
-                sys.stdout.write("\rMaking Payments (%i/%i)" % (paymentcount, num_payments))
-                sys.stdout.flush()
-                payments.append(fake_payment(db, participant, team))
-            if paymentcount > num_payments:
-                break
+    teamamounts = {}
+    for team in teams:
+        teamamounts[team.slug] = 0
+    for subscription in subscriptions:
+        participant = subscription['subscriber']
+        team = Team.from_slug(subscription['team'])
+        amount = subscription['amount']
+        if participant != team.owner: 
+            paymentcount += 1
+            sys.stdout.write("\rMaking Payments (%i)" % (paymentcount))
+            sys.stdout.flush()
+            payments.append(fake_payment(db, participant, team.slug, amount, 'to-team'))
+            teamamounts[team.slug] = teamamounts[team.slug] + amount
+    for team in teams:
+        paymentcount += 1
+        sys.stdout.write("\rMaking Payments (%i)" % (paymentcount))
+        sys.stdout.flush()
+        payments.append(fake_payment(db, team.owner, team.slug, teamamounts[team.slug], 'to-participant'))
     print("")
 
     # Transfers
