@@ -7,7 +7,6 @@ import mock
 import pytest
 
 from gratipay.billing.payday import Payday
-from gratipay.exceptions import NotWhitelisted
 from gratipay.models.community import Community
 from gratipay.models.participant import Participant
 from gratipay.testing import Harness
