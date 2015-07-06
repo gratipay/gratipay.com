@@ -370,8 +370,6 @@ class Participant(Model, MixinTeam):
     def clear_personal_information(self, cursor):
         """Clear personal information such as statements.
         """
-        if self.IS_PLURAL:
-            self.remove_all_members(cursor)
         r = cursor.one("""
 
             INSERT INTO community_members (slug, participant, ctime, name, is_member) (
