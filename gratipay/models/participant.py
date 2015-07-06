@@ -842,7 +842,7 @@ class Participant(Model, MixinTeam):
 
 
     def get_teams(self, only_approved=False):
-        """Return a list of teams this user is a member or owner of.
+        """Return a list of teams this user is the owner of.
         """
         teams = self.db.all("SELECT teams.*::teams FROM teams WHERE owner=%s", (self.username,))
         if only_approved:
