@@ -35,6 +35,7 @@ def check_db(cursor):
     """Runs all available self checks on the given cursor.
     """
     _check_balances(cursor)
+    _check_no_team_balances(cursor)
     _check_tips(cursor)
     _check_orphans(cursor)
     _check_orphans_no_tips(cursor)
@@ -118,6 +119,34 @@ def _check_balances(cursor):
         where expected <> p.balance
     """)
     assert len(b) == 0, "conflicting balances: {}".format(b)
+
+def _check_no_team_balances(cursor):
+    if cursor.one("select exists (select * from paydays where ts_end < ts_start) as running"):
+        # payday is running
+        return
+    teams = cursor.all("""
+        SELECT t.slug, balance
+          FROM (
+                SELECT team, sum(delta) as balance
+                  FROM (
+                        SELECT team, sum(-amount) AS delta
+                          FROM payments
+                         WHERE direction='to-participant'
+                      GROUP BY team
+
+                         UNION ALL
+
+                        SELECT team, sum(amount) AS delta
+                          FROM payments
+                         WHERE direction='to-team'
+                      GROUP BY team
+                       ) AS foo
+              GROUP BY team
+               ) AS foo2
+          JOIN teams t ON t.slug = foo2.team
+         WHERE balance <> 0
+    """)
+    assert len(teams) == 0, "teams with non-zero balance: {}".format(teams)
 
 
 def _check_orphans(cursor):
