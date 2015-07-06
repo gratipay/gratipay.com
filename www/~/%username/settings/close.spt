@@ -27,8 +27,9 @@ if request.method == 'POST':
 
     {% if participant.has_payout_route %}
 
-    You've <a href="../routes/paypal.html">linked a PayPal account</a>. Please
-    <a href="mailto:support@gratipay.com?subject=close%20account">notify
+    You've <a href="../routes/paypal.html">linked a PayPal account</a>. If you
+    haven't received a payout from us before, please <a
+    href="mailto:support@gratipay.com?subject=close%20account">notify
     support</a> to make sure your payout goes through.
 
     {% else %}
