@@ -319,21 +319,10 @@ class Participant(Model, MixinTeam):
     # Closing
     # =======
 
-    class UnknownDisbursementStrategy(Exception): pass
-
-    def close(self, disbursement_strategy):
+    def close(self):
         """Close the participant's account.
         """
         with self.db.get_cursor() as cursor:
-            if disbursement_strategy == None:
-                pass  # No balance, supposedly. final_check will make sure.
-            # XXX Bring me back!
-            #elif disbursement_strategy == 'downstream':
-            #    # This in particular needs to come before clear_tips_giving.
-            #    self.distribute_balance_as_final_gift(cursor)
-            else:
-                raise self.UnknownDisbursementStrategy
-
             self.clear_tips_giving(cursor)
             self.clear_tips_receiving(cursor)
             self.clear_personal_information(cursor)
@@ -351,53 +340,6 @@ class Participant(Model, MixinTeam):
                      , dict(id=self.id, action='set', values=dict(is_closed=is_closed))
                       )
             self.set_attributes(is_closed=is_closed)
-
-
-    class NoOneToGiveFinalGiftTo(Exception): pass
-
-    def distribute_balance_as_final_gift(self, cursor):
-        """Distribute a balance as a final gift.
-        """
-        raise NotImplementedError # XXX Bring me back!
-        if self.balance == 0:
-            return
-
-        claimed_tips, claimed_total = self.get_giving_for_profile()
-        transfers = []
-        distributed = Decimal('0.00')
-
-        for tip in claimed_tips:
-            rate = tip.amount / claimed_total
-            pro_rated = (self.balance * rate).quantize(Decimal('0.01'), ROUND_DOWN)
-            if pro_rated == 0:
-                continue
-            distributed += pro_rated
-            transfers.append([tip.tippee, pro_rated])
-
-        if not transfers:
-            raise self.NoOneToGiveFinalGiftTo
-
-        diff = self.balance - distributed
-        if diff != 0:
-            transfers[0][1] += diff  # Give it to the highest receiver.
-
-        for tippee, amount in transfers:
-            assert amount > 0
-            balance = cursor.one( "UPDATE participants SET balance=balance - %s "
-                                  "WHERE username=%s RETURNING balance"
-                                , (amount, self.username)
-                                 )
-            assert balance >= 0  # sanity check
-            cursor.run( "UPDATE participants SET balance=balance + %s WHERE username=%s"
-                      , (amount, tippee)
-                       )
-            cursor.run( "INSERT INTO transfers (tipper, tippee, amount, context) "
-                        "VALUES (%s, %s, %s, 'final-gift')"
-                      , (self.username, tippee, amount)
-                       )
-
-        assert balance == 0
-        self.set_attributes(balance=balance)
 
 
     def clear_tips_giving(self, cursor):

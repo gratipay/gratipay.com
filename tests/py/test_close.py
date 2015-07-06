@@ -16,32 +16,16 @@ class TestClosing(Harness):
 
     # close
 
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     def test_close_closes(self):
-        team = self.make_participant('team', claimed_time='now', number='plural', balance=50)
+        alice = self.make_participant('alice', claimed_time='now')
+        alice.close()
+        assert Participant.from_username('alice').is_closed
+
+    def test_close_fails_if_still_a_balance(self):
         alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
-        bob = self.make_participant('bob', claimed_time='now')
-        carl = self.make_participant('carl', claimed_time='now')
+        with pytest.raises(alice.BalanceIsNotZero):
+            alice.close()
 
-        alice.set_tip_to(bob, D('3.00'))
-        carl.set_tip_to(alice, D('2.00'))
-
-        team.add_member(alice)
-        team.add_member(bob)
-        assert len(team.get_current_takes()) == 2  # sanity check
-
-        alice.close('downstream')
-
-        assert carl.get_tip_to('alice')['amount'] == 0
-        assert alice.balance == 0
-        assert len(team.get_current_takes()) == 1
-
-    def test_close_raises_for_unknown_disbursement_strategy(self):
-        alice = self.make_participant('alice', balance=D('0.00'))
-        with pytest.raises(alice.UnknownDisbursementStrategy):
-            alice.close('cheese')
-
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     def test_close_page_is_usually_available(self):
         self.make_participant('alice', claimed_time='now')
         body = self.client.GET('/~alice/settings/close', auth_as='alice').body
@@ -54,108 +38,18 @@ class TestClosing(Harness):
         assert 'Personal Information' not in body
         assert 'Try Again Later' in body
 
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     def test_can_post_to_close_page(self):
-        alice = self.make_participant('alice', claimed_time='now', balance=7)
-        bob = self.make_participant('bob', claimed_time='now')
-        alice.set_tip_to(bob, D('10.00'))
-
-        data = {'disbursement_strategy': 'downstream'}
-        response = self.client.PxST('/~alice/settings/close', auth_as='alice', data=data)
+        self.make_participant('alice', claimed_time='now')
+        response = self.client.PxST('/~alice/settings/close', auth_as='alice')
         assert response.code == 302
         assert response.headers['Location'] == '/~alice/'
-        assert Participant.from_username('alice').balance == 0
-        assert Participant.from_username('bob').balance == 7
+        assert Participant.from_username('alice').is_closed
 
     def test_cant_post_to_close_page_during_payday(self):
         Payday.start()
         self.make_participant('alice', claimed_time='now')
         body = self.client.POST('/~alice/settings/close', auth_as='alice').body
         assert 'Try Again Later' in body
-
-
-    # dbafg - distribute_balance_as_final_gift
-
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
-    def test_dbafg_distributes_balance_as_final_gift(self):
-        alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
-        bob = self.make_participant('bob', claimed_time='now')
-        carl = self.make_participant('carl', claimed_time='now')
-        alice.set_tip_to(bob, D('3.00'))
-        alice.set_tip_to(carl, D('2.00'))
-        with self.db.get_cursor() as cursor:
-            alice.distribute_balance_as_final_gift(cursor)
-        assert Participant.from_username('bob').balance == D('6.00')
-        assert Participant.from_username('carl').balance == D('4.00')
-        assert Participant.from_username('alice').balance == D('0.00')
-
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
-    def test_dbafg_needs_claimed_tips(self):
-        alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
-        bob = self.make_participant('bob')
-        carl = self.make_participant('carl')
-        alice.set_tip_to(bob, D('3.00'))
-        alice.set_tip_to(carl, D('2.00'))
-        with self.db.get_cursor() as cursor:
-            with pytest.raises(alice.NoOneToGiveFinalGiftTo):
-                alice.distribute_balance_as_final_gift(cursor)
-        assert Participant.from_username('bob').balance == D('0.00')
-        assert Participant.from_username('carl').balance == D('0.00')
-        assert Participant.from_username('alice').balance == D('10.00')
-
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
-    def test_dbafg_gives_all_to_claimed(self):
-        alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
-        bob = self.make_participant('bob', claimed_time='now')
-        carl = self.make_participant('carl')
-        alice.set_tip_to(bob, D('3.00'))
-        alice.set_tip_to(carl, D('2.00'))
-        with self.db.get_cursor() as cursor:
-            alice.distribute_balance_as_final_gift(cursor)
-        assert Participant.from_username('bob').balance == D('10.00')
-        assert Participant.from_username('carl').balance == D('0.00')
-        assert Participant.from_username('alice').balance == D('0.00')
-
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
-    def test_dbafg_skips_zero_tips(self):
-        alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
-        bob = self.make_participant('bob', claimed_time='now')
-        carl = self.make_participant('carl', claimed_time='now')
-        alice.set_tip_to(bob, D('0.00'))
-        alice.set_tip_to(carl, D('2.00'))
-        with self.db.get_cursor() as cursor:
-            alice.distribute_balance_as_final_gift(cursor)
-        assert self.db.one("SELECT count(*) FROM tips WHERE tippee='bob'") == 1
-        assert Participant.from_username('bob').balance == D('0.00')
-        assert Participant.from_username('carl').balance == D('10.00')
-        assert Participant.from_username('alice').balance == D('0.00')
-
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
-    def test_dbafg_favors_highest_tippee_in_rounding_errors(self):
-        alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
-        bob = self.make_participant('bob', claimed_time='now')
-        carl = self.make_participant('carl', claimed_time='now')
-        alice.set_tip_to(bob, D('3.00'))
-        alice.set_tip_to(carl, D('6.00'))
-        with self.db.get_cursor() as cursor:
-            alice.distribute_balance_as_final_gift(cursor)
-        assert Participant.from_username('bob').balance == D('3.33')
-        assert Participant.from_username('carl').balance == D('6.67')
-        assert Participant.from_username('alice').balance == D('0.00')
-
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3467')
-    def test_dbafg_with_zero_balance_is_a_noop(self):
-        alice = self.make_participant('alice', claimed_time='now', balance=D('0.00'))
-        bob = self.make_participant('bob', claimed_time='now')
-        carl = self.make_participant('carl', claimed_time='now')
-        alice.set_tip_to(bob, D('3.00'))
-        alice.set_tip_to(carl, D('6.00'))
-        with self.db.get_cursor() as cursor:
-            alice.distribute_balance_as_final_gift(cursor)
-        assert self.db.one("SELECT count(*) FROM tips") == 2
-        assert Participant.from_username('bob').balance == D('0.00')
-        assert Participant.from_username('carl').balance == D('0.00')
-        assert Participant.from_username('alice').balance == D('0.00')
 
 
     # ctg - clear_tips_giving
