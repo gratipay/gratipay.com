@@ -11,7 +11,7 @@ of participant, based on certain properties.
 from __future__ import print_function, unicode_literals
 
 from datetime import timedelta
-from decimal import Decimal, ROUND_DOWN
+from decimal import Decimal
 import pickle
 from time import sleep
 from urllib import quote
@@ -323,7 +323,7 @@ class Participant(Model, MixinTeam):
         """Close the participant's account.
         """
         with self.db.get_cursor() as cursor:
-            self.clear_tips_giving(cursor)
+            self.clear_subscriptions(cursor)
             self.clear_tips_receiving(cursor)
             self.clear_personal_information(cursor)
             self.final_check(cursor)
@@ -342,22 +342,22 @@ class Participant(Model, MixinTeam):
             self.set_attributes(is_closed=is_closed)
 
 
-    def clear_tips_giving(self, cursor):
-        """Zero out tips from a given user.
+    def clear_subscriptions(self, cursor):
+        """Zero out the participant's subscriptions.
         """
-        tippees = cursor.all("""
+        teams = cursor.all("""
 
-            SELECT ( SELECT participants.*::participants
-                       FROM participants
-                      WHERE username=tippee
-                    ) AS tippee
-              FROM current_tips
-             WHERE tipper = %s
+            SELECT ( SELECT teams.*::teams
+                       FROM teams
+                      WHERE slug=team
+                    ) AS team
+              FROM current_subscriptions
+             WHERE subscriber = %s
                AND amount > 0
 
         """, (self.username,))
-        for tippee in tippees:
-            self.set_tip_to(tippee, '0.00', update_self=False, cursor=cursor)
+        for team in teams:
+            self.set_subscription_to(team, '0.00', update_self=False, cursor=cursor)
 
     def clear_tips_receiving(self, cursor):
         """Zero out tips to a given user.

@@ -52,50 +52,52 @@ class TestClosing(Harness):
         assert 'Try Again Later' in body
 
 
-    # ctg - clear_tips_giving
+    # cs - clear_subscriptions
 
-    def test_ctg_clears_tips_giving(self):
+    def test_cs_clears_subscriptions(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        alice.set_tip_to(self.make_participant('bob', claimed_time='now').username, D('1.00'))
-        ntips = lambda: self.db.one("SELECT count(*) FROM current_tips "
-                                    "WHERE tipper='alice' AND amount > 0")
-        assert ntips() == 1
+        alice.set_subscription_to(self.make_team(), D('1.00'))
+        nsubscriptions = lambda: self.db.one("SELECT count(*) FROM current_subscriptions "
+                                             "WHERE subscriber='alice' AND amount > 0")
+        assert nsubscriptions() == 1
         with self.db.get_cursor() as cursor:
-            alice.clear_tips_giving(cursor)
-        assert ntips() == 0
+            alice.clear_subscriptions(cursor)
+        assert nsubscriptions() == 0
 
-    def test_ctg_doesnt_duplicate_zero_tips(self):
+    def test_cs_doesnt_duplicate_zero_subscriptions(self):
         alice = self.make_participant('alice', claimed_time='now')
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, D('1.00'))
-        alice.set_tip_to(bob, D('0.00'))
-        ntips = lambda: self.db.one("SELECT count(*) FROM tips WHERE tipper='alice'")
-        assert ntips() == 2
+        A = self.make_team()
+        alice.set_subscription_to(A, D('1.00'))
+        alice.set_subscription_to(A, D('0.00'))
+        nsubscriptions = lambda: self.db.one("SELECT count(*) FROM subscriptions "
+                                             "WHERE subscriber='alice'")
+        assert nsubscriptions() == 2
         with self.db.get_cursor() as cursor:
-            alice.clear_tips_giving(cursor)
-        assert ntips() == 2
+            alice.clear_subscriptions(cursor)
+        assert nsubscriptions() == 2
 
-    def test_ctg_doesnt_zero_when_theres_no_tip(self):
+    def test_cs_doesnt_zero_when_theres_no_subscription(self):
         alice = self.make_participant('alice')
-        ntips = lambda: self.db.one("SELECT count(*) FROM tips WHERE tipper='alice'")
-        assert ntips() == 0
+        nsubscriptions = lambda: self.db.one("SELECT count(*) FROM subscriptions "
+                                             "WHERE subscriber='alice'")
+        assert nsubscriptions() == 0
         with self.db.get_cursor() as cursor:
-            alice.clear_tips_giving(cursor)
-        assert ntips() == 0
+            alice.clear_subscriptions(cursor)
+        assert nsubscriptions() == 0
 
-    def test_ctg_clears_multiple_tips_giving(self):
+    def test_cs_clears_multiple_subscriptions(self):
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_tip_to(self.make_participant('bob', claimed_time='now').username, D('1.00'))
-        alice.set_tip_to(self.make_participant('carl', claimed_time='now').username, D('1.00'))
-        alice.set_tip_to(self.make_participant('darcy', claimed_time='now').username, D('1.00'))
-        alice.set_tip_to(self.make_participant('evelyn', claimed_time='now').username, D('1.00'))
-        alice.set_tip_to(self.make_participant('francis', claimed_time='now').username, D('1.00'))
-        ntips = lambda: self.db.one("SELECT count(*) FROM current_tips "
-                                    "WHERE tipper='alice' AND amount > 0")
-        assert ntips() == 5
+        alice.set_subscription_to(self.make_team('A'), D('1.00'))
+        alice.set_subscription_to(self.make_team('B'), D('1.00'))
+        alice.set_subscription_to(self.make_team('C'), D('1.00'))
+        alice.set_subscription_to(self.make_team('D'), D('1.00'))
+        alice.set_subscription_to(self.make_team('E'), D('1.00'))
+        nsubscriptions = lambda: self.db.one("SELECT count(*) FROM current_subscriptions "
+                                             "WHERE subscriber='alice' AND amount > 0")
+        assert nsubscriptions() == 5
         with self.db.get_cursor() as cursor:
-            alice.clear_tips_giving(cursor)
-        assert ntips() == 0
+            alice.clear_subscriptions(cursor)
+        assert nsubscriptions() == 0
 
 
     # ctr - clear_tips_receiving
