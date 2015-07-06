@@ -19,12 +19,8 @@ if request.method == 'POST':
             error = _("You still have money in this Gratipay account, please "
                       "choose a disbursement method below or contact support.")
         else:
-            try:
-                participant.close(disbursement_strategy)
-            except participant.BankWithdrawalFailed as e:
-                error = _("The bank withdrawal failed. Error message: {0}", e)
-            else:
-                website.redirect('/~%s/' % participant.username)
+            participant.close(disbursement_strategy)
+            website.redirect('/~%s/' % participant.username)
 [---] text/html
 {% extends "templates/base.html" %}
 
@@ -52,30 +48,6 @@ if request.method == 'POST':
                What should we do with it?</p>
 
             <ul>
-
-                {% if participant.get_bank_account_error() == '' %}
-                    {% if participant.is_whitelisted %}
-                        <li><input type="radio" name="disbursement_strategy" id="r1"
-                             value="bank" checked />
-                            <label for="r1">Send it to my <a href="../routes/bank-account.html">bank
-                            account</a></label></li>
-                    {% else %}
-
-                        <li><label>A staff member will review your account
-                        by Thursday, and then you'll be able to have your
-                        funds deposited to your bank account on file. To
-                        expedite the review, please <a
-                        href="mailto:support@gratipay.com?subject=review%20for%20closing%20account">contact
-                        support</a>.</label></li>
-
-                    {% endif %}
-                {% else %}
-                    <li><label>Go <a href="../routes/bank-account.html">set up a bank
-                    account</a> to be able to have your funds deposited there.
-                    Due to our anti-fraud policies, a staff member will need to
-                    review your account before completing the
-                    transaction using this option.</label></li>
-                {% endif %}
 
                 {% if participant.giving %}
                 <li><input type="radio" name="disbursement_strategy" id="r2"

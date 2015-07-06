@@ -74,38 +74,6 @@ class TestClosing(Harness):
         body = self.client.POST('/~alice/settings/close', auth_as='alice').body
         assert 'Try Again Later' in body
 
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
-    @mock.patch('gratipay.billing.exchanges.ach_credit')
-    def test_ach_credit_failure_doesnt_cause_500(self, ach_credit):
-        ach_credit.side_effect = 'some error'
-        self.make_participant('alice', claimed_time='now', balance=384)
-        data = {'disbursement_strategy': 'bank'}
-        r = self.client.POST('/~alice/settings/close', auth_as='alice', data=data)
-        assert r.code == 200
-
-
-    # wbtba - withdraw_balance_to_bank_account
-
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
-    @mock.patch('gratipay.billing.exchanges.thing_from_href')
-    def test_wbtba_withdraws_balance_to_bank_account(self, tfh):
-        alice = self.make_participant( 'alice'
-                                     , balance=D('10.00')
-                                     , is_suspicious=False
-                                     , last_paypal_result=''
-                                      )
-        alice.close('bank')
-
-    def test_wbtba_raises_NotWhitelisted_if_not_whitelisted(self):
-        alice = self.make_participant('alice', balance=D('10.00'))
-        with pytest.raises(NotWhitelisted):
-            alice.withdraw_balance_to_bank_account()
-
-    def test_wbtba_raises_NotWhitelisted_if_blacklisted(self):
-        alice = self.make_participant('alice', balance=D('10.00'), is_suspicious=True)
-        with pytest.raises(NotWhitelisted):
-            alice.withdraw_balance_to_bank_account()
-
 
     # dbafg - distribute_balance_as_final_gift
 

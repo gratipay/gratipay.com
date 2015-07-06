@@ -328,8 +328,6 @@ class Participant(Model, MixinTeam):
             if disbursement_strategy == None:
                 pass  # No balance, supposedly. final_check will make sure.
             # XXX Bring me back!
-            #elif disbursement_strategy == 'bank':
-            #    self.withdraw_balance_to_bank_account()
             #elif disbursement_strategy == 'downstream':
             #    # This in particular needs to come before clear_tips_giving.
             #    self.distribute_balance_as_final_gift(cursor)
@@ -353,18 +351,6 @@ class Participant(Model, MixinTeam):
                      , dict(id=self.id, action='set', values=dict(is_closed=is_closed))
                       )
             self.set_attributes(is_closed=is_closed)
-
-    class BankWithdrawalFailed(Exception): pass
-
-    def withdraw_balance_to_bank_account(self):
-        from gratipay.billing.exchanges import ach_credit
-        error = ach_credit( self.db
-                          , self
-                          , Decimal('0.00') # don't withhold anything
-                          , Decimal('0.00') # send it all
-                           )
-        if error:
-            raise self.BankWithdrawalFailed(error)
 
 
     class NoOneToGiveFinalGiftTo(Exception): pass
