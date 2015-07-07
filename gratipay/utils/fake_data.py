@@ -445,10 +445,8 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
             payments_in = filter(lambda x: x['participant'] == p.username, week_payments_to_owners)
             transfers_out = filter(lambda x: x['tipper'] == p.username, week_transfers)
             payments_out = filter(lambda x: x['participant'] == p.username, week_payments_to_teams)
-            amount_in = sum([t['amount'] for t in transfers_in])
-            amount_in = amount_in + sum([t['amount'] for t in payments_in])
-            amount_out = sum([t['amount'] for t in transfers_out])
-            amount_out = amount_out + sum([t['amount'] for t in payments_out])
+            amount_in = sum([t['amount'] for t in transfers_in + payments_in])
+            amount_out = sum([t['amount'] for t in transfers_out + payments_out])
             amount = amount_out - amount_in
             fee = amount * D('0.02')
             fee = abs(fee.quantize(D('.01')))
