@@ -316,12 +316,7 @@ def clean_db(db):
     """)
 
 
-<<<<<<< HEAD
 def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=5000, num_communities=20):
-=======
-def populate_db(db, num_participants=100, num_tips=200, num_teams=25, num_transfers=5000,
-        num_communities=20):
->>>>>>> 7828f7b... Increase the number of teams to 25
     """Populate DB with fake data.
     """
     print("Making Participants")
