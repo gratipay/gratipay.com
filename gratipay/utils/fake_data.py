@@ -414,14 +414,10 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
 
     # Paydays
     # First determine the boundaries - min and max date
-    min_date = min(min(x['ctime'] for x in subscriptions),
-                   min(x['timestamp'] for x in payments),
-                   min(x['ctime'] for x in tips),
-                   min(x['timestamp'] for x in transfers))
-    max_date = max(max(x['ctime'] for x in subscriptions),
-                   max(x['timestamp'] for x in payments),
-                   max(x['ctime'] for x in tips),
-                   max(x['timestamp'] for x in transfers))
+    min_date = min(min(x['ctime'] for x in subscriptions + tips),
+                   min(x['timestamp'] for x in payments + transfers))
+    max_date = max(max(x['ctime'] for x in subscriptions + tips),
+                   max(x['timestamp'] for x in payments + transfers))
     # iterate through min_date, max_date one week at a time
     payday_counter = 1
     date = min_date
