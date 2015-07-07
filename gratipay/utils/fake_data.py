@@ -355,16 +355,12 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         for team in teams:
             #eliminate self-payment
             if participant.username != team.owner:
-<<<<<<< HEAD
                 npayment_instructions += 1
                 if npayment_instructions > ntips:
                     break
                 fake_payment_instruction(db, participant, team)
         if npayment_instructions > ntips:
             break
-=======
-                subscriptions.append(fake_subscription(db, participant, team))
->>>>>>> 7828f7b... Increase the number of teams to 25
 
     print("Making Elsewheres")
     for p in participants:
@@ -488,18 +484,8 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         payday = {
             'ts_start': date,
             'ts_end': end_date,
-<<<<<<< HEAD
             'nusers': len(actives),
             'volume': sum(x['amount'] for x in week_transfers)
-=======
-            'ntips': len(week_tips) + len(week_subscriptions),
-            'ntransfers': len(week_transfers) + len(week_payments),
-            'nparticipants': len(week_participants),
-            'ntippers': len(tippers),
-            'nactive': len(actives),
-            'transfer_volume': sum(x['amount'] for x in week_transfers)
-                + sum(x['amount'] for x in week_payments)
->>>>>>> 7828f7b... Increase the number of teams to 25
         }
         insert_fake_data(db, "paydays", **payday)
         date = end_date
