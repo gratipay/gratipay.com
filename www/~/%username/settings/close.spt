@@ -16,33 +16,52 @@ if request.method == 'POST':
     else:
         participant.close()
         website.redirect('/~%s/' % participant.username)
+teams = participant.get_teams()
+nteams = len(teams)
+if nteams > 1:
+    teams = ', '.join([t.name for t in teams[:-1]]) + ' and ' + teams[-1].name + ' teams'
+elif nteams == 1:
+    teams = teams[0].name + ' team'
+
 [---] text/html
 {% extends "templates/base.html" %}
 
 {% block content %}
 <div class="col0">
-    {% if participant.balance > 0 %}
 
-    <p>You have a balance of <b>${{ participant.balance }}</b>.
+  {% if teams or participant.balance > 0 %}
 
-    {% if participant.has_payout_route %}
+    {% if teams %}
 
-    You've <a href="../routes/paypal.html">linked a PayPal account</a>. If you
-    haven't received a payout from us before, please <a
-    href="mailto:support@gratipay.com?subject=close%20account">notify
-    support</a> to make sure your payout goes through.
-
-    {% else %}
-
-    Please <a href="../routes/paypal.html">link a PayPal account</a> and then
-    <a href="mailto:support@gratipay.com?subject=close%20account">notify
-    support</a> to make sure your payout goes through.
+      <p>You are the owner of the {{ teams }}. We don't yet <a
+      href="https://github.com/gratipay/gratipay.com/issues/3602">support
+      team owners closing their accounts</a>.</p>
 
     {% endif %}
 
-    You will be able to close your account once your balance is zero.</p>
+    {% if participant.balance > 0 %}
+      {% if participant.has_payout_route %}
 
-    {% elif payday_is_running %}
+        <p>You have a balance of <b>${{ participant.balance }}</b>, and you've
+        <a href="../routes/paypal.html">linked a PayPal account</a>. If you
+        haven't received a payout from us before, please <a
+        href="mailto:support@gratipay.com?subject=close%20account">notify
+        support</a> to make sure your payout goes through.
+
+      {% else %}
+
+        Please <a href="../routes/paypal.html">link a PayPal account</a> and
+        then <a
+        href="mailto:support@gratipay.com?subject=close%20account">notify
+        support</a> to make sure your payout goes through.
+
+      {% endif %}
+
+      You will be able to close your account once your balance is zero.</p>
+
+    {% endif %}
+
+  {% elif payday_is_running %}
 
     <h2>Try Again Later</h2>
 
@@ -50,7 +69,7 @@ if request.method == 'POST':
     to close accounts while payday is running. Please check back in
     an hour.</p>
 
-    {% else %}
+  {% else %}
     <form method="POST">
 
         <h2>Personal Information</h2>
@@ -101,7 +120,7 @@ if request.method == 'POST':
         <button class="selected larger close-account" id="save"
             type="submit">Yes, Close My Gratipay Account</button>
     </form>
-    {% endif %}
+  {% endif %}
 </div>
 {% endblock %}
 

@@ -57,6 +57,27 @@ class TestClosing(Harness):
         body = self.client.POST('/~alice/settings/close', auth_as='alice').body
         assert 'Try Again Later' in body
 
+    def test_close_page_shows_a_message_to_team_owners(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_team('A', alice)
+        body = self.client.GET('/~alice/settings/close', auth_as='alice').body
+        assert 'You are the owner of the A team.' in body
+
+    def test_close_page_shows_a_message_to_owners_of_two_teams(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_team('A', alice)
+        self.make_team('B', alice)
+        body = self.client.GET('/~alice/settings/close', auth_as='alice').body
+        assert 'You are the owner of the A and B teams.' in body
+
+    def test_close_page_shows_a_message_to_owners_of_three_teams(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_team('A', alice)
+        self.make_team('B', alice)
+        self.make_team('C', alice)
+        body = self.client.GET('/~alice/settings/close', auth_as='alice').body
+        assert 'You are the owner of the A, B and C teams.' in body
+
 
     # cs - clear_subscriptions
 
