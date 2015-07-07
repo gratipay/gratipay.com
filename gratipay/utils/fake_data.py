@@ -281,7 +281,6 @@ def prep_db(db):
                    AND NEW.direction = 'to-team';
 
                 RETURN NULL;
-
             END;
         $$ language plpgsql;
 
@@ -313,7 +312,6 @@ def clean_db(db):
     db.run("""
         DROP FUNCTION IF EXISTS process_transfer() CASCADE;
         DROP FUNCTION IF EXISTS process_exchange() CASCADE;
-    """)
 
 
 def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=5000, num_communities=20):
