@@ -394,12 +394,12 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         participant = subscription['subscriber']
         team = Team.from_slug(subscription['team'])
         amount = subscription['amount']
-        if participant != team.owner:
-            paymentcount += 1
-            sys.stdout.write("\rMaking Payments (%i)" % (paymentcount))
-            sys.stdout.flush()
-            payments.append(fake_payment(db, participant, team.slug, amount, 'to-team'))
-            teamamounts[team.slug] = teamamounts[team.slug] + amount
+        assert participant != team.owner
+        paymentcount += 1
+        sys.stdout.write("\rMaking Payments (%i)" % (paymentcount))
+        sys.stdout.flush()
+        payments.append(fake_payment(db, participant, team.slug, amount, 'to-team'))
+        teamamounts[team.slug] = teamamounts[team.slug] + amount
     for team in teams:
         paymentcount += 1
         sys.stdout.write("\rMaking Payments (%i)" % (paymentcount))
@@ -439,14 +439,14 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         week_transfers = filter(lambda x: date <= x['timestamp'] < end_date, transfers)
         week_subscriptions = filter(lambda x: date <= x['ctime'] < end_date, subscriptions)
         week_payments = filter(lambda x: date <= x['timestamp'] < end_date, payments)
+        week_payments_to_teams = filter(lambda x: x['direction'] == 'to-team', week_payments)
+        week_payments_to_owners = filter(lambda x: x['direction'] == 'to-participant', week_payments)
         week_participants = filter(lambda x: x.ctime.replace(tzinfo=None) < end_date, participants)
         for p in week_participants:
             transfers_in = filter(lambda x: x['tippee'] == p.username, week_transfers)
-            payments_in = filter(lambda x: (x['participant'] == p.username) &
-                (x['direction'] == 'to-participant'), week_payments)
+            payments_in = filter(lambda x: x['participant'] == p.username, week_payments_to_owners)
             transfers_out = filter(lambda x: x['tipper'] == p.username, week_transfers)
-            payments_out = filter(lambda x: (x['participant'] == p.username) &
-                (x['direction'] == 'to-team'), week_payments)
+            payments_out = filter(lambda x: x['participant'] == p.username, week_payments_to_teams)
             amount_in = sum([t['amount'] for t in transfers_in])
             amount_in = amount_in + sum([t['amount'] for t in payments_in])
             amount_out = sum([t['amount'] for t in transfers_out])
@@ -478,8 +478,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
 
         # week_payments
         actives.update(x['participant'] for x in week_payments)
-        tip_payments = filter(lambda x: x['direction'] == 'to-team', week_payments)
-        tippers.update(x['participant'] for x in tip_payments)
+        tippers.update(x['participant'] for x in week_payments_to_owners)
 
         payday = {
             'ts_start': date,
