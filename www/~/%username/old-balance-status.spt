@@ -22,7 +22,7 @@ website.db.run("""
      WHERE id = %s
 """, (new_status, participant.id))
 
-website.redirect('settings')
+website.redirect('settings', base_url='')
 
 [---] text/html
 
