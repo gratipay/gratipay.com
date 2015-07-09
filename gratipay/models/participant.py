@@ -717,8 +717,8 @@ class Participant(Model, MixinTeam):
     def add_signin_notifications(self):
         if not self.get_emails():
             self.add_notification('email_missing')
-        if self.get_bank_account_error():
-            self.add_notification('ba_withdrawal_failed')
+        if self.get_paypal_error():
+            self.add_notification('paypal_withdrawal_failed')
         if self.get_credit_card_error():
             self.add_notification('credit_card_failed')
         elif self.credit_card_expiring():
