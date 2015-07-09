@@ -19,8 +19,7 @@ import braintree
 import aspen.utils
 from aspen import log
 from gratipay.billing.exchanges import (
-    ach_credit, cancel_card_hold, capture_card_hold, create_card_hold, upcharge,
-    get_ready_payout_routes_by_network
+    cancel_card_hold, capture_card_hold, create_card_hold, upcharge,
 )
 from gratipay.exceptions import NegativeBalance
 from gratipay.models import check_db
@@ -80,7 +79,6 @@ class Payday(object):
                 settle_card_holds
                 update_balances
                 take_over_balances
-            payout
             update_stats
             update_cached_amounts
             end
@@ -138,9 +136,6 @@ class Payday(object):
             self.payin()
             self.mark_stage_done()
         if self.stage < 2:
-            self.payout()
-            self.mark_stage_done()
-        if self.stage < 3:
             self.update_stats()
             self.update_cached_amounts()
             self.mark_stage_done()
@@ -400,26 +395,6 @@ class Payday(object):
                  WHERE username = absorbed_by;
 
             """)
-
-
-    def payout(self):
-        """This is the second stage of payday in which we send money out to the
-        bank accounts of participants.
-        """
-        log("Starting payout loop.")
-        routes = get_ready_payout_routes_by_network(self.db, 'balanced-ba')
-        def credit(route):
-            if route.participant.is_suspicious is None:
-                log("UNREVIEWED: %s" % route.participant.username)
-                return
-            withhold = route.participant.giving
-            error = ach_credit(self.db, route.participant, withhold)
-            if error:
-                self.mark_ach_failed()
-        threaded_map(credit, routes)
-        log("Did payout for %d participants." % len(routes))
-        self.db.self_check()
-        log("Checked the DB.")
 
 
     def update_stats(self):
