@@ -29,7 +29,7 @@ BEGIN;
 
     CREATE TABLE journal
     ( id        bigserial           PRIMARY KEY
-    , ts        timestamp_tz        NOT NULL DEFAULT CURRENT_TIMESTAMP
+    , ts        timestamptz         NOT NULL DEFAULT CURRENT_TIMESTAMP
     , amount    numeric(35, 2)      NOT NULL
     , debit     bigint              NOT NULL REFERENCES accounts
     , credit    bigint              NOT NULL REFERENCES accounts
