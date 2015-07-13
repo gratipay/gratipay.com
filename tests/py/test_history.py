@@ -16,10 +16,10 @@ from gratipay.utils.history import get_end_of_year_balance, iter_payday_events
 def make_history(harness):
     alice = harness.make_participant('alice', claimed_time=datetime(2001, 1, 1, 0, 0, 0))
     harness.alice = alice
-    harness.make_exchange('balanced-cc', 50, 0, alice)
-    harness.make_exchange('balanced-cc', 12, 0, alice, status='failed')
-    harness.make_exchange('balanced-ba', -40, 0, alice)
-    harness.make_exchange('balanced-ba', -5, 0, alice, status='failed')
+    harness.make_exchange('braintree-cc', 50, 0, alice)
+    harness.make_exchange('braintree-cc', 12, 0, alice, status='failed')
+    harness.make_exchange('paypal', -40, 0, alice)
+    harness.make_exchange('paypal', -5, 0, alice, status='failed')
     harness.db.run("""
         UPDATE exchanges
            SET timestamp = "timestamp" - interval '1 year'
@@ -30,10 +30,10 @@ def make_history(harness):
       ORDER BY timestamp ASC
          LIMIT 1
     """))
-    harness.make_exchange('balanced-cc', 35, 0, alice)
-    harness.make_exchange('balanced-cc', 49, 0, alice, status='failed')
-    harness.make_exchange('balanced-ba', -15, 0, alice)
-    harness.make_exchange('balanced-ba', -7, 0, alice, status='failed')
+    harness.make_exchange('braintree-cc', 35, 0, alice)
+    harness.make_exchange('braintree-cc', 49, 0, alice, status='failed')
+    harness.make_exchange('paypal', -15, 0, alice)
+    harness.make_exchange('paypal', -7, 0, alice, status='failed')
 
 
 class TestHistory(Harness):
@@ -43,9 +43,9 @@ class TestHistory(Harness):
         Payday.start().run()
         team = self.make_participant('team', number='plural', claimed_time='now')
         alice = self.make_participant('alice', claimed_time='now')
-        self.make_exchange('balanced-cc', 10000, 0, team)
-        self.make_exchange('balanced-cc', 10000, 0, alice)
-        self.make_exchange('balanced-cc', -5000, 0, alice)
+        self.make_exchange('braintree-cc', 10000, 0, team)
+        self.make_exchange('braintree-cc', 10000, 0, alice)
+        self.make_exchange('braintree-cc', -5000, 0, alice)
         self.db.run("""
             UPDATE transfers
                SET timestamp = "timestamp" - interval '1 month'
@@ -96,9 +96,9 @@ class TestHistory(Harness):
 
     def test_iter_payday_events_with_failed_exchanges(self):
         alice = self.make_participant('alice', claimed_time='now')
-        self.make_exchange('balanced-cc', 50, 0, alice)
-        self.make_exchange('balanced-cc', 12, 0, alice, status='failed')
-        self.make_exchange('balanced-ba', -40, 0, alice, status='failed')
+        self.make_exchange('braintree-cc', 50, 0, alice)
+        self.make_exchange('braintree-cc', 12, 0, alice, status='failed')
+        self.make_exchange('paypal', -40, 0, alice, status='failed')
         events = list(iter_payday_events(self.db, alice))
         assert len(events) == 5
         assert events[0]['kind'] == 'day-open'
