@@ -51,6 +51,10 @@ title = _("Apply for a New Team")
 <form action="/teams/create.json" method="POST" id="new-team">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
+    <p>Your answers to these questions will be public, and your application
+    will be <a href="https://github.com/gratipay/review/issues">reviewed publicly
+    on GitHub</a>.</p>
+
     <label><h2>{{ _("Team Name") }}</h2></label>
     <input type="text" name="name" required autofocus />
 
