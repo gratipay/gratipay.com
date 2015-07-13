@@ -218,10 +218,10 @@ with the `TWITTER_*` keys, but there they required us to spell it `127.0.0.1`.
 
 If you are running Gratipay somewhere other than `localhost:8537`, then you'll
 need to set `BASE_URL`, but your options are limited because we use proprietary
-fonts from Typography.com, and they filter by `Referer`. You won't get the
-right fonts unless you use an approved domain. We've configured `gratipay.dev`
-as well as `localhost`, so if you don't want to run on `localhost` then
-configure `gratipay.dev` in your
+fonts from [Typography.com](http://www.typography.com/), and they filter by
+`Referer`. You won't get the right fonts unless you use an approved domain.
+We've configured `gratipay.dev` as well as `localhost`, so if you don't want to
+run on `localhost` then configure `gratipay.dev` in your
 [`etc/hosts`](https://en.wikipedia.org/wiki/Hosts_(file)) file and set this in
 `local.env`:
 
