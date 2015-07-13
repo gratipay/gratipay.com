@@ -61,7 +61,7 @@ $ docker run -p 8537:8537 gratipay
 Table of Contents
 =================
 
- - [Installation](#installation)
+ - [Installing](#installing)
   - [Dependencies](#dependencies)
   - [Building](#building)
   - [Launching](#launching)
@@ -69,7 +69,6 @@ Table of Contents
   - [Vagrant](#vagrant)
   - [Docker](#docker)
   - [Help!](#help)
- - [Configuration](https://github.com/gratipay/gratipay.com/wiki/Configuration)
  - [Modifying CSS](#modifying-css)
  - [Modifying the Database](#modifying-the-database)
  - [Testing](#testing-)
@@ -79,8 +78,8 @@ Table of Contents
  - [Glossary](#glossary)
 
 
-Installation
-============
+Installing
+==========
 
 Thanks for hacking on Gratipay! Be sure to review
 [CONTRIBUTING](https://github.com/gratipay/gratipay.com/blob/master/CONTRIBUTING.md#readme)
@@ -212,23 +211,24 @@ If you'd like to override some settings, create a file named `local.env` to stor
 
 The following explains some of the content of that file:
 
-The `BALANCED_API_SECRET` is a test marketplace. To generate a new secret for
-your own testing run this command:
-
-    curl -X POST https://api.balancedpayments.com/v1/api_keys | grep secret
-
-Grab that secret and also create a new marketplace to test against:
-
-    curl -X POST https://api.balancedpayments.com/v1/marketplaces -u <your_secret>:
-
-The site works without this, except for the credit card page. Visit the
-[Balanced Documentation](https://www.balancedpayments.com/docs) if you want to
-know more about creating marketplaces.
-
 The `GITHUB_*` keys are for a gratipay-dev application in the Gratipay
 organization on Github. It points back to localhost:8537, which is where
 Gratipay will be running if you start it locally with `make run`. Similarly
 with the `TWITTER_*` keys, but there they required us to spell it `127.0.0.1`.
+
+If you are running Gratipay somewhere other than `localhost:8537`, then you'll
+need to set `BASE_URL`, but your options are limited because we use proprietary
+fonts from [Typography.com](http://www.typography.com/), and they filter by
+`Referer`. You won't get the right fonts unless you use an approved domain.
+We've configured `gratipay.dev` as well as `localhost`, so if you don't want to
+run on `localhost` then configure `gratipay.dev` in your
+[`/etc/hosts`](https://en.wikipedia.org/wiki/Hosts_(file)) file and set this in
+`local.env`:
+
+    BASE_URL=http://gratipay.dev:8537
+    GITHUB_CLIENT_ID=ca4a9a35c161af1d024d
+    GITHUB_CLIENT_SECRET=8744f6333d51b5f4af38d46cf035ecfcf34c671e
+    GITHUB_CALLBACK=http://gratipay.dev:8537/on/github/associate
 
 If you wish to use a different username or database name for the database, you
 should override the `DATABASE_URL` in `local.env` using the following format:
@@ -322,9 +322,8 @@ $ docker kill [container_id]
 Help!
 -----
 
-If you get stuck somewhere along the way, you can find help in the #gratipay
-channel on [Freenode](http://webchat.freenode.net/) or in the [issue
-tracker](/gratipay/gratipay.com/issues/new) here on GitHub.
+If you get stuck somewhere along the way, [make an
+issue](/gratipay/gratipay.com/issues/new) here on GitHub.
 
 Thanks for installing Gratipay! :smiley:
 
