@@ -211,19 +211,6 @@ If you'd like to override some settings, create a file named `local.env` to stor
 
 The following explains some of the content of that file:
 
-The `BALANCED_API_SECRET` is a test marketplace. To generate a new secret for
-your own testing run this command:
-
-    curl -X POST https://api.balancedpayments.com/v1/api_keys | grep secret
-
-Grab that secret and also create a new marketplace to test against:
-
-    curl -X POST https://api.balancedpayments.com/v1/marketplaces -u <your_secret>:
-
-The site works without this, except for the credit card page. Visit the
-[Balanced Documentation](https://www.balancedpayments.com/docs) if you want to
-know more about creating marketplaces.
-
 The `GITHUB_*` keys are for a gratipay-dev application in the Gratipay
 organization on Github. It points back to localhost:8537, which is where
 Gratipay will be running if you start it locally with `make run`. Similarly
