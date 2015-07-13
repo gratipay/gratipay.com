@@ -321,9 +321,8 @@ $ docker kill [container_id]
 Help!
 -----
 
-If you get stuck somewhere along the way, you can find help in the #gratipay
-channel on [Freenode](http://webchat.freenode.net/) or in the [issue
-tracker](/gratipay/gratipay.com/issues/new) here on GitHub.
+If you get stuck somewhere along the way, [make an
+i ssue](/gratipay/gratipay.com/issues/new) here on GitHub.
 
 Thanks for installing Gratipay! :smiley:
 
