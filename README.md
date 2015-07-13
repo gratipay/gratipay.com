@@ -61,7 +61,7 @@ $ docker run -p 8537:8537 gratipay
 Table of Contents
 =================
 
- - [Installation](#installation)
+ - [Installing](#installing)
   - [Dependencies](#dependencies)
   - [Building](#building)
   - [Launching](#launching)
@@ -69,7 +69,6 @@ Table of Contents
   - [Vagrant](#vagrant)
   - [Docker](#docker)
   - [Help!](#help)
- - [Configuration](https://github.com/gratipay/gratipay.com/wiki/Configuration)
  - [Modifying CSS](#modifying-css)
  - [Modifying the Database](#modifying-the-database)
  - [Testing](#testing-)
@@ -79,8 +78,8 @@ Table of Contents
  - [Glossary](#glossary)
 
 
-Installation
-============
+Installing
+==========
 
 Thanks for hacking on Gratipay! Be sure to review
 [CONTRIBUTING](https://github.com/gratipay/gratipay.com/blob/master/CONTRIBUTING.md#readme)
