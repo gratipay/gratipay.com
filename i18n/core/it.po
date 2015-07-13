@@ -115,7 +115,7 @@ msgid "Upstream Error"
 msgstr "Errore Upstream"
 
 msgid "Your last PayPal payout failed!"
-msgstr ""
+msgstr "Si è verificato un errore con il tuo ultimo pagamento tramite PayPal!"
 
 msgid "Your credit card has failed!"
 msgstr "Si è verificato un errore con la tua carta di credito!"
