@@ -1,5 +1,7 @@
 BEGIN;
 
+    DROP TABLE payments;
+
     CREATE TYPE account_type AS ENUM ('asset', 'liability', 'income', 'expense');
 
     CREATE TABLE accounts
