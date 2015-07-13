@@ -216,6 +216,20 @@ organization on Github. It points back to localhost:8537, which is where
 Gratipay will be running if you start it locally with `make run`. Similarly
 with the `TWITTER_*` keys, but there they required us to spell it `127.0.0.1`.
 
+If you are running Gratipay somewhere other than `localhost:8537`, then you'll
+need to set `BASE_URL`, but your options are limited because we use proprietary
+fonts from Typography.com, and they filter by `Referer`. You won't get the
+right fonts unless you use an approved domain. We've configured `gratipay.dev`
+as well as `localhost`, so if you don't want to run on `localhost` then
+configure `gratipay.dev` in your
+[`etc/hosts`](https://en.wikipedia.org/wiki/Hosts_(file)) file and set this in
+`local.env`:
+
+    BASE_URL=http://gratipay.dev:8537
+    GITHUB_CLIENT_ID=ca4a9a35c161af1d024d
+    GITHUB_CLIENT_SECRET=8744f6333d51b5f4af38d46cf035ecfcf34c671e
+    GITHUB_CALLBACK=http://gratipay.dev:8537/on/github/associate
+
 If you wish to use a different username or database name for the database, you
 should override the `DATABASE_URL` in `local.env` using the following format:
 
