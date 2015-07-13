@@ -433,8 +433,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         week_payments = filter(lambda x: date <= x['timestamp'] < end_date, payments)
         week_payments_to_teams = filter(lambda x: x['direction'] == 'to-team', week_payments)
         week_payments_to_owners = filter(lambda x: x['direction'] == 'to-participant', week_payments)
-        week_participants = filter(lambda x: x.ctime.replace(tzinfo=None) < end_date, participants)
-        for p in week_participants:
+        for p in participants:
             transfers_in = filter(lambda x: x['tippee'] == p.username, week_transfers)
             payments_in = filter(lambda x: x['participant'] == p.username, week_payments_to_owners)
             transfers_out = filter(lambda x: x['tipper'] == p.username, week_transfers)
