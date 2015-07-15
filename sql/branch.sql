@@ -1,6 +1,7 @@
 BEGIN;
 
     DROP TABLE payments;
+    DROP TABLE exchanges;
 
 
     CREATE FUNCTION current_payday() RETURNS SETOF paydays AS $$
