@@ -21,7 +21,6 @@ from aspen import log
 from gratipay.billing.exchanges import (
     cancel_card_hold, capture_card_hold, create_card_hold, upcharge,
 )
-from gratipay.exceptions import NegativeBalance
 from gratipay.models import check_db
 from psycopg2 import IntegrityError
 

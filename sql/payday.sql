@@ -1,4 +1,4 @@
--- Recreate the necessary tables and indexes
+-- Participants
 
 DROP TABLE IF EXISTS payday_participants;
 CREATE TABLE payday_participants AS
@@ -24,6 +24,22 @@ CREATE TABLE payday_participants AS
 CREATE UNIQUE INDEX ON payday_participants (id);
 CREATE UNIQUE INDEX ON payday_participants (username);
 
+CREATE OR REPLACE FUNCTION protect_balances() RETURNS trigger AS $$
+BEGIN
+    IF NEW.new_balance < LEAST(0, OLD.new_balance) THEN
+        RAISE 'You''re trying to make balance more negative for %.', NEW.username
+            USING ERRCODE = '23000';
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER protect_balances AFTER UPDATE ON payday_participants
+    FOR EACH ROW EXECUTE PROCEDURE protect_balances();
+
+
+-- Teams
+
 DROP TABLE IF EXISTS payday_teams;
 CREATE TABLE payday_teams AS
     SELECT t.id
@@ -46,6 +62,22 @@ CREATE TABLE payday_teams AS
                AND error = ''
             ) > 0
     ;
+
+CREATE OR REPLACE FUNCTION protect_team_balances() RETURNS trigger AS $$
+BEGIN
+    IF NEW.balance < 0 THEN
+        RAISE 'You''re trying to set a negative balance for the % team.', NEW.slug
+            USING ERRCODE = '23000';
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER protect_team_balances AFTER UPDATE ON payday_teams
+    FOR EACH ROW EXECUTE PROCEDURE protect_team_balances();
+
+
+-- Subscriptions
 
 DROP TABLE IF EXISTS payday_journal_so_far;
 CREATE TABLE payday_journal_so_far AS
@@ -80,12 +112,18 @@ UPDATE payday_participants
             WHERE subscriber = username
        ), 0);
 
+
+-- Takes
+
 DROP TABLE IF EXISTS payday_takes;
 CREATE TABLE payday_takes
 ( team text
 , member text
 , amount numeric(35,2)
  );
+
+
+-- Journal
 
 DROP TABLE IF EXISTS payday_journal;
 CREATE TABLE payday_journal
@@ -100,7 +138,6 @@ CREATE OR REPLACE FUNCTION payday_update_balance() RETURNS trigger AS $$
 DECLARE
     to_debit            text;
     to_credit           text;
-    balance_after_debit numeric(35, 2);
 BEGIN
     to_debit = (SELECT participant FROM accounts WHERE id=NEW.debit);
     IF to_debit IS NOT NULL THEN
@@ -116,7 +153,9 @@ BEGIN
         UPDATE payday_teams
            SET balance = balance + NEW.amount
          WHERE slug = to_credit;
+
     ELSE
+
         -- Payroll from a Team to a ~user.
 
         to_debit = (SELECT team FROM accounts WHERE id=NEW.debit);
@@ -129,6 +168,7 @@ BEGIN
         UPDATE payday_participants
            SET new_balance = new_balance + NEW.amount
          WHERE username = to_credit;
+
     END IF;
 
     RETURN NULL;
@@ -155,10 +195,10 @@ RETURNS void AS $$
         team_account := (SELECT id FROM accounts WHERE team=$2);
 
         IF participant_account IS NULL THEN
-            RAISE USING MESSAGE = 'Unknown participant: ' || $1;
+            RAISE 'Unknown participant: %.', $1;
         END IF;
         IF team_account IS NULL THEN
-            RAISE USING MESSAGE = 'Unknown team: ' || $2;
+            RAISE 'Unknown team: %', $2;
         END IF;
 
         IF ($4 = 'to-team') THEN

@@ -362,20 +362,43 @@ class TestPayin(BillingHarness):
         assert Participant.from_id(self.janet.id).balance == 8
         assert Participant.from_id(self.homer.id).balance == 42
 
-    def test_payin_cant_make_balances_more_negative(self):
-        self.db.run("""
-            UPDATE participants SET balance = -10 WHERE username='janet'
-        """)
+
+    # protect_balances - pb
+
+    def test_pb_doesnt_allow_taking_a_balance_negative(self):
+        self.make_participant('alice', claimed_time='now', balance=10)
+        payday = Payday.start()
+        with self.db.get_cursor() as cursor:
+            payday.prepare(cursor)
+            with pytest.raises(IntegrityError):
+                cursor.run("""
+                    UPDATE payday_participants
+                       SET new_balance = -8
+                     WHERE username = 'alice';
+                """)
+
+    def test_pb_allows_making_a_balance_less_negative(self):
+        self.make_participant('alice', claimed_time='now', balance=-10)
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
             cursor.run("""
                 UPDATE payday_participants
-                   SET new_balance = -50
-                 WHERE username IN ('janet', 'homer')
+                   SET new_balance = -8
+                 WHERE username = 'alice';
             """)
-            with self.assertRaises(NegativeBalance):
-                payday.update_balances(cursor)
+
+    def test_pb_allows_taking_a_balance_to_zero(self):
+        self.make_participant('alice', claimed_time='now', balance=10)
+        payday = Payday.start()
+        with self.db.get_cursor() as cursor:
+            payday.prepare(cursor)
+            cursor.run("""
+                UPDATE payday_participants
+                   SET new_balance = 0
+                 WHERE username = 'alice';
+            """)
+
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     @mock.patch('braintree.Transaction.sale')
@@ -446,8 +469,7 @@ class TestPayin(BillingHarness):
                               "WHERE username='alice'") == D('9.23')
 
     def test_payday_journal_disallows_negative_payday_team_balance(self):
-        self.make_team()
-        assert Participant.from_username('hannibal').balance == 0
+        self.make_team(is_approved=True)
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
