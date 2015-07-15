@@ -535,7 +535,7 @@ class TestPayin(BillingHarness):
             with self.db.get_cursor() as cursor:
                 payday.prepare(cursor)
                 payday.transfer_takes(cursor, payday.ts_start)
-                payday.update_balances(cursor)
+                payday.make_journal_entries(cursor)
 
         participants = self.db.all("SELECT username, balance FROM participants")
 
@@ -564,7 +564,7 @@ class TestPayin(BillingHarness):
             assert cursor.one("select new_balance from payday_participants "
                               "where username='picard'") == D('0.51')
             assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == 0
-            payday.update_balances(cursor)
+            payday.make_journal_entries(cursor)
 
         assert Participant.from_id(alice.id).balance == D('0.49')
         assert Participant.from_username('picard').balance == D('0.51')
@@ -602,7 +602,7 @@ class TestPayin(BillingHarness):
             bruce.delete_elsewhere('twitter', str(bob.id))
             billy = self.make_participant('billy', claimed_time='now')
             billy.take_over(('github', str(bruce.id)), have_confirmation=True)
-            payday.update_balances(cursor)
+            payday.make_journal_entries(cursor)
         payday.take_over_balances()
         assert Participant.from_id(bob.id).balance == 0
         assert Participant.from_id(bruce.id).balance == 0
