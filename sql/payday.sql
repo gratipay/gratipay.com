@@ -138,7 +138,7 @@ CREATE TRIGGER payday_update_balance AFTER INSERT ON payday_journal
     FOR EACH ROW EXECUTE PROCEDURE payday_update_balance();
 
 
--- Prepare a statement that makes and records a payment
+-- Prepare a statement that makes a journal entry
 
 CREATE OR REPLACE FUNCTION pay(text, text, numeric, payment_direction)
 RETURNS void AS $$
@@ -154,7 +154,7 @@ RETURNS void AS $$
         team_account := (SELECT id FROM accounts WHERE team=$2);
 
         IF participant_account IS NULL THEN
-            RAISE USING MESSAGE = 'Unknown particiapnt: ' || $1;
+            RAISE USING MESSAGE = 'Unknown participant: ' || $1;
         END IF;
         IF team_account IS NULL THEN
             RAISE USING MESSAGE = 'Unknown team: ' || $2;
