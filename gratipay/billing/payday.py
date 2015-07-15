@@ -320,13 +320,14 @@ class Payday(object):
     @staticmethod
     def make_journal_entries(cursor):
         log("Making journal entries.")
-        nentries = cursor.one("""
+        nentries = len(cursor.all("""
             INSERT INTO journal
                         (ts, amount, debit, credit, payday)
                         (SELECT * FROM payday_journal)
-              RETURNING (SELECT count(*) FROM payday_journal);
-        """)
+            RETURNING id;
+        """))
         log("Journal entries recorded: %i." % nentries)
+        return nentries
 
 
     def take_over_balances(self):

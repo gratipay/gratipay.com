@@ -577,13 +577,14 @@ class TestPayin(BillingHarness):
             assert cursor.one("select new_balance from payday_participants "
                               "where username='hannibal'") == D('0.51')
             assert cursor.one("select balance from payday_teams where slug='TheATeam'") == 0
-            payday.make_journal_entries(cursor)
+            assert payday.make_journal_entries(cursor) == 2
 
         assert Participant.from_id(alice.id).balance == D('0.49')
         assert Participant.from_username('hannibal').balance == D('0.51')
 
-        payment = self.db.one("SELECT * FROM payments WHERE direction='to-participant'")
-        assert payment.amount == D('0.51')
+        entry = self.db.one("SELECT * FROM journal "
+                            "WHERE credit=(SELECT id FROM accounts WHERE participant='hannibal')")
+        assert entry.amount == D('0.51')
 
     @pytest.mark.xfail(reason="haven't migrated_transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
