@@ -103,14 +103,8 @@ class Payday(object):
             """, back_as=dict)
             log("Starting a new payday.")
         except IntegrityError:  # Collision, we have a Payday already.
-            d = cls.db.one("""
-                SELECT id, (ts_start AT TIME ZONE 'UTC') AS ts_start, stage
-                  FROM paydays
-                 WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz
-            """, back_as=dict)
+            d = cls.db.one("SELECT current_payday();", back_as=dict)
             log("Picking up with an existing payday.")
-
-        d['ts_start'] = d['ts_start'].replace(tzinfo=aspen.utils.utc)
 
         log("Payday started at %s." % d['ts_start'])
 
@@ -154,7 +148,7 @@ class Payday(object):
         money internally between participants.
         """
         with self.db.get_cursor() as cursor:
-            self.prepare(cursor, self.id, self.ts_start)
+            self.prepare(cursor)
             holds = self.create_card_holds(cursor)
             self.process_subscriptions(cursor)
             self.transfer_takes(cursor, self.ts_start)
@@ -177,10 +171,10 @@ class Payday(object):
 
 
     @staticmethod
-    def prepare(cursor, payday_id, ts_start):
+    def prepare(cursor):
         """Prepare the DB: we need temporary tables with indexes and triggers.
         """
-        cursor.run(PAYDAY, dict(payday_id=payday_id, ts_start=ts_start))
+        cursor.run(PAYDAY)
         log('Prepared the DB.')
 
 

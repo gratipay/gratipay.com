@@ -18,7 +18,7 @@ CREATE TABLE payday_participants AS
           , braintree_customer_id
       FROM participants p
      WHERE is_suspicious IS NOT true
-       AND claimed_time < %(ts_start)s
+       AND claimed_time < (SELECT ts_start FROM current_payday())
   ORDER BY claimed_time;
 
 CREATE UNIQUE INDEX ON payday_participants (id);
@@ -49,14 +49,14 @@ CREATE TABLE payday_teams AS
 
 DROP TABLE IF EXISTS payday_journal_so_far;
 CREATE TABLE payday_journal_so_far AS
-    SELECT * FROM journal WHERE payday = %(payday_id)s;
+    SELECT * FROM journal WHERE payday = (SELECT id FROM current_payday());
 
 DROP TABLE IF EXISTS payday_subscriptions;
 CREATE TABLE payday_subscriptions AS
     SELECT subscriber, team, amount
       FROM ( SELECT DISTINCT ON (subscriber, team) *
                FROM subscriptions
-              WHERE mtime < %(ts_start)s
+              WHERE mtime < (SELECT ts_start FROM current_payday())
            ORDER BY subscriber, team, mtime DESC
            ) s
       JOIN payday_participants p ON p.username = s.subscriber
@@ -93,13 +93,14 @@ CREATE TABLE payday_journal
 , amount numeric(35,2)  NOT NULL
 , debit bigint          NOT NULL
 , credit bigint         NOT NULL
-, payday int            DEFAULT %(payday_id)s
+, payday int            NOT NULL DEFAULT current_payday_id()
  );
 
 CREATE OR REPLACE FUNCTION payday_update_balance() RETURNS trigger AS $$
 DECLARE
-    to_debit    text;
-    to_credit   text;
+    to_debit            text;
+    to_credit           text;
+    balance_after_debit numeric(35, 2);
 BEGIN
     to_debit = (SELECT participant FROM accounts WHERE id=NEW.debit);
     IF to_debit IS NOT NULL THEN

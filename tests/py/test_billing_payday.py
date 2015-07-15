@@ -172,17 +172,16 @@ class TestPayday(BillingHarness):
         self.make_participant('carl', balance=10, claimed_time='now')
 
         payday = Payday.start()
-        ts_start = payday.ts_start
 
         get_participants = lambda c: c.all("SELECT * FROM payday_participants")
 
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, ts_start)
+            payday.prepare(cursor)
             participants = get_participants(cursor)
 
         expected_logging_call_args = [
             ('Starting a new payday.'),
-            ('Payday started at {}.'.format(ts_start)),
+            ('Payday started at {}.'.format(payday.ts_start)),
             ('Prepared the DB.'),
         ]
         expected_logging_call_args.reverse()
@@ -192,13 +191,12 @@ class TestPayday(BillingHarness):
         log.reset_mock()
 
         # run a second time, we should see it pick up the existing payday
-        payday = Payday.start()
-        second_ts_start = payday.ts_start
+        second_payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, second_payday.id, ts_start)
+            payday.prepare(cursor)
             second_participants = get_participants(cursor)
 
-        assert ts_start == second_ts_start
+        assert payday.ts_start == second_payday.ts_start
         participants = list(participants)
         second_participants = list(second_participants)
 
@@ -208,7 +206,7 @@ class TestPayday(BillingHarness):
 
         expected_logging_call_args = [
             ('Picking up with an existing payday.'),
-            ('Payday started at {}.'.format(second_ts_start)),
+            ('Payday started at {}.'.format(second_payday.ts_start)),
             ('Prepared the DB.'),
         ]
         expected_logging_call_args.reverse()
@@ -239,7 +237,7 @@ class TestPayin(BillingHarness):
     def create_card_holds(self):
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, payday.ts_start)
+            payday.prepare(cursor)
             return payday.create_card_holds(cursor)
 
     @mock.patch.object(Payday, 'fetch_card_holds')
@@ -370,7 +368,7 @@ class TestPayin(BillingHarness):
         """)
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, payday.ts_start)
+            payday.prepare(cursor)
             cursor.run("""
                 UPDATE payday_participants
                    SET new_balance = -50
@@ -408,7 +406,7 @@ class TestPayin(BillingHarness):
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, payday.ts_start)
+            payday.prepare(cursor)
 
             cursor.run("UPDATE payday_teams SET balance=20 WHERE slug='TheATeam'")
             cursor.run("""
@@ -432,7 +430,7 @@ class TestPayin(BillingHarness):
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, payday.ts_start)
+            payday.prepare(cursor)
 
             cursor.run("""
                 INSERT INTO payday_journal
@@ -453,7 +451,7 @@ class TestPayin(BillingHarness):
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, payday.ts_start)
+            payday.prepare(cursor)
             cursor.run("UPDATE payday_teams SET balance=10 WHERE slug='TheATeam'")
             with pytest.raises(IntegrityError):
                 cursor.run("""
@@ -471,7 +469,7 @@ class TestPayin(BillingHarness):
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, payday.ts_start)
+            payday.prepare(cursor)
             with pytest.raises(IntegrityError):
                 cursor.run("""
                     INSERT INTO payday_journal
@@ -494,7 +492,7 @@ class TestPayin(BillingHarness):
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, payday.ts_start)
+            payday.prepare(cursor)
             payday.process_subscriptions(cursor)
             assert cursor.one("select balance from payday_teams where slug='TheATeam'") == D('0.51')
             assert cursor.one("select balance from payday_teams where slug='TheBTeam'") == 0
@@ -526,7 +524,7 @@ class TestPayin(BillingHarness):
         # have already been processed
         for i in range(3):
             with self.db.get_cursor() as cursor:
-                payday.prepare(cursor, payday.id, payday.ts_start)
+                payday.prepare(cursor)
                 payday.transfer_takes(cursor, payday.ts_start)
                 payday.update_balances(cursor)
 
@@ -550,7 +548,7 @@ class TestPayin(BillingHarness):
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, payday.ts_start)
+            payday.prepare(cursor)
             payday.process_subscriptions(cursor)
             payday.transfer_takes(cursor, payday.ts_start)
             payday.process_draws(cursor)
@@ -588,7 +586,7 @@ class TestPayin(BillingHarness):
         alice.set_tip_to(bob, 18)
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
-            payday.prepare(cursor, payday.id, payday.ts_start)
+            payday.prepare(cursor)
             bruce = self.make_participant('bruce', claimed_time='now')
             bruce.take_over(('twitter', str(bob.id)), have_confirmation=True)
             payday.process_subscriptions(cursor)
