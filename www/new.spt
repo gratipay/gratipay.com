@@ -66,7 +66,7 @@ title = _("Apply for a New Team")
     <textarea name="product_or_service" required></textarea>
 
     <label><h2>{{ _("Revenue Model") }}</h2></label>
-    <p>{{ _("How do you prompt your users to support your team's work?") }}</p>
+    <p>{{ _("How do you prompt your customers to financially support your team's work?") }}</p>
     <textarea name="revenue_model" required></textarea>
 
     <label><h2>{{ _("Contributing") }}</h2></label>
