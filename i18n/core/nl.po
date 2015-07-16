@@ -1190,14 +1190,6 @@ msgstr "Ontkoppel {0}"
 msgid "Close Account"
 msgstr "Sluit account"
 
-msgid ""
-"You still have money in this Gratipay account, please choose a disbursement "
-"method below or contact support."
-msgstr "Er staat nog geld op deze Gratipay account, kies alsjeblieft een methode voor uitbetaling of neem contact op met onze support afdeling."
-
-msgid "The bank withdrawal failed. Error message: {0}"
-msgstr "De geldopname is mislukt. Foutmelding: {0}"
-
 msgid "Account"
 msgstr "Account"
 

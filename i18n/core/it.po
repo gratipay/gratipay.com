@@ -1188,14 +1188,6 @@ msgstr "Scollega {0}"
 msgid "Close Account"
 msgstr "Chiudi Account"
 
-msgid ""
-"You still have money in this Gratipay account, please choose a disbursement "
-"method below or contact support."
-msgstr "Hai ancora denaro su questo account Gratipay, per favore scegli un metodo di esborso qua sotto oppure contatta l'assistenza."
-
-msgid "The bank withdrawal failed. Error message: {0}"
-msgstr "Il prelievo bancario è fallito. Messaggio d'errore: {0}"
-
 msgid "Account"
 msgstr "Conto"
 
