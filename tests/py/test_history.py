@@ -126,11 +126,10 @@ class TestHistoryPage(Harness):
         assert self.client.GET('/~alice/history/', auth_as='alice').code == 200
 
     def test_admin_can_view_closed_participant_history(self):
+        self.make_exchange('braintree-cc', -30, 0, self.alice)
+        self.alice.close(None)
+
         self.make_participant('bob', claimed_time='now', is_admin=True)
-
-        self.alice.set_tip_to('bob', '1')
-        self.alice.close('downstream')
-
         response = self.client.GET('/~alice/history/?year=%s' % self.past_year, auth_as='bob')
         assert "automatic charge" in response.body
 
