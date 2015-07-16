@@ -50,17 +50,6 @@ class ExchangeRoute(Model):
         return r
 
     @classmethod
-    def associate_balanced(cls, participant, balanced_account, network, address):
-        if network == 'balanced-cc':
-            obj = balanced.Card.fetch(address)
-        else:
-            assert network == 'balanced-ba', network # sanity check
-            obj = balanced.BankAccount.fetch(address)
-        obj.associate_to_customer(balanced_account)
-
-        return cls.insert(participant, network, address)
-
-    @classmethod
     def insert(cls, participant, network, address, error='', fee_cap=None):
         participant_id = participant.id
         r = cls.db.one("""
@@ -75,11 +64,7 @@ class ExchangeRoute(Model):
         return r
 
     def invalidate(self):
-        if self.network == 'balanced-ba':
-            balanced.BankAccount.fetch(self.address).delete()
-        elif self.network == 'balanced-cc':
-            balanced.Card.fetch(self.address).unstore()
-        elif self.network == 'braintree-cc':
+        if self.network == 'braintree-cc':
             braintree.PaymentMethod.delete(self.address)
 
         # For Paypal, we remove the record entirely to prevent

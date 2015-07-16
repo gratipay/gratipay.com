@@ -669,9 +669,6 @@ class Participant(Model, MixinTeam):
     # Exchange-related stuff
     # ======================
 
-    def get_bank_account_error(self):
-        return getattr(ExchangeRoute.from_network(self, 'balanced-ba'), 'error', None)
-
     def get_paypal_error(self):
         return getattr(ExchangeRoute.from_network(self, 'paypal'), 'error', None)
 

@@ -25,18 +25,7 @@ if change:
     if not address:
         raise Response(400, _("The address cannot be empty."))
 
-    if network == 'balanced-ba':
-        account = participant.get_balanced_account()
-
-        if account.merchant_status != 'underwritten':
-            raise Response(400, _("You need to verify your identity first."))
-
-        try:
-            ExchangeRoute.associate_balanced(participant, account, network, address)
-        except balanced.exc.HTTPError as err:
-            raise Response(400, repr_exception(err))
-
-    elif network == 'braintree-cc':
+    if network == 'braintree-cc':
         result = braintree.PaymentMethod.create({
             "customer_id": participant.braintree_customer_id,
             "payment_method_nonce": address,

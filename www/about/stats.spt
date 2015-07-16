@@ -23,18 +23,19 @@ subhead = _("Stats")
 yesterday = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
 db = website.db
 escrow = db.one("SELECT sum(balance) FROM participants", default=0)
-nach = db.one("""
+nach = 0
+npaypal = db.one("""
     SELECT count(*)
       FROM current_exchange_routes r
       JOIN participants p ON p.id = r.participant
-     WHERE r.network = 'balanced-ba'
+     WHERE r.network = 'paypal'
        AND r.error = ''
        AND p.is_suspicious IS NOT true
 """)
-if nach < 10:
-    nach = CARDINALS[nach].title()
+if npaypal < 10:
+    npaypal = CARDINALS[npaypal].title()
 else:
-    nach = commaize(nach)
+    npaypal = commaize(npaypal)
 payday = db.one( "SELECT ts_start, ts_end FROM paydays WHERE ts_start > %s"
                , (yesterday,)
                 )
@@ -161,8 +162,8 @@ elif now.weekday() == SATURDAY:
 
 def out():
     names = ['ncc', 'pcc', 'transfer_volume', 'last_thursday',
-             'this_thursday', 'punc', 'other_people', 'average_tip',
-             'average_tippees', 'total_backed_tips', 'tip_n', 'nach', 'escrow',
+             'this_thursday', 'punc', 'other_people', 'average_tip', 'nach',
+             'average_tippees', 'total_backed_tips', 'tip_n', 'npaypal', 'escrow',
              'ngivers', 'nreceivers', 'noverlap', 'nactive']
     d = globals()
     r = {name: d[name] for name in names}
