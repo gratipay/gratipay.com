@@ -4,7 +4,6 @@ from datetime import datetime
 from decimal import Decimal
 import json
 
-import pytest
 from mock import patch
 
 from gratipay.billing.payday import Payday
@@ -38,7 +37,6 @@ def make_history(harness):
 
 class TestHistory(Harness):
 
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     def test_iter_payday_events(self):
         Payday.start().run()
         team = self.make_participant('team', number='plural', claimed_time='now')
@@ -127,7 +125,6 @@ class TestHistoryPage(Harness):
     def test_participant_can_view_history(self):
         assert self.client.GET('/~alice/history/', auth_as='alice').code == 200
 
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     def test_admin_can_view_closed_participant_history(self):
         self.make_participant('bob', claimed_time='now', is_admin=True)
 
