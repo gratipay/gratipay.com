@@ -19,12 +19,12 @@ from gratipay.testing.emails import EmailHarness
 
 class TestPayday(BillingHarness):
 
-    @mock.patch.object(Payday, 'fetch_card_holds')
-    def test_payday_moves_money(self, fch):
+    def test_payday_moves_money(self):
         A = self.make_team(is_approved=True)
         self.obama.set_subscription_to(A, '6.00')  # under $10!
-        fch.return_value = {}
-        Payday.start().run()
+        with mock.patch.object(Payday, 'fetch_card_holds') as fch:
+            fch.return_value = {}
+            Payday.start().run()
 
         obama = Participant.from_username('obama')
         hannibal = Participant.from_username('hannibal')
