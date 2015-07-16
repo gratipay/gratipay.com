@@ -75,6 +75,12 @@ def iter_payday_events(db, participant, year=None):
          WHERE participant=%(username)s
            AND extract(year from timestamp) = %(year)s
     """, locals(), back_as=dict)
+    payments = db.all("""
+        SELECT *
+          FROM payments
+         WHERE participant=%(username)s
+           AND extract(year from timestamp) = %(year)s
+    """, locals(), back_as=dict)
     transfers = db.all("""
         SELECT *
           FROM transfers
@@ -82,15 +88,20 @@ def iter_payday_events(db, participant, year=None):
            AND extract(year from timestamp) = %(year)s
     """, locals(), back_as=dict)
 
-    if not (exchanges or transfers):
+    if not (exchanges or payments or transfers):
         return
 
-    if transfers:
-        yield dict(
-            kind='totals',
-            given=sum(t['amount'] for t in transfers if t['tipper'] == username and t['context'] != 'take'),
-            received=sum(t['amount'] for t in transfers if t['tippee'] == username),
-        )
+    if payments or transfers:
+        payments_given = sum([p['amount'] for p in payments if p['direction'] == 'to-team'])
+        payments_received = sum([p['amount'] for p in payments \
+                                                            if p['direction'] == 'to-participant'])
+        transfers_given = sum(t['amount'] for t in transfers \
+                                             if t['tipper'] == username and t['context'] != 'take')
+        transfers_received = sum(t['amount'] for t in transfers if t['tippee'] == username)
+        yield dict( kind='totals'
+                  , given=payments_given + transfers_given
+                  , received=payments_received + transfers_received
+                   )
 
     payday_dates = db.all("""
         SELECT ts_start::date
@@ -101,7 +112,7 @@ def iter_payday_events(db, participant, year=None):
     balance = get_end_of_year_balance(db, participant, year, current_year)
     prev_date = None
     get_timestamp = lambda e: e['timestamp']
-    events = sorted(exchanges+transfers, key=get_timestamp, reverse=True)
+    events = sorted(exchanges+payments+transfers, key=get_timestamp, reverse=True)
     for event in events:
 
         event['balance'] = balance
@@ -129,6 +140,13 @@ def iter_payday_events(db, participant, year=None):
                 kind = 'credit'
                 if event['status'] != 'failed':
                     balance -= event['amount'] - event['fee']
+        elif 'direction' in event:
+            kind = 'payment'
+            if event['direction'] == 'to-participant':
+                balance -= event['amount']
+            else:
+                assert event['direction'] == 'to-team'
+                balance += event['amount']
         else:
             kind = 'transfer'
             if event['tippee'] == username:
