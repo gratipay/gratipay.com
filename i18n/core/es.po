@@ -464,7 +464,8 @@ msgstr ""
 msgid "Revenue Model"
 msgstr ""
 
-msgid "How does your team make money?"
+msgid ""
+"How do you prompt your customers to financially support your team's work?"
 msgstr ""
 
 msgid "Contributing"
@@ -1060,9 +1061,6 @@ msgid "Tips Received, by Dollar Amount"
 msgstr "Tips recibidos, por cantidad en dólares"
 
 msgid "The address cannot be empty."
-msgstr ""
-
-msgid "You need to verify your identity first."
 msgstr ""
 
 msgid "Only verified email addresses allowed."

@@ -462,8 +462,9 @@ msgstr "Welk product of service levert uw team?"
 msgid "Revenue Model"
 msgstr "Business model"
 
-msgid "How does your team make money?"
-msgstr "Hoe verdient uw team geld?"
+msgid ""
+"How do you prompt your customers to financially support your team's work?"
+msgstr ""
 
 msgid "Contributing"
 msgstr "Bijdragen"
@@ -1059,9 +1060,6 @@ msgstr "Fooien Ontvangen, per bedrag"
 
 msgid "The address cannot be empty."
 msgstr "Het adres moet worden ingevuld."
-
-msgid "You need to verify your identity first."
-msgstr "U dient eerst uw identiteit te verifiëren."
 
 msgid "Only verified email addresses allowed."
 msgstr "Alleen geverifieerde e-mailadressen zijn toegestaan."
