@@ -1,25 +1,25 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import datetime
-from decimal import Decimal
+from decimal import Decimal as D
 import json
 
-import pytest
 from mock import patch
 
 from gratipay.billing.payday import Payday
 from gratipay.models.participant import Participant
 from gratipay.testing import Harness
+from gratipay.testing.billing import BillingHarness
 from gratipay.utils.history import get_end_of_year_balance, iter_payday_events
 
 
 def make_history(harness):
     alice = harness.make_participant('alice', claimed_time=datetime(2001, 1, 1, 0, 0, 0))
     harness.alice = alice
-    harness.make_exchange('balanced-cc', 50, 0, alice)
-    harness.make_exchange('balanced-cc', 12, 0, alice, status='failed')
-    harness.make_exchange('balanced-ba', -40, 0, alice)
-    harness.make_exchange('balanced-ba', -5, 0, alice, status='failed')
+    harness.make_exchange('braintree-cc', 50, 0, alice)
+    harness.make_exchange('braintree-cc', 12, 0, alice, status='failed')
+    harness.make_exchange('paypal', -40, 0, alice)
+    harness.make_exchange('paypal', -5, 0, alice, status='failed')
     harness.db.run("""
         UPDATE exchanges
            SET timestamp = "timestamp" - interval '1 year'
@@ -30,33 +30,19 @@ def make_history(harness):
       ORDER BY timestamp ASC
          LIMIT 1
     """))
-    harness.make_exchange('balanced-cc', 35, 0, alice)
-    harness.make_exchange('balanced-cc', 49, 0, alice, status='failed')
-    harness.make_exchange('balanced-ba', -15, 0, alice)
-    harness.make_exchange('balanced-ba', -7, 0, alice, status='failed')
+    harness.make_exchange('braintree-cc', 35, 0, alice)
+    harness.make_exchange('braintree-cc', 49, 0, alice, status='failed')
+    harness.make_exchange('paypal', -15, 0, alice)
+    harness.make_exchange('paypal', -7, 0, alice, status='failed')
 
 
-class TestHistory(Harness):
+class TestHistory(BillingHarness):
 
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     def test_iter_payday_events(self):
-        Payday.start().run()
-        team = self.make_participant('team', number='plural', claimed_time='now')
-        alice = self.make_participant('alice', claimed_time='now')
-        self.make_exchange('balanced-cc', 10000, 0, team)
-        self.make_exchange('balanced-cc', 10000, 0, alice)
-        self.make_exchange('balanced-cc', -5000, 0, alice)
-        self.db.run("""
-            UPDATE transfers
-               SET timestamp = "timestamp" - interval '1 month'
-        """)
-        bob = self.make_participant('bob', claimed_time='now')
-        carl = self.make_participant('carl', claimed_time='now')
-        team.add_member(bob)
-        team.set_take_for(bob, Decimal('1.00'), team)
-        alice.set_tip_to(bob, Decimal('5.00'))
+        Payday().start().run()
 
-        assert bob.balance == 0
+        A = self.make_team(is_approved=True)
+        self.obama.set_subscription_to(A, '6.00')  # under $10!
         for i in range(2):
             with patch.object(Payday, 'fetch_card_holds') as fch:
                 fch.return_value = {}
@@ -65,15 +51,22 @@ class TestHistory(Harness):
                 UPDATE paydays
                    SET ts_start = ts_start - interval '1 week'
                      , ts_end = ts_end - interval '1 week';
+                UPDATE payments
+                   SET timestamp = "timestamp" - interval '1 week';
                 UPDATE transfers
                    SET timestamp = "timestamp" - interval '1 week';
             """)
-        bob = Participant.from_id(bob.id)
-        assert bob.balance == 12
 
-        Payday().start()
-        events = list(iter_payday_events(self.db, bob))
-        assert len(events) == 9
+        obama = Participant.from_username('obama')
+        hannibal = Participant.from_username('hannibal')
+
+        assert obama.balance == D('6.82')
+        assert hannibal.balance == D('12.00')
+
+        Payday().start()  # to demonstrate that we ignore any open payday?
+
+        events = list(iter_payday_events(self.db, hannibal))
+        assert len(events) == 7
         assert events[0]['kind'] == 'totals'
         assert events[0]['given'] == 0
         assert events[0]['received'] == 12
@@ -83,22 +76,15 @@ class TestHistory(Harness):
         assert events[-1]['kind'] == 'day-close'
         assert events[-1]['balance'] == 0
 
-        alice = Participant.from_id(alice.id)
-        assert alice.balance == 4990
-        events = list(iter_payday_events(self.db, alice))
-        assert events[0]['given'] == 10
+        events = list(iter_payday_events(self.db, obama))
+        assert events[0]['given'] == 12
         assert len(events) == 11
-
-        carl = Participant.from_id(carl.id)
-        assert carl.balance == 0
-        events = list(iter_payday_events(self.db, carl))
-        assert len(events) == 0
 
     def test_iter_payday_events_with_failed_exchanges(self):
         alice = self.make_participant('alice', claimed_time='now')
-        self.make_exchange('balanced-cc', 50, 0, alice)
-        self.make_exchange('balanced-cc', 12, 0, alice, status='failed')
-        self.make_exchange('balanced-ba', -40, 0, alice, status='failed')
+        self.make_exchange('braintree-cc', 50, 0, alice)
+        self.make_exchange('braintree-cc', 12, 0, alice, status='failed')
+        self.make_exchange('paypal', -40, 0, alice, status='failed')
         events = list(iter_payday_events(self.db, alice))
         assert len(events) == 5
         assert events[0]['kind'] == 'day-open'
@@ -127,13 +113,11 @@ class TestHistoryPage(Harness):
     def test_participant_can_view_history(self):
         assert self.client.GET('/~alice/history/', auth_as='alice').code == 200
 
-    @pytest.mark.xfail(reason='https://github.com/gratipay/gratipay.com/pull/3454')
     def test_admin_can_view_closed_participant_history(self):
+        self.make_exchange('braintree-cc', -30, 0, self.alice)
+        self.alice.close(None)
+
         self.make_participant('bob', claimed_time='now', is_admin=True)
-
-        self.alice.set_tip_to('bob', '1')
-        self.alice.close('downstream')
-
         response = self.client.GET('/~alice/history/?year=%s' % self.past_year, auth_as='bob')
         assert "automatic charge" in response.body
 

@@ -129,6 +129,33 @@ else:
         {% endif %}
         </td>
     </tr>
+    {% elif event['kind'] == 'payment' %}
+    <tr>
+        <td class="bank"></td>
+        <td class="card"></td>
+        <td class="fees"></td>
+
+        {% if event['direction'] == 'to-participant' %}
+        <td class="credits">{{ event['amount'] }}</td>
+        <td class="debits"></td>
+        {% else %}
+        <td class="credits"></td>
+        <td class="debits">{{ event['amount'] }}</td>
+        {% endif %}
+
+        <td class="balance">{{ event['balance'] }}</td>
+
+        <td class="status"></td>
+        <td class="notes">
+        {% set context = event['context'] %}
+        {% if event['direction'] == 'to-participant' %}
+            taken from <a href="/{{ event['team'] }}/">{{ event['team'] }}</a>
+        {% else %}
+            given to <a href="/{{ event['team'] }}/">{{ event['team'] }}</a>
+        {% endif %}
+        </td>
+
+    </tr>
     {% elif event['kind'] == 'transfer' %}
     <tr>
         <td class="bank"></td>
