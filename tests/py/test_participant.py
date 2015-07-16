@@ -529,8 +529,6 @@ class Tests(Harness):
 
         assert alice.giving == Decimal('4.00')
 
-
-    @pytest.mark.xfail(reason="#3399")
     def test_receiving_includes_tips_from_whitelisted_accounts(self):
         alice = self.make_participant( 'alice'
                                      , claimed_time='now'
@@ -543,7 +541,6 @@ class Tests(Harness):
         assert bob.receiving == Decimal('3.00')
         assert bob.npatrons == 1
 
-    @pytest.mark.xfail(reason="#3399")
     def test_receiving_includes_tips_from_unreviewed_accounts(self):
         alice = self.make_participant( 'alice'
                                      , claimed_time='now'
@@ -569,7 +566,6 @@ class Tests(Harness):
         assert bob.receiving == Decimal('0.00')
         assert bob.npatrons == 0
 
-    @pytest.mark.xfail(reason="#3399")
     def test_receiving_includes_taking_when_updated_from_set_tip_to(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob', claimed_time='now', taking=Decimal('42.00'))
