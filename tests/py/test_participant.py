@@ -725,11 +725,11 @@ class Tests(Harness):
 
     # archive
 
-    def test_archive_fails_if_ctr_not_run(self):
+    def test_archive_fails_for_team_owner(self):
         alice = self.make_participant('alice')
-        self.make_participant('bob', claimed_time='now').set_tip_to(alice, Decimal('1.00'))
+        self.make_team(owner=alice)
         with self.db.get_cursor() as cursor:
-            pytest.raises(alice.StillReceivingTips, alice.archive, cursor)
+            pytest.raises(alice.StillATeamOwner, alice.archive, cursor)
 
     def test_archive_fails_if_balance_is_positive(self):
         alice = self.make_participant('alice', balance=2)

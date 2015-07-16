@@ -11,7 +11,7 @@ of participant, based on certain properties.
 from __future__ import print_function, unicode_literals
 
 from datetime import timedelta
-from decimal import Decimal, ROUND_DOWN
+from decimal import Decimal
 import pickle
 from time import sleep
 from urllib import quote
@@ -319,25 +319,11 @@ class Participant(Model, MixinTeam):
     # Closing
     # =======
 
-    class UnknownDisbursementStrategy(Exception): pass
-
-    def close(self, disbursement_strategy):
+    def close(self):
         """Close the participant's account.
         """
         with self.db.get_cursor() as cursor:
-            if disbursement_strategy == None:
-                pass  # No balance, supposedly. final_check will make sure.
-            # XXX Bring me back!
-            #elif disbursement_strategy == 'bank':
-            #    self.withdraw_balance_to_bank_account()
-            #elif disbursement_strategy == 'downstream':
-            #    # This in particular needs to come before clear_tips_giving.
-            #    self.distribute_balance_as_final_gift(cursor)
-            else:
-                raise self.UnknownDisbursementStrategy
-
-            self.clear_tips_giving(cursor)
-            self.clear_tips_receiving(cursor)
+            self.clear_subscriptions(cursor)
             self.clear_personal_information(cursor)
             self.final_check(cursor)
             self.update_is_closed(True, cursor)
@@ -354,99 +340,23 @@ class Participant(Model, MixinTeam):
                       )
             self.set_attributes(is_closed=is_closed)
 
-    class BankWithdrawalFailed(Exception): pass
 
-    def withdraw_balance_to_bank_account(self):
-        from gratipay.billing.exchanges import ach_credit
-        error = ach_credit( self.db
-                          , self
-                          , Decimal('0.00') # don't withhold anything
-                          , Decimal('0.00') # send it all
-                           )
-        if error:
-            raise self.BankWithdrawalFailed(error)
-
-
-    class NoOneToGiveFinalGiftTo(Exception): pass
-
-    def distribute_balance_as_final_gift(self, cursor):
-        """Distribute a balance as a final gift.
+    def clear_subscriptions(self, cursor):
+        """Zero out the participant's subscriptions.
         """
-        raise NotImplementedError # XXX Bring me back!
-        if self.balance == 0:
-            return
+        teams = cursor.all("""
 
-        claimed_tips, claimed_total = self.get_giving_for_profile()
-        transfers = []
-        distributed = Decimal('0.00')
-
-        for tip in claimed_tips:
-            rate = tip.amount / claimed_total
-            pro_rated = (self.balance * rate).quantize(Decimal('0.01'), ROUND_DOWN)
-            if pro_rated == 0:
-                continue
-            distributed += pro_rated
-            transfers.append([tip.tippee, pro_rated])
-
-        if not transfers:
-            raise self.NoOneToGiveFinalGiftTo
-
-        diff = self.balance - distributed
-        if diff != 0:
-            transfers[0][1] += diff  # Give it to the highest receiver.
-
-        for tippee, amount in transfers:
-            assert amount > 0
-            balance = cursor.one( "UPDATE participants SET balance=balance - %s "
-                                  "WHERE username=%s RETURNING balance"
-                                , (amount, self.username)
-                                 )
-            assert balance >= 0  # sanity check
-            cursor.run( "UPDATE participants SET balance=balance + %s WHERE username=%s"
-                      , (amount, tippee)
-                       )
-            cursor.run( "INSERT INTO transfers (tipper, tippee, amount, context) "
-                        "VALUES (%s, %s, %s, 'final-gift')"
-                      , (self.username, tippee, amount)
-                       )
-
-        assert balance == 0
-        self.set_attributes(balance=balance)
-
-
-    def clear_tips_giving(self, cursor):
-        """Zero out tips from a given user.
-        """
-        tippees = cursor.all("""
-
-            SELECT ( SELECT participants.*::participants
-                       FROM participants
-                      WHERE username=tippee
-                    ) AS tippee
-              FROM current_tips
-             WHERE tipper = %s
+            SELECT ( SELECT teams.*::teams
+                       FROM teams
+                      WHERE slug=team
+                    ) AS team
+              FROM current_subscriptions
+             WHERE subscriber = %s
                AND amount > 0
 
         """, (self.username,))
-        for tippee in tippees:
-            self.set_tip_to(tippee, '0.00', update_self=False, cursor=cursor)
-
-    def clear_tips_receiving(self, cursor):
-        """Zero out tips to a given user.
-        """
-        tippers = cursor.all("""
-
-            SELECT ( SELECT participants.*::participants
-                       FROM participants
-                      WHERE username=tipper
-                    ) AS tipper
-              FROM current_tips
-             WHERE tippee = %s
-               AND amount > 0
-
-        """, (self.username,))
-        for tipper in tippers:
-            tipper.set_tip_to(self, '0.00', update_tippee=False, cursor=cursor)
+        for team in teams:
+            self.set_subscription_to(team, '0.00', update_self=False, cursor=cursor)
 
 
     def clear_takes(self, cursor):
@@ -460,9 +370,6 @@ class Participant(Model, MixinTeam):
     def clear_personal_information(self, cursor):
         """Clear personal information such as statements.
         """
-        if self.IS_PLURAL:
-            self.remove_all_members(cursor)
-        self.clear_takes(cursor)
         r = cursor.one("""
 
             INSERT INTO community_members (slug, participant, ctime, name, is_member) (
@@ -787,7 +694,7 @@ class Participant(Model, MixinTeam):
 
     @property
     def has_payout_route(self):
-        for network in ('balanced-ba', 'paypal'):
+        for network in ('paypal',):
             route = ExchangeRoute.from_network(self, network)
             if route and not route.error:
                 return True
@@ -931,10 +838,12 @@ class Participant(Model, MixinTeam):
         return '{base_url}/{username}/'.format(**locals())
 
 
-    def get_teams(self, only_approved=False):
-        """Return a list of teams this user is a member or owner of.
+    def get_teams(self, only_approved=False, cursor=None):
+        """Return a list of teams this user is the owner of.
         """
-        teams = self.db.all("SELECT teams.*::teams FROM teams WHERE owner=%s", (self.username,))
+        teams = (cursor or self.db).all( "SELECT teams.*::teams FROM teams WHERE owner=%s"
+                                       , (self.username,)
+                                        )
         if only_approved:
             teams = [t for t in teams if t.is_approved]
         return teams
@@ -1394,15 +1303,14 @@ class Participant(Model, MixinTeam):
         return out
 
 
-    class StillReceivingTips(Exception): pass
+    class StillATeamOwner(Exception): pass
     class BalanceIsNotZero(Exception): pass
 
     def final_check(self, cursor):
         """Sanity-check that balance and tips have been dealt with.
         """
-        INCOMING = "SELECT count(*) FROM current_tips WHERE tippee = %s AND amount > 0"
-        if cursor.one(INCOMING, (self.username,)) > 0:
-            raise self.StillReceivingTips
+        if self.get_teams(cursor=cursor):
+            raise self.StillATeamOwner
         if self.balance != 0:
             raise self.BalanceIsNotZero
 
