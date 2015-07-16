@@ -10,8 +10,6 @@ import braintree
 from aspen import log
 from aspen.utils import typecheck
 from gratipay.exceptions import NegativeBalance, NotWhitelisted
-from gratipay.models import check_db
-from gratipay.models.participant import Participant
 from gratipay.models.exchange_route import ExchangeRoute
 
 

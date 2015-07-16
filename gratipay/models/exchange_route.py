@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import balanced
 import braintree
 from postgres.orm import Model
 
