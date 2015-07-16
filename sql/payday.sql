@@ -42,7 +42,7 @@ CREATE TABLE payday_teams AS
        AND (SELECT count(*)
               FROM current_exchange_routes er
              WHERE er.participant = p.id
-               AND network IN ('balanced-ba', 'paypal')
+               AND network = 'paypal'
                AND error = ''
             ) > 0
     ;
