@@ -64,8 +64,12 @@ subhead = _("Hall of Fame")
 {% extends "templates/about-security.html" %}
 {% block content %}
 <div class="col0">
-    <p>Thank you to the following researchers (most recent first) for
-    <a href="./">disclosing</a> security issues to us.</p>
+
+    <p>Thank you to the following researchers (most recent first) for <a
+        href="https://hackerone.com/gratipay">disclosing</a> security issues to
+    us. We also <a href="https://hackerone.com/gratipay/thanks">thank
+    researchers on HackerOne</a>.</p>
+
 </div>
 <div class="hall-of-fame">
     <dl>
