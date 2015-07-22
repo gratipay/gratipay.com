@@ -115,7 +115,7 @@ class TestHistoryPage(Harness):
 
     def test_admin_can_view_closed_participant_history(self):
         self.make_exchange('braintree-cc', -30, 0, self.alice)
-        self.alice.close(None)
+        self.alice.close()
 
         self.make_participant('bob', claimed_time='now', is_admin=True)
         response = self.client.GET('/~alice/history/?year=%s' % self.past_year, auth_as='bob')

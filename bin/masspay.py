@@ -125,23 +125,20 @@ def compute_input_csv():
     routes = get_ready_payout_routes_by_network(db, 'paypal')
     writer = csv.writer(open(INPUT_CSV, 'w+'))
     print_rule(88)
-    headers = "username", "email", "fee cap", "balance", "tips", "amount"
-    print("{:<24}{:<32} {:^7} {:^7} {:^7} {:^7}".format(*headers))
+    headers = "username", "email", "fee cap", "amount"
+    print("{:<24}{:<32} {:^7} {:^7}".format(*headers))
     print_rule(88)
     total_gross = 0
     for route in routes:
-        total = route.participant.giving
-        amount = route.participant.balance - total
+        amount = route.participant.balance
         if amount < 0.50:
             # Minimum payout of 50 cents. I think that otherwise PayPal upcharges to a penny.
             # See https://github.com/gratipay/gratipay.com/issues/1958.
             continue
         total_gross += amount
-        print("{:<24}{:<32} {:>7} {:>7} {:>7} {:>7}".format( route.participant.username
+        print("{:<24}{:<32} {:>7} {:>7}".format( route.participant.username
                                                            , route.address
                                                            , route.fee_cap
-                                                           , route.participant.balance
-                                                           , total
                                                            , amount
                                                             ))
         row = (route.participant.username, route.address, route.fee_cap, amount)
