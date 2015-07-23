@@ -18,8 +18,7 @@ Gratipay.init = function() {
     Gratipay.payments.initSupportGratipay();
 };
 
-Gratipay.warnOffUsersFromDeveloperConsole = function()
-{
+Gratipay.warnOffUsersFromDeveloperConsole = function() {
     console.log("%cStop!", "color: red; font-weight: bold; font-size: 50px;");
     console.log( "%cThis is a console for developers. If someone has asked you to open this "
                + "window, they are likely trying to compromise your Gratipay account."
@@ -27,7 +26,6 @@ Gratipay.warnOffUsersFromDeveloperConsole = function()
                 );
     console.log("%cPlease close this window now.", "color: blue;");
 };
-
 
 Gratipay.error = function(jqXHR, textStatus, errorThrown) {
     var msg = null;
