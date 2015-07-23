@@ -208,3 +208,16 @@ class TestPages(Harness):
         self.make_team(is_approved=True)
         assert self.client.GET("/TheATeam/").code == 200
         assert self.client.GxT("/~TheATeam/").code == 404
+
+
+    def test_security_headers_sets_x_frame_options(self):
+        headers = self.client.GET('/about/').headers
+        assert headers['X-Frame-Options'] == 'SAMEORIGIN'
+
+    def test_security_headers_sets_x_content_type_options(self):
+        headers = self.client.GET('/about/').headers
+        assert headers['X-Content-Type-Options'] == 'nosniff'
+
+    def test_security_headers_sets_x_xss_protection(self):
+        headers = self.client.GET('/about/').headers
+        assert headers['X-XSS-Protection'] == '1; mode=block'

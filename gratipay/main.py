@@ -7,7 +7,7 @@ import gratipay.wireup
 from gratipay import utils
 from gratipay.cron import Cron
 from gratipay.models.participant import Participant
-from gratipay.security import authentication, csrf, x_frame_options
+from gratipay.security import authentication, csrf, security_headers
 from gratipay.utils import erase_cookie, http_caching, i18n, set_cookie, timer
 from gratipay.version import get_version
 from gratipay.renderers import csv_dump, jinja2_htmlescaped
@@ -119,7 +119,7 @@ algorithm.functions = [
     authentication.add_auth_to_response,
     csrf.add_token_to_response,
     http_caching.add_caching_to_response,
-    x_frame_options,
+    security_headers,
 
     algorithm['log_traceback_for_5xx'],
     algorithm['delegate_error_to_simplate'],
