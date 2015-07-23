@@ -59,16 +59,19 @@ for line in raw.splitlines():
 
 [---]
 title = _("Security")
-subhead = _("Hall of Fame")
+subhead = _("Hall of Fame (Legacy)")
 [---] text/html
 {% extends "templates/about-security.html" %}
 {% block content %}
 <div class="col0">
 
+    <p><b>Note:</b> We now prefer to <a
+        href="https://hackerone.com/gratipay/thanks">thank researchers on
+    HackerOne</a>. This is our legacy Hall of Fame.</p>
+
     <p>Thank you to the following researchers (most recent first) for <a
         href="https://hackerone.com/gratipay">disclosing</a> security issues to
-    us. We also <a href="https://hackerone.com/gratipay/thanks">thank
-    researchers on HackerOne</a>.</p>
+    us outside of HackerOne.</p>
 
 </div>
 <div class="hall-of-fame">
