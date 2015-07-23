@@ -9,7 +9,7 @@ def payday():
     # ===============
 
     env = wireup.env()
-
+    wireup.db(env)
     wireup.billing(env)
 
 
