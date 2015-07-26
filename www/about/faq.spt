@@ -93,18 +93,11 @@ subhead = _("Frequently Asked Questions")
             </a>
         </dt>
 
-        <dd>There are two ways to withdraw funds from Gratipay:
+        <dd>There is one way to withdraw funds from Gratipay:
 
         <ol>
-
-            <li><a href="/about/me/routes/bank-account.html">Connect a
-                bank account</a>. Funds will be deposited every Friday ($10 minimum; no fee;
-            U.S.-only).</li>
-
-            <li><a
-                href="mailto:support@gratipay.com?subject=configuring%20PayPal">Email
-            us</a> to set up a weekly PayPal payout (unlimited payout; 2% fee capped at
-            $20).</li>
+            <li>Visit your <a href="http://gratipay.com/about/me/settings">Settings page</a> to set up a weekly PayPal payout (unlimited payout; 2% fee capped at $20).</li>
+        
 
         </ol>
 
