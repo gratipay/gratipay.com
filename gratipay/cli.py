@@ -9,8 +9,7 @@ def payday():
     # ===============
 
     env = wireup.env()
-    db = wireup.db(env)
-
+    wireup.db(env)
     wireup.billing(env)
 
 
@@ -19,11 +18,9 @@ def payday():
     # This dodges a problem where db in billing is None if we import it from
     # gratipay before calling wireup.billing.
 
-    from gratipay.billing.exchanges import sync_with_balanced
     from gratipay.billing.payday import Payday
 
     try:
-        sync_with_balanced(db)
         Payday.start().run()
     except KeyboardInterrupt:
         pass
