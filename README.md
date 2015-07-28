@@ -323,7 +323,7 @@ Help!
 -----
 
 If you get stuck somewhere along the way, [make an
-issue](/gratipay/gratipay.com/issues/new) here on GitHub.
+issue](https://github.com/gratipay/gratipay.com/issues/new) here on GitHub.
 
 Thanks for installing Gratipay! :smiley:
 
