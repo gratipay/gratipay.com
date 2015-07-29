@@ -168,8 +168,8 @@ msgstr "Política de Privacidade"
 msgid "Disclosure"
 msgstr "Divulgação"
 
-msgid "Hall of Fame"
-msgstr "Hall da Fama"
+msgid "Hall of Fame (Legacy)"
+msgstr ""
 
 msgid "Basic Info"
 msgstr "Informação básica"
@@ -1199,12 +1199,6 @@ msgid ""
 "Have you linked to your Gratipay profile from other websites? Be sure to "
 "update those links!"
 msgstr "Você ligou seu perfil do Gratipay com outros websites? Lembre-se de atualizar estes links!"
-
-msgid "Account type"
-msgstr "Tipo de conta"
-
-msgid "Individual"
-msgstr "Individual"
 
 msgid "Available Money"
 msgstr "Dinheiro Disponível"

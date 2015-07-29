@@ -164,8 +164,8 @@ msgstr "Privateco"
 msgid "Disclosure"
 msgstr "Rivelado"
 
-msgid "Hall of Fame"
-msgstr "Halo de Fameco"
+msgid "Hall of Fame (Legacy)"
+msgstr ""
 
 msgid "Basic Info"
 msgstr "Baza informo"
@@ -1195,12 +1195,6 @@ msgid ""
 "Have you linked to your Gratipay profile from other websites? Be sure to "
 "update those links!"
 msgstr "Ĉu vi alligis via Gratipay profilon de aliaj retejoj? Nepre aktualigi tiujn ligilojn!"
-
-msgid "Account type"
-msgstr "Tipo de konto"
-
-msgid "Individual"
-msgstr "Individua"
 
 msgid "Available Money"
 msgstr "Disponebla Mono"
