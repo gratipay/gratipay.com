@@ -351,23 +351,35 @@ deployment.
 Testing [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
 =======
 
-Please write unit tests for all new code and all code you change. Gratipay's
-test suite uses the py.test test runner, which will be installed into the
-virtualenv you get by running `make env`. As a rule of thumb, each test case
-should perform one assertion.
+|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
+Our test suite is divided into JavaScript tests and Python tests. The Python 
+part of the test suite is much more extensive than the JavaScript part. You need 
+to install [PhantomJS](http://phantomjs.org/) separately in order to run the 
+JavaScript tests. For Python we use the [pytest](http://pytest.org/) test runner; 
+it's installed automatically as part of `make env`.
 
-The easiest way to run the test suite is:
+The easiest way to run the whole test suite is:
 
     $ make test
+    
+You can also do:
 
-However, the test suite deletes data in all tables in the public schema of the
-database configured in your testing environment.
+    $ make jstest
+    
+and/or:
 
-To invoke py.test directly you should use the `honcho` utility that comes
+    $ make pytest
+    
+
+To invoke `py.test` directly you should use the `honcho` utility that comes 
 with the install. First `make tests/env`, activate the virtualenv and then:
 
     [gratipay] $ cd tests/
     [gratipay] $ honcho run -e defaults.env,local.env py.test
+
+Be careful! The test suite deletes data in all tables in the public schema of the
+database configured in your testing environment.
+
 
 Local Database Setup
 --------------------
@@ -378,7 +390,7 @@ version of Postgres to use is 9.3.5, because that's what we're using in
 production at Heroku. You need at least 9.2, because we depend on being able to
 specify a URI to `psql`, and that was added in 9.2.
 
-+ Mac: use Homerew: `brew install postgres`
++ Mac: use Homebrew: `brew install postgres`
 + Ubuntu: use Apt: `apt-get install postgresql postgresql-contrib libpq-dev`
 
 To setup the instance for gratipay's needs run:
