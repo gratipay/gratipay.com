@@ -1,0 +1,2 @@
+class Journal(object):
+    pass

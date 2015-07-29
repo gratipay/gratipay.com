@@ -1,4 +1,4 @@
--- Recreate the necessary tables and indexes
+-- Participants
 
 DROP TABLE IF EXISTS payday_participants;
 CREATE TABLE payday_participants AS
@@ -18,11 +18,27 @@ CREATE TABLE payday_participants AS
           , braintree_customer_id
       FROM participants p
      WHERE is_suspicious IS NOT true
-       AND claimed_time < %(ts_start)s
+       AND claimed_time < (SELECT ts_start FROM current_payday())
   ORDER BY claimed_time;
 
 CREATE UNIQUE INDEX ON payday_participants (id);
 CREATE UNIQUE INDEX ON payday_participants (username);
+
+CREATE OR REPLACE FUNCTION protect_balances() RETURNS trigger AS $$
+BEGIN
+    IF NEW.new_balance < LEAST(0, OLD.new_balance) THEN
+        RAISE 'You''re trying to make balance more negative for %.', NEW.username
+            USING ERRCODE = '23000';
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER protect_balances AFTER UPDATE ON payday_participants
+    FOR EACH ROW EXECUTE PROCEDURE protect_balances();
+
+
+-- Teams
 
 DROP TABLE IF EXISTS payday_teams;
 CREATE TABLE payday_teams AS
@@ -47,29 +63,41 @@ CREATE TABLE payday_teams AS
             ) > 0
     ;
 
-DROP TABLE IF EXISTS payday_payments_done;
-CREATE TABLE payday_payments_done AS
-    SELECT *
-      FROM payments p
-     WHERE p.timestamp > %(ts_start)s;
+CREATE OR REPLACE FUNCTION protect_team_balances() RETURNS trigger AS $$
+BEGIN
+    IF NEW.balance < 0 THEN
+        RAISE 'You''re trying to set a negative balance for the % team.', NEW.slug
+            USING ERRCODE = '23000';
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER protect_team_balances AFTER UPDATE ON payday_teams
+    FOR EACH ROW EXECUTE PROCEDURE protect_team_balances();
+
+
+-- Subscriptions
+
+DROP TABLE IF EXISTS payday_journal_so_far;
+CREATE TABLE payday_journal_so_far AS
+    SELECT * FROM journal WHERE payday = (SELECT id FROM current_payday());
 
 DROP TABLE IF EXISTS payday_subscriptions;
 CREATE TABLE payday_subscriptions AS
     SELECT subscriber, team, amount
       FROM ( SELECT DISTINCT ON (subscriber, team) *
                FROM subscriptions
-              WHERE mtime < %(ts_start)s
+              WHERE mtime < (SELECT ts_start FROM current_payday())
            ORDER BY subscriber, team, mtime DESC
            ) s
       JOIN payday_participants p ON p.username = s.subscriber
-      JOIN payday_teams t ON t.slug = s.team
      WHERE s.amount > 0
        AND ( SELECT id
-               FROM payday_payments_done done
-              WHERE s.subscriber = done.participant
-                AND s.team = done.team
-                AND direction = 'to-team'
-           ) IS NULL
+               FROM payday_journal_so_far so_far
+              WHERE so_far.debit = (SELECT id FROM accounts WHERE team=s.team)
+                AND so_far.credit = (SELECT id FROM accounts WHERE participant=s.subscriber)
+            ) IS NULL
   ORDER BY p.claimed_time ASC, s.ctime ASC;
 
 CREATE INDEX ON payday_subscriptions (subscriber);
@@ -84,6 +112,9 @@ UPDATE payday_participants
             WHERE subscriber = username
        ), 0);
 
+
+-- Takes
+
 DROP TABLE IF EXISTS payday_takes;
 CREATE TABLE payday_takes
 ( team text
@@ -91,53 +122,96 @@ CREATE TABLE payday_takes
 , amount numeric(35,2)
  );
 
-DROP TABLE IF EXISTS payday_payments;
-CREATE TABLE payday_payments
-( timestamp timestamptz         DEFAULT now()
-, participant text              NOT NULL
-, team text                     NOT NULL
-, amount numeric(35,2)          NOT NULL
-, direction payment_direction   NOT NULL
+
+-- Journal
+
+DROP TABLE IF EXISTS payday_journal;
+CREATE TABLE payday_journal
+( ts timestamptz        DEFAULT now()
+, amount numeric(35,2)  NOT NULL
+, debit bigint          NOT NULL
+, credit bigint         NOT NULL
+, payday int            NOT NULL DEFAULT current_payday_id()
  );
 
+CREATE OR REPLACE FUNCTION payday_update_balance() RETURNS trigger AS $$
+DECLARE
+    to_debit            text;
+    to_credit           text;
+BEGIN
+    to_debit = (SELECT participant FROM accounts WHERE id=NEW.debit);
+    IF to_debit IS NOT NULL THEN
 
--- Prepare a statement that makes and records a payment
+        -- Fulfillment of a subscription from a ~user to a Team.
+
+        to_credit = (SELECT team FROM accounts WHERE id=NEW.credit);
+
+        UPDATE payday_participants
+           SET new_balance = new_balance - NEW.amount
+         WHERE username = to_debit;
+
+        UPDATE payday_teams
+           SET balance = balance + NEW.amount
+         WHERE slug = to_credit;
+
+    ELSE
+
+        -- Payroll from a Team to a ~user.
+
+        to_debit = (SELECT team FROM accounts WHERE id=NEW.debit);
+        to_credit = (SELECT participant FROM accounts WHERE id=NEW.credit);
+
+        UPDATE payday_teams
+           SET balance = balance - NEW.amount
+         WHERE slug = to_debit;
+
+        UPDATE payday_participants
+           SET new_balance = new_balance + NEW.amount
+         WHERE username = to_credit;
+
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER payday_update_balance AFTER INSERT ON payday_journal
+    FOR EACH ROW EXECUTE PROCEDURE payday_update_balance();
+
+
+-- Prepare a statement that makes a journal entry
 
 CREATE OR REPLACE FUNCTION pay(text, text, numeric, payment_direction)
 RETURNS void AS $$
     DECLARE
-        participant_delta numeric;
-        team_delta numeric;
+        participant_account bigint;
+        team_account        bigint;
+        to_debit            bigint;
+        to_credit           bigint;
     BEGIN
         IF ($3 = 0) THEN RETURN; END IF;
 
-        IF ($4 = 'to-team') THEN
-            participant_delta := -$3;
-            team_delta := $3;
-        ELSE
-            participant_delta := $3;
-            team_delta := -$3;
+        participant_account := (SELECT id FROM accounts WHERE participant=$1);
+        team_account := (SELECT id FROM accounts WHERE team=$2);
+
+        IF participant_account IS NULL THEN
+            RAISE 'Unknown participant: %.', $1;
+        END IF;
+        IF team_account IS NULL THEN
+            RAISE 'Unknown team: %', $2;
         END IF;
 
-        UPDATE payday_participants
-           SET new_balance = (new_balance + participant_delta)
-         WHERE username = $1;
-        UPDATE payday_teams
-           SET balance = (balance + team_delta)
-         WHERE slug = $2;
-        INSERT INTO payday_payments
-                    (participant, team, amount, direction)
-             VALUES ( ( SELECT p.username
-                          FROM participants p
-                          JOIN payday_participants p2 ON p.id = p2.id
-                         WHERE p2.username = $1 )
-                    , ( SELECT t.slug
-                          FROM teams t
-                          JOIN payday_teams t2 ON t.id = t2.id
-                         WHERE t2.slug = $2 )
-                    , $3
-                    , $4
-                     );
+        IF ($4 = 'to-team') THEN
+            to_debit := participant_account;
+            to_credit := team_account;
+        ELSE
+            to_debit := team_account;
+            to_credit := participant_account;
+        END IF;
+
+        INSERT INTO payday_journal
+                    (amount, debit, credit)
+             VALUES ($3, to_debit, to_credit);
     END;
 $$ LANGUAGE plpgsql;
 
