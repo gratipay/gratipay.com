@@ -740,6 +740,7 @@ class Participant(Model, MixinTeam):
         token = braintree.ClientToken.generate({'customer_id': account.id})
         return token
 
+
     # Elsewhere-related stuff
     # =======================
 
@@ -919,13 +920,13 @@ class Participant(Model, MixinTeam):
 
     def update_giving_and_teams(self):
         with self.db.get_cursor() as cursor:
-            updated_subs = self.update_giving(cursor)
-            for sub in updated_subs:
-                Team.from_slug(sub.team).update_receiving(cursor)
+            updated_giving = self.update_giving(cursor)
+            for payment_instruction in updated_giving:
+                Team.from_slug(payment_instruction.team).update_receiving(cursor)
 
     def update_giving(self, cursor=None):
         updated = []
-        # Update is_funded on tips
+        # Update is_funded on payment_instructions
         if self.get_credit_card_error() == '':
             updated = (cursor or self.db).all("""
                 UPDATE current_payment_instructions
@@ -939,9 +940,9 @@ class Participant(Model, MixinTeam):
             UPDATE participants p
                SET giving = COALESCE((
                       SELECT sum(amount)
-                        FROM current_payment_instructions s
-                        JOIN teams t ON t.slug=s.team
-                       WHERE participant=%(username)s
+                        FROM current_payment_instructions cpi
+                        JOIN teams t ON t.slug = cpi.team
+                       WHERE participant = %(username)s
                          AND amount > 0
                          AND is_funded
                          AND t.is_approved
@@ -992,8 +993,6 @@ class Participant(Model, MixinTeam):
                       )
             self.set_attributes(is_free_rider=is_free_rider)
 
-
-    # New payday system
 
     def set_payment_instruction(self, team, amount, update_self=True, update_team=True,
                                                                                       cursor=None):
