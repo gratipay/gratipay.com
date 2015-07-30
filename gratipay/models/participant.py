@@ -908,19 +908,19 @@ class Participant(Model, MixinTeam):
         GIVING = """\
 
             SELECT * FROM (
-                SELECT DISTINCT ON (s.team)
-                       s.team   as team_slug
-                     , s.amount
-                     , s.ctime
-                     , s.mtime
-                     , t.name   as team_name
-                  FROM payment_instructions s
-                  JOIN teams t ON s.team = t.slug
+                SELECT DISTINCT ON (pi.team)
+                       pi.team  AS team_slug
+                     , pi.amount
+                     , pi.ctime
+                     , pi.mtime
+                     , t.name   AS team_name
+                  FROM payment_instructions pi
+                  JOIN teams t ON pi.team = t.slug
                  WHERE participant = %s
                    AND t.is_approved is true
                    AND t.is_closed is not true
-              ORDER BY s.team
-                     , s.mtime DESC
+              ORDER BY pi.team
+                     , pi.mtime DESC
             ) AS foo
             ORDER BY amount DESC
                    , team_slug
