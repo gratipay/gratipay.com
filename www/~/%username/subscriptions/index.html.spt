@@ -5,7 +5,7 @@ from datetime import timedelta
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-subscriptions, total = participant.get_subscriptions_for_profile()
+subscriptions, total = participant.get_giving_for_profile()
 title = participant.username
 subhead = _("Subscriptions")
 recently = utcnow() - timedelta(days=30)

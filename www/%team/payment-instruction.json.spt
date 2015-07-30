@@ -1,4 +1,4 @@
-"""Get or change the authenticated user's subscription to this team.
+"""Get or change the authenticated user's payment instruction for this team.
 """
 from decimal import InvalidOperation
 
@@ -28,7 +28,7 @@ else:
 
     if request.method == 'POST' and 'amount' in request.body:
         try:
-            out = user.participant.set_subscription_to(team, parse_decimal(request.body['amount']))
+            out = user.participant.set_payment_instruction(team, parse_decimal(request.body['amount']))
         except (InvalidOperation, ValueError, BadAmount, NumberFormatError):
             raise Response(400, "bad amount")
     else:

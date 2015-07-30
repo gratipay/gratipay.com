@@ -323,7 +323,7 @@ class Participant(Model, MixinTeam):
         """Close the participant's account.
         """
         with self.db.get_cursor() as cursor:
-            self.clear_subscriptions(cursor)
+            self.clear_payment_instructions(cursor)
             self.clear_personal_information(cursor)
             self.final_check(cursor)
             self.update_is_closed(True, cursor)
@@ -341,8 +341,8 @@ class Participant(Model, MixinTeam):
             self.set_attributes(is_closed=is_closed)
 
 
-    def clear_subscriptions(self, cursor):
-        """Zero out the participant's subscriptions.
+    def clear_payment_instructions(self, cursor):
+        """Zero out the participant's payment_instructions.
         """
         teams = cursor.all("""
 
@@ -350,13 +350,13 @@ class Participant(Model, MixinTeam):
                        FROM teams
                       WHERE slug=team
                     ) AS team
-              FROM current_subscriptions
-             WHERE subscriber = %s
+              FROM current_payment_instructions
+             WHERE participant = %s
                AND amount > 0
 
         """, (self.username,))
         for team in teams:
-            self.set_subscription_to(team, '0.00', update_self=False, cursor=cursor)
+            self.set_payment_instruction(team, '0.00', update_self=False, cursor=cursor)
 
 
     def clear_takes(self, cursor):
@@ -934,9 +934,9 @@ class Participant(Model, MixinTeam):
         # Update is_funded on tips
         if self.get_credit_card_error() == '':
             updated = (cursor or self.db).all("""
-                UPDATE current_subscriptions
+                UPDATE current_payment_instructions
                    SET is_funded = true
-                 WHERE subscriber = %s
+                 WHERE participant = %s
                    AND is_funded IS NOT true
              RETURNING *
             """, (self.username,))
@@ -945,9 +945,9 @@ class Participant(Model, MixinTeam):
             UPDATE participants p
                SET giving = COALESCE((
                       SELECT sum(amount)
-                        FROM current_subscriptions s
+                        FROM current_payment_instructions s
                         JOIN teams t ON t.slug=s.team
-                       WHERE subscriber=%(username)s
+                       WHERE participant=%(username)s
                          AND amount > 0
                          AND is_funded
                          AND t.is_approved
@@ -1001,16 +1001,17 @@ class Participant(Model, MixinTeam):
 
     # New payday system
 
-    def set_subscription_to(self, team, amount, update_self=True, update_team=True, cursor=None):
-        """Given a Team or username, and amount as str, returns a dict.
+    def set_payment_instruction(self, team, amount, update_self=True, update_team=True,
+                                                                                      cursor=None):
+        """Given a Team or slug, and amount as str, returns a dict.
 
         We INSERT instead of UPDATE, so that we have history to explore. The
         COALESCE function returns the first of its arguments that is not NULL.
-        The effect here is to stamp all tips with the timestamp of the first
-        tip from this user to that. I believe this is used to determine the
-        order of payments during payday.
+        The effect here is to stamp all payment instructions with the timestamp
+        of the first instruction from this ~user to that Team. I believe this
+        is used to determine the order of payments during payday.
 
-        The dict returned represents the row inserted in the subscriptions
+        The dict returned represents the row inserted in the payment_instructions
         table.
 
         """
@@ -1022,41 +1023,41 @@ class Participant(Model, MixinTeam):
                 raise NoTeam(slug)
 
         amount = Decimal(amount)  # May raise InvalidOperation
-        if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
+        if (amount < gratipay.MIN_PAYMENT) or (amount > gratipay.MAX_PAYMENT):
             raise BadAmount
 
-        # Insert subscription
-        NEW_SUBSCRIPTION = """\
+        # Insert payment instruction
+        NEW_PAYMENT_INSTRUCTION = """\
 
-            INSERT INTO subscriptions
-                        (ctime, subscriber, team, amount)
+            INSERT INTO payment_instructions
+                        (ctime, participant, team, amount)
                  VALUES ( COALESCE (( SELECT ctime
-                                        FROM subscriptions
-                                       WHERE (subscriber=%(subscriber)s AND team=%(team)s)
+                                        FROM payment_instructions
+                                       WHERE (participant=%(participant)s AND team=%(team)s)
                                        LIMIT 1
                                       ), CURRENT_TIMESTAMP)
-                        , %(subscriber)s, %(team)s, %(amount)s
+                        , %(participant)s, %(team)s, %(amount)s
                          )
               RETURNING *
 
         """
-        args = dict(subscriber=self.username, team=team.slug, amount=amount)
-        t = (cursor or self.db).one(NEW_SUBSCRIPTION, args)
+        args = dict(participant=self.username, team=team.slug, amount=amount)
+        t = (cursor or self.db).one(NEW_PAYMENT_INSTRUCTION, args)
 
         if update_self:
-            # Update giving amount of subscriber
+            # Update giving amount of participant
             self.update_giving(cursor)
         if update_team:
             # Update receiving amount of team
             team.update_receiving(cursor)
         if team.slug == 'Gratipay':
-            # Update whether the subscriber is using Gratipay for free
+            # Update whether the participant is using Gratipay for free
             self.update_is_free_rider(None if amount == 0 else False, cursor)
 
         return t._asdict()
 
 
-    def get_subscription_to(self, team):
+    def get_payment_instruction(self, team):
         """Given a slug, returns a dict.
         """
 
@@ -1069,8 +1070,8 @@ class Participant(Model, MixinTeam):
         return self.db.one("""\
 
             SELECT *
-              FROM subscriptions
-             WHERE subscriber=%s
+              FROM payment_instructions
+             WHERE participant=%s
                AND team=%s
           ORDER BY mtime DESC
              LIMIT 1
@@ -1218,11 +1219,11 @@ class Participant(Model, MixinTeam):
         return tip_amounts, npatrons, contributed
 
 
-    def get_subscriptions_for_profile(self):
+    def get_giving_for_profile(self):
         """Return a list and a Decimal.
         """
 
-        SUBSCRIPTIONS = """\
+        GIVING = """\
 
             SELECT * FROM (
                 SELECT DISTINCT ON (s.team)
@@ -1231,9 +1232,9 @@ class Participant(Model, MixinTeam):
                      , s.ctime
                      , s.mtime
                      , t.name   as team_name
-                  FROM subscriptions s
+                  FROM payment_instructions s
                   JOIN teams t ON s.team = t.slug
-                 WHERE subscriber = %s
+                 WHERE participant = %s
                    AND t.is_approved is true
                    AND t.is_closed is not true
               ORDER BY s.team
@@ -1243,18 +1244,18 @@ class Participant(Model, MixinTeam):
                    , team_slug
 
         """
-        subscriptions = self.db.all(SUBSCRIPTIONS, (self.username,))
+        giving = self.db.all(GIVING, (self.username,))
 
 
         # Compute the total.
         # ==================
 
-        total = sum([s.amount for s in subscriptions])
+        total = sum([rec.amount for rec in giving])
         if not total:
             # If tips is an empty list, total is int 0. We want a Decimal.
             total = Decimal('0.00')
 
-        return subscriptions, total
+        return giving, total
 
     def get_current_tips(self):
         """Get the tips this participant is currently sending to others.

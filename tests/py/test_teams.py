@@ -116,7 +116,7 @@ class TestTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Please fill out the 'Team Name' field." in r.body
 
-    def test_migrate_tips_to_subscriptions(self):
+    def test_migrate_tips_to_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now')
         bob = self.make_participant('bob', claimed_time='now')
         self.make_participant('old_team')
@@ -126,14 +126,14 @@ class TestTeams(Harness):
 
         new_team.migrate_tips()
 
-        subscriptions = self.db.all("SELECT * FROM subscriptions")
-        assert len(subscriptions) == 2
-        assert subscriptions[0].subscriber == 'alice'
-        assert subscriptions[0].team == 'new_team'
-        assert subscriptions[0].amount == 1
-        assert subscriptions[1].subscriber == 'bob'
-        assert subscriptions[1].team == 'new_team'
-        assert subscriptions[1].amount == 2
+        payment_instructions = self.db.all("SELECT * FROM payment_instructions")
+        assert len(payment_instructions) == 2
+        assert payment_instructions[0].participant == 'alice'
+        assert payment_instructions[0].team == 'new_team'
+        assert payment_instructions[0].amount == 1
+        assert payment_instructions[1].participant == 'bob'
+        assert payment_instructions[1].team == 'new_team'
+        assert payment_instructions[1].amount == 2
 
     def test_migrate_tips_only_runs_once(self):
         alice = self.make_participant('alice', claimed_time='now')
@@ -146,8 +146,8 @@ class TestTeams(Harness):
         with pytest.raises(AlreadyMigrated):
             new_team.migrate_tips()
 
-        subscriptions = self.db.all("SELECT * FROM subscriptions")
-        assert len(subscriptions) == 1
+        payment_instructions = self.db.all("SELECT * FROM payment_instructions")
+        assert len(payment_instructions) == 1
 
     def test_migrate_tips_checks_for_multiple_teams(self):
         alice = self.make_participant('alice', claimed_time='now')
@@ -161,5 +161,5 @@ class TestTeams(Harness):
         with pytest.raises(AlreadyMigrated):
             newer_team.migrate_tips()
 
-        subscriptions = self.db.all("SELECT * FROM subscriptions")
-        assert len(subscriptions) == 1
+        payment_instructions = self.db.all("SELECT * FROM payment_instructions")
+        assert len(payment_instructions) == 1

@@ -165,14 +165,14 @@ class TestPages(Harness):
     def test_subscriptions_page(self):
         self.make_team(is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_subscription_to('TheATeam', "1.00")
+        alice.set_payment_instruction('TheATeam', "1.00")
         assert "The A Team" in self.client.GET("/~alice/subscriptions/", auth_as="alice").body
 
     def test_giving_page_shows_cancelled(self):
         self.make_team(is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_subscription_to('TheATeam', "1.00")
-        alice.set_subscription_to('TheATeam', "0.00")
+        alice.set_payment_instruction('TheATeam', "1.00")
+        alice.set_payment_instruction('TheATeam', "0.00")
         assert "Cancelled" in self.client.GET("/~alice/subscriptions/", auth_as="alice").body
 
     def test_new_participant_can_edit_profile(self):

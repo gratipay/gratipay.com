@@ -87,23 +87,23 @@ class Team(Model):
                 }[self.is_approved]
 
     def migrate_tips(self):
-        subscriptions = self.db.all("""
-            SELECT s.*
-              FROM subscriptions s
-              JOIN teams t ON t.slug = s.team
+        payment_instructions = self.db.all("""
+            SELECT pi.*
+              FROM payment_instructions pi
+              JOIN teams t ON t.slug = pi.team
               JOIN participants p ON t.owner = p.username
              WHERE p.username = %s
-               AND s.ctime < t.ctime
+               AND pi.ctime < t.ctime
         """, (self.owner, ))
 
         # Make sure the migration hasn't been done already
-        if subscriptions:
+        if payment_instructions:
             raise AlreadyMigrated
 
         self.db.run("""
 
-            INSERT INTO subscriptions
-                        (ctime, mtime, subscriber, team, amount, is_funded)
+            INSERT INTO payment_instructions
+                        (ctime, mtime, participant, team, amount, is_funded)
                  SELECT ct.ctime
                       , ct.mtime
                       , ct.tipper
