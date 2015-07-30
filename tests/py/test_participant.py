@@ -452,63 +452,63 @@ class Tests(Harness):
         assert Participant.from_username('bob').number == 'plural'
 
 
-    # set_subscription_to - sst
+    # set_payment_instruction - spi
 
-    def test_sst_sets_subscription_to(self):
+    def test_spi_sets_payment_instruction(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team()
-        alice.set_subscription_to(team, '1.00')
+        alice.set_payment_instruction(team, '1.00')
 
-        actual = alice.get_subscription_to(team)['amount']
+        actual = alice.get_payment_instruction(team)['amount']
         assert actual == Decimal('1.00')
 
-    def test_sst_returns_a_dict(self):
+    def test_spi_returns_a_dict(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team()
-        actual = alice.set_subscription_to(team, '1.00')
+        actual = alice.set_payment_instruction(team, '1.00')
         assert isinstance(actual, dict)
         assert isinstance(actual['amount'], Decimal)
         assert actual['amount'] == 1
 
-    def test_sst_allows_up_to_a_thousand(self):
+    def test_spi_allows_up_to_a_thousand(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team()
-        alice.set_subscription_to(team, '1000.00')
+        alice.set_payment_instruction(team, '1000.00')
 
-    def test_sst_doesnt_allow_a_penny_more(self):
+    def test_spi_doesnt_allow_a_penny_more(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team()
-        self.assertRaises(BadAmount, alice.set_subscription_to, team, '1000.01')
+        self.assertRaises(BadAmount, alice.set_payment_instruction, team, '1000.01')
 
-    def test_sst_allows_a_zero_subscription(self):
+    def test_spi_allows_a_zero_payment_instruction(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team()
-        alice.set_subscription_to(team, '0.00')
+        alice.set_payment_instruction(team, '0.00')
 
-    def test_sst_doesnt_allow_a_penny_less(self):
+    def test_spi_doesnt_allow_a_penny_less(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team()
-        self.assertRaises(BadAmount, alice.set_subscription_to, team, '-0.01')
+        self.assertRaises(BadAmount, alice.set_payment_instruction, team, '-0.01')
 
-    def test_sst_fails_to_subscribe_to_an_unknown_team(self):
+    def test_spi_fails_to_set_a_payment_instruction_to_an_unknown_team(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.assertRaises(NoTeam, alice.set_subscription_to, 'The B Team', '1.00')
+        self.assertRaises(NoTeam, alice.set_payment_instruction, 'The B Team', '1.00')
 
-    def test_sst_is_free_rider_defaults_to_none(self):
+    def test_spi_is_free_rider_defaults_to_none(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         assert alice.is_free_rider is None
 
-    def test_sst_sets_is_free_rider_to_false(self):
+    def test_spi_sets_is_free_rider_to_false(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         gratipay = self.make_team('Gratipay', owner=self.make_participant('Gratipay').username)
-        alice.set_subscription_to(gratipay, '0.01')
+        alice.set_payment_instruction(gratipay, '0.01')
         assert alice.is_free_rider is False
         assert Participant.from_username('alice').is_free_rider is False
 
-    def test_sst_resets_is_free_rider_to_null(self):
+    def test_spi_resets_is_free_rider_to_null(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         gratipay = self.make_team('Gratipay', owner=self.make_participant('Gratipay').username)
-        alice.set_subscription_to(gratipay, '0.00')
+        alice.set_payment_instruction(gratipay, '0.00')
         assert alice.is_free_rider is None
         assert Participant.from_username('alice').is_free_rider is None
 
@@ -606,9 +606,9 @@ class Tests(Harness):
         carl = self.make_participant('carl', claimed_time='now', last_bill_result="Fail!")
         team = self.make_team(is_approved=True)
 
-        alice.set_subscription_to(team, '3.00') # The only funded tip
-        bob.set_subscription_to(team, '5.00')
-        carl.set_subscription_to(team, '7.00')
+        alice.set_payment_instruction(team, '3.00') # The only funded tip
+        bob.set_payment_instruction(team, '5.00')
+        carl.set_payment_instruction(team, '7.00')
 
         # TODO - Add team payroll and check receiving values
 
@@ -616,16 +616,16 @@ class Tests(Harness):
         assert bob.giving == Decimal('0.00')
         assert carl.giving == Decimal('0.00')
 
-        funded_tip = self.db.one("SELECT * FROM subscriptions WHERE is_funded ORDER BY id")
-        assert funded_tip.subscriber == alice.username
+        funded_tip = self.db.one("SELECT * FROM payment_instructions WHERE is_funded ORDER BY id")
+        assert funded_tip.participant == alice.username
 
     @pytest.mark.xfail(reason="#3399")
     def test_only_latest_tip_counts(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team(is_approved=True)
 
-        alice.set_subscription_to(team, '12.00')
-        alice.set_subscription_to(team, '4.00')
+        alice.set_payment_instruction(team, '12.00')
+        alice.set_payment_instruction(team, '4.00')
 
         # TODO - Add team payroll and check receiving values
 

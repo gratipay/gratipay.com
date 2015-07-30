@@ -4,31 +4,31 @@
     </div>
 {% else %}
     <div class="cta">
-        {% set subscription = user.participant.get_subscription_to(team.slug) %}
+        {% set payment_instruction = user.participant.get_payment_instruction(team.slug) %}
         <h2>{{ _('Your Payment') }}</h2>
         <div class="js-edit your-payment {{ 'anon' if user.ANON }}" data-team="{{ team.id }}">
             <div class="view">
-                <span class="amount">{{ format_currency(subscription.amount, 'USD') }}</span>
+                <span class="amount">{{ format_currency(payment_instruction.amount, 'USD') }}</span>
                 <div class="per-week">{{ _("per week") }}</div>
-                <button class="edit {{ 'not-zero' if subscription.amount > 0 }}">
+                <button class="edit {{ 'not-zero' if payment_instruction.amount > 0 }}">
                     <span class="zero">{{ _("Support {0}", team.name) }}</span>
                     <span class="not-zero">{{ _("Edit") }}</span>
                 </button>
             </div>
-            <form class="edit" action="/{{ team.slug }}/subscription.json">
+            <form class="edit" action="/{{ team.slug }}/payment-instruction.json">
                 $
                 <input type="text" name="amount" class="amount"
-                       value="{{ format_decimal(subscription.amount) }}"
+                       value="{{ format_decimal(payment_instruction.amount) }}"
                        min="0" max="1000">
                 <div class="per-week">{{ _("per week") }}</div>
                 <button class="save">{{ _("Save") }}</button>
                 <button class="cancel">{{ _("Cancel") }}</button>
-                <button class="stop {{ 'zero' if not subscription.amount }}">{{ _("Stop Giving") }}</button>
+                <button class="stop {{ 'zero' if not payment_instruction.amount }}">{{ _("Stop Giving") }}</button>
             </form>
         </div>
 
-        {% if not subscription.is_funded %}
-        <div id="payment-prompt" class="{{ 'needed' if subscription.amount > 0 }}">
+        {% if not payment_instruction.is_funded %}
+        <div id="payment-prompt" class="{{ 'needed' if payment_instruction.amount > 0 }}">
             {{ _("Back your payment with a {0}credit card{1} to make sure it goes through!",
                  "<a href='/~%s/routes/credit-card.html'>"|safe % user.participant.username,
                  "</a>"|safe) }}

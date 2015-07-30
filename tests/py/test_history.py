@@ -42,7 +42,7 @@ class TestHistory(BillingHarness):
         Payday().start().run()
 
         A = self.make_team(is_approved=True)
-        self.obama.set_subscription_to(A, '6.00')  # under $10!
+        self.obama.set_payment_instruction(A, '6.00')  # under $10!
         for i in range(2):
             with patch.object(Payday, 'fetch_card_holds') as fch:
                 fch.return_value = {}

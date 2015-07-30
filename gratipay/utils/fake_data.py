@@ -81,7 +81,7 @@ def fake_team(db, teamowner):
     productorservice = ['Product','Service']
 
     teamname = faker.first_name() + fake_text_id(3)
-    teamslugname = faker.city() 
+    teamslugname = faker.city()
 
     try:
         #using community.slugize
@@ -105,15 +105,15 @@ def fake_team(db, teamowner):
 
     return Team.from_slug(teamslug)
 
-def fake_subscription(db, subscriber, subscribee):
-    """Create a fake subscription
+def fake_payment_instruction(db, participant, team):
+    """Create a fake payment_instruction
     """
     return _fake_thing( db
-                      , "subscriptions"
+                      , "payment_instructions"
                       , ctime=faker.date_time_this_year()
                       , mtime=faker.date_time_this_month()
-                      , subscriber=subscriber.username
-                      , team=subscribee.slug
+                      , participant=participant.username
+                      , team=team.slug
                       , amount=fake_tip_amount()
                        )
 
@@ -272,7 +272,7 @@ def clean_db(db):
     """)
 
 
-def populate_db(db, num_participants=100, num_tips=200, num_teams=5, num_transfers=5000, num_communities=20):
+def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=5000, num_communities=20):
     """Populate DB with fake data.
     """
     print("Making Participants")
@@ -286,19 +286,19 @@ def populate_db(db, num_participants=100, num_tips=200, num_teams=5, num_transfe
     for teamowner in teamowners:
         teams.append(fake_team(db, teamowner))
 
-    print("Making Subscriptions")
-    subscriptioncount = 0
+    print("Making Payment Instructions")
+    npayment_instructions = 0
     for participant in participants:
         for team in teams:
-            #eliminate self-subscription
+            #eliminate self-payment
             if participant.username != team.owner:
-                subscriptioncount += 1
-                if subscriptioncount > num_tips:
+                npayment_instructions += 1
+                if npayment_instructions > ntips:
                     break
-                fake_subscription(db, participant, team)
-        if subscriptioncount > num_tips:
+                fake_payment_instruction(db, participant, team)
+        if npayment_instructions > ntips:
             break
-     
+
 
     print("Making Elsewheres")
     for p in participants:
@@ -318,7 +318,7 @@ def populate_db(db, num_participants=100, num_tips=200, num_teams=5, num_transfe
 
     print("Making Tips")
     tips = []
-    for i in xrange(num_tips):
+    for i in xrange(ntips):
         tipper, tippee = random.sample(participants, 2)
         tips.append(fake_tip(db, tipper, tippee))
 

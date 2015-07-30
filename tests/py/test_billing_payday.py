@@ -21,7 +21,7 @@ class TestPayday(BillingHarness):
 
     def test_payday_moves_money(self):
         A = self.make_team(is_approved=True)
-        self.obama.set_subscription_to(A, '6.00')  # under $10!
+        self.obama.set_payment_instruction(A, '6.00')  # under $10!
         with mock.patch.object(Payday, 'fetch_card_holds') as fch:
             fch.return_value = {}
             Payday.start().run()
@@ -40,7 +40,7 @@ class TestPayday(BillingHarness):
              WHERE username = 'obama'
         """)
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_subscription_to(team, '6.00')  # under $10!
+        self.obama.set_payment_instruction(team, '6.00')  # under $10!
         fch.return_value = {}
         Payday.start().run()
 
@@ -58,7 +58,7 @@ class TestPayday(BillingHarness):
              WHERE username = 'homer'
         """)
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_subscription_to(team, '6.00')  # under $10!
+        self.obama.set_payment_instruction(team, '6.00')  # under $10!
         fch.return_value = {}
         Payday.start().run()
 
@@ -247,7 +247,7 @@ class TestPayin(BillingHarness):
     def test_payin_pays_in(self, sale, sfs, fch):
         fch.return_value = {}
         team = self.make_team('Gratiteam', is_approved=True)
-        self.obama.set_subscription_to(team, 1)
+        self.obama.set_payment_instruction(team, 1)
 
         txn_attrs = {
             'amount': 1,
@@ -274,7 +274,7 @@ class TestPayin(BillingHarness):
     def test_payin_doesnt_try_failed_cards(self, sale):
         team = self.make_team('Gratiteam', is_approved=True)
         self.obama_route.update_error('error')
-        self.obama.set_subscription_to(team, 1)
+        self.obama.set_payment_instruction(team, 1)
 
         Payday.start().payin()
         assert not sale.called
@@ -293,7 +293,7 @@ class TestPayin(BillingHarness):
             UPDATE participants SET balance = -10 WHERE username='obama'
         """)
         team = self.make_team('The A Team', is_approved=True)
-        self.obama.set_subscription_to(team, 25)
+        self.obama.set_payment_instruction(team, 25)
         fch.return_value = {}
         cch.return_value = (None, 'some error')
         self.create_card_holds()
@@ -301,7 +301,7 @@ class TestPayin(BillingHarness):
 
     def test_payin_fetches_and_uses_existing_holds(self):
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_subscription_to(team, '20.00')
+        self.obama.set_payment_instruction(team, '20.00')
         hold, error = create_card_hold(self.db, self.obama, D(20))
         assert hold is not None
         assert not error
@@ -313,7 +313,7 @@ class TestPayin(BillingHarness):
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payin_cancels_existing_holds_of_insufficient_amounts(self, fch):
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_subscription_to(team, '30.00')
+        self.obama.set_payment_instruction(team, '30.00')
         hold, error = create_card_hold(self.db, self.obama, D(10))
         assert not error
         fch.return_value = {self.obama.id: hold}
@@ -382,7 +382,7 @@ class TestPayin(BillingHarness):
     @mock.patch('braintree.Transaction.sale')
     def test_card_hold_error(self, bt_sale, fch):
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_subscription_to(team, '17.00')
+        self.obama.set_payment_instruction(team, '17.00')
         bt_sale.side_effect = Foobar
         fch.return_value = {}
         Payday.start().payin()
@@ -392,27 +392,27 @@ class TestPayin(BillingHarness):
     def test_payin_doesnt_make_null_payments(self):
         team = self.make_team('Gratiteam', is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_subscription_to(team, 1)
-        alice.set_subscription_to(team, 0)
+        alice.set_payment_instruction(team, 1)
+        alice.set_payment_instruction(team, 0)
         a_team = self.make_participant('a_team', claimed_time='now', number='plural')
         a_team.add_member(alice)
         Payday.start().payin()
         payments = self.db.all("SELECT * FROM payments WHERE amount = 0")
         assert not payments
 
-    def test_process_subscriptions(self):
+    def test_process_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
         hannibal = self.make_participant('hannibal', claimed_time='now', last_paypal_result='')
         lecter = self.make_participant('lecter', claimed_time='now', last_paypal_result='')
         A = self.make_team('The A Team', hannibal, is_approved=True)
         B = self.make_team('The B Team', lecter, is_approved=True)
-        alice.set_subscription_to(A, D('0.51'))
-        alice.set_subscription_to(B, D('0.50'))
+        alice.set_payment_instruction(A, D('0.51'))
+        alice.set_payment_instruction(B, D('0.50'))
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor, payday.ts_start)
-            payday.process_subscriptions(cursor)
+            payday.process_payment_instructions(cursor)
             assert cursor.one("select balance from payday_teams where slug='TheATeam'") == D('0.51')
             assert cursor.one("select balance from payday_teams where slug='TheBTeam'") == 0
             payday.update_balances(cursor)
@@ -462,12 +462,12 @@ class TestPayin(BillingHarness):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
         hannibal = self.make_participant('hannibal', claimed_time='now', last_paypal_result='')
         A = self.make_team('The A Team', hannibal, is_approved=True)
-        alice.set_subscription_to(A, D('0.51'))
+        alice.set_payment_instruction(A, D('0.51'))
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor, payday.ts_start)
-            payday.process_subscriptions(cursor)
+            payday.process_payment_instructions(cursor)
             payday.transfer_takes(cursor, payday.ts_start)
             payday.process_draws(cursor)
             assert cursor.one("select new_balance from payday_participants "
@@ -507,7 +507,7 @@ class TestPayin(BillingHarness):
             payday.prepare(cursor, payday.ts_start)
             bruce = self.make_participant('bruce', claimed_time='now')
             bruce.take_over(('twitter', str(bob.id)), have_confirmation=True)
-            payday.process_subscriptions(cursor)
+            payday.process_payment_instructions(cursor)
             bruce.delete_elsewhere('twitter', str(bob.id))
             billy = self.make_participant('billy', claimed_time='now')
             billy.take_over(('github', str(bruce.id)), have_confirmation=True)
@@ -521,7 +521,7 @@ class TestPayin(BillingHarness):
     @mock.patch('gratipay.billing.payday.capture_card_hold')
     def test_payin_dumps_transfers_for_debugging(self, cch, fch):
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_subscription_to(team, '10.00')
+        self.obama.set_payment_instruction(team, '10.00')
         fake_hold = mock.MagicMock()
         fake_hold.amount = 1500
         fch.return_value = {self.obama.id: fake_hold}
@@ -541,7 +541,7 @@ class TestNotifyParticipants(EmailHarness):
         kalel = self.make_participant('kalel', claimed_time='now', is_suspicious=False,
                                       email_address='kalel@example.net', notify_charge=3)
         team = self.make_team('Gratiteam', is_approved=True)
-        kalel.set_subscription_to(team, 10)
+        kalel.set_payment_instruction(team, 10)
 
         for status in ('failed', 'succeeded'):
             payday = Payday.start()

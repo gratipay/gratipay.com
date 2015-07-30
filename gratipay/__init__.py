@@ -48,8 +48,8 @@ db = None # This global is wired in wireup. It's an instance of
           # gratipay.postgres.PostgresManager.
 
 
-MAX_TIP = Decimal('1000.00')
-MIN_TIP = Decimal('0.00')
+MAX_TIP = MAX_PAYMENT = Decimal('1000.00')
+MIN_TIP = MIN_PAYMENT = Decimal('0.00')
 
 RESTRICTED_IDS = None
 

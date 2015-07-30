@@ -79,52 +79,54 @@ class TestClosing(Harness):
         assert 'You are the owner of the A, B and C teams.' in body
 
 
-    # cs - clear_subscriptions
+    # cpi - clear_payment_instructions
 
-    def test_cs_clears_subscriptions(self):
+    def test_cpi_clears_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        alice.set_subscription_to(self.make_team(), D('1.00'))
-        nsubscriptions = lambda: self.db.one("SELECT count(*) FROM current_subscriptions "
-                                             "WHERE subscriber='alice' AND amount > 0")
-        assert nsubscriptions() == 1
+        alice.set_payment_instruction(self.make_team(), D('1.00'))
+        npayment_instructions = lambda: self.db.one("SELECT count(*) "
+                                                    "FROM current_payment_instructions "
+                                                    "WHERE participant='alice' AND amount > 0")
+        assert npayment_instructions() == 1
         with self.db.get_cursor() as cursor:
-            alice.clear_subscriptions(cursor)
-        assert nsubscriptions() == 0
+            alice.clear_payment_instructions(cursor)
+        assert npayment_instructions() == 0
 
-    def test_cs_doesnt_duplicate_zero_subscriptions(self):
+    def test_cpi_doesnt_duplicate_zero_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now')
         A = self.make_team()
-        alice.set_subscription_to(A, D('1.00'))
-        alice.set_subscription_to(A, D('0.00'))
-        nsubscriptions = lambda: self.db.one("SELECT count(*) FROM subscriptions "
-                                             "WHERE subscriber='alice'")
-        assert nsubscriptions() == 2
+        alice.set_payment_instruction(A, D('1.00'))
+        alice.set_payment_instruction(A, D('0.00'))
+        npayment_instructions = lambda: self.db.one("SELECT count(*) FROM payment_instructions "
+                                                    "WHERE participant='alice'")
+        assert npayment_instructions() == 2
         with self.db.get_cursor() as cursor:
-            alice.clear_subscriptions(cursor)
-        assert nsubscriptions() == 2
+            alice.clear_payment_instructions(cursor)
+        assert npayment_instructions() == 2
 
-    def test_cs_doesnt_zero_when_theres_no_subscription(self):
+    def test_cpi_doesnt_zero_when_theres_no_payment_instruction(self):
         alice = self.make_participant('alice')
-        nsubscriptions = lambda: self.db.one("SELECT count(*) FROM subscriptions "
-                                             "WHERE subscriber='alice'")
-        assert nsubscriptions() == 0
+        npayment_instructions = lambda: self.db.one("SELECT count(*) FROM payment_instructions "
+                                                    "WHERE participant='alice'")
+        assert npayment_instructions() == 0
         with self.db.get_cursor() as cursor:
-            alice.clear_subscriptions(cursor)
-        assert nsubscriptions() == 0
+            alice.clear_payment_instructions(cursor)
+        assert npayment_instructions() == 0
 
-    def test_cs_clears_multiple_subscriptions(self):
+    def test_cpi_clears_multiple_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_subscription_to(self.make_team('A'), D('1.00'))
-        alice.set_subscription_to(self.make_team('B'), D('1.00'))
-        alice.set_subscription_to(self.make_team('C'), D('1.00'))
-        alice.set_subscription_to(self.make_team('D'), D('1.00'))
-        alice.set_subscription_to(self.make_team('E'), D('1.00'))
-        nsubscriptions = lambda: self.db.one("SELECT count(*) FROM current_subscriptions "
-                                             "WHERE subscriber='alice' AND amount > 0")
-        assert nsubscriptions() == 5
+        alice.set_payment_instruction(self.make_team('A'), D('1.00'))
+        alice.set_payment_instruction(self.make_team('B'), D('1.00'))
+        alice.set_payment_instruction(self.make_team('C'), D('1.00'))
+        alice.set_payment_instruction(self.make_team('D'), D('1.00'))
+        alice.set_payment_instruction(self.make_team('E'), D('1.00'))
+        npayment_instructions = lambda: self.db.one("SELECT count(*) "
+                                                    "FROM current_payment_instructions "
+                                                    "WHERE participant='alice' AND amount > 0")
+        assert npayment_instructions() == 5
         with self.db.get_cursor() as cursor:
-            alice.clear_subscriptions(cursor)
-        assert nsubscriptions() == 0
+            alice.clear_payment_instructions(cursor)
+        assert npayment_instructions() == 0
 
 
     # cpi - clear_personal_information

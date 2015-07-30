@@ -73,7 +73,7 @@ class Payday(object):
             payin
                 prepare
                 create_card_holds
-                process_subscriptions
+                process_payment_instructions
                 transfer_takes
                 process_draws
                 settle_card_holds
@@ -156,7 +156,7 @@ class Payday(object):
         with self.db.get_cursor() as cursor:
             self.prepare(cursor, self.ts_start)
             holds = self.create_card_holds(cursor)
-            self.process_subscriptions(cursor)
+            self.process_payment_instructions(cursor)
             self.transfer_takes(cursor, self.ts_start)
             self.process_draws(cursor)
             payments = cursor.all("""
@@ -259,11 +259,12 @@ class Payday(object):
 
 
     @staticmethod
-    def process_subscriptions(cursor):
-        """Trigger the process_subscription function for each row in payday_subscriptions.
+    def process_payment_instructions(cursor):
+        """Trigger the process_payment_instructions function for each row in
+        payday_payment_instructions.
         """
-        log("Processing subscriptions.")
-        cursor.run("UPDATE payday_subscriptions SET is_funded=true;")
+        log("Processing payment instructions.")
+        cursor.run("UPDATE payday_payment_instructions SET is_funded=true;")
 
 
     @staticmethod
@@ -503,9 +504,9 @@ class Payday(object):
                 WITH tippees AS (
                          SELECT t.slug, amount
                            FROM ( SELECT DISTINCT ON (team) team, amount
-                                    FROM subscriptions
+                                    FROM payment_instructions
                                    WHERE mtime < %(ts_start)s
-                                     AND subscriber = %(username)s
+                                     AND participant = %(username)s
                                 ORDER BY team, mtime DESC
                                 ) s
                            JOIN teams t ON s.team = t.slug

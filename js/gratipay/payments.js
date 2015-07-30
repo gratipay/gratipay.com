@@ -78,7 +78,7 @@ Gratipay.payments.afterTipChange = function(data) {
 Gratipay.payments.set = function(team, amount, callback) {
 
     // send request to set up a recurring payment
-    $.post('/' + team + '/subscription.json', { amount: amount }, function(data) {
+    $.post('/' + team + '/payment-instruction.json', { amount: amount }, function(data) {
         if (callback) callback(data);
         Gratipay.payments.afterTipChange(data);
     })

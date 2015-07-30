@@ -9,7 +9,7 @@ from gratipay.testing import Harness
 class TestTipJson(Harness):
 
     def test_api_returns_amount_and_totals(self):
-        "Test that we get correct amounts and totals back on POSTs to subscription.json"
+        "Test that we get correct amounts and totals back on POSTs to payment-instruction.json"
 
         # First, create some test data
         # We need accounts
@@ -18,13 +18,13 @@ class TestTipJson(Harness):
         self.make_team("B", is_approved=True)
         self.make_participant("alice", claimed_time=now, last_bill_result='')
 
-        # Then, add a $1.50 and $3.00 subscription
-        response1 = self.client.POST( "/A/subscription.json"
+        # Then, add a $1.50 and $3.00 payment instruction
+        response1 = self.client.POST( "/A/payment-instruction.json"
                                     , {'amount': "1.50"}
                                     , auth_as='alice'
                                      )
 
-        response2 = self.client.POST( "/B/subscription.json"
+        response2 = self.client.POST( "/B/payment-instruction.json"
                                     , {'amount': "3.00"}
                                     , auth_as='alice'
                                      )
@@ -40,18 +40,18 @@ class TestTipJson(Harness):
         # assert second_data['total_giving'] == "4.50"
 
 
-    def test_setting_subscription_out_of_range_gets_bad_amount(self):
+    def test_setting_payment_instruction_out_of_range_gets_bad_amount(self):
         self.make_team(is_approved=True)
         self.make_participant("alice", claimed_time='now', last_bill_result='')
 
-        response = self.client.PxST( "/TheATeam/subscription.json"
+        response = self.client.PxST( "/TheATeam/payment-instruction.json"
                                    , {'amount': "1010.00"}
                                    , auth_as='alice'
                                     )
         assert "bad amount" in response.body
         assert response.code == 400
 
-        response = self.client.PxST( "/TheATeam/subscription.json"
+        response = self.client.PxST( "/TheATeam/payment-instruction.json"
                                    , {'amount': "-1.00"}
                                    , auth_as='alice'
                                     )
@@ -62,7 +62,7 @@ class TestTipJson(Harness):
     def test_subscribing_to_rejected_team_fails(self):
         self.make_team(is_approved=False)
         self.make_participant("alice", claimed_time='now', last_bill_result='')
-        response = self.client.PxST( "/TheATeam/subscription.json"
+        response = self.client.PxST( "/TheATeam/payment-instruction.json"
                                    , {'amount': "10.00"}
                                    , auth_as='alice'
                                     )
