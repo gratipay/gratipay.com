@@ -6,12 +6,15 @@ import itertools
 import unittest
 from collections import defaultdict
 from os.path import dirname, join, realpath
+from decimal import Decimal
 
+import gratipay
 from aspen import resources
 from aspen.utils import utcnow
 from aspen.testing.client import Client
 from gratipay.billing.exchanges import record_exchange, record_exchange_result
 from gratipay.elsewhere import UserInfo
+from gratipay.exceptions import NoSelfTipping, NoTippee, BadAmount
 from gratipay.main import website
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
@@ -231,6 +234,86 @@ class Harness(unittest.TestCase):
         e_id = record_exchange(self.db, route, amount, fee, participant, 'pre')
         record_exchange_result(self.db, e_id, status, error, participant)
         return e_id
+
+
+    def make_tip(self, tipper, tippee, amount, update_self=True, update_tippee=True, cursor=None):
+        """Given a Participant or username, and amount as str, returns a dict.
+
+        We INSERT instead of UPDATE, so that we have history to explore. The
+        COALESCE function returns the first of its arguments that is not NULL.
+        The effect here is to stamp all tips with the timestamp of the first
+        tip from this user to that. I believe this is used to determine the
+        order of transfers during payday.
+
+        The dict returned represents the row inserted in the tips table, with
+        an additional boolean indicating whether this is the first time this
+        tipper has tipped (we want to track that as part of our conversion
+        funnel).
+
+        This is the old Participant.set_tip_to method, migrated here to support
+        testing that still needs tips (take over, tip migration)
+
+        """
+        assert tipper.is_claimed  # sanity check
+
+        if not isinstance(tippee, Participant):
+            tippee, u = Participant.from_username(tippee), tippee
+            if not tippee:
+                raise NoTippee(u)
+
+        if tipper.username == tippee.username:
+            raise NoSelfTipping
+
+        amount = Decimal(amount)  # May raise InvalidOperation
+        if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
+            raise BadAmount
+
+        # Insert tip
+        NEW_TIP = """\
+
+            INSERT INTO tips
+                        (ctime, tipper, tippee, amount)
+                 VALUES ( COALESCE (( SELECT ctime
+                                        FROM tips
+                                       WHERE (tipper=%(tipper)s AND tippee=%(tippee)s)
+                                       LIMIT 1
+                                      ), CURRENT_TIMESTAMP)
+                        , %(tipper)s, %(tippee)s, %(amount)s
+                         )
+              RETURNING *
+                      , ( SELECT count(*) = 0 FROM tips WHERE tipper=%(tipper)s ) AS first_time_tipper
+
+        """
+        args = dict(tipper=tipper.username, tippee=tippee.username, amount=amount)
+        t = (cursor or self.db).one(NEW_TIP, args)
+
+        if update_self:
+            # Update giving amount of tipper
+            tipper.update_giving(cursor)
+        if update_tippee:
+            # Update receiving amount of tippee
+            tippee.update_receiving(cursor)
+        if tippee.username == 'Gratipay':
+            # Update whether the tipper is using Gratipay for free
+            tipper.update_is_free_rider(None if amount == 0 else False, cursor)
+
+        return t._asdict()
+
+
+    def get_tip(self, tipper, tippee):
+        """Given a username, returns a dict.
+        """
+        default = dict(amount=Decimal('0.00'), is_funded=False)
+        return self.db.one("""\
+
+            SELECT *
+              FROM tips
+             WHERE tipper=%s
+               AND tippee=%s
+          ORDER BY mtime DESC
+             LIMIT 1
+
+        """, (tipper, tippee), back_as=dict, default=default)['amount']
 
 
 class Foobar(Exception): pass

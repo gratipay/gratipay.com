@@ -31,6 +31,7 @@ class Tests(Harness):
         assert html.count('alice') == 4  # entries in both New Participants and Givers
         assert 'bob' not in html
 
+    @pytest.mark.xfail(reason="#3399")
     def test_givers_dont_show_up_if_they_give_zero(self):
 
         # Alice tips bob.
@@ -53,6 +54,7 @@ class Tests(Harness):
         assert html.count('alice') == 4  # entries in both New Participants and Receivers
         assert 'bob' not in html
 
+    @pytest.mark.xfail(reason="#3399")
     def test_receivers_dont_show_up_if_they_receive_zero(self):
 
         # Bob tips alice.
