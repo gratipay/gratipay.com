@@ -12,8 +12,8 @@ slugs = db.all("""
 for slug in slugs:
     team = Team.from_slug(slug)
     try:
-        team.migrate_tips()
-        print("Migrated tips for '%s'" % slug)
+        ntips = team.migrate_tips()
+        print("Migrated {} tip(s) for '{}'".format(ntips, slug))
     except AlreadyMigrated:
         print("'%s' already migrated." % slug)
 

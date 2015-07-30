@@ -100,7 +100,8 @@ class Team(Model):
         if payment_instructions:
             raise AlreadyMigrated
 
-        self.db.run("""
+        return self.db.one("""
+        WITH rows AS (
 
             INSERT INTO payment_instructions
                         (ctime, mtime, participant, team, amount, is_funded)
@@ -116,7 +117,9 @@ class Team(Model):
                     AND p.claimed_time IS NOT NULL
                     AND p.is_suspicious IS NOT TRUE
                     AND p.is_closed IS NOT TRUE
+              RETURNING 1
 
+        ) SELECT count(*) FROM rows;
         """, {'slug': self.slug, 'owner': self.owner})
 
 class AlreadyMigrated(Exception): pass
