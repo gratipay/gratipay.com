@@ -181,7 +181,7 @@ CREATE TABLE exchange_routes
 , error         text           NOT NULL
 , fee_cap       numeric(35,2)
 , UNIQUE (participant, network, address)
-);
+ );
 
 CREATE VIEW current_exchange_routes AS
     SELECT DISTINCT ON (participant, network) *
@@ -229,7 +229,7 @@ CREATE TABLE community_members
 , mtime         timestamptz    NOT NULL DEFAULT CURRENT_TIMESTAMP
 , name          text           NOT NULL
 , is_member     boolean        NOT NULL
-);
+ );
 
 CREATE INDEX community_members_idx
     ON community_members (slug, participant, mtime DESC);
@@ -240,7 +240,7 @@ CREATE TABLE communities
 , nmembers int NOT NULL
 , ctime timestamptz NOT NULL
 , CHECK (nmembers > 0)
-);
+ );
 
 \i sql/upsert_community.sql
 
@@ -337,7 +337,7 @@ CREATE TABLE statements
 , lang         text    NOT NULL
 , content      text    NOT NULL CHECK (content <> '')
 , UNIQUE (participant, lang)
-);
+ );
 
 \i sql/enumerate.sql
 
@@ -371,7 +371,7 @@ CREATE TABLE email_queue
 , participant   bigint   NOT NULL REFERENCES participants(id)
 , spt_name      text     NOT NULL
 , context       bytea    NOT NULL
-);
+ );
 
 -- https://github.com/gratipay/gratipay.com/pull/3239
 CREATE TABLE balances_at
@@ -379,7 +379,7 @@ CREATE TABLE balances_at
 , at           timestamptz    NOT NULL
 , balance      numeric(35,2)  NOT NULL
 , UNIQUE (participant, at)
-);
+ );
 
 -- https://github.com/gratipay/gratipay.com/pull/3301
 ALTER TABLE participants ADD COLUMN notify_charge int DEFAULT 3;
@@ -423,12 +423,12 @@ CREATE TABLE teams
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3414
--- subscriptions - recurring payments from a participant to a team
-CREATE TABLE subscriptions
+-- payment_instructions - A ~user instructs Gratipay to make voluntary payments to a Team.
+CREATE TABLE payment_instructions
 ( id                    serial                      PRIMARY KEY
 , ctime                 timestamp with time zone    NOT NULL
 , mtime                 timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
-, subscriber            text                        NOT NULL REFERENCES participants
+, participant           text                        NOT NULL REFERENCES participants
                                                         ON UPDATE CASCADE ON DELETE RESTRICT
 , team                  text                        NOT NULL REFERENCES teams
                                                         ON UPDATE CASCADE ON DELETE RESTRICT
@@ -436,25 +436,26 @@ CREATE TABLE subscriptions
 , is_funded             boolean                     NOT NULL DEFAULT false
  );
 
-CREATE INDEX subscriptions_all ON subscriptions USING btree (subscriber, team, mtime DESC);
+CREATE INDEX payment_instructions_all ON payment_instructions
+       USING btree (participant, team, mtime DESC);
 
-CREATE VIEW current_subscriptions AS
-    SELECT DISTINCT ON (subscriber, team) *
-      FROM subscriptions
-  ORDER BY subscriber, team, mtime DESC;
+CREATE VIEW current_payment_instructions AS
+    SELECT DISTINCT ON (participant, team) *
+      FROM payment_instructions
+  ORDER BY participant, team, mtime DESC;
 
--- Allow updating is_funded via the current_subscriptions view for convenience
-CREATE FUNCTION update_subscription() RETURNS trigger AS $$
+-- Allow updating is_funded via the current_payment_instructions view for convenience
+CREATE FUNCTION update_payment_instruction() RETURNS trigger AS $$
     BEGIN
-        UPDATE subscriptions
+        UPDATE payment_instructions
            SET is_funded = NEW.is_funded
          WHERE id = NEW.id;
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER update_current_subscription INSTEAD OF UPDATE ON current_subscriptions
-    FOR EACH ROW EXECUTE PROCEDURE update_subscription();
+CREATE TRIGGER update_current_payment_instruction INSTEAD OF UPDATE ON current_payment_instructions
+    FOR EACH ROW EXECUTE PROCEDURE update_payment_instruction();
 
 
 -- payroll - recurring payments from a team to participant
@@ -535,3 +536,4 @@ CREATE TRIGGER update_status_of_1_0_balance
     FOR EACH ROW
     WHEN (OLD.balance > 0 AND NEW.balance = 0)
     EXECUTE PROCEDURE set_status_of_1_0_balance_to_resolved();
+BEGIN;
