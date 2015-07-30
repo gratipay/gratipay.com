@@ -1079,146 +1079,6 @@ class Participant(Model, MixinTeam):
         """, (self.username, team.slug), back_as=dict, default=default)
 
 
-    # Old payday system, deprecated and going away ...
-
-    def set_tip_to(self, tippee, amount, update_self=True, update_tippee=True, cursor=None):
-        """Given a Participant or username, and amount as str, returns a dict.
-
-        We INSERT instead of UPDATE, so that we have history to explore. The
-        COALESCE function returns the first of its arguments that is not NULL.
-        The effect here is to stamp all tips with the timestamp of the first
-        tip from this user to that. I believe this is used to determine the
-        order of transfers during payday.
-
-        The dict returned represents the row inserted in the tips table, with
-        an additional boolean indicating whether this is the first time this
-        tipper has tipped (we want to track that as part of our conversion
-        funnel).
-
-        """
-        assert self.is_claimed  # sanity check
-
-        if not isinstance(tippee, Participant):
-            tippee, u = Participant.from_username(tippee), tippee
-            if not tippee:
-                raise NoTippee(u)
-
-        if self.username == tippee.username:
-            raise NoSelfTipping
-
-        amount = Decimal(amount)  # May raise InvalidOperation
-        if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
-            raise BadAmount
-
-        # Insert tip
-        NEW_TIP = """\
-
-            INSERT INTO tips
-                        (ctime, tipper, tippee, amount)
-                 VALUES ( COALESCE (( SELECT ctime
-                                        FROM tips
-                                       WHERE (tipper=%(tipper)s AND tippee=%(tippee)s)
-                                       LIMIT 1
-                                      ), CURRENT_TIMESTAMP)
-                        , %(tipper)s, %(tippee)s, %(amount)s
-                         )
-              RETURNING *
-                      , ( SELECT count(*) = 0 FROM tips WHERE tipper=%(tipper)s ) AS first_time_tipper
-
-        """
-        args = dict(tipper=self.username, tippee=tippee.username, amount=amount)
-        t = (cursor or self.db).one(NEW_TIP, args)
-
-        if update_self:
-            # Update giving amount of tipper
-            self.update_giving(cursor)
-        if update_tippee:
-            # Update receiving amount of tippee
-            tippee.update_receiving(cursor)
-        if tippee.username == 'Gratipay':
-            # Update whether the tipper is using Gratipay for free
-            self.update_is_free_rider(None if amount == 0 else False, cursor)
-
-        return t._asdict()
-
-
-    def get_tip_to(self, tippee):
-        """Given a username, returns a dict.
-        """
-        default = dict(amount=Decimal('0.00'), is_funded=False)
-        return self.db.one("""\
-
-            SELECT *
-              FROM tips
-             WHERE tipper=%s
-               AND tippee=%s
-          ORDER BY mtime DESC
-             LIMIT 1
-
-        """, (self.username, tippee), back_as=dict, default=default)
-
-
-    def get_tip_distribution(self):
-        """
-            Returns a data structure in the form of::
-
-                [
-                    [TIPAMOUNT1, TIPAMOUNT2...TIPAMOUNTN],
-                    total_number_patrons_giving_to_me,
-                    total_amount_received
-                ]
-
-            where each TIPAMOUNTN is in the form::
-
-                [
-                    amount,
-                    number_of_tippers_for_this_amount,
-                    total_amount_given_at_this_amount,
-                    proportion_of_tips_at_this_amount,
-                    proportion_of_total_amount_at_this_amount
-                ]
-
-        """
-        SQL = """
-
-            SELECT amount
-                 , count(amount) AS ncontributing
-              FROM ( SELECT DISTINCT ON (tipper)
-                            amount
-                          , tipper
-                       FROM tips
-                       JOIN participants p ON p.username = tipper
-                      WHERE tippee=%s
-                        AND is_funded
-                        AND is_suspicious IS NOT true
-                   ORDER BY tipper
-                          , mtime DESC
-                    ) AS foo
-             WHERE amount > 0
-          GROUP BY amount
-          ORDER BY amount
-
-        """
-
-        tip_amounts = []
-
-        npatrons = 0.0  # float to trigger float division
-        contributed = Decimal('0.00')
-        for rec in self.db.all(SQL, (self.username,)):
-            tip_amounts.append([ rec.amount
-                               , rec.ncontributing
-                               , rec.amount * rec.ncontributing
-                                ])
-            contributed += tip_amounts[-1][2]
-            npatrons += rec.ncontributing
-
-        for row in tip_amounts:
-            row.append((row[1] / npatrons) if npatrons > 0 else 0)
-            row.append((row[2] / contributed) if contributed > 0 else 0)
-
-        return tip_amounts, npatrons, contributed
-
-
     def get_giving_for_profile(self):
         """Return a list and a Decimal.
         """
@@ -1252,32 +1112,10 @@ class Participant(Model, MixinTeam):
 
         total = sum([rec.amount for rec in giving])
         if not total:
-            # If tips is an empty list, total is int 0. We want a Decimal.
+            # If giving is an empty list, total is int 0. We want a Decimal.
             total = Decimal('0.00')
 
         return giving, total
-
-    def get_current_tips(self):
-        """Get the tips this participant is currently sending to others.
-        """
-        TIPS = """
-            SELECT * FROM (
-                SELECT DISTINCT ON (tippee)
-                       amount
-                     , tippee
-                     , t.ctime
-                     , p.claimed_time
-                  FROM tips t
-                  JOIN participants p ON p.username = t.tippee
-                 WHERE tipper = %s
-                   AND p.is_suspicious IS NOT true
-              ORDER BY tippee
-                     , t.mtime DESC
-            ) AS foo
-            ORDER BY amount DESC
-                   , tippee
-        """
-        return self.db.all(TIPS, (self.username,), back_as=dict)
 
 
     def get_og_title(self):
@@ -1305,7 +1143,7 @@ class Participant(Model, MixinTeam):
     class BalanceIsNotZero(Exception): pass
 
     def final_check(self, cursor):
-        """Sanity-check that balance and tips have been dealt with.
+        """Sanity-check that teams and balance have been dealt with.
         """
         if self.get_teams(cursor=cursor):
             raise self.StillATeamOwner
