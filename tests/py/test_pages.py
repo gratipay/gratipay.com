@@ -1,7 +1,6 @@
 from __future__ import print_function, unicode_literals
 
 import re
-from decimal import Decimal as D
 
 from aspen import Response
 
