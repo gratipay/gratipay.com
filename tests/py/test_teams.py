@@ -120,8 +120,8 @@ class TestTeams(Harness):
         alice = self.make_participant('alice', claimed_time='now')
         bob = self.make_participant('bob', claimed_time='now')
         self.make_participant('old_team')
-        alice.set_tip_to('old_team', '1.00')
-        bob.set_tip_to('old_team', '2.00')
+        self.make_tip(alice, 'old_team', '1.00')
+        self.make_tip(bob, 'old_team', '2.00')
         new_team = self.make_team('new_team', owner='old_team')
 
         new_team.migrate_tips()
@@ -138,7 +138,7 @@ class TestTeams(Harness):
     def test_migrate_tips_only_runs_once(self):
         alice = self.make_participant('alice', claimed_time='now')
         self.make_participant('old_team')
-        alice.set_tip_to('old_team', '1.00')
+        self.make_tip(alice, 'old_team', '1.00')
         new_team = self.make_team('new_team', owner='old_team')
 
         new_team.migrate_tips()
@@ -152,7 +152,7 @@ class TestTeams(Harness):
     def test_migrate_tips_checks_for_multiple_teams(self):
         alice = self.make_participant('alice', claimed_time='now')
         self.make_participant('old_team')
-        alice.set_tip_to('old_team', '1.00')
+        self.make_tip(alice, 'old_team', '1.00')
         new_team = self.make_team('new_team', owner='old_team')
         new_team.migrate_tips()
 

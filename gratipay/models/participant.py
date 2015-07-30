@@ -33,8 +33,6 @@ from gratipay.exceptions import (
     UsernameContainsInvalidCharacters,
     UsernameIsRestricted,
     UsernameAlreadyTaken,
-    NoSelfTipping,
-    NoTippee,
     NoTeam,
     BadAmount,
     EmailAlreadyTaken,

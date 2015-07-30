@@ -47,6 +47,7 @@ class TestChartOfReceiving(Harness):
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 
+    @pytest.mark.xfail(reason="#3399")
     def test_get_tip_distribution_handles_no_tips(self):
         expected = ([], 0.0, Decimal('0.00'))
         actual = self.alice.get_tip_distribution()

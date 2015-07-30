@@ -65,8 +65,7 @@ class TestPages(Harness):
 
     def test_on_the_fence_can_browse(self):
         def setup(alice):
-            bob = self.make_participant('bob', claimed_time='now', last_bill_result='')
-            bob.set_tip_to(alice, D('1.00'))
+            alice.update_is_free_rider(None)
         self.browse(setup, auth_as='alice')
 
     def test_escaping_on_homepage(self):
