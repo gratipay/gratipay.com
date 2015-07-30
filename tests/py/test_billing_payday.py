@@ -410,7 +410,7 @@ class TestPayin(BillingHarness):
         assert not payments
 
 
-    def test_payday_journal_updates_participant_and_team_balances_for_payroll(self):
+    def test_payday_ledger_updates_participant_and_team_balances_for_payroll(self):
         self.make_team(is_approved=True)
         assert Participant.from_username('picard').balance == 0
 
@@ -420,7 +420,7 @@ class TestPayin(BillingHarness):
 
             cursor.run("UPDATE payday_teams SET balance=20 WHERE slug='TheEnterprise'")
             cursor.run("""
-                INSERT INTO payday_journal
+                INSERT INTO payday_ledger
                             (amount, debit, credit)
                      VALUES ( 10.77
                             , (SELECT id FROM accounts WHERE team='TheEnterprise')
@@ -434,7 +434,7 @@ class TestPayin(BillingHarness):
             assert self.db.one("SELECT balance FROM participants "
                                "WHERE username='picard'") == 0
 
-    def test_payday_journal_updates_participant_and_team_balances_for_subscriptions(self):
+    def test_payday_ledger_updates_participant_and_team_balances_for_subscriptions(self):
         self.make_team(is_approved=True)
         self.make_participant('alice', claimed_time='now', balance=20)
 
@@ -443,7 +443,7 @@ class TestPayin(BillingHarness):
             payday.prepare(cursor)
 
             cursor.run("""
-                INSERT INTO payday_journal
+                INSERT INTO payday_ledger
                             (amount, debit, credit)
                      VALUES ( 10.77
                             , (SELECT id FROM accounts WHERE participant='alice')
@@ -455,7 +455,7 @@ class TestPayin(BillingHarness):
             assert cursor.one("SELECT new_balance FROM payday_participants "
                               "WHERE username='alice'") == D('9.23')
 
-    def test_payday_journal_disallows_negative_payday_team_balance(self):
+    def test_payday_ledger_disallows_negative_payday_team_balance(self):
         self.make_team(is_approved=True)
 
         payday = Payday.start()
@@ -464,7 +464,7 @@ class TestPayin(BillingHarness):
             cursor.run("UPDATE payday_teams SET balance=10 WHERE slug='TheEnterprise'")
             with pytest.raises(IntegrityError):
                 cursor.run("""
-                    INSERT INTO payday_journal
+                    INSERT INTO payday_ledger
                                 (amount, debit, credit)
                          VALUES ( 10.77
                                 , (SELECT id FROM accounts WHERE team='TheEnterprise')
@@ -472,7 +472,7 @@ class TestPayin(BillingHarness):
                                  )
                 """)
 
-    def test_payday_journal_disallows_negative_payday_participant_balance(self):
+    def test_payday_ledger_disallows_negative_payday_participant_balance(self):
         self.make_team()
         self.make_participant('alice', claimed_time='now', balance=10)
 
@@ -481,7 +481,7 @@ class TestPayin(BillingHarness):
             payday.prepare(cursor)
             with pytest.raises(IntegrityError):
                 cursor.run("""
-                    INSERT INTO payday_journal
+                    INSERT INTO payday_ledger
                                 (amount, debit, credit)
                          VALUES ( 10.77
                                 , (SELECT id FROM accounts WHERE participant='alice')
@@ -505,13 +505,13 @@ class TestPayin(BillingHarness):
             payday.process_payment_instructions(cursor)
             assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == D('0.51')
             assert cursor.one("select balance from payday_teams where slug='TheTrident'") == 0
-            payday.make_journal_entries(cursor)
+            payday.make_ledger_entries(cursor)
 
         assert Participant.from_username('alice').balance == D('0.49')
         assert Participant.from_username('picard').balance == 0
         assert Participant.from_username('shelby').balance == 0
 
-        entries = self.db.one("SELECT * FROM journal")
+        entries = self.db.one("SELECT * FROM ledger")
         assert entries.amount == D('0.51')
         assert entries.debit == self.db.one("SELECT id FROM accounts WHERE participant='alice'")
         assert entries.credit == self.db.one("SELECT id FROM accounts WHERE team='TheEnterprise'")
@@ -535,7 +535,7 @@ class TestPayin(BillingHarness):
             with self.db.get_cursor() as cursor:
                 payday.prepare(cursor)
                 payday.transfer_takes(cursor, payday.ts_start)
-                payday.make_journal_entries(cursor)
+                payday.make_ledger_entries(cursor)
 
         participants = self.db.all("SELECT username, balance FROM participants")
 
@@ -564,12 +564,12 @@ class TestPayin(BillingHarness):
             assert cursor.one("select new_balance from payday_participants "
                               "where username='picard'") == D('0.51')
             assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == 0
-            assert payday.make_journal_entries(cursor) == 2
+            assert payday.make_ledger_entries(cursor) == 2
 
         assert Participant.from_id(alice.id).balance == D('0.49')
         assert Participant.from_username('picard').balance == D('0.51')
 
-        entry = self.db.one("SELECT * FROM journal "
+        entry = self.db.one("SELECT * FROM ledger "
                             "WHERE credit=(SELECT id FROM accounts WHERE participant='hannibal')")
         assert entry.amount == D('0.51')
 
@@ -603,7 +603,7 @@ class TestPayin(BillingHarness):
             bruce.delete_elsewhere('twitter', str(bob.id))
             billy = self.make_participant('billy', claimed_time='now')
             billy.take_over(('github', str(bruce.id)), have_confirmation=True)
-            payday.make_journal_entries(cursor)
+            payday.make_ledger_entries(cursor)
         payday.take_over_balances()
         assert Participant.from_id(bob.id).balance == 0
         assert Participant.from_id(bruce.id).balance == 0

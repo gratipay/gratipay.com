@@ -72,9 +72,9 @@ BEGIN;
         FOR EACH ROW EXECUTE PROCEDURE create_account_for_team();
 
 
-    -- The Journal
+    -- The General Ledger
 
-    CREATE TABLE journal
+    CREATE TABLE ledger
     ( id        bigserial           PRIMARY KEY
     , ts        timestamptz         NOT NULL DEFAULT CURRENT_TIMESTAMP
     , amount    numeric(35, 2)      NOT NULL
@@ -99,12 +99,12 @@ BEGIN;
         to_credit = (SELECT participant FROM accounts WHERE id=NEW.credit);
 
         IF (to_debit IS NULL) AND (to_credit IS NULL) THEN
-            -- No participants involved in this journal entry.
+            -- No participants involved in this ledger entry.
             RETURN NULL;
         END IF;
 
         IF (to_debit IS NOT NULL) AND (to_credit IS NOT NULL) THEN
-            -- Two participants involved in this journal entry!
+            -- Two participants involved in this ledger entry!
             -- This is a bug: we don't allow direct transfers from one ~user to another.
             RAISE USING MESSAGE =
                 'Both ' || to_debit || ' and ' || to_credit || ' are participants.';
@@ -126,13 +126,13 @@ BEGIN;
     END;
     $$ LANGUAGE plpgsql;
 
-    CREATE TRIGGER update_balance AFTER INSERT ON journal
+    CREATE TRIGGER update_balance AFTER INSERT ON ledger
         FOR EACH ROW EXECUTE PROCEDURE update_balance();
 
 
-    -- Journal Notes
+    -- Ledger Notes
 
-    CREATE TABLE journal_notes
+    CREATE TABLE ledger_notes
     ( id            bigserial       PRIMARY KEY
     , body          text            NOT NULL
     , author        text            NOT NULL REFERENCES participants

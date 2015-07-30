@@ -18,8 +18,8 @@ understand Gratipay, you should start by understanding our schema.
 
 There are three main parts to our schema:
 
- - The ``journal``. Gratipay implements a full-fledged double-entry accounting
-   system, and the ``journal`` table is at the heart of it.
+ - The ``ledger``. Gratipay implements a full-fledged double-entry accounting
+   system, and the ``ledger`` table is at the heart of it.
 
  - **~user**-related tables. The primary table for users is ``participants``.
    A number of other tables record additional information related to users,

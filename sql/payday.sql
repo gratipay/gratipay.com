@@ -79,9 +79,9 @@ CREATE TRIGGER protect_team_balances AFTER UPDATE ON payday_teams
 
 -- Subscriptions
 
-DROP TABLE IF EXISTS payday_journal_so_far;
-CREATE TABLE payday_journal_so_far AS
-    SELECT * FROM journal WHERE payday = (SELECT id FROM current_payday());
+DROP TABLE IF EXISTS payday_ledger_so_far;
+CREATE TABLE payday_ledger_so_far AS
+    SELECT * FROM ledger WHERE payday = (SELECT id FROM current_payday());
 
 DROP TABLE IF EXISTS payday_payment_instructions;
 CREATE TABLE payday_payment_instructions AS
@@ -94,7 +94,7 @@ CREATE TABLE payday_payment_instructions AS
       JOIN payday_participants p ON p.username = s.participant
      WHERE s.amount > 0
        AND ( SELECT id
-               FROM payday_journal_so_far so_far
+               FROM payday_ledger_so_far so_far
               WHERE so_far.debit = (SELECT id FROM accounts WHERE team=s.team)
                 AND so_far.credit = (SELECT id FROM accounts WHERE participant=s.participant)
             ) IS NULL
@@ -125,8 +125,8 @@ CREATE TABLE payday_takes
 
 -- Journal
 
-DROP TABLE IF EXISTS payday_journal;
-CREATE TABLE payday_journal
+DROP TABLE IF EXISTS payday_ledger;
+CREATE TABLE payday_ledger
 ( ts timestamptz        DEFAULT now()
 , amount numeric(35,2)  NOT NULL
 , debit bigint          NOT NULL
@@ -175,11 +175,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER payday_update_balance AFTER INSERT ON payday_journal
+CREATE TRIGGER payday_update_balance AFTER INSERT ON payday_ledger
     FOR EACH ROW EXECUTE PROCEDURE payday_update_balance();
 
 
--- Prepare a statement that makes a journal entry
+-- Prepare a statement that makes a ledger entry
 
 CREATE OR REPLACE FUNCTION pay(text, text, numeric, payment_direction)
 RETURNS void AS $$
@@ -214,7 +214,7 @@ RETURNS void AS $$
             to_credit := participant_account;
         END IF;
 
-        INSERT INTO payday_journal
+        INSERT INTO payday_ledger
                     (amount, debit, credit)
              VALUES ($3, to_debit, to_credit);
     END;
