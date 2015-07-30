@@ -236,6 +236,18 @@ msgstr "Verwijderen"
 msgid "Edit"
 msgstr "Verander"
 
+msgid "Team"
+msgstr "Team"
+
+msgid "Amount ($)"
+msgstr "Bedrag ($)"
+
+msgid "Last Set"
+msgstr "Laatste serie"
+
+msgid "First Set"
+msgstr "Eerste serie"
+
 msgid "Jump to {0} from {1}"
 msgstr "Ga naal {0} van {1}"
 
@@ -292,8 +304,8 @@ msgstr "Dashboard"
 msgid "Profile"
 msgstr "Profiel"
 
-msgid "Subscriptions"
-msgstr "Abonnementen"
+msgid "Giving"
+msgstr "Geven"
 
 msgid "History"
 msgstr "Geschiedenis"
@@ -315,18 +327,6 @@ msgstr "{0} gift aan {1}"
 
 msgid "Sign in"
 msgstr "Log in"
-
-msgid "Team"
-msgstr "Team"
-
-msgid "Amount ($)"
-msgstr "Bedrag ($)"
-
-msgid "Last Set"
-msgstr "Laatste serie"
-
-msgid "First Set"
-msgstr "Eerste serie"
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -406,9 +406,6 @@ msgstr "Wil je zien wie ze zijn? Bezoek {0}onze gemeenschappen{1}."
 
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Wil je voor Gratipay werken? We zijn een {0}open bedrijf{1}."
-
-msgid "Giving"
-msgstr "Geven"
 
 msgid "You pay {0} per week."
 msgstr "Je betaalt {0} per week."
@@ -965,6 +962,21 @@ msgstr "Verficatie e-mail opnieuw versturen"
 msgid "View your email addresses"
 msgstr "Bekijk uw e-mailadressen."
 
+msgid "Active"
+msgstr "Actief"
+
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+msgid "These are giving that you recently cancelled."
+msgstr ""
+
+msgid "You pay {0} every week."
+msgstr "Je betaalt {0} elke week."
+
+msgid "No giving to show"
+msgstr ""
+
 msgid "Export History"
 msgstr "Exporteer geschiedenis"
 
@@ -1288,21 +1300,6 @@ msgstr "als de aanrekening lukt"
 
 msgid "Close"
 msgstr "Sluit"
-
-msgid "Active"
-msgstr "Actief"
-
-msgid "Cancelled"
-msgstr "Geannuleerd"
-
-msgid "These are subscriptions that you recently cancelled."
-msgstr "Dit zijn abonnementen die je recentelijk hebt geannuleerd."
-
-msgid "You pay {0} every week."
-msgstr "Je betaalt {0} elke week."
-
-msgid "No subscriptions to show"
-msgstr "Geen abonnementen aanwezig"
 
 msgid "Button"
 msgstr "Knop"

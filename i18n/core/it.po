@@ -166,7 +166,7 @@ msgid "Disclosure"
 msgstr "Informateci"
 
 msgid "Hall of Fame (Legacy)"
-msgstr ""
+msgstr "Hall of Fame (Eredità)"
 
 msgid "Basic Info"
 msgstr "Informazioni"
@@ -234,6 +234,18 @@ msgstr "Cancella"
 msgid "Edit"
 msgstr "Modifica"
 
+msgid "Team"
+msgstr "Team"
+
+msgid "Amount ($)"
+msgstr "Ammontare ($)"
+
+msgid "Last Set"
+msgstr "Modificati"
+
+msgid "First Set"
+msgstr "Creati"
+
 msgid "Jump to {0} from {1}"
 msgstr "Cerca {0} su {1}"
 
@@ -290,8 +302,8 @@ msgstr "Dashboard"
 msgid "Profile"
 msgstr "Profilo"
 
-msgid "Subscriptions"
-msgstr "Sottoscrizioni"
+msgid "Giving"
+msgstr "Donazioni"
 
 msgid "History"
 msgstr "Storia"
@@ -313,18 +325,6 @@ msgstr "{0} Per donare a {1}"
 
 msgid "Sign in"
 msgstr "Accedi"
-
-msgid "Team"
-msgstr "Team"
-
-msgid "Amount ($)"
-msgstr "Ammontare ($)"
-
-msgid "Last Set"
-msgstr "Modificati"
-
-msgid "First Set"
-msgstr "Creati"
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -404,9 +404,6 @@ msgstr "Vuoi vedere chi sono? Cerca fra le {0}nostre comunità{1}."
 
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Vuoi lavorare per Gratipay? Siamo un'{0}azienda aperta{1}."
-
-msgid "Giving"
-msgstr "Donazioni"
 
 msgid "You pay {0} per week."
 msgstr "Doni {0} a settimana."
@@ -963,6 +960,21 @@ msgstr "Reinvia l'email di verifica"
 msgid "View your email addresses"
 msgstr "Guarda il tuo indirizzo email"
 
+msgid "Active"
+msgstr "Attive"
+
+msgid "Cancelled"
+msgstr "Cancellate"
+
+msgid "These are giving that you recently cancelled."
+msgstr ""
+
+msgid "You pay {0} every week."
+msgstr "Doni {0} a settimana."
+
+msgid "No giving to show"
+msgstr ""
+
 msgid "Export History"
 msgstr "Storia Export"
 
@@ -1286,21 +1298,6 @@ msgstr "Se l'addebito ha successo"
 
 msgid "Close"
 msgstr "Chiudi"
-
-msgid "Active"
-msgstr "Attive"
-
-msgid "Cancelled"
-msgstr "Cancellate"
-
-msgid "These are subscriptions that you recently cancelled."
-msgstr "Queste sono le donazioni che hai annullato recentemente."
-
-msgid "You pay {0} every week."
-msgstr "Doni {0} a settimana."
-
-msgid "No subscriptions to show"
-msgstr "Nessuna sottoscrizione da mostrare"
 
 msgid "Button"
 msgstr "Pulsante"

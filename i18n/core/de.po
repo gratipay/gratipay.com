@@ -241,6 +241,18 @@ msgstr ""
 msgid "Edit"
 msgstr "Edieren"
 
+msgid "Team"
+msgstr "Team"
+
+msgid "Amount ($)"
+msgstr ""
+
+msgid "Last Set"
+msgstr ""
+
+msgid "First Set"
+msgstr ""
+
 msgid "Jump to {0} from {1}"
 msgstr "Springe von {1} zu {0}"
 
@@ -297,8 +309,8 @@ msgstr "Dashboard"
 msgid "Profile"
 msgstr "Profil"
 
-msgid "Subscriptions"
-msgstr ""
+msgid "Giving"
+msgstr "Gibt"
 
 msgid "History"
 msgstr "Verlauf"
@@ -320,18 +332,6 @@ msgstr "{0} um an {1} zu geben"
 
 msgid "Sign in"
 msgstr "Anmelden"
-
-msgid "Team"
-msgstr "Team"
-
-msgid "Amount ($)"
-msgstr ""
-
-msgid "Last Set"
-msgstr ""
-
-msgid "First Set"
-msgstr ""
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -411,9 +411,6 @@ msgstr "Möchtest du sehen, wer sie sind? Durchstöbere {0}unsere Gemeinschaften
 
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Möchtest du für Gratipay arbeiten? Wir sind eine {0}open company{1}."
-
-msgid "Giving"
-msgstr "Gibt"
 
 msgid "You pay {0} per week."
 msgstr ""
@@ -970,6 +967,21 @@ msgstr "Verifikationsmail erneut senden"
 msgid "View your email addresses"
 msgstr "Liste Ihrer E-Mail Adressen"
 
+msgid "Active"
+msgstr ""
+
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
+msgid "These are giving that you recently cancelled."
+msgstr ""
+
+msgid "You pay {0} every week."
+msgstr ""
+
+msgid "No giving to show"
+msgstr ""
+
 msgid "Export History"
 msgstr "Verlauf exportieren"
 
@@ -1293,21 +1305,6 @@ msgstr ""
 
 msgid "Close"
 msgstr "Schließen"
-
-msgid "Active"
-msgstr ""
-
-msgid "Cancelled"
-msgstr "Abgebrochen"
-
-msgid "These are subscriptions that you recently cancelled."
-msgstr ""
-
-msgid "You pay {0} every week."
-msgstr ""
-
-msgid "No subscriptions to show"
-msgstr ""
 
 msgid "Button"
 msgstr "Knopf"
