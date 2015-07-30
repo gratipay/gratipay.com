@@ -124,7 +124,8 @@ class TestTeams(Harness):
         bob.set_tip_to('old_team', '2.00')
         new_team = self.make_team('new_team', owner='old_team')
 
-        new_team.migrate_tips()
+        ntips = new_team.migrate_tips()
+        assert ntips == 2
 
         payment_instructions = self.db.all("SELECT * FROM payment_instructions")
         assert len(payment_instructions) == 2
