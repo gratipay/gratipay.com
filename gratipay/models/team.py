@@ -75,10 +75,10 @@ class Team(Model):
 
     def update_receiving(self, cursor=None):
         r = (cursor or self.db).one("""
-            WITH our_subscriptions AS (
+            WITH our_receiving AS (
                      SELECT amount
-                       FROM current_subscriptions
-                       JOIN participants p ON p.username = subscriber
+                       FROM current_payment_instructions
+                       JOIN participants p ON p.username = participant
                       WHERE team = %(slug)s
                         AND p.is_suspicious IS NOT true
                         AND amount > 0
@@ -87,9 +87,9 @@ class Team(Model):
             UPDATE teams t
                SET receiving = (COALESCE((
                        SELECT sum(amount)
-                         FROM our_subscriptions
+                         FROM our_receiving
                    ), 0))
-                 , nsupporters = COALESCE((SELECT count(*) FROM our_subscriptions), 0)
+                 , nsupporters = COALESCE((SELECT count(*) FROM our_receiving), 0)
              WHERE t.slug = %(slug)s
          RETURNING receiving, nsupporters
         """, dict(slug=self.slug))

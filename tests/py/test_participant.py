@@ -497,9 +497,9 @@ class Tests(Harness):
         assert [t.slug for t in picard.get_teams()] == ['TheEnterprise', 'TheStargazer']
 
 
-    # giving, npatrons and receiving
+    # giving
 
-    def test_only_funded_tips_count(self):
+    def test_giving_only_includes_funded_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         bob = self.make_participant('bob', claimed_time='now')
         carl = self.make_participant('carl', claimed_time='now', last_bill_result="Fail!")
@@ -509,8 +509,6 @@ class Tests(Harness):
         bob.set_payment_instruction(team, '5.00')
         carl.set_payment_instruction(team, '7.00')
 
-        # TODO - Add team payroll and check receiving values
-
         assert alice.giving == Decimal('3.00')
         assert bob.giving == Decimal('0.00')
         assert carl.giving == Decimal('0.00')
@@ -518,59 +516,14 @@ class Tests(Harness):
         funded_tip = self.db.one("SELECT * FROM payment_instructions WHERE is_funded ORDER BY id")
         assert funded_tip.participant == alice.username
 
-    def test_only_latest_tip_counts(self):
+    def test_giving_only_includes_the_latest_payment_instruction(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team(is_approved=True)
 
         alice.set_payment_instruction(team, '12.00')
         alice.set_payment_instruction(team, '4.00')
 
-        # TODO - Add team payroll and check receiving values
-
         assert alice.giving == Decimal('4.00')
-
-    def test_receiving_includes_tips_from_whitelisted_accounts(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=False
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        assert bob.receiving == Decimal('3.00')
-        assert bob.npatrons == 1
-
-    def test_receiving_includes_tips_from_unreviewed_accounts(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=None
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        assert bob.receiving == Decimal('3.00')
-        assert bob.npatrons == 1
-
-    @pytest.mark.xfail(reason="#3399")
-    def test_receiving_ignores_tips_from_blacklisted_accounts(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , last_bill_result=''
-                                     , is_suspicious=True
-                                      )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '3.00')
-
-        assert bob.receiving == Decimal('0.00')
-        assert bob.npatrons == 0
-
-    def test_receiving_includes_taking_when_updated_from_set_tip_to(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', claimed_time='now', taking=Decimal('42.00'))
-        alice.set_tip_to(bob, '3.00')
-        assert Participant.from_username('bob').receiving == bob.receiving == Decimal('45.00')
 
 
     # get_age_in_seconds - gais
