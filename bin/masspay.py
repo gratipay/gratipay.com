@@ -143,8 +143,8 @@ def compute_input_csv():
                                                             ))
         row = (route.participant.username, route.address, route.fee_cap, amount)
         writer.writerow(row)
-    print(" "*80, "-"*7)
-    print("{:>88}".format(total_gross))
+    print(" "*64, "-"*7)
+    print("{:>72}".format(total_gross))
 
 
 def compute_output_csvs():
