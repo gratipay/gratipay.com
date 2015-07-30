@@ -18,7 +18,7 @@ class TestTipJson(Harness):
         self.make_team("B", is_approved=True)
         self.make_participant("alice", claimed_time=now, last_bill_result='')
 
-        # Then, add a $1.50 and $3.00 subscription
+        # Then, add a $1.50 and $3.00 payment instruction
         response1 = self.client.POST( "/A/payment-instruction.json"
                                     , {'amount': "1.50"}
                                     , auth_as='alice'
@@ -40,7 +40,7 @@ class TestTipJson(Harness):
         # assert second_data['total_giving'] == "4.50"
 
 
-    def test_setting_subscription_out_of_range_gets_bad_amount(self):
+    def test_setting_payment_instruction_out_of_range_gets_bad_amount(self):
         self.make_team(is_approved=True)
         self.make_participant("alice", claimed_time='now', last_bill_result='')
 

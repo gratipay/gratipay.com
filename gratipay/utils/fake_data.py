@@ -106,7 +106,7 @@ def fake_team(db, teamowner):
     return Team.from_slug(teamslug)
 
 def fake_payment_instruction(db, participant, team):
-    """Create a fake subscription
+    """Create a fake payment_instruction
     """
     return _fake_thing( db
                       , "payment_instructions"

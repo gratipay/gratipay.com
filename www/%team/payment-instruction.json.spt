@@ -32,7 +32,7 @@ else:
         except (InvalidOperation, ValueError, BadAmount, NumberFormatError):
             raise Response(400, "bad amount")
     else:
-        out = user.participant.get_subscription_to(team)
+        out = user.participant.get_payment_instruction(team)
 
     amount = out['amount']
     total_giving = user.participant.giving
