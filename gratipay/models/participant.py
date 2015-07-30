@@ -820,179 +820,8 @@ class Participant(Model, MixinTeam):
         self.set_attributes(avatar_url=avatar_url)
 
 
-    # Random Junk
-    # ===========
-
-    @property
-    def profile_url(self):
-        base_url = gratipay.base_url
-        username = self.username
-        return '{base_url}/{username}/'.format(**locals())
-
-
-    def get_teams(self, only_approved=False, cursor=None):
-        """Return a list of teams this user is the owner of.
-        """
-        teams = (cursor or self.db).all( "SELECT teams.*::teams FROM teams WHERE owner=%s"
-                                       , (self.username,)
-                                        )
-        if only_approved:
-            teams = [t for t in teams if t.is_approved]
-        return teams
-
-
-    def get_old_teams(self):
-        """Return a list of old-style teams this user was a member of.
-        """
-        return self.db.all("""
-
-            SELECT team AS name
-                 , ( SELECT count(*)
-                       FROM current_takes
-                      WHERE team=x.team
-                    ) AS nmembers
-              FROM current_takes x
-             WHERE member=%s;
-
-        """, (self.username,))
-
-
-    def insert_into_communities(self, is_member, name, slug):
-        participant_id = self.id
-        self.db.run("""
-
-            INSERT INTO community_members
-                        (ctime, name, slug, participant, is_member)
-                 VALUES ( COALESCE (( SELECT ctime
-                                        FROM community_members
-                                       WHERE participant=%(participant_id)s
-                                         AND slug=%(slug)s
-                                       LIMIT 1
-                                      ), CURRENT_TIMESTAMP)
-                        , %(name)s, %(slug)s, %(participant_id)s, %(is_member)s
-                         )
-
-        """, locals())
-
-
-    def change_username(self, suggested):
-        """Raise Response or return None.
-
-        Usernames are limited to alphanumeric characters, plus ".,-_:@ ",
-        and can only be 32 characters long.
-
-        """
-        # TODO: reconsider allowing unicode usernames
-        suggested = suggested and suggested.strip()
-
-        if not suggested:
-            raise UsernameIsEmpty(suggested)
-
-        if len(suggested) > USERNAME_MAX_SIZE:
-            raise UsernameTooLong(suggested)
-
-        if set(suggested) - ASCII_ALLOWED_IN_USERNAME:
-            raise UsernameContainsInvalidCharacters(suggested)
-
-        lowercased = suggested.lower()
-
-        if lowercased in gratipay.RESTRICTED_USERNAMES:
-            raise UsernameIsRestricted(suggested)
-
-        if suggested != self.username:
-            try:
-                # Will raise IntegrityError if the desired username is taken.
-                with self.db.get_cursor(back_as=tuple) as c:
-                    add_event(c, 'participant', dict(id=self.id, action='set', values=dict(username=suggested)))
-                    actual = c.one( "UPDATE participants "
-                                    "SET username=%s, username_lower=%s "
-                                    "WHERE username=%s "
-                                    "RETURNING username, username_lower"
-                                   , (suggested, lowercased, self.username)
-                                   )
-            except IntegrityError:
-                raise UsernameAlreadyTaken(suggested)
-
-            assert (suggested, lowercased) == actual # sanity check
-            self.set_attributes(username=suggested, username_lower=lowercased)
-
-        return suggested
-
-    def update_giving_and_teams(self):
-        with self.db.get_cursor() as cursor:
-            updated_giving = self.update_giving(cursor)
-            for payment_instruction in updated_giving:
-                Team.from_slug(payment_instruction.team).update_receiving(cursor)
-
-    def update_giving(self, cursor=None):
-        updated = []
-        # Update is_funded on payment_instructions
-        if self.get_credit_card_error() == '':
-            updated = (cursor or self.db).all("""
-                UPDATE current_payment_instructions
-                   SET is_funded = true
-                 WHERE participant = %s
-                   AND is_funded IS NOT true
-             RETURNING *
-            """, (self.username,))
-
-        giving = (cursor or self.db).one("""
-            UPDATE participants p
-               SET giving = COALESCE((
-                      SELECT sum(amount)
-                        FROM current_payment_instructions cpi
-                        JOIN teams t ON t.slug = cpi.team
-                       WHERE participant = %(username)s
-                         AND amount > 0
-                         AND is_funded
-                         AND t.is_approved
-                   ), 0)
-             WHERE p.username=%(username)s
-         RETURNING giving
-        """, dict(username=self.username))
-        self.set_attributes(giving=giving)
-
-        return updated
-
-    def update_receiving(self, cursor=None):
-        if self.IS_PLURAL:
-            old_takes = self.compute_actual_takes(cursor=cursor)
-        r = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tipper
-                      WHERE tippee = %(username)s
-                        AND p2.is_suspicious IS NOT true
-                        AND amount > 0
-                        AND is_funded
-                 )
-            UPDATE participants p
-               SET receiving = (COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                   ), 0) + taking)
-                 , npatrons = COALESCE((SELECT count(*) FROM our_tips), 0)
-             WHERE p.username = %(username)s
-         RETURNING receiving, npatrons
-        """, dict(username=self.username))
-        self.set_attributes(receiving=r.receiving, npatrons=r.npatrons)
-        if self.IS_PLURAL:
-            new_takes = self.compute_actual_takes(cursor=cursor)
-            self.update_taking(old_takes, new_takes, cursor=cursor)
-
-    def update_is_free_rider(self, is_free_rider, cursor=None):
-        with self.db.get_cursor(cursor) as cursor:
-            cursor.run( "UPDATE participants SET is_free_rider=%(is_free_rider)s "
-                        "WHERE username=%(username)s"
-                      , dict(username=self.username, is_free_rider=is_free_rider)
-                       )
-            add_event( cursor
-                     , 'participant'
-                     , dict(id=self.id, action='set', values=dict(is_free_rider=is_free_rider))
-                      )
-            self.set_attributes(is_free_rider=is_free_rider)
-
+    # Giving and Taking
+    # =================
 
     def set_payment_instruction(self, team, amount, update_self=True, update_team=True,
                                                                                       cursor=None):
@@ -1109,6 +938,184 @@ class Participant(Model, MixinTeam):
             total = Decimal('0.00')
 
         return giving, total
+
+
+    def update_giving_and_teams(self):
+        with self.db.get_cursor() as cursor:
+            updated_giving = self.update_giving(cursor)
+            for payment_instruction in updated_giving:
+                Team.from_slug(payment_instruction.team).update_receiving(cursor)
+
+
+    def update_giving(self, cursor=None):
+        updated = []
+        # Update is_funded on payment_instructions
+        if self.get_credit_card_error() == '':
+            updated = (cursor or self.db).all("""
+                UPDATE current_payment_instructions
+                   SET is_funded = true
+                 WHERE participant = %s
+                   AND is_funded IS NOT true
+             RETURNING *
+            """, (self.username,))
+
+        giving = (cursor or self.db).one("""
+            UPDATE participants p
+               SET giving = COALESCE((
+                      SELECT sum(amount)
+                        FROM current_payment_instructions cpi
+                        JOIN teams t ON t.slug = cpi.team
+                       WHERE participant = %(username)s
+                         AND amount > 0
+                         AND is_funded
+                         AND t.is_approved
+                   ), 0)
+             WHERE p.username=%(username)s
+         RETURNING giving
+        """, dict(username=self.username))
+        self.set_attributes(giving=giving)
+
+        return updated
+
+
+    def update_receiving(self, cursor=None):
+        if self.IS_PLURAL:
+            old_takes = self.compute_actual_takes(cursor=cursor)
+        r = (cursor or self.db).one("""
+            WITH our_tips AS (
+                     SELECT amount
+                       FROM current_tips
+                       JOIN participants p2 ON p2.username = tipper
+                      WHERE tippee = %(username)s
+                        AND p2.is_suspicious IS NOT true
+                        AND amount > 0
+                        AND is_funded
+                 )
+            UPDATE participants p
+               SET receiving = (COALESCE((
+                       SELECT sum(amount)
+                         FROM our_tips
+                   ), 0) + taking)
+                 , npatrons = COALESCE((SELECT count(*) FROM our_tips), 0)
+             WHERE p.username = %(username)s
+         RETURNING receiving, npatrons
+        """, dict(username=self.username))
+        self.set_attributes(receiving=r.receiving, npatrons=r.npatrons)
+        if self.IS_PLURAL:
+            new_takes = self.compute_actual_takes(cursor=cursor)
+            self.update_taking(old_takes, new_takes, cursor=cursor)
+
+
+    def update_is_free_rider(self, is_free_rider, cursor=None):
+        with self.db.get_cursor(cursor) as cursor:
+            cursor.run( "UPDATE participants SET is_free_rider=%(is_free_rider)s "
+                        "WHERE username=%(username)s"
+                      , dict(username=self.username, is_free_rider=is_free_rider)
+                       )
+            add_event( cursor
+                     , 'participant'
+                     , dict(id=self.id, action='set', values=dict(is_free_rider=is_free_rider))
+                      )
+            self.set_attributes(is_free_rider=is_free_rider)
+
+
+    # Random Junk
+    # ===========
+
+    @property
+    def profile_url(self):
+        base_url = gratipay.base_url
+        username = self.username
+        return '{base_url}/{username}/'.format(**locals())
+
+
+    def get_teams(self, only_approved=False, cursor=None):
+        """Return a list of teams this user is the owner of.
+        """
+        teams = (cursor or self.db).all( "SELECT teams.*::teams FROM teams WHERE owner=%s"
+                                       , (self.username,)
+                                        )
+        if only_approved:
+            teams = [t for t in teams if t.is_approved]
+        return teams
+
+
+    def get_old_teams(self):
+        """Return a list of old-style teams this user was a member of.
+        """
+        return self.db.all("""
+
+            SELECT team AS name
+                 , ( SELECT count(*)
+                       FROM current_takes
+                      WHERE team=x.team
+                    ) AS nmembers
+              FROM current_takes x
+             WHERE member=%s;
+
+        """, (self.username,))
+
+
+    def insert_into_communities(self, is_member, name, slug):
+        participant_id = self.id
+        self.db.run("""
+
+            INSERT INTO community_members
+                        (ctime, name, slug, participant, is_member)
+                 VALUES ( COALESCE (( SELECT ctime
+                                        FROM community_members
+                                       WHERE participant=%(participant_id)s
+                                         AND slug=%(slug)s
+                                       LIMIT 1
+                                      ), CURRENT_TIMESTAMP)
+                        , %(name)s, %(slug)s, %(participant_id)s, %(is_member)s
+                         )
+
+        """, locals())
+
+
+    def change_username(self, suggested):
+        """Raise Response or return None.
+
+        Usernames are limited to alphanumeric characters, plus ".,-_:@ ",
+        and can only be 32 characters long.
+
+        """
+        # TODO: reconsider allowing unicode usernames
+        suggested = suggested and suggested.strip()
+
+        if not suggested:
+            raise UsernameIsEmpty(suggested)
+
+        if len(suggested) > USERNAME_MAX_SIZE:
+            raise UsernameTooLong(suggested)
+
+        if set(suggested) - ASCII_ALLOWED_IN_USERNAME:
+            raise UsernameContainsInvalidCharacters(suggested)
+
+        lowercased = suggested.lower()
+
+        if lowercased in gratipay.RESTRICTED_USERNAMES:
+            raise UsernameIsRestricted(suggested)
+
+        if suggested != self.username:
+            try:
+                # Will raise IntegrityError if the desired username is taken.
+                with self.db.get_cursor(back_as=tuple) as c:
+                    add_event(c, 'participant', dict(id=self.id, action='set', values=dict(username=suggested)))
+                    actual = c.one( "UPDATE participants "
+                                    "SET username=%s, username_lower=%s "
+                                    "WHERE username=%s "
+                                    "RETURNING username, username_lower"
+                                   , (suggested, lowercased, self.username)
+                                   )
+            except IntegrityError:
+                raise UsernameAlreadyTaken(suggested)
+
+            assert (suggested, lowercased) == actual # sanity check
+            self.set_attributes(username=suggested, username_lower=lowercased)
+
+        return suggested
 
 
     def get_og_title(self):
