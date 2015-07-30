@@ -1,4 +1,4 @@
-{% macro subscriptions_table(state, subscriptions, total) %}
+{% macro giving_table(state, giving, total) %}
     <table class="table">
         <thead>
             <tr>
@@ -21,16 +21,16 @@
             </tr>
         </tfoot>
         <tbody>
-        {% for subscription in subscriptions %}
+        {% for payment_instruction in giving %}
         <tr>
             <td class="team">
-                <a href="/{{ subscription.team_slug }}/">{{ subscription.team_name }}</a>
+                <a href="/{{ payment_instruction.team_slug }}/">{{ payment_instruction.team_name }}</a>
             </td>
             {% if state != 'cancelled' %}
-                <td class="figure">{{ subscription.amount }}</td>
+                <td class="figure">{{ payment_instruction.amount }}</td>
             {% endif %}
-            <td class="figure">{{ to_age(subscription.mtime) }}</td>
-            <td class="figure">{{ to_age(subscription.ctime) }}</td>
+            <td class="figure">{{ to_age(payment_instruction.mtime) }}</td>
+            <td class="figure">{{ to_age(payment_instruction.ctime) }}</td>
         </tr>
         {% endfor %}
         </tbody>

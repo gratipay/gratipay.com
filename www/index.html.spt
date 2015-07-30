@@ -93,7 +93,7 @@ if not user.ANON:
         <div class="col0">
             <h2>{{ _("Giving") }}</h2>
 
-            <p><a href="/{{ participant.username }}/subscriptions/">{{
+            <p><a href="/{{ participant.username }}/giving/">{{
                 _("You pay {0} per week.", format_currency(participant.giving, 'USD'))
             }}</a></p>
 
