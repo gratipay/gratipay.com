@@ -45,7 +45,7 @@
                     <a href="/"{% if request.path.raw == '/' or request.path.raw.split('/')[1] == user.participant.username  %} class="selected"{% endif %}>
                         {{ user.participant.username }}
                         <div class="quick-stats">
-                            <span class="my-total-giving">{{ format_currency(user.participant.giving, "USD") }}</span>/{{ _("wk") }}
+                            <span class="my-total-giving">{{ format_currency(user.participant.get_giving_for_profile()[1], "USD") }}</span>/{{ _("wk") }}
                         </div>
                     </a>
                 </li>

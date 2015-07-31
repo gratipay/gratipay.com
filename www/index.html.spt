@@ -6,7 +6,7 @@ if user.ANON:
 if not user.ANON:
     participant = user.participant
     title = participant.username
-    __ignored, giving = participant.get_giving_for_profile()
+    giving = participant.get_giving_for_profile()[1]
 
 [---]
 {% extends "templates/base.html" %}
