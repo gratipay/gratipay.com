@@ -408,7 +408,7 @@ msgstr "Regardez {0}nos communautés{1} si vous souhaitez voir qui sont nos util
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Vous voulez travailler pour Gratipay ? Nous sommes une {0}entreprise ouverte{1}."
 
-msgid "You pay {0} per week."
+msgid "You give {0} per week."
 msgstr ""
 
 msgid "Who inspires you? See if they're on Gratipay:"
@@ -416,22 +416,6 @@ msgstr "Qui vous inspire ? Voyez s'ils sont sur Gratipay:"
 
 msgid "Find your friends from social networks:"
 msgstr "Trouvez vos amis des réseaux sociaux:"
-
-msgid "Receiving"
-msgstr "Revenus"
-
-msgid "You receive {0} per week."
-msgstr "Vous recevez {0} par semaine."
-
-msgid "To receive money, do something awesome and then tell people about it:"
-msgstr "Pour recevoir des dons, faites quelque chose de génial et dites-le:"
-
-msgid "{0}Fill out your profile{1} to let others know about you."
-msgstr "{0}Remplissez votre profil{1}."
-
-msgid ""
-"Reach a wider audience by {0}embedding our widgets{1} on your blog/website."
-msgstr "Faites passer le mot en {0}ajoutant nos widgets{1} sur votre site web."
 
 msgid "You must sign in to apply for a new team."
 msgstr ""
@@ -972,7 +956,7 @@ msgstr "Annulé"
 msgid "These are giving that you recently cancelled."
 msgstr ""
 
-msgid "You pay {0} every week."
+msgid "You give {0} every week."
 msgstr ""
 
 msgid "No giving to show"
@@ -1049,6 +1033,9 @@ msgstr "Récépissé"
 
 msgid "No transactions to show."
 msgstr "Aucune transaction à afficher."
+
+msgid "Receiving"
+msgstr "Revenus"
 
 msgid "You receive {0} per week"
 msgstr "Vous recevez {0} par semaine"

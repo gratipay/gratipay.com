@@ -407,30 +407,14 @@ msgstr "Wil je zien wie ze zijn? Bezoek {0}onze gemeenschappen{1}."
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Wil je voor Gratipay werken? We zijn een {0}open bedrijf{1}."
 
-msgid "You pay {0} per week."
-msgstr "Je betaalt {0} per week."
+msgid "You give {0} per week."
+msgstr ""
 
 msgid "Who inspires you? See if they're on Gratipay:"
 msgstr "Wie inspireert u? Kijk of ze ook lid zijn van Gratipay: "
 
 msgid "Find your friends from social networks:"
 msgstr "Vind je vrienden op sociale netwerken:"
-
-msgid "Receiving"
-msgstr "Ontvangt"
-
-msgid "You receive {0} per week."
-msgstr "Je ontvangt {0} per week."
-
-msgid "To receive money, do something awesome and then tell people about it:"
-msgstr "Om giften te ontvangen, doe iets geweldigs en vertel er iets over:"
-
-msgid "{0}Fill out your profile{1} to let others know about you."
-msgstr "{0}Vervolledig je profiel{1} zodat anderen je beter kennen."
-
-msgid ""
-"Reach a wider audience by {0}embedding our widgets{1} on your blog/website."
-msgstr "Bereik een groter publiek door {0}onze widgets te plaatses{1} op je blog/website."
 
 msgid "You must sign in to apply for a new team."
 msgstr "U moet inloggen om u aan te melden bij een nieuw team."
@@ -971,8 +955,8 @@ msgstr "Geannuleerd"
 msgid "These are giving that you recently cancelled."
 msgstr ""
 
-msgid "You pay {0} every week."
-msgstr "Je betaalt {0} elke week."
+msgid "You give {0} every week."
+msgstr ""
 
 msgid "No giving to show"
 msgstr ""
@@ -1048,6 +1032,9 @@ msgstr "Ontvangstbewijs"
 
 msgid "No transactions to show."
 msgstr "Er zijn geen overboekingen aanwezig in het systeem."
+
+msgid "Receiving"
+msgstr "Ontvangt"
 
 msgid "You receive {0} per week"
 msgstr "Je ontvangt {0} per week"

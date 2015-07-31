@@ -404,7 +404,7 @@ msgstr "Ĉu vi volas vidi kiu estas? Foliumu {0}niajn komunumojn{1}."
 msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Ĉu vi volas labori por Gratipay? Ni estas {0}malferma firmo{1}."
 
-msgid "You pay {0} per week."
+msgid "You give {0} per week."
 msgstr ""
 
 msgid "Who inspires you? See if they're on Gratipay:"
@@ -412,22 +412,6 @@ msgstr "Kiu inspiras vin? Trovu ilin en Gratipay:"
 
 msgid "Find your friends from social networks:"
 msgstr ""
-
-msgid "Receiving"
-msgstr "Ricevanta"
-
-msgid "You receive {0} per week."
-msgstr "Vi ricevas {0} ĉiusemanje."
-
-msgid "To receive money, do something awesome and then tell people about it:"
-msgstr ""
-
-msgid "{0}Fill out your profile{1} to let others know about you."
-msgstr "{0}Plenigu vian profilon{1} informi aliajn pri vi."
-
-msgid ""
-"Reach a wider audience by {0}embedding our widgets{1} on your blog/website."
-msgstr "Atingu pli larĝan aŭdiantaron de {0}enkorpigado nia umaĵoj{1} en via blogo au TTT-ejo."
 
 msgid "You must sign in to apply for a new team."
 msgstr ""
@@ -968,7 +952,7 @@ msgstr "Nuligita"
 msgid "These are giving that you recently cancelled."
 msgstr ""
 
-msgid "You pay {0} every week."
+msgid "You give {0} every week."
 msgstr ""
 
 msgid "No giving to show"
@@ -1045,6 +1029,9 @@ msgstr "Kvitanco"
 
 msgid "No transactions to show."
 msgstr ""
+
+msgid "Receiving"
+msgstr "Ricevanta"
 
 msgid "You receive {0} per week"
 msgstr "Vi ricevas {0} ĉiusemajne"
