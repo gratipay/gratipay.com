@@ -67,12 +67,6 @@ class TestPages(Harness):
             alice.update_is_free_rider(None)
         self.browse(setup, auth_as='alice')
 
-    def test_escaping_on_homepage(self):
-        self.make_participant('alice', claimed_time='now')
-        expected = "<a href='/alice/'>"
-        actual = self.client.GET('/', auth_as='alice').body
-        assert expected in actual
-
     @pytest.mark.xfail(reason="migrating to Teams; #3399")
     def test_username_is_in_button(self):
         self.make_participant('alice', claimed_time='now')

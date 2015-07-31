@@ -6,6 +6,7 @@ if user.ANON:
 if not user.ANON:
     participant = user.participant
     title = participant.username
+    __ignored, giving = participant.get_giving_for_profile()
 
 [---]
 {% extends "templates/base.html" %}
@@ -94,7 +95,7 @@ if not user.ANON:
             <h2>{{ _("Giving") }}</h2>
 
             <p><a href="/{{ participant.username }}/giving/">{{
-                _("You pay {0} per week.", format_currency(participant.giving, 'USD'))
+                _("You give {0} per week.", format_currency(giving, 'USD'))
             }}</a></p>
 
             <p>{{ _("Who inspires you? See if they're on Gratipay:") }}</p>
@@ -106,20 +107,6 @@ if not user.ANON:
                 >{{ ',' if not loop.last }}
             {% endfor %}
             </p>
-
-            <h2>{{ _("Receiving") }}</h2>
-
-            <p><a href="/{{ participant.username }}/receiving/">{{
-                _("You receive {0} per week.", format_currency(participant.receiving, 'USD'))
-            }}</a></p>
-
-            <p>{{ _("To receive money, do something awesome and then tell people about it:") }}</p>
-            <ol>
-                <li>{{ _("{0}Fill out your profile{1} to let others know about you.",
-                         "<a href='/%s/'>"|safe % participant.username, "</a>"|safe) }}</li>
-                <li>{{ _("Reach a wider audience by {0}embedding our widgets{1} on your blog/website.",
-                         "<a href='/%s/widgets'>"|safe % participant.username, "</a>"|safe) }}</li>
-            </ol>
         </div>
 
     {% endif %}
