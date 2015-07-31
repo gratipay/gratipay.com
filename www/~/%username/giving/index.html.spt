@@ -46,7 +46,7 @@ tabs = {
 
 <div class="giving">
 
-<p>{{ _("You pay {0} every week.", format_currency(participant.giving, "USD")) }}</p>
+<p>{{ _("You give {0} every week.", format_currency(total, "USD")) }}</p>
 
 <h2>{{ _("Giving") }}</h2>
 
