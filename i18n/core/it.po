@@ -406,7 +406,7 @@ msgid "Want to work for Gratipay? We are an {0}open company{1}."
 msgstr "Vuoi lavorare per Gratipay? Siamo un'{0}azienda aperta{1}."
 
 msgid "You give {0} per week."
-msgstr ""
+msgstr "Doni {0} a settimana."
 
 msgid "Who inspires you? See if they're on Gratipay:"
 msgstr "Chi ti dona l'ispirazione? Guarda se sono su Gratipay:"
@@ -951,13 +951,13 @@ msgid "Cancelled"
 msgstr "Cancellate"
 
 msgid "These are giving that you recently cancelled."
-msgstr ""
+msgstr "Queste sono le donazioni che hai recentemente cancellato."
 
 msgid "You give {0} every week."
-msgstr ""
+msgstr "Doni {0} ogni settimana."
 
 msgid "No giving to show"
-msgstr ""
+msgstr "Nessuna donazione da mostrare"
 
 msgid "Export History"
 msgstr "Storia Export"
