@@ -55,7 +55,7 @@ CREATE TABLE payday_payments_done AS
 
 DROP TABLE IF EXISTS payday_payment_instructions;
 CREATE TABLE payday_payment_instructions AS
-    SELECT participant, team, amount
+    SELECT s.id, participant, team, amount, giving_due
       FROM ( SELECT DISTINCT ON (participant, team) *
                FROM payment_instructions
               WHERE mtime < %(ts_start)s
@@ -76,10 +76,24 @@ CREATE INDEX ON payday_payment_instructions (participant);
 CREATE INDEX ON payday_payment_instructions (team);
 ALTER TABLE payday_payment_instructions ADD COLUMN is_funded boolean;
 
+UPDATE payday_payment_instructions ppi
+   SET giving_due = s.giving_due
+  FROM (SELECT participant, team, SUM(giving_due) AS giving_due
+       FROM payment_instructions 
+       GROUP BY participant, team) s
+ WHERE ppi.participant = s.participant
+   AND ppi.team = s.team;
+
+DROP TABLE IF EXISTS participants_payments_uncharged;
+CREATE TABLE participants_payments_uncharged AS
+    SELECT participant 
+      FROM payday_payment_instructions
+     WHERE 1 = 2;
+
 ALTER TABLE payday_participants ADD COLUMN giving_today numeric(35,2);
 UPDATE payday_participants
    SET giving_today = COALESCE((
-           SELECT sum(amount)
+           SELECT sum(amount + giving_due)
              FROM payday_payment_instructions
             WHERE participant = username
        ), 0);
@@ -125,6 +139,11 @@ RETURNS void AS $$
         UPDATE payday_teams
            SET balance = (balance + team_delta)
          WHERE slug = $2;
+        UPDATE payday_payment_instructions
+           SET giving_due = 0
+         WHERE participant = $1
+           AND team = $2
+           AND giving_due > 0; 
         INSERT INTO payday_payments
                     (participant, team, amount, direction)
              VALUES ( ( SELECT p.username
@@ -153,8 +172,8 @@ CREATE OR REPLACE FUNCTION process_payment_instruction() RETURNS trigger AS $$
               FROM payday_participants p
              WHERE username = NEW.participant
         );
-        IF (NEW.amount <= participant.new_balance OR participant.card_hold_ok) THEN
-            EXECUTE pay(NEW.participant, NEW.team, NEW.amount, 'to-team');
+        IF (NEW.amount + NEW.giving_due <= participant.new_balance OR participant.card_hold_ok) THEN
+            EXECUTE pay(NEW.participant, NEW.team, NEW.amount + NEW.giving_due, 'to-team');
             RETURN NEW;
         END IF;
         RETURN NULL;

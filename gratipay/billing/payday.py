@@ -19,7 +19,7 @@ import braintree
 import aspen.utils
 from aspen import log
 from gratipay.billing.exchanges import (
-    cancel_card_hold, capture_card_hold, create_card_hold, upcharge,
+    cancel_card_hold, capture_card_hold, create_card_hold, upcharge, MINIMUM_CHARGE,
 )
 from gratipay.exceptions import NegativeBalance
 from gratipay.models import check_db
@@ -220,12 +220,17 @@ class Payday(object):
             if p.old_balance < 0:
                 amount -= p.old_balance
             if p.id in holds:
-                charge_amount = upcharge(amount)[0]
-                if holds[p.id].amount >= charge_amount:
-                    return
+                if amount >= MINIMUM_CHARGE:
+                    charge_amount = upcharge(amount)[0]
+                    if holds[p.id].amount >= charge_amount:
+                        return
+                    else:
+                        # The amount is too low, cancel the hold and make a new one
+                        cancel_card_hold(holds.pop(p.id))
                 else:
-                    # The amount is too low, cancel the hold and make a new one
+                    # not up to minimum charge level. cancel the hold
                     cancel_card_hold(holds.pop(p.id))
+                    return
             hold, error = create_card_hold(self.db, p, amount)
             if error:
                 return 1
@@ -253,6 +258,26 @@ class Payday(object):
         log("Processing payment instructions.")
         cursor.run("UPDATE payday_payment_instructions SET is_funded=true;")
 
+    @staticmethod
+    def park_payment_instructions(cursor):
+        """In the case of participants in whose case the amount to be charged to their cc's
+        in order to meet all outstanding and current subscriptions does not reach the minimum
+        charge threshold, park this for the next week by adding the current subscription amount 
+        to giving_due
+        """
+	cursor.run("""INSERT INTO participants_payments_uncharged 
+              SELECT participant 
+                FROM payday_payment_instructions
+            GROUP BY participant
+              HAVING SUM(amount + giving_due) < %(MINIMUM_CHARGE)s
+            """,dict(MINIMUM_CHARGE=MINIMUM_CHARGE))
+
+        cursor.run("""UPDATE payment_instructions 
+              SET giving_due = amount + giving_due
+            WHERE id IN (SELECT id 
+                FROM payday_payment_instructions ppi, participants_payments_uncharged ppu
+               WHERE ppi.participant = ppu.participant)
+                """)
 
     @staticmethod
     def transfer_takes(cursor, ts_start):
@@ -295,7 +320,7 @@ class Payday(object):
             SELECT *
               FROM payday_participants
              WHERE new_balance < 0
-        """)
+        """,dict(MINIMUM_CHARGE=MINIMUM_CHARGE))
         participants = [p for p in participants if p.id in holds]
 
         log("Capturing card holds.")
@@ -340,6 +365,13 @@ class Payday(object):
             INSERT INTO payments (timestamp, participant, team, amount, direction, payday)
                 SELECT *, (SELECT id FROM paydays WHERE extract(year from ts_end) = 1970)
                   FROM payday_payments;
+        """)
+        # Copy giving_due value back to payment_instructions
+        cursor.run("""
+            UPDATE payment_instructions pi
+               SET giving_due = pi2.giving_due
+              FROM payday_payment_instructions pi2
+             WHERE pi.id = pi2.id
         """)
         log("Updated the balances of %i participants." % len(participants))
 

@@ -433,6 +433,7 @@ CREATE TABLE payment_instructions
 , team                  text                        NOT NULL REFERENCES teams
                                                         ON UPDATE CASCADE ON DELETE RESTRICT
 , amount                numeric(35,2)               NOT NULL
+, giving_due            numeric(35,2)               DEFAULT 0   
 , is_funded             boolean                     NOT NULL DEFAULT false
  );
 
