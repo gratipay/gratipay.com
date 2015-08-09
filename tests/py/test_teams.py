@@ -127,7 +127,7 @@ class TestTeams(Harness):
         ntips = new_team.migrate_tips()
         assert ntips == 2
 
-        payment_instructions = self.db.all("SELECT * FROM payment_instructions")
+        payment_instructions = self.db.all("SELECT * FROM payment_instructions ORDER BY participant ASC")
         assert len(payment_instructions) == 2
         assert payment_instructions[0].participant == 'alice'
         assert payment_instructions[0].team == 'new_team'
