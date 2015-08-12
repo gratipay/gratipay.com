@@ -37,7 +37,7 @@ title = name = team.name
 <div class="col0">
     {% if team.is_approved in (None, False) %}
     {% if team.is_approved == None %}unreviewed{% endif %}
-    {% if team.is_approved == False %}rejected{% endif %} |
+    {% if team.is_approved == False %}closed{% endif %} |
     {{ team.homepage }}
     {% else %}
     <a href="{{ team.homepage }}">{{ team.homepage }}</a>
