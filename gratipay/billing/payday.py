@@ -258,26 +258,36 @@ class Payday(object):
         log("Processing payment instructions.")
         cursor.run("UPDATE payday_payment_instructions SET is_funded=true;")
 
+
     @staticmethod
     def park_payment_instructions(cursor):
         """In the case of participants in whose case the amount to be charged to their cc's
         in order to meet all outstanding and current subscriptions does not reach the minimum
-        charge threshold, park this for the next week by adding the current subscription amount 
+        charge threshold, park this for the next week by adding the current subscription amount
         to giving_due
         """
-	cursor.run("""INSERT INTO participants_payments_uncharged 
-              SELECT participant 
-                FROM payday_payment_instructions
-            GROUP BY participant
-              HAVING SUM(amount + giving_due) < %(MINIMUM_CHARGE)s
-            """,dict(MINIMUM_CHARGE=MINIMUM_CHARGE))
+        cursor.run("""
 
-        cursor.run("""UPDATE payment_instructions 
-              SET giving_due = amount + giving_due
-            WHERE id IN (SELECT id 
-                FROM payday_payment_instructions ppi, participants_payments_uncharged ppu
-               WHERE ppi.participant = ppu.participant)
-                """)
+        INSERT INTO participants_payments_uncharged
+             SELECT participant
+               FROM payday_payment_instructions
+           GROUP BY participant
+             HAVING SUM(amount + giving_due) < %(MINIMUM_CHARGE)s
+
+        """, dict(MINIMUM_CHARGE=MINIMUM_CHARGE))
+
+        cursor.run("""
+
+        UPDATE payment_instructions
+           SET giving_due = amount + giving_due
+         WHERE id IN ( SELECT id
+                         FROM payday_payment_instructions ppi
+                            , participants_payments_uncharged ppu
+                        WHERE ppi.participant = ppu.participant
+                      )
+
+        """)
+
 
     @staticmethod
     def transfer_takes(cursor, ts_start):
