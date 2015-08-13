@@ -82,7 +82,7 @@ class Team(Model):
     @property
     def status(self):
         return { None: 'unreviewed'
-               , False: 'rejected'
+               , False: 'closed'
                , True: 'approved'
                 }[self.is_approved]
 
