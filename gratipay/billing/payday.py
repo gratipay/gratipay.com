@@ -330,7 +330,7 @@ class Payday(object):
             SELECT *
               FROM payday_participants
              WHERE new_balance < 0
-        """,dict(MINIMUM_CHARGE=MINIMUM_CHARGE))
+        """)
         participants = [p for p in participants if p.id in holds]
 
         log("Capturing card holds.")
