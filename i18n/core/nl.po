@@ -422,8 +422,8 @@ msgstr "U moet inloggen om u aan te melden bij een nieuw team."
 msgid "You must have a verified email address to apply for a new team."
 msgstr "U moet in het bezit zijn van een geverifieerd emailadres om u te kunnen aanmelden voor een nieuw team. "
 
-msgid "You must attach a bank account or PayPal to apply for a new team."
-msgstr "U moet een bankrekening of PayPal account aan uw account koppelen om u te kunnen aanmelden voor een nieuw team."
+msgid "You must attach a PayPal account to apply for a new team."
+msgstr "U moet een PayPal account aan uw account koppelen om u te kunnen aanmelden voor een nieuw team."
 
 msgid "Apply for a New Team"
 msgstr "Aanmelden voor een nieuw team"
