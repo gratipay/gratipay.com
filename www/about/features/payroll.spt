@@ -69,8 +69,9 @@ subhead = _("Payroll")
     We'll bring back payroll once we've got firmer guidance for Team owners
     about these issues. In the mean time, Team owners need to be prepared to
     accept the burden associated with payroll once we bring it back: a somewhat
-    risky proposition, given that the burden is currently undetermined.
-    <i>Caveat emptor</i>.</p>
+    risky proposition, given that the burden is <a
+    href="https://github.com/gratipay/gratipay.com/issues/3433">currently
+    undetermined</a>. <i>Caveat emptor</i>.</p>
 
 </div>
 {% endblock %}
