@@ -1,0 +1,77 @@
+[---]
+title = _("Features")
+subhead = _("Payroll")
+[---] text/html
+{% extends "templates/about-features.html" %}
+{% block content %}
+<div class="col0">
+
+    <p>We've invented a system called &ldquo;team takes</a>&rdquo; to solve the
+    <a
+    href="https://mako.cc/writing/funding_volunteers/funding_volunteers.html">problem
+    of compensating voluntary labor</a>. Essentially, in our solution, everyone
+    sets their own compensation. Our first version of this system worked great! Now
+    we are <a
+    href="https://github.com/gratipay/gratipay.com/issues/3433">revamping</a> it to
+    better fit with existing labor law. <a
+    href="https://medium.com/gratipay-blog">Stay tuned</a>! :-)</p>
+
+    <a href="https://github.com/gratipay/gratipay.com/issues/3433">
+        <img src="{{ website.asset('under-construction.png') }}">
+    </a>
+
+    <p>This page documents how our system will work once we <a
+        href="https://github.com/gratipay/gratipay.com/issues/3433">bring it
+    back</a>. See our <a href="/about/">site overview</a> for definitions of
+    basic terms.</p>
+
+
+    <h2>Take-What-You-Need</h2>
+
+    <p>The essence of Gratipay's payroll system is that everyone sets their own
+    compensation, or &ldquo;take.&rdquo; Similar to <a
+    href="https://en.wikipedia.org/wiki/Pay_what_you_want">pay-what-you-want</a>
+    on the <a href="./payments">payments</a> side, Gratipay introduces
+    &ldquo;take-what-you-need&rdquo; on the payroll side.</p>
+
+    <p>The owner of a Team adds ~users as &ldquo;members,&rdquo; which sets
+    their weekly take to a penny, and can remove members, which is a safeguard
+    against abuse of the system. However, once a ~user is a member of a Team,
+    only that ~user can increase their take above a penny a week, or reduce it
+    once it's been increased (apart from the nuclear option of removing the
+    ~user).</p>
+
+    <p>Gratipay's payroll system optimizes compensation of voluntary labor. In
+    a voluntary organization, by definition, each member has control of their
+    labor inputs.  Gratipay payroll complements this with control over their
+    monetary compensation. By giving the individual control over *both*
+    variables, Gratipay provides for the resolution of the individual
+    resentment and guilt that otherwise build up when mixing money with
+    voluntary labor. Feeling burned out? Take more money, or do less work. Not
+    pulling your weight? Take less money, or do more work.</p>
+
+    <p>A healthy Team is built on trust, and trusting each other with money is
+    a powerful cause and effect of mutual trust. Gratipay's payroll system is
+    not a panacea, however. The management of the Team should use payroll
+    imbalances as indicators of underlying social issues on the Team, and
+    address those issues at the social level. Once the social issues are
+    addressed, the payroll will naturally rebalance to reflect the new social
+    reality of the Team.</p>
+
+
+    <h2>What About Labor Law?</h2>
+
+    <p>We ran Gratipay payroll as an experiment for a year or so, and it worked
+    great! Now we're working on how to properly implement it atop existing
+    labor law. Voluntary organizations such as open-source projects are often
+    loose and informal. Owning a Gratipay Team, by contrast, introduces duties
+    and responsibilities related to tax reporting and other labor law issues.
+    We'll bring back payroll once we've got firmer guidance for Team owners
+    about these issues. In the mean time, Team owners need to be prepared to
+    accept the burden associated with payroll once we bring it back: a somewhat
+    risky proposition, given that the burden is <a
+    href="https://github.com/gratipay/gratipay.com/issues/3433">currently
+    undetermined</a>. <i>Caveat emptor</i>.</p>
+
+</div>
+{% endblock %}

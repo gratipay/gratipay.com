@@ -1,0 +1,73 @@
+# encoding: utf8
+[---]
+title = _("Features")
+subhead = _("Payments")
+[---] text/html
+{% extends "templates/about-features.html" %}
+{% block content %}
+<div class="col0">
+
+    <p>Gratipay offers a <a
+        href="https://en.wikipedia.org/wiki/Pay_what_you_want">voluntary</a> <a
+    href="https://en.wikipedia.org/wiki/Subscription_business_model">subscription</a>
+    <a href="https://en.wikipedia.org/wiki/Revenue_model">revenue model</a>,
+    wherein Teams receive weekly payments from ~users: see our <a href="/about/">site
+    overview</a> for basic definitions.</p>
+
+
+    <h2>How do I accept payments?</h2>
+
+    <p><a href="/new">Apply for a Team</a>. Your ~user account will be the
+    owner of the Team, and will receive 100% of the Team's revenue each week
+    until we bring back <a href="./payroll">payroll</a>.</p>
+
+
+    <h2>When are payments run?</h2>
+
+    <p>We process payments once a week, on Thursdays. You can <a
+    href="https://github.com/gratipay/inside.gratipay.com/issues?q=label%3APayday">watch
+    along</a> each week.</p>
+
+
+    <h2>What currencies do you support?</h2>
+
+    <p>We charge and pay out in USD.</p>
+
+
+    <h2>What payment methods do you support?</h2>
+
+    <p>We support the following brands of credit and debit card: Visa,
+    MasterCard, Discover, JCB, and American Express.</p>
+
+
+    <h2>What are the payment fees and minimums?</h2>
+
+    <p>Our credit card processor, Braintree, charges 2.9% + 30¢ per
+    transaction. We upcharge ~users to cover this fee at cost, and Teams
+    receive the face value of the payment. For example, we'll charge $20.91 to
+    cover a $20 payment.</p>
+
+    <p>Non-U.S. banks may assess foreign exchange and/or other fees.</p>
+
+    <p>Our minimum charge is $10. We charge in advance. For example, we'll
+    charge $10 up front to cover 10 weeks of a $1/wk subscription.</p>
+
+
+    <h2>What payout methods do you support?</h2>
+
+    <p>We are able to deliver your funds to you via PayPal.</p>
+
+
+    <h2>What are the payout fees and minimums?</h2>
+
+    <p>PayPal charges a 2% fee, capped at a $1 fee for U.S. accounts, and $20
+    for non-U.S. accounts. We assess this fee at cost upon payout.</p>
+
+    <p>There may be foreign exchange and/or other fees involved in withdrawing
+    funds from PayPal to your bank.</p>
+
+    <p>Our minimum payout is 50¢.</p>
+
+</div>
+{% endblock %}
+
