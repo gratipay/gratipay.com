@@ -7,17 +7,19 @@ subhead = _("Payments")
 {% block content %}
 <div class="col0">
 
-    <p>Gratipay is able to support your company or organization's <a
+    <p>Gratipay offers a <a
         href="https://en.wikipedia.org/wiki/Pay_what_you_want">voluntary</a> <a
     href="https://en.wikipedia.org/wiki/Subscription_business_model">subscription</a>
-    <a href="https://en.wikipedia.org/wiki/Revenue_model">revenue model</a>.</p>
+    <a href="https://en.wikipedia.org/wiki/Revenue_model">revenue model</a>,
+    wherein Teams receive weekly payments from ~users: see our <a href="/about/">site
+    overview</a> for basic definitions.</p>
 
 
     <h2>When are payments run?</h2>
 
     <p>We process payments once a week, on Thursdays. You can <a
     href="https://github.com/gratipay/inside.gratipay.com/issues?q=label%3APayday">watch
-    along</a>.</p>
+    along</a> each week.</p>
 
 
     <h2>What currencies do you support?</h2>
@@ -34,9 +36,9 @@ subhead = _("Payments")
     <h2>What are the payment fees and minimums?</h2>
 
     <p>Our credit card processor, Braintree, charges 2.9% + 30¢ per
-    transaction. We upcharge to cover this fee at cost, and you receive the
-    face value of the payment. For example, we'll charge $20.91 to cover a $20
-    payment.</p>
+    transaction. We upcharge ~users to cover this fee at cost, and Teams
+    receive the face value of the payment. For example, we'll charge $20.91 to
+    cover a $20 payment.</p>
 
     <p>Non-U.S. banks may assess foreign exchange and/or other fees.</p>
 
