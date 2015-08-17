@@ -5,8 +5,9 @@ title = _("About")
 {% block content %}
 <div class="col0">
 
-    <p>Welcome to Gratipay! We provide voluntary payments and (eventually) payroll
-    for open work.</p>
+    <p>Welcome to Gratipay! We provide voluntary <a
+        href="/about/features/payments">payments</a> and (eventually) <a
+    href="/about/features/payroll">payroll</a> for open work.</p>
 
 
     <h2>What is Open Work?</h2>
@@ -15,32 +16,50 @@ title = _("About")
     easy for any individual to do your work for you without asking you first,
     and as a result to share in any revenue you generate. Basically you need to
     have a public issue tracker and documentation for self-onboarding, and be
-    willing to use our payroll feature once we bring it back.</p>
+    willing to use our <a href="/about/features/payroll">payroll</a> feature
+    once we bring it back.</p>
 
 
-    <h2>How do Payments Work?</h2>
+    <h2>Basic Terminology</h2>
 
-    <p>Gratipay implements a <a
-    href="https://en.wikipedia.org/wiki/Pay_what_you_want">voluntary</a> <a
-    href="https://en.wikipedia.org/wiki/Subscription_business_model">subscription</a>
-    <a href="https://en.wikipedia.org/wiki/Revenue_model">revenue model</a>. All
-    subscriptions are weekly.</p>
+    <p>Gratipay has &ldquo;~users&rdquo; and &ldquo;Teams,&rdquo; and every
+    Team has an &ldquo;owner,&rdquo; who is a ~user.</p>
 
+    <img src="entities.svg">
 
-    <h2>How does Payroll Work?</h2>
-
-    <p>To be honest ... it doesn't right now. Gratipay invented a system called
-    &ldquo;<a
-        href="https://medium.com/gratipay-blog/team-gittip-eba0a27825b8)">team
-        takes</a>&rdquo; (you'll see that we were named Gittip at the time) to
-        solve the <a
-            href="https://mako.cc/writing/funding_volunteers/funding_volunteers.html">problem
-        of compensating voluntary labor</a>. Essentially, in our solution,
-    everyone sets their own salary. Our first version of this system worked
-    great! Now we are <a
-    href="https://github.com/gratipay/gratipay.com/issues/3433">revamping</a>
-    it to better fit with existing labor law.</p>
-
+    <table class="table" style="margin: 0 auto;">
+        <tr>
+            <th>Speaking of ...&nbsp;&nbsp;&nbsp;</th>
+            <th>Subject</th>
+            <th>Verb</th>
+            <th>Object</th>
+        </tr>
+        <tr>
+            <td>payments</td>
+            <td>~alice</td>
+            <td><b>gives</b> to</td>
+            <td>The A Team.</td>
+        </tr>
+        <tr>
+            <td>payments</td>
+            <td>The A Team</td>
+            <td><b>receives</b> from</td>
+            <td>~alice.</td>
+        </tr>
+        <tr>
+            <td>payroll</td>
+            <td>The A Team</td>
+            <td><b>distributes</b> to</td>
+            <td>~bob.</td>
+        </tr>
+        <tr>
+            <td>payroll</td>
+            <td>~bob</td>
+            <td><b>takes</b> from</td>
+            <td>The A Team.</td>
+        </tr>
+    </table>
+    <br>
 
     <h2>How is Gratipay Funded?</h2>
 
