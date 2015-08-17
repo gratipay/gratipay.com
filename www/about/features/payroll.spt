@@ -1,4 +1,3 @@
-# encoding: utf8
 [---]
 title = _("Features")
 subhead = _("Payroll")
@@ -7,131 +6,71 @@ subhead = _("Payroll")
 {% block content %}
 <div class="col0">
 
-<div><img src="{{ website.asset('under-construction.png') }}"></div>
+    <p>We've invented a system called &ldquo;team takes</a>&rdquo; to solve the
+    <a
+    href="https://mako.cc/writing/funding_volunteers/funding_volunteers.html">problem
+    of compensating voluntary labor</a>. Essentially, in our solution, everyone
+    sets their own compensation. Our first version of this system worked great! Now
+    we are <a
+    href="https://github.com/gratipay/gratipay.com/issues/3433">revamping</a> it to
+    better fit with existing labor law. <a
+    href="https://medium.com/gratipay-blog">Stay tuned</a>! :-)</p>
 
-<a href="https://github.com/gratipay/gratipay.com/issues/3433">More info ...</a>
+    <a href="https://github.com/gratipay/gratipay.com/issues/3433">
+        <img src="{{ website.asset('under-construction.png') }}">
+    </a>
+
+    <p>This page documents how our system will work once we <a
+        href="https://github.com/gratipay/gratipay.com/issues/3433">bring it
+    back</a>. See our <a href="/about/">site overview</a> for definitions of
+    basic terms.</p>
 
 
-    <p>Gratipay invented a system called
-    &ldquo;<a
-        href="https://medium.com/gratipay-blog/team-gittip-eba0a27825b8)">team
-        takes</a>&rdquo; (you'll see that we were named Gittip at the time) to
-        solve the <a
-            href="https://mako.cc/writing/funding_volunteers/funding_volunteers.html">problem
-        of compensating voluntary labor</a>. Essentially, in our solution,
-    everyone sets their own salary. Our first version of this system worked
-    great! Now we are <a
-    href="https://github.com/gratipay/gratipay.com/issues/3433">revamping</a>
-    it to better fit with existing labor law.</p>
+    <h2>Take-What-You-Need</h2>
 
-    <p><a href="./payments">Read more</a>.</p>
+    <p>The essence of Gratipay's payroll system is that everyone sets their own
+    compensation, or &ldquo;take.&rdquo; Similar to <a
+    href="https://en.wikipedia.org/wiki/Pay_what_you_want">pay-what-you-want</a>
+    on the <a href="./payments">payments</a> side, Gratipay introduces
+    &ldquo;take-what-you-need&rdquo; on the payroll side.</p>
+
+    <p>The owner of a Team adds ~users as &ldquo;members,&rdquo; which sets
+    their weekly take to a penny, and can remove members, which is a safeguard
+    against abuse of the system. However, once a ~user is a member of a Team,
+    only that ~user can increase their take above a penny a week, or reduce it
+    once it's been increased (apart from the nuclear option of removing the
+    ~user).</p>
+
+    <p>Gratipay's payroll system optimizes compensation of voluntary labor. In
+    a voluntary organization, by definition, each member has control of their
+    labor inputs.  Gratipay payroll complements this with control over their
+    monetary compensation. By putting the individual in control of both
+    variables, Gratipay provides for the resolution of the individual
+    resentment and guilt that otherwise build up when mixing money with
+    voluntary labor. Feeling burned out? Take more money, or do less work. Not
+    pulling your weight? Take less money, or do more work.</p>
+
+    <p>A healthy Team is built on trust, and trusting each other with money is
+    a powerful cause and effect of mutual trust. Gratipay's payroll system is
+    not a panacea, however. The management of the Team should use payroll
+    imbalances as indicators of underlying social issues on the Team, and
+    address those issues at the social level. Once the social issues are
+    addressed, the payroll will naturally rebalance to reflect the new social
+    reality of the Team.</p>
 
 
-<p>On Gratipay you will find users, communities and teams. Teams are sets of
-people working towards a common goal. A team can represent an open-source
-software project, a small time indie magazine publisher, a set of YouTubers
-working together on something or generally any set of people collaborating on
-the same goal.</p>
+    <h2>What About Labor Law?</h2>
 
-<p>Teams on Gratipay have members and can receive funds. The team's members can
-make use of those funds to help support them in reaching their team's goals.</p>
-
-<h2>Creating a team</h2>
-
-<p>Team accounts are created just like regular accounts. Just login. Then go to
-your Account page and change from "Individual" to "Team".</p>
-
-<p>After you saved the change, the navigation section on the profile page should
-include a new "Members" button. This section will list all of the team's members
-and allows the team owner (i.e., whoever controls the team account) to add new
-members to the team.</p>
-
-<h2>Becoming a team member</h2>
-
-<p>After a team is first created, there are no team members. This is because a
-team is in essence the same as a normal account. Adding members is very easy and
-can be done by the team account owner:</p>
-
-<ol>
-  <li>Log into the team account.</li>
-  <li>Click the "Members" button on the Profile page.</li>
-  <li>Type the Gratipay username of the person you want to add in the box.</li>
-  <li>Click add.</li>
-</ol>
-
-<p>If you want to become a team member, contact the project that is represented
-by the team account. The first member of the team will usually also be the team
-account owner.</p>
-
-<h2>Removing team membership</h2>
-
-<p>People move, people change, life catches up to you when you least expect it.
-What ever the reason, you want to stop being the member of a team.</p>
-
-<p>Simply log into your account, go to the Members section of the team and
-change your take to zero. To be a team member, you have to have a minimum take
-of one penny ($ 0.01). Also see the <a href="#using-team-funds">Using team funds
-</a> section below for more details on team members takes and team funding.</p>
-
-<p>If you're the team account owner and someone has broken the team's trust or,
-for example, is no longer active, you can remove them from the team too. Simply
-click on their take entry for "This week" in the Members section of the team.
-</p>
-
-<p>Please note that no one, not even the team account owner, can change a
-member's take. The team account owner can only add or remove members.</p>
-
-<h2 id="using-team-funds">Using team funds</h2>
-
-<p>So your team is receiving funds through Gratipay. Now what? How are we going
-to split the funds?</p>
-
-<p>Gratipay uses the "Kids eat first" concept.</p>
-
-<p>The "Kids eat first" concept means that the last member added to the team is
-the first to take funds out each week. That means the first team member is the
-last to access funds. Any money left over after all members have taken their
-share stays in the team account until next week, or is deposited into a bank
-account if one is attached to the team account.</p>
-
-<p>All team members set their own “take” of the money.</p>
-
-<img src="{{ website.asset('teams/first-in-last-out.png') }}" />
-
-<p>The idea is that a healthy team is built on trust, and trusting each other
-with money is a powerful cause and effect of mutual trust. Team memberships and
-what a member's take is, is public information. This combined with the team's
-own agreements, means everyone involved in the team should have sufficient
-information to reach appropriate decisions together.</p>
-
-<p>However, it is important to understand that taking money is throttled. This
-allows new members to build trust. New members start with a penny ($ 0.01) per
-week.</p>
-
-<p>As a team member, you can double your take each week (and if you’re under $1
-you can increase to $1). If you set your new take higher than double the
-previous take, it will be clipped to double. Here’s the throttled growth curve:
-</p>
-
-<img src="{{ website.asset('teams/take-growth-curve.png') }}" class="col0" />
-
-<p>Note that your take does not increase automatically, and no-one else can
-change it for you. This means you will have to increase your take manually each
-week until you're happy. The above graph shows what happens if you increase your
-take as fast as you’re allowed.</p>
-
-<p>The idea is that, for a mature project with funds available, a new member
-will generally start to flatten out their growth curve between week 10 and 12.
-That gives a two to three month honeymoon period for existing team members and
-new members to get to know one another, and makes it easy to add new members at
-the first sign of interest as a way to encourage further participation without
-worrying that they’ll take all the money and run.</p>
-
-<p>A member can withdraw from a team by setting their take to zero. After that,
-they need to be added back by the team owner. The team owner can drop members
-from the team as well, in the case of broken trust or stagnant membership.
-However, even the team owner can’t otherwise set takes. Only a member can change
-their own take.</p>
+    <p>We ran Gratipay payroll as an experiment for a year or so, and it worked
+    great! Now we're working on how to properly implement it atop existing
+    labor law. Voluntary organizations such as open-source projects are often
+    loose and informal. Owning a Gratipay Team, by contrast, introduces duties
+    and responsibilities related to tax reporting and other labor law issues.
+    We'll bring back payroll once we've got firmer guidance for Team owners
+    about these issues. In the mean time, Team owners need to be prepared to
+    accept the burden associated with payroll once we bring it back: a somewhat
+    risky proposition, given that the burden is currently undetermined.
+    <i>Caveat emptor</i>.</p>
 
 </div>
 {% endblock %}
