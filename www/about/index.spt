@@ -6,8 +6,8 @@ title = _("About")
 <div class="col0">
 
     <p>Welcome to Gratipay! We provide voluntary <a
-        href="/about/features/payments">payments</a> and (eventually) <a
-    href="/about/features/payroll">payroll</a> for open work.</p>
+        href="/about/features/">payments</a> and (eventually) <a
+    href="/about/features/teams/">payroll</a> for open work.</p>
 
 
     <h2>What is Open Work?</h2>
@@ -16,7 +16,7 @@ title = _("About")
     easy for any individual to do your work for you without asking you first,
     and as a result to share in any revenue you generate. Basically you need to
     have a public issue tracker with documentation for self-onboarding, and be
-    willing to use our <a href="/about/features/payroll">payroll</a> feature
+    willing to use our <a href="/about/features/teams/">payroll</a> feature
     once we bring it back.</p>
 
 
