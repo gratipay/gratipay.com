@@ -5,8 +5,8 @@ title = _("About")
 {% block content %}
 <div class="col0">
 
-    <p>Welcome to Gratipay! We provide voluntary payments and (eventually)
-    payroll for open work.</p>
+    <p>Welcome to Gratipay! We provide voluntary payments and (eventually) payroll
+    for open work.</p>
 
     <h2>What is Open Work?</h2>
 
