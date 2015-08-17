@@ -8,6 +8,7 @@ title = _("About")
     <p>Welcome to Gratipay! We provide voluntary payments and (eventually) payroll
     for open work.</p>
 
+
     <h2>What is Open Work?</h2>
 
     <p>&ldquo;Open work&rdquo; means that your company or organization makes it
@@ -43,11 +44,9 @@ title = _("About")
 
     <h2>How is Gratipay Funded?</h2>
 
-    <p title="Gratipay does pass credit card processing fees to donors. See
-    Features for more information.">Gratipay is <a href="/Gratipay/">funded on
-        Gratipay</a>. We don't take a cut of payments (though we do pass
-        through processing fees at cost). See our <a
-            href="/about/pricing">pricing page</a> for more information.</p>
+    <p>Gratipay is <a href="/Gratipay/">funded on Gratipay</a>. We don't take a
+    cut of payments (though we do pass through processing fees at cost). See
+    our <a href="/about/pricing">pricing page</a> for more information.</p>
 
 </div>
 {% endblock %}
