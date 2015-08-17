@@ -15,17 +15,17 @@ subhead = _("Payments")
     overview</a> for basic definitions.</p>
 
 
-    <h2>How do I accept payments?</h2>
+    <h2>How do I use Gratipay to receive money?</h2>
 
     <p><a href="/new">Apply for a Team</a>. Your ~user account will be the
-    owner of the Team, and will receive 100% of the Team's revenue each week
+    owner of the Team, and will take 100% of the Team's revenue each week
     until we bring back <a href="./payroll">payroll</a>.</p>
 
 
     <h2>How do I give money?</h2>
 
     <p><a href="/explore/teams/">Browse</a> or <a href="/search">search</a> for
-    a Team to give to, and then look for the prompt. Here's <a
+    a Team you want to give to, and then look for the prompt. Here's <a
     href="/introtopython/">introtopython</a>, for example:</p>
 
     <div><a href="/introtopython/"><img src="giving-prompt-anon.png"></a></div>
