@@ -22,6 +22,17 @@ subhead = _("Payments")
     until we bring back <a href="./payroll">payroll</a>.</p>
 
 
+    <h2>How do I give money?</h2>
+
+    <p><a href="/explore/teams/">Browse</a> or <a href="/search">search</a> for
+    a Team to give to, and then look for the prompt. Here's <a
+    href="/introtopython/">introtopython</a>, for example:</p>
+
+    <div><a href="/introtopython/"><img src="giving-prompt-anon.png"></a></div>
+
+    <div><a href="/introtopython/"><img src="giving-prompt-auth.png"></a></div>
+
+
     <h2>When are payments run?</h2>
 
     <p>We process payments once a week, on Thursdays. You can <a
