@@ -1,40 +1,53 @@
 [---]
 title = _("About")
-example = website.db.one("""
-
-    SELECT username FROM participants
-     WHERE is_suspicious IS NOT true
-       AND (giving > 10 AND NOT anonymous_giving)
-        OR (receiving > 10 AND NOT anonymous_receiving)
-  ORDER BY random() LIMIT 1
-
-""")
 [---] text/html
 {% extends "templates/about-basic-info.html" %}
 {% block content %}
 <div class="col0">
 
-    <p>You've found Gratipay!</p>
+    <p>Welcome to Gratipay! We provide voluntary payments and (eventually)
+    payroll for open work.</p>
 
-    <p>Gratipay (formerly Gittip) is a way to give money every week to people
-    and teams you believe in.</p>
+    <h2>What is Open Work?</h2>
 
-    <p>Payments are <b>weekly</b>. Bills are recurring. Therefore, income from
-    Gratipay is recurring.</p>
+    <p>&ldquo;Open work&rdquo; means that your company or organization makes it
+    easy for any individual to do your work for you without asking you first,
+    and as a result to share in any revenue you generate. Basically you need to
+    have a public issue tracker and documentation for self-onboarding, and be
+    willing to use our payroll feature once we bring it back.</p>
 
-    <p>Payments come with <b>no strings attached</b>. You don't know exactly
-    who is paying you, and payments are capped at $100/wk to individuals and
-    $1,000/wk to organizations, to dampen undue influence.</p>
 
-    <p>Payments are <b>public</b>. By default, the <i>total</i> amount you give
-    and the <i>total</i> amount you receive is public (you can opt out of
-    sharing this info).</p>
+    <h2>How do Payments Work?</h2>
 
-    <p title="Gratipay does pass credit card processing fees to donors. See Features for more information.">
-    Gratipay does not take a cut of payments, recipients get the <b>full face
-    value</b>. Instead of taking a cut, Gratipay is funded by the voluntary
-    payments of our users to <a href="/Gratipay/">our own Gratipay account</a>.
-    See our <a href="/about/pricing">pricing page</a> for more information.</p>
+    <p>Gratipay implements a <a
+    href="https://en.wikipedia.org/wiki/Pay_what_you_want">voluntary</a> <a
+    href="https://en.wikipedia.org/wiki/Subscription_business_model">subscription</a>
+    <a href="https://en.wikipedia.org/wiki/Revenue_model">revenue model</a>. All
+    subscriptions are weekly.</p>
+
+
+    <h2>How does Payroll Work?</h2>
+
+    <p>To be honest ... it doesn't right now. Gratipay invented a system called
+    &ldquo;<a
+        href="https://medium.com/gratipay-blog/team-gittip-eba0a27825b8)">team
+        takes</a>&rdquo; (you'll see that we were named Gittip at the time) to
+        solve the <a
+            href="https://mako.cc/writing/funding_volunteers/funding_volunteers.html">problem
+        of compensating voluntary labor</a>. Essentially, in our solution,
+    everyone sets their own salary. Our first version of this system worked
+    great! Now we are <a
+    href="https://github.com/gratipay/gratipay.com/issues/3433">revamping</a>
+    it to better fit with existing labor law.</p>
+
+
+    <h2>How is Gratipay Funded?</h2>
+
+    <p title="Gratipay does pass credit card processing fees to donors. See
+    Features for more information.">Gratipay is <a href="/Gratipay/">funded on
+        Gratipay</a>. We don't take a cut of payments (though we do pass
+        through processing fees at cost). See our <a
+            href="/about/pricing">pricing page</a> for more information.</p>
 
 </div>
 {% endblock %}
