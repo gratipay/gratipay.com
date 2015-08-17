@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"Language-Team: Dutch (http://www.transifex.com/projects/p/gratipay/language/nl/)\n"
+"Language-Team: Dutch (http://www.transifex.com/gratipay/gratipay/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -309,9 +309,6 @@ msgstr "Geven"
 
 msgid "History"
 msgstr "Geschiedenis"
-
-msgid "Widgets"
-msgstr "Widgets"
 
 msgid "Settings"
 msgstr "Instellingen"
@@ -1287,6 +1284,9 @@ msgstr "als de aanrekening lukt"
 
 msgid "Close"
 msgstr "Sluit"
+
+msgid "Widgets"
+msgstr "Widgets"
 
 msgid "Button"
 msgstr "Knop"
