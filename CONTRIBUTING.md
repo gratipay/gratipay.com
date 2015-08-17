@@ -5,8 +5,7 @@ Don't be afraid that it's a dumb idea or a duplicate of another issue or an
 unwanted change or whatever. Maybe it is! We're still glad to have you! :^)
 
 **License.** Gratipay is [licensed under
-CC0](https://github.com/gratipay/gratipay.com/tree/master/COPYING), i.e.,
-it's public domain. 
+CC0](https://github.com/gratipay/gratipay.com/tree/master/COPYING).
 
 **More info.** If you want to really get involved, then check out our full
 documentation for contributors:
