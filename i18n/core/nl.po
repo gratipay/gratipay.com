@@ -152,8 +152,11 @@ msgstr "Kosten"
 msgid "Contact Us"
 msgstr "Contact"
 
-msgid "Teams"
-msgstr "Teams"
+msgid "Payments"
+msgstr ""
+
+msgid "Payroll"
+msgstr ""
 
 msgid "Do Not Track"
 msgstr "Do Not Track"
@@ -235,6 +238,9 @@ msgstr "Verwijderen"
 
 msgid "Edit"
 msgstr "Verander"
+
+msgid "Teams"
+msgstr "Teams"
 
 msgid "Team"
 msgstr "Team"

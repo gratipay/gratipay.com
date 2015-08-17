@@ -149,8 +149,11 @@ msgstr "Prezado"
 msgid "Contact Us"
 msgstr "Kontakti Nin"
 
-msgid "Teams"
-msgstr "Teamoj"
+msgid "Payments"
+msgstr ""
+
+msgid "Payroll"
+msgstr ""
 
 msgid "Do Not Track"
 msgstr "Ne Spuri (DNT)"
@@ -232,6 +235,9 @@ msgstr ""
 
 msgid "Edit"
 msgstr "Redakti"
+
+msgid "Teams"
+msgstr "Teamoj"
 
 msgid "Team"
 msgstr "Teama"

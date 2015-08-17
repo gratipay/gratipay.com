@@ -153,8 +153,11 @@ msgstr "Preços"
 msgid "Contact Us"
 msgstr "Contate-nos"
 
-msgid "Teams"
-msgstr "Times"
+msgid "Payments"
+msgstr ""
+
+msgid "Payroll"
+msgstr ""
 
 msgid "Do Not Track"
 msgstr "Não Rastreie"
@@ -236,6 +239,9 @@ msgstr ""
 
 msgid "Edit"
 msgstr "Editar"
+
+msgid "Teams"
+msgstr "Times"
 
 msgid "Team"
 msgstr "Equipe"
