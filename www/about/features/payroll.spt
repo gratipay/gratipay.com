@@ -27,14 +27,14 @@ subhead = _("Payroll")
     href="/about/">site overview</a> for definitions of basic terms.</p>
 
 
-    <h2 id="take-what-you-need">Take-What-You-Need
+    <h2 id="take-what-you-want">Take-What-You-Want
     </h2>
 
     <p>The essence of Gratipay's payroll system is that everyone sets their own
     compensation, or &ldquo;take.&rdquo; Similar to <a
     href="https://en.wikipedia.org/wiki/Pay_what_you_want">pay-what-you-want</a>
     on the <a href="./payments">payments</a> side, Gratipay introduces
-    &ldquo;take-what-you-need&rdquo; on the payroll side.</p>
+    &ldquo;take-what-you-want&rdquo; on the payroll side.</p>
 
     <p>The owner of a Team adds ~users as &ldquo;members,&rdquo; which sets
     their weekly take to a penny, and can remove members, which is a safeguard
