@@ -88,24 +88,26 @@ subhead = _("Payments")
     subscription.</p>
 
 
-    <h2 id="taxes">Is money I give through Gratipay tax-deductible?
-        <a class="permalink" title="permalink" href="#taxes">&#182;</a>
+    <h2 id="who">How do I see who is giving to my Team?
+        <a class="permalink" title="permalink" href="#receiving">&#182;</a>
     </h2>
 
-    <p>No.</p>
+    <p>You can't. Payments are anonymous, to avoid the problem where people
+    feel overly entitled to special treatment because they've given you a
+    little money.</p>
 
 
-    <h2 id="receiving-less">Why am I receiving less now than I was before?
+    <h2 id="receiving-less">Why is my Team receiving less now than it was before?
         <a class="permalink" title="permalink" href="#receiving-less">&#182;</a>
     </h2>
 
-    <p>If your income on Gratipay decreased, one of the following happened
-    (most likely first):</p>
+    <p>If your Team's income on Gratipay decreased, one of the following
+    happened (most likely first):</p>
 
     <ol>
-        <li>A ~user manually decreased or entirely removed their
-          payment to your Team, or their Gratipay account was closed. As
-          Gratipay payments are anonymous, we cannot tell you who.</li>
+        <li>A ~user decreased or entirely removed their payment to your Team,
+          or their Gratipay account was closed. As Gratipay payments are
+          anonymous, we cannot tell you who.</li>
 
         <li>A ~user's credit card failed when we tried to charge it.</li>
 
@@ -118,6 +120,13 @@ subhead = _("Payments")
          court order.</li>
 
     </ol>
+
+
+    <h2 id="taxes">Is money I give through Gratipay tax-deductible?
+        <a class="permalink" title="permalink" href="#taxes">&#182;</a>
+    </h2>
+
+    <p>No.</p>
 
 
     <h2 id="right-team">How do I know I am giving to the right Team?
