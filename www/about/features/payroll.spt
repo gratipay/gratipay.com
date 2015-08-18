@@ -111,8 +111,15 @@ subhead = _("Payroll")
     along</a> each week.</p>
 
 
-    <h2 id="payout-methods">What payout methods do you support?
-        <a class="permalink" title="permalink" href="#payout-methods">&#182;</a>
+    <h2 id="currencies">What currencies do you support?
+        <a class="permalink" title="permalink" href="#currencies">&#182;</a>
+    </h2>
+
+    <p>We pay out in USD.</p>
+
+
+    <h2 id="methods">What payout methods do you support?
+        <a class="permalink" title="permalink" href="#methods">&#182;</a>
     </h2>
 
     <p>We are able to deliver funds to Team owners via PayPal. In fact, you
@@ -121,8 +128,8 @@ subhead = _("Payroll")
     apply for a Team.</p>
 
 
-    <h2 id="payout-fees">What are the payout fees?
-        <a class="permalink" title="permalink" href="#payout-fees">&#182;</a>
+    <h2 id="fees">What are the payout fees?
+        <a class="permalink" title="permalink" href="#fees">&#182;</a>
     </h2>
 
     <p>PayPal charges a 2% fee, capped at a $1 fee for U.S. accounts, and $20
@@ -135,16 +142,16 @@ subhead = _("Payroll")
     take a cut.<p>
 
 
-    <h2 id="payout-minimum">What are the payout limits?
-        <a class="permalink" title="permalink" href="#payout-minimum">&#182;</a>
+    <h2 id="limits">What are the payout limits?
+        <a class="permalink" title="permalink" href="#minimum">&#182;</a>
     </h2>
 
     <p>Our minimum payout is 50&#162;. We pool your money for you week to week
     until you reach the minimum. There is no maximum.</p>
 
 
-    <h2 id="taxable">Do I have to pay taxes on the income I receive from Gratipay?
-        <a class="permalink" title="permalink" href="#taxable">&#182;</a>
+    <h2 id="taxes">Do I have to pay taxes on the income I receive from Gratipay?
+        <a class="permalink" title="permalink" href="#taxes">&#182;</a>
     </h2>
 
     <p>Yes.</p>
