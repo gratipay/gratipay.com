@@ -419,7 +419,7 @@ msgstr ""
 msgid "You must have a verified email address to apply for a new team."
 msgstr ""
 
-msgid "You must attach a PayPal account to apply for a new team."
+msgid "You must attach a bank account or PayPal to apply for a new team."
 msgstr ""
 
 msgid "Apply for a New Team"
