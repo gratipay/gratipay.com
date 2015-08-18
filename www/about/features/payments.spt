@@ -1,4 +1,3 @@
-# encoding: utf8
 [---]
 title = _("Features")
 subhead = _("Payments")
@@ -15,14 +14,18 @@ subhead = _("Payments")
     overview</a> for basic definitions.</p>
 
 
-    <h2>How do I use Gratipay to receive money?</h2>
+    <h2 id="how-to-receive">How do I use Gratipay to receive money?
+        <a class="permalink" title="permalink" href="#how-to-receive">&#182;</a>
+    </h2>
 
     <p><a href="/new">Apply for a Team</a>. Your ~user account will be the
     owner of the Team, and will take 100% of the Team's revenue each week
     until we bring back <a href="./payroll">payroll</a>.</p>
 
 
-    <h2>How do I give money?</h2>
+    <h2 id="how-to-give">How do I give money?
+        <a class="permalink" title="permalink" href="#how-to-give">&#182;</a>
+    </h2>
 
     <p><a href="/explore/teams/">Browse</a> or <a href="/search">search</a> for
     a Team you want to give to, and then look for the prompt. Here's <a
@@ -33,51 +36,95 @@ subhead = _("Payments")
     <div><a href="/introtopython/"><img src="giving-prompt-auth.png"></a></div>
 
 
-    <h2>When are payments run?</h2>
+    <h2 id="when">When are payments run?
+        <a class="permalink" title="permalink" href="#when">&#182;</a>
+    </h2>
 
     <p>We process payments once a week, on Thursdays. You can <a
     href="https://github.com/gratipay/inside.gratipay.com/issues?q=label%3APayday">watch
     along</a> each week.</p>
 
 
-    <h2>What currencies do you support?</h2>
+    <h2 id="currencies">What currencies do you support?
+        <a class="permalink" title="permalink" href="#currencies">&#182;</a>
+    </h2>
 
     <p>We charge and pay out in USD.</p>
 
 
-    <h2>What payment methods do you support?</h2>
+    <h2 id="payment-methods">What payment methods do you support?
+        <a class="permalink" title="permalink" href="#payment-methods">&#182;</a>
+    </h2>
 
     <p>We support the following brands of credit and debit card: Visa,
     MasterCard, Discover, JCB, and American Express.</p>
 
 
-    <h2>What are the payment fees and minimums?</h2>
+    <h2 id="payment-fees">What are the payment fees?
+        <a class="permalink" title="permalink" href="#payment-fees">&#182;</a>
+    </h2>
 
-    <p>Our credit card processor, Braintree, charges 2.9% + 30¢ per
+    <p>Our credit card processor, Braintree, charges 2.9% + 30&#162; per
     transaction. We upcharge ~users to cover this fee at cost, and Teams
     receive the face value of the payment. For example, we'll charge $20.91 to
     cover a $20 payment.</p>
 
     <p>Non-U.S. banks may assess foreign exchange and/or other fees.</p>
 
-    <p>Our minimum charge is $10. We charge in advance. For example, we'll
-    charge $10 up front to cover 10 weeks of a $1/wk subscription.</p>
+
+    <h2 id="payment-minimum">What are the payment limits?
+        <a class="permalink" title="permalink" href="#payment-minimum">&#182;</a>
+    </h2>
+
+    <p>The minimum a ~user can give any one Team is 1&#162; per week. The
+    maximum is $1,000 per week, and is intended to reduce income volatility by
+    reducing how dependent a Team is on a few sources of income.</p>
+
+    <p>Our minimum credit/debit card charge is $10. We charge in advance. For
+    example, we'll charge $10 up front to cover nine weeks of a $1/wk
+    subscription.</p>
 
 
-    <h2>What payout methods do you support?</h2>
+    <h2 id="tax-deductible">Is money I give through Gratipay tax-deductible?
+        <a class="permalink" title="permalink" href="#tax-deductible">&#182;</a>
+    </h2>
 
-    <p>We are able to deliver your funds to you via PayPal.</p>
+    <p>No.</p>
 
 
-    <h2>What are the payout fees and minimums?</h2>
+    <h2 id="receiving-less">Why am I receiving less now than I was before?
+        <a class="permalink" title="permalink" href="#receiving-less">&#182;</a>
+    </h2>
 
-    <p>PayPal charges a 2% fee, capped at a $1 fee for U.S. accounts, and $20
-    for non-U.S. accounts. We assess this fee at cost upon payout.</p>
+    <p>If your income on Gratipay decreased, one of the following happened
+    (most likely first):</p>
 
-    <p>There may be foreign exchange and/or other fees involved in withdrawing
-    funds from PayPal to your bank.</p>
+    <ol>
+        <li>A ~user manually decreased or entirely removed their
+          payment to your Team, or their Gratipay account was closed. As
+          Gratipay payments are anonymous, we cannot tell you who.</li>
 
-    <p>Our minimum payout is 50¢.</p>
+        <li>A ~user's credit card failed when we tried to charge it.</li>
+
+        <li>You have violated our <a
+         href="https://gratipay.com/about/terms/">terms of service</a>. We will
+         have contacted you before terminating your account.</li>
+
+        <li>We received a legal document ordering Gratipay to cease
+         processing payments for you. We will contact you unless prohibited by
+         court order.</li>
+
+    </ol>
+
+
+    <h2 id="right-team">How do I know I am giving to the right Team?
+        <a class="permalink" title="permalink" href="#right-team">&#182;</a>
+    </h2>
+
+    <p>You can follow links to Gratipay from a trusted source like a company
+    or organization's website. Also, Twitter verifies accounts in instances
+    where this is particularly relevant, so check their Twitter account
+    carefully if it's linked.</p>
 
 </div>
 {% endblock %}
