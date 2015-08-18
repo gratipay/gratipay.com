@@ -14,8 +14,8 @@ subhead = _("Payments")
     overview</a> for basic definitions.</p>
 
 
-    <h2 id="how-to-receive">How do I use Gratipay to receive money?
-        <a class="permalink" title="permalink" href="#how-to-receive">&#182;</a>
+    <h2 id="receiving">How do I use Gratipay to receive money?
+        <a class="permalink" title="permalink" href="#receiving">&#182;</a>
     </h2>
 
     <p><a href="/new">Apply for a Team</a>. Your ~user account will be the
@@ -23,8 +23,8 @@ subhead = _("Payments")
     until we bring back <a href="./payroll">payroll</a>.</p>
 
 
-    <h2 id="how-to-give">How do I give money?
-        <a class="permalink" title="permalink" href="#how-to-give">&#182;</a>
+    <h2 id="giving">How do I give money?
+        <a class="permalink" title="permalink" href="#giving">&#182;</a>
     </h2>
 
     <p><a href="/explore/teams/">Browse</a> or <a href="/search">search</a> for

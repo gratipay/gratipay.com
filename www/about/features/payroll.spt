@@ -76,8 +76,8 @@ subhead = _("Payroll")
                 it back</a>. <i>Caveat emptor</i>.</p>
 
 
-    <h2 id="how-to-distribute">How do I use Gratipay to distribute payroll?
-        <a class="permalink" title="permalink" href="#how-to-distribute">&#182;</a>
+    <h2 id="distributing">How do I use Gratipay to distribute payroll?
+        <a class="permalink" title="permalink" href="#distributing">&#182;</a>
     </h2>
 
     <p><a href="/new">Apply for a Team</a>. Your ~user account will be the
@@ -85,8 +85,8 @@ subhead = _("Payroll")
     href="./payments">revenue</a> each week.</p>
 
 
-    <h2 id="how-to-take">How do I take money from a Team?
-        <a class="permalink" title="permalink" href="#how-to-take">&#182;</a>
+    <h2 id="taking">How do I take money from a Team?
+        <a class="permalink" title="permalink" href="#taking">&#182;</a>
     </h2>
 
     <p>Right now, the only one who can take money from a Team is the Team's
@@ -94,7 +94,9 @@ subhead = _("Payroll")
     href="./payments">revenue</a> each week.</p>
 
 
-    <h2>How do I add people to my Team's payroll?</h2>
+    <h2 id="adding-members">How do I add members to my Team's payroll?
+        <a class="permalink" title="permalink" href="#adding-members">&#182;</a>
+    </h2>
 
     <p>You <a href="https://github.com/gratipay/gratipay.com/issues/3433">can't
     yet</a>.</p>
@@ -113,9 +115,10 @@ subhead = _("Payroll")
         <a class="permalink" title="permalink" href="#payout-methods">&#182;</a>
     </h2>
 
-    <p>We are able to deliver your funds to you via PayPal. You must connect a
-    PayPal account to your ~user account via <a href="/about/me/settings/">your
-    Gratipay settings page</a> before you can apply for a Team.</p>
+    <p>We are able to deliver funds to Team owners via PayPal. In fact, you
+    must connect a PayPal account to your ~user account via <a
+    href="/about/me/settings/">your Gratipay settings page</a> before you can
+    apply for a Team.</p>
 
 
     <h2 id="payout-fees">What are the payout fees?
