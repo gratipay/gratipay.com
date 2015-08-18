@@ -49,19 +49,19 @@ subhead = _("Payments")
         <a class="permalink" title="permalink" href="#currencies">&#182;</a>
     </h2>
 
-    <p>We charge and pay out in USD.</p>
+    <p>We charge in USD.</p>
 
 
-    <h2 id="payment-methods">What payment methods do you support?
-        <a class="permalink" title="permalink" href="#payment-methods">&#182;</a>
+    <h2 id="methods">What payment methods do you support?
+        <a class="permalink" title="permalink" href="#methods">&#182;</a>
     </h2>
 
     <p>We support the following brands of credit and debit card: Visa,
     MasterCard, Discover, JCB, and American Express.</p>
 
 
-    <h2 id="payment-fees">What are the payment fees?
-        <a class="permalink" title="permalink" href="#payment-fees">&#182;</a>
+    <h2 id="fees">What are the payment fees?
+        <a class="permalink" title="permalink" href="#fees">&#182;</a>
     </h2>
 
     <p>Our credit card processor, Braintree, charges 2.9% + 30&#162; per
@@ -75,8 +75,8 @@ subhead = _("Payments")
     take a cut.<p>
 
 
-    <h2 id="payment-minimum">What are the payment limits?
-        <a class="permalink" title="permalink" href="#payment-minimum">&#182;</a>
+    <h2 id="limits">What are the payment limits?
+        <a class="permalink" title="permalink" href="#limits">&#182;</a>
     </h2>
 
     <p>The minimum a ~user can give any one Team is 1&#162; per week. The
@@ -88,8 +88,8 @@ subhead = _("Payments")
     subscription.</p>
 
 
-    <h2 id="tax-deductible">Is money I give through Gratipay tax-deductible?
-        <a class="permalink" title="permalink" href="#tax-deductible">&#182;</a>
+    <h2 id="taxes">Is money I give through Gratipay tax-deductible?
+        <a class="permalink" title="permalink" href="#taxes">&#182;</a>
     </h2>
 
     <p>No.</p>
