@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"Language-Team: Portuguese (http://www.transifex.com/projects/p/gratipay/language/pt/)\n"
+"Language-Team: Portuguese (http://www.transifex.com/gratipay/gratipay/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -141,9 +141,6 @@ msgstr "Adicione um endereço de email"
 msgid "Overview"
 msgstr "Visão geral"
 
-msgid "FAQ"
-msgstr "Perguntas frequentes"
-
 msgid "Stats"
 msgstr "Estatísticas"
 
@@ -153,8 +150,11 @@ msgstr "Preços"
 msgid "Contact Us"
 msgstr "Contate-nos"
 
-msgid "Teams"
-msgstr "Times"
+msgid "Payments"
+msgstr ""
+
+msgid "Payroll"
+msgstr ""
 
 msgid "Do Not Track"
 msgstr "Não Rastreie"
@@ -237,6 +237,9 @@ msgstr ""
 msgid "Edit"
 msgstr "Editar"
 
+msgid "Teams"
+msgstr "Times"
+
 msgid "Team"
 msgstr "Equipe"
 
@@ -310,9 +313,6 @@ msgstr "Doando"
 
 msgid "History"
 msgstr "Histórico"
-
-msgid "Widgets"
-msgstr "Widgets"
 
 msgid "Settings"
 msgstr "Definições"
@@ -577,9 +577,6 @@ msgstr "Entre um usuário Gratipay"
 
 msgid "Add"
 msgstr "Adicionar"
-
-msgid "Frequently Asked Questions"
-msgstr "Perguntas Mais Frequentes"
 
 msgid "The Delpan Incident"
 msgstr "O incidente Delpan"
@@ -1288,6 +1285,9 @@ msgstr ""
 
 msgid "Close"
 msgstr "Fechar"
+
+msgid "Widgets"
+msgstr "Widgets"
 
 msgid "Button"
 msgstr "Botão"

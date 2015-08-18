@@ -6,34 +6,58 @@ subhead = _("Contact Us")
 {% block content %}
 <div class="col0">
 
-    <p>
-      <b>Gratipay, LLC</b><br />
-      716 Park Road<br />
-      Ambridge, PA 15003<br />
-      USA<br />
-      <br />
-      Email: <a href="mailto:support@gratipay.com">support@gratipay.com</a><br />
-      Twitter: <a href="https://twitter.com/Gratipay">@Gratipay</a><br />
-      Facebook: <a href="https://www.facebook.com/Gratipay">Gratipay</a><br />
-      Google+: <a href="https://plus.google.com/+Gratipay">+Gratipay</a><br />
-      Freenode: <a href="http://inside.gratipay.com/appendices/chat">#gratipay</a><br />
-      GitHub: <a href="https://github.com/gratipay/gratipay.com/issues/new">gratipay</a>
-    </p>
+    <h2>Communication Channels</h2>
 
-    <div class="clear"></div>
+    <table class="table">
+        <tr>
+            <th>Subject Matter</th>
+            <th>Channel</th>
+        </tr>
+        <tr>
+            <td>public feedback</td>
+            <td><a href="https://github.com/gratipay/gratipay.com/issues/new">GitHub</a></td>
+        </tr>
+        <tr>
+            <td>private feedback</td>
+            <td><a href="mailto:support@gratipay.com">support@gratipay.com</a></td>
+        </tr>
+        <tr>
+            <td><a href="https://gratipay.com/about/policies/terms-of-service">Terms of Service</a> violations</td>
+            <td><a href="mailto:support@gratipay.com">support@gratipay.com</a></td>
+        </tr>
+        <tr>
+            <td>security issues</td>
+            <td><a href="https://hackerone.com/gratipay">HackerOne</a></td>
+        </tr>
+        <tr>
+            <td>legal issues</td>
+            <td><a href="mailto:legal@gratipay.com">legal@gratipay.com</a></td>
+        </tr>
+    </table>
 
 
-    <h2>Security</h2>
+    <h2>Legal Structure &amp; Mailing Address</h2>
 
-    <p>Please see our <a href="./security">security page</a> to report
-    security-related issues.</p>
+    <p>Gratipay is an <a
+        href="http://blog.gittip.com/post/26350459746/the-first-open-company">open
+    company</a>, legally structured as a single-member LLC in the Commonwealth of
+    Pennsylvania. It was founded by <a href="/whit537/">Chad Whitacre</a> in 2002
+    as Zeta Web Design Company, renamed to Gittip, LLC in February, 2013, and
+    renamed to Gratipay, LLC in September, 2014. Our mailing address is:</p>
+
+    <blockquote>
+      Gratipay, LLC<br>
+      716 Park Road<br>
+      Ambridge, PA 15003<br>
+      USA
+    </blockquote>
 
 
     <a name="get-involved"></a>
     <h2>Help Build Gratipay</h2>
 
     <p>Want to help us with design, code, marketing, and management for Gratipay?
-    Learn how on <a href="http://inside.gratipay.com/">Inside Gratipay</a>!</p>
+    Learn how on <a href="http://inside.gratipay.com/">Inside Gratipay</a>.</p>
 
 </div>
 {% endblock %}

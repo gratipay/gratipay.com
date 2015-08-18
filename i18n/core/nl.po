@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"Language-Team: Dutch (http://www.transifex.com/projects/p/gratipay/language/nl/)\n"
+"Language-Team: Dutch (http://www.transifex.com/gratipay/gratipay/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -140,9 +140,6 @@ msgstr "Voeg een e-mailadres toe"
 msgid "Overview"
 msgstr "Overzicht"
 
-msgid "FAQ"
-msgstr "FAQ"
-
 msgid "Stats"
 msgstr "Stats"
 
@@ -152,8 +149,11 @@ msgstr "Kosten"
 msgid "Contact Us"
 msgstr "Contact"
 
-msgid "Teams"
-msgstr "Teams"
+msgid "Payments"
+msgstr ""
+
+msgid "Payroll"
+msgstr ""
 
 msgid "Do Not Track"
 msgstr "Do Not Track"
@@ -236,6 +236,9 @@ msgstr "Verwijderen"
 msgid "Edit"
 msgstr "Verander"
 
+msgid "Teams"
+msgstr "Teams"
+
 msgid "Team"
 msgstr "Team"
 
@@ -309,9 +312,6 @@ msgstr "Geven"
 
 msgid "History"
 msgstr "Geschiedenis"
-
-msgid "Widgets"
-msgstr "Widgets"
 
 msgid "Settings"
 msgstr "Instellingen"
@@ -576,9 +576,6 @@ msgstr "Geef een Gratipay gebruikersnaam op"
 
 msgid "Add"
 msgstr "Toevoegen"
-
-msgid "Frequently Asked Questions"
-msgstr "Veelgestelde vragen"
 
 msgid "The Delpan Incident"
 msgstr "Het Delpan incident"
@@ -1287,6 +1284,9 @@ msgstr "als de aanrekening lukt"
 
 msgid "Close"
 msgstr "Sluit"
+
+msgid "Widgets"
+msgstr "Widgets"
 
 msgid "Button"
 msgstr "Knop"
