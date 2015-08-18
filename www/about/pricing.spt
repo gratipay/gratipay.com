@@ -59,8 +59,8 @@ subhead = _("Pricing")
     payment processor. We don't see any of that ourselves.</p>
 
     <p>Read about processing fees for <a
-        href="/about/feautres/payments">payments</a> and <a
-        href="/about/features/payroll">payroll</a>.</p>
+        href="/about/features/payments#fees">payments</a> and <a
+        href="/about/features/payroll#fees">payroll</a>.</p>
 
 
     <h2>Where Do Payments Go?</h2>
