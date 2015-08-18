@@ -105,11 +105,6 @@ class TestPages(Harness):
     def test_about_charts(self):
         assert self.client.GxT('/about/charts.html').code == 302
 
-    def test_about_faq(self):
-        expected = "What is Gratipay?"
-        actual = self.client.GET('/about/faq.html').body.decode('utf8')
-        assert expected in actual
-
     def test_about_teams_redirect(self):
         assert self.client.GxT('/about/teams/').code == 302
         assert self.client.GxT('/about/features/teams/').code == 302
