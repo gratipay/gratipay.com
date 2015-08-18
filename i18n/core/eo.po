@@ -137,9 +137,6 @@ msgstr "Aldoni retpoŝtadreson"
 msgid "Overview"
 msgstr "Superrigardo"
 
-msgid "FAQ"
-msgstr "Respondaro"
-
 msgid "Stats"
 msgstr "Statistikoj"
 
@@ -576,9 +573,6 @@ msgstr "Tajpu Gratipay-an uzantnomon"
 
 msgid "Add"
 msgstr "Aldoni"
-
-msgid "Frequently Asked Questions"
-msgstr "Oftaj demandoj"
 
 msgid "The Delpan Incident"
 msgstr "La okazintaĵo de Delpan"

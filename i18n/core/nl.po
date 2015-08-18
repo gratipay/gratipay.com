@@ -140,9 +140,6 @@ msgstr "Voeg een e-mailadres toe"
 msgid "Overview"
 msgstr "Overzicht"
 
-msgid "FAQ"
-msgstr "FAQ"
-
 msgid "Stats"
 msgstr "Stats"
 
@@ -579,9 +576,6 @@ msgstr "Geef een Gratipay gebruikersnaam op"
 
 msgid "Add"
 msgstr "Toevoegen"
-
-msgid "Frequently Asked Questions"
-msgstr "Veelgestelde vragen"
 
 msgid "The Delpan Incident"
 msgstr "Het Delpan incident"

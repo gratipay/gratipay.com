@@ -142,9 +142,6 @@ msgstr "Añadir un correo electrónico"
 msgid "Overview"
 msgstr ""
 
-msgid "FAQ"
-msgstr "Preguntas Frecuentes"
-
 msgid "Stats"
 msgstr "Estadísticas"
 
@@ -581,9 +578,6 @@ msgstr "Introduce un nombre de usuario Gratipay"
 
 msgid "Add"
 msgstr "Añadir"
-
-msgid "Frequently Asked Questions"
-msgstr ""
 
 msgid "The Delpan Incident"
 msgstr ""
