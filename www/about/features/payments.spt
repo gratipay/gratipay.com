@@ -89,11 +89,11 @@ subhead = _("Payments")
 
 
     <h2 id="who">How do I see who is giving to my Team?
-        <a class="permalink" title="permalink" href="#receiving">&#182;</a>
+        <a class="permalink" title="permalink" href="#who">&#182;</a>
     </h2>
 
     <p>You can't. Payments are anonymous, to avoid the problem where people
-    feel overly entitled to special treatment because they've given you a
+    feel overly entitled to special treatment because they've given your Team a
     little money.</p>
 
 
