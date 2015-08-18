@@ -131,6 +131,9 @@ subhead = _("Payroll")
     <p>There may be foreign exchange and/or other fees involved in withdrawing
     funds from PayPal to your bank.</p>
 
+    <p>Gratipay itself is <a href="/Gratipay/">funded on Gratipay</a>. We don't
+    take a cut.<p>
+
 
     <h2 id="payout-minimum">What are the payout limits?
         <a class="permalink" title="permalink" href="#payout-minimum">&#182;</a>
