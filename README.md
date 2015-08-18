@@ -3,7 +3,8 @@
 [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
 [![Open Bounties](https://api.bountysource.com/badge/team?team_id=423&style=bounties_received)](https://www.bountysource.com/teams/gratipay/issues)
 
-[Gratipay](http://gratipay.com) is a weekly gift exchange, helping to create a culture of generosity.
+[Gratipay](http://gratipay.com) provides payments and payroll for open work,
+in order to cultivate an economy of gratitude, generosity, and love.
 If you'd like to learn more, check out <https://gratipay.com/about>.
 If you'd like to contribute to Gratipay, check out <http://inside.gratipay.com>.
 

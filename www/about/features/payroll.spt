@@ -6,6 +6,7 @@ subhead = _("Payroll")
 {% block content %}
 <div class="col0">
 
+
     <p>We've invented a system called &ldquo;team takes</a>&rdquo; to solve the
     <a
     href="https://mako.cc/writing/funding_volunteers/funding_volunteers.html">problem
@@ -22,11 +23,12 @@ subhead = _("Payroll")
 
     <p>This page documents how our system will work once we <a
         href="https://github.com/gratipay/gratipay.com/issues/3433">bring it
-    back</a>. See our <a href="/about/">site overview</a> for definitions of
-    basic terms.</p>
+    back</a>, and the limited sense it which it works today. See our <a
+    href="/about/">site overview</a> for definitions of basic terms.</p>
 
 
-    <h2>Take-What-You-Need</h2>
+    <h2 id="take-what-you-need">Take-What-You-Need
+    </h2>
 
     <p>The essence of Gratipay's payroll system is that everyone sets their own
     compensation, or &ldquo;take.&rdquo; Similar to <a
@@ -42,36 +44,110 @@ subhead = _("Payroll")
     ~user).</p>
 
     <p>Gratipay's payroll system optimizes compensation of voluntary labor. In
-    a voluntary organization, by definition, each member has control of their
-    labor inputs.  Gratipay payroll complements this with control over their
-    monetary compensation. By giving the individual control over *both*
-    variables, Gratipay provides for the resolution of the individual
-    resentment and guilt that otherwise build up when mixing money with
-    voluntary labor. Feeling burned out? Take more money, or do less work. Not
-    pulling your weight? Take less money, or do more work.</p>
+    a voluntary organization&mdash;by definition&mdash;each member has control
+    of their labor inputs. Gratipay payroll complements this with control over
+    their monetary withdrawals. By giving the individual control over
+    <i>both</i> variables, Gratipay provides for the resolution of the
+    individual resentment and guilt that otherwise build up when mixing money
+    with voluntary labor. Feeling burned out? Take more money, or do less work.
+    Not pulling your weight? Take less money, or do more work.</p>
 
     <p>A healthy Team is built on trust, and trusting each other with money is
     a powerful cause and effect of mutual trust. Gratipay's payroll system is
-    not a panacea, however. The management of the Team should use payroll
-    imbalances as indicators of underlying social issues on the Team, and
-    address those issues at the social level. Once the social issues are
-    addressed, the payroll will naturally rebalance to reflect the new social
-    reality of the Team.</p>
+    not a panacea, however. Team managers should view payroll imbalances as
+    vital indicators of underlying social issues on the Team, and address those
+    issues at the social level. Once the social issues are addressed, the
+    payroll will naturally rebalance to reflect the new social reality of the
+    Team.</p>
 
 
-    <h2>What About Labor Law?</h2>
+    <h2 id="labor-law">What About Labor Law?
+        <a class="permalink" title="permalink" href="#labor-law">&#182;</a>
+    </h2>
 
-    <p>We ran Gratipay payroll as an experiment for a year or so, and it worked
-    great! Now we're working on how to properly implement it atop existing
-    labor law. Voluntary organizations such as open-source projects are often
-    loose and informal. Owning a Gratipay Team, by contrast, introduces duties
-    and responsibilities related to tax reporting and other labor law issues.
-    We'll bring back payroll once we've got firmer guidance for Team owners
-    about these issues. In the mean time, Team owners need to be prepared to
-    accept the burden associated with payroll once we bring it back: a somewhat
-    risky proposition, given that the burden is <a
-    href="https://github.com/gratipay/gratipay.com/issues/3433">currently
-    undetermined</a>. <i>Caveat emptor</i>.</p>
+    <p>Voluntary organizations such as open-source projects are often only
+    loosely organized. Owning a Gratipay Team, by contrast, introduces
+    weightier duties and responsibilities related to taxes and other labor
+    laws. We'll bring back payroll once we've got firmer guidance for Team
+    owners about these issues. In the mean time, Team owners signing up now
+        should be prepared to accept the burden associated with payroll once
+            we do <a
+                href="https://github.com/gratipay/gratipay.com/issues/3433">bring
+                it back</a>. <i>Caveat emptor</i>.</p>
+
+
+    <h2 id="distributing">How do I use Gratipay to distribute payroll?
+        <a class="permalink" title="permalink" href="#distributing">&#182;</a>
+    </h2>
+
+    <p><a href="/new">Apply for a Team</a>. Your ~user account will be the
+    owner of the Team, and will receive 100% of the Team's <a
+    href="./payments">revenue</a> each week.</p>
+
+
+    <h2 id="taking">How do I take money from a Team?
+        <a class="permalink" title="permalink" href="#taking">&#182;</a>
+    </h2>
+
+    <p>Right now, the only one who can take money from a Team is the Team's
+    owner. The Team's owner takes 100% of the Team's <a
+    href="./payments">revenue</a> each week.</p>
+
+
+    <h2 id="adding-members">How do I add members to my Team's payroll?
+        <a class="permalink" title="permalink" href="#adding-members">&#182;</a>
+    </h2>
+
+    <p>You <a href="https://github.com/gratipay/gratipay.com/issues/3433">can't
+    yet</a>.</p>
+
+
+    <h2 id="when">When is payroll run?
+        <a class="permalink" title="permalink" href="#when">&#182;</a>
+    </h2>
+
+    <p>We process payroll once a week, on Thursdays. You can <a
+    href="https://github.com/gratipay/inside.gratipay.com/issues?q=label%3APayday">watch
+    along</a> each week.</p>
+
+
+    <h2 id="payout-methods">What payout methods do you support?
+        <a class="permalink" title="permalink" href="#payout-methods">&#182;</a>
+    </h2>
+
+    <p>We are able to deliver funds to Team owners via PayPal. In fact, you
+    must connect a PayPal account to your ~user account via <a
+    href="/about/me/settings/">your Gratipay settings page</a> before you can
+    apply for a Team.</p>
+
+
+    <h2 id="payout-fees">What are the payout fees?
+        <a class="permalink" title="permalink" href="#payout-fees">&#182;</a>
+    </h2>
+
+    <p>PayPal charges a 2% fee, capped at a $1 fee for U.S. accounts, and $20
+    for non-U.S. accounts. We assess this fee at cost upon payout.</p>
+
+    <p>There may be foreign exchange and/or other fees involved in withdrawing
+    funds from PayPal to your bank.</p>
+
+    <p>Gratipay itself is <a href="/Gratipay/">funded on Gratipay</a>. We don't
+    take a cut.<p>
+
+
+    <h2 id="payout-minimum">What are the payout limits?
+        <a class="permalink" title="permalink" href="#payout-minimum">&#182;</a>
+    </h2>
+
+    <p>Our minimum payout is 50&#162;. We pool your money for you week to week
+    until you reach the minimum. There is no maximum.</p>
+
+
+    <h2 id="taxable">Do I have to pay taxes on the income I receive from Gratipay?
+        <a class="permalink" title="permalink" href="#taxable">&#182;</a>
+    </h2>
+
+    <p>Yes.</p>
 
 </div>
 {% endblock %}

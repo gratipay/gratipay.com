@@ -46,14 +46,14 @@ dt:target, dt:target + dd {
     0% { background-color: rgba(yellow,.3); }
     100% { background-color: rgba(yellow,0); }
 }
-dt .permlink {
+
+h2 .permalink {
     visibility: hidden;
-
 }
-dt:hover .permlink {
+h2:hover .permalink {
     visibility: visible;
-
 }
+
 pre {
     font: 11px/13px monospace;
     margin: 0 0 11px 11px;
