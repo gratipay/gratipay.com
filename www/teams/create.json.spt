@@ -10,6 +10,8 @@ field_names = {
     'name': 'Team Name',
     'homepage': 'Homepage',
     'product_or_service': 'Product or Service',
+    'todo_url': 'Issue Tracker URL',
+    'onboarding_url': 'Self-Onboarding Documentation URL',
 }
 
 if user.ANON:

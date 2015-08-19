@@ -170,10 +170,10 @@ class Harness(unittest.TestCase):
 
         team = self.db.one("""
             INSERT INTO teams
-                        (slug, slug_lower, name, homepage, product_or_service,
-                         owner, is_approved)
+                        (slug, slug_lower, name, homepage, product_or_service, todo_url,
+                         onboarding_url, owner, is_approved)
                  VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s, %(product_or_service)s,
-                         %(owner)s, %(is_approved)s)
+                         %(todo_url)s, %(onboarding_url)s, %(owner)s, %(is_approved)s)
               RETURNING teams.*::teams
         """, _kw)
 

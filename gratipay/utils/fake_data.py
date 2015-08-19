@@ -86,13 +86,16 @@ def fake_team(db, teamowner):
     try:
         #using community.slugize
         teamslug = community.slugize(teamslugname)
+        homepage = 'http://www.example.org/' + fake_text_id(3)
         _fake_thing( db
                    , "teams"
                    , slug=teamslug
                    , slug_lower=teamslug.lower()
                    , name=teamname
-                   , homepage='www.example.org/' + fake_text_id(3)
+                   , homepage=homepage
                    , product_or_service=random.sample(productorservice,1)[0]
+                   , todo_url=homepage + '/tickets'
+                   , onboarding_url=homepage + '/contributing'
                    , owner=teamowner.username
                    , is_approved=random.sample(isapproved,1)[0]
                    , receiving=0.1
