@@ -30,8 +30,8 @@ subhead = _("Payroll")
     <h2 id="take-what-you-want">Take-What-You-Want
     </h2>
 
-    <p>The essence of Gratipay's payroll system is that everyone sets their own
-    compensation, or &ldquo;take.&rdquo; Similar to <a
+    <p>The essence of Gratipay's payroll system is that everyone publicly sets
+    their own compensation, or &ldquo;take.&rdquo; Similar to <a
     href="https://en.wikipedia.org/wiki/Pay_what_you_want">pay-what-you-want</a>
     on the <a href="./payments">payments</a> side, Gratipay introduces
     &ldquo;take-what-you-want&rdquo; on the payroll side.</p>
