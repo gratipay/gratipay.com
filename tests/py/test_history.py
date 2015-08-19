@@ -3,7 +3,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from datetime import datetime
 from decimal import Decimal as D
 import json
-import time
 
 from mock import patch
 
