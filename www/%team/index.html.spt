@@ -46,21 +46,6 @@ title = name = team.name
     <div class="statement profile-statement">
         {{ markdown.render(team.product_or_service) }}
     </div>
-
-    <h2>{{ _("Revenue Model") }}</h2>
-    <div class="statement profile-statement">
-        {{ markdown.render(team.revenue_model) }}
-    </div>
-
-    <h2>{{ _("How to Get Involved") }}</h2>
-    <div class="statement profile-statement">
-        {{ markdown.render(team.getting_involved) }}
-    </div>
-
-    <h2>{{ _("How Revenue Is Shared") }}</h2>
-    <div class="statement profile-statement">
-        {{ markdown.render(team.getting_paid) }}
-    </div>
 </div>
 {% endblock %}
 

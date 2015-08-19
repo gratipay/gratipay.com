@@ -65,18 +65,6 @@ title = _("Apply for a New Team")
     <p>{{ _("What product or service does your Team provide?") }}</p>
     <textarea name="product_or_service" required></textarea>
 
-    <label><h2>{{ _("Revenue Model") }}</h2></label>
-    <p>{{ _("How do you prompt your customers to financially support your Team's work?") }}</p>
-    <textarea name="revenue_model" required></textarea>
-
-    <label><h2>{{ _("Contributing") }}</h2></label>
-    <p>{{ _("How can other people get involved with your Team?") }}</p>
-    <textarea name="getting_involved" required></textarea>
-
-    <label><h2>{{ _("Paying Contributors") }}</h2></label>
-    <p>{{ _("How do you share revenue with contributors?") }}</p>
-    <textarea name="getting_paid" required></textarea>
-
     <br>
     <br>
     <input type="checkbox" value="true" name="agree_terms" id="agree_terms">

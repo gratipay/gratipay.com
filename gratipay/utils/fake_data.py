@@ -93,8 +93,6 @@ def fake_team(db, teamowner):
                    , name=teamname
                    , homepage='www.example.org/' + fake_text_id(3)
                    , product_or_service=random.sample(productorservice,1)[0]
-                   , getting_involved='build'
-                   , getting_paid='paypal'
                    , owner=teamowner.username
                    , is_approved=random.sample(isapproved,1)[0]
                    , receiving=0.1

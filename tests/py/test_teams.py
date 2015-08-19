@@ -13,9 +13,6 @@ class TestTeams(Harness):
         'homepage': 'http://gratipay.com/',
         'agree_terms': 'true',
         'product_or_service': 'We make widgets.',
-        'revenue_model': 'People pay us.',
-        'getting_involved': 'People do stuff.',
-        'getting_paid': 'We pay people.'
     }
 
     def post_new(self, data, auth_as='alice', expected=200):
@@ -53,9 +50,6 @@ class TestTeams(Harness):
         assert team.name == 'Gratiteam'
         assert team.homepage == 'http://gratipay.com/'
         assert team.product_or_service == 'We make widgets.'
-        assert team.revenue_model == 'People pay us.'
-        assert team.getting_involved == 'People do stuff.'
-        assert team.getting_paid == 'We pay people.'
 
     def test_401_for_anon_creating_new_team(self):
         self.post_new(self.valid_data, auth_as=None, expected=401)
