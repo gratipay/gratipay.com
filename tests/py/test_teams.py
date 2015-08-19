@@ -71,7 +71,7 @@ class TestTeams(Harness):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
         r = self.post_new(dict(self.valid_data), expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
-        assert "You must attach a bank account or PayPal to apply for a new team." in r.body
+        assert "You must attach a PayPal account to apply for a new team." in r.body
 
     def test_error_message_for_terms(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
