@@ -84,12 +84,6 @@ UPDATE payday_payment_instructions ppi
  WHERE ppi.participant = s.participant
    AND ppi.team = s.team;
 
-DROP TABLE IF EXISTS participants_payments_uncharged;
-CREATE TABLE participants_payments_uncharged AS
-    SELECT id, giving_due
-      FROM payday_payment_instructions
-     WHERE 1 = 2;
-
 ALTER TABLE payday_participants ADD COLUMN giving_today numeric(35,2);
 UPDATE payday_participants pp
    SET giving_today = COALESCE((
