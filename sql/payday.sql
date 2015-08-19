@@ -79,14 +79,14 @@ ALTER TABLE payday_payment_instructions ADD COLUMN is_funded boolean;
 UPDATE payday_payment_instructions ppi
    SET giving_due = s.giving_due
   FROM (SELECT participant, team, SUM(giving_due) AS giving_due
-       FROM payment_instructions 
+       FROM payment_instructions
        GROUP BY participant, team) s
  WHERE ppi.participant = s.participant
    AND ppi.team = s.team;
 
 DROP TABLE IF EXISTS participants_payments_uncharged;
 CREATE TABLE participants_payments_uncharged AS
-    SELECT id, giving_due 
+    SELECT id, giving_due
       FROM payday_payment_instructions
      WHERE 1 = 2;
 
@@ -143,7 +143,7 @@ RETURNS void AS $$
            SET giving_due = 0
          WHERE participant = $1
            AND team = $2
-           AND giving_due > 0; 
+           AND giving_due > 0;
         INSERT INTO payday_payments
                     (participant, team, amount, direction)
              VALUES ( ( SELECT p.username

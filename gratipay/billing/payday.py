@@ -239,7 +239,6 @@ class Payday(object):
                     holds[p.id] = hold
         threaded_map(f, participants)
 
-
         # Update the values of card_hold_ok in our temporary table
         if not holds:
             return {}
