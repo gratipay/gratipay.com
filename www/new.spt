@@ -6,13 +6,13 @@ from gratipay.models.team import Team
 request.allow('GET')
 
 if user.ANON:
-    raise Response(401, _("You must sign in to apply for a new team."))
+    raise Response(401, _("You must sign in to apply for a new Team."))
 
 if user.participant.email_address is None:
-    raise Response(400, _("You must have a verified email address to apply for a new team."))
+    raise Response(400, _("You must have a verified email address to apply for a new Team."))
 
 if not user.participant.has_payout_route:
-    raise Response(400, _("You must attach a PayPal account to apply for a new team."))
+    raise Response(400, _("You must attach a PayPal account to apply for a new Team."))
 
 
 # We'll actually migrate *all* non-zero tips from non-closed, non-suspicious
@@ -62,15 +62,15 @@ title = _("Apply for a New Team")
     <input type="text" name="homepage" required />
 
     <label><h2>{{ _("Product or Service") }}</h2></label>
-    <p>{{ _("What product or service does your team provide?") }}</p>
+    <p>{{ _("What product or service does your Team provide?") }}</p>
     <textarea name="product_or_service" required></textarea>
 
     <label><h2>{{ _("Revenue Model") }}</h2></label>
-    <p>{{ _("How do you prompt your customers to financially support your team's work?") }}</p>
+    <p>{{ _("How do you prompt your customers to financially support your Team's work?") }}</p>
     <textarea name="revenue_model" required></textarea>
 
     <label><h2>{{ _("Contributing") }}</h2></label>
-    <p>{{ _("How can other people get involved with your team?") }}</p>
+    <p>{{ _("How can other people get involved with your Team?") }}</p>
     <textarea name="getting_involved" required></textarea>
 
     <label><h2>{{ _("Paying Contributors") }}</h2></label>
@@ -91,7 +91,7 @@ title = _("Apply for a New Team")
 
     {% if ntips %}
     <p>The {{ ntips }} weekly payments totalling ${{ receiving }} that
-    previously were directed at you will be <b>redirected to your new team</b>,
+    previously were directed at you will be <b>redirected to your new Team</b>,
     pending approval of your application.</p>
     {% endif %}
 
