@@ -7,14 +7,14 @@ subhead = _("Payroll")
 <div class="col0">
 
 
-    <p>We've invented a system called &ldquo;team takes</a>&rdquo; to solve the
+    <p>We've invented a system called &ldquo;Team takes</a>&rdquo; to solve the
     <a
     href="https://mako.cc/writing/funding_volunteers/funding_volunteers.html">problem
     of compensating voluntary labor</a>. Essentially, in our solution, everyone
     sets their own compensation. Our first version of this system worked great! Now
     we are <a
     href="https://github.com/gratipay/gratipay.com/issues/3433">revamping</a> it to
-    better fit with existing labor law. <a
+    better fit with existing tax and labor law. <a
     href="https://medium.com/gratipay-blog">Stay tuned</a>! :-)</p>
 
     <a href="https://github.com/gratipay/gratipay.com/issues/3433">
@@ -30,8 +30,8 @@ subhead = _("Payroll")
     <h2 id="take-what-you-want">Take-What-You-Want
     </h2>
 
-    <p>The essence of Gratipay's payroll system is that everyone sets their own
-    compensation, or &ldquo;take.&rdquo; Similar to <a
+    <p>The essence of Gratipay's payroll system is that everyone publicly sets
+    their own compensation, or &ldquo;take.&rdquo; Similar to <a
     href="https://en.wikipedia.org/wiki/Pay_what_you_want">pay-what-you-want</a>
     on the <a href="./payments">payments</a> side, Gratipay introduces
     &ldquo;take-what-you-want&rdquo; on the payroll side.</p>
@@ -52,28 +52,55 @@ subhead = _("Payroll")
     with voluntary labor. Feeling burned out? Take more money, or do less work.
     Not pulling your weight? Take less money, or do more work.</p>
 
-    <p>A healthy Team is built on trust, and trusting each other with money is
-    a powerful cause and effect of mutual trust. Gratipay's payroll system is
-    not a panacea, however. Team managers should view payroll imbalances as
-    vital indicators of underlying social issues on the Team, and address those
-    issues at the social level. Once the social issues are addressed, the
-    payroll will naturally rebalance to reflect the new social reality of the
-    Team.</p>
+    <p>It is normal for payroll to gradually get out of balance over time, for
+    some people to end up taking too much and others too little. Team managers
+    should view payroll imbalances as vital indicators of underlying social
+    issues on the Team, and address those issues at the social level. Once the
+    social issues are addressed, the payroll will naturally rebalance to
+    reflect the new social reality of the Team. A healthy Team is built on
+    trust, and trusting each other with money is a powerful cause and effect of
+    mutual trust.</p>
 
 
-    <h2 id="labor-law">What About Labor Law?
-        <a class="permalink" title="permalink" href="#labor-law">&#182;</a>
+    <h2 id="law">What About Tax and Labor Law?
+        <a class="permalink" title="permalink" href="#law">&#182;</a>
     </h2>
 
     <p>Voluntary organizations such as open-source projects are often only
     loosely organized. Owning a Gratipay Team, by contrast, introduces
-    weightier duties and responsibilities related to taxes and other labor
-    laws. We'll bring back payroll once we've got firmer guidance for Team
-    owners about these issues. In the mean time, Team owners signing up now
-        should be prepared to accept the burden associated with payroll once
-            we do <a
-                href="https://github.com/gratipay/gratipay.com/issues/3433">bring
-                it back</a>. <i>Caveat emptor</i>.</p>
+    weightier duties and responsibilities governed by tax and labor law. The
+    challenge we face is building out a system that is robust enough to be
+    legal, and simple enough to be accessible.</p>
+
+    <p>Team owners signing up now should be prepared to accept the
+    yet-to-be-fully-determined burden associated with payroll once we do <a
+    href="https://github.com/gratipay/gratipay.com/issues/3433">bring it
+    back</a>. <i>Caveat emptor</i>.</p>
+
+
+    <h2 id="not-enough-revenue">What if my Team doesn't have any revenue to share?
+        <a class="permalink" title="permalink" href="#not-enough-revenue">&#182;</a>
+    </h2>
+
+    <p>Gratipay's payroll is about sharing out of your Team's <i>abundance</i>,
+    so it doesn't apply if your Team has no revenue available to share with
+    contributors. Every Team when it's just starting out will take some time to
+    generate enough revenue to compensate people for their labor. Some Teams
+    may take especially long, for example, a coworking space where the money
+    primarily goes towards rent and other expenses. A good rule of thumb is
+    that if anyone <i>is</i> taking payroll for their labor, then anyone else
+    <i>may</i> take payroll for their labor.</p>
+
+
+    <h2 id="take-order">Who takes first?
+        <a class="permalink" title="permalink" href="#take-order">&#182;</a>
+    </h2>
+
+    <p>In our original experiment, the last person added to a Team was the
+    first person to take payroll each week (and take growth was throttled so
+    they couldn't take all the money and run). We'll probably add more
+    flexibility here so that company founders can be guaranteed they'll get
+    their take before sharing with others.</p>
 
 
     <h2 id="distributing">How do I use Gratipay to distribute payroll?
