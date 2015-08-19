@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from datetime import datetime
 from decimal import Decimal as D
 import json
+import time
 
 from mock import patch
 
@@ -42,7 +43,7 @@ class TestHistory(BillingHarness):
         Payday().start().run()
 
         Enterprise = self.make_team(is_approved=True)
-        self.obama.set_payment_instruction(Enterprise, '6.00')  # under $10!
+        self.obama.set_payment_instruction(Enterprise, '10.00')  # >= MINIMUM_CHARGE!
         for i in range(2):
             with patch.object(Payday, 'fetch_card_holds') as fch:
                 fch.return_value = {}
@@ -57,11 +58,12 @@ class TestHistory(BillingHarness):
                    SET timestamp = "timestamp" - interval '1 week';
             """)
 
+
         obama = Participant.from_username('obama')
         picard = Participant.from_username('picard')
 
-        assert obama.balance == D('6.82')
-        assert picard.balance == D('12.00')
+        assert obama.balance == D('0.00')
+        assert picard.balance == D('20.00')
 
         Payday().start()  # to demonstrate that we ignore any open payday?
 
@@ -69,15 +71,15 @@ class TestHistory(BillingHarness):
         assert len(events) == 7
         assert events[0]['kind'] == 'totals'
         assert events[0]['given'] == 0
-        assert events[0]['received'] == 12
+        assert events[0]['received'] == 20
         assert events[1]['kind'] == 'day-open'
         assert events[1]['payday_number'] == 2
-        assert events[2]['balance'] == 12
+        assert events[2]['balance'] == 20
         assert events[-1]['kind'] == 'day-close'
         assert events[-1]['balance'] == 0
 
         events = list(iter_payday_events(self.db, obama))
-        assert events[0]['given'] == 12
+        assert events[0]['given'] == 20
         assert len(events) == 11
 
     def test_iter_payday_events_with_failed_exchanges(self):

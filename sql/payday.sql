@@ -86,16 +86,16 @@ UPDATE payday_payment_instructions ppi
 
 DROP TABLE IF EXISTS participants_payments_uncharged;
 CREATE TABLE participants_payments_uncharged AS
-    SELECT participant 
+    SELECT id, giving_due 
       FROM payday_payment_instructions
      WHERE 1 = 2;
 
 ALTER TABLE payday_participants ADD COLUMN giving_today numeric(35,2);
-UPDATE payday_participants
+UPDATE payday_participants pp
    SET giving_today = COALESCE((
            SELECT sum(amount + giving_due)
              FROM payday_payment_instructions
-            WHERE participant = username
+            WHERE participant = pp.username
        ), 0);
 
 DROP TABLE IF EXISTS payday_takes;
@@ -160,6 +160,20 @@ RETURNS void AS $$
     END;
 $$ LANGUAGE plpgsql;
 
+-- Add payments that were not met on to giving_due
+
+CREATE OR REPLACE FUNCTION park(text, text, numeric)
+RETURNS void AS $$
+    BEGIN
+        IF ($3 = 0) THEN RETURN; END IF;
+
+        UPDATE payday_payment_instructions
+           SET giving_due = $3
+         WHERE participant = $1
+           AND team = $2;
+    END;
+$$ LANGUAGE plpgsql;
+
 
 -- Create a trigger to process payment_instructions
 
@@ -175,6 +189,9 @@ CREATE OR REPLACE FUNCTION process_payment_instruction() RETURNS trigger AS $$
         IF (NEW.amount + NEW.giving_due <= participant.new_balance OR participant.card_hold_ok) THEN
             EXECUTE pay(NEW.participant, NEW.team, NEW.amount + NEW.giving_due, 'to-team');
             RETURN NEW;
+        ELSE
+            EXECUTE park(NEW.participant, NEW.team, NEW.amount + NEW.giving_due);
+            RETURN NULL;
         END IF;
         RETURN NULL;
     END;

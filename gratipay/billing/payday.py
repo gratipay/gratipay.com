@@ -231,12 +231,14 @@ class Payday(object):
                     # not up to minimum charge level. cancel the hold
                     cancel_card_hold(holds.pop(p.id))
                     return
-            hold, error = create_card_hold(self.db, p, amount)
-            if error:
-                return 1
-            else:
-                holds[p.id] = hold
+            if amount >= MINIMUM_CHARGE:
+                hold, error = create_card_hold(self.db, p, amount)
+                if error:
+                    return 1
+                else:
+                    holds[p.id] = hold
         threaded_map(f, participants)
+
 
         # Update the values of card_hold_ok in our temporary table
         if not holds:
@@ -383,6 +385,7 @@ class Payday(object):
               FROM payday_payment_instructions pi2
              WHERE pi.id = pi2.id
         """)
+
         log("Updated the balances of %i participants." % len(participants))
 
 
