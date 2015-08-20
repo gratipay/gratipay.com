@@ -105,6 +105,19 @@ class TestTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Please fill out the 'Team Name' field." in r.body
 
+    def test_error_message_for_bad_url(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+
+        r = self.post_new(dict(self.valid_data, homepage='foo'), expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Please enter an http[s]:// URL for the 'Homepage' field." in r.body
+
+        r = self.post_new(dict(self.valid_data, todo_url='foo'), expected=400)
+        assert "Please enter an http[s]:// URL for the 'Issue Tracker URL' field." in r.body
+
+        r = self.post_new(dict(self.valid_data, onboarding_url='foo'), expected=400)
+        assert "Please enter an http[s]:// URL for the 'Self-Onboarding Documentation URL' field." in r.body
+
     def test_error_message_for_slug_collision(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         self.post_new(dict(self.valid_data))
