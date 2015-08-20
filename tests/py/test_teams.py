@@ -25,19 +25,19 @@ class TestTeams(Harness):
 
     def test_harness_can_make_a_team(self):
         team = self.make_team()
-        assert team.name == 'The A Team'
-        assert team.owner == 'hannibal'
+        assert team.name == 'The Enterprise'
+        assert team.owner == 'picard'
 
     def test_can_construct_from_slug(self):
         self.make_team()
-        team = Team.from_slug('TheATeam')
-        assert team.name == 'The A Team'
-        assert team.owner == 'hannibal'
+        team = Team.from_slug('TheEnterprise')
+        assert team.name == 'The Enterprise'
+        assert team.owner == 'picard'
 
     def test_can_construct_from_id(self):
         team = Team.from_id(self.make_team().id)
-        assert team.name == 'The A Team'
-        assert team.owner == 'hannibal'
+        assert team.name == 'The Enterprise'
+        assert team.owner == 'picard'
 
     def test_can_create_new_team(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
@@ -98,15 +98,15 @@ class TestTeams(Harness):
 
     def test_approved_team_shows_up_on_explore_teams(self):
         self.make_team(is_approved=True)
-        assert 'The A Team' in self.client.GET("/explore/teams/").body
+        assert 'The Enterprise' in self.client.GET("/explore/teams/").body
 
     def test_unreviewed_team_does_not_show_up_on_explore_teams(self):
         self.make_team(is_approved=None)
-        assert 'The A Team' not in self.client.GET("/explore/teams/").body
+        assert 'The Enterprise' not in self.client.GET("/explore/teams/").body
 
     def test_rejected_team_does_not_show_up_on_explore_teams(self):
         self.make_team(is_approved=False)
-        assert 'The A Team' not in self.client.GET("/explore/teams/").body
+        assert 'The Enterprise' not in self.client.GET("/explore/teams/").body
 
     def test_stripping_required_inputs(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')

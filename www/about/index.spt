@@ -38,25 +38,25 @@ title = _("About")
             <td>payments</td>
             <td>~alice</td>
             <td><b>gives</b> to</td>
-            <td>The A Team.</td>
+            <td>The Enterprise.</td>
         </tr>
         <tr>
             <td>payments</td>
-            <td>The A Team</td>
+            <td>The Enterprise</td>
             <td><b>receives</b> from</td>
             <td>~alice.</td>
         </tr>
         <tr>
             <td>payroll</td>
-            <td>The A Team</td>
+            <td>The Enterprise</td>
             <td><b>distributes</b> to</td>
-            <td>~bob.</td>
+            <td>~crusher.</td>
         </tr>
         <tr>
             <td>payroll</td>
-            <td>~bob</td>
+            <td>~crusher</td>
             <td><b>takes</b> from</td>
-            <td>The A Team.</td>
+            <td>The Enterprise.</td>
         </tr>
     </table>
     <br>

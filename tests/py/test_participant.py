@@ -456,7 +456,7 @@ class Tests(Harness):
 
     def test_spi_fails_to_set_a_payment_instruction_to_an_unknown_team(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.assertRaises(NoTeam, alice.set_payment_instruction, 'The B Team', '1.00')
+        self.assertRaises(NoTeam, alice.set_payment_instruction, 'The Stargazer', '1.00')
 
     def test_spi_is_free_rider_defaults_to_none(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
@@ -481,20 +481,20 @@ class Tests(Harness):
 
     def test_get_teams_gets_teams(self):
         self.make_team(is_approved=True)
-        hannibal = Participant.from_username('hannibal')
-        assert [t.slug for t in hannibal.get_teams()] == ['TheATeam']
+        picard = Participant.from_username('picard')
+        assert [t.slug for t in picard.get_teams()] == ['TheEnterprise']
 
     def test_get_teams_can_get_only_approved_teams(self):
         self.make_team(is_approved=True)
-        hannibal = Participant.from_username('hannibal')
-        self.make_team('The B Team', owner=hannibal, is_approved=False)
-        assert [t.slug for t in hannibal.get_teams(only_approved=True)] == ['TheATeam']
+        picard = Participant.from_username('picard')
+        self.make_team('The Stargazer', owner=picard, is_approved=False)
+        assert [t.slug for t in picard.get_teams(only_approved=True)] == ['TheEnterprise']
 
     def test_get_teams_can_get_all_teams(self):
         self.make_team(is_approved=True)
-        hannibal = Participant.from_username('hannibal')
-        self.make_team('The B Team', owner=hannibal, is_approved=False)
-        assert [t.slug for t in hannibal.get_teams()] == ['TheATeam', 'TheBTeam']
+        picard = Participant.from_username('picard')
+        self.make_team('The Stargazer', owner=picard, is_approved=False)
+        assert [t.slug for t in picard.get_teams()] == ['TheEnterprise', 'TheStargazer']
 
 
     # giving, npatrons and receiving
