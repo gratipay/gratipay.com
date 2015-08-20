@@ -51,10 +51,6 @@ title = _("Apply for a New Team")
 <form action="/teams/create.json" method="POST" id="new-team">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-    <p>Your answers to these questions will be public, and your application
-    will be <a href="https://github.com/gratipay/review/issues">reviewed publicly
-    on GitHub</a>.</p>
-
     <label><h2>{{ _("Team Name") }}</h2></label>
     <input type="text" name="name" required autofocus>
 
@@ -74,23 +70,40 @@ title = _("Apply for a New Team")
     <p><i>{{ _("Where can people find instructions on how to do your work for you?") }}</i></p>
     <input type="text" name="onboarding_url" required>
 
+    <h2>{{ _("Agreements") }}</h2>
+    <input type="checkbox" value="true" name="agree_public" id="agree_public">
+    <label for="agree_public">
+        {{ _( "I agree to have my application {0}publicly reviewed{1}."
+            , '<a href="https://github.com/gratipay/applications/issues">'|safe
+            , '</a>'|safe
+             ) }}
+    </label>
+
     <br>
+    <input type="checkbox" value="true" name="agree_payroll" id="agree_payroll">
+    <label for="agree_payroll">
+        {{ _( "I agree to be responsible for {0}payroll{1}."
+            , '<a href="/about/features/payroll">'|safe
+            , '</a>'|safe
+             ) }}
+    </label>
+
     <br>
     <input type="checkbox" value="true" name="agree_terms" id="agree_terms">
     <label for="agree_terms">
-        {{ _( "I agree to the {0}terms of service{1}"
+        {{ _( "I agree to the {0}terms of service{1}."
             , '<a href="/about/policies/terms-of-service">'|safe
             , '</a>'|safe
              ) }}
     </label>
-    <br>
-    <br>
 
     {% if ntips %}
+    <h2>Migration of Payments</h2>
+
     <p>The {{ ntips }} weekly payments totalling ${{ receiving }} that
-    previously were directed at you will be <b>redirected to your new Team</b>,
-    pending approval of your application.</p>
-    {% endif %}
+    previously were directed to your {{ user.participant.username }} user
+    account will be <b>redirected to your new Team</b>, pending approval of
+    your application.</p> {% endif %}
 
     <button type="submit">{{ _("Apply") }}</button>
 </form>

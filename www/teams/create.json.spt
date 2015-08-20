@@ -28,8 +28,12 @@ or user.participant.is_suspicious is True \
 or user.participant.is_closed:  # sanity checks
     raise Response(400, _("How are you applying for a team!?"))
 
+if not request.body.get('agree_public', False):
+    raise Response(400, _("Sorry, you must agree to have your application publicly reviewed."))
+if not request.body.get('agree_payroll', False):
+    raise Response(400, _("Sorry, you must agree to be responsible for payroll."))
 if not request.body.get('agree_terms', False):
-    raise Response(400, _("Please agree to the terms of service."))
+    raise Response(400, _("Sorry, you must agree to the terms of service."))
 
 if request.method == 'POST':
     fields = {}

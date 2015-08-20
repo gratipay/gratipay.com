@@ -10,11 +10,13 @@ class TestTeams(Harness):
 
     valid_data = {
         'name': 'Gratiteam',
-        'homepage': 'http://gratipay.com/',
-        'agree_terms': 'true',
         'product_or_service': 'We make widgets.',
+        'homepage': 'http://gratipay.com/',
         'todo_url': 'https://github.com/gratipay',
         'onboarding_url': 'http://inside.gratipay.com/',
+        'agree_public': 'true',
+        'agree_payroll': 'true',
+        'agree_terms': 'true',
     }
 
     def post_new(self, data, auth_as='alice', expected=200):
@@ -71,13 +73,29 @@ class TestTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "You must attach a PayPal account to apply for a new team." in r.body
 
+    def test_error_message_for_public_review(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        data = dict(self.valid_data)
+        del data['agree_public']
+        r = self.post_new(data, expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Sorry, you must agree to have your application publicly reviewed." in r.body
+
+    def test_error_message_for_payroll(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        data = dict(self.valid_data)
+        del data['agree_payroll']
+        r = self.post_new(data, expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Sorry, you must agree to be responsible for payroll." in r.body
+
     def test_error_message_for_terms(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         data = dict(self.valid_data)
         del data['agree_terms']
         r = self.post_new(data, expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
-        assert "Please agree to the terms of service." in r.body
+        assert "Sorry, you must agree to the terms of service." in r.body
 
     def test_error_message_for_missing_fields(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
