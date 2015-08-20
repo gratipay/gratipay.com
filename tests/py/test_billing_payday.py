@@ -403,23 +403,23 @@ class TestPayin(BillingHarness):
     def test_process_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
         picard = self.make_participant('picard', claimed_time='now', last_paypal_result='')
-        lecter = self.make_participant('lecter', claimed_time='now', last_paypal_result='')
+        shelby = self.make_participant('shelby', claimed_time='now', last_paypal_result='')
         Enterprise = self.make_team('The Enterprise', picard, is_approved=True)
-        B = self.make_team('The B Team', lecter, is_approved=True)
+        Trident = self.make_team('The Trident', shelby, is_approved=True)
         alice.set_payment_instruction(Enterprise, D('0.51'))
-        alice.set_payment_instruction(B, D('0.50'))
+        alice.set_payment_instruction(Trident, D('0.50'))
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor, payday.ts_start)
             payday.process_payment_instructions(cursor)
             assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == D('0.51')
-            assert cursor.one("select balance from payday_teams where slug='TheBTeam'") == 0
+            assert cursor.one("select balance from payday_teams where slug='TheTrident'") == 0
             payday.update_balances(cursor)
 
         assert Participant.from_id(alice.id).balance == D('0.49')
         assert Participant.from_username('picard').balance == 0
-        assert Participant.from_username('lecter').balance == 0
+        assert Participant.from_username('shelby').balance == 0
 
         payment = self.db.one("SELECT * FROM payments")
         assert payment.amount == D('0.51')
