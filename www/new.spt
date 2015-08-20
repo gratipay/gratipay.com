@@ -58,12 +58,21 @@ title = _("Apply for a New Team")
     <label><h2>{{ _("Team Name") }}</h2></label>
     <input type="text" name="name" required autofocus>
 
+    <label><h2>{{ _("Product or Service") }}</h2></label>
+    <p><i>{{ _("What product or service does your Team provide?") }}</i></p>
+    <textarea name="product_or_service" required></textarea>
+
     <label><h2>{{ _("Homepage") }}</h2></label>
+    <p><i>{{ _("What is the customer-facing web page for your product or service?") }}</i></p>
     <input type="text" name="homepage" required>
 
-    <label><h2>{{ _("Product or Service") }}</h2></label>
-    <p>{{ _("What product or service does your Team provide?") }}</p>
-    <textarea name="product_or_service" required></textarea>
+    <label><h2>{{ _("Issue Tracker URL") }}</h2></label>
+    <p><i>{{ _("Where can people find a list of available work to do for your Team?") }}</i></p>
+    <input type="text" name="todo_url" required>
+
+    <label><h2>{{ _("Self-Onboarding Documentation URL") }}</h2></label>
+    <p><i>{{ _("Where can people find instructions on how to do your work for you?") }}</i></p>
+    <input type="text" name="onboarding_url" required>
 
     <br>
     <br>

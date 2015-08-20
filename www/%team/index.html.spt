@@ -35,14 +35,12 @@ title = name = team.name
 
 {% block content %}
 <div class="col0">
-    {% if team.is_approved in (None, False) %}
-    {{ team.status }} | {{ team.homepage }}
-    {% else %}
-    <a href="{{ team.homepage }}">{{ team.homepage }}</a>
-    {% endif %} |
-    owned by <a href="/~{{ team.owner }}/">{{ team.owner }}</a>
+    <p>{% if team.status != 'approved' %}{{ team.status }} | {% endif %}
+    <a href="{{ team.homepage }}">{{ _("Homepage") }}</a>
+    {% if team.todo_url %}| <a href="{{ team.todo_url }}">{{ _("Issues") }}</a>{% endif %}
+    {% if team.onboarding_url %}| <a href="{{ team.onboarding_url }}">{{ _("Onboarding") }}</a>{% endif %}
+    | owned by <a href="/{{ team.owner }}/">{{ team.owner }}</a></p>
 
-    <h2>{{ _("Product or Service") }}</h2>
     <div class="statement profile-statement">
         {{ markdown.render(team.product_or_service) }}
     </div>
