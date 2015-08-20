@@ -37,7 +37,7 @@ title = name = team.name
 <div class="col0">
     <p>{% if team.status != 'approved' %}{{ team.status }} | {% endif %}
     <a href="{{ team.homepage }}">{{ _("Homepage") }}</a>
-    {% if team.todo_url %}| <a href="{{ team.todo_url }}">{{ _("Issues") }}</a>{% endif %}
+    {% if team.todo_url %}| <a href="{{ team.todo_url }}">{{ _("To-do") }}</a>{% endif %}
     {% if team.onboarding_url %}| <a href="{{ team.onboarding_url }}">{{ _("Onboarding") }}</a>{% endif %}
     | owned by <a href="/{{ team.owner }}/">{{ team.owner }}</a></p>
 

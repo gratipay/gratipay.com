@@ -62,7 +62,7 @@ title = _("Apply for a New Team")
     <p><i>{{ _("What is the customer-facing web page for your product or service?") }}</i></p>
     <input type="text" name="homepage" required>
 
-    <label><h2>{{ _("Issue Tracker URL") }}</h2></label>
+    <label><h2>{{ _("To-do URL") }}</h2></label>
     <p><i>{{ _("Where can people find a list of available work to do for your Team?") }}</i></p>
     <input type="text" name="todo_url" required>
 
