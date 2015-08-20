@@ -421,7 +421,7 @@ msgid "You must have a verified email address to apply for a new team."
 msgstr "Devi avere un indirizzo email verificato per poterti proporre in un nuovo team."
 
 msgid "You must attach a PayPal account to apply for a new team."
-msgstr ""
+msgstr "Devi collegare un conto PayPal per poterti proporre in un nuovo team."
 
 msgid "Apply for a New Team"
 msgstr "Proponiti in un nuovo team."
