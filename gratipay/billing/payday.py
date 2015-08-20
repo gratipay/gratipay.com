@@ -347,10 +347,10 @@ class Payday(object):
                 SELECT *, (SELECT id FROM paydays WHERE extract(year from ts_end) = 1970)
                   FROM payday_payments;
         """)
-        # Copy giving_due value back to payment_instructions
+        # Copy due value back to payment_instructions
         cursor.run("""
             UPDATE payment_instructions pi
-               SET giving_due = pi2.giving_due
+               SET due = pi2.due
               FROM payday_payment_instructions pi2
              WHERE pi.id = pi2.id
         """)

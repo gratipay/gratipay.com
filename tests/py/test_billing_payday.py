@@ -41,7 +41,7 @@ class TestPayday(BillingHarness):
 
         obama = Participant.from_username('obama')
         picard = Participant.from_username('picard')
-        giving_due = self.db.one("""SELECT giving_due
+        due = self.db.one("""SELECT due
              FROM payment_instructions ppi
             WHERE ppi.participant = 'obama'
               AND ppi.team = 'TheEnterprise'
@@ -49,7 +49,7 @@ class TestPayday(BillingHarness):
 
         assert picard.balance == D('0.00')
         assert obama.balance == D('0.00')
-        assert giving_due == D('6.00')
+        assert due == D('6.00')
 
 
     @mock.patch.object(Payday, 'fetch_card_holds')
