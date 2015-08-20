@@ -17,7 +17,7 @@ class Tests(Harness):
 
     def test_get_team_gets_team(self):
         team = self.make_team()
-        state = self.client.GET( '/TheATeam/'
+        state = self.client.GET( '/TheEnterprise/'
                                , return_after='dispatch_request_to_filesystem'
                                , want='state'
                                 )
@@ -25,7 +25,7 @@ class Tests(Harness):
 
     def test_get_team_canonicalizes(self):
         self.make_team()
-        state = self.client.GET( '/theateam/'
+        state = self.client.GET( '/theenterprise/'
                                , return_after='dispatch_request_to_filesystem'
                                , want='state'
                                 )
@@ -33,7 +33,7 @@ class Tests(Harness):
         with self.assertRaises(Response) as cm:
             utils.get_team(state)
         assert cm.exception.code == 302
-        assert cm.exception.headers['Location'] == '/TheATeam/'
+        assert cm.exception.headers['Location'] == '/TheEnterprise/'
 
     def test_get_participant_gets_participant(self):
         expected = self.make_participant('alice', claimed_time='now')

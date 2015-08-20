@@ -41,8 +41,8 @@ class TestHistory(BillingHarness):
     def test_iter_payday_events(self):
         Payday().start().run()
 
-        A = self.make_team(is_approved=True)
-        self.obama.set_payment_instruction(A, '6.00')  # under $10!
+        Enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(Enterprise, '6.00')  # under $10!
         for i in range(2):
             with patch.object(Payday, 'fetch_card_holds') as fch:
                 fch.return_value = {}
@@ -58,14 +58,14 @@ class TestHistory(BillingHarness):
             """)
 
         obama = Participant.from_username('obama')
-        hannibal = Participant.from_username('hannibal')
+        picard = Participant.from_username('picard')
 
         assert obama.balance == D('6.82')
-        assert hannibal.balance == D('12.00')
+        assert picard.balance == D('12.00')
 
         Payday().start()  # to demonstrate that we ignore any open payday?
 
-        events = list(iter_payday_events(self.db, hannibal))
+        events = list(iter_payday_events(self.db, picard))
         assert len(events) == 7
         assert events[0]['kind'] == 'totals'
         assert events[0]['given'] == 0

@@ -20,16 +20,16 @@ from gratipay.testing.emails import EmailHarness
 class TestPayday(BillingHarness):
 
     def test_payday_moves_money(self):
-        A = self.make_team(is_approved=True)
-        self.obama.set_payment_instruction(A, '6.00')  # under $10!
+        Enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(Enterprise, '6.00')  # under $10!
         with mock.patch.object(Payday, 'fetch_card_holds') as fch:
             fch.return_value = {}
             Payday.start().run()
 
         obama = Participant.from_username('obama')
-        hannibal = Participant.from_username('hannibal')
+        picard = Participant.from_username('picard')
 
-        assert hannibal.balance == D('6.00')
+        assert picard.balance == D('6.00')
         assert obama.balance == D('3.41')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
@@ -292,7 +292,7 @@ class TestPayin(BillingHarness):
         self.db.run("""
             UPDATE participants SET balance = -10 WHERE username='obama'
         """)
-        team = self.make_team('The A Team', is_approved=True)
+        team = self.make_team('The Enterprise', is_approved=True)
         self.obama.set_payment_instruction(team, 25)
         fch.return_value = {}
         cch.return_value = (None, 'some error')
@@ -402,23 +402,23 @@ class TestPayin(BillingHarness):
 
     def test_process_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
-        hannibal = self.make_participant('hannibal', claimed_time='now', last_paypal_result='')
+        picard = self.make_participant('picard', claimed_time='now', last_paypal_result='')
         lecter = self.make_participant('lecter', claimed_time='now', last_paypal_result='')
-        A = self.make_team('The A Team', hannibal, is_approved=True)
+        Enterprise = self.make_team('The Enterprise', picard, is_approved=True)
         B = self.make_team('The B Team', lecter, is_approved=True)
-        alice.set_payment_instruction(A, D('0.51'))
+        alice.set_payment_instruction(Enterprise, D('0.51'))
         alice.set_payment_instruction(B, D('0.50'))
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor, payday.ts_start)
             payday.process_payment_instructions(cursor)
-            assert cursor.one("select balance from payday_teams where slug='TheATeam'") == D('0.51')
+            assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == D('0.51')
             assert cursor.one("select balance from payday_teams where slug='TheBTeam'") == 0
             payday.update_balances(cursor)
 
         assert Participant.from_id(alice.id).balance == D('0.49')
-        assert Participant.from_username('hannibal').balance == 0
+        assert Participant.from_username('picard').balance == 0
         assert Participant.from_username('lecter').balance == 0
 
         payment = self.db.one("SELECT * FROM payments")
@@ -460,9 +460,9 @@ class TestPayin(BillingHarness):
 
     def test_process_draws(self):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
-        hannibal = self.make_participant('hannibal', claimed_time='now', last_paypal_result='')
-        A = self.make_team('The A Team', hannibal, is_approved=True)
-        alice.set_payment_instruction(A, D('0.51'))
+        picard = self.make_participant('picard', claimed_time='now', last_paypal_result='')
+        Enterprise = self.make_team('The Enterprise', picard, is_approved=True)
+        alice.set_payment_instruction(Enterprise, D('0.51'))
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
@@ -471,12 +471,12 @@ class TestPayin(BillingHarness):
             payday.transfer_takes(cursor, payday.ts_start)
             payday.process_draws(cursor)
             assert cursor.one("select new_balance from payday_participants "
-                              "where username='hannibal'") == D('0.51')
-            assert cursor.one("select balance from payday_teams where slug='TheATeam'") == 0
+                              "where username='picard'") == D('0.51')
+            assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == 0
             payday.update_balances(cursor)
 
         assert Participant.from_id(alice.id).balance == D('0.49')
-        assert Participant.from_username('hannibal').balance == D('0.51')
+        assert Participant.from_username('picard').balance == D('0.51')
 
         payment = self.db.one("SELECT * FROM payments WHERE direction='to-participant'")
         assert payment.amount == D('0.51')

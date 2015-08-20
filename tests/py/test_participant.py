@@ -481,20 +481,20 @@ class Tests(Harness):
 
     def test_get_teams_gets_teams(self):
         self.make_team(is_approved=True)
-        hannibal = Participant.from_username('hannibal')
-        assert [t.slug for t in hannibal.get_teams()] == ['TheATeam']
+        picard = Participant.from_username('picard')
+        assert [t.slug for t in picard.get_teams()] == ['TheEnterprise']
 
     def test_get_teams_can_get_only_approved_teams(self):
         self.make_team(is_approved=True)
-        hannibal = Participant.from_username('hannibal')
-        self.make_team('The B Team', owner=hannibal, is_approved=False)
-        assert [t.slug for t in hannibal.get_teams(only_approved=True)] == ['TheATeam']
+        picard = Participant.from_username('picard')
+        self.make_team('The B Team', owner=picard, is_approved=False)
+        assert [t.slug for t in picard.get_teams(only_approved=True)] == ['TheEnterprise']
 
     def test_get_teams_can_get_all_teams(self):
         self.make_team(is_approved=True)
-        hannibal = Participant.from_username('hannibal')
-        self.make_team('The B Team', owner=hannibal, is_approved=False)
-        assert [t.slug for t in hannibal.get_teams()] == ['TheATeam', 'TheBTeam']
+        picard = Participant.from_username('picard')
+        self.make_team('The B Team', owner=picard, is_approved=False)
+        assert [t.slug for t in picard.get_teams()] == ['TheEnterprise', 'TheBTeam']
 
 
     # giving, npatrons and receiving

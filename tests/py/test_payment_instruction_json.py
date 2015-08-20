@@ -44,14 +44,14 @@ class TestTipJson(Harness):
         self.make_team(is_approved=True)
         self.make_participant("alice", claimed_time='now', last_bill_result='')
 
-        response = self.client.PxST( "/TheATeam/payment-instruction.json"
+        response = self.client.PxST( "/TheEnterprise/payment-instruction.json"
                                    , {'amount': "1010.00"}
                                    , auth_as='alice'
                                     )
         assert "bad amount" in response.body
         assert response.code == 400
 
-        response = self.client.PxST( "/TheATeam/payment-instruction.json"
+        response = self.client.PxST( "/TheEnterprise/payment-instruction.json"
                                    , {'amount': "-1.00"}
                                    , auth_as='alice'
                                     )
@@ -62,7 +62,7 @@ class TestTipJson(Harness):
     def test_subscribing_to_rejected_team_fails(self):
         self.make_team(is_approved=False)
         self.make_participant("alice", claimed_time='now', last_bill_result='')
-        response = self.client.PxST( "/TheATeam/payment-instruction.json"
+        response = self.client.PxST( "/TheEnterprise/payment-instruction.json"
                                    , {'amount': "10.00"}
                                    , auth_as='alice'
                                     )

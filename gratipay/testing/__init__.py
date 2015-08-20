@@ -153,9 +153,9 @@ class Harness(unittest.TestCase):
             try: _kw['owner'] = a[1]
             except IndexError: pass
         if 'name' not in _kw:
-            _kw['name'] = "The A Team"
+            _kw['name'] = "The Enterprise"
         if 'owner' not in _kw:
-            _kw['owner'] = "hannibal"
+            _kw['owner'] = "picard"
         elif isinstance(_kw['owner'], Participant):
             _kw['owner'] = _kw['owner'].username
         if 'slug' not in _kw:

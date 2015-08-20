@@ -154,14 +154,14 @@ class TestPages(Harness):
     def test_giving_page(self):
         self.make_team(is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_payment_instruction('TheATeam', "1.00")
-        assert "The A Team" in self.client.GET("/~alice/giving/", auth_as="alice").body
+        alice.set_payment_instruction('TheEnterprise', "1.00")
+        assert "The Enterprise" in self.client.GET("/~alice/giving/", auth_as="alice").body
 
     def test_giving_page_shows_cancelled(self):
         self.make_team(is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_payment_instruction('TheATeam', "1.00")
-        alice.set_payment_instruction('TheATeam', "0.00")
+        alice.set_payment_instruction('TheEnterprise', "1.00")
+        alice.set_payment_instruction('TheEnterprise', "0.00")
         assert "Cancelled" in self.client.GET("/~alice/giving/", auth_as="alice").body
 
     def test_new_participant_can_edit_profile(self):
@@ -195,8 +195,8 @@ class TestPages(Harness):
 
     def test_team_slug__not__redirected_from_tilde(self):
         self.make_team(is_approved=True)
-        assert self.client.GET("/TheATeam/").code == 200
-        assert self.client.GxT("/~TheATeam/").code == 404
+        assert self.client.GET("/TheEnterprise/").code == 200
+        assert self.client.GxT("/~TheEnterprise/").code == 404
 
 
     def test_security_headers_sets_x_frame_options(self):
