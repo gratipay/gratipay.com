@@ -54,11 +54,10 @@ class Team(Model):
 
             INSERT INTO teams
                         (slug, slug_lower, name, homepage,
-                         product_or_service, revenue_model, getting_involved, getting_paid,
+                         product_or_service, todo_url, onboarding_url,
                          owner)
                  VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s,
-                         %(product_or_service)s, %(revenue_model)s, %(getting_involved)s,
-                            %(getting_paid)s,
+                         %(product_or_service)s, %(todo_url)s, %(onboarding_url)s,
                          %(owner)s)
               RETURNING teams.*::teams
 

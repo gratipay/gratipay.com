@@ -6,13 +6,13 @@ from gratipay.models.team import Team
 request.allow('GET')
 
 if user.ANON:
-    raise Response(401, _("You must sign in to apply for a new team."))
+    raise Response(401, _("You must sign in to apply for a new Team."))
 
 if user.participant.email_address is None:
-    raise Response(400, _("You must have a verified email address to apply for a new team."))
+    raise Response(400, _("You must have a verified email address to apply for a new Team."))
 
 if not user.participant.has_payout_route:
-    raise Response(400, _("You must attach a PayPal account to apply for a new team."))
+    raise Response(400, _("You must attach a PayPal account to apply for a new Team."))
 
 
 # We'll actually migrate *all* non-zero tips from non-closed, non-suspicious
@@ -49,50 +49,64 @@ title = _("Apply for a New Team")
     }
 </style>
 <form action="/teams/create.json" method="POST" id="new-team">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-
-    <p>Your answers to these questions will be public, and your application
-    will be <a href="https://github.com/gratipay/review/issues">reviewed publicly
-    on GitHub</a>.</p>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
     <label><h2>{{ _("Team Name") }}</h2></label>
-    <input type="text" name="name" required autofocus />
-
-    <label><h2>{{ _("Homepage") }}</h2></label>
-    <input type="text" name="homepage" required />
+    <input type="text" name="name" required autofocus>
 
     <label><h2>{{ _("Product or Service") }}</h2></label>
-    <p>{{ _("What product or service does your team provide?") }}</p>
+    <p><i>{{ _("What product or service does your Team provide?") }}</i></p>
     <textarea name="product_or_service" required></textarea>
 
-    <label><h2>{{ _("Revenue Model") }}</h2></label>
-    <p>{{ _("How do you prompt your customers to financially support your team's work?") }}</p>
-    <textarea name="revenue_model" required></textarea>
+    <label><h2>{{ _("Homepage") }}</h2></label>
+    <p><i>{{ _("What is the customer-facing web page for your product or service?") }}</i></p>
+    <input type="text" name="homepage" required>
 
-    <label><h2>{{ _("Contributing") }}</h2></label>
-    <p>{{ _("How can other people get involved with your team?") }}</p>
-    <textarea name="getting_involved" required></textarea>
+    <label><h2>{{ _("Self-onboarding Documentation URL") }}</h2></label>
+    <p><i>{{ _("Where can people find instructions on how to do your work for you?") }}</i></p>
+    <input type="text" name="onboarding_url" required>
 
-    <label><h2>{{ _("Paying Contributors") }}</h2></label>
-    <p>{{ _("How do you share revenue with contributors?") }}</p>
-    <textarea name="getting_paid" required></textarea>
+    <label><h2>{{ _("To-do URL") }}</h2></label>
+    <p><i>{{ _("Where can people find a list of available work to do for your Team?") }}</i></p>
+    <input type="text" name="todo_url" required>
+
+    <h2>{{ _("Agreements") }}</h2>
+    <input type="checkbox" value="true" name="agree_public" id="agree_public">
+    <label for="agree_public">
+        {{ _( "I agree to have my application {0}publicly reviewed{1}."
+            , '<a href="https://github.com/gratipay/applications/issues">'|safe
+            , '</a>'|safe
+             ) }}
+    </label>
 
     <br>
+    <input type="checkbox" value="true" name="agree_payroll" id="agree_payroll">
+    <label for="agree_payroll">
+        {{ _( "I agree to be responsible for {0}payroll{1}."
+            , '<a href="/about/features/payroll">'|safe
+            , '</a>'|safe
+             ) }}
+    </label>
+
     <br>
     <input type="checkbox" value="true" name="agree_terms" id="agree_terms">
     <label for="agree_terms">
-        {{ _( "I agree to the {0}terms of service{1}"
+        {{ _( "I agree to the {0}terms of service{1}."
             , '<a href="/about/policies/terms-of-service">'|safe
             , '</a>'|safe
              ) }}
     </label>
-    <br>
-    <br>
 
     {% if ntips %}
-    <p>The {{ ntips }} weekly payments totalling ${{ receiving }} that
-    previously were directed at you will be <b>redirected to your new team</b>,
-    pending approval of your application.</p>
+    <h2>{{ _("Migration of Payments") }}</h2>
+
+    <p>{{ _("The {ntips} weekly payments totalling {receiving} that previously were directed to your {username} user account will be {b}redirected to your new Team{_b}, pending approval of your application."
+           , ntips=ntips
+           , receiving=format_currency(receiving, 'USD')
+           , username=user.participant.username
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
     {% endif %}
 
     <button type="submit">{{ _("Apply") }}</button>

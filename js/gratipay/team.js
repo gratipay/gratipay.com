@@ -38,7 +38,7 @@ Gratipay.team = (function() {
     }
 
     function drawRows(members) {
-        nmembers = members.length - 1; // includes the team itself, which we don't
+        nmembers = members.length - 1; // includes the Team itself, which we don't
                                        // want to enumerate
         var rows = [];
 
