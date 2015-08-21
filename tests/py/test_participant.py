@@ -348,7 +348,7 @@ class Tests(Harness):
         """helper method to chooses a restricted username for testing """
         from gratipay import RESTRICTED_USERNAMES
         random_item = random.choice(RESTRICTED_USERNAMES)
-        while random_item.startswith('%'):
+        while any(map(random_item.startswith, ('%', '~'))):
             random_item = random.choice(RESTRICTED_USERNAMES)
         return random_item
 
