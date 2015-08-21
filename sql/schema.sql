@@ -536,4 +536,16 @@ CREATE TRIGGER update_status_of_1_0_balance
     FOR EACH ROW
     WHEN (OLD.balance > 0 AND NEW.balance = 0)
     EXECUTE PROCEDURE set_status_of_1_0_balance_to_resolved();
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3694
 BEGIN;
+
+    ALTER TABLE teams ALTER COLUMN revenue_model DROP NOT NULL;
+    ALTER TABLE teams ALTER COLUMN getting_involved DROP NOT NULL;
+    ALTER TABLE teams ALTER COLUMN getting_paid DROP NOT NULL;
+
+    ALTER TABLE teams ADD COLUMN onboarding_url text NOT NULL DEFAULT '';
+    ALTER TABLE teams ADD COLUMN todo_url text NOT NULL DEFAULT '';
+
+END;
