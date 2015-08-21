@@ -2,7 +2,6 @@
 """
 from collections import OrderedDict
 
-from gratipay.models import community
 from gratipay.utils import excerpt_intro, get_participant, markdown
 
 LONG_STATEMENT = 256
@@ -23,7 +22,6 @@ if user.participant == participant:
     select_langs.update(locale.languages_2)
     stmt_placeholder = _("You don't have a profile statement in this language yet.")
     confirm_discard = _("You haven't saved your changes, are you sure you want to discard them?")
-communities = community.get_list_for(website.db, participant.id)
 
 def with_others(obj):
     others = obj.nmembers - 1
@@ -66,7 +64,6 @@ def with_others(obj):
             {% endif %}
 
             {% include "templates/team-listing.html" %}
-            {% include "templates/community-listing.html" %}
             {% include "templates/connected-accounts.html" %}
         </div>
     </div>

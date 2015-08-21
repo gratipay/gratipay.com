@@ -1,289 +1,30 @@
-from itertools import chain
-
-from aspen import Response
-from aspen.utils import utcnow
-from gratipay.models.community import name_pattern, slugize, Community
-from gratipay.utils import excerpt_intro, format_money
-from gratipay.utils.query_cache import QueryCache
-
-LUXURY = 4
-
-query_cache = QueryCache(website.db, threshold=20)
-
 [---]
-
-_slug = request.path['slug']
-if name_pattern.match(_slug) is None:
-    raise Response(404)
-slug = slugize(_slug)
-if slug != _slug:
-    website.redirect('/for/' + slug + '/')
-
-try:
-    limit = min(int(request.qs.get('limit', 12)), 100)
-    offset = int(request.qs.get('offset', 0))
-except ValueError:
-    raise Response(400)
-
-community = Community.from_slug(slug)
-
-if community is None:
-    class StubCommunity:
-        slug = _slug
-        name = _slug
-        nmembers = 0
-        check_membership = lambda a, b: False
-        ctime = utcnow()
-
-    community = StubCommunity()
-
-# Set the page title based on the communities name.
-title = community.name
-
-
-# Run queries for listings.
-# =========================
-
-new_participants = query_cache.all("""
--- new participants on community page
-
-    SELECT username
-         , id
-         , claimed_time
-         , avatar_url
-         , number
-      FROM participants p
-      JOIN current_community_members cc ON cc.participant = p.id
-     WHERE p.claimed_time IS NOT null
-       AND p.is_suspicious IS NOT true
-       AND cc.slug = %s AND cc.is_member
-  ORDER BY p.claimed_time DESC
-     LIMIT %s
-    OFFSET %s
-
-""", (community.slug, limit, offset))
-
-givers = query_cache.all("""
--- top givers on community page
-
-    SELECT username
-         , id
-         , anonymous_giving AS anonymous
-         , giving AS amount
-         , avatar_url
-         , number
-      FROM participants p
-      JOIN current_community_members cc ON cc.participant = p.id AND cc.slug = %s
-     WHERE is_suspicious IS NOT true
-       AND giving > 0
-       AND cc.is_member
-  ORDER BY giving DESC
-  LIMIT %s
-  OFFSET %s
-
-""", (community.slug, limit, offset))
-
-# XXX I'm nearly positive that one or both of givers and receivers can contain
-# orphan accounts. See https://github.com/gratipay/gratipay.com/issues/650
-
-receivers = query_cache.all("""
--- top receivers on community page
-
-    SELECT username
-         , id
-         , anonymous_receiving AS anonymous
-         , receiving AS amount
-         , avatar_url
-         , number
-      FROM participants p
-      JOIN current_community_members cc ON cc.participant = p.id AND cc.slug = %s
-     WHERE is_suspicious IS NOT true
-       AND receiving > 0
-       AND cc.is_member
-  ORDER BY receiving DESC
-  LIMIT %s
-  OFFSET %s
-
-""", (community.slug, limit, offset))
-
-
-# Fetch statements
-
-ids = tuple(p.id for p in chain(new_participants, givers, receivers))
-if ids:
-    statements = website.db.all("""
-        SELECT DISTINCT ON (participant) participant, content
-        FROM statements s
-        JOIN enumerate(%s) langs ON langs.value = s.lang
-        WHERE participant IN %s
-    ORDER BY participant, langs.rank ASC
-    """, (request.accept_langs, ids))
-    statements = {s.participant: s.content for s in statements}
-else:
-    statements = {}
-
-for p in chain(new_participants, givers, receivers):
-    p.__dict__['statement'] = statements.get(p.id)
-
 [---]
-{% from 'templates/avatar-url.html' import avatar_url with context %}
-
 {% extends "templates/base.html" %}
-
-{% block sidebar %}
-
-    <div class="avatar">
-        <img src="{{ website.asset('default-avatar-community.svg') }}" />
-    </div>
-
-    <div class="mono">
-        <table>
-            <tr>
-                <td class="left">{{ ngettext("Member", "Members", community.nmembers) }}</td>
-                <td class="right">{{ format_number(community.nmembers) }}</td>
-            </tr>
-        </table>
-        {% if community.nmembers > 0 %}
-        <p>{{ _('Organized {0} ago.', to_age(community.ctime, add_direction=False)) }}</p>
-        {% endif %}
-    </div>
-
-
-    {% if user.ANON %}
-        <div class="sign-in-to">
-            {% include "templates/sign-in-using.html" %}
-            {{ _("{0} to join the {1} community on Gratipay.", "", community.name) }}
-        </div>
-    {% else %}
-        <div class="cta">
-            {% set is_member = community.check_membership(user.participant) %}
-            <button class="join-leave {{ 'leave' if is_member else 'join' }}"
-                    data-name="{{ community.name }}"
-                    data-is-member="{{ 'true' if is_member else 'false' }}">
-                <span>{{ _("Leave") if is_member else _("Join") }}</span>
-            </button>
-        </div>
-    {% endif %}
-{% endblock %}
-
+{% block head %}
+<meta http-equiv="Refresh" content="10; https://gratipay.com/">
+{% endblock%}
 {% block content %}
+<div class="col-0">
+    <h1>Communities</h1>
 
-{% if community.nmembers == 0 %}
-    <h2>{{ _("You're the first one here!") }}</h2>
-    <p>{{ _("Bring the {0} community to Gratipay to find like-minded people to give to.",
-            community.name) }}</p>
-{% else %}
-
-<div id="leaderboard">
-    <div class="people">
-        <h2>{{ _("New Members") }}</h2>
-        <ul class="clearfix">
-            {% for i, participant in enumerate(new_participants, start=1) %}
-            <li{% if i > LUXURY %} class="luxury"{% endif %}>
-                <a href="/{{ participant.username }}/" class="mini-user"
-                   data-tip="{{ excerpt_intro(participant.statement) }}">
-                    <span class="inner">
-                        <span class="avatar"
-                            style="background-image: url('{{ avatar_url(participant) }}')">
-                        </span>
-                        <span class="age">{{ to_age(participant.claimed_time, add_direction=True) }}</span>
-                        <span class="name">{{ participant.username }}</span>
-                    </span>
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="people">
-        <h2>{{ _("Top Givers") }}</h2>
-        <ul class="clearfix">
-            {% for i, giver in enumerate(givers, start=1) %}
-            <li{% if i > LUXURY %} class="luxury"{% endif %}>
-                {% if giver.anonymous and not user.ADMIN %}
-                <span class="mini-user">
-                    <span class="inner">
-                        <span class="avatar">
-                        </span>
-                        <span class="money">${{ format_money(giver.amount) }}</span>
-                        <span class="name">{{ _("Anonymous") }}</span>
-                    </span>
-                </span>
-                {% else %}
-                <a href="/{{ giver.username }}/"
-                   class="mini-user{{ ' anonymous' if giver.anonymous else '' }}"
-                   data-tip="{{ excerpt_intro(giver.statement) }}">
-                    <span class="inner">
-                        <span class="avatar" style="background-image: url('{{ avatar_url(giver) }}')">
-                        </span>
-                        <span class="money">${{ format_money(giver.amount) }}</span>
-                        <span class="name">{{ giver.username }}</span>
-                    </span>
-                </a>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="people">
-        <h2>{{ _("Top Receivers") }}</h2>
-        <ul class="clearfix">
-            {% for i, receiver in enumerate(receivers, start=1) %}
-            <li{% if i > LUXURY %} class="luxury"{% endif %}>
-                {% if receiver.anonymous and not user.ADMIN %}
-                <span class="mini-user">
-                    <span class="inner">
-                        <span class="avatar">
-                        </span>
-                        <span class="money">${{ format_money(receiver.amount) }}</span>
-                        <span class="name">{{ _("Anonymous") }}</span>
-                    </span>
-                </span>
-                {% else %}
-                <a href="/{{ receiver.username }}/"
-                   class="mini-user{{ ' anonymous' if receiver.anonymous else '' }}"
-                   data-tip="{{ excerpt_intro(receiver.statement) }}">
-                    <span class="inner">
-                        <span class="avatar"
-                            style="background-image: url('{{ avatar_url(receiver) }}')">
-                        </span>
-                        <span class="money">${{ format_money(receiver.amount) }}</span>
-                        <span class="name">{{ receiver.username }}</span>
-                    </span>
-                </a>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-
+    <p>We turned off our old communities feature as part of our upgrade to <a
+        href="https://medium.com/gratipay-blog/gratipay-2-0-2453d3c53077">Gratipay
+    2.0</a>. This page will redirect in <span class="ticker">10</span> seconds.</p>
 </div>
-
-<div class="more-container">
-    <a href="/for/{{ community.slug }}/?limit={{ limit + 12 }}"><button class="selected">{{ _("More") }}</button></a>
-</div>
-
-{% endif %}
 {% endblock %}
-
 {% block scripts %}
-
-<script>
-$(document).ready(function() {
-    $("a.mini-user:not([data-tip=''])").tipr();
-
-    $('button.join-leave').click(function()
-    {
-        var button = $(this);
-        var name = button.attr('data-name');
-        var is_member = button.attr('data-is-member') === 'true';
-        Gratipay.communities.update(name, !is_member, function()
-        {
-            window.location.reload();
+    <script>
+        $(document).ready(function() {
+            function tick() {
+                var t = $('.ticker');
+                var cur = parseInt(t.text(), 10);
+                if (cur > 0) {
+                    t.text(cur - 1);
+                    window.setTimeout(tick, 1000);
+                }
+            }
+            window.setTimeout(tick, 1000);
         });
-    });
-
-});
-</script>
-
-{{ super() }}
+    </script>
 {% endblock %}
