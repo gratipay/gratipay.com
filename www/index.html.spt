@@ -20,7 +20,7 @@ title = _("Teams (N={0})", nteams)
 {% block head %}
     <link rel="publisher" href="https://plus.google.com/104524895706770139568">
     <link type="application/opensearchdescription+xml" rel="search" href="/opensearch.osdd" />
-    <meta name="description" content="Weekly payments, motivated by gratitude. Sustainably crowdfund your business, personal projects, or charity, with no extra fees." />
+    <meta name="description" content="Voluntary payments and payroll for open work" />
     <meta name="fb:app_id" content="229465400522758" />
     <meta name="og:type" content="website" />
     <meta name="og:url" content="https://gratipay.com/" />
