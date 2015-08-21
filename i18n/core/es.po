@@ -418,13 +418,13 @@ msgstr ""
 msgid "Find your friends from social networks:"
 msgstr ""
 
-msgid "You must sign in to apply for a new team."
+msgid "You must sign in to apply for a new Team."
 msgstr ""
 
-msgid "You must have a verified email address to apply for a new team."
+msgid "You must have a verified email address to apply for a new Team."
 msgstr ""
 
-msgid "You must attach a PayPal account to apply for a new team."
+msgid "You must attach a PayPal account to apply for a new Team."
 msgstr ""
 
 msgid "Apply for a New Team"
@@ -433,35 +433,49 @@ msgstr ""
 msgid "Team Name"
 msgstr ""
 
-msgid "Homepage"
-msgstr ""
-
 msgid "Product or Service"
 msgstr ""
 
-msgid "What product or service does your team provide?"
+msgid "What product or service does your Team provide?"
 msgstr ""
 
-msgid "Revenue Model"
+msgid "Homepage"
+msgstr ""
+
+msgid "What is the customer-facing web page for your product or service?"
+msgstr ""
+
+msgid "Self-onboarding Documentation URL"
+msgstr ""
+
+msgid "Where can people find instructions on how to do your work for you?"
+msgstr ""
+
+msgid "To-do URL"
+msgstr ""
+
+msgid "Where can people find a list of available work to do for your Team?"
+msgstr ""
+
+msgid "Agreements"
+msgstr ""
+
+msgid "I agree to have my application {0}publicly reviewed{1}."
+msgstr ""
+
+msgid "I agree to be responsible for {0}payroll{1}."
+msgstr ""
+
+msgid "I agree to the {0}terms of service{1}."
+msgstr ""
+
+msgid "Migration of Payments"
 msgstr ""
 
 msgid ""
-"How do you prompt your customers to financially support your team's work?"
-msgstr ""
-
-msgid "Contributing"
-msgstr ""
-
-msgid "How can other people get involved with your team?"
-msgstr ""
-
-msgid "Paying Contributors"
-msgstr ""
-
-msgid "How do you share revenue with contributors?"
-msgstr ""
-
-msgid "I agree to the {0}terms of service{1}"
+"The {ntips} weekly payments totalling {receiving} that previously were "
+"directed to your {username} user account will be {b}redirected to your new "
+"Team{_b}, pending approval of your application."
 msgstr ""
 
 msgid "Apply"
@@ -502,10 +516,19 @@ msgstr "Seguro que quieres desconectar?"
 msgid "Yes!"
 msgstr "¡Si!"
 
-msgid "How to Get Involved"
+msgid "Unreviewed"
 msgstr ""
 
-msgid "How Revenue Is Shared"
+msgid "Rejected"
+msgstr ""
+
+msgid "Onboarding"
+msgstr ""
+
+msgid "To-do"
+msgstr ""
+
+msgid "owned by {a}{owner}{_a}"
 msgstr ""
 
 msgid "Please sign in first"
@@ -782,13 +805,31 @@ msgstr ""
 msgid "hasn't joined Gratipay yet"
 msgstr ""
 
+msgid "You must sign in to apply for a new team."
+msgstr ""
+
+msgid "You must have a verified email address to apply for a new team."
+msgstr ""
+
+msgid "You must attach a PayPal account to apply for a new team."
+msgstr ""
+
 msgid "How are you applying for a team!?"
 msgstr ""
 
-msgid "Please agree to the terms of service."
+msgid "Sorry, you must agree to have your application publicly reviewed."
 msgstr ""
 
-msgid "Please fill out the '{0}' field."
+msgid "Sorry, you must agree to be responsible for payroll."
+msgstr ""
+
+msgid "Sorry, you must agree to the terms of service."
+msgstr ""
+
+msgid "Please fill out the '{}' field."
+msgstr ""
+
+msgid "Please enter an http[s]:// URL for the '{}' field."
 msgstr ""
 
 msgid "Sorry, there is already a team using '{}'."

@@ -416,13 +416,13 @@ msgstr "Wie inspireert u? Kijk of ze ook lid zijn van Gratipay: "
 msgid "Find your friends from social networks:"
 msgstr "Vind je vrienden op sociale netwerken:"
 
-msgid "You must sign in to apply for a new team."
-msgstr "U moet inloggen om u aan te melden bij een nieuw team."
+msgid "You must sign in to apply for a new Team."
+msgstr ""
 
-msgid "You must have a verified email address to apply for a new team."
-msgstr "U moet in het bezit zijn van een geverifieerd emailadres om u te kunnen aanmelden voor een nieuw team. "
+msgid "You must have a verified email address to apply for a new Team."
+msgstr ""
 
-msgid "You must attach a PayPal account to apply for a new team."
+msgid "You must attach a PayPal account to apply for a new Team."
 msgstr ""
 
 msgid "Apply for a New Team"
@@ -431,36 +431,50 @@ msgstr "Aanmelden voor een nieuw team"
 msgid "Team Name"
 msgstr "Team naam"
 
-msgid "Homepage"
-msgstr "Home pagina"
-
 msgid "Product or Service"
 msgstr "Product of service"
 
-msgid "What product or service does your team provide?"
-msgstr "Welk product of service levert uw team?"
-
-msgid "Revenue Model"
-msgstr "Business model"
-
-msgid ""
-"How do you prompt your customers to financially support your team's work?"
+msgid "What product or service does your Team provide?"
 msgstr ""
 
-msgid "Contributing"
-msgstr "Bijdragen"
+msgid "Homepage"
+msgstr "Home pagina"
 
-msgid "How can other people get involved with your team?"
-msgstr "Hoe kunnen andere mensen uw team helpen?"
+msgid "What is the customer-facing web page for your product or service?"
+msgstr ""
 
-msgid "Paying Contributors"
-msgstr "Betalende medewerkers"
+msgid "Self-onboarding Documentation URL"
+msgstr ""
 
-msgid "How do you share revenue with contributors?"
-msgstr "Hoe deelt u inkomen met uw medewerkers?"
+msgid "Where can people find instructions on how to do your work for you?"
+msgstr ""
 
-msgid "I agree to the {0}terms of service{1}"
-msgstr "Ik ga akkoord met de {0}algemene voorwaarden{1}"
+msgid "To-do URL"
+msgstr ""
+
+msgid "Where can people find a list of available work to do for your Team?"
+msgstr ""
+
+msgid "Agreements"
+msgstr ""
+
+msgid "I agree to have my application {0}publicly reviewed{1}."
+msgstr ""
+
+msgid "I agree to be responsible for {0}payroll{1}."
+msgstr ""
+
+msgid "I agree to the {0}terms of service{1}."
+msgstr ""
+
+msgid "Migration of Payments"
+msgstr ""
+
+msgid ""
+"The {ntips} weekly payments totalling {receiving} that previously were "
+"directed to your {username} user account will be {b}redirected to your new "
+"Team{_b}, pending approval of your application."
+msgstr ""
 
 msgid "Apply"
 msgstr "Aanmelden"
@@ -500,11 +514,20 @@ msgstr "Ben je zeker dat je wil uitloggen?"
 msgid "Yes!"
 msgstr "Ja!"
 
-msgid "How to Get Involved"
-msgstr "Hoe kan je meedoen"
+msgid "Unreviewed"
+msgstr ""
 
-msgid "How Revenue Is Shared"
-msgstr "Hoe wordt het inkomen gedeeld"
+msgid "Rejected"
+msgstr ""
+
+msgid "Onboarding"
+msgstr ""
+
+msgid "To-do"
+msgstr ""
+
+msgid "owned by {a}{owner}{_a}"
+msgstr ""
 
 msgid "Please sign in first"
 msgstr "Logt u alstublieft eerst in"
@@ -780,14 +803,32 @@ msgstr "donaties accepteren"
 msgid "hasn't joined Gratipay yet"
 msgstr "is nog geen lid geworden van Gratipay"
 
+msgid "You must sign in to apply for a new team."
+msgstr "U moet inloggen om u aan te melden bij een nieuw team."
+
+msgid "You must have a verified email address to apply for a new team."
+msgstr "U moet in het bezit zijn van een geverifieerd emailadres om u te kunnen aanmelden voor een nieuw team. "
+
+msgid "You must attach a PayPal account to apply for a new team."
+msgstr ""
+
 msgid "How are you applying for a team!?"
 msgstr "Hoe meldt u zich aan voor een team!?"
 
-msgid "Please agree to the terms of service."
-msgstr "Ga alstublieft akkoord met de algemene voorwaarden."
+msgid "Sorry, you must agree to have your application publicly reviewed."
+msgstr ""
 
-msgid "Please fill out the '{0}' field."
-msgstr "Vul alstublieft het '{0}' veld in."
+msgid "Sorry, you must agree to be responsible for payroll."
+msgstr ""
+
+msgid "Sorry, you must agree to the terms of service."
+msgstr ""
+
+msgid "Please fill out the '{}' field."
+msgstr ""
+
+msgid "Please enter an http[s]:// URL for the '{}' field."
+msgstr ""
 
 msgid "Sorry, there is already a team using '{}'."
 msgstr "Sorry, er is al een team dat '{}' gebruikt."
