@@ -20,7 +20,7 @@ from gratipay.testing.emails import EmailHarness
 class TestPayday(BillingHarness):
 
     def test_payday_moves_money_above_min_charge(self):
-        Enterprise  = self.make_team(is_approved=True)
+        Enterprise = self.make_team(is_approved=True)
         self.obama.set_payment_instruction(Enterprise, MINIMUM_CHARGE)  # must be >= MINIMUM_CHARGE
         with mock.patch.object(Payday, 'fetch_card_holds') as fch:
             fch.return_value = {}
