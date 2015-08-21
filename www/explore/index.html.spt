@@ -1,34 +1,3 @@
 [-----------------------------]
-
-teams = website.db.all("""
-
-    SELECT teams.*::teams
-      FROM teams
-  ORDER BY ctime DESC
-
-""")
-nteams = len(teams)
-title = _("Explore Teams (N={0})", nteams)
-subhead = _("Teams")
-
+website.redirect('/')
 [-----------------------------] text/html
-{% extends "templates/base.html" %}
-{% block content %}
-<table class="table">
-    <tr>
-        <th>{{ _("Name") }}</th>
-        <th>{{ _("Owner") }}</th>
-        {% if user.ADMIN %}<th>{{ _("Status") }}</th>{% endif %}
-    </tr>
-    {% for team in teams %}
-    {% if team.is_approved or user.ADMIN %}
-    <tr>
-        <td><a href="/{{ team.slug }}/">{{ team.name }}</a></td>
-        <td><a href="/{{ team.owner }}/">{{ team.owner }}</a></td>
-        {% if user.ADMIN %}<td>{{ team.status }}</td>{% endif %}
-    </tr>
-    {% endif %}
-    {% endfor %}
-</table>
-{% endblock %}
-

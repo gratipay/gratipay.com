@@ -1,12 +1,14 @@
 [---]
 
-if user.ANON:
-    website.redirect('/about/')
+teams = website.db.all("""
 
-if not user.ANON:
-    participant = user.participant
-    title = participant.username
-    giving = participant.get_giving_for_profile()[1]
+    SELECT teams.*::teams
+      FROM teams
+  ORDER BY ctime DESC
+
+""")
+nteams = len(teams)
+title = _("Teams (N={0})", nteams)
 
 [---]
 {% extends "templates/base.html" %}
@@ -24,90 +26,22 @@ if not user.ANON:
     <meta name="og:url" content="https://gratipay.com/" />
     <meta name="og:title" content="Gratipay" />
     <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
-    {% if user.ANON %}
-    <style>
-        #header, #footer { display: none; }
-        #upgrade_browser .container { display: block; }
-    </style>
-    {% endif %}
 {% endblock %}
-
-{% block sidebar %}
-{% if user.ANON %}
-    <img src="{{ website.asset('gratipay.white.svg') }}" alt="Gratipay">
-    <h1>{{ _("Weekly Payments") }}</h1>
-    <p>{{ _("Motivated by Gratitude") }}</p>
-
-    <p>{{ _("Sustainably crowdfund your business, personal projects, or charity, with {0}no extra fees{1}.",
-            "<span>"|safe, "</span>"|safe) }}</p>
-
-    <p><a href="/about/">{{ _("Learn more") }}</a></p>
-{% else %}
-{% include "templates/profile-sidebar.html" %}
-{% endif %}
-{% endblock %}
-
-{% block heading %}{{ super() if not user.ANON }}{% endblock %}
-{% block subnav %}
-{% if not user.ANON %}{% include "templates/profile-subnav.html" %}{% endif %}
-{% endblock %}
-
 {% block content %}
-    {% if user.ANON %}
-
-        {{ _("{0}Sign In{1} {2}to Accept Weekly Payments{3}",
-             "<h1>"|safe, "</h1>"|safe, "<p>"|safe, "</p>"|safe) }}
-        {% from 'templates/auth.html' import auth_button with context %}
-
-        <div class="twitter">
-        {% call auth_button('twitter', 'opt-in') %}
-        {{ _("Sign in with {0}", "Twitter") }}
-        {% endcall %}
-        </div>
-
-        <div class="other">
-            <div class="or">{{ _("Or sign in with:") }}</div>
-            <span>
-            {% call auth_button('google', 'opt-in') %}Google{% endcall %}
-            {% call auth_button('facebook', 'opt-in') %}Facebook{% endcall %}
-            {% call auth_button('github', 'opt-in') %}GitHub{% endcall %}
-            {% call auth_button('bitbucket', 'opt-in') %}Bitbucket{% endcall %}
-            {% call auth_button('openstreetmap', 'opt-in') %}OpenStreetMap{% endcall %}
-            </span>
-        </div>
-
-        <p class="other">{{
-            _("By signing in, you indicate that you have read and agree to our {0}Terms of Service{1}.",
-              "<a href='/about/terms/'>"|safe, "</a>"|safe) + " " +
-            _("You'll be joining {0} active users, who exchanged {1} {2}last week{3}.",
-              format_number(website.gnactive),
-              format_currency(website.gtransfer_volume, "USD"),
-              "<a href='/about/stats'>"|safe, "</a>"|safe) + " " +
-            _("Want to see who they are? Browse {0}our communities{1}.",
-              "<a href='/for/'>"|safe, "</a>"|safe) + " " +
-            _("Want to work for Gratipay? We are an {0}open company{1}.",
-              "<a href='http://inside.gratipay.com/big-picture/welcome'>"|safe,
-              "</a>"|safe) }}</p>
-
-    {% else %}
-
-        <div class="col0">
-            <h2>{{ _("Giving") }}</h2>
-
-            <p><a href="/{{ participant.username }}/giving/">{{
-                _("You give {0} per week.", format_currency(giving, 'USD'))
-            }}</a></p>
-
-            <p>{{ _("Who inspires you? See if they're on Gratipay:") }}</p>
-            {% include "templates/search-box.html" %}
-
-            <p>{{ _("Find your friends from social networks:") }}<br>
-            {% for p in website.friends_platforms %}
-                <a href="/on/{{ p.name }}/">{{ p.display_name }}</a
-                >{{ ',' if not loop.last }}
-            {% endfor %}
-            </p>
-        </div>
-
+<table class="table">
+    <tr>
+        <th>{{ _("Name") }}</th>
+        <th>{{ _("Owner") }}</th>
+        {% if user.ADMIN %}<th>{{ _("Status") }}</th>{% endif %}
+    </tr>
+    {% for team in teams %}
+    {% if team.is_approved or user.ADMIN %}
+    <tr>
+        <td><a href="/{{ team.slug }}/">{{ team.name }}</a></td>
+        <td><a href="/{{ team.owner }}/">{{ team.owner }}</a></td>
+        {% if user.ADMIN %}<td>{{ team.status }}</td>{% endif %}
+    </tr>
     {% endif %}
+    {% endfor %}
+</table>
 {% endblock %}
