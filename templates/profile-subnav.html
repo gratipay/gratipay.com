@@ -1,15 +1,13 @@
 {% set current_page = '/' if request.path.raw == '/' else '/~' + request.path.raw[3:] %}
 {% set show_members = participant.show_as_team(user) %}
-{% set show_dashboard = (user.participant == participant) %}
 {% set show_receiving = (user.participant == participant or not participant.anonymous_receiving) %}
 {% set show_profile = show_members or show_receiving %}
 {% set u = participant.username %}
-{% set pages = [ ('/',                  _('Dashboard'), True,           False)
-               , ('/~'+u+'/',           _('Profile'),   True,           show_profile)
-               , ('/~'+u+'/giving/', _('Giving'), True,   False)
-               , ('/~'+u+'/history/',   _('History'),   True,           False)
-               , ('/~'+u+'/settings/',  _('Settings'),  True,           False)
-               , ('/~'+u+'/events/',    _('Events'),    False,          False)
+{% set pages = [ ('/~'+u+'/',           _('Profile'),   True,   show_profile)
+               , ('/~'+u+'/giving/',    _('Giving'),    True,   False)
+               , ('/~'+u+'/history/',   _('History'),   True,   False)
+               , ('/~'+u+'/settings/',  _('Settings'),  True,   False)
+               , ('/~'+u+'/events/',    _('Events'),    False,  False)
                 ] %}
 {% set pages = filter_profile_subnav(user, participant, pages) %}
 {% if pages %}
