@@ -444,16 +444,6 @@ msgid_plural "Found matching usernames"
 msgstr[0] "Trovinta kongruan uzantnomon"
 msgstr[1] "Trovinta kongruajn uzantnomojn"
 
-msgid "Found a matching community name"
-msgid_plural "Found matching community names"
-msgstr[0] "Trovinta kongruan nomon por komunumo"
-msgstr[1] "Trovinta kongruajn nomojn por komunumoj"
-
-msgid "{0}{n}{1} Member"
-msgid_plural "{0}{n}{1} Members"
-msgstr[0] "{0}{n}{1} membro"
-msgstr[1] "{0}{n}{1} membroj"
-
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
 msgstr[0] "Trovinta kongrua uzanta aserto"

@@ -448,16 +448,6 @@ msgid_plural "Found matching usernames"
 msgstr[0] "Trouvé un nom d'utilisateur"
 msgstr[1] "Trouvé des noms d'utilisateurs"
 
-msgid "Found a matching community name"
-msgid_plural "Found matching community names"
-msgstr[0] "Trouvé un nom de communauté"
-msgstr[1] "Trouvé des noms de communautés"
-
-msgid "{0}{n}{1} Member"
-msgid_plural "{0}{n}{1} Members"
-msgstr[0] "{0}{n}{1} Membre"
-msgstr[1] "{0}{n}{1} Membres"
-
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
 msgstr[0] "Trouvé une présentation d'utilisateur"

@@ -447,16 +447,6 @@ msgid_plural "Found matching usernames"
 msgstr[0] "De volgende overeenkomende gebruikersnaam is gevonden"
 msgstr[1] "De volgende overeenkomende gebruikersnamen zijn gevonden"
 
-msgid "Found a matching community name"
-msgid_plural "Found matching community names"
-msgstr[0] "De volgende overeenkomende gemeenschap is gevonden"
-msgstr[1] "De volgende overeenkomende gemeenschappen zijn gevonden"
-
-msgid "{0}{n}{1} Member"
-msgid_plural "{0}{n}{1} Members"
-msgstr[0] "{0}{n}{1} lid"
-msgstr[1] "{0}{n}{1} leden"
-
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
 msgstr[0] "De volgende overeenkomende gebruikersverklaring is gevonden"
