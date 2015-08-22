@@ -612,24 +612,8 @@ msgstr "Fraude controle dashboard"
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr "Fraude controle dashboard - (Teams)"
 
-msgid "There is {n} community on Gratipay."
-msgid_plural "There are {n} communities on Gratipay."
-msgstr[0] "Er is {n} community op Gratipay."
-msgstr[1] "Er zijn {n} communities op Gratipay."
-
-msgid "Find or add a community ..."
-msgstr "Zoek of voeg een gemeenschap toe ..."
-
-msgid "{n} Member"
-msgid_plural "{n} Members"
-msgstr[0] "{n} Lid"
-msgstr[1] "{n} Leden"
-
-msgid "Popular Communities"
-msgstr "Populaire gemeenschappen"
-
-msgid "Teams (N={0})"
-msgstr "Teams (N={0})"
+msgid "Explore Teams (N={0})"
+msgstr ""
 
 msgid "Name"
 msgstr "Naam"
@@ -639,45 +623,6 @@ msgstr "Eigenaar"
 
 msgid "Status"
 msgstr "Status"
-
-msgid "Member"
-msgid_plural "Members"
-msgstr[0] "Lid"
-msgstr[1] "Leden"
-
-msgid "Organized {0} ago."
-msgstr "{0} geleden georganiseerd."
-
-msgid "{0} to join the {1} community on Gratipay."
-msgstr "{0} vervoegt de {1} gemeenschap op Gratipay."
-
-msgid "Leave"
-msgstr "Verlaat"
-
-msgid "Join"
-msgstr "Vervoeg"
-
-msgid "You're the first one here!"
-msgstr "Je bent de eerste hier!"
-
-msgid ""
-"Bring the {0} community to Gratipay to find like-minded people to give to."
-msgstr "Breng de {0} gemeenschap naar Gratipay om gelijkgestemden mensen te vinden om aan te geven."
-
-msgid "New Members"
-msgstr "Nieuwe leden"
-
-msgid "Top Givers"
-msgstr "Top gevers"
-
-msgid "Anonymous"
-msgstr "Anoniem"
-
-msgid "Top Receivers"
-msgstr "Top ontvangers"
-
-msgid "More"
-msgstr "Meer"
 
 msgid "Please Confirm"
 msgstr "Bevestigen alstublieft"
@@ -796,6 +741,9 @@ msgstr "Wat is Gratipay?"
 
 msgid "Gratipay provides payments and payroll for open work."
 msgstr "Gratipay voorziet in betalingen en lonen voor open werk."
+
+msgid "Member"
+msgstr ""
 
 msgid "accepts gifts"
 msgstr "donaties accepteren"

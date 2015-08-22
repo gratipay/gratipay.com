@@ -614,23 +614,7 @@ msgstr ""
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr ""
 
-msgid "There is {n} community on Gratipay."
-msgid_plural "There are {n} communities on Gratipay."
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Find or add a community ..."
-msgstr "Busca o añade una comunidad ..."
-
-msgid "{n} Member"
-msgid_plural "{n} Members"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Popular Communities"
-msgstr ""
-
-msgid "Teams (N={0})"
+msgid "Explore Teams (N={0})"
 msgstr ""
 
 msgid "Name"
@@ -641,45 +625,6 @@ msgstr ""
 
 msgid "Status"
 msgstr "Estado"
-
-msgid "Member"
-msgid_plural "Members"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Organized {0} ago."
-msgstr ""
-
-msgid "{0} to join the {1} community on Gratipay."
-msgstr "{0} para formar parte de la comunidad {1} en Gratipay."
-
-msgid "Leave"
-msgstr "Salir"
-
-msgid "Join"
-msgstr "Unirse"
-
-msgid "You're the first one here!"
-msgstr "¡Eres el primero aquí!"
-
-msgid ""
-"Bring the {0} community to Gratipay to find like-minded people to give to."
-msgstr "Trae la comunidad {0} a Gratipay para encontrar a gente parecida a la que dar."
-
-msgid "New Members"
-msgstr "Nuevos Miembros"
-
-msgid "Top Givers"
-msgstr "Las personas que más dan"
-
-msgid "Anonymous"
-msgstr "Anónimos"
-
-msgid "Top Receivers"
-msgstr "Las personas que más reciben"
-
-msgid "More"
-msgstr "Más"
 
 msgid "Please Confirm"
 msgstr ""
@@ -797,6 +742,9 @@ msgid "What is Gratipay?"
 msgstr ""
 
 msgid "Gratipay provides payments and payroll for open work."
+msgstr ""
+
+msgid "Member"
 msgstr ""
 
 msgid "accepts gifts"

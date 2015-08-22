@@ -609,24 +609,8 @@ msgstr "Panelo por Fraŭda Recenzo"
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr ""
 
-msgid "There is {n} community on Gratipay."
-msgid_plural "There are {n} communities on Gratipay."
-msgstr[0] "Existas {n} komunumo en Gratipay."
-msgstr[1] "Existas {n} komunumoj en Gratipay."
-
-msgid "Find or add a community ..."
-msgstr "Trovu aŭ aldonu komunumo..."
-
-msgid "{n} Member"
-msgid_plural "{n} Members"
-msgstr[0] "{n}-aj ano"
-msgstr[1] "{n}-aj anoj"
-
-msgid "Popular Communities"
-msgstr "Popularaj komunumoj"
-
-msgid "Teams (N={0})"
-msgstr "Teamoj (№={0})"
+msgid "Explore Teams (N={0})"
+msgstr ""
 
 msgid "Name"
 msgstr ""
@@ -636,45 +620,6 @@ msgstr ""
 
 msgid "Status"
 msgstr "Stato"
-
-msgid "Member"
-msgid_plural "Members"
-msgstr[0] "Ano"
-msgstr[1] "Anoj"
-
-msgid "Organized {0} ago."
-msgstr "Organizita antaŭ {0}."
-
-msgid "{0} to join the {1} community on Gratipay."
-msgstr "{0} por kuniĝi la {1}-an komunumon sur Gratipay."
-
-msgid "Leave"
-msgstr "Lasi"
-
-msgid "Join"
-msgstr "Aliĝi"
-
-msgid "You're the first one here!"
-msgstr "Vi estas la unua ĉi tie!"
-
-msgid ""
-"Bring the {0} community to Gratipay to find like-minded people to give to."
-msgstr "Alportu la {0} komunumon al Gratipay trovi samideanojn homojn doni."
-
-msgid "New Members"
-msgstr "Novaj membroj"
-
-msgid "Top Givers"
-msgstr "Supra donantoj"
-
-msgid "Anonymous"
-msgstr "Anonima"
-
-msgid "Top Receivers"
-msgstr "Supra riceviloj"
-
-msgid "More"
-msgstr "Pli"
 
 msgid "Please Confirm"
 msgstr "Bonvolu konfirmi"
@@ -792,6 +737,9 @@ msgid "What is Gratipay?"
 msgstr "Kio estas Gratipay?"
 
 msgid "Gratipay provides payments and payroll for open work."
+msgstr ""
+
+msgid "Member"
 msgstr ""
 
 msgid "accepts gifts"

@@ -415,13 +415,13 @@ msgid "Find your friends from social networks:"
 msgstr "Trova i tuoi amici sui social network:"
 
 msgid "You must sign in to apply for a new Team."
-msgstr ""
+msgstr "Devi registrarti per poterti proporre in un nuovo Team."
 
 msgid "You must have a verified email address to apply for a new Team."
-msgstr ""
+msgstr "Devi avere un indirizzo email verificato per poterti proporre in un nuovo Team."
 
 msgid "You must attach a PayPal account to apply for a new Team."
-msgstr ""
+msgstr "Devi collegare un conto PayPal per poterti proporre in un nuovo Team."
 
 msgid "Apply for a New Team"
 msgstr "Proponiti in un nuovo team."
@@ -433,46 +433,46 @@ msgid "Product or Service"
 msgstr "Prodotto o Servizio"
 
 msgid "What product or service does your Team provide?"
-msgstr ""
+msgstr "Quale prodotto o servizio è offerto dal tuo Team?"
 
 msgid "Homepage"
 msgstr "Homepage"
 
 msgid "What is the customer-facing web page for your product or service?"
-msgstr ""
+msgstr "Qual è la pagina web del tuo prodotto o servizio rivolta ai tuoi clienti?"
 
 msgid "Self-onboarding Documentation URL"
-msgstr ""
+msgstr "URL Documentazione Formazione Iniziale Autonoma"
 
 msgid "Where can people find instructions on how to do your work for you?"
-msgstr ""
+msgstr "Dove si possono trovare istruzioni su come lavorare per voi?"
 
 msgid "To-do URL"
-msgstr ""
+msgstr "URL cose da fare"
 
 msgid "Where can people find a list of available work to do for your Team?"
-msgstr ""
+msgstr "Dove si può trovare una lista dei lavori da fare disponibili per il vostro Team?"
 
 msgid "Agreements"
-msgstr ""
+msgstr "Condizioni"
 
 msgid "I agree to have my application {0}publicly reviewed{1}."
-msgstr ""
+msgstr "Accetto a rendere la mia domanda {0}pubblicamente visibile{1}."
 
 msgid "I agree to be responsible for {0}payroll{1}."
-msgstr ""
+msgstr "Accetto di essere responsabile del {0}libro paga{1}."
 
 msgid "I agree to the {0}terms of service{1}."
-msgstr ""
+msgstr "Accetto i {0}termini di servizio{1}."
 
 msgid "Migration of Payments"
-msgstr ""
+msgstr "Migrazione dei Pagamenti"
 
 msgid ""
 "The {ntips} weekly payments totalling {receiving} that previously were "
 "directed to your {username} user account will be {b}redirected to your new "
 "Team{_b}, pending approval of your application."
-msgstr ""
+msgstr "I {ntips} pagamenti settimanali per un totale di {receiving} che precedentemente venivano indirizzati al tuo account utente {username} saranno {b}reindirizzati al tuo nuovo Team{_b}, in attesa di approvazione della tua domanda."
 
 msgid "Apply"
 msgstr "Proponiti"
@@ -513,19 +513,19 @@ msgid "Yes!"
 msgstr "Sì!"
 
 msgid "Unreviewed"
-msgstr ""
+msgstr "Non vista"
 
 msgid "Rejected"
-msgstr ""
+msgstr "Rifiutata"
 
 msgid "Onboarding"
-msgstr ""
+msgstr "Formazione Iniziale"
 
 msgid "To-do"
-msgstr ""
+msgstr "Cose da fare"
 
 msgid "owned by {a}{owner}{_a}"
-msgstr ""
+msgstr "Proprietà di {a}{owner}{_a}"
 
 msgid "Please sign in first"
 msgstr "Per favore, accedi prima di continuare"
@@ -610,24 +610,8 @@ msgstr "Dashboard Recensione Rischio Frodi"
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr "Dashboard Recensione Rischio Frodi - (Team)"
 
-msgid "There is {n} community on Gratipay."
-msgid_plural "There are {n} communities on Gratipay."
-msgstr[0] "C'è {n} comunità su Gratipay."
-msgstr[1] "Ci sono {n} comunità su Gratipay."
-
-msgid "Find or add a community ..."
-msgstr "Trova o aggiungi una comunità ..."
-
-msgid "{n} Member"
-msgid_plural "{n} Members"
-msgstr[0] "{n} Membro"
-msgstr[1] "{n} Membri"
-
-msgid "Popular Communities"
-msgstr "Comunità Popolari"
-
-msgid "Teams (N={0})"
-msgstr "Team (N={0})"
+msgid "Explore Teams (N={0})"
+msgstr ""
 
 msgid "Name"
 msgstr "Nome"
@@ -637,45 +621,6 @@ msgstr "Proprietario"
 
 msgid "Status"
 msgstr "Stato"
-
-msgid "Member"
-msgid_plural "Members"
-msgstr[0] "Membro"
-msgstr[1] "Membri"
-
-msgid "Organized {0} ago."
-msgstr "Organizzato {0} fa."
-
-msgid "{0} to join the {1} community on Gratipay."
-msgstr "{0} per unirti alla comunità {1} su Gratipay."
-
-msgid "Leave"
-msgstr "Abbandona"
-
-msgid "Join"
-msgstr "Unisciti"
-
-msgid "You're the first one here!"
-msgstr "Sei il primo arrivato qui!"
-
-msgid ""
-"Bring the {0} community to Gratipay to find like-minded people to give to."
-msgstr "Porta la comunità {0} su Gratipay per trovare persone che la pensano come te a cui donare."
-
-msgid "New Members"
-msgstr "Nuovi Membri"
-
-msgid "Top Givers"
-msgstr "Chi Dona Di Più"
-
-msgid "Anonymous"
-msgstr "Anonimo"
-
-msgid "Top Receivers"
-msgstr "Chi Riceve Di Più"
-
-msgid "More"
-msgstr "Più risultati"
 
 msgid "Please Confirm"
 msgstr "Per Favore Conferma"
@@ -795,6 +740,9 @@ msgstr "Cos'è Gratipay?"
 msgid "Gratipay provides payments and payroll for open work."
 msgstr "Gratipay permette pagamenti di lavori gratuiti."
 
+msgid "Member"
+msgstr ""
+
 msgid "accepts gifts"
 msgstr "accetta le donazioni"
 
@@ -814,19 +762,19 @@ msgid "How are you applying for a team!?"
 msgstr "Come ti stai proponendo per un team!?"
 
 msgid "Sorry, you must agree to have your application publicly reviewed."
-msgstr ""
+msgstr "Scusa, devi accettare di rendere la tua domanda pubblicamente visibile."
 
 msgid "Sorry, you must agree to be responsible for payroll."
-msgstr ""
+msgstr "Scusa, devi accettare di essere responsabile del libro paga."
 
 msgid "Sorry, you must agree to the terms of service."
-msgstr ""
+msgstr "Scusa, devi accettare i termini di servizio."
 
 msgid "Please fill out the '{}' field."
-msgstr ""
+msgstr "Per favore, completa il campo '{}'."
 
 msgid "Please enter an http[s]:// URL for the '{}' field."
-msgstr ""
+msgstr "Per favore, inserisci un URL http[s]:// per il campo '{}'."
 
 msgid "Sorry, there is already a team using '{}'."
 msgstr "Ci dispiace, un altro team sta già usando '{}'."

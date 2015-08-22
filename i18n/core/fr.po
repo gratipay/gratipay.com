@@ -613,24 +613,8 @@ msgstr ""
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr ""
 
-msgid "There is {n} community on Gratipay."
-msgid_plural "There are {n} communities on Gratipay."
-msgstr[0] "Il y a {n} communauté sur Gratipay."
-msgstr[1] "Il y a {n} communautés sur Gratipay."
-
-msgid "Find or add a community ..."
-msgstr "Trouver ou ajouter une communauté …"
-
-msgid "{n} Member"
-msgid_plural "{n} Members"
-msgstr[0] "{n} Membre"
-msgstr[1] "{n} Membres"
-
-msgid "Popular Communities"
-msgstr "Communautés populaires"
-
-msgid "Teams (N={0})"
-msgstr "Équipes (N={0})"
+msgid "Explore Teams (N={0})"
+msgstr ""
 
 msgid "Name"
 msgstr "Nom"
@@ -640,45 +624,6 @@ msgstr ""
 
 msgid "Status"
 msgstr "État"
-
-msgid "Member"
-msgid_plural "Members"
-msgstr[0] "Membre"
-msgstr[1] "Membres"
-
-msgid "Organized {0} ago."
-msgstr "Organisée il y a {0}."
-
-msgid "{0} to join the {1} community on Gratipay."
-msgstr "{0} pour devenir membre de la communauté {1} sur Gratipay."
-
-msgid "Leave"
-msgstr "Quitter"
-
-msgid "Join"
-msgstr "Rejoindre"
-
-msgid "You're the first one here!"
-msgstr "Vous êtes la première personne ici !"
-
-msgid ""
-"Bring the {0} community to Gratipay to find like-minded people to give to."
-msgstr "Amenez la communauté {0} sur Gratipay pour trouver des gens comme vous à qui donner."
-
-msgid "New Members"
-msgstr "Nouveaux membres"
-
-msgid "Top Givers"
-msgstr "Membres qui donnent le plus"
-
-msgid "Anonymous"
-msgstr "Anonyme"
-
-msgid "Top Receivers"
-msgstr "Membres qui reçoivent le plus"
-
-msgid "More"
-msgstr "Plus"
 
 msgid "Please Confirm"
 msgstr "Veuillez confirmer"
@@ -796,6 +741,9 @@ msgid "What is Gratipay?"
 msgstr "Qu'est-ce que Gratipay ?"
 
 msgid "Gratipay provides payments and payroll for open work."
+msgstr ""
+
+msgid "Member"
 msgstr ""
 
 msgid "accepts gifts"
