@@ -191,9 +191,6 @@ msgstr "Afsluiten"
 msgid "About"
 msgstr "Omtrent"
 
-msgid "Explore"
-msgstr "Ontdek"
-
 msgid "Search"
 msgstr "Zoeken"
 
@@ -301,9 +298,6 @@ msgstr "Ontvangt"
 msgid "Joined"
 msgstr "Lid geworden"
 
-msgid "Dashboard"
-msgstr "Dashboard"
-
 msgid "Profile"
 msgstr "Profiel"
 
@@ -373,48 +367,17 @@ msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
 msgstr "Ondersteun je betaling met een {0}credit card{1} om er zeker van te zijn dat het aankomt!"
 
-msgid "Weekly Payments"
-msgstr "Wekelijkse betalingen"
-
-msgid "Motivated by Gratitude"
-msgstr "Gemotiveerd door dankbaarheid"
-
-msgid ""
-"Sustainably crowdfund your business, personal projects, or charity, with "
-"{0}no extra fees{1}."
-msgstr "Duurzame crowdfinanciering van je zaak, persoonlijke projecten, of liefdadigheid, zonder {0} extra kosten{1}."
-
-msgid "{0}Sign In{1} {2}to Accept Weekly Payments{3}"
-msgstr "{0}Log in{1} {2}om wekelijkse betalingen te aanvaarden{3}"
-
-msgid "Sign in with {0}"
-msgstr "Log in met {0}"
-
-msgid "Or sign in with:"
-msgstr "of log in met:"
-
-msgid ""
-"By signing in, you indicate that you have read and agree to our {0}Terms of "
-"Service{1}."
-msgstr "Door in te loggen verklaart u dat u instemt met onze {0}algemene voorwaarden{1}."
-
-msgid "You'll be joining {0} active users, who exchanged {1} {2}last week{3}."
-msgstr "Je vervoegt {0} actieve gebruikers, die vorige weer {1} {2} uitgewisseld hebben{3}."
-
-msgid "Want to see who they are? Browse {0}our communities{1}."
-msgstr "Wil je zien wie ze zijn? Bezoek {0}onze gemeenschappen{1}."
-
-msgid "Want to work for Gratipay? We are an {0}open company{1}."
-msgstr "Wil je voor Gratipay werken? We zijn een {0}open bedrijf{1}."
-
-msgid "You give {0} per week."
+msgid "Teams (N={0})"
 msgstr ""
 
-msgid "Who inspires you? See if they're on Gratipay:"
-msgstr "Wie inspireert u? Kijk of ze ook lid zijn van Gratipay: "
+msgid "Name"
+msgstr "Naam"
 
-msgid "Find your friends from social networks:"
-msgstr "Vind je vrienden op sociale netwerken:"
+msgid "Owner"
+msgstr "Eigenaar"
+
+msgid "Status"
+msgstr "Status"
 
 msgid "You must sign in to apply for a new Team."
 msgstr ""
@@ -612,18 +575,6 @@ msgstr "Fraude controle dashboard"
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr "Fraude controle dashboard - (Teams)"
 
-msgid "Explore Teams (N={0})"
-msgstr ""
-
-msgid "Name"
-msgstr "Naam"
-
-msgid "Owner"
-msgstr "Eigenaar"
-
-msgid "Status"
-msgstr "Status"
-
 msgid "Please Confirm"
 msgstr "Bevestigen alstublieft"
 
@@ -666,6 +617,9 @@ msgstr "Ververs je {0} verbinding, alstublieft."
 
 msgid "to find your friends from there."
 msgstr "om je vrienden van daar te vinden."
+
+msgid "Sign in with {0}"
+msgstr "Log in met {0}"
 
 msgid "Connect your {0} account"
 msgstr "Verbind uw {0} account"

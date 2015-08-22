@@ -197,9 +197,6 @@ msgstr "Verbindung trennen"
 msgid "About"
 msgstr "Über"
 
-msgid "Explore"
-msgstr "Entdecke"
-
 msgid "Search"
 msgstr "Suche"
 
@@ -307,9 +304,6 @@ msgstr "erhält"
 msgid "Joined"
 msgstr "Beigetreten"
 
-msgid "Dashboard"
-msgstr "Dashboard"
-
 msgid "Profile"
 msgstr "Profil"
 
@@ -379,48 +373,17 @@ msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
 msgstr "Gib deine {0}Kreditkateninformationen{1} an um sicherzustellen, dass deine Spenden auch zukünftig ankommen."
 
-msgid "Weekly Payments"
-msgstr "Wöchentliche Zahlungen"
-
-msgid "Motivated by Gratitude"
-msgstr "Durch Dankbarkeit motiviert."
-
-msgid ""
-"Sustainably crowdfund your business, personal projects, or charity, with "
-"{0}no extra fees{1}."
-msgstr "Finanziere dein Geschäft, persönliche- oder Wohltätigkeitsprojekte nachhaltig durch Crowdfunding - {0} ohne extra Gebühren{1}."
-
-msgid "{0}Sign In{1} {2}to Accept Weekly Payments{3}"
-msgstr "{0} Anmelden{1} {2} um wöchentliche Zahlungen zu akzeptieren{3}"
-
-msgid "Sign in with {0}"
-msgstr "Anmelden mit {0}"
-
-msgid "Or sign in with:"
-msgstr "Oder melde dich an mit:"
-
-msgid ""
-"By signing in, you indicate that you have read and agree to our {0}Terms of "
-"Service{1}."
+msgid "Teams (N={0})"
 msgstr ""
 
-msgid "You'll be joining {0} active users, who exchanged {1} {2}last week{3}."
-msgstr "Du trittst {0} aktiven Nutzern bei, die {1} {2} letzte Woche{3} ausgetauscht haben."
-
-msgid "Want to see who they are? Browse {0}our communities{1}."
-msgstr "Möchtest du sehen, wer sie sind? Durchstöbere {0}unsere Gemeinschaften{1}."
-
-msgid "Want to work for Gratipay? We are an {0}open company{1}."
-msgstr "Möchtest du für Gratipay arbeiten? Wir sind eine {0}open company{1}."
-
-msgid "You give {0} per week."
+msgid "Name"
 msgstr ""
 
-msgid "Who inspires you? See if they're on Gratipay:"
-msgstr "Wer inspiriert dich? Guck ob er/sie auf Gratipay ist:"
-
-msgid "Find your friends from social networks:"
+msgid "Owner"
 msgstr ""
+
+msgid "Status"
+msgstr "Status"
 
 msgid "You must sign in to apply for a new Team."
 msgstr ""
@@ -618,18 +581,6 @@ msgstr ""
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr ""
 
-msgid "Explore Teams (N={0})"
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Owner"
-msgstr ""
-
-msgid "Status"
-msgstr "Status"
-
 msgid "Please Confirm"
 msgstr "Bitte bestätige"
 
@@ -672,6 +623,9 @@ msgstr ""
 
 msgid "to find your friends from there."
 msgstr ""
+
+msgid "Sign in with {0}"
+msgstr "Anmelden mit {0}"
 
 msgid "Connect your {0} account"
 msgstr ""

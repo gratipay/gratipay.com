@@ -189,9 +189,6 @@ msgstr "Disconnetti"
 msgid "About"
 msgstr "Chi siamo"
 
-msgid "Explore"
-msgstr "Esplora"
-
 msgid "Search"
 msgstr "Cerca"
 
@@ -299,9 +296,6 @@ msgstr "Riceve"
 msgid "Joined"
 msgstr "Iscritto"
 
-msgid "Dashboard"
-msgstr "Dashboard"
-
 msgid "Profile"
 msgstr "Profilo"
 
@@ -371,48 +365,17 @@ msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
 msgstr "Sostieni il pagamento con una {0}carta di credito{1} per assicurare che venga effettuato!"
 
-msgid "Weekly Payments"
-msgstr "Pagamenti Settimanali"
+msgid "Teams (N={0})"
+msgstr ""
 
-msgid "Motivated by Gratitude"
-msgstr "Motivati dalla Gratitudine"
+msgid "Name"
+msgstr "Nome"
 
-msgid ""
-"Sustainably crowdfund your business, personal projects, or charity, with "
-"{0}no extra fees{1}."
-msgstr "Finanzia la tua azienda, i tuoi progetti personali o umanitari in modo sostenibile tramite il crowdfunding senza {0}commissioni aggiuntive{1}."
+msgid "Owner"
+msgstr "Proprietario"
 
-msgid "{0}Sign In{1} {2}to Accept Weekly Payments{3}"
-msgstr "{0}Accedi{1} {2}per Accettare Pagamenti Settimanali{3}"
-
-msgid "Sign in with {0}"
-msgstr "Accedi con {0}"
-
-msgid "Or sign in with:"
-msgstr "O accedi con:"
-
-msgid ""
-"By signing in, you indicate that you have read and agree to our {0}Terms of "
-"Service{1}."
-msgstr "Registrandoti, dichiari di aver letto e accetti i nostri {0}Termini di Servizio{1}."
-
-msgid "You'll be joining {0} active users, who exchanged {1} {2}last week{3}."
-msgstr "Ti unirai a {0} utenti attivi, che hanno scambiato {1} {2}settimana scorsa{3}."
-
-msgid "Want to see who they are? Browse {0}our communities{1}."
-msgstr "Vuoi vedere chi sono? Cerca fra le {0}nostre comunità{1}."
-
-msgid "Want to work for Gratipay? We are an {0}open company{1}."
-msgstr "Vuoi lavorare per Gratipay? Siamo un'{0}azienda aperta{1}."
-
-msgid "You give {0} per week."
-msgstr "Doni {0} a settimana."
-
-msgid "Who inspires you? See if they're on Gratipay:"
-msgstr "Chi ti dona l'ispirazione? Guarda se sono su Gratipay:"
-
-msgid "Find your friends from social networks:"
-msgstr "Trova i tuoi amici sui social network:"
+msgid "Status"
+msgstr "Stato"
 
 msgid "You must sign in to apply for a new Team."
 msgstr "Devi registrarti per poterti proporre in un nuovo Team."
@@ -610,18 +573,6 @@ msgstr "Dashboard Recensione Rischio Frodi"
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr "Dashboard Recensione Rischio Frodi - (Team)"
 
-msgid "Explore Teams (N={0})"
-msgstr ""
-
-msgid "Name"
-msgstr "Nome"
-
-msgid "Owner"
-msgstr "Proprietario"
-
-msgid "Status"
-msgstr "Stato"
-
 msgid "Please Confirm"
 msgstr "Per Favore Conferma"
 
@@ -664,6 +615,9 @@ msgstr "Per favore ricarica la {0} connessione"
 
 msgid "to find your friends from there."
 msgstr "per trovare i tuoi amici da lì."
+
+msgid "Sign in with {0}"
+msgstr "Accedi con {0}"
 
 msgid "Connect your {0} account"
 msgstr "Collega il tuo {0} account"
@@ -741,7 +695,7 @@ msgid "Gratipay provides payments and payroll for open work."
 msgstr "Gratipay permette pagamenti di lavori gratuiti."
 
 msgid "Member"
-msgstr ""
+msgstr "Membro"
 
 msgid "accepts gifts"
 msgstr "accetta le donazioni"

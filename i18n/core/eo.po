@@ -188,9 +188,6 @@ msgstr "Malkonekti"
 msgid "About"
 msgstr "Pri"
 
-msgid "Explore"
-msgstr "Esplori"
-
 msgid "Search"
 msgstr "Serĉi"
 
@@ -298,9 +295,6 @@ msgstr "Ricevas"
 msgid "Joined"
 msgstr "Aliĝita"
 
-msgid "Dashboard"
-msgstr ""
-
 msgid "Profile"
 msgstr "Profilo"
 
@@ -370,48 +364,17 @@ msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
 msgstr "Subtenu vian pagon kun {0}kreditkarto{1} certigi ke la pago estas sukcesita."
 
-msgid "Weekly Payments"
-msgstr "Semajnaj Pagoj"
-
-msgid "Motivated by Gratitude"
-msgstr "Motivita de Dankemo"
-
-msgid ""
-"Sustainably crowdfund your business, personal projects, or charity, with "
-"{0}no extra fees{1}."
-msgstr "Longdaŭra amasfinancado por via negoco, personaj projektoj, aŭ bonfarado, kun {0}neniu ekstra kotizo{1}."
-
-msgid "{0}Sign In{1} {2}to Accept Weekly Payments{3}"
-msgstr "{0}Ensaluti{1} {2}por akcepti semajnajn pagojn{3}"
-
-msgid "Sign in with {0}"
-msgstr "Ensaluti kun {0}"
-
-msgid "Or sign in with:"
-msgstr "Aŭ ensaluti kun:"
-
-msgid ""
-"By signing in, you indicate that you have read and agree to our {0}Terms of "
-"Service{1}."
+msgid "Teams (N={0})"
 msgstr ""
 
-msgid "You'll be joining {0} active users, who exchanged {1} {2}last week{3}."
-msgstr "Vi estos kunigi {0} aktivajn uzantojn, kiuj interŝanĝis {1} {2}pasintsemajne{3}."
-
-msgid "Want to see who they are? Browse {0}our communities{1}."
-msgstr "Ĉu vi volas vidi kiu estas? Foliumu {0}niajn komunumojn{1}."
-
-msgid "Want to work for Gratipay? We are an {0}open company{1}."
-msgstr "Ĉu vi volas labori por Gratipay? Ni estas {0}malferma firmo{1}."
-
-msgid "You give {0} per week."
+msgid "Name"
 msgstr ""
 
-msgid "Who inspires you? See if they're on Gratipay:"
-msgstr "Kiu inspiras vin? Trovu ilin en Gratipay:"
-
-msgid "Find your friends from social networks:"
+msgid "Owner"
 msgstr ""
+
+msgid "Status"
+msgstr "Stato"
 
 msgid "You must sign in to apply for a new Team."
 msgstr ""
@@ -609,18 +572,6 @@ msgstr "Panelo por Fraŭda Recenzo"
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr ""
 
-msgid "Explore Teams (N={0})"
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Owner"
-msgstr ""
-
-msgid "Status"
-msgstr "Stato"
-
 msgid "Please Confirm"
 msgstr "Bonvolu konfirmi"
 
@@ -663,6 +614,9 @@ msgstr ""
 
 msgid "to find your friends from there."
 msgstr ""
+
+msgid "Sign in with {0}"
+msgstr "Ensaluti kun {0}"
 
 msgid "Connect your {0} account"
 msgstr ""
