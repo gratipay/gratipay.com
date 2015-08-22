@@ -7,7 +7,7 @@ teams = website.db.all("""
   ORDER BY ctime DESC
 
 """)
-nteams = len(teams)
+nteams = len(teams) if user.ADMIN else len([t for t in teams if t.is_approved])
 title = _("Teams (N={0})", nteams)
 
 [---]
