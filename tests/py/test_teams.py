@@ -125,17 +125,17 @@ class TestTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 1
         assert "Sorry, there is already a team using 'gratiteam'." in r.body
 
-    def test_approved_team_shows_up_on_explore_teams(self):
+    def test_approved_team_shows_up_on_explore(self):
         self.make_team(is_approved=True)
-        assert 'The Enterprise' in self.client.GET("/explore/teams/").body
+        assert 'The Enterprise' in self.client.GET("/explore/").body
 
-    def test_unreviewed_team_does_not_show_up_on_explore_teams(self):
+    def test_unreviewed_team_does_not_show_up_on_explore(self):
         self.make_team(is_approved=None)
-        assert 'The Enterprise' not in self.client.GET("/explore/teams/").body
+        assert 'The Enterprise' not in self.client.GET("/explore/").body
 
-    def test_rejected_team_does_not_show_up_on_explore_teams(self):
+    def test_rejected_team_does_not_show_up_on_explore(self):
         self.make_team(is_approved=False)
-        assert 'The Enterprise' not in self.client.GET("/explore/teams/").body
+        assert 'The Enterprise' not in self.client.GET("/explore/").body
 
     def test_stripping_required_inputs(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')

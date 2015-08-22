@@ -1,86 +1,34 @@
-from gratipay.models import community
-
 [-----------------------------]
 
-communities = community.get_list_for(website.db, None)
-ncommunities = len(communities)
-title = _("Explore")
+teams = website.db.all("""
 
-[-----------------------------]
-{% extends "templates/explore.html" %}
-{% block head %}
-    <!-- Otherwise we're getting Indonesian. :-/ -->
-    <!-- https://github.com/gratipay/gratipay.com/issues/953 -->
-    <meta name="google" value="notranslate">
-{% endblock %}
+    SELECT teams.*::teams
+      FROM teams
+  ORDER BY ctime DESC
 
-{% block sidebar %}
-    <div class="avatar">
-        <img src="{{ website.asset('communities.svg') }}">
-    </div>
-    <p>
-        {{ ngettext( "There is {n} community on Gratipay."
-                   , "There are {n} communities on Gratipay."
-                   , ncommunities
-                    ) }}
-    </p>
-{% endblock %}
+""")
+nteams = len(teams)
+title = _("Explore Teams (N={0})", nteams)
+subhead = _("Teams")
 
+[-----------------------------] text/html
+{% extends "templates/base.html" %}
 {% block content %}
-<form class="communities">
-    <select data-placeholder="{{ _("Find or add a community ...") }}" tabindex="1">
-        <option></option>
-        {% for community in communities %}
-        <option value="{{ community.slug }}">{{ community.name }} -
-        {{ ngettext("{n} Member", "{n} Members", community.nmembers).lower() }}
-        </option>
-        {% endfor %}
-    </select>
-</form>
-
-<h2>{{ _("Popular Communities") }}</h2>
-<ul class="community memberships">
-    {% for community in communities[:18] %}
-    <li>
-        <a href="/for/{{ community.slug }}/">{{ community.name }}</a>
-        {% set n = community.nmembers %}
-        <div class="fine">
-            {{ ngettext("{0}{n}{1} Member", "{0}{n}{1} Members", n, "", "").lower() }}
-        </div>
-    </li>
+<table class="table">
+    <tr>
+        <th>{{ _("Name") }}</th>
+        <th>{{ _("Owner") }}</th>
+        {% if user.ADMIN %}<th>{{ _("Status") }}</th>{% endif %}
+    </tr>
+    {% for team in teams %}
+    {% if team.is_approved or user.ADMIN %}
+    <tr>
+        <td><a href="/{{ team.slug }}/">{{ team.name }}</a></td>
+        <td><a href="/{{ team.owner }}/">{{ team.owner }}</a></td>
+        {% if user.ADMIN %}<td>{{ team.status }}</td>{% endif %}
+    </tr>
+    {% endif %}
     {% endfor %}
-</ul>
+</table>
 {% endblock %}
 
-{% block scripts %}
-<script>
-    $(document).ready(function()
-    {
-
-        var communityChooser = $('.communities select')
-        var communityList = $('.communities ul')
-
-
-        function createOption(term)
-        {
-            success = function () {
-                Gratipay.communities.jumpTo(term);
-            }
-            Gratipay.communities.join(term, success, Gratipay.error);
-        }
-        // TODO: in future
-        {% if user.ANON %}
-        var chosenOpts = {};
-        {% else %}
-        var chosenOpts = { create_option: createOption
-                         , create_option_text: "Add a new community"
-                          };
-        {% endif %}
-        communityChooser.chosen(chosenOpts).change(function() {
-            Gratipay.communities.jumpTo(communityChooser.val());
-        });
-    });
-</script>
-
-{{ super() }}
-{% endblock %}

@@ -2,7 +2,6 @@ from __future__ import print_function, unicode_literals
 
 from aspen import json
 from gratipay.testing import Harness
-from gratipay.models.participant import Participant
 
 
 class Tests(Harness):
@@ -71,11 +70,6 @@ class Tests(Harness):
     def test_participant_doesnt_show_up_on_search(self):
         self.hit_privacy('POST', data={'toggle': 'is_searchable'})
         assert 'alice' not in self.client.GET("/search.json?q=alice").body
-
-    def test_team_participant_doesnt_show_up_on_explore_teams(self):
-        alice = Participant.from_username('alice')
-        self.make_participant('A-Team', number='plural', is_searchable=False).add_member(alice)
-        assert 'A-Team' not in self.client.GET("/explore/teams/").body
 
     # Related to anonymous-receiving
 
