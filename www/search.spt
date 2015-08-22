@@ -60,16 +60,6 @@ if query:
           ORDER BY max_rank DESC
         """, locals())
 
-    if action in (None, 'search_communities'):
-        results['communities'] = website.db.all("""
-            SELECT slug, name, nmembers, similarity(name, %(q)s) AS rank
-              FROM communities
-             WHERE name %% %(q)s
-               AND nmembers > 0
-          ORDER BY rank DESC, name
-             LIMIT 10
-        """, locals())
-
 [---] text/html
 {% extends "templates/base.html" %}
 {% from 'templates/avatar-url.html' import avatar_url, avatar_img with context %}
@@ -78,7 +68,6 @@ if query:
     {% include "templates/search-box.html" %}
 
     {% set usernames = results.get('usernames') %}
-    {% set communities = results.get('communities') %}
     {% set statements = results.get('statements') %}
 
     <div class="row">
@@ -97,27 +86,6 @@ if query:
             </a>
         {% endfor %}
         </div>
-    </div>
-    {% endif %}
-
-    {% if communities %}
-    <div class="col1">
-        <h2>{{ ngettext("Found a matching community name",
-                        "Found matching community names",
-                        len(communities)) }}</h2>
-        <ul class="community memberships">
-        {% for result in communities %}
-            <li>
-                <a href="/for/{{ result.slug }}/">{{ result.name }}</a>
-                <div class="fine">{{
-                    ngettext("{0}{n}{1} Member",
-                             "{0}{n}{1} Members",
-                             result.nmembers,
-                             "", "").lower()
-                }}</div>
-            </li>
-        {% endfor %}
-        </ul>
     </div>
     {% endif %}
     </div>
@@ -143,7 +111,7 @@ if query:
     </div>
     {% endif %}
 
-    {% if query and not (usernames or communities or statements) %}
+    {% if query and not (usernames or statements) %}
         <p>{{ _("Sorry, we didn't find anything matching your query.") }}</p>
     {% endif %}
 
