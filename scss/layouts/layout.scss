@@ -4,9 +4,13 @@ body {
     line-height: 100%;
 }
 
+#wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
 #header {
     background: transparentize($white, 0.1);
-    border-bottom: 1px solid $brown;
 
     h1 {
         line-height: 100%;
@@ -46,20 +50,29 @@ body {
     }
 }
 
+#banner {
+    border: 1px solid $brown;
+    border-style: solid none;
+    font: bold 64px/64px $Ideal;
+    text-align: right;
+    padding: 128px 8px 8px;
+    background: $black;
+    color: $white;
+}
+
 #main {
     display: table;
     height: 100%;
     table-layout: fixed;
     width: 100%;
+    padding-top: 40px;
 }
 
 #sidebar {
     display: table-cell;
     vertical-align: top;
-    width: 200px;
-    padding: 20px;
-    background: transparentize($brown, 0.1);
-    color: $white;
+    width: 128px;
+    padding: 0 20px 0 0;
 
     div.avatar {
         margin-bottom: 20px;
@@ -111,7 +124,6 @@ body {
     vertical-align: top;
     font: 300 16px/27px $Chronicle;
     padding: 0 40px 40px;
-    background: transparentize($white, 0.03);
 
     h1 {
         color: $black;
