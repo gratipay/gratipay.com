@@ -366,7 +366,7 @@ msgid ""
 msgstr "Sostieni il pagamento con una {0}carta di credito{1} per assicurare che venga effettuato!"
 
 msgid "Teams (N={0})"
-msgstr ""
+msgstr "Team (N={0})"
 
 msgid "Name"
 msgstr "Nome"
