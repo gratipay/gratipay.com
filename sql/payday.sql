@@ -84,6 +84,13 @@ UPDATE payday_payment_instructions ppi
  WHERE ppi.participant = s.participant
    AND ppi.team = s.team;
 
+DROP TABLE IF EXISTS payment_instructions_due;
+CREATE TABLE payment_instructions_due AS
+    SELECT * FROM payday_payment_instructions;
+
+CREATE INDEX ON payment_instructions_due (participant);
+CREATE INDEX ON payment_instructions_due (team);
+
 ALTER TABLE payday_participants ADD COLUMN giving_today numeric(35,2);
 UPDATE payday_participants pp
    SET giving_today = COALESCE((
@@ -116,6 +123,7 @@ RETURNS void AS $$
     DECLARE
         participant_delta numeric;
         team_delta numeric;
+        payload json;
     BEGIN
         IF ($3 = 0) THEN RETURN; END IF;
 
@@ -133,11 +141,17 @@ RETURNS void AS $$
         UPDATE payday_teams
            SET balance = (balance + team_delta)
          WHERE slug = $2;
-        UPDATE payday_payment_instructions
+        UPDATE payment_instructions_due
            SET due = 0
          WHERE participant = $1
            AND team = $2
            AND due > 0;
+        IF ($4 = 'to-team') THEN
+            payload = '{"action":"pay","participant":"' || $1 || '", "team":"'
+                || $2 || '", "amount":' || $3 || '}';
+            INSERT INTO events(type, payload)
+                VALUES ('payday',payload);
+        END IF;
         INSERT INTO payday_payments
                     (participant, team, amount, direction)
              VALUES ( ( SELECT p.username
@@ -158,13 +172,20 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION park(text, text, numeric)
 RETURNS void AS $$
+    DECLARE payload json;
     BEGIN
         IF ($3 = 0) THEN RETURN; END IF;
 
-        UPDATE payday_payment_instructions
+        UPDATE payment_instructions_due
            SET due = $3
          WHERE participant = $1
            AND team = $2;
+
+        payload = '{"action":"due","participant":"' || $1 || '", "team":"'
+            || $2 || '", "due":' || $3 || '}';
+        INSERT INTO events(type, payload)
+            VALUES ('payday',payload);
+
     END;
 $$ LANGUAGE plpgsql;
 
@@ -195,7 +216,6 @@ CREATE TRIGGER process_payment_instruction BEFORE UPDATE OF is_funded ON payday_
     FOR EACH ROW
     WHEN (NEW.is_funded IS true AND OLD.is_funded IS NOT true)
     EXECUTE PROCEDURE process_payment_instruction();
-
 
 -- Create a trigger to process takes
 

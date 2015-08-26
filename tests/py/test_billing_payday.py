@@ -28,9 +28,140 @@ class TestPayday(BillingHarness):
 
         obama = Participant.from_username('obama')
         picard = Participant.from_username('picard')
+        due = self.db.one("""SELECT due
+             FROM payment_instructions ppi
+            WHERE ppi.participant = 'obama'
+              AND ppi.team = 'TheEnterprise'
+            """)
 
         assert picard.balance == D(MINIMUM_CHARGE)
         assert obama.balance == D('0.00')
+        assert due == D('0.00')
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def test_payday_moves_money_cumulative_above_min_charge(self, fch):
+        Enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(Enterprise, '5.00')  # < MINIMUM_CHARGE
+        # simulate already due amount
+        self.db.run("""
+
+            UPDATE payment_instructions ppi
+               SET due = '5.00'
+             WHERE ppi.participant = 'obama'
+               AND ppi.team = 'TheEnterprise'
+
+        """)
+
+        fch.return_value = {}
+        Payday.start().run()
+
+        due = self.db.one("""
+
+            SELECT due
+              FROM payment_instructions ppi
+             WHERE ppi.participant = 'obama'
+               AND ppi.team = 'TheEnterprise'
+
+        """)
+
+        obama = Participant.from_username('obama')
+        picard = Participant.from_username('picard')
+
+        assert picard.balance == D('10.00')
+        assert obama.balance == D('0.00')
+        assert due == D('0.00')
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def test_payday_preserves_due_until_charged(self, fch):
+        Enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(Enterprise, '2.00')  # < MINIMUM_CHARGE
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 0
+
+        due = self.db.one("""
+
+            SELECT DISTINCT ON (participant, team) due
+              FROM payment_instructions ppi
+             WHERE ppi.participant = 'obama'
+               AND ppi.team = 'TheEnterprise'
+          ORDER BY participant, team, mtime DESC
+
+        """)
+
+        assert due == D('2.00')
+
+        self.obama.set_payment_instruction(Enterprise, '3.00')  # < MINIMUM_CHARGE
+        self.obama.set_payment_instruction(Enterprise, '2.50')  # cumulatively still < MINIMUM_CHARGE
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 1
+
+        due = self.db.one("""
+
+            SELECT DISTINCT ON (participant, team) due
+              FROM payment_instructions ppi
+             WHERE ppi.participant = 'obama'
+               AND ppi.team = 'TheEnterprise'
+          ORDER BY participant, team, mtime DESC
+
+        """)
+
+        assert due == D('4.50')
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 2
+
+        due = self.db.one("""
+
+            SELECT DISTINCT ON (participant, team) due
+              FROM payment_instructions ppi
+             WHERE ppi.participant = 'obama'
+               AND ppi.team = 'TheEnterprise'
+          ORDER BY participant, team, mtime DESC
+
+        """)
+
+        assert due == D('7.00')
+
+        self.obama.set_payment_instruction(Enterprise, '1.00')  # cumulatively still < MINIMUM_CHARGE
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 3
+
+        due = self.db.one("""
+
+            SELECT DISTINCT ON (participant, team) due
+              FROM payment_instructions ppi
+             WHERE ppi.participant = 'obama'
+               AND ppi.team = 'TheEnterprise'
+          ORDER BY participant, team, mtime DESC
+
+        """)
+
+        assert due == D('8.00')
+
+        self.obama.set_payment_instruction(Enterprise, '4.00')  # cumulatively > MINIMUM_CHARGE
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 4
+
+        due = self.db.one("""
+
+            SELECT DISTINCT ON (participant, team) due
+              FROM payment_instructions ppi
+             WHERE ppi.participant = 'obama'
+               AND ppi.team = 'TheEnterprise'
+          ORDER BY participant, team, mtime DESC
+
+        """)
+
+        obama = Participant.from_username('obama')
+        picard = Participant.from_username('picard')
+
+        assert picard.balance == D('12.00')
+        assert obama.balance == D('0.00')
+        assert due == D('0.00')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_does_not_move_money_below_min_charge(self, fch):

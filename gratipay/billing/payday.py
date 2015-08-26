@@ -351,8 +351,16 @@ class Payday(object):
         cursor.run("""
             UPDATE payment_instructions pi
                SET due = pi2.due
-              FROM payday_payment_instructions pi2
+              FROM payment_instructions_due pi2
              WHERE pi.id = pi2.id
+        """)
+        # Reset older due values to zero
+        cursor.run("""
+            UPDATE payment_instructions pi
+               SET due = '0'
+             WHERE pi.id NOT IN (
+                 SELECT id
+                   FROM payment_instructions_due pi2)
         """)
 
         log("Updated the balances of %i participants." % len(participants))
