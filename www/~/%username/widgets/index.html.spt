@@ -3,8 +3,8 @@ from gratipay.utils import get_participant
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-title = participant.username
-subhead = _("Widgets")
+banner = participant.username
+title = _("Widgets")
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/profile.html" %}

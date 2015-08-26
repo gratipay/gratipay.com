@@ -1,8 +1,8 @@
 from gratipay.utils import get_participant, to_javascript
 [---]
 participant = get_participant(state, restrict=True)
+banner = participant.username
 title = _("Close Account")
-subhead = participant.username
 
 payday_is_running = website.db.one("""
 

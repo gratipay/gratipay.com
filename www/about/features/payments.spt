@@ -1,6 +1,6 @@
 [---]
-title = _("Features")
-subhead = _("Payments")
+banner = _("About")
+title = _("Payments")
 [---] text/html
 {% extends "templates/about-features.html" %}
 {% block content %}

@@ -1,6 +1,6 @@
 [---]
-title = _("About")
-subhead = _("Contact Us")
+banner = _("About")
+title = _("Contact Us")
 [---] text/html
 {% extends "templates/about-basic-info.html" %}
 {% block content %}

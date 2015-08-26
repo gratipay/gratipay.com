@@ -8,8 +8,8 @@ from gratipay.utils.history import iter_payday_events
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-title = participant.username
-subhead = _("History")
+banner = participant.username
+title = _("History")
 subpath = 'history/' if user.ADMIN else ''
 admin_override = user.ADMIN and (participant != user.participant or 'override' in request.qs)
 translated_status = { None:         ''

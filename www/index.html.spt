@@ -8,6 +8,7 @@ teams = website.db.all("""
 
 """)
 nteams = len(teams) if user.ADMIN else len([t for t in teams if t.is_approved])
+banner = "[Homepage]"
 title = _("Teams (N={0})", nteams)
 
 [---]

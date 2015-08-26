@@ -6,11 +6,11 @@ from gratipay.utils.i18n import LANGUAGES_2, SEARCH_CONFS, strip_accents
 action = request.qs.get('action')
 query = request.qs.get('q')
 
-title = _("Search")
+banner = _("Search")
 results = {}
 
 if query:
-    subhead = query
+    title = query
     q = strip_accents(query)
 
     if action in (None, 'search_usernames'):

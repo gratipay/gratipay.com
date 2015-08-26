@@ -5,8 +5,8 @@ from gratipay.utils import get_participant
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-title = participant.username
-subhead = _("Account")
+banner = participant.username
+title = _("Settings")
 
 emails = participant.get_emails()
 

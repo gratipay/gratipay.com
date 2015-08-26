@@ -9,7 +9,7 @@ LONG_STATEMENT = 256
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=False)
-title = username = participant.username
+banner = username = participant.username
 
 accounts = participant.get_accounts_elsewhere()
 

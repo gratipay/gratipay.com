@@ -1,5 +1,6 @@
 [---]
-title = _("About")
+banner = _("About")
+title = _("Welcome!")
 [---] text/html
 {% extends "templates/about-basic-info.html" %}
 {% block content %}

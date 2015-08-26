@@ -1,7 +1,7 @@
 # encoding=utf8
 [---]
-title = _("About")
-subhead = _("Pricing")
+banner = _("About")
+title = _("Pricing")
 [---] text/html
 {% extends "templates/about-basic-info.html" %}
 {% block content %}

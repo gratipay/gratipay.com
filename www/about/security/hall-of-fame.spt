@@ -61,8 +61,8 @@ for line in raw.splitlines():
         hof[-1][0] = parse_github(line)
 
 [---]
-title = _("Security")
-subhead = _("Hall of Fame (Legacy)")
+banner = _("About")
+title = _("Hall of Fame (Legacy)")
 [---] text/html
 {% extends "templates/about-security.html" %}
 {% block content %}

@@ -8,8 +8,8 @@ from gratipay.utils import markdown
 #terms = '\n'.join(terms.splitlines()[2:])
 
 [---]
-title = _("Policies")
-subhead = _("Terms of Service")
+banner = _("About")
+title = _("Terms of Service")
 [---] text/html
 {% extends "templates/about-policies.html" %}
 
