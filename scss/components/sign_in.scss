@@ -110,7 +110,7 @@
             right: 0;
             margin-top: 0;
             @include border-radius(0);
-            background: transparentize($gold, 0.8);
+            background: $gold;
             button {
                 color: $black;
                 &:hover {
