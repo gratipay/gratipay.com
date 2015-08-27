@@ -890,6 +890,24 @@ class Participant(Model):
         """, (self.username, team.slug), back_as=dict, default=default)
 
 
+    def get_due(self, team):
+        """Given a slug, return a Decimal.
+        """
+        if not isinstance(team, Team):
+            team, slug = Team.from_slug(team), team
+            if not team:
+                raise NoTeam(slug)
+
+        return self.db.one("""\
+
+            SELECT due
+              FROM current_payment_instructions
+             WHERE participant = %s
+               AND team = %s
+
+        """, (self.username, team.slug))
+
+
     def get_giving_for_profile(self):
         """Return a list and a Decimal.
         """
