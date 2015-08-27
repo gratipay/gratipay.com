@@ -30,45 +30,6 @@
 {% endblock %}
 
 {% block sidebar %}
-<div class="mono">
-    {% set g = participant.giving %}
-    {% set r = participant.receiving %}
-    {% set anon_giving = participant.anonymous_giving %}
-    {% set anon_receiving = participant.anonymous_receiving %}
-    {% set giving_str = '[' + _('hidden') + ']' if anon_giving else format_currency(g, "USD") %}
-    {% set receiving_str = '[' + _('hidden') + ']' if anon_receiving else format_currency(r, "USD") %}
-
-    <!--
-    <table>
-        <tr>
-            <td class="left">{{ _('Gives') }}</td>
-            <td class="right">{{ giving_str }}</td>
-        </tr>
-        <tr>
-            <td class="left">{{ _('Receives') }}</td>
-            <td class="right total-receiving" data-tippee="{{ participant.id }}">
-                {{ receiving_str }}
-            </td>
-        </tr>
-    </table>
-    -->
-
-    {% if participant.claimed_time %}
-    <p>{{ _('Joined') }} {{ to_age(participant.claimed_time, add_direction=True) }}.</p>
-    {% elif participant.is_closed %}
-    <p>Closed {{ to_age(participant.closed_time, add_direction=True) }}.</p>
-    {% else %}
-    {% set absorption = website.db.one( "select * from absorptions where archived_as=%s"
-                                      , (participant.username,)
-                                       ) %}
-    <p>Formerly {{ absorption.absorbed_was }}.</p>
-    <p>Absorbed by <a href="/{{ absorption.absorbed_by }}/">{{ absorption.absorbed_by }}</a>
-    {{ to_age(absorption.timestamp, add_direction=True) }}.<p>
-    {% endif %}
-</div>
-{% endblock %}
-
-{% block subnav %}
 {% set current_page = '/' if request.path.raw == '/' else '/~' + request.path.raw[3:] %}
 {% set show_members = participant.show_as_team(user) %}
 {% set show_receiving = (user.participant == participant or not participant.anonymous_receiving) %}
@@ -80,7 +41,7 @@
                , ('/~'+u+'/settings/',  _('Settings'),  True,   False)
                , ('/~'+u+'/events/',    _('Events'),    False,  False)
                 ] %}
-{% set pages = filter_profile_subnav(user, participant, pages) %}
+{% set pages = filter_profile_nav(user, participant, pages) %}
 {% if pages %}
 <ul class="nav">
     {% for slug, name, show_them, show_others in pages %}

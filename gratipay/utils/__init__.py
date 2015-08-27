@@ -214,7 +214,7 @@ def erase_cookie(cookies, key, **kw):
     set_cookie(cookies, key, '', BEGINNING_OF_EPOCH, **kw)
 
 
-def filter_profile_subnav(user, participant, pages):
+def filter_profile_nav(user, participant, pages):
     out = []
     for foo, bar, show_them, show_others in pages:
         if (user.participant == participant and show_them) \

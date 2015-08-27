@@ -111,10 +111,13 @@ body {
     font: 300 14px/24px $Chronicle;
     padding: 0 40px 40px;
 
+    .nav {
+        margin-bottom: 40px;
+    }
     h1 {
         color: $black;
         font: bold 28px/33px $Ideal;
-        margin: 40px 0 5px 0;
+        margin: 0 0 5px 0;
     }
     a:hover {
         background: transparentize($gold, 0.8);

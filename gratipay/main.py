@@ -34,7 +34,7 @@ website.renderer_factories['jinja2'].Renderer.global_context = {
     'b64encode': base64.b64encode,
     'enumerate': enumerate,
     'filter': filter,
-    'filter_profile_subnav': utils.filter_profile_subnav,
+    'filter_profile_nav': utils.filter_profile_nav,
     'float': float,
     'len': len,
     'map': map,
