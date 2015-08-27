@@ -1,4 +1,4 @@
-{% extends "templates/participant.html" %}
+{% extends "templates/base.html" %}
 
 {% block head_early %}
     {% if not participant.is_searchable %}
@@ -8,6 +8,10 @@
 
 {% block scripts %}
     {% if user.ADMIN %}<script src="{{ website.asset('admin.js') }}"></script>{% endif %}
+{% endblock %}
+
+{% block sidebar %}
+{% include "templates/profile-sidebar.html" %}
 {% endblock %}
 
 {% block subnav %}
