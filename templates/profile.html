@@ -10,11 +10,11 @@
     {% if user.ADMIN %}<script src="{{ website.asset('admin.js') }}"></script>{% endif %}
 {% endblock %}
 
-{% block sidebar %}
+{% block banner %}
 {% from 'templates/avatar-url.html' import avatar_img with context %}
 
 <div class="avatar {{ 'is-suspicious' if participant.is_suspicious }}">
-    <a href="/{{ participant.username }}/">{{ avatar_img(participant) }}</a>
+    <a href="/~{{ participant.username }}/">{{ avatar_img(participant) }}</a>
 
     {% if user.ADMIN %}
     <label class="is-suspicious-label">
@@ -26,7 +26,10 @@
     <div class="is-suspicious-label">Suspicious</div>
     {% endif %}
 </div>
+{{ super() }}
+{% endblock %}
 
+{% block sidebar %}
 <div class="mono">
     {% set g = participant.giving %}
     {% set r = participant.receiving %}

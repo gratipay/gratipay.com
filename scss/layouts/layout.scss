@@ -53,11 +53,17 @@ body {
 #banner {
     border: 1px solid $brown;
     border-style: solid none;
-    font: bold 64px/64px $Ideal;
-    text-align: right;
-    padding: 128px 8px 8px;
+    height: 194px; // includes border
     background: $black;
-    color: $white;
+    position: relative;
+
+    h1 {
+        font: bold 64px/64px $Ideal;
+        color: $white;
+        position: absolute;
+        bottom: 4px;
+        right: 16px;
+    }
 }
 
 #main {
@@ -74,18 +80,6 @@ body {
     width: 128px;
     padding: 0 20px 0 0;
 
-    div.avatar {
-        margin-bottom: 20px;
-        &.is-suspicious {
-            background: transparentize($light-red, 0.1);
-        }
-        img {
-            width: 160px;
-            height: 160px;
-            @include border-radius(5px);
-        }
-    }
-
     .right {
         text-align: right;
     }
@@ -100,14 +94,6 @@ body {
         .left {
             padding-right: 10px;
         }
-    }
-
-    .is-suspicious-label {
-        text-align: right;
-        padding: 3px 0;
-        font-size: 10px;
-        text-transform: uppercase;
-        display: block;
     }
 
     .sign-in-to {

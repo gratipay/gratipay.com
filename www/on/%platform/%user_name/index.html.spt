@@ -16,7 +16,7 @@ participant = account.participant
 if participant.is_claimed or participant.is_closed:
     website.redirect('/%s/' % participant.username)
 
-title = friendly_name = account.friendly_name
+banner = friendly_name = account.friendly_name
 user_id = account.user_id
 is_team = account.is_team
 
@@ -52,12 +52,17 @@ if is_team:
     </h1>
 {% endblock %}
 
-{% block sidebar %}
-
+{% block banner %}
 <div class="avatar">
-    <a href="{{ account.html_url}}">{{ avatar_img(account) }}</a>
+    <a href="{{ account.html_url}}">
+        {{ avatar_img(account) }}
+        <img class="platform" src="{{ platform.logo }}" />
+    </a>
 </div>
+{{ super () }}
+{% endblock %}
 
+{% block sidebar %}
 <div class="mono">
     <table>
         {% if account.is_team %}
@@ -68,11 +73,9 @@ if is_team:
         {% endif %}
     </table>
 </div>
-
 {% endblock %}
 
 {% block content %}
-
 {% from 'templates/auth.html' import auth_button with context %}
 
 <div class="col0">

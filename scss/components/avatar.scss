@@ -1,0 +1,47 @@
+#banner {
+    .avatar {
+        position: relative;
+        height: 192px;
+        width: 192px;
+
+        a {
+            display: block;
+            position: absolute;
+            top: 16px;
+            left: 16px;
+
+            img {
+                display: block;
+                width: 160px;
+                height: 160px;
+                border: 2px solid $white;
+                @include border-radius(5px);
+
+                &.platform {
+                    width: 32px;
+                    height: 32px;
+                    @include border-radius(5px);
+                    border: 2px solid $white;
+                    position: absolute;
+                    bottom: 8px;
+                    right: 8px;
+                }
+            }
+        }
+
+        .is-suspicious-label {
+            text-align: right;
+            font-size: 10px;
+            text-transform: uppercase;
+            display: block;
+            color: $white;
+            position: absolute;
+            bottom: 0px;
+            right: 16px;
+        }
+
+        &.is-suspicious {
+            background: transparentize($light-red, 0.1);
+        }
+    }
+}
