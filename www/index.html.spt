@@ -7,7 +7,8 @@ teams = website.db.all("""
   ORDER BY ctime DESC
 
 """)
-nteams = len(teams) if user.ADMIN else len([t for t in teams if t.is_approved])
+napproved = len([t for t in teams if t.is_approved])
+nteams = len(teams) if user.ADMIN else napproved
 title = _("Teams (N={0})", nteams)
 
 [---]
@@ -47,7 +48,7 @@ title = _("Teams (N={0})", nteams)
 
 <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
 
-<p>{{ _("We have {nteams} Teams receiving and distributing money each week.", nteams=nteams) }}</p>
+<p>{{ _("We have {nteams} Teams receiving and distributing money each week.", nteams=napproved) }}</p>
 
 <p>{{ _('Explore our Teams at right, or <a href="/about/">read more about us</a>.'|safe) }}</p>
 {% endblock %}

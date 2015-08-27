@@ -35,6 +35,7 @@ Gratipay.adaptToLongUsernames = function() {
         h1.addClass('really-long');
     else if (nchars > 8)
         h1.addClass('long');
+    h1.show();
 };
 
 Gratipay.error = function(jqXHR, textStatus, errorThrown) {

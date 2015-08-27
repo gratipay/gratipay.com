@@ -75,6 +75,7 @@
         max-width: 386px;
         overflow: hidden;
         text-overflow: ellipsis;
+        display: none; // turn on in JS to avoid fouc
 
         &.long {
             font-size: 32px;
@@ -89,7 +90,6 @@
     }
 
     .homepage {
-
         margin: 0;
         color: $white;
         position: absolute;
