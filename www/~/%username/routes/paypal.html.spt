@@ -14,26 +14,9 @@ if not user.ANON:
 
     emails = participant.get_verified_email_addresses()
 
-title = _("PayPal Account")
+banner = _("PayPal")
 [---]
 {% extends "templates/base.html" %}
-
-{% block heading %}
-
-    {% if not user.ANON %}
-        <h1>{{ escape(status).format("<em id=\"status\">"|safe, "</em>"|safe) }}</h1>
-    {% else %}
-        <h1>{{ title }}</h1>
-    {% endif %}
-
-    <p>{{ _("When you receive money on Gratipay we'll automatically send it to your PayPal account "
-            "if you don't have a bank account attached.") }}
-    {{ _("Deposits are initiated every Thursday when you accumulate at least {0} in your balance.",
-         format_currency(0.5, 'USD')) }}
-    {{ _("PayPal's fee is 2%, but not more than $1 for U.S. PayPal accounts, or $20 for non-U.S. PayPal accounts.") }}</p>
-
-
-{% endblock %}
 
 {% block scripts %}
 
@@ -47,31 +30,35 @@ title = _("PayPal Account")
 {% endblock %}
 
 {% block content %}
+  {% if user.ANON %}
+    {% include "templates/sign-in-using.html" %}
+    {{ _("and then you'll be able to add or change your PayPal account.") }}
+  {% else %}
+    {% if emails %}
+        <p>{{ _("Choose from one of your verified emails below:") }}</p>
+        <form id="paypal">
+            <select id="email">
+                {% for email in emails %}
+                    <option value="{{ email }}" {% if route.address == email %}selected{% endif %}>{{ email }}</option>
+                {% endfor %}
+            </select>
+            <button id="save" class="selected">Save</button>
+        </form>
+        <br />
 
-{% if emails %}
-    <p>{{ _("Choose from one of your verified emails below:") }}</p>
-    <form id="paypal">
-        <select id="email">
-            {% for email in emails %}
-                <option value="{{ email }}" {% if route.address == email %}selected{% endif %}>{{ email }}</option>
-            {% endfor %}
-        </select>
-        <button id="save" class="selected">Save</button>
-    </form>
-    <br />
+        <p>{{ _("Can't find your PayPal email? {0}Add it here{1}.", "<a href='/about/me/settings#emails'>"|safe, "</a>"|safe) }}</p>
+    {% else %}
+        <p>{{ _("You must {0}add and verify{1} your PayPal email first.",
+                "<a href='/about/me/settings#emails'>"|safe,
+                "</a>"|safe) }}</p>
+    {% endif %}
 
-    <p>{{ _("Can't find your PayPal email? {0}Add it here{1}.", "<a href='/about/me/settings#emails'>"|safe, "</a>"|safe) }}</p>
-{% else %}
-    <p>{{ _("You must {0}add and verify{1} your PayPal email first.",
-            "<a href='/about/me/settings#emails'>"|safe,
-            "</a>"|safe) }}</p>
-{% endif %}
-
-{% if route %}
-    <form id="delete" data-network="paypal" data-address="{{ route.address }}"
-        data-confirm="{{ _('Are you sure you want to disconnect your PayPal account?') }}">
-    <button>{{ _("Disconnect {0}", route.address|safe) }}</button>
-    </form>
-{% endif %}
+    {% if route %}
+        <form id="delete" data-network="paypal" data-address="{{ route.address }}"
+            data-confirm="{{ _('Are you sure you want to disconnect your PayPal account?') }}">
+        <button>{{ _("Disconnect {0}", route.address|safe) }}</button>
+        </form>
+    {% endif %}
+  {% endif %}
 
 {% endblock %}

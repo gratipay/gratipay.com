@@ -9,6 +9,7 @@ from gratipay.utils import emails, get_participant
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=False)
+banner = '~' + participant.username
 if participant == user.participant:
     email = request.qs.get('email', '')
     nonce = request.qs.get('nonce', '')

@@ -142,7 +142,7 @@ emails = participant.get_emails()
                     <span class="label-primary">{{ _("Primary") }}</span>
                     <span class="label-unverified">{{ _("Unverified") }}</span>
                     <button class="remove">{{ _("Remove") }}</button>
-                    <button class="resend">{{ _("Resend email") }}</button>
+                    <button class="resend">{{ _("Resend") }}</button>
                     <button class="set-primary">{{ _("Set as primary") }}</button>
                 </li>
             {% endfor %}
