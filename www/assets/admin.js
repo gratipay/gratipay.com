@@ -5,7 +5,7 @@ $(document).ready(function() {
     $('.is-suspicious-label input').change(function() {
         var username = $(this).attr('data-username');
         jQuery.ajax({
-            url: '/' + username + '/toggle-is-suspicious.json',
+            url: '/~' + username + '/toggle-is-suspicious.json',
             type: 'POST',
             dataType: 'json',
             success: function (data) {
