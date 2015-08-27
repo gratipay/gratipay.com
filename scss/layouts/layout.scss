@@ -5,7 +5,7 @@ body {
 }
 
 #wrapper {
-    max-width: 600px;
+    max-width: 576px;
     margin: 0 auto;
 }
 
@@ -20,10 +20,10 @@ body {
         a {
             display: inline-block;
             border-top: 4px solid transparent;
-            padding: 6px 10px 10px;
+            padding: 6px 16px 16px;
             img {
                 display: inline-block;
-                width: 180px;
+                width: 160px;
             }
             &:hover {
                 border-top-color: $gold;
@@ -41,7 +41,7 @@ body {
             text-align: right;
             float: left;
             a#sign-out {
-                padding-right: 20px; // tweak to make icon placement look right
+                padding-right: 8px; // tweak to make icon placement look right
                 .icon {
                     font: normal 20px/20px 'icomoon';
                 }
@@ -53,18 +53,9 @@ body {
 #banner {
     border: 1px solid $brown;
     border-style: solid none;
-    height: 194px; // includes border
-    background: $black;
+    height: 194px;
+    background: $black url("banner.jpg") top left no-repeat;
     position: relative;
-
-    h1 {
-        font: bold 64px/80px $Ideal;
-        color: $white;
-        position: absolute;
-        bottom: 4px;
-        right: 16px;
-        text-align: right;
-    }
 }
 
 #main {
@@ -76,9 +67,8 @@ body {
 
 #sidebar {
     display: table-cell;
+    width: 192px;
     vertical-align: top;
-    width: 148px;
-    padding: 0 20px 0 0;
 
     .right {
         text-align: right;
@@ -105,10 +95,10 @@ body {
 }
 
 #content {
+    width: 384px;
     display: table-cell;
     vertical-align: top;
     font: 300 14px/24px $Chronicle;
-    padding: 0 0 0 20px;
 
     .nav {
         margin-bottom: 40px;
@@ -126,37 +116,8 @@ body {
     }
 }
 
-.col {
-    width: auto;
-    margin: 0 auto;
-}
-
-.col0, .col1 {
-    width: 50%;
-}
-
-.col0 {
-    min-width: 420px;
-}
-
-.row {
-    margin: 0 -20px;
-    @include clearfix;
-}
-
-.col1 {
-    float: left;
-    padding: 0 20px;
-}
-
-.payment-footer {
-    font: normal 12px $Ideal;
-    text-align: center;
-}
-
 #footer {
     border-top: 1px solid $brown;
-    padding: 10px 0;
     text-align: right;
 
     li {
@@ -165,16 +126,17 @@ body {
 
         a {
             display: inline-block;
-            margin: 0 0.3em;
-            padding: 0.25em 0.5em;
+            padding: 16px 16px 12px;
 
             .icon {
                 font: normal 20px/20px 'icomoon';
             }
 
             color: $black;
+            border-bottom: 4px solid transparent;
             &:hover {
-                color: $green;
+                border-bottom-color: $gold;
+                background: transparentize($gold, 0.8);
             }
         }
 

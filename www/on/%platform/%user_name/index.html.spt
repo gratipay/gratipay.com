@@ -53,13 +53,13 @@ if is_team:
 {% endblock %}
 
 {% block banner %}
-<div class="avatar">
-    <a href="{{ account.html_url}}">
+<a class="elsewhere" href="{{ account.html_url }}">
+    <div class="avatar">
         {{ avatar_img(account) }}
         <img class="platform" src="{{ platform.logo }}" />
-    </a>
-</div>
-{{ super () }}
+    </div>
+    {{ super () }}
+</a>
 {% endblock %}
 
 {% block sidebar %}
@@ -78,20 +78,19 @@ if is_team:
 {% block content %}
 {% from 'templates/auth.html' import auth_button with context %}
 
-<div class="col0">
-  {% if is_team %}
+{% if is_team %}
 
-    {% if allow_team_connect %}
-        <h2>{{ _("{0} has not joined Gratipay.", user_id) }}</h2>
-        <p>{{ _("Are you an administrator of this {0} team account? Connect it "
-                "to your Gratipay account.",
-                platform.display_name) }}</p>
-        {% call auth_button(platform.name, 'connect', user_id) %}
-            {{ _("Connect team account") }}
-        {% endcall %}
-    {% endif %}
+  {% if allow_team_connect %}
+    <h2>{{ _("{0} has not joined Gratipay.", user_id) }}</h2>
+    <p>{{ _("Are you an administrator of this {0} team account? Connect it "
+            "to your Gratipay account.",
+            platform.display_name) }}</p>
+    {% call auth_button(platform.name, 'connect', user_id) %}
+        {{ _("Connect team account") }}
+    {% endcall %}
+  {% endif %}
 
-  {% else %}
+{% else %}
 
     <h2>{{ _("{0} has not joined Gratipay.", friendly_name) }}</h2>
 
@@ -161,8 +160,7 @@ if is_team:
 
     </tbody>
     </table>
-    {% endif %}
-
   {% endif %}
-</div>
+
+{% endif %}
 {% endblock %}

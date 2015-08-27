@@ -27,7 +27,6 @@ elif nteams == 1:
 {% extends "templates/base.html" %}
 
 {% block content %}
-<div class="col0">
 
   {% if teams or participant.balance > 0 %}
 
@@ -121,7 +120,6 @@ elif nteams == 1:
             type="submit">Yes, Close My Gratipay Account</button>
     </form>
   {% endif %}
-</div>
 {% endblock %}
 
 {% block scripts %}

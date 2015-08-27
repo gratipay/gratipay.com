@@ -70,9 +70,7 @@ if query:
     {% set usernames = results.get('usernames') %}
     {% set statements = results.get('statements') %}
 
-    <div class="row">
     {% if usernames %}
-    <div class="col1">
         <h2>{{ ngettext("Found a matching username",
                         "Found matching usernames",
                         len(usernames)) }}</h2>
@@ -86,9 +84,7 @@ if query:
             </a>
         {% endfor %}
         </div>
-    </div>
     {% endif %}
-    </div>
 
     {% if statements %}
     <div>

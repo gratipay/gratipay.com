@@ -627,7 +627,6 @@ collects information related to the incident.</p>
         color: red;
     }
 </style>
-<div class="col0">
 
 <h2>Summary</h2>
 
@@ -679,7 +678,6 @@ incident.</p>
         <td class="amount"><b>${{ total_legit }}</b></td>
     </tr>
 </table>
-</div>
 
 <table class="details centered">
     <tr>

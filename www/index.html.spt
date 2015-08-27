@@ -39,7 +39,7 @@ title = _("Teams (N={0})", nteams)
     {% if team.is_approved or user.ADMIN %}
     <tr>
         <td><a href="/{{ team.slug }}/">{{ team.name }}</a></td>
-        <td><a href="/{{ team.owner }}/">{{ team.owner }}</a></td>
+        <td><a href="/~{{ team.owner }}/">~{{ team.owner }}</a></td>
         {% if user.ADMIN %}<td>{{ team.status }}</td>{% endif %}
     </tr>
     {% endif %}

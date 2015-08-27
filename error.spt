@@ -7,6 +7,7 @@ from gratipay.utils.i18n import HTTP_ERRORS
 
 [----------------------------------------]
 
+banner = _("Eep!")
 code = response.code
 msg = _(HTTP_ERRORS.get(code, status_strings.get(code, '')))
 try:

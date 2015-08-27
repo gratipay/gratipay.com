@@ -54,20 +54,14 @@ def with_others(obj):
         {% include "templates/profile-edit.html" %}
     </div>
 {% else %}
-    <div class="clearfix">
-        <div class="col0">
-            {% include "templates/profile-details.html" %}
-            {% if statement %}
-            <h2>{{ _("Statement") }}</h2>
-            <div class="statement profile-statement">
-                {{ markdown.render(statement) }}
-            </div>
-            {% endif %}
-
-            {% include "templates/team-listing.html" %}
-            {% include "templates/connected-accounts.html" %}
-        </div>
+    {% if statement %}
+    <div class="statement profile-statement">
+        {{ markdown.render(statement) }}
     </div>
+    {% endif %}
+
+    {% include "templates/team-listing.html" %}
+    {% include "templates/connected-accounts.html" %}
 {% endif %}
 {% endblock %}
 

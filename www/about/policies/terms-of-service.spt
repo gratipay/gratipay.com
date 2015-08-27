@@ -14,7 +14,7 @@ title = _("Terms of Service")
 {% extends "templates/about-policies.html" %}
 
 {% block content %}
-<div class="col0">
+
 <p><i>Last Updated: May 14, 2015</i></p>
 
 <p>These Terms of Service (&ldquo;Terms&rdquo;) are an agreement between you, a user
@@ -439,5 +439,4 @@ shall be no third-party beneficiaries to the Terms.</li>
 </ol></li>
 </ol>
 
-</div>
 {% endblock %}

@@ -12,7 +12,7 @@
                 height: 78px;
                 font: normal 16px/16px $Ideal;
                 display: inline-block;
-                padding: 27px 25px 31px;
+                padding: 27px 12px 31px;
                 border-top: 4px solid transparent;
                 color: $black;
                 &.selected {
@@ -32,11 +32,11 @@
 #sidebar {
     .nav {
         li {
-            margin: 0;
+            margin: 0 54px 0 0;
         }
         a {
             height: 26px;
-            padding: 5px 0 5px 28px;
+            padding: 7px 0 0 36px;
             font: normal 14px/14px $Ideal;
             text-indent: -20px;
             display: block;
@@ -46,6 +46,7 @@
 
             &.selected {
                 background: transparentize($green, 0.8);
+                box-shadow: -2px 2px 2px rgba($black, 0.3);
                 font-weight: bold;
                 &:after { /* Thank you, http://cssarrowplease.com/! :-) */
                     left: 100%;
@@ -58,8 +59,8 @@
                     pointer-events: none;
                     border-color: rgba(0, 0, 0, 0);
                     border-left-color: transparentize($green, 0.8);
-                    border-width: 14px;
-                    margin-top: -14px;
+                    border-width: 12px;
+                    margin-top: -12px;
                 }
                 &:hover {
                     background: transparentize($gold, 0.8);

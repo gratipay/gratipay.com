@@ -4,7 +4,6 @@ title = _("Privacy Policy")
 [---] text/html
 {% extends "templates/about-policies.html" %}
 {% block content %}
-<div class="col0">
 
 <p><i>Last Updated: October 29, 2014</i></p>
 
@@ -154,5 +153,4 @@ the Policy, we will change the "Last Updated" date above.</p>
 <p>If you have any questions about this Policy, please contact us at
 chad@zetaweb.com.</p>
 
-</div>
 {% endblock %}

@@ -41,7 +41,6 @@ title = _("Apply for a New Team")
 {% endblock %}
 
 {% block content %}
-<div class="col0">
 <style>
     textarea {
         width: 100%;
@@ -111,5 +110,4 @@ title = _("Apply for a New Team")
 
     <button type="submit">{{ _("Apply") }}</button>
 </form>
-</div>
 {% endblock %}
