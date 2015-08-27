@@ -34,7 +34,7 @@
         <div id="header" class="clearfix">
             <h1><a href="/"><img src="{{ website.asset('gratipay.svg') }}"
                                  alt="Gratipay" /></a></h1>
-            {% set pages = [('/about/', _('About')), ('/search', _('Search'))] %}
+            {% set pages = [('/search', _('Search'))] %}
             {% set current_page = request.path.raw.split('/')[1] %}
             {% include "templates/nav.html" %}
             {% if user.ANON %}
@@ -82,7 +82,9 @@
 
         <div id="footer">
             <ul>
-                <li>
+                <li class="left">
+                <a href="/about/">{{ ("About") }}</a>
+                </li><li>
                     <a href="https://medium.com/gratipay-blog" 
                        title="our blog on Medium">
                         <span class="icon">&#xe006;</span>

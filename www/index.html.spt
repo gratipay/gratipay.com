@@ -31,7 +31,8 @@ title = _("Teams (N={0})", nteams)
 
 {% block banner %}
     <a href="/about/" class="homepage">
-        {{ _("Payments{br}and Payroll{br}for Open Work", br='<br>'|safe) }}
+        {{ _("Payments{br}and Payroll{br}for Open Work", br='<br>'|safe) }}<br>
+        <u>{{ _("Read more") }}&hellip;</u>
     </a>
 </a>
 {% endblock %}

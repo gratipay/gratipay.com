@@ -14,13 +14,13 @@ body {
 
     h1 {
         line-height: 100%;
-        height: 78px;
+        height: 64px;
         overflow: hidden;
         float: left;
         a {
             display: inline-block;
             border-top: 4px solid transparent;
-            padding: 6px 16px 16px;
+            padding: 2px 16px 12px;
             img {
                 display: inline-block;
                 width: 160px;
@@ -97,29 +97,4 @@ body {
 #footer {
     border-top: 1px solid $brown;
     text-align: right;
-
-    li {
-        display: inline-block;
-        margin: 0;
-
-        a {
-            display: inline-block;
-            padding: 16px 16px 12px;
-
-            .icon {
-                font: normal 20px/20px 'icomoon';
-            }
-
-            color: $black;
-            border-bottom: 4px solid transparent;
-            &:hover {
-                border-bottom-color: $gold;
-                background: transparentize($gold, 0.8);
-            }
-        }
-
-        &:first-child:before {
-            content: none;
-        }
-    }
 }

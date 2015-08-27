@@ -2,17 +2,17 @@
     .nav {
         line-height: 100%;
         display: inline-block;
-        height: 78px;
+        height: 64px;
         float: left;
 
         li {
             float: left;
             margin: 0;
             a {
-                height: 78px;
+                height: 64px;
                 font: normal 16px/16px $Ideal;
                 display: inline-block;
-                padding: 27px 12px 31px;
+                padding: 21px 12px 0;
                 border-top: 4px solid transparent;
                 max-width: 160px;
                 overflow: hidden;
@@ -109,6 +109,34 @@
                     background: transparentize($gold, 0.8);
                 }
             }
+        }
+    }
+}
+
+#footer {
+    li {
+        display: inline-block;
+        margin: 0;
+
+        a {
+            display: inline-block;
+            padding: 16px 16px 12px;
+
+            .icon {
+                font: normal 20px/20px 'icomoon';
+            }
+
+            color: $black;
+            border-bottom: 4px solid transparent;
+            &:hover {
+                border-bottom-color: $gold;
+                background: transparentize($gold, 0.8);
+            }
+        }
+
+        &.left {
+            float: left;
+            font: normal 14px/22px $Ideal;
         }
     }
 }
