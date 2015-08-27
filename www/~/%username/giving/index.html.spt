@@ -46,10 +46,6 @@ tabs = {
 
 <div class="giving">
 
-<p>{{ _("You give {0} every week.", format_currency(total, "USD")) }}</p>
-
-<h2>{{ _("Giving") }}</h2>
-
 <ul class="nav" id="tab-nav">
     {% for tab in ['active', 'cancelled'] %}
         <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>

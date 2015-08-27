@@ -33,24 +33,12 @@
         li {
             margin: 0;
             list-style: none;
-            &.facebook button {
-                @include has-icon("facebook");
-            }
-            &.google button {
-                @include has-icon("google");
-            }
-            &.twitter button {
-                @include has-icon("twitter");
-            }
-            &.github button {
-                @include has-icon("github");
-            }
-            &.bitbucket button {
-                @include has-icon("bitbucket");
-            }
-            &.openstreetmap button {
-                @include has-icon("openstreetmap");
-            }
+            &.facebook      button { @include has-icon("facebook"); }
+            &.google        button { @include has-icon("google"); }
+            &.twitter       button { @include has-icon("twitter"); }
+            &.github        button { @include has-icon("github"); }
+            &.bitbucket     button { @include has-icon("bitbucket"); }
+            &.openstreetmap button { @include has-icon("openstreetmap"); }
             &:hover button {
                 background: $darker-green;
             }

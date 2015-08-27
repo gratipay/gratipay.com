@@ -58,20 +58,20 @@ body {
     position: relative;
 
     h1 {
-        font: bold 64px/64px $Ideal;
+        font: bold 64px/80px $Ideal;
         color: $white;
         position: absolute;
         bottom: 4px;
         right: 16px;
+        text-align: right;
     }
 }
 
 #main {
     display: table;
-    height: 100%;
     table-layout: fixed;
     width: 100%;
-    padding-top: 40px;
+    padding: 40px 0;
 }
 
 #sidebar {
@@ -108,7 +108,7 @@ body {
     display: table-cell;
     vertical-align: top;
     font: 300 14px/24px $Chronicle;
-    padding: 0 0 40px 20px;
+    padding: 0 0 0 20px;
 
     .nav {
         margin-bottom: 40px;
@@ -155,13 +155,9 @@ body {
 }
 
 #footer {
-    background: transparentize($white, 0.1);
     border-top: 1px solid $brown;
-    padding: 10px 40px;
+    padding: 10px 0;
     text-align: right;
-    font-size: 13px;
-    line-height: 13px;
-    @include clearfix;
 
     li {
         display: inline-block;
@@ -171,6 +167,15 @@ body {
             display: inline-block;
             margin: 0 0.3em;
             padding: 0.25em 0.5em;
+
+            .icon {
+                font: normal 20px/20px 'icomoon';
+            }
+
+            color: $black;
+            &:hover {
+                color: $green;
+            }
         }
 
         &:first-child:before {

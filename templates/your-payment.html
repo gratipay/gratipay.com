@@ -17,7 +17,7 @@
                 </button>
             </div>
             <form class="edit" action="/{{ team.slug }}/payment-instruction.json">
-                $
+                <span class="amount">$</span>
                 <input type="text" name="amount" class="amount"
                        value="{{ format_decimal(payment_instruction.amount) }}"
                        min="0" max="1000">

@@ -55,7 +55,7 @@
                 <li>
                     <a id="sign-out" href="/sign-out.html">
                         <span class="icon">&#xe600;</span>
-                        <span class="screen-reader-text">Sign out</span>
+                        <span class="screen-reader-text">{{ _("Sign out") }}</span>
                     </a>
                 </li>
             </ul>
@@ -80,15 +80,27 @@
 
         <div id="footer">
             <ul>
-                <li><a href="/about/">{{ _("About") }}</a></li>
-                <li><a href="/about/contact">{{ _("Contact Us") }}</a></li>
-                <li><a href="/about/terms/">{{ _("Terms") }}</a></li>
-                <li><a href="http://inside.gratipay.com/appendices/colophon">{{ _("Colophon") }}</a></li>
-                <li><a href="https://medium.com/gratipay-blog">{{ _("Blog") }}</a></li>
-                <li><a href="https://twitter.com/gratipay">Twitter</a></li>
-                <li><a href="https://github.com/gratipay/gratipay.com">GitHub</a></li>
-                <li><a href="https://plus.google.com/+Gratipay/posts">Google Plus</a></li>
-                <li><a href="https://www.facebook.com/Gratipay">Facebook</a></li>
+                <li>
+                    <a href="https://medium.com/gratipay-blog" 
+                       title="our blog on Medium">
+                        <span class="icon">&#xe006;</span>
+                        <span class="screen-reader-text">{{ _("Blog") }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/gratipay/gratipay.com/issues/new"
+                       title="public feedback on GitHub">
+                        <span class="icon">&#xe003;</span>
+                        <span class="screen-reader-text">{{ _("GitHub") }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="mailto:support@gratipay.com"
+                       title="private feedback via email">
+                        <span class="icon">&#xe007;</span>
+                        <span class="screen-reader-text">{{ _("Email") }}</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
