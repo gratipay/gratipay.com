@@ -77,7 +77,7 @@ body {
 #sidebar {
     display: table-cell;
     vertical-align: top;
-    width: 128px;
+    width: 148px;
     padding: 0 20px 0 0;
 
     .right {
@@ -98,7 +98,6 @@ body {
 
     .sign-in-to {
         line-height: 125%;
-        margin-top: 50px;
         .dropdown-toggle {
             margin-bottom: 3px;
         }
@@ -109,7 +108,7 @@ body {
     display: table-cell;
     vertical-align: top;
     font: 300 14px/24px $Chronicle;
-    padding: 0 40px 40px;
+    padding: 0 0 40px 20px;
 
     .nav {
         margin-bottom: 40px;

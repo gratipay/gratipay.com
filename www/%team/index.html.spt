@@ -11,7 +11,7 @@ team = get_team(state)
 if team.is_approved in (None, False):
     if user.ANON:
         raise Response(401)
-title = name = team.name
+banner = name = team.name
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/base.html" %}
@@ -53,7 +53,7 @@ title = name = team.name
     | <a href="{{ team.todo_url }}">{{ _("To-do") }}</a>
     {% endif %}
 
-    | {{ _( "owned by {a}{owner}{_a}"
+    | {{ _( "owned by {a}~{owner}{_a}"
           , a=('<a href="/{}/">'.format(team.owner))|safe
           , owner=team.owner
           , _a='</a>'|safe

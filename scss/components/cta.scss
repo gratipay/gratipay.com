@@ -1,11 +1,8 @@
 #sidebar .cta {
-    margin: 50px 0 40px;
-    text-align: right;
 
     h2 {
         margin: 0;
         padding: 0 0 10px;
-        color: $white;
     }
 
     .your-payment .amount {
@@ -19,7 +16,7 @@
 
     .your-payment {
         input {
-            width: 120px;
+            width: 80px;
             height: 33px;
             text-align: right;
             font: bold 28px/28px $Ideal;
@@ -30,11 +27,11 @@
         background: $white;
         color: $brown;
         margin-bottom: 3px;
-        &.edit, &.join {
+        &.edit, &.join, &.save {
             background: $gold;
         }
         &.edit.not-zero, &.cancel, &.leave, &.stop {
-            background: transparentize($white, 0.5);
+            background: transparentize($green, 0.8);
         }
         &:hover {
             background: $green !important;
@@ -54,14 +51,7 @@
     }
 
     #payment-prompt {
-        font-size: smaller;
-        margin: 0;
+        font: italic 10px/12px $Ideal;
         padding: 20px 0 0;
-        a {
-            color: $gold;
-            &:hover {
-                color: $white;
-            }
-        }
     }
 }
