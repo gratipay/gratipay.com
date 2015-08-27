@@ -5,7 +5,7 @@ from gratipay.utils import get_participant
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-banner = participant.username
+banner = '~' + participant.username
 title = _("Settings")
 
 emails = participant.get_emails()
@@ -24,10 +24,10 @@ emails = participant.get_emails()
 
         <div class="username js-edit">
             <h2>{{ _("You are {0}",
-                     ("<span class='view'>%s</span>"|safe) % participant.username) }}
+                     ("<span class='view'>~%s</span>"|safe) % participant.username) }}
                 <button class="edit">{{ _("Edit") }}</button>
                 <form class="edit" action="../username.json" data-display="inline">
-                    <input name="username" value="{{ participant.username }}"/>
+                    ~<input name="username" value="{{ participant.username }}"/>
                     <button class="save">{{ _("Save") }}</button>
                     <button class="cancel">{{ _("Cancel") }}</button>
                     <span class="warning">

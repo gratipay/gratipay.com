@@ -3,7 +3,7 @@ from gratipay.utils import get_participant
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-banner = participant.username
+banner = '~' + participant.username
 title = _("Widgets")
 
 [-----------------------------------------------------------------------------]

@@ -5,7 +5,7 @@ db = website.db
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-banner = participant.username
+banner = '~' + participant.username
 title = _("Events")
 
 SQL = """

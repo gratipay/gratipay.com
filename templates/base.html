@@ -46,7 +46,7 @@
                     {% set on_profile = parts[1] == '~' %}
                     {% set on_own_profile = on_profile and parts[2] == user.participant.username %}
                     <a href="/~{{user.participant.username}}/"{% if on_own_profile %} class="selected"{% endif %}>
-                        {{ user.participant.username }}
+                        ~{{ user.participant.username }}
                         <div class="quick-stats">
                             <span class="my-total-giving">{{ format_currency(user.participant.get_giving_for_profile()[1], "USD") }}</span>/{{ _("wk") }}
                         </div>

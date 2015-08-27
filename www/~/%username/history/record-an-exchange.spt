@@ -11,7 +11,7 @@ if not user.ADMIN:
 request.allow('GET', 'POST')
 
 participant = get_participant(state)
-banner = participant.username
+banner = '~' + participant.username
 title = "Record an exchange"
 
 if request.method == 'POST':

@@ -7,7 +7,7 @@ if participant.anonymous_receiving:
     if user.participant != participant and not user.ADMIN:
         website.redirect('../', base_url='')
 
-banner = participant.username
+banner = '~' + participant.username
 title = _("Receiving")
 
 [-----------------------------------------------------------------------------]

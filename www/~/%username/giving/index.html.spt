@@ -6,7 +6,7 @@ from datetime import timedelta
 
 participant = get_participant(state, restrict=True)
 giving, total = participant.get_giving_for_profile()
-banner = participant.username
+banner = '~' + participant.username
 title = _("Giving")
 recently = utcnow() - timedelta(days=30)
 cancelled_giving = [x for x in giving if x.amount == 0 and x.mtime >= recently]
