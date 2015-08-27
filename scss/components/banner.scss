@@ -87,4 +87,16 @@
             bottom: 12px;
         }
     }
+
+    .homepage {
+
+        margin: 0;
+        color: $white;
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        font: bold 28px/33px $Ideal;
+        text-shadow: -1px 1px 1px rgba($brown, 1);
+        text-align: right;
+    }
 }
