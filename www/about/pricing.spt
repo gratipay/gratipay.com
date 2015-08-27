@@ -7,7 +7,9 @@ title = _("Pricing")
 {% block content %}
 <div class="col0">
 
-    <h2>Pay-What-You-Want</h2>
+    <h2 id="pwyw">Pay-What-You-Want
+        <a class="permalink" title="permalink" href="#pwyw">&#182;</a>
+    </h2>
 
     <p>Gratipay is funded <a href="/Gratipay/">on Gratipay</a>. We don't take a cut.
     We don't skim off the top. We don't have any venture capital or foundation
@@ -52,23 +54,29 @@ title = _("Pricing")
     {% endif %}
 
 
-    <h2>We Charge Processing Fees at Cost</h2>
+    <h2 id="fees">We Charge Processing Fees at Cost
+        <a class="permalink" title="permalink" href="#fees">&#182;</a>
+    </h2>
 
-    <p>Now, we <i>do</i> charge you processing fees when you use your credit
-    card or other payment method, but that's at cost. It all goes to the
-    payment processor. We don't see any of that ourselves.</p>
+    <p>We don't skim off the top, but we <i>do</i> charge you processing fees
+    when you use your credit card or other payment method, but that's at cost.
+    It all goes to the payment processor. We don't see any of that
+    ourselves.</p>
 
     <p>Read about processing fees for <a
         href="/about/features/payments#fees">payments</a> and <a
         href="/about/features/payroll#fees">payroll</a>.</p>
 
 
-    <h2>Where Do Payments Go?</h2>
+    <h2 id="uses">Where Do Payments Go?
+        <a class="permalink" title="permalink" href="#uses">&#182;</a>
+    </h2>
 
-    <p>Your payments cover hosting and other costs of doing business, and the
-    rest goes to the people who are building
-    Gratipay for you. If you want to help us build Gratipay, <a
-    href="http://inside.gratipay.com/big-picture/welcome">you can</a>!</p>
+
+    <p>Your voluntary payments <a href="/Gratipay/">to Gratipay</a> cover
+    hosting and other costs of doing business, and the rest goes to the people
+    who are building Gratipay for you. If you want to help us build Gratipay,
+    <a href="http://inside.gratipay.com/big-picture/welcome">you can</a>!</p>
 
 </div>
 {% endblock %}

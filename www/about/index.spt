@@ -11,7 +11,9 @@ title = _("Welcome!")
     href="/about/features/payroll">payroll</a> for open work.</p>
 
 
-    <h2>What is Open Work?</h2>
+    <h2 id="open-work">What is Open Work?
+        <a class="permalink" title="permalink" href="#open-work">&#182;</a>
+    </h2>
 
     <p>&ldquo;Open work&rdquo; means that your company or organization makes it
     easy for any individual to do your work for you without asking you first,
@@ -21,7 +23,9 @@ title = _("Welcome!")
     once we bring it back.</p>
 
 
-    <h2>Other Basic Terminology</h2>
+    <h2 id="terms">Other Basic Terminology
+        <a class="permalink" title="permalink" href="#terms">&#182;</a>
+    </h2>
 
     <p>Gratipay has &ldquo;~users&rdquo; and &ldquo;Teams,&rdquo; and every
     Team has an &ldquo;owner,&rdquo; who is a ~user.</p>
@@ -62,7 +66,10 @@ title = _("Welcome!")
     </table>
     <br>
 
-    <h2>How is Gratipay Funded?</h2>
+
+    <h2 id="funding">How is Gratipay Funded?
+        <a class="permalink" title="permalink" href="#funding">&#182;</a>
+    </h2>
 
     <p>Gratipay is <a href="/Gratipay/">funded on Gratipay</a>. We don't take a
     cut of payments (though we do pass through processing fees at cost). See
