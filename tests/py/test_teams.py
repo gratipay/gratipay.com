@@ -57,6 +57,18 @@ class TestTeams(Harness):
         assert team.onboarding_url == 'http://inside.gratipay.com/'
         assert team.todo_url == 'https://github.com/gratipay'
 
+    def test_casing_of_urls_survives(self):
+        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
+        self.post_new( dict(self.valid_data
+                     , homepage='Http://gratipay.com/'
+                     , onboarding_url='http://INSIDE.GRATipay.com/'
+                     , todo_url='hTTPS://github.com/GRATIPAY'
+                      ))
+        team = Team.from_slug('gratiteam')
+        assert team.homepage == 'Http://gratipay.com/'
+        assert team.onboarding_url == 'http://INSIDE.GRATipay.com/'
+        assert team.todo_url == 'hTTPS://github.com/GRATIPAY'
+
     def test_401_for_anon_creating_new_team(self):
         self.post_new(self.valid_data, auth_as=None, expected=401)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
