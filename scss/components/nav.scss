@@ -14,6 +14,9 @@
                 display: inline-block;
                 padding: 27px 12px 31px;
                 border-top: 4px solid transparent;
+                max-width: 160px;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 color: $black;
                 &.selected {
                     border-top-color: $brown;

@@ -68,12 +68,14 @@
         </div>
 
         <div id="main">
+            {% block main %}
             <div id="sidebar">{% block sidebar %}{% endblock %}</div>
-            <div id="content" class="clearfix">
+            <div id="content">
                 {% block subnav %}{% endblock %}
                 {% if title %}<h1>{{ title }}</h1>{% endif %}
                 {% block content %}{% endblock %}
             </div>
+            {% endblock %}
         </div>
 
         <a class="feedback" href="https://github.com/gratipay/gratipay.com/issues" target="_blank">Feedback</a>

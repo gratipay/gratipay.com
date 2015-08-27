@@ -1,0 +1,18 @@
+#sidebar {
+
+    .right {
+        text-align: right;
+    }
+
+    p {
+        font: normal 12px/15px $Ideal;
+        padding-right: 32px;
+    }
+
+    .sign-in-to {
+        line-height: 125%;
+        .dropdown-toggle {
+            margin-bottom: 3px;
+        }
+    }
+}

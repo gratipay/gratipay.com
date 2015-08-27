@@ -28,6 +28,23 @@ title = _("Teams (N={0})", nteams)
     <meta name="og:title" content="Gratipay" />
     <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
 {% endblock %}
+{% block sidebar %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<p><b>{{ _("Welcome to Gratipay!") }}</b></p>
+
+<p>{{ _("We have {nteams} Teams receiving and distributing money each week.", nteams=nteams) }}</p>
+
+<p>{{ _('Explore our Teams at right, or <a href="/about/">read more about us</a>.'|safe) }}</p>
+{% endblock %}
 {% block content %}
 <table class="table">
     <tr>

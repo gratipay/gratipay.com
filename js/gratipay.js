@@ -12,6 +12,7 @@ Gratipay.getCookie = function(key) {
 
 Gratipay.init = function() {
     Gratipay.warnOffUsersFromDeveloperConsole();
+    Gratipay.adaptToLongUsernames();
     Gratipay.forms.initCSRF();
     Gratipay.signIn();
     Gratipay.signOut();
@@ -25,6 +26,15 @@ Gratipay.warnOffUsersFromDeveloperConsole = function() {
                , "color: red;"
                 );
     console.log("%cPlease close this window now.", "color: blue;");
+};
+
+Gratipay.adaptToLongUsernames = function() {
+    var h1 = $('#banner h1');
+    var nchars = h1.text().length;
+    if (nchars > 16)
+        h1.addClass('really-long');
+    else if (nchars > 8)
+        h1.addClass('long');
 };
 
 Gratipay.error = function(jqXHR, textStatus, errorThrown) {

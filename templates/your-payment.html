@@ -29,11 +29,11 @@
         </div>
 
         {% if not payment_instruction.is_funded %}
-        <div id="payment-prompt" class="{{ 'needed' if payment_instruction.amount > 0 }}">
+        <p ="payment-prompt" class="{{ 'needed' if payment_instruction.amount > 0 }}">
             {{ _("Back your payment with a {0}credit card{1} to make sure it goes through!",
                  "<a href='/~%s/routes/credit-card.html'>"|safe % user.participant.username,
                  "</a>"|safe) }}
-        </div>
+        </p>
         {% endif %}
     </div>
 {% endif %}

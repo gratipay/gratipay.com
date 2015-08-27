@@ -63,9 +63,31 @@ if query:
 [---] text/html
 {% extends "templates/base.html" %}
 {% from 'templates/avatar-url.html' import avatar_url, avatar_img with context %}
-{% block content %}
 
-    {% include "templates/search-box.html" %}
+{% block sidebar %}
+<form action="/search" method="get" class="search-box">
+    <input type="text" name="q" placeholder="{{ _('Search Gratipay') }}"
+           value="{{ query or '' }}" autofocus />
+    <button type="submit">{{ _("Go") }}</button>
+</form>
+
+<form class="jump-box">
+    <p>{{ _("Looking for a specific user of a social network?") }}</p>
+    <p>{{ _("{0} on {1}",
+         """<input placeholder='username' autocomplete='off' autocorrect='off'
+                   spellcheck='false' size='12' type='text'>"""|safe,
+         """<select>
+            <option value='twitter'>Twitter</option>
+            <option value='facebook'>Facebook</option>
+            <option value='github'>GitHub</option>
+            <option value='bitbucket'>Bitbucket</option>
+         </select>"""|safe) }}
+         <button type="submit">{{ _("Go") }}</button></p>
+</form>
+
+{% endblock %}
+
+{% block content %}
 
     {% set usernames = results.get('usernames') %}
     {% set statements = results.get('statements') %}
@@ -74,7 +96,7 @@ if query:
         <h2>{{ ngettext("Found a matching username",
                         "Found matching usernames",
                         len(usernames)) }}</h2>
-        <div class="search-results">
+        <div class="search-results clearfix">
         {% for result in usernames %}
             <a class="mini-user" href="/{{ result.username }}/">
                 <span class="inner">
@@ -110,9 +132,6 @@ if query:
     {% if query and not (usernames or statements) %}
         <p>{{ _("Sorry, we didn't find anything matching your query.") }}</p>
     {% endif %}
-
-    <h2>{{ _("Looking for a specific user of a social network?") }}</h2>
-    {% include "templates/jump.html" %}
 
 {% endblock %}
 

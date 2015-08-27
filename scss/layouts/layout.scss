@@ -56,6 +56,7 @@ body {
     height: 194px;
     background: $black url("banner.jpg") top left no-repeat;
     position: relative;
+    overflow: hidden;
 }
 
 #main {
@@ -69,29 +70,6 @@ body {
     display: table-cell;
     width: 192px;
     vertical-align: top;
-
-    .right {
-        text-align: right;
-    }
-
-    p, table {
-        line-height: 150%;
-    }
-
-    table {
-        width: 100%;
-        margin-bottom: 10px;
-        .left {
-            padding-right: 10px;
-        }
-    }
-
-    .sign-in-to {
-        line-height: 125%;
-        .dropdown-toggle {
-            margin-bottom: 3px;
-        }
-    }
 }
 
 #content {
