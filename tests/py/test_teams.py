@@ -59,11 +59,11 @@ class TestTeams(Harness):
 
     def test_casing_of_urls_survives(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
-        self.post_new( dict(self.valid_data
-                     , homepage='Http://gratipay.com/'
-                     , onboarding_url='http://INSIDE.GRATipay.com/'
-                     , todo_url='hTTPS://github.com/GRATIPAY'
-                      ))
+        self.post_new(dict( self.valid_data
+                          , homepage='Http://gratipay.com/'
+                          , onboarding_url='http://INSIDE.GRATipay.com/'
+                          , todo_url='hTTPS://github.com/GRATIPAY'
+                           ))
         team = Team.from_slug('gratiteam')
         assert team.homepage == 'Http://gratipay.com/'
         assert team.onboarding_url == 'http://INSIDE.GRATipay.com/'
