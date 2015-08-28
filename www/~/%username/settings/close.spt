@@ -42,14 +42,14 @@ elif nteams == 1:
       {% if participant.has_payout_route %}
 
         <p>You have a balance of <b>${{ participant.balance }}</b>, and you've
-        <a href="../routes/paypal.html">linked a PayPal account</a>. If you
+        <a href="../routes/paypal">linked a PayPal account</a>. If you
         haven't received a payout from us before, please <a
         href="mailto:support@gratipay.com?subject=close%20account">notify
         support</a> to make sure your payout goes through.
 
       {% else %}
 
-        Please <a href="../routes/paypal.html">link a PayPal account</a> and
+        Please <a href="../routes/paypal">link a PayPal account</a> and
         then <a
         href="mailto:support@gratipay.com?subject=close%20account">notify
         support</a> to make sure your payout goes through.

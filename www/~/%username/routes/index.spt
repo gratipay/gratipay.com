@@ -1,0 +1,71 @@
+from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.utils import get_participant
+
+[-----------------------------------------------------------------------------]
+
+participant = get_participant(state, restrict=True)
+banner = '~' + participant.username
+title = _("Payment Routes")
+
+[-----------------------------------------------------------------------------] text/html
+{% extends "templates/profile-routes.html" %}
+
+{% block content %}
+<h2>{{ _("Adding Money") }}
+    {% if user.ADMIN and participant.balanced_customer_href %}
+        <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href }}"
+           title="Go to Balanced Dashboard">
+            <span class="payments-by"></span>
+        </a>
+    {% else %}
+        <span class="payments-by"></span>
+    {% endif %}
+</h2>
+<table class="accounts">
+    <tr>
+        {% set cc_error = participant.get_credit_card_error() %}
+        <td class="account-type">
+            <img src="{{ website.asset('card_icon.jpg') }}" />
+        </td>
+        <td class="account-details">
+            <div class="account-type">{{ _("Credit Card") }}</div>
+            {% if cc_error == "" %}
+                {{ _("Your credit card is {0}working{1}", "", "") }}
+            {% elif cc_error %}
+                {{ _("Your credit card is {0}failing{1}", "<b>"|safe, "</b>"|safe) }}
+            {% endif %}
+        </td>
+        <td class="account-action">
+            <a class="button auth-button" href="../routes/credit-card">{{
+                _("+ Add") if cc_error is none else _("Edit")
+            }}</a>
+        </td>
+    </tr>
+</table>
+
+<h2>{{ _("Withdrawing Money") }}
+    {% if user.ADMIN and participant.balanced_customer_href %}
+        <a href="https://dashboard.balancedpayments.com/#/marketplaces/MP12Xw5lL6iaILtqImIoroDL{{ participant.balanced_customer_href }}"
+           title="Go to Balanced Dashboard">
+            <div class="payments-by"></div>
+        </a>
+    {% endif %}
+</h2>
+<table class="accounts">
+    <tr>
+        {% set paypal = ExchangeRoute.from_network(participant, 'paypal') %}
+        <td class="account-type">
+            <img src="{{ website.asset('paypal.png') }}" />
+        </td>
+        <td class="account-details">
+            <div class="account-type">PayPal</div>
+            <span>{{ paypal.address }}</span>
+        </td>
+        <td class="account-action">
+            <a class="button auth-button" href="../routes/paypal">{{
+                _("Edit") if paypal else _("+ Add")
+            }}</a>
+        </td>
+    </tr>
+</table>
+{% endblock %}

@@ -7,19 +7,19 @@ from gratipay.billing.instruments import CreditCard
 
 [-----------------------------------------------------------------------------]
 
-if not user.ANON:
-    participant = get_participant(state, restrict=True)
-    route = ExchangeRoute.from_network(participant, 'braintree-cc')
-    if route:
-        card = CreditCard.from_route(route)
-        last_bill_result = route.error
-    else:
-        card = CreditCard()
+participant = get_participant(state, restrict=True)
+banner = '~' + participant.username
+title = _("Credit Card")
 
-banner = _("Credit Card")
+route = ExchangeRoute.from_network(participant, 'braintree-cc')
+if route:
+    card = CreditCard.from_route(route)
+    last_bill_result = route.error
+else:
+    card = CreditCard()
 
-[-----------------------------------------------------------------------------]
-{% extends "templates/base.html" %}
+[-----------------------------------------------------------------------------] text/html
+{% extends "templates/profile-routes.html" %}
 
 {% block scripts %}
 

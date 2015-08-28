@@ -1,5 +1,3 @@
-
-from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.utils import get_participant
 
 [-----------------------------------------------------------------------------]
@@ -35,122 +33,40 @@ emails = participant.get_emails()
         </h2>
     </div>
 
-    {% if not user.ANON and (user.ADMIN or user.participant == participant) %}
-        <h2>{{ _("Available Money") }}</h2>
-        <table class="accounts" id="account-balance">
-            <tr>
-                <td class="account-type">
-                    <img src="{{ website.asset('bank_account_icon.jpg') }}" />
-                </td>
-                <td class="account-details">
-                    <div class="account-type">{{ _("Available Balance") }}</div>
-                    <span>
-                        <a class="account-username" href="/~{{ participant.username }}/history/">{{ format_currency(participant.balance, "USD") }}</a>
-                    </span>
-                </td>
-              {% if user.ADMIN and participant.balance > 0 %}
-                {% if participant.status_of_1_0_balance == 'pending-payout' %}
-                <td class="account-action">
-                    <form action='../old-balance-status' method='POST'>
-                        Payout Pending
-                        <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
-                        <input name="to" type="hidden" value="unresolved" />
-                        <button type='submit'>Undo</button>
-                    </form>
-                </td>
-                {% elif participant.status_of_1_0_balance == 'unresolved' %}
-                <td class="account-action">
-                    <form action='../old-balance-status' method='POST'>
-                        <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
-                        <input name="to" type="hidden" value="pending-payout" />
-                        <button type='submit'>Clear for payout</button>
-                    </form>
-                </td>
-                {% endif %}
-              {% endif %}
-            </tr>
-        </table>
-        <h2>{{ _("Adding Money") }}
-            {% if user.ADMIN and participant.balanced_customer_href %}
-                <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href }}"
-                   title="Go to Balanced Dashboard">
-                    <span class="payments-by"></span>
-                </a>
-            {% else %}
-                <span class="payments-by"></span>
+    <h2>{{ _("Available Money") }}</h2>
+    <table class="accounts" id="account-balance">
+        <tr>
+            <td class="account-type">
+                <img src="{{ website.asset('bank_account_icon.jpg') }}" />
+            </td>
+            <td class="account-details">
+                <div class="account-type">{{ _("Available Balance") }}</div>
+                <span>
+                    <a class="account-username" href="/~{{ participant.username }}/history/">{{ format_currency(participant.balance, "USD") }}</a>
+                </span>
+            </td>
+          {% if user.ADMIN and participant.balance > 0 %}
+            {% if participant.status_of_1_0_balance == 'pending-payout' %}
+            <td class="account-action">
+                <form action='../old-balance-status' method='POST'>
+                    Payout Pending
+                    <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
+                    <input name="to" type="hidden" value="unresolved" />
+                    <button type='submit'>Undo</button>
+                </form>
+            </td>
+            {% elif participant.status_of_1_0_balance == 'unresolved' %}
+            <td class="account-action">
+                <form action='../old-balance-status' method='POST'>
+                    <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
+                    <input name="to" type="hidden" value="pending-payout" />
+                    <button type='submit'>Clear for payout</button>
+                </form>
+            </td>
             {% endif %}
-        </h2>
-        <table class="accounts">
-            <tr>
-                {% set cc_error = participant.get_credit_card_error() %}
-                <td class="account-type">
-                    <img src="{{ website.asset('card_icon.jpg') }}" />
-                </td>
-                <td class="account-details">
-                    <div class="account-type">{{ _("Credit Card") }}</div>
-                    {% if cc_error == "" %}
-                        {{ _("Your credit card is {0}working{1}", "", "") }}
-                    {% elif cc_error %}
-                        {{ _("Your credit card is {0}failing{1}", "<b>"|safe, "</b>"|safe) }}
-                    {% endif %}
-                </td>
-                <td class="account-action">
-                    <a class="button auth-button" href="../routes/credit-card.html">{{
-                        _("+ Add") if cc_error is none else _("Edit")
-                    }}</a>
-                </td>
-            </tr>
-        </table>
-
-        <h2>{{ _("Withdrawing Money") }}
-            {% if user.ADMIN and participant.balanced_customer_href %}
-                <a href="https://dashboard.balancedpayments.com/#/marketplaces/MP12Xw5lL6iaILtqImIoroDL{{ participant.balanced_customer_href }}"
-                   title="Go to Balanced Dashboard">
-                    <div class="payments-by"></div>
-                </a>
-            {% endif %}
-        </h2>
-        <table class="accounts">
-            <tr>
-                {% set paypal = ExchangeRoute.from_network(participant, 'paypal') %}
-                <td class="account-type">
-                    <img src="{{ website.asset('paypal.png') }}" />
-                </td>
-                <td class="account-details">
-                    <div class="account-type">PayPal</div>
-                    <span>{{ paypal.address }}</span>
-                </td>
-                <td class="account-action">
-                    <a class="button auth-button" href="../routes/paypal.html">{{
-                        _("Edit") if paypal else _("+ Add")
-                    }}</a>
-                </td>
-            </tr>
-        </table>
-    {% endif %}
-
-    <div id="emails" class="emails">
-        <h2>{{ _("Email Addresses (Private)") }}</h2>
-        <ul>
-        {% for email in emails %}
-            {% set is_primary = email.address == participant.email_address %}
-            <li class="{{ 'primary' if is_primary }} {{ 'verified' if email.verified }}"
-                data-email="{{ email.address }}">
-                {{ email.address }}
-                <span class="label-primary">{{ _("Primary") }}</span>
-                <span class="label-unverified">{{ _("Unverified") }}</span>
-                <button class="remove">{{ _("Remove") }}</button>
-                <button class="resend">{{ _("Resend") }}</button>
-                <button class="set-primary">{{ _("Set as primary") }}</button>
-            </li>
-        {% endfor %}
-        </ul>
-        <form class="add-email">
-            <input class="add-email" name="email" type="email" placeholder="sam@example.net" />
-            <button type="submit">{{ _("Add email address") }}</button>
-        </form>
-    </div>
-
+          {% endif %}
+        </tr>
+    </table>
 
     <div class="api-credentials">
       <h2>{{ _("API Credentials") }}</h2>
@@ -194,27 +110,6 @@ emails = participant.get_emails()
             {{ _("Off").upper() }}
         {% endif %}
     </p>
-
-    <h2 id="notifications">{{ _("Notifications") }}</h2>
-    <div class="email-notifications">
-        <span>{{ _("Send me notifications via email:") }}</span>
-        <br />
-        <div>
-            {{ _("When my credit card is charged:") }}
-            <br />
-            <label>
-                <input type="checkbox" data-field="notify_charge" data-bits="1"
-                    {{ 'checked' if participant.notify_charge.__and__(1) }} />
-                    {{ _("if the charge fails") }}
-            </label>
-            <br />
-            <label>
-                <input type="checkbox" data-field="notify_charge" data-bits="2"
-                    {{ 'checked' if participant.notify_charge.__and__(2) }} />
-                    {{ _("if the charge succeeds") }}
-            </label>
-        </div>
-    </div>
 
     <div class="close">
       <h2>{{ _("Close") }}</h2>

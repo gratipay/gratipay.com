@@ -167,9 +167,9 @@ class TestEmail(EmailHarness):
         with self.assertRaises(TooManyEmailAddresses):
             self.alice.add_email('alice@gratipay.coop')
 
-    def test_account_page_shows_emails(self):
+    def test_emails_page_shows_emails(self):
         self.verify_and_change_email('alice@example.com', 'alice@example.net')
-        body = self.client.GET("/~alice/settings/", auth_as="alice").body
+        body = self.client.GET("/~alice/emails/", auth_as="alice").body
         assert 'alice@example.com' in body
         assert 'alice@example.net' in body
 

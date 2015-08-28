@@ -1,0 +1,52 @@
+from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.utils import get_participant
+
+[---]
+participant = get_participant(state, restrict=True)
+banner = '~' + participant.username
+title = _("PayPal")
+
+route = ExchangeRoute.from_network(participant, 'paypal')
+emails = participant.get_verified_email_addresses()
+
+[---] text/html
+{% extends "templates/profile-routes.html" %}
+
+{% block scripts %}
+
+{% if not user.ANON %}
+<script>
+    $(document).ready(function() { Gratipay.routes.pp.init(); });
+</script>
+{% endif %}
+
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+{% if emails %}
+    <p>{{ _("Choose from one of your verified emails below:") }}</p>
+    <form id="paypal">
+        <select id="email">
+            {% for email in emails %}
+                <option value="{{ email }}" {% if route.address == email %}selected{% endif %}>{{ email }}</option>
+            {% endfor %}
+        </select>
+        <button id="save" class="selected">Save</button>
+    </form>
+    <br />
+
+    <p>{{ _("Can't find your PayPal email? {0}Add it here{1}.", "<a href='/about/me/emails/'>"|safe, "</a>"|safe) }}</p>
+{% else %}
+    <p>{{ _("You must {0}add and verify{1} your PayPal email first.",
+            "<a href='/about/me/settings#emails'>"|safe,
+            "</a>"|safe) }}</p>
+{% endif %}
+
+{% if route %}
+    <form id="delete" data-network="paypal" data-address="{{ route.address }}"
+        data-confirm="{{ _('Are you sure you want to disconnect your PayPal account?') }}">
+    <button>{{ _("Disconnect {0}", route.address|safe) }}</button>
+    </form>
+{% endif %}
+{% endblock %}

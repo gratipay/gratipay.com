@@ -198,7 +198,7 @@ def out():
     file.{% if not user.ANON and user.participant.get_credit_card_error() == '' %}
     You're one of them.{% elif not user.ANON %} You're not one of them.</p>
 
-    <p><b><a href="/about/me/routes/credit-card.html" class="highlight">Click
+    <p><b><a href="/about/me/routes/credit-card" class="highlight">Click
         here to set up a credit card</a></b>.{% endif %}</p>
 
     <p><b>${{ commaize(escrow, 2) }}</b> is escrowed within Gratipay.</p>

@@ -75,6 +75,6 @@ if participant == user.participant:
             {% endif %}
             <p data-email="{{ email }}"><button class="resend">{{ _("Resend verification email") }}</button></p>
         {% endif %}
-        <a href="/{{ participant.username }}/settings/#emails">{{ _("View your email addresses") }}.</a>
+        <a href="/{{ participant.username }}/emails/">{{ _("View your email addresses") }}.</a>
     {% endif %}
 {% endblock %}
