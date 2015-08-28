@@ -188,23 +188,23 @@ msgstr "+ Toevoegen"
 msgid "Disconnect"
 msgstr "Afsluiten"
 
-msgid "About"
-msgstr "Omtrent"
-
 msgid "Search"
 msgstr "Zoeken"
 
 msgid "wk"
 msgstr "wk"
 
-msgid "Terms"
-msgstr "Voorwaarden"
-
-msgid "Colophon"
-msgstr "Colofon"
+msgid "Sign out"
+msgstr ""
 
 msgid "Blog"
 msgstr "Blog"
+
+msgid "GitHub"
+msgstr ""
+
+msgid "Email"
+msgstr ""
 
 msgid "Communities"
 msgstr "Gemeenschappen"
@@ -233,9 +233,6 @@ msgstr "Verwijderen"
 msgid "Edit"
 msgstr "Verander"
 
-msgid "Teams"
-msgstr "Teams"
-
 msgid "Team"
 msgstr "Team"
 
@@ -248,12 +245,6 @@ msgstr "Laatste serie"
 msgid "First Set"
 msgstr "Eerste serie"
 
-msgid "Jump to {0} from {1}"
-msgstr "Ga naal {0} van {1}"
-
-msgid "Go"
-msgstr "Start"
-
 msgid "Previous"
 msgstr "Vorige"
 
@@ -265,6 +256,21 @@ msgstr "Eerste"
 
 msgid "Last"
 msgstr "Laatste"
+
+msgid "hidden"
+msgstr "verborgen"
+
+msgid "Gives"
+msgstr "Geeft"
+
+msgid "Receives"
+msgstr "Ontvangt"
+
+msgid "Joined"
+msgstr "Lid geworden"
+
+msgid "Profile"
+msgstr "Profiel"
 
 msgid "Statement"
 msgstr "Afschrift"
@@ -286,20 +292,11 @@ msgstr "Wat is markdown?"
 msgid "View source."
 msgstr "Bekijk bron."
 
-msgid "hidden"
-msgstr "verborgen"
+msgid "Credit Card"
+msgstr "Kredietkaart"
 
-msgid "Gives"
-msgstr "Geeft"
-
-msgid "Receives"
-msgstr "Ontvangt"
-
-msgid "Joined"
-msgstr "Lid geworden"
-
-msgid "Profile"
-msgstr "Profiel"
+msgid "PayPal"
+msgstr ""
 
 msgid "Giving"
 msgstr "Geven"
@@ -307,17 +304,17 @@ msgstr "Geven"
 msgid "History"
 msgstr "Geschiedenis"
 
+msgid "Emails"
+msgstr ""
+
+msgid "Routes"
+msgstr ""
+
 msgid "Settings"
 msgstr "Instellingen"
 
 msgid "Events"
 msgstr "Gebeurtenissen"
-
-msgid "Search Gratipay"
-msgstr "Doorzoek Gratipay"
-
-msgid "{0} to give to {1}"
-msgstr "{0} gift aan {1}"
 
 msgid "Sign in"
 msgstr "Log in"
@@ -348,17 +345,20 @@ msgstr "Wij financieren Gratipay uitsluitend door uw vrijwillige bijdragen! "
 msgid "Learn more"
 msgstr "Leer meer"
 
-msgid "Learn more about how teams work"
-msgstr "Leer meer over hoe teams werken"
+msgid "Teams"
+msgstr "Teams"
 
-msgid "Your Payment"
-msgstr "Uw betaling"
+msgid "{sign_in}{br}to give to{br}{team}"
+msgstr ""
+
+msgid "You Give"
+msgstr ""
 
 msgid "per week"
 msgstr "per week"
 
-msgid "Support {0}"
-msgstr "Steun {0}"
+msgid "Give to {0}"
+msgstr ""
 
 msgid "Stop Giving"
 msgstr "Stop met geven"
@@ -368,6 +368,18 @@ msgid ""
 msgstr "Ondersteun je betaling met een {0}credit card{1} om er zeker van te zijn dat het aankomt!"
 
 msgid "Teams (N={0})"
+msgstr ""
+
+msgid "Payments{br}and Payroll{br}for Open Work"
+msgstr ""
+
+msgid "Read more"
+msgstr ""
+
+msgid "Welcome to Gratipay!"
+msgstr ""
+
+msgid "We have {nteams} Teams receiving and distributing money each week."
 msgstr ""
 
 msgid "Name"
@@ -442,6 +454,18 @@ msgstr ""
 msgid "Apply"
 msgstr "Aanmelden"
 
+msgid "Search Gratipay"
+msgstr "Doorzoek Gratipay"
+
+msgid "Go"
+msgstr "Start"
+
+msgid "Looking for a specific user of a social network?"
+msgstr "Ben je op zoek naar één specifieke gebruiker van een sociaal netwerk?"
+
+msgid "{0} on {1}"
+msgstr ""
+
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
 msgstr[0] "De volgende overeenkomende gebruikersnaam is gevonden"
@@ -454,9 +478,6 @@ msgstr[1] "De volgende overeenkomende gebruikersverklaringen zijn gevonden"
 
 msgid "Sorry, we didn't find anything matching your query."
 msgstr "Sorry, we hebben niks gevonden wat voldoet aan je zoekopdracht. "
-
-msgid "Looking for a specific user of a social network?"
-msgstr "Ben je op zoek naar één specifieke gebruiker van een sociaal netwerk?"
 
 msgid "Sign Out"
 msgstr "Uitloggen"
@@ -479,7 +500,7 @@ msgstr ""
 msgid "To-do"
 msgstr ""
 
-msgid "owned by {a}{owner}{_a}"
+msgid "owned by {a}~{owner}{_a}"
 msgstr ""
 
 msgid "Please sign in first"
@@ -553,6 +574,12 @@ msgstr "Geef een Gratipay gebruikersnaam op"
 msgid "Add"
 msgstr "Toevoegen"
 
+msgid "About"
+msgstr "Omtrent"
+
+msgid "Welcome!"
+msgstr ""
+
 msgid "The Delpan Incident"
 msgstr "Het Delpan incident"
 
@@ -565,14 +592,17 @@ msgstr "Fraude controle dashboard"
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr "Fraude controle dashboard - (Teams)"
 
+msgid "Transfer?"
+msgstr ""
+
 msgid "Please Confirm"
 msgstr "Bevestigen alstublieft"
 
 msgid "{0} is connected to {1} on Gratipay."
 msgstr "{0} is verbonden met {1} op Gratipay."
 
-msgid "Transfer it?"
-msgstr "Overmaken?"
+msgid "Transfer it to your ~{username} account?"
+msgstr ""
 
 msgid "How the accounts are now"
 msgstr "Huidige staat van de account"
@@ -582,6 +612,9 @@ msgstr "Staat van de account na de overboeking"
 
 msgid "Abandoned:"
 msgstr "Verlaten:"
+
+msgid "Transfer it?"
+msgstr "Overmaken?"
 
 msgid "Yes"
 msgstr "Ja"
@@ -809,6 +842,39 @@ msgstr "Het is voor teams niet toegestaan om hun te ontvangen bedrag te verberge
 msgid "Your privacy setting has been changed."
 msgstr "Uw privacy instellingen zijn gewijzigd."
 
+msgid "Primary"
+msgstr "Primair"
+
+msgid "Unverified"
+msgstr "Niet geverifieerd"
+
+msgid "Remove"
+msgstr "Verwijderen"
+
+msgid "Resend"
+msgstr ""
+
+msgid "Set as primary"
+msgstr "Stel in als primair"
+
+msgid "Add email address"
+msgstr "Voeg een e-mailadres toe"
+
+msgid "Notifications"
+msgstr "Notificaties"
+
+msgid "Send me notifications via email:"
+msgstr "Stuur me notificaties per mail:"
+
+msgid "When my credit card is charged:"
+msgstr "Wanneer mijn kredietkaart wordt aangerekend."
+
+msgid "if the charge fails"
+msgstr "als de aanrekening faalt"
+
+msgid "if the charge succeeds"
+msgstr "als de aanrekening lukt"
+
 msgid "Invalid email address."
 msgstr "Ongeldig e-mailadres"
 
@@ -883,9 +949,6 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 msgid "These are giving that you recently cancelled."
-msgstr ""
-
-msgid "You give {0} every week."
 msgstr ""
 
 msgid "No giving to show"
@@ -996,28 +1059,6 @@ msgstr "Alleen geverifieerde e-mailadressen zijn toegestaan."
 msgid "This is not a valid Bitcoin address."
 msgstr "Dit is geen geldig Bitcoin adres."
 
-msgid "Your credit card is {0}missing{1}"
-msgstr "Uw kredietkaart {0}ontbreekt{1}"
-
-msgid "Your credit card is {0}working{1}"
-msgstr "Uw kredietkaart is {0}operationeel{1}"
-
-msgid "Your credit card is {0}failing{1}"
-msgstr "Uw kredietkaart heeft{0}gefaald{1}"
-
-msgid "Credit Card"
-msgstr "Kredietkaart"
-
-msgid ""
-"When you don't have enough money in your Gratipay account to cover your "
-"gifts, we'll attempt to pull money in using your credit card."
-msgstr "Wanneer je onvoldoende geld in je Gratipay rekening hebt om je giften te dekken, zullen we properen geld van je kredietkaart over te halen."
-
-msgid ""
-"If your credit card is missing or fails then your gifts won't go through for"
-" that week."
-msgstr "Wanneer je kredietkaart ontbreekt of faalt, dan zullen je giften voor die week niet doorgaan."
-
 msgid "and then you'll be able to add or change your credit card."
 msgstr "en dan kun je een creditcard toevoegen of wijzigen."
 
@@ -1075,29 +1116,20 @@ msgstr "Koppel mijn kredietkaart af"
 msgid "It seems you're trying to delete something that doesn't exist."
 msgstr "Het lijkt erop dat u iets probeert te verwijderen wat niet bestaat."
 
-msgid "Your PayPal account is {0}not connected{1}"
-msgstr "Uw PayPal account is {0}niet gekoppeld{1}"
+msgid "Payment Routes"
+msgstr ""
 
-msgid "Your PayPal account is {0}connected{1}"
-msgstr "Uw PayPal account is {0}gekoppeld{1}"
+msgid "Adding Money"
+msgstr "Geld toevoegen"
 
-msgid "PayPal Account"
-msgstr "PayPal account"
+msgid "Your credit card is {0}working{1}"
+msgstr "Uw kredietkaart is {0}operationeel{1}"
 
-msgid ""
-"When you receive money on Gratipay we'll automatically send it to your "
-"PayPal account if you don't have a bank account attached."
-msgstr "Als u geld ontvangt op Gratipay, dan sturen we het automatisch naar uw PayPal account als u geen bank rekening heeft gekoppeld."
+msgid "Your credit card is {0}failing{1}"
+msgstr "Uw kredietkaart heeft{0}gefaald{1}"
 
-msgid ""
-"Deposits are initiated every Thursday when you accumulate at least {0} in "
-"your balance."
-msgstr "Bedragen worden elke donderdag gestort, mits er meer dan {0} op uw balans staat."
-
-msgid ""
-"PayPal's fee is 2%, but not more than $1 for U.S. PayPal accounts, or $20 "
-"for non-U.S. PayPal accounts."
-msgstr "PayPal's commissie is 2%, maar dit is beperkt tot $1 voor Amerikaanse Paypal accounts, of $20 voor niet-Amerikaanse PayPal accounts. "
+msgid "Withdrawing Money"
+msgstr "Geld opvragen"
 
 msgid "Choose from one of your verified emails below:"
 msgstr "Kies hieronder een van uw geverifieerde e-mailadressen:"
@@ -1117,9 +1149,6 @@ msgstr "Ontkoppel {0}"
 msgid "Close Account"
 msgstr "Sluit account"
 
-msgid "Account"
-msgstr "Account"
-
 msgid "You are {0}"
 msgstr "Je bent {0}"
 
@@ -1133,33 +1162,6 @@ msgstr "Beschikbaar geld."
 
 msgid "Available Balance"
 msgstr "Beschikbare balans"
-
-msgid "Adding Money"
-msgstr "Geld toevoegen"
-
-msgid "Withdrawing Money"
-msgstr "Geld opvragen"
-
-msgid "Email Addresses (Private)"
-msgstr "E-mailadres (privé)"
-
-msgid "Primary"
-msgstr "Primair"
-
-msgid "Unverified"
-msgstr "Niet geverifieerd"
-
-msgid "Remove"
-msgstr "Verwijderen"
-
-msgid "Resend email"
-msgstr "E-mail opnieuw versturen"
-
-msgid "Set as primary"
-msgstr "Stel in als primair"
-
-msgid "Add email address"
-msgstr "Voeg een e-mailadres toe"
 
 msgid "API Credentials"
 msgstr "API gegevens"
@@ -1199,21 +1201,6 @@ msgstr "Aan"
 
 msgid "Off"
 msgstr "Uit"
-
-msgid "Notifications"
-msgstr "Notificaties"
-
-msgid "Send me notifications via email:"
-msgstr "Stuur me notificaties per mail:"
-
-msgid "When my credit card is charged:"
-msgstr "Wanneer mijn kredietkaart wordt aangerekend."
-
-msgid "if the charge fails"
-msgstr "als de aanrekening faalt"
-
-msgid "if the charge succeeds"
-msgstr "als de aanrekening lukt"
 
 msgid "Close"
 msgstr "Sluit"

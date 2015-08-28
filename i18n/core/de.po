@@ -194,23 +194,23 @@ msgstr "+ Hinzufügen"
 msgid "Disconnect"
 msgstr "Verbindung trennen"
 
-msgid "About"
-msgstr "Über"
-
 msgid "Search"
 msgstr "Suche"
 
 msgid "wk"
 msgstr "Woche"
 
-msgid "Terms"
-msgstr "AGB"
-
-msgid "Colophon"
-msgstr "Kolophon"
+msgid "Sign out"
+msgstr ""
 
 msgid "Blog"
 msgstr "Blog"
+
+msgid "GitHub"
+msgstr ""
+
+msgid "Email"
+msgstr ""
 
 msgid "Communities"
 msgstr "Gemeinschaften"
@@ -239,9 +239,6 @@ msgstr ""
 msgid "Edit"
 msgstr "Edieren"
 
-msgid "Teams"
-msgstr "Teams"
-
 msgid "Team"
 msgstr "Team"
 
@@ -254,12 +251,6 @@ msgstr ""
 msgid "First Set"
 msgstr ""
 
-msgid "Jump to {0} from {1}"
-msgstr "Springe von {1} zu {0}"
-
-msgid "Go"
-msgstr "Los"
-
 msgid "Previous"
 msgstr ""
 
@@ -271,6 +262,21 @@ msgstr ""
 
 msgid "Last"
 msgstr ""
+
+msgid "hidden"
+msgstr "versteckt"
+
+msgid "Gives"
+msgstr "gibt"
+
+msgid "Receives"
+msgstr "erhält"
+
+msgid "Joined"
+msgstr "Beigetreten"
+
+msgid "Profile"
+msgstr "Profil"
 
 msgid "Statement"
 msgstr "Statement"
@@ -292,20 +298,11 @@ msgstr "Was ist Markdown?"
 msgid "View source."
 msgstr "Quelltext"
 
-msgid "hidden"
-msgstr "versteckt"
+msgid "Credit Card"
+msgstr "Kreditkarte"
 
-msgid "Gives"
-msgstr "gibt"
-
-msgid "Receives"
-msgstr "erhält"
-
-msgid "Joined"
-msgstr "Beigetreten"
-
-msgid "Profile"
-msgstr "Profil"
+msgid "PayPal"
+msgstr ""
 
 msgid "Giving"
 msgstr "Gibt"
@@ -313,17 +310,17 @@ msgstr "Gibt"
 msgid "History"
 msgstr "Verlauf"
 
+msgid "Emails"
+msgstr ""
+
+msgid "Routes"
+msgstr ""
+
 msgid "Settings"
 msgstr "Einstellungen"
 
 msgid "Events"
 msgstr "Events"
-
-msgid "Search Gratipay"
-msgstr "Durchsuche Gratipay"
-
-msgid "{0} to give to {1}"
-msgstr "{0} um an {1} zu geben"
 
 msgid "Sign in"
 msgstr "Anmelden"
@@ -354,16 +351,19 @@ msgstr "Gratipay ist ausschließlich durch freiwillige Spenden finanziert."
 msgid "Learn more"
 msgstr "Mehr erfahren"
 
-msgid "Learn more about how teams work"
-msgstr "Lern mehr über die Funktionsweise von Teams"
+msgid "Teams"
+msgstr "Teams"
 
-msgid "Your Payment"
+msgid "{sign_in}{br}to give to{br}{team}"
+msgstr ""
+
+msgid "You Give"
 msgstr ""
 
 msgid "per week"
 msgstr "pro Woche"
 
-msgid "Support {0}"
+msgid "Give to {0}"
 msgstr ""
 
 msgid "Stop Giving"
@@ -374,6 +374,18 @@ msgid ""
 msgstr "Gib deine {0}Kreditkateninformationen{1} an um sicherzustellen, dass deine Spenden auch zukünftig ankommen."
 
 msgid "Teams (N={0})"
+msgstr ""
+
+msgid "Payments{br}and Payroll{br}for Open Work"
+msgstr ""
+
+msgid "Read more"
+msgstr ""
+
+msgid "Welcome to Gratipay!"
+msgstr ""
+
+msgid "We have {nteams} Teams receiving and distributing money each week."
 msgstr ""
 
 msgid "Name"
@@ -448,6 +460,18 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
+msgid "Search Gratipay"
+msgstr "Durchsuche Gratipay"
+
+msgid "Go"
+msgstr "Los"
+
+msgid "Looking for a specific user of a social network?"
+msgstr "Suchen Sie nach einem bestimmtem Mitglied eines Sozialen Netzwerks?"
+
+msgid "{0} on {1}"
+msgstr ""
+
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
 msgstr[0] ""
@@ -460,9 +484,6 @@ msgstr[1] ""
 
 msgid "Sorry, we didn't find anything matching your query."
 msgstr "Es tut uns leid, wir konnten keine Übereinstimmungen mit Ihrer Suchanfrage finden."
-
-msgid "Looking for a specific user of a social network?"
-msgstr "Suchen Sie nach einem bestimmtem Mitglied eines Sozialen Netzwerks?"
 
 msgid "Sign Out"
 msgstr "Abmelden"
@@ -485,7 +506,7 @@ msgstr ""
 msgid "To-do"
 msgstr ""
 
-msgid "owned by {a}{owner}{_a}"
+msgid "owned by {a}~{owner}{_a}"
 msgstr ""
 
 msgid "Please sign in first"
@@ -559,6 +580,12 @@ msgstr "Geben Sie einen Gratipay Usernamen ein"
 msgid "Add"
 msgstr "Hinzufügen"
 
+msgid "About"
+msgstr "Über"
+
+msgid "Welcome!"
+msgstr ""
+
 msgid "The Delpan Incident"
 msgstr ""
 
@@ -571,13 +598,16 @@ msgstr ""
 msgid "Fraud Review Dashboard - (Teams)"
 msgstr ""
 
+msgid "Transfer?"
+msgstr ""
+
 msgid "Please Confirm"
 msgstr "Bitte bestätige"
 
 msgid "{0} is connected to {1} on Gratipay."
 msgstr ""
 
-msgid "Transfer it?"
+msgid "Transfer it to your ~{username} account?"
 msgstr ""
 
 msgid "How the accounts are now"
@@ -587,6 +617,9 @@ msgid "How the accounts will be after the transfer"
 msgstr ""
 
 msgid "Abandoned:"
+msgstr ""
+
+msgid "Transfer it?"
 msgstr ""
 
 msgid "Yes"
@@ -815,6 +848,39 @@ msgstr "Teams dürfen die Gesamtsumme die Sie erhalten nicht verstecken."
 msgid "Your privacy setting has been changed."
 msgstr "Ihre Privatsphäre-Einstellungen wurden geändert."
 
+msgid "Primary"
+msgstr "Primär"
+
+msgid "Unverified"
+msgstr "Unverifiziert"
+
+msgid "Remove"
+msgstr "Löschen"
+
+msgid "Resend"
+msgstr ""
+
+msgid "Set as primary"
+msgstr "Als Standard festlegen"
+
+msgid "Add email address"
+msgstr "Eine E-Mail-Adresse hinzufügen"
+
+msgid "Notifications"
+msgstr "Benachrichtigungen"
+
+msgid "Send me notifications via email:"
+msgstr ""
+
+msgid "When my credit card is charged:"
+msgstr ""
+
+msgid "if the charge fails"
+msgstr ""
+
+msgid "if the charge succeeds"
+msgstr ""
+
 msgid "Invalid email address."
 msgstr "Ungültige Email Adresse."
 
@@ -889,9 +955,6 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 msgid "These are giving that you recently cancelled."
-msgstr ""
-
-msgid "You give {0} every week."
 msgstr ""
 
 msgid "No giving to show"
@@ -1002,28 +1065,6 @@ msgstr ""
 msgid "This is not a valid Bitcoin address."
 msgstr "Das ist keine valide Bitcoin Addresse."
 
-msgid "Your credit card is {0}missing{1}"
-msgstr "Deine Kreditkarte {0}fehlt{1}"
-
-msgid "Your credit card is {0}working{1}"
-msgstr "Deine Kreditkarte {0}funktioniert{1}"
-
-msgid "Your credit card is {0}failing{1}"
-msgstr "Deine Kreditkarte {0}funktioniert nicht{1}"
-
-msgid "Credit Card"
-msgstr "Kreditkarte"
-
-msgid ""
-"When you don't have enough money in your Gratipay account to cover your "
-"gifts, we'll attempt to pull money in using your credit card."
-msgstr "Solltest du nicht genügend Geld in deinem Gratipay-Konto  haben, um deine Spenden zu bezahlen, werden wir von deiner Kreditkarte Geld einziehen."
-
-msgid ""
-"If your credit card is missing or fails then your gifts won't go through for"
-" that week."
-msgstr "Wenn deine Kreditkarte fehlt oder die Abbuchung fehlschlägt, werden deine Zahlungen für diese Woche nicht weitergeleitet."
-
 msgid "and then you'll be able to add or change your credit card."
 msgstr "und dann wird es Ihnen möglich sein Ihre Kreditkarteninformationen hinzuzufügen oder zu ändern."
 
@@ -1081,29 +1122,20 @@ msgstr "Meine Kreditkarte entfernen"
 msgid "It seems you're trying to delete something that doesn't exist."
 msgstr ""
 
-msgid "Your PayPal account is {0}not connected{1}"
+msgid "Payment Routes"
 msgstr ""
 
-msgid "Your PayPal account is {0}connected{1}"
-msgstr ""
+msgid "Adding Money"
+msgstr "Geld Hinzufügen"
 
-msgid "PayPal Account"
-msgstr ""
+msgid "Your credit card is {0}working{1}"
+msgstr "Deine Kreditkarte {0}funktioniert{1}"
 
-msgid ""
-"When you receive money on Gratipay we'll automatically send it to your "
-"PayPal account if you don't have a bank account attached."
-msgstr ""
+msgid "Your credit card is {0}failing{1}"
+msgstr "Deine Kreditkarte {0}funktioniert nicht{1}"
 
-msgid ""
-"Deposits are initiated every Thursday when you accumulate at least {0} in "
-"your balance."
-msgstr ""
-
-msgid ""
-"PayPal's fee is 2%, but not more than $1 for U.S. PayPal accounts, or $20 "
-"for non-U.S. PayPal accounts."
-msgstr ""
+msgid "Withdrawing Money"
+msgstr "Geld abheben"
 
 msgid "Choose from one of your verified emails below:"
 msgstr ""
@@ -1123,9 +1155,6 @@ msgstr ""
 msgid "Close Account"
 msgstr "Konto schließen"
 
-msgid "Account"
-msgstr "Account"
-
 msgid "You are {0}"
 msgstr "Sie sind {0}"
 
@@ -1139,33 +1168,6 @@ msgstr "Verfügbarer Betrag"
 
 msgid "Available Balance"
 msgstr "Verfügbare Differenz"
-
-msgid "Adding Money"
-msgstr "Geld Hinzufügen"
-
-msgid "Withdrawing Money"
-msgstr "Geld abheben"
-
-msgid "Email Addresses (Private)"
-msgstr "E-Mail Adressen (Privat)"
-
-msgid "Primary"
-msgstr "Primär"
-
-msgid "Unverified"
-msgstr "Unverifiziert"
-
-msgid "Remove"
-msgstr "Löschen"
-
-msgid "Resend email"
-msgstr "Email erneut senden"
-
-msgid "Set as primary"
-msgstr "Als Standard festlegen"
-
-msgid "Add email address"
-msgstr "Eine E-Mail-Adresse hinzufügen"
 
 msgid "API Credentials"
 msgstr "API Zugangsdaten"
@@ -1205,21 +1207,6 @@ msgstr "An"
 
 msgid "Off"
 msgstr "Aus"
-
-msgid "Notifications"
-msgstr "Benachrichtigungen"
-
-msgid "Send me notifications via email:"
-msgstr ""
-
-msgid "When my credit card is charged:"
-msgstr ""
-
-msgid "if the charge fails"
-msgstr ""
-
-msgid "if the charge succeeds"
-msgstr ""
 
 msgid "Close"
 msgstr "Schließen"
