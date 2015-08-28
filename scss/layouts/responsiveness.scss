@@ -190,15 +190,4 @@
             }
         }
     }
-
-
-    #leaderboard {
-        .people {
-            width: $people-column-width * 3;
-
-            li:nth-child(4n) {
-                display: none;
-            }
-        }
-    }
 }
