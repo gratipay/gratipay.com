@@ -22,6 +22,32 @@
     {% set giving_str = '[' + _('hidden') + ']' if anon_giving else format_currency(g, "USD") %}
     {% set receiving_str = '[' + _('hidden') + ']' if anon_receiving else format_currency(r, "USD") %}
 
+<!-- Copied and modified from team-listing.html -->
+{% set approved_teams = participant.get_teams(only_approved=True) %}
+
+<!-- If viewer is admin or account owner, show team listing or team heading with no teams -->
+{% if user.ADMIN or user.participant == participant %}
+    {{ _("Teams") }}
+    <ul class="team memberships">
+        {% for team in participant.get_teams() %}
+        <li><a href="/{{ team.slug }}/">{{ team.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <!-- If viewer is account owner, give them some help -->
+    {% if user.participant == participant %}
+        <p><a href="/about/teams/">{{ _("Learn more about how teams work") }}</a></p>
+    {% endif %}
+<!-- If viewer is not admin or account owner, only show team heading if there are teams to list -->    
+{% elif approved_teams %}
+    {{ _("Teams") }}
+    <ul class="team memberships">
+        {% for team in approved_teams %}
+        <li><a href="/{{ team.slug }}/">{{ team.name }}</a></li>
+        {% endfor %}
+    </ul>    
+{% endif %}
+<!-- End copied section -->
+
     <!--
     <table>
         <tr>
