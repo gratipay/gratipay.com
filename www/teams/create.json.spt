@@ -46,7 +46,6 @@ if request.method == 'POST':
         fields[field] = value
 
     for field in ('homepage', 'onboarding_url', 'todo_url'):
-        fields[field] = fields[field]
         if not any(map(fields[field].lower().startswith, ('http://', 'https://'))):
             raise Response(400, _( "Please enter an http[s]:// URL for the '{}' field."
                                  , field_names[field]
