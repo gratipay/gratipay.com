@@ -164,6 +164,12 @@ body {
     text-align: right;
     font-size: 13px;
     line-height: 13px;
+    
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    height: 40px;    
+    width: 100%;
     @include clearfix;
 
     li {
@@ -181,3 +187,4 @@ body {
         }
     }
 }
+
