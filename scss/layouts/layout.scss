@@ -1,7 +1,5 @@
-html, body, #wrapper { height: 100%; }
-
 body {
-    line-height: 100%;
+    padding: 0 12px;
 }
 
 #wrapper {
@@ -54,7 +52,7 @@ body {
     border: 1px solid $brown;
     border-style: solid none;
     height: 194px;
-    background: $black url("banner.jpg") top left no-repeat;
+    background: $black url("banner.jpg") 50% 50% no-repeat;
     position: relative;
     overflow: hidden;
 }

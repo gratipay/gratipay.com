@@ -31,7 +31,7 @@ Team has an &ldquo;owner,&rdquo; who is a ~user.</p>
 
 <img src="entities.svg">
 
-<table class="table">
+<table class="table" style="margin-left: auto; margin-right: auto; white-space: nowrap;">
     <tr>
         <th>Speaking of ...&nbsp;&nbsp;&nbsp;</th>
         <th>Subject</th>
