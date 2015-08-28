@@ -6,8 +6,8 @@ from datetime import timedelta
 
 participant = get_participant(state, restrict=True)
 giving, total = participant.get_giving_for_profile()
-title = participant.username
-subhead = _("Giving")
+banner = '~' + participant.username
+title = _("Giving")
 recently = utcnow() - timedelta(days=30)
 cancelled_giving = [x for x in giving if x.amount == 0 and x.mtime >= recently]
 
@@ -45,10 +45,6 @@ tabs = {
 {% block content %}
 
 <div class="giving">
-
-<p>{{ _("You give {0} every week.", format_currency(total, "USD")) }}</p>
-
-<h2>{{ _("Giving") }}</h2>
 
 <ul class="nav" id="tab-nav">
     {% for tab in ['active', 'cancelled'] %}

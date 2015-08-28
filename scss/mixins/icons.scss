@@ -19,19 +19,14 @@
   text-transform: none;
   -webkit-font-smoothing: antialiased;
 
-  @if $name == "facebook" {
-    content: "\e000";
-  } @else if $name == "twitter" {
-    content: "\e001";
-  } @else if $name == "google" {
-    content: "\e002";
-  } @else if $name == "github" {
-    content: "\e003";
-  } @else if $name == "openstreetmap" {
-    content: "\e004";
-  } @else if $name == "bitbucket" {
-    content: "\e005";
-  }
+       @if $name == "facebook"      { content: "\e000"; }
+  @else if $name == "twitter"       { content: "\e001"; }
+  @else if $name == "google"        { content: "\e002"; }
+  @else if $name == "github"        { content: "\e003"; }
+  @else if $name == "openstreetmap" { content: "\e004"; }
+  @else if $name == "bitbucket"     { content: "\e005"; }
+  @else if $name == "medium"        { content: "\e006"; }
+  @else if $name == "email"         { content: "\e007"; }
 }
 
 @mixin has-icon($name: "", $font-size: 16px, $margin-right: 4px) {

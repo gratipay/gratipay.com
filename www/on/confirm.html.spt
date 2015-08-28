@@ -29,7 +29,9 @@ if nix:
 fmt = lambda x: format_currency(x, 'USD')
 get_name = lambda a: a.user_name or a.display_name or a.user_id
 
+banner = _("Transfer?")
 title = _("Please Confirm")
+suppress_sidebar = True
 
 [--------]
 
@@ -40,8 +42,8 @@ title = _("Please Confirm")
     <p><img class="platform-icon" src="{{ account.platform_data.icon }}" />
     {{ _("{0} is connected to {1} on Gratipay.",
          '<span class="highlight">%s</span>'|safe % get_name(account),
-         ('<a href="/{0}/">{0}</a>'|safe).format(other.username)) }}
-    {{ _("Transfer it?") }}
+         ('<a href="/~{0}/">~{0}</a>'|safe).format(other.username)) }}
+    {{ _("Transfer it to your ~{username} account?", username=user.participant.username) }}
     </p>
 
     <h2>{{ _("How the accounts are now") }}</h2>

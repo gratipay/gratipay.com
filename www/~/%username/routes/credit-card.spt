@@ -7,48 +7,19 @@ from gratipay.billing.instruments import CreditCard
 
 [-----------------------------------------------------------------------------]
 
-status = status_msg = ""
-
-if not user.ANON:
-    participant = get_participant(state, restrict=True)
-
-    status = "missing"
-    status_msg = _("Your credit card is {0}missing{1}")
-
-    braintree_route = ExchangeRoute.from_network(participant, 'braintree-cc')
-    balanced_route = ExchangeRoute.from_network(participant, 'balanced-cc')
-
-    route = braintree_route or balanced_route
-
-    if route:
-        card = CreditCard.from_route(route)
-        last_bill_result = route.error
-        if last_bill_result == "":
-            status = "working"
-            status_msg = _("Your credit card is {0}working{1}")
-        else:
-            status = "failing"
-            status_msg = _("Your credit card is {0}failing{1}")
-    else:
-        card = CreditCard()
-
+participant = get_participant(state, restrict=True)
+banner = '~' + participant.username
 title = _("Credit Card")
 
-[-----------------------------------------------------------------------------]
-{% extends "templates/base.html" %}
+route = ExchangeRoute.from_network(participant, 'braintree-cc')
+if route:
+    card = CreditCard.from_route(route)
+    last_bill_result = route.error
+else:
+    card = CreditCard()
 
-{% block heading %}
-
-    {% if not user.ANON %}
-        <h1>{{ escape(status_msg).format("<em id=\"status\">"|safe, "</em>"|safe) }}</h1>
-    {% else %}
-        <h1>{{ title }}</h1>
-    {% endif %}
-
-    <p>{{ _("When you don't have enough money in your Gratipay account to cover your gifts, we'll attempt to pull money in using your credit card.") }}
-    {{ _("If your credit card is missing or fails then your gifts won't go through for that week.") }}</p>
-
-{% endblock %}
+[-----------------------------------------------------------------------------] text/html
+{% extends "templates/profile-routes.html" %}
 
 {% block scripts %}
 
@@ -77,8 +48,6 @@ title = _("Credit Card")
 
     <div class="cc-ba">
         <form id="credit-card" autocomplete="off">
-
-            <input type="hidden" id="braintree_token" value="{{ participant.get_braintree_token() }}">
 
             <h2>{{ _("Required") }}</h2>
 
@@ -126,11 +95,13 @@ title = _("Credit Card")
                 <input id="name" value="{{ card.cardholder_name }}" />
             </label>
 
+            <input type="hidden" id="braintree_token" value="{{ participant.get_braintree_token() }}">
+
             <button class="selected larger" id="save" type="submit">{{ _("Save") }}</button>
 
         </form>
 
-        {% if status != "missing" %}
+        {% if route %}
         <form id="delete" data-network="{{ route.network }}" data-address="{{ route.address }}"
               data-confirm="{{ _('Are you sure you want to disconnect your credit card?') }}">
             <button>{{ _("Disconnect My Credit Card") }}</button>

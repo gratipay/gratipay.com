@@ -7,6 +7,7 @@ from gratipay.utils.i18n import HTTP_ERRORS
 
 [----------------------------------------]
 
+banner = _("Eep!")
 code = response.code
 msg = _(HTTP_ERRORS.get(code, status_strings.get(code, '')))
 try:
@@ -20,6 +21,7 @@ err = response.body
 if code == 500 and not err:
     err = _("Looks like you've found a bug! Sorry for the inconvenience, we'll get it fixed ASAP!")
 
+suppress_sidebar = True
 [----------------------------------------] text/html
 {% extends "templates/base.html" %}
 {% set title = code %}

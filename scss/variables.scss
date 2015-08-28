@@ -19,11 +19,5 @@ $light-red: #F99;
 $gold: #FFC300;
 $white: #FFF;
 
-// leaderboard widths
+// search result item width
 $people-column-width: 90px;
-$people-column-gutter: 30px;
-
-@function leaderboard-width($people, $col: 3) {
-  @return (($people-column-width * $people) * $col) + ($people-column-gutter * ($col - 1));
-}
-

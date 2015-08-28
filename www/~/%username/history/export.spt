@@ -8,8 +8,8 @@ from gratipay.utils.history import export_history
 [---]
 
 participant = get_participant(state, restrict=True)
-title = participant.username
-subhead = _("Export History")
+banner = '~' + participant.username
+title = _("Export History")
 
 current_year = datetime.utcnow().year
 try:

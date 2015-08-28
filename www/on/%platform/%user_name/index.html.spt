@@ -16,7 +16,7 @@ participant = account.participant
 if participant.is_claimed or participant.is_closed:
     website.redirect('/%s/' % participant.username)
 
-title = friendly_name = account.friendly_name
+banner = friendly_name = account.friendly_name
 user_id = account.user_id
 is_team = account.is_team
 
@@ -41,6 +41,7 @@ if is_team:
         if len(user_accounts) == 1 and platform.name in user_accounts:
             allow_team_connect = False
 
+suppress_sidebar = True
 [-----------------------------------------------------------------------------]
 {% from 'templates/avatar-url.html' import avatar_img with context %}
 
@@ -52,12 +53,17 @@ if is_team:
     </h1>
 {% endblock %}
 
+{% block banner %}
+<a class="elsewhere" href="{{ account.html_url }}">
+    <div class="avatar">
+        {{ avatar_img(account) }}
+        <img class="platform" src="{{ platform.logo }}" />
+    </div>
+    {{ super () }}
+</a>
+{% endblock %}
+
 {% block sidebar %}
-
-<div class="avatar">
-    <a href="{{ account.html_url}}">{{ avatar_img(account) }}</a>
-</div>
-
 <div class="mono">
     <table>
         {% if account.is_team %}
@@ -68,27 +74,24 @@ if is_team:
         {% endif %}
     </table>
 </div>
-
 {% endblock %}
 
 {% block content %}
-
 {% from 'templates/auth.html' import auth_button with context %}
 
-<div class="col0">
-  {% if is_team %}
+{% if is_team %}
 
-    {% if allow_team_connect %}
-        <h2>{{ _("{0} has not joined Gratipay.", user_id) }}</h2>
-        <p>{{ _("Are you an administrator of this {0} team account? Connect it "
-                "to your Gratipay account.",
-                platform.display_name) }}</p>
-        {% call auth_button(platform.name, 'connect', user_id) %}
-            {{ _("Connect team account") }}
-        {% endcall %}
-    {% endif %}
+  {% if allow_team_connect %}
+    <h2>{{ _("{0} has not joined Gratipay.", user_id) }}</h2>
+    <p>{{ _("Are you an administrator of this {0} team account? Connect it "
+            "to your Gratipay account.",
+            platform.display_name) }}</p>
+    {% call auth_button(platform.name, 'connect', user_id) %}
+        {{ _("Connect team account") }}
+    {% endcall %}
+  {% endif %}
 
-  {% else %}
+{% else %}
 
     <h2>{{ _("{0} has not joined Gratipay.", friendly_name) }}</h2>
 
@@ -158,8 +161,7 @@ if is_team:
 
     </tbody>
     </table>
-    {% endif %}
-
   {% endif %}
-</div>
+
+{% endif %}
 {% endblock %}

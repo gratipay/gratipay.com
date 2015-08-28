@@ -1,7 +1,9 @@
 table.table { // hack class, need to review all table instances
 
+    margin: 24px 0 36px;
+
     td {
-        padding: 3px 5px 3px 0px;
+        padding: 3px 12px 3px 0px;
         font: normal 12px/14px $Ideal;
 
         &.no-members {
@@ -18,13 +20,17 @@ table.table { // hack class, need to review all table instances
             text-align: right;
             padding: 0 1em 0 5px;
         }
+
+        &:last-child {
+            padding-right: 0;
+        }
     }
 
     th {
         font: bold 11px/14px $Ideal;
         text-transform: uppercase;
         color: $brown;
-        padding: 0 0 5px 0;
+        padding: 0 12px 5px 0;
         vertical-align: bottom;
 
         &.figure {

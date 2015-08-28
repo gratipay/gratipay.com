@@ -33,24 +33,12 @@
         li {
             margin: 0;
             list-style: none;
-            &.facebook button {
-                @include has-icon("facebook");
-            }
-            &.google button {
-                @include has-icon("google");
-            }
-            &.twitter button {
-                @include has-icon("twitter");
-            }
-            &.github button {
-                @include has-icon("github");
-            }
-            &.bitbucket button {
-                @include has-icon("bitbucket");
-            }
-            &.openstreetmap button {
-                @include has-icon("openstreetmap");
-            }
+            &.facebook      button { @include has-icon("facebook"); }
+            &.google        button { @include has-icon("google"); }
+            &.twitter       button { @include has-icon("twitter"); }
+            &.github        button { @include has-icon("github"); }
+            &.bitbucket     button { @include has-icon("bitbucket"); }
+            &.openstreetmap button { @include has-icon("openstreetmap"); }
             &:hover button {
                 background: $darker-green;
             }
@@ -91,7 +79,7 @@
             @include border-radius(0);
             border-top: 4px solid transparent;
             background: none;
-            padding: 27px 20px 31px 25px;
+            padding: 21px 12px 23px;
             color: $black;
 
             font-size: 16px;
@@ -110,7 +98,7 @@
             right: 0;
             margin-top: 0;
             @include border-radius(0);
-            background: transparentize($gold, 0.8);
+            background: $gold;
             button {
                 color: $black;
                 &:hover {

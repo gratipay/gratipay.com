@@ -626,8 +626,19 @@ collects information related to the incident.</p>
     .charge {
         color: red;
     }
+
+    .details-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background: white;
+        padding: 40px;
+    }
 </style>
-<div class="col0">
 
 <h2>Summary</h2>
 
@@ -679,8 +690,11 @@ incident.</p>
         <td class="amount"><b>${{ total_legit }}</b></td>
     </tr>
 </table>
-</div>
 
+<button class="details-on">View Details</button>
+
+<div class="details-container">
+<button class="details-off">Hide Details</button>
 <table class="details centered">
     <tr>
         <td colspan="5">
@@ -740,4 +754,14 @@ incident.</p>
     </tr>
     {% endfor %}
 </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $('.details-on').click(function() {$('.details-container').show();});
+            $('.details-off').click(function() {$('.details-container').hide();});
+        });
+    </script>
 {% endblock %}

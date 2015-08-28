@@ -1,71 +1,77 @@
 [---]
-title = _("About")
+banner = _("About")
+title = _("Welcome!")
 [---] text/html
 {% extends "templates/about-basic-info.html" %}
 {% block content %}
-<div class="col0">
 
-    <p>Welcome to Gratipay! We provide voluntary <a
-        href="/about/features/payments">payments</a> and (eventually) <a
-    href="/about/features/payroll">payroll</a> for open work.</p>
-
-
-    <h2>What is Open Work?</h2>
-
-    <p>&ldquo;Open work&rdquo; means that your company or organization makes it
-    easy for any individual to do your work for you without asking you first,
-    and as a result to share in any revenue you generate. Basically you need to
-    have a public issue tracker with documentation for self-onboarding, and be
-    willing to use our <a href="/about/features/payroll">payroll</a> feature
-    once we bring it back.</p>
+<p>Welcome to Gratipay! We provide voluntary <a
+    href="/about/features/payments">payments</a> and (eventually) <a
+href="/about/features/payroll">payroll</a> for open work.</p>
 
 
-    <h2>Other Basic Terminology</h2>
+<h2 id="open-work">What is Open Work?
+    <a class="permalink" title="permalink" href="#open-work">&#182;</a>
+</h2>
 
-    <p>Gratipay has &ldquo;~users&rdquo; and &ldquo;Teams,&rdquo; and every
-    Team has an &ldquo;owner,&rdquo; who is a ~user.</p>
+<p>&ldquo;Open work&rdquo; means that your company or organization makes it
+easy for any individual to do your work for you without asking you first,
+and as a result to share in any revenue you generate. Basically you need to
+have a public issue tracker with documentation for self-onboarding, and be
+willing to use our <a href="/about/features/payroll">payroll</a> feature
+once we bring it back.</p>
 
-    <img src="entities.svg">
 
-    <table class="table" style="margin: 0 auto;">
-        <tr>
-            <th>Speaking of ...&nbsp;&nbsp;&nbsp;</th>
-            <th>Subject</th>
-            <th>Verb</th>
-            <th>Object</th>
-        </tr>
-        <tr>
-            <td>payments</td>
-            <td>~alice</td>
-            <td><b>gives</b> to</td>
-            <td>The Enterprise.</td>
-        </tr>
-        <tr>
-            <td>payments</td>
-            <td>The Enterprise</td>
-            <td><b>receives</b> from</td>
-            <td>~alice.</td>
-        </tr>
-        <tr>
-            <td>payroll</td>
-            <td>The Enterprise</td>
-            <td><b>distributes</b> to</td>
-            <td>~crusher.</td>
-        </tr>
-        <tr>
-            <td>payroll</td>
-            <td>~crusher</td>
-            <td><b>takes</b> from</td>
-            <td>The Enterprise.</td>
-        </tr>
-    </table>
-    <br>
+<h2 id="terms">Other Basic Terminology
+    <a class="permalink" title="permalink" href="#terms">&#182;</a>
+</h2>
 
-    <h2>How is Gratipay Funded?</h2>
+<p>Gratipay has &ldquo;~users&rdquo; and &ldquo;Teams,&rdquo; and every
+Team has an &ldquo;owner,&rdquo; who is a ~user.</p>
 
-    <p>Gratipay is <a href="/Gratipay/">funded on Gratipay</a>. We don't take a
-    cut of payments (though we do pass through processing fees at cost). See
-    our <a href="/about/pricing">pricing page</a> for more information.</p>
+<img src="entities.svg">
 
-</div>
+<table class="table" style="margin-left: auto; margin-right: auto; white-space: nowrap;">
+    <tr>
+        <th>Speaking of ...&nbsp;&nbsp;&nbsp;</th>
+        <th>Subject</th>
+        <th>Verb</th>
+        <th>Object</th>
+    </tr>
+    <tr>
+        <td>payments</td>
+        <td>~alice</td>
+        <td><b>gives</b> to</td>
+        <td>The Enterprise.</td>
+    </tr>
+    <tr>
+        <td>payments</td>
+        <td>The Enterprise</td>
+        <td><b>receives</b> from</td>
+        <td>~alice.</td>
+    </tr>
+    <tr>
+        <td>payroll</td>
+        <td>The Enterprise</td>
+        <td><b>distributes</b> to</td>
+        <td>~crusher.</td>
+    </tr>
+    <tr>
+        <td>payroll</td>
+        <td>~crusher</td>
+        <td><b>takes</b> from</td>
+        <td>The Enterprise.</td>
+    </tr>
+</table>
+<br>
+
+
+<h2 id="funding">How is Gratipay Funded?
+    <a class="permalink" title="permalink" href="#funding">&#182;</a>
+</h2>
+
+<p>Gratipay is <a href="/Gratipay/">funded on Gratipay</a>. We don't take a
+cut of payments (though we do pass through processing fees at cost). See
+our <a href="/about/pricing">pricing page</a> for more information.</p>
+
 {% endblock %}

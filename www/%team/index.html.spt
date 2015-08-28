@@ -11,7 +11,7 @@ team = get_team(state)
 if team.is_approved in (None, False):
     if user.ANON:
         raise Response(401)
-title = name = team.name
+banner = name = team.name
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/base.html" %}
@@ -34,7 +34,6 @@ title = name = team.name
 {% endblock %}
 
 {% block content %}
-<div class="col0">
     <p>
 
     {% if team.status == 'unreviewed' %}
@@ -53,7 +52,7 @@ title = name = team.name
     | <a href="{{ team.todo_url }}">{{ _("To-do") }}</a>
     {% endif %}
 
-    | {{ _( "owned by {a}{owner}{_a}"
+    | {{ _( "owned by {a}~{owner}{_a}"
           , a=('<a href="/{}/">'.format(team.owner))|safe
           , owner=team.owner
           , _a='</a>'|safe
@@ -64,7 +63,6 @@ title = name = team.name
     <div class="statement profile-statement">
         {{ markdown.render(team.product_or_service) }}
     </div>
-</div>
 {% endblock %}
 
 {% block scripts %}

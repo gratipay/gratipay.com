@@ -12,7 +12,7 @@
 
 <pre>{{ exchange.note }}</pre>
 
-<a href="{{ participant.profile_url+'routes/credit-card.html' }}"
+<a href="{{ participant.profile_url+'routes/credit-card' }}"
    style="{{ button_style }}">{{ _("Fix Credit Card") }}</a>
 
 [---] text/plain
@@ -25,4 +25,4 @@
 
 {{ exchange.note }}
 
-{{ _("Follow this link to fix your credit card:") }} {{ participant.profile_url+'routes/credit-card.html' }}
+{{ _("Follow this link to fix your credit card:") }} {{ participant.profile_url+'routes/credit-card' }}

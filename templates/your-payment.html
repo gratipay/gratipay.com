@@ -1,22 +1,23 @@
 {% if user.ANON %}
-    <div class="right">
-        {% include "templates/sign-in-using-to-give.html" %}
+    <div class="sign-in-to">
+        {% include "templates/sign-in-using.html" %}
+        {{ _("{sign_in}{br}to give to{br}{team}").format(sign_in="", team=team.name, br='<br>'|safe) }}
     </div>
 {% else %}
     <div class="cta">
         {% set payment_instruction = user.participant.get_payment_instruction(team.slug) %}
-        <h2>{{ _('Your Payment') }}</h2>
+        <h2>{{ _('You Give') }}</h2>
         <div class="js-edit your-payment {{ 'anon' if user.ANON }}" data-team="{{ team.id }}">
             <div class="view">
                 <span class="amount">{{ format_currency(payment_instruction.amount, 'USD') }}</span>
                 <div class="per-week">{{ _("per week") }}</div>
                 <button class="edit {{ 'not-zero' if payment_instruction.amount > 0 }}">
-                    <span class="zero">{{ _("Support {0}", team.name) }}</span>
+                    <span class="zero">{{ _("Give to {0}", team.name) }}</span>
                     <span class="not-zero">{{ _("Edit") }}</span>
                 </button>
             </div>
             <form class="edit" action="/{{ team.slug }}/payment-instruction.json">
-                $
+                <span class="amount">$</span>
                 <input type="text" name="amount" class="amount"
                        value="{{ format_decimal(payment_instruction.amount) }}"
                        min="0" max="1000">
@@ -28,11 +29,11 @@
         </div>
 
         {% if not payment_instruction.is_funded %}
-        <div id="payment-prompt" class="{{ 'needed' if payment_instruction.amount > 0 }}">
+        <p ="payment-prompt" class="{{ 'needed' if payment_instruction.amount > 0 }}">
             {{ _("Back your payment with a {0}credit card{1} to make sure it goes through!",
-                 "<a href='/~%s/routes/credit-card.html'>"|safe % user.participant.username,
+                 "<a href='/~%s/routes/credit-card'>"|safe % user.participant.username,
                  "</a>"|safe) }}
-        </div>
+        </p>
         {% endif %}
     </div>
 {% endif %}

@@ -1,41 +1,40 @@
 [---]
+banner = _("About")
 title = _("Features")
 [---] text/html
 {% extends "templates/about-features.html" %}
 {% block content %}
-<div class="col0">
 
-    <p>Gratipay provides voluntary <a
-        href="/about/features/payments">payments</a> and (eventually) <a
-    href="/about/features/payroll">payroll</a> for open work. Read our <a
-    href="/about/">site overview</a> for basic definitions.</p>
-
-
-    <h2>How do Payments Work?</h2>
-
-    <p>Gratipay implements a <a
-        href="https://en.wikipedia.org/wiki/Pay_what_you_want">voluntary</a> <a
-    href="https://en.wikipedia.org/wiki/Subscription_business_model">subscription</a>
-    <a href="https://en.wikipedia.org/wiki/Revenue_model">revenue model</a>.
-    Payments are pay-what-you-want, and recurring.</p>
-
-    <p><a href="./payments">Read more about payments</a>.</p>
+<p>Gratipay provides voluntary <a
+    href="/about/features/payments">payments</a> and (eventually) <a
+href="/about/features/payroll">payroll</a> for open work. Read our <a
+href="/about/">site overview</a> for basic definitions.</p>
 
 
-    <h2>How does Payroll Work?</h2>
+<h2>How do Payments Work?</h2>
 
-    <p>To be honest ... it doesn't right now. But when we bring it back again,
-    it will be based on the idea that everyone sets their own salary. Our
-    payments are pay-what-you-want, and our payroll is
-    &ldquo;take-what-you-want.&rdquo;</p>
+<p>Gratipay implements a <a
+    href="https://en.wikipedia.org/wiki/Pay_what_you_want">voluntary</a> <a
+href="https://en.wikipedia.org/wiki/Subscription_business_model">subscription</a>
+<a href="https://en.wikipedia.org/wiki/Revenue_model">revenue model</a>.
+Payments are pay-what-you-want, and recurring.</p>
 
-    <p><a href="./payroll">Read more about payroll</a>.</p>
+<p><a href="./payments">Read more about payments</a>.</p>
 
 
-    <h2>Other Features</h2>
+<h2>How does Payroll Work?</h2>
 
-    <p>We honor the <a href="./dnt">Do Not Track</a> web analytics opt-out
-    mechanism.</p>
+<p>To be honest ... it doesn't right now. But when we bring it back again,
+it will be based on the idea that everyone sets their own salary. Our
+payments are pay-what-you-want, and our payroll is
+&ldquo;take-what-you-want.&rdquo;</p>
 
-</div>
+<p><a href="./payroll">Read more about payroll</a>.</p>
+
+
+<h2>Other Features</h2>
+
+<p>We honor the <a href="./dnt">Do Not Track</a> web analytics opt-out
+mechanism.</p>
+
 {% endblock %}

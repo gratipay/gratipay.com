@@ -2,7 +2,7 @@
 <html>
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
     {% block head_early %}{% endblock %}
-    <title>{% if title %}{% if subhead %}{{ subhead }} - {% endif %}{{ title }} - {% endif %}Gratipay</title>
+    <title>{% if title %}{{ title }} - {% endif %}{% if banner %}{{ banner }} - {% endif %}Gratipay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ website.asset('gratipay.css') }}" type="text/css">
     <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-60x60.png') }}">
@@ -28,13 +28,13 @@
     {% endif %}
 </head>
 {% set homepage = request.path.raw == '/' %}
-<body id="{{ 'homepage' if homepage and user.ANON }}">
+<body id="{{ 'homepage' if homepage }}">
 
     <div id="wrapper">
         <div id="header" class="clearfix">
             <h1><a href="/"><img src="{{ website.asset('gratipay.svg') }}"
                                  alt="Gratipay" /></a></h1>
-            {% set pages = [('/about/', _('About')), ('/search', _('Search'))] %}
+            {% set pages = [('/search', _('Search'))] %}
             {% set current_page = request.path.raw.split('/')[1] %}
             {% include "templates/nav.html" %}
             {% if user.ANON %}
@@ -46,7 +46,7 @@
                     {% set on_profile = parts[1] == '~' %}
                     {% set on_own_profile = on_profile and parts[2] == user.participant.username %}
                     <a href="/~{{user.participant.username}}/"{% if on_own_profile %} class="selected"{% endif %}>
-                        {{ user.participant.username }}
+                        ~{{ user.participant.username }}
                         <div class="quick-stats">
                             <span class="my-total-giving">{{ format_currency(user.participant.get_giving_for_profile()[1], "USD") }}</span>/{{ _("wk") }}
                         </div>
@@ -55,7 +55,7 @@
                 <li>
                     <a id="sign-out" href="/sign-out.html">
                         <span class="icon">&#xe600;</span>
-                        <span class="screen-reader-text">Sign out</span>
+                        <span class="screen-reader-text">{{ _("Sign out") }}</span>
                     </a>
                 </li>
             </ul>
@@ -63,41 +63,46 @@
             {% include "templates/support-gratipay.html" %}
         </div>
 
-        <div id="main">
-            <div id="sidebar">{% block sidebar %}{% endblock %}</div>
-            <div id="content" class="clearfix">
-
-                <div style="padding: 5px 10px; margin: 40px 0 20px; border: 4px
-                    solid gold;"> <b>Announcing <a
-                        href="https://medium.com/gratipay-blog/gratipay-2-0-2453d3c53077">Gratipay
-                    2.0</a></b>! Thanks for bearing with us as we <a
-                href="https://github.com/gratipay/gratipay.com/milestones/Pivot">finish
-                sweeping up</a> after this major upgrade. As always, feel free
-            to get in touch privately <a href="mailto:support@gratipay.com">via
-            email</a> or publicly <a
-                    href="https://github.com/gratipay/gratipay.com/issues/new">on
-            GitHub</a> with any questions or issues.</div>
-
-
-                {% block heading %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
-                {% block subnav %}{% endblock %}
-                {% block content %}{% endblock %}
-            </div>
+        <div id="banner">
+            {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
         </div>
 
-        <a class="feedback" href="https://github.com/gratipay/gratipay.com/issues" target="_blank">Feedback</a>
+        <div id="main">
+            {% block main %}
+            {% if not suppress_sidebar %}
+            <div id="sidebar">{% block sidebar %}{% endblock %}</div>
+            {% endif %}
+            <div id="content">
+                {% block subnav %}{% endblock %}
+                {% if title %}<h1>{{ title }}</h1>{% endif %}
+                {% block content %}{% endblock %}
+            </div>
+            {% endblock %}
+        </div>
 
         <div id="footer">
             <ul>
-                <li><a href="/about/">{{ _("About") }}</a></li>
-                <li><a href="/about/contact">{{ _("Contact Us") }}</a></li>
-                <li><a href="/about/terms/">{{ _("Terms") }}</a></li>
-                <li><a href="http://inside.gratipay.com/appendices/colophon">{{ _("Colophon") }}</a></li>
-                <li><a href="https://medium.com/gratipay-blog">{{ _("Blog") }}</a></li>
-                <li><a href="https://twitter.com/gratipay">Twitter</a></li>
-                <li><a href="https://github.com/gratipay/gratipay.com">GitHub</a></li>
-                <li><a href="https://plus.google.com/+Gratipay/posts">Google Plus</a></li>
-                <li><a href="https://www.facebook.com/Gratipay">Facebook</a></li>
+                <li class="left">
+                <a href="/about/">{{ ("About") }}</a>
+                </li><li>
+                    <a href="https://medium.com/gratipay-blog" 
+                       title="our blog on Medium">
+                        <span class="icon">&#xe006;</span>
+                        <span class="screen-reader-text">{{ _("Blog") }}</span>
+                    </a>
+                </li><li>
+                    <a href="https://github.com/gratipay/gratipay.com/issues/new"
+                       title="public feedback on GitHub">
+                        <span class="icon">&#xe003;</span>
+                        <span class="screen-reader-text">{{ _("GitHub") }}</span>
+                    </a>
+                </li><li>
+                    <a href="mailto:support@gratipay.com"
+                       title="private feedback via email">
+                        <span class="icon">&#xe007;</span>
+                        <span class="screen-reader-text">{{ _("Email") }}</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

@@ -1,0 +1,10 @@
+{% extends "templates/profile.html" %}
+{% block subnav %}
+    {% set current_page = request.path.raw.split('/')[4] %}
+    {% set nav_base = '/~{}/routes'.format(participant.username) %}
+    {% set pages = [ ('/', _('Overview'))
+                   , ('/credit-card', _('Credit Card'))
+                   , ('/paypal', _('PayPal'))
+                    ] %}
+    {% include "templates/nav.html" %}
+{% endblock %}

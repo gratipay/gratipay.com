@@ -8,13 +8,13 @@ from gratipay.utils import markdown
 #terms = '\n'.join(terms.splitlines()[2:])
 
 [---]
-title = _("Policies")
-subhead = _("Terms of Service")
+banner = _("About")
+title = _("Terms of Service")
 [---] text/html
 {% extends "templates/about-policies.html" %}
 
 {% block content %}
-<div class="col0">
+
 <p><i>Last Updated: May 14, 2015</i></p>
 
 <p>These Terms of Service (&ldquo;Terms&rdquo;) are an agreement between you, a user
@@ -439,5 +439,4 @@ shall be no third-party beneficiaries to the Terms.</li>
 </ol></li>
 </ol>
 
-</div>
 {% endblock %}

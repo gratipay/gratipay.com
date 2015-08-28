@@ -1,5 +1,7 @@
 .search-box {
-    margin: 1em 0;
+    input {
+        width: 136px;
+    }
 }
 
 .search-results {
@@ -26,4 +28,8 @@
         line-height: 130%;
         padding: 0.5em 0 0 1em;
     }
+}
+
+.jump-box {
+    margin-top: 40px;
 }

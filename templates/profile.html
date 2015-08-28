@@ -1,4 +1,4 @@
-{% extends "templates/participant.html" %}
+{% extends "templates/base.html" %}
 
 {% block head_early %}
     {% if not participant.is_searchable %}
@@ -10,6 +10,81 @@
     {% if user.ADMIN %}<script src="{{ website.asset('admin.js') }}"></script>{% endif %}
 {% endblock %}
 
-{% block subnav %}
-{% include "templates/profile-subnav.html" %}
+{% block banner %}
+{% from 'templates/avatar-url.html' import avatar_img with context %}
+
+<div class="avatar {{ 'is-suspicious' if participant.is_suspicious }}">
+    {{ avatar_img(participant) }}
+
+    {% if user.ADMIN %}
+    <label class="is-suspicious-label">
+        Suspicious
+        <input type="checkbox" data-username="{{ participant.username }}"
+            {% if participant.is_suspicious %}checked="true"{% endif %} />
+    </label>
+    {% elif participant.is_suspicious %}
+    <div class="is-suspicious-label">Suspicious</div>
+    {% endif %}
+</div>
+
+<div class="details mono">
+    {% set g = participant.giving %}
+    {% set r = participant.receiving %}
+    {% set anon_giving = participant.anonymous_giving %}
+    {% set anon_receiving = participant.anonymous_receiving %}
+    {% set giving_str = '[' + _('hidden') + ']' if anon_giving else format_currency(g, "USD") %}
+    {% set receiving_str = '[' + _('hidden') + ']' if anon_receiving else format_currency(r, "USD") %}
+
+    <!--
+    <table>
+        <tr>
+            <td class="left">{{ _('Gives') }}</td>
+            <td class="right">{{ giving_str }}</td>
+        </tr>
+        <tr>
+            <td class="left">{{ _('Receives') }}</td>
+            <td class="right total-receiving" data-tippee="{{ participant.id }}">
+                {{ receiving_str }}
+            </td>
+        </tr>
+    </table>
+    -->
+
+    {% if participant.claimed_time %}
+    <p>{{ _('Joined') }} {{ to_age(participant.claimed_time, add_direction=True) }}.</p>
+    {% elif participant.is_closed %}
+    <p>Closed {{ to_age(participant.closed_time, add_direction=True) }}.</p>
+    {% else %}
+    {% set absorption = website.db.one( "select * from absorptions where archived_as=%s"
+                                      , (participant.username,)
+                                       ) %}
+    <p>Formerly {{ absorption.absorbed_was }}.</p>
+    <p>Absorbed by <a href="/{{ absorption.absorbed_by }}/">{{ absorption.absorbed_by }}</a>
+    {{ to_age(absorption.timestamp, add_direction=True) }}.<p>
+    {% endif %}
+</div>
+
+{{ super() }}
+{% endblock %}
+
+{% set suppress_sidebar = user.ANON or (user.participant != participant and not user.ADMIN)%}
+{% block sidebar %}
+{% set current_page = request.path.raw.split('/')[3] %}
+{% set nav_base = '/~' + participant.username %}
+{% set pages = [ ('/',           _('Profile'),   True,   True)
+               , ('/giving/',    _('Giving'),    True,   False)
+               , ('/history/',   _('History'),   True,   False)
+               , ('/emails/',    _('Emails'),    True,   False)
+               , ('/routes/',    _('Routes'),    True,   False)
+               , ('/settings/',  _('Settings'),  True,   False)
+               , ('/events/',    _('Events'),    False,  False)
+                ] %}
+{% set pages = filter_profile_nav(user, participant, pages) %}
+{% if pages %}
+<ul class="nav">
+    {% for slug, name, show_them, show_others in pages %}
+    <li><a href="{{ nav_base }}{{ slug }}"{% if slug.strip('/') == current_page.strip('/') %} class="selected"{% endif %}>{{ _(name) }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

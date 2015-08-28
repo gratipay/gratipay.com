@@ -66,23 +66,16 @@ class TestRoutes(BillingHarness):
 
     def test_credit_card_page(self):
         self.make_participant('alice', claimed_time='now')
-        expected = "add or change your credit card"
-        actual = self.client.GET('/~alice/routes/credit-card.html').body
-        assert expected in actual
-
-    def test_credit_card_page_shows_card_missing(self):
-        self.make_participant('alice', claimed_time='now')
-        expected = 'Your credit card is <em id="status">missing'
-        actual = self.client.GET('/~alice/routes/credit-card.html', auth_as='alice').body.decode('utf8')
-        assert expected in actual
+        actual = self.client.GET('/~alice/routes/credit-card', auth_as='alice').body
+        assert "ZIP or Postal Code" in actual
 
     def test_credit_card_page_loads_when_there_is_a_braintree_card(self):
-        expected = 'Your credit card is <em id="status">working'
-        actual = self.client.GET('/~obama/routes/credit-card.html', auth_as='obama').body.decode('utf8')
+        expected = 'Current: '
+        actual = self.client.GET('/~obama/routes/credit-card', auth_as='obama').body.decode('utf8')
         assert expected in actual
 
     def test_credit_card_page_shows_details_for_braintree_cards(self):
-        response = self.client.GET('/~obama/routes/credit-card.html', auth_as='obama').body.decode('utf8')
+        response = self.client.GET('/~obama/routes/credit-card', auth_as='obama').body.decode('utf8')
         assert self.bt_card.masked_number in response
 
     def test_receipt_page_loads_for_braintree_cards(self):

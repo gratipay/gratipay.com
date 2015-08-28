@@ -22,6 +22,10 @@ Gratipay.routes.lazyLoad = function(script_url) {
     }).fail(Gratipay.error);
 }
 
+Gratipay.routes.redirectToOverview = function() {
+    window.location = './';
+};
+
 Gratipay.routes.deleteRoute = function(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -35,7 +39,7 @@ Gratipay.routes.deleteRoute = function(e) {
         { url: "/~" + Gratipay.username + "/routes/delete.json"
         , data: {network: $this.data('network'), address: $this.data('address')}
         , type: "POST"
-        , success: function() { window.location.reload(); }
+        , success: Gratipay.routes.redirectToOverview
         , error: Gratipay.error
          }
     );
@@ -44,7 +48,7 @@ Gratipay.routes.deleteRoute = function(e) {
 
 Gratipay.routes.onSuccess = function(data) {
     $('button#save').prop('disabled', false);
-    window.location.reload();
+    Gratipay.routes.redirectToOverview();
 };
 
 Gratipay.routes.associate = function (network, address) {

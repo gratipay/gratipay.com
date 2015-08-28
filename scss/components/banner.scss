@@ -1,0 +1,106 @@
+#banner {
+
+    a {
+        display: block;
+    }
+
+    .avatar {
+        position: relative;
+        height: 192px;
+        width: 256px; // to allow for blur
+        overflow: hidden;
+
+        img {
+            display: block;
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 160px;
+            height: 160px;
+            border: 2px solid $white;
+            @include border-radius(5px);
+            box-shadow: 0px 0px 32px 16px rgba($black, 0.5);
+            background: white;
+
+            &.platform {
+                width: 32px;
+                height: 32px;
+                @include border-radius(5px);
+                border: 2px solid $white;
+                top: auto;
+                left: 136px;
+                bottom: 24px;
+                box-shadow: none;
+            }
+        }
+
+        .is-suspicious-label {
+            text-align: right;
+            font-size: 10px;
+            text-transform: uppercase;
+            display: block;
+            color: $white;
+            position: absolute;
+            bottom: 0px;
+            right: 80px;
+        }
+
+        &.is-suspicious {
+            background: transparentize($light-red, 0.1);
+        }
+    }
+
+    .details {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        color: $white;
+        text-shadow: -1px 1px 1px rgba($brown, 1);
+        text-align: right;
+
+        a {
+            color: $white;
+            text-decoration: underline;
+        }
+    }
+
+    h1 {
+        font: bold 64px/80px $Ideal;
+        position: absolute;
+        bottom: 4px;
+        right: 16px;
+        text-align: right;
+        color: $white;
+        text-shadow: -1px 1px 1px rgba($brown, 1);
+        max-width: 386px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: none; // turn on in JS to avoid fouc
+
+        &.long {
+            font-size: 32px;
+            line-height: 40px;
+            bottom: 8px;
+        }
+        &.really-long {
+            font-size: 16px;
+            line-height: 20px;
+            bottom: 12px;
+        }
+    }
+
+    .homepage {
+        margin: 0;
+        color: $white;
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        font: bold 28px/33px $Ideal;
+        text-shadow: -1px 1px 1px rgba($brown, 1);
+        text-align: right;
+
+        u {
+            font: normal 21px/27px $Ideal;
+        }
+    }
+}
