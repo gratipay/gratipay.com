@@ -53,6 +53,7 @@ body {
     border-style: solid none;
     height: 194px;
     background: $black url("banner.jpg") 50% 50% no-repeat;
+    background-size: cover;
     position: relative;
     overflow: hidden;
 }

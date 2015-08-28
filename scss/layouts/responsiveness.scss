@@ -1,13 +1,78 @@
 @media (max-width: 600px) {
+    #header {
+        text-align: center;
+        h1 {
+            float: none;
+            display: block;
+            margin: 0 auto;
+        }
+    }
+    #banner {
+        height: 128px;
+        .avatar {
+            height: 128px;
+            width: 144px;
+            img {
+                width: 112px;
+                height: 112px;
+                top: 8px;
+                left: 8px;
+                box-shadow: 0px 0px 16px 8px rgba($black, 0.5);
+                @include border-radius(3px);
+
+                &.platform {
+                    width: 21px;
+                    height: 21px;
+                    @include border-radius(3px);
+                    border: 2px solid $white;
+                    top: auto;
+                    left: 94px;
+                    bottom: 13px;
+                    box-shadow: none;
+                }
+            }
+            .is-suspicious-label {
+                display: none;
+            }
+        }
+        h1 {
+            font-size: 32px;
+            line-height: 40px;
+            &.long {
+                font-size: 16px;
+                line-height: 20px;
+            }
+            &.really-long {
+                font-size: 12px;
+                line-height: 16px;
+            }
+        }
+        .homepage {
+            font-size: 18px;
+            line-height: 22px;
+            u {
+            font-size: 14px;
+            line-height: 22px;
+            }
+        }
+    }
     #main {
-        display: inline;
+        display: block;
+        padding: 0 0 40px;
+        min-height: 0;
+    }
+    #homepage #sidebar {
+        padding-top: 20px ! important;
+    }
+    #sidebar {
+        padding-top: 20px;
     }
     #sidebar, #content {
         display: block;
-        width: 100% !important;
+        width: 100%;
     }
     #sidebar .nav {
-        margin: 20px 0;
+        margin: 0 0 20px;
         li {
             margin: 0;
             padding: 0 5px;

@@ -38,16 +38,6 @@ title = _("Teams (N={0})", nteams)
 {% endblock %}
 
 {% block sidebar %}
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
 <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
 
 <p>{{ _("We have {nteams} Teams receiving and distributing money each week.", nteams=napproved) }}</p>

@@ -41,6 +41,7 @@ if is_team:
         if len(user_accounts) == 1 and platform.name in user_accounts:
             allow_team_connect = False
 
+suppress_sidebar = True
 [-----------------------------------------------------------------------------]
 {% from 'templates/avatar-url.html' import avatar_img with context %}
 
