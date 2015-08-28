@@ -52,7 +52,7 @@ title = _("Teams (N={0})", nteams)
 
 <p>{{ _("We have {nteams} Teams receiving and distributing money each week.", nteams=napproved) }}</p>
 
-<p>{{ _('Explore our Teams at right, or <a href="/about/">read more about us</a>.'|safe) }}</p>
+<p>{{ _('Explore our Teams here, or <a href="/about/">read more about us</a>.'|safe) }}</p>
 {% endblock %}
 {% block content %}
 <table class="table">
