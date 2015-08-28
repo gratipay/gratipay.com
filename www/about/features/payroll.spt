@@ -16,7 +16,7 @@ better fit with existing tax and labor law. <a
 href="https://medium.com/gratipay-blog">Stay tuned</a>! :-)</p>
 
 <a href="https://github.com/gratipay/gratipay.com/issues/3433">
-    <img src="{{ website.asset('under-construction.png') }}">
+    <img src="{{ website.asset('under-construction.png') }}" width="386">
 </a>
 
 <p>This page documents how our system will work once we <a

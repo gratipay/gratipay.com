@@ -5,8 +5,6 @@ title = _("Contact Us")
 {% extends "templates/about-basic-info.html" %}
 {% block content %}
 
-<h2>Communication Channels</h2>
-
 <table class="table">
     <tr>
         <th>Subject Matter</th>
