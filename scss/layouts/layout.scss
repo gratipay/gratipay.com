@@ -64,6 +64,7 @@ body {
     table-layout: fixed;
     width: 100%;
     padding: 40px 0;
+    min-height: 356px; // golden ratio with 576
 }
 
 #sidebar {
