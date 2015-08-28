@@ -69,7 +69,9 @@
 
         <div id="main">
             {% block main %}
+            {% if not suppress_sidebar %}
             <div id="sidebar">{% block sidebar %}{% endblock %}</div>
+            {% endif %}
             <div id="content">
                 {% block subnav %}{% endblock %}
                 {% if title %}<h1>{{ title }}</h1>{% endif %}

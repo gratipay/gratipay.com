@@ -67,6 +67,7 @@
 {{ super() }}
 {% endblock %}
 
+{% set suppress_sidebar = user.ANON or (user.participant != participant and not user.ADMIN)%}
 {% block sidebar %}
 {% set current_page = request.path.raw.split('/')[3] %}
 {% set nav_base = '/~' + participant.username %}

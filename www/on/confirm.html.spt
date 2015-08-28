@@ -31,6 +31,7 @@ get_name = lambda a: a.user_name or a.display_name or a.user_id
 
 banner = _("Transfer?")
 title = _("Please Confirm")
+suppress_sidebar = True
 
 [--------]
 
