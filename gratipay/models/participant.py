@@ -1,12 +1,4 @@
-"""*Participant* is the name Gratipay gives to people and groups that are known
-to Gratipay. We've got a ``participants`` table in the database, and a
-:py:class:`Participant` class that we define here. We distinguish several kinds
-of participant, based on certain properties.
-
- - *Stub* participants
- - *Organizations* are plural participants
- - *Teams* are plural participants with members
-
+"""Participants on Gratipay give payments and take payroll.
 """
 from __future__ import print_function, unicode_literals
 
@@ -975,6 +967,22 @@ class Participant(Model):
         return updated
 
 
+    def update_taking(self, cursor=None):
+        (cursor or self.db).run("""
+
+            UPDATE participants
+               SET taking=(
+
+                    SELECT sum(receiving)
+                      FROM teams
+                     WHERE owner=%(username)s
+
+                   )
+             WHERE username=%(username)s
+
+        """, dict(username=self.username))
+
+
     def update_is_free_rider(self, is_free_rider, cursor=None):
         with self.db.get_cursor(cursor) as cursor:
             cursor.run( "UPDATE participants SET is_free_rider=%(is_free_rider)s "
@@ -1500,7 +1508,7 @@ class Participant(Model):
                  , 'avatar': self.avatar_url
                  , 'number': self.number
                  , 'on': 'gratipay'
-                 }
+                  }
 
         if not details:
             return output
@@ -1508,16 +1516,16 @@ class Participant(Model):
         # Key: taking
         # Values:
         #   3.00 - user takes this amount in payroll
-        output['taking'] = self.taking
+        output['taking'] = str(self.taking)
 
         # Key: giving
         # Values:
         #   null - user is giving anonymously
-        #   3.00 - user gives this amount in tips
-        if not self.anonymous_giving:
-            giving = str(self.giving)
-        else:
+        #   3.00 - user gives this amount
+        if self.anonymous_giving:
             giving = None
+        else:
+            giving = str(self.giving)
         output['giving'] = giving
 
         # Key: elsewhere

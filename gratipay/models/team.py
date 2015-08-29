@@ -1,4 +1,4 @@
-"""Teams on Gratipay are plural participants with members.
+"""Teams on Gratipay receive payments and distribute payroll.
 """
 from postgres.orm import Model
 
@@ -93,6 +93,11 @@ class Team(Model):
              WHERE t.slug = %(slug)s
          RETURNING receiving, nsupporters
         """, dict(slug=self.slug))
+
+
+        # This next step is easy for now since we don't have payroll.
+        from gratipay.models.participant import Participant
+        Participant.from_username(self.owner).update_taking()
 
         self.set_attributes(receiving=r.receiving, nsupporters=r.nsupporters)
 
