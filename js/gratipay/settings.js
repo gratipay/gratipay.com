@@ -15,39 +15,6 @@ Gratipay.settings.init = function() {
     });
 
 
-    // Wire up account type knob.
-    // ==========================
-
-    $('.number input').click(function(e) {
-        var $input = $(this);
-
-        e.preventDefault();
-
-        function post(confirmed) {
-            jQuery.ajax({
-                url: '../number.json',
-                type: 'POST',
-                data: {
-                    number: $input.val(),
-                    confirmed: confirmed
-                },
-                success: function(data) {
-                    if (data.confirm) {
-                        if (confirm(data.confirm)) return post(true);
-                        return;
-                    }
-                    if (data.number) {
-                        $input.prop('checked', true);
-                        Gratipay.notification(data.msg || "Success", 'success');
-                        $('li.members').toggleClass('hidden', data.number !== 'plural');
-                    }
-                },
-                error: Gratipay.error,
-            });
-        }
-        post();
-    });
-
     // Wire up privacy settings.
     // =========================
 
