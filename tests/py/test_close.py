@@ -135,7 +135,6 @@ class TestClosing(Harness):
     def test_cpi_clears_personal_information(self, mailer):
         alice = self.make_participant( 'alice'
                                      , anonymous_giving=True
-                                     , anonymous_receiving=True
                                      , avatar_url='img-url'
                                      , email_address='alice@example.com'
                                      , claimed_time='now'
@@ -154,7 +153,6 @@ class TestClosing(Harness):
 
         assert alice.get_statement(['en']) == (None, None)
         assert alice.anonymous_giving == new_alice.anonymous_giving == False
-        assert alice.anonymous_receiving == new_alice.anonymous_receiving == False
         assert alice.number == new_alice.number == 'singular'
         assert alice.avatar_url == new_alice.avatar_url == None
         assert alice.email_address == new_alice.email_address == None

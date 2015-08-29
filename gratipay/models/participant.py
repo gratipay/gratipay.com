@@ -382,7 +382,6 @@ class Participant(Model, MixinTeam):
 
             UPDATE participants
                SET anonymous_giving=False
-                 , anonymous_receiving=False
                  , number='singular'
                  , avatar_url=NULL
                  , email_address=NULL
@@ -1120,12 +1119,12 @@ class Participant(Model, MixinTeam):
 
     def get_og_title(self):
         out = self.username
-        receiving = self.receiving
         giving = self.giving
-        if (giving > receiving) and not self.anonymous_giving:
+        taking = self.taking
+        if (giving > taking) and not self.anonymous_giving:
             out += " gives $%.2f/wk" % giving
-        elif receiving > 0 and not self.anonymous_receiving:
-            out += " receives $%.2f/wk" % receiving
+        elif taking > 0:
+            out += " takes $%.2f/wk" % taking
         else:
             out += " is"
         return out + " on Gratipay"
@@ -1540,15 +1539,10 @@ class Participant(Model, MixinTeam):
         # Key: npatrons
         output['npatrons'] = self.npatrons
 
-        # Key: receiving
+        # Key: taking
         # Values:
-        #   null - user is receiving anonymously
-        #   3.00 - user receives this amount in tips
-        if not self.anonymous_receiving:
-            receiving = str(self.receiving)
-        else:
-            receiving = None
-        output['receiving'] = receiving
+        #   3.00 - user takes this amount in payroll
+        output['taking'] = self.taking
 
         # Key: giving
         # Values:

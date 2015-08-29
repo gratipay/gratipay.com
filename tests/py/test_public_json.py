@@ -65,18 +65,6 @@ class Tests(Harness):
         assert data['giving'] == None
 
     @pytest.mark.xfail(reason="#3599")
-    def test_anonymous_gets_null_receiving_if_user_anonymous(self):
-        alice = self.make_participant( 'alice'
-                                     , last_bill_result=''
-                                     , anonymous_receiving=True
-                                     )
-        bob = self.make_participant('bob')
-        alice.set_tip_to(bob, '1.00')
-        data = json.loads(self.client.GET('/~alice/public.json').body)
-
-        assert data['receiving'] == None
-
-    @pytest.mark.xfail(reason="#3599")
     def test_authenticated_user_gets_their_tip(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')

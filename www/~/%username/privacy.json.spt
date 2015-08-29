@@ -7,18 +7,15 @@ participant = get_participant(state, restrict=True)
 if request.method == 'POST':
     field = request.body.get("toggle")
 
-    if field not in ["is_searchable", "anonymous_receiving", "anonymous_giving"]:
+    if field not in ["is_searchable", "anonymous_giving"]:
         raise Response(400)
-
-    if participant.IS_PLURAL and field == "anonymous_receiving":
-        raise Response(403, _("Teams aren't allowed to hide their receiving amount."))
 
     rec = website.db.one("""
 
         UPDATE participants
            SET {0}=not {0}
          WHERE username=%s
-        RETURNING {0}
+     RETURNING {0}
 
     """.format(field), (user.participant.username,))
     assert rec is not None
@@ -29,7 +26,7 @@ if request.method == 'POST':
 else:
     rec = website.db.one("""
 
-        SELECT is_searchable, anonymous_receiving, anonymous_giving
+        SELECT is_searchable, anonymous_giving
         FROM participants WHERE username=%s
 
     """, (user.participant.username,), back_as=dict)

@@ -29,11 +29,10 @@
 
 <div class="details mono">
     {% set g = participant.giving %}
-    {% set r = participant.receiving %}
+    {% set t = participant.taking %}
     {% set anon_giving = participant.anonymous_giving %}
-    {% set anon_receiving = participant.anonymous_receiving %}
     {% set giving_str = '[' + _('hidden') + ']' if anon_giving else format_currency(g, "USD") %}
-    {% set receiving_str = '[' + _('hidden') + ']' if anon_receiving else format_currency(r, "USD") %}
+    {% set taking_str = format_currency(t, "USD") %}
 
     <!--
     <table>
@@ -42,9 +41,9 @@
             <td class="right">{{ giving_str }}</td>
         </tr>
         <tr>
-            <td class="left">{{ _('Receives') }}</td>
-            <td class="right total-receiving" data-tippee="{{ participant.id }}">
-                {{ receiving_str }}
+            <td class="left">{{ _('Takes') }}</td>
+            <td class="right total-taking" data-tippee="{{ participant.id }}">
+                {{ taking_str }}
             </td>
         </tr>
     </table>
