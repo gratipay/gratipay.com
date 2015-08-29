@@ -423,7 +423,7 @@ some fake data, so that more of the site is functional, run this command:
 API
 ===
 
-The Gratipay API is comprised of these six endpoints:
+The Gratipay API is comprised of these five endpoints:
 
 **[/about/charts.json](https://gratipay.com/about/charts.json)**
 ([source](https://github.com/gratipay/gratipay.com/tree/master/www/about/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
@@ -440,18 +440,12 @@ charts page used to use this.
 an object giving a point-in-time snapshot of Gratipay. The
 [stats](https://gratipay.com/about/stats.html) page displays the same info.
 
-**/`%username`/charts.json**
-([example](https://gratipay.com/Gratipay/charts.json),
-[source](https://github.com/gratipay/gratipay.com/tree/master/www/%25username/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
-an array of objects, one per week, showing aggregate numbers over time for the
-given user.
-
 **/`%username`/public.json**
 ([example](https://gratipay.com/Gratipay/public.json),
 [source](https://github.com/gratipay/gratipay.com/tree/master/www/%25username/public.json.spt))&mdash;<i>public</i>&mdash;Returns an object with these keys:
 
-  - "receiving"&mdash;an estimate of the amount the given participant will
-    receive this week
+  - "taking"&mdash;an estimate of the amount the given participant will
+    take from Teams this week
 
   - "my_tip"&mdash;logged-in user's tip to the Gratipay participant in
     question; possible values are:
@@ -478,34 +472,6 @@ given user.
           - `undefined` (key not present)&mdash;no OpenStreetMap account connected
           - `http://www.openstreetmap.org/user/%openstreetmap_username`
 
-
-**/`%username`/tips.json**
-([source](https://github.com/gratipay/gratipay.com/tree/master/www/%25username/tips.json.spt))&mdash;<i>private</i>&mdash;Responds
-to `GET` with an array of objects representing your current tips. `POST` the
-same structure back in order to update tips in bulk (be sure to set
-`Content-Type` to `application/json` instead of
-`application/x-www-form-urlencoded`). You can `POST` a partial array to update
-a subset of your tips. The response to a `POST` will be only the subset you
-updated. If the `amount` is `"error"` then there will also be an `error`
-attribute with a one-word error code. If you include an `also_prune` key in the
-querystring (not the body!) with a value of `yes`, `true`, or `1`, then any
-tips not in the array you `POST` will be zeroed out.
-
-NOTE: The amounts must be encoded as a string (rather than a number).
-Additionally, currently, the only supported platform is 'gratipay' ('gittip'
-still works for backwards-compatibility).
-
-This endpoint requires authentication. Look for your user ID and API key on your
-[account page](https://gratipay.com/about/me/settings/), and pass them using basic
-auth. E.g.:
-
-```
-curl https://gratipay.com/foobar/tips.json \
-    -u $userid:$api_key \
-    -X POST \
-    -d'[{"username":"bazbuz", "platform":"gratipay", "amount": "1.00"}]' \
-    -H"Content-Type: application/json"
-```
 
 API Implementations
 -------------------
