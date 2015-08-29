@@ -115,9 +115,7 @@ class TestPayday(BillingHarness):
             assert carl.giving == D('0.00')
             assert carl.receiving == D('0.00')
             assert dana.receiving == D('5.00')
-            assert dana.npatrons == 2
             assert emma.receiving == D('1.00')
-            assert emma.npatrons == 1
             funded_tips = self.db.all("SELECT amount FROM tips WHERE is_funded ORDER BY id")
             assert funded_tips == [3, 6, 1, 4, 5, 2]
 
@@ -133,7 +131,6 @@ class TestPayday(BillingHarness):
             UPDATE tips SET is_funded = false;
             UPDATE participants
                SET giving = 0
-                 , npatrons = 0
                  , receiving = 0
                  , taking = 0;
         """)
@@ -156,7 +153,6 @@ class TestPayday(BillingHarness):
                 user = Participant.from_username(username)
                 assert user.giving == D('1.00')
                 assert user.receiving == D('1.00')
-                assert user.npatrons == 1
             funded_tips = self.db.all("SELECT id FROM tips WHERE is_funded ORDER BY id")
             assert len(funded_tips) == 6
 

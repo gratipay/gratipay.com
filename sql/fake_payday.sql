@@ -7,7 +7,6 @@ CREATE TEMPORARY TABLE temp_participants ON COMMIT DROP AS
          , 0::numeric(35,2) AS giving
          , 0::numeric(35,2) AS taking
          , 0::numeric(35,2) AS receiving
-         , 0 as npatrons
          , ( SELECT count(*)
                FROM exchange_routes r
               WHERE r.participant = p.id
@@ -65,7 +64,6 @@ CREATE OR REPLACE FUNCTION fake_tip() RETURNS trigger AS $$
         UPDATE temp_participants
            SET fake_balance = (fake_balance + NEW.amount)
              , receiving = (receiving + NEW.amount)
-             , npatrons = (npatrons + 1)
          WHERE username = NEW.tippee;
         RETURN NEW;
     END;
@@ -171,13 +169,11 @@ UPDATE participants p
    SET giving = p2.giving
      , taking = p2.taking
      , receiving = p2.receiving
-     , npatrons = p2.npatrons
   FROM temp_participants p2
  WHERE p.username = p2.username
    AND ( p.giving <> p2.giving OR
          p.taking <> p2.taking OR
-         p.receiving <> p2.receiving OR
-         p.npatrons <> p2.npatrons
+         p.receiving <> p2.receiving
        );
 
 -- Clean up functions

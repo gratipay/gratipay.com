@@ -390,7 +390,6 @@ class Participant(Model, MixinTeam):
                  , session_expires=now()
                  , giving=0
                  , receiving=0
-                 , npatrons=0
              WHERE username=%(username)s
          RETURNING *;
 
@@ -980,7 +979,7 @@ class Participant(Model, MixinTeam):
     def update_receiving(self, cursor=None):
         if self.IS_PLURAL:
             old_takes = self.compute_actual_takes(cursor=cursor)
-        r = (cursor or self.db).one("""
+        receiving = (cursor or self.db).one("""
             WITH our_tips AS (
                      SELECT amount
                        FROM current_tips
@@ -995,11 +994,10 @@ class Participant(Model, MixinTeam):
                        SELECT sum(amount)
                          FROM our_tips
                    ), 0) + taking)
-                 , npatrons = COALESCE((SELECT count(*) FROM our_tips), 0)
              WHERE p.username = %(username)s
-         RETURNING receiving, npatrons
+         RETURNING receiving
         """, dict(username=self.username))
-        self.set_attributes(receiving=r.receiving, npatrons=r.npatrons)
+        self.set_attributes(receiving=receiving)
         if self.IS_PLURAL:
             new_takes = self.compute_actual_takes(cursor=cursor)
             self.update_taking(old_takes, new_takes, cursor=cursor)
@@ -1535,9 +1533,6 @@ class Participant(Model, MixinTeam):
 
         if not details:
             return output
-
-        # Key: npatrons
-        output['npatrons'] = self.npatrons
 
         # Key: taking
         # Values:
