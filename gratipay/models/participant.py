@@ -671,11 +671,7 @@ class Participant(Model, MixinTeam):
         return getattr(ExchangeRoute.from_network(self, 'paypal'), 'error', None)
 
     def get_credit_card_error(self):
-        if self.braintree_customer_id:
-            return getattr(ExchangeRoute.from_network(self, 'braintree-cc'), 'error', None)
-        # Backward compatibility until we get rid of balanced
-        else:
-            return getattr(ExchangeRoute.from_network(self, 'balanced-cc'), 'error', None)
+        return getattr(ExchangeRoute.from_network(self, 'braintree-cc'), 'error', None)
 
     def get_cryptocoin_addresses(self):
         routes = self.db.all("""
@@ -743,6 +739,7 @@ class Participant(Model, MixinTeam):
 
         token = braintree.ClientToken.generate({'customer_id': account.id})
         return token
+
 
     # Elsewhere-related stuff
     # =======================
@@ -821,6 +818,205 @@ class Participant(Model, MixinTeam):
          RETURNING avatar_url
         """, (self.username,))
         self.set_attributes(avatar_url=avatar_url)
+
+
+    # Giving and Taking
+    # =================
+
+    def set_payment_instruction(self, team, amount, update_self=True, update_team=True,
+                                                                                      cursor=None):
+        """Given a Team or slug, and amount as str, returns a dict.
+
+        We INSERT instead of UPDATE, so that we have history to explore. The
+        COALESCE function returns the first of its arguments that is not NULL.
+        The effect here is to stamp all payment instructions with the timestamp
+        of the first instruction from this ~user to that Team. I believe this
+        is used to determine the order of payments during payday.
+
+        The dict returned represents the row inserted in the payment_instructions
+        table.
+
+        """
+        assert self.is_claimed  # sanity check
+
+        if not isinstance(team, Team):
+            team, slug = Team.from_slug(team), team
+            if not team:
+                raise NoTeam(slug)
+
+        amount = Decimal(amount)  # May raise InvalidOperation
+        if (amount < gratipay.MIN_PAYMENT) or (amount > gratipay.MAX_PAYMENT):
+            raise BadAmount
+
+        # Insert payment instruction
+        NEW_PAYMENT_INSTRUCTION = """\
+
+            INSERT INTO payment_instructions
+                        (ctime, participant, team, amount)
+                 VALUES ( COALESCE (( SELECT ctime
+                                        FROM payment_instructions
+                                       WHERE (participant=%(participant)s AND team=%(team)s)
+                                       LIMIT 1
+                                      ), CURRENT_TIMESTAMP)
+                        , %(participant)s, %(team)s, %(amount)s
+                         )
+              RETURNING *
+
+        """
+        args = dict(participant=self.username, team=team.slug, amount=amount)
+        t = (cursor or self.db).one(NEW_PAYMENT_INSTRUCTION, args)
+
+        if update_self:
+            # Update giving amount of participant
+            self.update_giving(cursor)
+        if update_team:
+            # Update receiving amount of team
+            team.update_receiving(cursor)
+        if team.slug == 'Gratipay':
+            # Update whether the participant is using Gratipay for free
+            self.update_is_free_rider(None if amount == 0 else False, cursor)
+
+        return t._asdict()
+
+
+    def get_payment_instruction(self, team):
+        """Given a slug, returns a dict.
+        """
+
+        if not isinstance(team, Team):
+            team, slug = Team.from_slug(team), team
+            if not team:
+                raise NoTeam(slug)
+
+        default = dict(amount=Decimal('0.00'), is_funded=False)
+        return self.db.one("""\
+
+            SELECT *
+              FROM payment_instructions
+             WHERE participant=%s
+               AND team=%s
+          ORDER BY mtime DESC
+             LIMIT 1
+
+        """, (self.username, team.slug), back_as=dict, default=default)
+
+
+    def get_giving_for_profile(self):
+        """Return a list and a Decimal.
+        """
+
+        GIVING = """\
+
+            SELECT * FROM (
+                SELECT DISTINCT ON (pi.team)
+                       pi.team  AS team_slug
+                     , pi.amount
+                     , pi.ctime
+                     , pi.mtime
+                     , t.name   AS team_name
+                  FROM payment_instructions pi
+                  JOIN teams t ON pi.team = t.slug
+                 WHERE participant = %s
+                   AND t.is_approved is true
+                   AND t.is_closed is not true
+              ORDER BY pi.team
+                     , pi.mtime DESC
+            ) AS foo
+            ORDER BY amount DESC
+                   , team_slug
+
+        """
+        giving = self.db.all(GIVING, (self.username,))
+
+
+        # Compute the total.
+        # ==================
+
+        total = sum([rec.amount for rec in giving])
+        if not total:
+            # If giving is an empty list, total is int 0. We want a Decimal.
+            total = Decimal('0.00')
+
+        return giving, total
+
+
+    def update_giving_and_teams(self):
+        with self.db.get_cursor() as cursor:
+            updated_giving = self.update_giving(cursor)
+            for payment_instruction in updated_giving:
+                Team.from_slug(payment_instruction.team).update_receiving(cursor)
+
+
+    def update_giving(self, cursor=None):
+        updated = []
+        # Update is_funded on payment_instructions
+        if self.get_credit_card_error() == '':
+            updated = (cursor or self.db).all("""
+                UPDATE current_payment_instructions
+                   SET is_funded = true
+                 WHERE participant = %s
+                   AND is_funded IS NOT true
+             RETURNING *
+            """, (self.username,))
+
+        giving = (cursor or self.db).one("""
+            UPDATE participants p
+               SET giving = COALESCE((
+                      SELECT sum(amount)
+                        FROM current_payment_instructions cpi
+                        JOIN teams t ON t.slug = cpi.team
+                       WHERE participant = %(username)s
+                         AND amount > 0
+                         AND is_funded
+                         AND t.is_approved
+                   ), 0)
+             WHERE p.username=%(username)s
+         RETURNING giving
+        """, dict(username=self.username))
+        self.set_attributes(giving=giving)
+
+        return updated
+
+
+    def update_receiving(self, cursor=None):
+        if self.IS_PLURAL:
+            old_takes = self.compute_actual_takes(cursor=cursor)
+        r = (cursor or self.db).one("""
+            WITH our_tips AS (
+                     SELECT amount
+                       FROM current_tips
+                       JOIN participants p2 ON p2.username = tipper
+                      WHERE tippee = %(username)s
+                        AND p2.is_suspicious IS NOT true
+                        AND amount > 0
+                        AND is_funded
+                 )
+            UPDATE participants p
+               SET receiving = (COALESCE((
+                       SELECT sum(amount)
+                         FROM our_tips
+                   ), 0) + taking)
+                 , npatrons = COALESCE((SELECT count(*) FROM our_tips), 0)
+             WHERE p.username = %(username)s
+         RETURNING receiving, npatrons
+        """, dict(username=self.username))
+        self.set_attributes(receiving=r.receiving, npatrons=r.npatrons)
+        if self.IS_PLURAL:
+            new_takes = self.compute_actual_takes(cursor=cursor)
+            self.update_taking(old_takes, new_takes, cursor=cursor)
+
+
+    def update_is_free_rider(self, is_free_rider, cursor=None):
+        with self.db.get_cursor(cursor) as cursor:
+            cursor.run( "UPDATE participants SET is_free_rider=%(is_free_rider)s "
+                        "WHERE username=%(username)s"
+                      , dict(username=self.username, is_free_rider=is_free_rider)
+                       )
+            add_event( cursor
+                     , 'participant'
+                     , dict(id=self.id, action='set', values=dict(is_free_rider=is_free_rider))
+                      )
+            self.set_attributes(is_free_rider=is_free_rider)
 
 
     # Random Junk
@@ -920,200 +1116,6 @@ class Participant(Model, MixinTeam):
             self.set_attributes(username=suggested, username_lower=lowercased)
 
         return suggested
-
-    def update_giving_and_tippees(self):
-        with self.db.get_cursor() as cursor:
-            updated_tips = self.update_giving(cursor)
-            for tip in updated_tips:
-                Participant.from_username(tip.tippee).update_receiving(cursor)
-
-    def update_giving(self, cursor=None):
-        updated = []
-        # Update is_funded on tips
-        if self.get_credit_card_error() == '':
-            updated = (cursor or self.db).all("""
-                UPDATE current_payment_instructions
-                   SET is_funded = true
-                 WHERE participant = %s
-                   AND is_funded IS NOT true
-             RETURNING *
-            """, (self.username,))
-
-        giving = (cursor or self.db).one("""
-            UPDATE participants p
-               SET giving = COALESCE((
-                      SELECT sum(amount)
-                        FROM current_payment_instructions s
-                        JOIN teams t ON t.slug=s.team
-                       WHERE participant=%(username)s
-                         AND amount > 0
-                         AND is_funded
-                         AND t.is_approved
-                   ), 0)
-             WHERE p.username=%(username)s
-         RETURNING giving
-        """, dict(username=self.username))
-        self.set_attributes(giving=giving)
-
-        return updated
-
-    def update_receiving(self, cursor=None):
-        if self.IS_PLURAL:
-            old_takes = self.compute_actual_takes(cursor=cursor)
-        r = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tipper
-                      WHERE tippee = %(username)s
-                        AND p2.is_suspicious IS NOT true
-                        AND amount > 0
-                        AND is_funded
-                 )
-            UPDATE participants p
-               SET receiving = (COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                   ), 0) + taking)
-                 , npatrons = COALESCE((SELECT count(*) FROM our_tips), 0)
-             WHERE p.username = %(username)s
-         RETURNING receiving, npatrons
-        """, dict(username=self.username))
-        self.set_attributes(receiving=r.receiving, npatrons=r.npatrons)
-        if self.IS_PLURAL:
-            new_takes = self.compute_actual_takes(cursor=cursor)
-            self.update_taking(old_takes, new_takes, cursor=cursor)
-
-    def update_is_free_rider(self, is_free_rider, cursor=None):
-        with self.db.get_cursor(cursor) as cursor:
-            cursor.run( "UPDATE participants SET is_free_rider=%(is_free_rider)s "
-                        "WHERE username=%(username)s"
-                      , dict(username=self.username, is_free_rider=is_free_rider)
-                       )
-            add_event( cursor
-                     , 'participant'
-                     , dict(id=self.id, action='set', values=dict(is_free_rider=is_free_rider))
-                      )
-            self.set_attributes(is_free_rider=is_free_rider)
-
-
-    # New payday system
-
-    def set_payment_instruction(self, team, amount, update_self=True, update_team=True,
-                                                                                      cursor=None):
-        """Given a Team or slug, and amount as str, returns a dict.
-
-        We INSERT instead of UPDATE, so that we have history to explore. The
-        COALESCE function returns the first of its arguments that is not NULL.
-        The effect here is to stamp all payment instructions with the timestamp
-        of the first instruction from this ~user to that Team. I believe this
-        is used to determine the order of payments during payday.
-
-        The dict returned represents the row inserted in the payment_instructions
-        table.
-
-        """
-        assert self.is_claimed  # sanity check
-
-        if not isinstance(team, Team):
-            team, slug = Team.from_slug(team), team
-            if not team:
-                raise NoTeam(slug)
-
-        amount = Decimal(amount)  # May raise InvalidOperation
-        if (amount < gratipay.MIN_PAYMENT) or (amount > gratipay.MAX_PAYMENT):
-            raise BadAmount
-
-        # Insert payment instruction
-        NEW_PAYMENT_INSTRUCTION = """\
-
-            INSERT INTO payment_instructions
-                        (ctime, participant, team, amount)
-                 VALUES ( COALESCE (( SELECT ctime
-                                        FROM payment_instructions
-                                       WHERE (participant=%(participant)s AND team=%(team)s)
-                                       LIMIT 1
-                                      ), CURRENT_TIMESTAMP)
-                        , %(participant)s, %(team)s, %(amount)s
-                         )
-              RETURNING *
-
-        """
-        args = dict(participant=self.username, team=team.slug, amount=amount)
-        t = (cursor or self.db).one(NEW_PAYMENT_INSTRUCTION, args)
-
-        if update_self:
-            # Update giving amount of participant
-            self.update_giving(cursor)
-        if update_team:
-            # Update receiving amount of team
-            team.update_receiving(cursor)
-        if team.slug == 'Gratipay':
-            # Update whether the participant is using Gratipay for free
-            self.update_is_free_rider(None if amount == 0 else False, cursor)
-
-        return t._asdict()
-
-
-    def get_payment_instruction(self, team):
-        """Given a slug, returns a dict.
-        """
-
-        if not isinstance(team, Team):
-            team, slug = Team.from_slug(team), team
-            if not team:
-                raise NoTeam(slug)
-
-        default = dict(amount=Decimal('0.00'), is_funded=False)
-        return self.db.one("""\
-
-            SELECT *
-              FROM payment_instructions
-             WHERE participant=%s
-               AND team=%s
-          ORDER BY mtime DESC
-             LIMIT 1
-
-        """, (self.username, team.slug), back_as=dict, default=default)
-
-
-    def get_giving_for_profile(self):
-        """Return a list and a Decimal.
-        """
-
-        GIVING = """\
-
-            SELECT * FROM (
-                SELECT DISTINCT ON (s.team)
-                       s.team   as team_slug
-                     , s.amount
-                     , s.ctime
-                     , s.mtime
-                     , t.name   as team_name
-                  FROM payment_instructions s
-                  JOIN teams t ON s.team = t.slug
-                 WHERE participant = %s
-                   AND t.is_approved is true
-                   AND t.is_closed is not true
-              ORDER BY s.team
-                     , s.mtime DESC
-            ) AS foo
-            ORDER BY amount DESC
-                   , team_slug
-
-        """
-        giving = self.db.all(GIVING, (self.username,))
-
-
-        # Compute the total.
-        # ==================
-
-        total = sum([rec.amount for rec in giving])
-        if not total:
-            # If giving is an empty list, total is int 0. We want a Decimal.
-            total = Decimal('0.00')
-
-        return giving, total
 
 
     def get_og_title(self):

@@ -74,9 +74,27 @@ class Team(Model):
 
 
     def update_receiving(self, cursor=None):
-        # Stubbed out for now. Migrate this over from Participant.
-        pass
+        r = (cursor or self.db).one("""
+            WITH our_receiving AS (
+                     SELECT amount
+                       FROM current_payment_instructions
+                       JOIN participants p ON p.username = participant
+                      WHERE team = %(slug)s
+                        AND p.is_suspicious IS NOT true
+                        AND amount > 0
+                        AND is_funded
+                 )
+            UPDATE teams t
+               SET receiving = (COALESCE((
+                       SELECT sum(amount)
+                         FROM our_receiving
+                   ), 0))
+                 , nsupporters = COALESCE((SELECT count(*) FROM our_receiving), 0)
+             WHERE t.slug = %(slug)s
+         RETURNING receiving, nsupporters
+        """, dict(slug=self.slug))
 
+        self.set_attributes(receiving=r.receiving, nsupporters=r.nsupporters)
 
     @property
     def status(self):

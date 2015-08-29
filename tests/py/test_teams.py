@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import pytest
+from decimal import Decimal
 
 from gratipay.testing import Harness
 from gratipay.models.team import Team, AlreadyMigrated
@@ -205,3 +206,31 @@ class TestTeams(Harness):
 
         payment_instructions = self.db.all("SELECT * FROM payment_instructions")
         assert len(payment_instructions) == 1
+
+
+    # cached values - receiving, ngivers
+
+    def test_receiving_only_includes_funded_payment_instructions(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        bob = self.make_participant('bob', claimed_time='now', last_bill_result="Fail!")
+        team = self.make_team(is_approved=True)
+
+        alice.set_payment_instruction(team, '3.00') # The only funded payment instruction
+        bob.set_payment_instruction(team, '5.00')
+
+        assert team.receiving == Decimal('3.00')
+        assert team.nsupporters == 1
+
+        funded_payment_instruction = self.db.one("SELECT * FROM payment_instructions "
+                                                 "WHERE is_funded ORDER BY id")
+        assert funded_payment_instruction.participant == alice.username
+
+    def test_receiving_only_includes_latest_payment_instructions(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team(is_approved=True)
+
+        alice.set_payment_instruction(team, '5.00')
+        alice.set_payment_instruction(team, '3.00')
+
+        assert team.receiving == Decimal('3.00')
+        assert team.nsupporters == 1

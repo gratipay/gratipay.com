@@ -58,7 +58,7 @@ class ExchangeRoute(Model):
               RETURNING exchange_routes.*::exchange_routes
         """, locals())
         if network == 'balanced-cc':
-            participant.update_giving_and_tippees()
+            participant.update_giving_and_teams()
         r.__dict__['participant'] = participant
         return r
 
@@ -90,4 +90,4 @@ class ExchangeRoute(Model):
             return
         if self.participant.is_suspicious or bool(new_error) == bool(old_error):
             return
-        self.participant.update_giving_and_tippees()
+        self.participant.update_giving_and_teams()
