@@ -423,7 +423,7 @@ some fake data, so that more of the site is functional, run this command:
 API
 ===
 
-The Gratipay API is comprised of these five endpoints:
+The Gratipay API is comprised of these four endpoints:
 
 **[/about/charts.json](https://gratipay.com/about/charts.json)**
 ([source](https://github.com/gratipay/gratipay.com/tree/master/www/about/charts.json.spt))&mdash;<i>public</i>&mdash;Returns
@@ -446,16 +446,6 @@ an object giving a point-in-time snapshot of Gratipay. The
 
   - "taking"&mdash;an estimate of the amount the given participant will
     take from Teams this week
-
-  - "my_tip"&mdash;logged-in user's tip to the Gratipay participant in
-    question; possible values are:
-
-      - `undefined` (key not present)&mdash;there is no logged-in user
-      - "self"&mdash;logged-in user is the participant in question
-      - `null`&mdash;user has never tipped this participant
-      - "0.00"&mdash;user used to tip this participant
-      - "3.00"&mdash;user tips this participant the given amount
-      <br><br>
 
   - "elsewhere"&mdash;participant's connected accounts elsewhere; returns an object with these keys:
 

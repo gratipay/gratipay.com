@@ -1554,20 +1554,6 @@ class Participant(Model, MixinTeam):
             giving = None
         output['giving'] = giving
 
-        # Key: my_tip
-        # Values:
-        #   undefined - user is not authenticated
-        #   "self" - user == participant
-        #   null - user has never tipped this person
-        #   0.00 - user used to tip this person but now doesn't
-        #   3.00 - user tips this person this amount
-        if inquirer:
-            if inquirer.username == self.username:
-                my_tip = 'self'
-            else:
-                my_tip = inquirer.get_tip_to(self.username)['amount']
-            output['my_tip'] = str(my_tip)
-
         # Key: elsewhere
         accounts = self.get_accounts_elsewhere()
         elsewhere = output['elsewhere'] = {}
