@@ -2,7 +2,6 @@ from __future__ import print_function, unicode_literals
 
 import json
 
-import pytest
 from aspen.utils import utcnow
 from gratipay.testing import Harness
 
@@ -19,8 +18,7 @@ class Tests(Harness):
 
         assert data['on'] == 'gratipay'
 
-    @pytest.mark.xfail(reason="#3599")
-    def test_anonymous_gets_receiving(self):
+    def test_anonymous_gets_taking(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')
 
@@ -28,9 +26,8 @@ class Tests(Harness):
 
         data = json.loads(self.client.GET('/~bob/public.json').body)
 
-        assert data['receiving'] == '1.00'
+        assert data['taking'] == '1.00'
 
-    @pytest.mark.xfail(reason="#3599")
     def test_anonymous_gets_giving(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')
@@ -41,12 +38,11 @@ class Tests(Harness):
 
         assert data['giving'] == '1.00'
 
-    @pytest.mark.xfail(reason="#3599")
     def test_anonymous_gets_null_giving_if_user_anonymous(self):
         alice = self.make_participant( 'alice'
                                      , last_bill_result=''
                                      , anonymous_giving=True
-                                     )
+                                      )
         bob = self.make_participant('bob')
         alice.set_tip_to(bob, '1.00')
         data = json.loads(self.client.GET('/~alice/public.json').body)
@@ -59,7 +55,6 @@ class Tests(Harness):
 
         assert response.headers['Access-Control-Allow-Origin'] == '*'
 
-    @pytest.mark.xfail(reason="#3599")
     def test_jsonp_works(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob')
@@ -83,6 +78,6 @@ foo({
     "id": %(user_id)s,
     "number": "singular",
     "on": "gratipay",
-    "receiving": "3.00",
+    "taking": "3.00",
     "username": "bob"
 })''' % dict(user_id=bob.id, elsewhere_id=bob.get_accounts_elsewhere()['github'].id)

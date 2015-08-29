@@ -465,7 +465,7 @@ class Payday(object):
     def update_cached_amounts(self):
         with self.db.get_cursor() as cursor:
             cursor.execute(FAKE_PAYDAY)
-        log("Updated receiving amounts.")
+        log("Updated cached amounts.")
 
 
     def end(self):

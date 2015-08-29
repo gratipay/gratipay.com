@@ -6,7 +6,6 @@ CREATE TEMPORARY TABLE temp_participants ON COMMIT DROP AS
          , balance AS fake_balance
          , 0::numeric(35,2) AS giving
          , 0::numeric(35,2) AS taking
-         , 0::numeric(35,2) AS receiving
          , ( SELECT count(*)
                FROM exchange_routes r
               WHERE r.participant = p.id
@@ -168,12 +167,10 @@ UPDATE tips t
 UPDATE participants p
    SET giving = p2.giving
      , taking = p2.taking
-     , receiving = p2.receiving
   FROM temp_participants p2
  WHERE p.username = p2.username
    AND ( p.giving <> p2.giving OR
-         p.taking <> p2.taking OR
-         p.receiving <> p2.receiving
+         p.taking <> p2.taking
        );
 
 -- Clean up functions

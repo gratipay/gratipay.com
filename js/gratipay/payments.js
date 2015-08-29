@@ -8,7 +8,7 @@ Gratipay.payments.init = function() {
         root: $('.your-payment.js-edit'),
         success: function(data) {
             Gratipay.notification(data.msg, 'success');
-            Gratipay.payments.afterTipChange(data);
+            Gratipay.payments.afterPaymentChange(data);
         }
     });
 
@@ -58,7 +58,7 @@ Gratipay.payments.initSupportGratipay = function() {
 };
 
 
-Gratipay.payments.afterTipChange = function(data) {
+Gratipay.payments.afterPaymentChange = function(data) {
     $('.my-total-giving').text(data.total_giving_l);
     $('.total-receiving[data-team="'+data.team_id+'"]').text(data.total_receiving_team_l);
     $('#payment-prompt').toggleClass('needed', data.amount > 0);
@@ -80,7 +80,7 @@ Gratipay.payments.set = function(team, amount, callback) {
     // send request to set up a recurring payment
     $.post('/' + team + '/payment-instruction.json', { amount: amount }, function(data) {
         if (callback) callback(data);
-        Gratipay.payments.afterTipChange(data);
+        Gratipay.payments.afterPaymentChange(data);
     })
     .fail(Gratipay.error);
 };

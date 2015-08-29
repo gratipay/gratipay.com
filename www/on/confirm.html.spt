@@ -21,10 +21,10 @@ other_accounts = other.get_accounts_elsewhere().values()
 abandoned_account = user_accounts_dict.get(account.platform, None)
 
 giving_after = user.participant.giving
-receiving_after = user.participant.receiving
+taking_after = user.participant.taking
 if nix:
     giving_after += other.giving
-    receiving_after += other.receiving
+    taking_after += other.taking
 
 fmt = lambda x: format_currency(x, 'USD')
 get_name = lambda a: a.user_name or a.display_name or a.user_id
@@ -52,7 +52,7 @@ suppress_sidebar = True
         <div class="participant">
             <b>{{ user.participant.username }}</b><br />
             {{ _("Gives") }} {{ fmt(user.participant.giving) }}<br />
-            {{ _("Receives") }} {{ fmt(user.participant.receiving) }}<br />
+            {{ _("Takes") }} {{ fmt(user.participant.taking) }}<br />
             <br />
 
             {% for account in user_accounts %}
@@ -65,7 +65,7 @@ suppress_sidebar = True
         <div class="participant other">
             <b>{{ other.username }}</b><br />
             {{ _("Gives") }} {{ fmt(other.giving) }}<br />
-            {{ _("Receives") }} {{ fmt(other.receiving) }}<br />
+            {{ _("Takes") }} {{ fmt(other.taking) }}<br />
             <br />
             {% for other_account in other_accounts %}
                 <img src="{{ other_account.platform_data.icon }}"
@@ -85,7 +85,7 @@ suppress_sidebar = True
         <div class="participant">
             <b>{{ user.participant.username }}</b><br />
             {{ _("Gives") }} {{ fmt(giving_after) }}<br />
-            {{ _("Receives") }} {{ fmt(receiving_after) }}<br />
+            {{ _("Takes") }} {{ fmt(taking_after) }}<br />
             <br />
 
             {% for user_account in user_accounts %}
@@ -113,7 +113,7 @@ suppress_sidebar = True
             {% endif %}
             <b>{{ other.username }}</b><br />
             {{ _("Gives") }} {{ fmt(other.giving) }}<br />
-            {{ _("Receives") }} {{ fmt(other.receiving) }}<br />
+            {{ _("Takes") }} {{ fmt(other.taking) }}<br />
             <br />
 
             {% for other_account in other_accounts %}

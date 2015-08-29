@@ -85,8 +85,8 @@ class ExchangeRoute(Model):
         """, locals())
         self.set_attributes(error=new_error)
 
-        # Update the receiving amounts of tippees if requested and necessary
-        if not propagate or self.network != 'balanced-cc':
+        # Update cached amounts if requested and necessary
+        if not propagate or self.network != 'braintree-cc':
             return
         if self.participant.is_suspicious or bool(new_error) == bool(old_error):
             return

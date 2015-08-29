@@ -79,16 +79,13 @@ elif nteams == 1:
                 href="https://github.com/gratipay/gratipay.com/issues/397">data
                 retention policy</a>).</p>
 
-        <p>Things we clear immediately include your profile statement, the
-        tips you're receiving, and those you're giving. You'll also be
-        removed from any communities and teams you were a part of. If
-        you're closing a team account, all team members will be removed
-        from the team.</p>
+        <p>Things we clear immediately include your profile statement, 
+        the payroll you're taking, and the payments you're giving.</p>
 
-        <p>We specifically <i>don't</i> delete your past giving and
-        receiving history on the site, because that information also
-        belongs equally to other users (the ones you gave to and
-        received from).</p>
+        <p>We specifically <i>don't</i> delete your past giving and 
+        taking history on the site, because that information also belongs 
+        equally to other users (the owners of the Teams you gave to and 
+        took from).</p>
 
         <p>After you close your account, your profile page will say,
         &ldquo;The account owner has closed this account.&rdquo;</p>

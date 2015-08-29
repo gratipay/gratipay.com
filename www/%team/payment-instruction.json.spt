@@ -36,7 +36,7 @@ else:
 
     amount = out['amount']
     total_giving = user.participant.giving
-    total_receiving = user.participant.receiving
+    total_taking = user.participant.taking
 
     out["amount"] = str(amount)
     out["amount_l"] = format_currency(amount, 'USD')
@@ -49,12 +49,12 @@ else:
     out["team_id"] = team.id
     out["total_giving"] = str(total_giving)
     out["total_giving_l"] = format_currency(total_giving, 'USD')
+    out["total_taking"] = str(total_taking)
+    out["total_taking_l"] = format_currency(total_taking, 'USD')
+
+    total_receiving = team.receiving
     out["total_receiving"] = str(total_receiving)
     out["total_receiving_l"] = format_currency(total_receiving, 'USD')
-
-    total_receiving_team = team.receiving
-    out["total_receiving_team"] = str(total_receiving_team)
-    out["total_receiving_team_l"] = format_currency(total_receiving_team, 'USD')
 
     if 'ctime' in out:
         out["ctime"] = str(out['ctime'])

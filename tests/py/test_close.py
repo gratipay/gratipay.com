@@ -141,7 +141,7 @@ class TestClosing(Harness):
                                      , session_token='deadbeef'
                                      , session_expires='2000-01-01'
                                      , giving=20
-                                     , receiving=40
+                                     , taking=40
                                       )
         alice.upsert_statement('en', 'not forgetting to be awesome!')
         alice.add_email('alice@example.net')
@@ -157,7 +157,7 @@ class TestClosing(Harness):
         assert alice.email_address == new_alice.email_address == None
         assert alice.claimed_time == new_alice.claimed_time == None
         assert alice.giving == new_alice.giving == 0
-        assert alice.receiving == new_alice.receiving == 0
+        assert alice.taking == new_alice.taking == 0
         assert alice.session_token == new_alice.session_token == None
         assert alice.session_expires.year == new_alice.session_expires.year == date.today().year
         assert not alice.get_emails()

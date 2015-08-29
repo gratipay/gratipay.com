@@ -42,7 +42,6 @@ from gratipay.exceptions import (
 )
 
 from gratipay.models import add_event
-from gratipay.models._mixin_team import MixinTeam
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.team import Team
@@ -61,7 +60,7 @@ EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 USERNAME_MAX_SIZE = 32
 
-class Participant(Model, MixinTeam):
+class Participant(Model):
     """Represent a Gratipay participant.
     """
 
@@ -257,7 +256,7 @@ class Participant(Model, MixinTeam):
 
     @property
     def usage(self):
-        return max(self.giving, self.receiving)
+        return max(self.giving, self.taking)
 
     @property
     def suggested_payment(self):
@@ -389,7 +388,7 @@ class Participant(Model, MixinTeam):
                  , session_token=NULL
                  , session_expires=now()
                  , giving=0
-                 , receiving=0
+                 , taking=0
              WHERE username=%(username)s
          RETURNING *;
 
@@ -976,33 +975,6 @@ class Participant(Model, MixinTeam):
         return updated
 
 
-    def update_receiving(self, cursor=None):
-        if self.IS_PLURAL:
-            old_takes = self.compute_actual_takes(cursor=cursor)
-        receiving = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tipper
-                      WHERE tippee = %(username)s
-                        AND p2.is_suspicious IS NOT true
-                        AND amount > 0
-                        AND is_funded
-                 )
-            UPDATE participants p
-               SET receiving = (COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                   ), 0) + taking)
-             WHERE p.username = %(username)s
-         RETURNING receiving
-        """, dict(username=self.username))
-        self.set_attributes(receiving=receiving)
-        if self.IS_PLURAL:
-            new_takes = self.compute_actual_takes(cursor=cursor)
-            self.update_taking(old_takes, new_takes, cursor=cursor)
-
-
     def update_is_free_rider(self, is_free_rider, cursor=None):
         with self.db.get_cursor(cursor) as cursor:
             cursor.run( "UPDATE participants SET is_free_rider=%(is_free_rider)s "
@@ -1167,7 +1139,6 @@ class Participant(Model, MixinTeam):
                      , session_token=NULL
                      , session_expires=now()
                      , giving = 0
-                     , receiving = 0
                      , taking = 0
                  WHERE username=%s
              RETURNING username
@@ -1519,8 +1490,8 @@ class Participant(Model, MixinTeam):
 
         self.update_avatar()
 
-        # Note: the order matters here, receiving needs to be updated before giving
-        self.update_receiving()
+        # Note: the order matters here, taking needs to be updated before giving
+        # XXX self.update_taking() - doesn't exist yet! replaces update_receiving
         self.update_giving()
 
     def to_dict(self, details=False, inquirer=None):

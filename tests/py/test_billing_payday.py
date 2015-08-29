@@ -82,7 +82,6 @@ class TestPayday(BillingHarness):
         after = self.fetch_payday()
         assert after['ncc_failing'] == 1
 
-    @pytest.mark.xfail(reason="#3399")
     def test_update_cached_amounts(self):
         team = self.make_participant('team', claimed_time='now', number='plural')
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
@@ -137,7 +136,6 @@ class TestPayday(BillingHarness):
         Payday.start().update_cached_amounts()
         check()
 
-    @pytest.mark.xfail(reason="#3399")
     def test_update_cached_amounts_depth(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         usernames = ('bob', 'carl', 'dana', 'emma', 'fred', 'greg')
