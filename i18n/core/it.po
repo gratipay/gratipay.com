@@ -193,16 +193,16 @@ msgid "wk"
 msgstr "settimana"
 
 msgid "Sign out"
-msgstr ""
+msgstr "Esci"
 
 msgid "Blog"
 msgstr "Blog"
 
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 msgid "Communities"
 msgstr "Comunità"
@@ -294,7 +294,7 @@ msgid "Credit Card"
 msgstr "Carta di Credito"
 
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 msgid "Giving"
 msgstr "Donazioni"
@@ -303,10 +303,10 @@ msgid "History"
 msgstr "Storia"
 
 msgid "Emails"
-msgstr ""
+msgstr "Email"
 
 msgid "Routes"
-msgstr ""
+msgstr "Percorsi"
 
 msgid "Settings"
 msgstr "Impostazioni"
@@ -347,16 +347,16 @@ msgid "Teams"
 msgstr "Team"
 
 msgid "{sign_in}{br}to give to{br}{team}"
-msgstr ""
+msgstr "{sign_in}{br}per donare a{br}{team}"
 
 msgid "You Give"
-msgstr ""
+msgstr "Doni"
 
 msgid "per week"
 msgstr "per settimana"
 
 msgid "Give to {0}"
-msgstr ""
+msgstr "Dona a {0}"
 
 msgid "Stop Giving"
 msgstr "Smetti di donare"
@@ -369,16 +369,16 @@ msgid "Teams (N={0})"
 msgstr "Team (N={0})"
 
 msgid "Payments{br}and Payroll{br}for Open Work"
-msgstr ""
+msgstr "Pagamenti{br}e Libri Paga{br}per Lavori Gratuiti"
 
 msgid "Read more"
-msgstr ""
+msgstr "Leggi di più"
 
 msgid "Welcome to Gratipay!"
-msgstr ""
+msgstr "Benvenuto su Gratipay!"
 
 msgid "We have {nteams} Teams receiving and distributing money each week."
-msgstr ""
+msgstr "Abbiamo {nteams} Team che ricevono e distribuiscono denaro ogni settimana."
 
 msgid "Name"
 msgstr "Nome"
@@ -462,7 +462,7 @@ msgid "Looking for a specific user of a social network?"
 msgstr "Cerchi un utente specifico di un social network?"
 
 msgid "{0} on {1}"
-msgstr ""
+msgstr "{0} su {1}"
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
@@ -499,7 +499,7 @@ msgid "To-do"
 msgstr "Cose da fare"
 
 msgid "owned by {a}~{owner}{_a}"
-msgstr ""
+msgstr "Proprietà di {a}~{owner}{_a}"
 
 msgid "Please sign in first"
 msgstr "Per favore, accedi prima di continuare"
@@ -576,7 +576,7 @@ msgid "About"
 msgstr "Chi siamo"
 
 msgid "Welcome!"
-msgstr ""
+msgstr "Benvenuto!"
 
 msgid "The Delpan Incident"
 msgstr "L'Incidente Delpan"
@@ -591,7 +591,7 @@ msgid "Fraud Review Dashboard - (Teams)"
 msgstr "Dashboard Recensione Rischio Frodi - (Team)"
 
 msgid "Transfer?"
-msgstr ""
+msgstr "Trasferire?"
 
 msgid "Please Confirm"
 msgstr "Per Favore Conferma"
@@ -600,7 +600,7 @@ msgid "{0} is connected to {1} on Gratipay."
 msgstr "{0} è associato a {1} su Gratipay."
 
 msgid "Transfer it to your ~{username} account?"
-msgstr ""
+msgstr "Transferire sul tuo ~{username} account?"
 
 msgid "How the accounts are now"
 msgstr "Come gli account sono ora"
@@ -850,7 +850,7 @@ msgid "Remove"
 msgstr "Rimuovi"
 
 msgid "Resend"
-msgstr ""
+msgstr "Invia nuovamente"
 
 msgid "Set as primary"
 msgstr "Imposta come primario"
@@ -1115,7 +1115,7 @@ msgid "It seems you're trying to delete something that doesn't exist."
 msgstr "Pare che tu stia cercando di cancellare qualcosa che non esiste."
 
 msgid "Payment Routes"
-msgstr ""
+msgstr "Percorsi dei Pagamenti"
 
 msgid "Adding Money"
 msgstr "Aggiungere Denaro"
