@@ -83,62 +83,6 @@ class TestPayday(BillingHarness):
         after = self.fetch_payday()
         assert after['ncc_failing'] == 1
 
-    def test_update_cached_amounts_updates_cached_amounts(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', claimed_time='now', last_bill_result='')
-        carl = self.make_participant('carl', claimed_time='now')
-
-        picard = self.make_participant('picard', claimed_time='now', last_paypal_result='')
-        shelby = self.make_participant('shelby', claimed_time='now', last_paypal_result='',
-                                                                               last_bill_result='')
-
-        Enterprise = self.make_team('The Enterprise', owner=picard, is_approved=True)
-        Stargazer = self.make_team('The Stargazer', owner=picard, is_approved=True)
-        Trident = self.make_team('The Trident', shelby, is_approved=True)
-
-        alice.set_payment_instruction(Enterprise, '4.00')
-        alice.set_payment_instruction(Stargazer, '5.00')
-        bob.set_payment_instruction(Enterprise, '6.00')
-        bob.set_payment_instruction(Trident, '7.00')
-        carl.set_payment_instruction(Enterprise, '20.00')  # Thanks carl, but your card is failing.
-        carl.set_payment_instruction(Stargazer, '100.00')
-        carl.set_payment_instruction(Trident, '1000.00')
-        picard.set_payment_instruction(Trident, '2.50')
-        shelby.set_payment_instruction(Enterprise, '3.50')
-
-        def check():
-            a, b, c, p, s = map(Participant.from_username, 'alice bob carl picard shelby'.split())
-            assert (a.giving, a.taking) == (9.00, 0.00)
-            assert (b.giving, b.taking) == (13.00, 0.00)
-            assert (c.giving, c.taking) == (0.00, 0.00)
-            assert (p.giving, p.taking) == (0.00, 18.50)
-            assert (s.giving, s.taking) == (3.50, 7.00)
-
-            E, S, T = map(Team.from_slug, 'TheEnterprise TheStargazer TheTrident'.split())
-            assert (E.receiving, E.payroll) == (13.50, 0.00)
-            assert (S.receiving, S.payroll) == (5.00, 0.00)
-            assert (T.receiving, T.payroll) == (7.00, 0.00)
-
-            funded_payments = self.db.all("SELECT amount FROM payment_instructions "
-                                          "WHERE is_funded ORDER BY ctime")
-            assert funded_payments == [4.00, 5.00, 6.00, 7.00, 3.50]
-
-        # Pre-test check
-        check()
-
-        # Check that update_cached_amounts doesn't mess anything up
-        Payday.start().update_cached_amounts()
-        check()
-
-        # Check that update_cached_amounts actually updates amounts
-        self.db.run("""
-            UPDATE payment_instructions SET is_funded = false;
-            UPDATE participants SET giving = 0, taking = 0;
-            UPDATE teams SET receiving = 0, payroll = 0;
-        """)
-        Payday.start().update_cached_amounts()
-        check()
-
     @mock.patch('gratipay.billing.payday.log')
     def test_start_prepare(self, log):
         self.clear_tables()

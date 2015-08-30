@@ -73,7 +73,7 @@ class ExchangeRoute(Model):
         else:
             self.update_error('invalidated')
 
-    def update_error(self, new_error, propagate=True):
+    def update_error(self, new_error):
         id = self.id
         old_error = self.error
         if old_error == 'invalidated':
@@ -86,7 +86,7 @@ class ExchangeRoute(Model):
         self.set_attributes(error=new_error)
 
         # Update cached amounts if requested and necessary
-        if not propagate or self.network != 'braintree-cc':
+        if self.network != 'braintree-cc':
             return
         if self.participant.is_suspicious or bool(new_error) == bool(old_error):
             return
