@@ -39,8 +39,8 @@ banner = name = team.name
         </tr>
         <tr>
             <td class="label">{{ _("Receives") }}</td>
-            <td>{{ format_currency(team.receiving, 'USD') }}</td>
-            <td>{{ team.nreceiving_from }}</td>
+            <td class="total-receiving" data-team="{{ team.id }}">{{ format_currency(team.receiving, 'USD') }}</td>
+            <td class="nreceiving-from" data-team="{{ team.id }}">{{ team.nreceiving_from }}</td>
         </tr>
         <tr>
             <td class="label">{{ _("Shares") }}</td>
