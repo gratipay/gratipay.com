@@ -10,4 +10,6 @@ BEGIN;
     ALTER TABLE teams RENAME COLUMN nsupporters TO nreceiving_from;
     ALTER TABLE teams RENAME COLUMN nmembers TO ndistributing_to;
     ALTER TABLE teams RENAME COLUMN payroll TO distributing;
+
+    \i sql/reset-cached-values.sql
 END;
