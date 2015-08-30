@@ -263,18 +263,6 @@ msgstr ""
 msgid "Last"
 msgstr ""
 
-msgid "hidden"
-msgstr "versteckt"
-
-msgid "Gives"
-msgstr "gibt"
-
-msgid "Receives"
-msgstr "erhält"
-
-msgid "Joined"
-msgstr "Beigetreten"
-
 msgid "Profile"
 msgstr "Profil"
 
@@ -303,6 +291,21 @@ msgstr "Kreditkarte"
 
 msgid "PayPal"
 msgstr ""
+
+msgid "Weekly"
+msgstr ""
+
+msgid "Gives"
+msgstr "gibt"
+
+msgid "hidden"
+msgstr "versteckt"
+
+msgid "Takes"
+msgstr ""
+
+msgid "Joined"
+msgstr "Beigetreten"
 
 msgid "Giving"
 msgstr "Gibt"
@@ -494,7 +497,19 @@ msgstr "Bist du sicher, dass du dich abmelden möchtest?"
 msgid "Yes!"
 msgstr "Ja!"
 
-msgid "Unreviewed"
+msgid "Receives"
+msgstr "erhält"
+
+msgid "Shares"
+msgstr ""
+
+msgid "Joined {ago}"
+msgstr ""
+
+msgid "Applied {ago}"
+msgstr ""
+
+msgid "Under Review"
 msgstr ""
 
 msgid "Rejected"
@@ -580,6 +595,30 @@ msgstr "Geben Sie einen Gratipay Usernamen ein"
 msgid "Add"
 msgstr "Hinzufügen"
 
+msgid "Receiving"
+msgstr "erhält"
+
+msgid "You receive {0} per week"
+msgstr "Du bekommst {0} pro Woche."
+
+msgid "{0} receives {1} per week"
+msgstr "{0} bekommt {1} pro Woche."
+
+msgid "Dollars Received Per Week"
+msgstr "Einkommen pro Woche (in Dollar)"
+
+msgid "weeks"
+msgstr "Wochen"
+
+msgid "Number of Payments Per Week"
+msgstr ""
+
+msgid "Tips Received, by Number of Tips"
+msgstr "Trinkgeld erhalten, geordnet nach Anzahl der Spenden"
+
+msgid "Tips Received, by Dollar Amount"
+msgstr "Trinkgeld erhalten, geordnet nach Dollar-Betrag"
+
 msgid "About"
 msgstr "Über"
 
@@ -657,9 +696,6 @@ msgid "No friends found."
 msgstr ""
 
 msgid "On Gratipay?"
-msgstr ""
-
-msgid "Supporters"
 msgstr ""
 
 msgid "Failure"
@@ -826,24 +862,6 @@ msgid "with {n} other"
 msgid_plural "with {n} others"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid ""
-"Warning: Doing this will remove all the members from your team.\n"
-"\n"
-"You'll have to add them back manually to undo this!"
-msgstr "Warnung: Diese Aktion wird alle Mitglieder von Ihrem Team entfernen.\n\nSie müssen diese manuell hinzufügen um dies rückgängig zu machen!"
-
-msgid ""
-"Warning: This will make the total amount you receive publicly visible.\n"
-"\n"
-"Are you sure you want to do this?"
-msgstr "Warnung: Diese Aktion macht die Gesamtsumme die Sie erhalten öffentlich sichtbar.\n\n\nSind Sie sicher, dass Sie dies tun wollen?"
-
-msgid "Your account type has been changed."
-msgstr "Ihr Kontotyp wurde geändert."
-
-msgid "Teams aren't allowed to hide their receiving amount."
-msgstr "Teams dürfen die Gesamtsumme die Sie erhalten nicht verstecken."
 
 msgid "Your privacy setting has been changed."
 msgstr "Ihre Privatsphäre-Einstellungen wurden geändert."
@@ -1032,30 +1050,6 @@ msgstr "Rechnung"
 msgid "No transactions to show."
 msgstr "Es gibt keine Transaktionen zu anzeigen."
 
-msgid "Receiving"
-msgstr "erhält"
-
-msgid "You receive {0} per week"
-msgstr "Du bekommst {0} pro Woche."
-
-msgid "{0} receives {1} per week"
-msgstr "{0} bekommt {1} pro Woche."
-
-msgid "Dollars Received Per Week"
-msgstr "Einkommen pro Woche (in Dollar)"
-
-msgid "weeks"
-msgstr "Wochen"
-
-msgid "Number of Patrons Per Week"
-msgstr "Anzahl Unterstützer/-innen pro Woche"
-
-msgid "Tips Received, by Number of Tips"
-msgstr "Trinkgeld erhalten, geordnet nach Anzahl der Spenden"
-
-msgid "Tips Received, by Dollar Amount"
-msgstr "Trinkgeld erhalten, geordnet nach Dollar-Betrag"
-
 msgid "The address cannot be empty."
 msgstr ""
 
@@ -1194,9 +1188,6 @@ msgid "Privacy"
 msgstr "Datenschutz"
 
 msgid "Hide total giving to others."
-msgstr ""
-
-msgid "Hide total received from others."
 msgstr ""
 
 msgid "Hide myself from search results."

@@ -257,18 +257,6 @@ msgstr "Eerste"
 msgid "Last"
 msgstr "Laatste"
 
-msgid "hidden"
-msgstr "verborgen"
-
-msgid "Gives"
-msgstr "Geeft"
-
-msgid "Receives"
-msgstr "Ontvangt"
-
-msgid "Joined"
-msgstr "Lid geworden"
-
 msgid "Profile"
 msgstr "Profiel"
 
@@ -297,6 +285,21 @@ msgstr "Kredietkaart"
 
 msgid "PayPal"
 msgstr ""
+
+msgid "Weekly"
+msgstr ""
+
+msgid "Gives"
+msgstr "Geeft"
+
+msgid "hidden"
+msgstr "verborgen"
+
+msgid "Takes"
+msgstr ""
+
+msgid "Joined"
+msgstr "Lid geworden"
 
 msgid "Giving"
 msgstr "Geven"
@@ -488,7 +491,19 @@ msgstr "Ben je zeker dat je wil uitloggen?"
 msgid "Yes!"
 msgstr "Ja!"
 
-msgid "Unreviewed"
+msgid "Receives"
+msgstr "Ontvangt"
+
+msgid "Shares"
+msgstr ""
+
+msgid "Joined {ago}"
+msgstr ""
+
+msgid "Applied {ago}"
+msgstr ""
+
+msgid "Under Review"
 msgstr ""
 
 msgid "Rejected"
@@ -574,6 +589,30 @@ msgstr "Geef een Gratipay gebruikersnaam op"
 msgid "Add"
 msgstr "Toevoegen"
 
+msgid "Receiving"
+msgstr "Ontvangt"
+
+msgid "You receive {0} per week"
+msgstr "Je ontvangt {0} per week"
+
+msgid "{0} receives {1} per week"
+msgstr "{0} ontvangt {1} per week"
+
+msgid "Dollars Received Per Week"
+msgstr "Dollar ontvangen per week"
+
+msgid "weeks"
+msgstr "weken"
+
+msgid "Number of Payments Per Week"
+msgstr ""
+
+msgid "Tips Received, by Number of Tips"
+msgstr "Fooien ontvangen, per aantal fooien"
+
+msgid "Tips Received, by Dollar Amount"
+msgstr "Fooien Ontvangen, per bedrag"
+
 msgid "About"
 msgstr "Omtrent"
 
@@ -652,9 +691,6 @@ msgstr "Geen vrienden gevonden."
 
 msgid "On Gratipay?"
 msgstr "Op Gratipay?"
-
-msgid "Supporters"
-msgstr "Steuners"
 
 msgid "Failure"
 msgstr "Mislukt"
@@ -820,24 +856,6 @@ msgid "with {n} other"
 msgid_plural "with {n} others"
 msgstr[0] "met {n} andere"
 msgstr[1] "met {n} anderen"
-
-msgid ""
-"Warning: Doing this will remove all the members from your team.\n"
-"\n"
-"You'll have to add them back manually to undo this!"
-msgstr "Let op: hiermee verwijdert u alle leden van uw team.\n\nOm dit ongedaan te maken zult u alle leden weer handmatig moeten toevoegen!"
-
-msgid ""
-"Warning: This will make the total amount you receive publicly visible.\n"
-"\n"
-"Are you sure you want to do this?"
-msgstr "Let op: Hierdoor wordt het totale ontvangen bedrag publiekelijk gemaakt.\n\nWeet je zeker dat je dit wilt doen?"
-
-msgid "Your account type has been changed."
-msgstr "Uw account type is gewijzigd."
-
-msgid "Teams aren't allowed to hide their receiving amount."
-msgstr "Het is voor teams niet toegestaan om hun te ontvangen bedrag te verbergen."
 
 msgid "Your privacy setting has been changed."
 msgstr "Uw privacy instellingen zijn gewijzigd."
@@ -1026,30 +1044,6 @@ msgstr "Ontvangstbewijs"
 msgid "No transactions to show."
 msgstr "Er zijn geen overboekingen aanwezig in het systeem."
 
-msgid "Receiving"
-msgstr "Ontvangt"
-
-msgid "You receive {0} per week"
-msgstr "Je ontvangt {0} per week"
-
-msgid "{0} receives {1} per week"
-msgstr "{0} ontvangt {1} per week"
-
-msgid "Dollars Received Per Week"
-msgstr "Dollar ontvangen per week"
-
-msgid "weeks"
-msgstr "weken"
-
-msgid "Number of Patrons Per Week"
-msgstr "Aantal patroons per week"
-
-msgid "Tips Received, by Number of Tips"
-msgstr "Fooien ontvangen, per aantal fooien"
-
-msgid "Tips Received, by Dollar Amount"
-msgstr "Fooien Ontvangen, per bedrag"
-
 msgid "The address cannot be empty."
 msgstr "Het adres moet worden ingevuld."
 
@@ -1189,9 +1183,6 @@ msgstr "Privacy"
 
 msgid "Hide total giving to others."
 msgstr "Verberg totaal gegeven aan anderen."
-
-msgid "Hide total received from others."
-msgstr "Verberg totaal ontvangen van anderen."
 
 msgid "Hide myself from search results."
 msgstr "Verberg mijzelf in de zoekresultaten"

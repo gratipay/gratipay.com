@@ -254,18 +254,6 @@ msgstr ""
 msgid "Last"
 msgstr ""
 
-msgid "hidden"
-msgstr "malvidebla"
-
-msgid "Gives"
-msgstr "Donas"
-
-msgid "Receives"
-msgstr "Ricevas"
-
-msgid "Joined"
-msgstr "Aliĝita"
-
 msgid "Profile"
 msgstr "Profilo"
 
@@ -294,6 +282,21 @@ msgstr "Kreditkarto"
 
 msgid "PayPal"
 msgstr ""
+
+msgid "Weekly"
+msgstr ""
+
+msgid "Gives"
+msgstr "Donas"
+
+msgid "hidden"
+msgstr "malvidebla"
+
+msgid "Takes"
+msgstr ""
+
+msgid "Joined"
+msgstr "Aliĝita"
 
 msgid "Giving"
 msgstr "Donado"
@@ -485,7 +488,19 @@ msgstr "Ĉu vi certas ke vi volas elsaluti?"
 msgid "Yes!"
 msgstr "Jes!"
 
-msgid "Unreviewed"
+msgid "Receives"
+msgstr "Ricevas"
+
+msgid "Shares"
+msgstr ""
+
+msgid "Joined {ago}"
+msgstr ""
+
+msgid "Applied {ago}"
+msgstr ""
+
+msgid "Under Review"
 msgstr ""
 
 msgid "Rejected"
@@ -571,6 +586,30 @@ msgstr "Tajpu Gratipay-an uzantnomon"
 msgid "Add"
 msgstr "Aldoni"
 
+msgid "Receiving"
+msgstr "Ricevanta"
+
+msgid "You receive {0} per week"
+msgstr "Vi ricevas {0} ĉiusemajne"
+
+msgid "{0} receives {1} per week"
+msgstr "{0} ricevas {1} ĉiusemajne"
+
+msgid "Dollars Received Per Week"
+msgstr "Ricevitaj dolaroj per semajno"
+
+msgid "weeks"
+msgstr "semajnoj"
+
+msgid "Number of Payments Per Week"
+msgstr ""
+
+msgid "Tips Received, by Number of Tips"
+msgstr "Trinkmonoj ricevitaj, laŭ nombro de trinkmonoj"
+
+msgid "Tips Received, by Dollar Amount"
+msgstr "Trinkmonoj ricevitaj, laŭ kvanto"
+
 msgid "About"
 msgstr "Pri"
 
@@ -648,9 +687,6 @@ msgid "No friends found."
 msgstr ""
 
 msgid "On Gratipay?"
-msgstr ""
-
-msgid "Supporters"
 msgstr ""
 
 msgid "Failure"
@@ -817,24 +853,6 @@ msgid "with {n} other"
 msgid_plural "with {n} others"
 msgstr[0] "kun {n} alia"
 msgstr[1] "kun {n} aliaj"
-
-msgid ""
-"Warning: Doing this will remove all the members from your team.\n"
-"\n"
-"You'll have to add them back manually to undo this!"
-msgstr "Averto: Fari tiun elprenos ĉiaj membroj el via teamo.\n\nVi havos realdoni ilin mane malfari tiun!"
-
-msgid ""
-"Warning: This will make the total amount you receive publicly visible.\n"
-"\n"
-"Are you sure you want to do this?"
-msgstr ""
-
-msgid "Your account type has been changed."
-msgstr "Via konttipo estis ŝanĝita."
-
-msgid "Teams aren't allowed to hide their receiving amount."
-msgstr ""
 
 msgid "Your privacy setting has been changed."
 msgstr ""
@@ -1023,30 +1041,6 @@ msgstr "Kvitanco"
 msgid "No transactions to show."
 msgstr ""
 
-msgid "Receiving"
-msgstr "Ricevanta"
-
-msgid "You receive {0} per week"
-msgstr "Vi ricevas {0} ĉiusemajne"
-
-msgid "{0} receives {1} per week"
-msgstr "{0} ricevas {1} ĉiusemajne"
-
-msgid "Dollars Received Per Week"
-msgstr "Ricevitaj dolaroj per semajno"
-
-msgid "weeks"
-msgstr "semajnoj"
-
-msgid "Number of Patrons Per Week"
-msgstr "Nombro de patronoj ĉiusemajne"
-
-msgid "Tips Received, by Number of Tips"
-msgstr "Trinkmonoj ricevitaj, laŭ nombro de trinkmonoj"
-
-msgid "Tips Received, by Dollar Amount"
-msgstr "Trinkmonoj ricevitaj, laŭ kvanto"
-
 msgid "The address cannot be empty."
 msgstr ""
 
@@ -1185,9 +1179,6 @@ msgid "Privacy"
 msgstr "Privateco"
 
 msgid "Hide total giving to others."
-msgstr ""
-
-msgid "Hide total received from others."
 msgstr ""
 
 msgid "Hide myself from search results."
