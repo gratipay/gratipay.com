@@ -948,21 +948,23 @@ class Participant(Model):
              RETURNING *
             """, (self.username,))
 
-        giving = (cursor or self.db).one("""
+        r = (cursor or self.db).one("""
+        WITH pi AS (
+            SELECT amount
+              FROM current_payment_instructions cpi
+              JOIN teams t ON t.slug = cpi.team
+             WHERE participant = %(username)s
+               AND amount > 0
+               AND is_funded
+               AND t.is_approved
+        )
             UPDATE participants p
-               SET giving = COALESCE((
-                      SELECT sum(amount)
-                        FROM current_payment_instructions cpi
-                        JOIN teams t ON t.slug = cpi.team
-                       WHERE participant = %(username)s
-                         AND amount > 0
-                         AND is_funded
-                         AND t.is_approved
-                   ), 0)
+               SET giving = COALESCE((SELECT sum(amount) FROM pi), 0)
+                 , ngiving_to = COALESCE((SELECT count(amount) FROM pi), 0)
              WHERE p.username=%(username)s
-         RETURNING giving
+         RETURNING giving, ngiving_to
         """, dict(username=self.username))
-        self.set_attributes(giving=giving)
+        self.set_attributes(giving=r.giving, ngiving_to=r.ngiving_to)
 
         return updated
 
@@ -971,13 +973,8 @@ class Participant(Model):
         (cursor or self.db).run("""
 
             UPDATE participants
-               SET taking=COALESCE((
-
-                    SELECT sum(receiving)
-                      FROM teams
-                     WHERE owner=%(username)s
-
-                   ), 0)
+               SET taking=COALESCE((SELECT sum(receiving) FROM teams WHERE owner=%(username)s), 0)
+                 , ntaking_from=COALESCE((SELECT count(*) FROM teams WHERE owner=%(username)s), 0)
              WHERE username=%(username)s
 
         """, dict(username=self.username))
@@ -1517,6 +1514,7 @@ class Participant(Model):
         # Values:
         #   3.00 - user takes this amount in payroll
         output['taking'] = str(self.taking)
+        output['ntaking_from'] = self.ntaking_from
 
         # Key: giving
         # Values:
@@ -1527,6 +1525,7 @@ class Participant(Model):
         else:
             giving = str(self.giving)
         output['giving'] = giving
+        output['ngiving_to'] = self.ngiving_to
 
         # Key: elsewhere
         accounts = self.get_accounts_elsewhere()

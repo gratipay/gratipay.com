@@ -63,6 +63,8 @@ foo({
     },
     "giving": "0.00",
     "id": %(user_id)s,
+    "ngiving_to": 0,
+    "ntaking_from": 1,
     "number": "singular",
     "on": "gratipay",
     "taking": "3.00",
