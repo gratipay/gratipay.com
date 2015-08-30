@@ -971,13 +971,13 @@ class Participant(Model):
         (cursor or self.db).run("""
 
             UPDATE participants
-               SET taking=(
+               SET taking=COALESCE((
 
                     SELECT sum(receiving)
                       FROM teams
                      WHERE owner=%(username)s
 
-                   )
+                   ), 0)
              WHERE username=%(username)s
 
         """, dict(username=self.username))
@@ -1498,8 +1498,8 @@ class Participant(Model):
 
         self.update_avatar()
 
-        # Note: the order matters here, taking needs to be updated before giving
-        # XXX self.update_taking() - doesn't exist yet! replaces update_receiving
+        # Note: the order ... doesn't actually matter here.
+        self.update_taking()
         self.update_giving()
 
     def to_dict(self, details=False, inquirer=None):
