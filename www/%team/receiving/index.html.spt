@@ -30,8 +30,8 @@ title = _("Receiving")
 </div>
 <div class="chart-wrapper">
     <a name="gifts"></a>
-    <h2>{{ _("Number of Supporters Per Week") }}</h2>
-    <div class="chart" data-chart="nsupporters"></div>
+    <h2>{{ _("Number of Payments Per Week") }}</h2>
+    <div class="chart" data-chart="nreceiving_from"></div>
     <div class="x-axis">{{ _("weeks") }}</div>
 </div>
 </div>

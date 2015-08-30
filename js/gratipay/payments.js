@@ -62,7 +62,7 @@ Gratipay.payments.afterPaymentChange = function(data) {
     $('.my-total-giving').text(data.total_giving_l);
     $('.total-receiving[data-team="'+data.team_id+'"]').text(data.total_receiving_team_l);
     $('#payment-prompt').toggleClass('needed', data.amount > 0);
-    $('.nsupporters[data-team="'+data.team_id+'"]').text(data.nsupporters);
+    $('.nreceiving_from[data-team="'+data.team_id+'"]').text(data.nreceiving_from);
 
     var $your_payment = $('.your-payment[data-team="'+data.team_id+'"]');
     if ($your_payment) {

@@ -98,7 +98,7 @@ def fake_team(db, teamowner):
                    , owner=teamowner.username
                    , is_approved=random.sample(isapproved,1)[0]
                    , receiving=0.1
-                   , nmembers=3
+                   , nreceiving_from=3
                    )
     except IntegrityError:
         return fake_team(db, teamowner)

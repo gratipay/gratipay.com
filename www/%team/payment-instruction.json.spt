@@ -45,7 +45,7 @@ else:
         out["msg"] += _("Thank you so much for supporting {0}!", team.name)
     else:
         out["msg"] = _("You have successfully canceled your payment to {0}.", team.name)
-    out["nsupporters"] = team.nsupporters
+    out["nreceiving_from"] = team.nreceiving_from
     out["team_id"] = team.id
     out["total_giving"] = str(total_giving)
     out["total_giving_l"] = format_currency(total_giving, 'USD')
