@@ -89,6 +89,7 @@ class Team(Model):
                        SELECT sum(amount)
                          FROM our_receiving
                    ), 0))
+                 , payroll = 0
                  , nsupporters = COALESCE((SELECT count(*) FROM our_receiving), 0)
              WHERE t.slug = %(slug)s
          RETURNING receiving, nsupporters
