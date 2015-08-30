@@ -285,7 +285,7 @@ msgid "PayPal"
 msgstr "PayPal"
 
 msgid "Weekly"
-msgstr ""
+msgstr "Settimanale"
 
 msgid "Gives"
 msgstr "Dona"
@@ -294,7 +294,7 @@ msgid "hidden"
 msgstr "nascosto"
 
 msgid "Takes"
-msgstr ""
+msgstr "Prende"
 
 msgid "Joined"
 msgstr "Iscritto"
@@ -493,16 +493,16 @@ msgid "Receives"
 msgstr "Riceve"
 
 msgid "Shares"
-msgstr ""
+msgstr "Condivide"
 
 msgid "Joined {ago}"
-msgstr ""
+msgstr "Si è unito {ago}"
 
 msgid "Applied {ago}"
-msgstr ""
+msgstr "Si è proposto {ago}"
 
 msgid "Under Review"
-msgstr ""
+msgstr "In esaminazione"
 
 msgid "Rejected"
 msgstr "Rifiutata"
@@ -603,7 +603,7 @@ msgid "weeks"
 msgstr "settimane"
 
 msgid "Number of Payments Per Week"
-msgstr ""
+msgstr "Numero di Pagamenti A Settimana"
 
 msgid "Tips Received, by Number of Tips"
 msgstr "Donazioni Ricevute - Numero di Donazioni"
