@@ -61,7 +61,6 @@ def fake_participant(db, number="singular", is_admin=False):
                    , is_admin=is_admin
                    , balance=0
                    , anonymous_giving=(random.randrange(5) == 0)
-                   , anonymous_receiving=(number != 'plural' and random.randrange(5) == 0)
                    , balanced_customer_href=faker.uri()
                    , is_suspicious=False
                    , claimed_time=faker.date_time_this_year()
@@ -99,7 +98,7 @@ def fake_team(db, teamowner):
                    , owner=teamowner.username
                    , is_approved=random.sample(isapproved,1)[0]
                    , receiving=0.1
-                   , nmembers=3
+                   , nreceiving_from=3
                    )
     except IntegrityError:
         return fake_team(db, teamowner)

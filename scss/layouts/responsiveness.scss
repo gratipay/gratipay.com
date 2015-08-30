@@ -1,4 +1,7 @@
 @media (max-width: 600px) {
+    .luxury {
+        display: none;
+    }
     #header {
         text-align: center;
         h1 {
@@ -11,7 +14,6 @@
         height: 128px;
         .avatar {
             height: 128px;
-            width: 144px;
             img {
                 width: 112px;
                 height: 112px;
@@ -32,8 +34,23 @@
                 }
             }
             .is-suspicious-label {
-                display: none;
+                font-size: 10px;
+                bottom: 13px;
+                left: 13px;
             }
+        }
+        .details {
+            font-size: 10px;
+            box-shadow: 0px 0px 16px 8px rgba($black, 0.5);
+            @include border-radius(3px);
+            top: 8px;
+            right: 8px;
+        }
+        .admin-details {
+            top: 13px;
+            left: 13px;
+            font-size: 10px;
+            padding: 1px 8px;
         }
         h1 {
             font-size: 32px;

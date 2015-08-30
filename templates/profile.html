@@ -22,47 +22,64 @@
         <input type="checkbox" data-username="{{ participant.username }}"
             {% if participant.is_suspicious %}checked="true"{% endif %} />
     </label>
+
     {% elif participant.is_suspicious %}
     <div class="is-suspicious-label">Suspicious</div>
     {% endif %}
 </div>
 
 <div class="details mono">
-    {% set g = participant.giving %}
-    {% set r = participant.receiving %}
-    {% set anon_giving = participant.anonymous_giving %}
-    {% set anon_receiving = participant.anonymous_receiving %}
-    {% set giving_str = '[' + _('hidden') + ']' if anon_giving else format_currency(g, "USD") %}
-    {% set receiving_str = '[' + _('hidden') + ']' if anon_receiving else format_currency(r, "USD") %}
-
-    <!--
     <table>
         <tr>
-            <td class="left">{{ _('Gives') }}</td>
-            <td class="right">{{ giving_str }}</td>
+            <th class="label">{{ _("Weekly") }}</th>
+            <th>&#x03A3; &nbsp;</th>
+            <th>n</th>
         </tr>
         <tr>
-            <td class="left">{{ _('Receives') }}</td>
-            <td class="right total-receiving" data-tippee="{{ participant.id }}">
-                {{ receiving_str }}
-            </td>
+            <td class="label">{{ _("Gives") }}</td>
+            {% if participant.anonymous_giving %}
+                {% if user.ADMIN %}
+                <td>{{ format_currency(participant.giving, 'USD') }}</td>
+                <td>[{{ participant.ngiving_to }}]</td>
+                {% else %}
+                <td colspan="2">
+                    [{{ _("hidden") }}]
+                </td>
+                {% endif %}
+            {% else %}
+            <td>{{ format_currency(participant.giving, 'USD') }}</td>
+            <td>{{ participant.ngiving_to }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td class="label">{{ _("Takes") }}</td>
+            <td>{{ format_currency(participant.taking, 'USD') }}</td>
+            <td>{{ participant.ntaking_from }}</td>
         </tr>
     </table>
-    -->
 
     {% if participant.claimed_time %}
-    <p>{{ _('Joined') }} {{ to_age(participant.claimed_time, add_direction=True) }}.</p>
-    {% elif participant.is_closed %}
-    <p>Closed {{ to_age(participant.closed_time, add_direction=True) }}.</p>
-    {% else %}
+    <p class="luxury">{{ _('Joined') }} {{ to_age(participant.claimed_time, add_direction=True) }}</p>
+    {% endif %}
+
+</div>
+
+{% if user.ADMIN %}
+    {% if participant.is_closed %}
+    <div class="admin-details mono">
+        Closed {{ to_age(participant.closed_time, add_direction=True) }}.
+    </div>
+    {% elif not participant.claimed_time  %}
     {% set absorption = website.db.one( "select * from absorptions where archived_as=%s"
                                       , (participant.username,)
                                        ) %}
-    <p>Formerly {{ absorption.absorbed_was }}.</p>
-    <p>Absorbed by <a href="/{{ absorption.absorbed_by }}/">{{ absorption.absorbed_by }}</a>
-    {{ to_age(absorption.timestamp, add_direction=True) }}.<p>
+    <div class="admin-details mono">
+        Was {{ absorption.absorbed_was }};
+        absorbed by <a href="/{{ absorption.absorbed_by }}/">{{ absorption.absorbed_by }}</a>
+        {{ to_age(absorption.timestamp, add_direction=True) }}.
+    </div>
     {% endif %}
-</div>
+{% endif %}
 
 {{ super() }}
 {% endblock %}

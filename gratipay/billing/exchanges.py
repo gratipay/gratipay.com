@@ -311,6 +311,7 @@ def record_exchange_result(db, exchange_id, status, error, participant):
         """, locals())
         assert participant.username == username
         assert isinstance(route, ExchangeRoute)
+        route.set_attributes(participant=participant)  # XXX Red hot hack!
 
         if amount < 0:
             amount -= fee
@@ -325,7 +326,7 @@ def propagate_exchange(cursor, participant, route, error, amount):
     """Propagates an exchange's result to the participant's balance and the
     route's status.
     """
-    route.update_error(error or '', propagate=False)
+    route.update_error(error or '')
     new_balance = cursor.one("""
         UPDATE participants
            SET balance=(balance + %s)

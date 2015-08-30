@@ -84,7 +84,7 @@ $(document).ready(function() {
     var btn = $('button.suggestion');
     btn.click(function() {
         var amount = parseFloat($(this).attr('data-amount'), 10);
-        Gratipay.tips.set('Gratipay', amount, function(data) {
+        Gratipay.payments.set('Gratipay', amount, function(data) {
             $('.suggestion-prompt').slideUp();
             $('button.suggestion').slideUp();
             amount = parseFloat(data.amount, 10).toFixed(2);

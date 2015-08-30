@@ -1,12 +1,4 @@
-"""*Participant* is the name Gratipay gives to people and groups that are known
-to Gratipay. We've got a ``participants`` table in the database, and a
-:py:class:`Participant` class that we define here. We distinguish several kinds
-of participant, based on certain properties.
-
- - *Stub* participants
- - *Organizations* are plural participants
- - *Teams* are plural participants with members
-
+"""Participants on Gratipay give payments and take payroll.
 """
 from __future__ import print_function, unicode_literals
 
@@ -42,7 +34,6 @@ from gratipay.exceptions import (
 )
 
 from gratipay.models import add_event
-from gratipay.models._mixin_team import MixinTeam
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.team import Team
@@ -61,7 +52,7 @@ EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 USERNAME_MAX_SIZE = 32
 
-class Participant(Model, MixinTeam):
+class Participant(Model):
     """Represent a Gratipay participant.
     """
 
@@ -257,7 +248,7 @@ class Participant(Model, MixinTeam):
 
     @property
     def usage(self):
-        return max(self.giving, self.receiving)
+        return max(self.giving, self.taking)
 
     @property
     def suggested_payment(self):
@@ -382,7 +373,6 @@ class Participant(Model, MixinTeam):
 
             UPDATE participants
                SET anonymous_giving=False
-                 , anonymous_receiving=False
                  , number='singular'
                  , avatar_url=NULL
                  , email_address=NULL
@@ -390,8 +380,7 @@ class Participant(Model, MixinTeam):
                  , session_token=NULL
                  , session_expires=now()
                  , giving=0
-                 , receiving=0
-                 , npatrons=0
+                 , taking=0
              WHERE username=%(username)s
          RETURNING *;
 
@@ -959,51 +948,36 @@ class Participant(Model, MixinTeam):
              RETURNING *
             """, (self.username,))
 
-        giving = (cursor or self.db).one("""
+        r = (cursor or self.db).one("""
+        WITH pi AS (
+            SELECT amount
+              FROM current_payment_instructions cpi
+              JOIN teams t ON t.slug = cpi.team
+             WHERE participant = %(username)s
+               AND amount > 0
+               AND is_funded
+               AND t.is_approved
+        )
             UPDATE participants p
-               SET giving = COALESCE((
-                      SELECT sum(amount)
-                        FROM current_payment_instructions cpi
-                        JOIN teams t ON t.slug = cpi.team
-                       WHERE participant = %(username)s
-                         AND amount > 0
-                         AND is_funded
-                         AND t.is_approved
-                   ), 0)
+               SET giving = COALESCE((SELECT sum(amount) FROM pi), 0)
+                 , ngiving_to = COALESCE((SELECT count(amount) FROM pi), 0)
              WHERE p.username=%(username)s
-         RETURNING giving
+         RETURNING giving, ngiving_to
         """, dict(username=self.username))
-        self.set_attributes(giving=giving)
+        self.set_attributes(giving=r.giving, ngiving_to=r.ngiving_to)
 
         return updated
 
 
-    def update_receiving(self, cursor=None):
-        if self.IS_PLURAL:
-            old_takes = self.compute_actual_takes(cursor=cursor)
-        r = (cursor or self.db).one("""
-            WITH our_tips AS (
-                     SELECT amount
-                       FROM current_tips
-                       JOIN participants p2 ON p2.username = tipper
-                      WHERE tippee = %(username)s
-                        AND p2.is_suspicious IS NOT true
-                        AND amount > 0
-                        AND is_funded
-                 )
-            UPDATE participants p
-               SET receiving = (COALESCE((
-                       SELECT sum(amount)
-                         FROM our_tips
-                   ), 0) + taking)
-                 , npatrons = COALESCE((SELECT count(*) FROM our_tips), 0)
-             WHERE p.username = %(username)s
-         RETURNING receiving, npatrons
+    def update_taking(self, cursor=None):
+        (cursor or self.db).run("""
+
+            UPDATE participants
+               SET taking=COALESCE((SELECT sum(receiving) FROM teams WHERE owner=%(username)s), 0)
+                 , ntaking_from=COALESCE((SELECT count(*) FROM teams WHERE owner=%(username)s), 0)
+             WHERE username=%(username)s
+
         """, dict(username=self.username))
-        self.set_attributes(receiving=r.receiving, npatrons=r.npatrons)
-        if self.IS_PLURAL:
-            new_takes = self.compute_actual_takes(cursor=cursor)
-            self.update_taking(old_takes, new_takes, cursor=cursor)
 
 
     def update_is_free_rider(self, is_free_rider, cursor=None):
@@ -1120,12 +1094,12 @@ class Participant(Model, MixinTeam):
 
     def get_og_title(self):
         out = self.username
-        receiving = self.receiving
         giving = self.giving
-        if (giving > receiving) and not self.anonymous_giving:
+        taking = self.taking
+        if (giving > taking) and not self.anonymous_giving:
             out += " gives $%.2f/wk" % giving
-        elif receiving > 0 and not self.anonymous_receiving:
-            out += " receives $%.2f/wk" % receiving
+        elif taking > 0:
+            out += " takes $%.2f/wk" % taking
         else:
             out += " is"
         return out + " on Gratipay"
@@ -1170,7 +1144,6 @@ class Participant(Model, MixinTeam):
                      , session_token=NULL
                      , session_expires=now()
                      , giving = 0
-                     , receiving = 0
                      , taking = 0
                  WHERE username=%s
              RETURNING username
@@ -1522,8 +1495,8 @@ class Participant(Model, MixinTeam):
 
         self.update_avatar()
 
-        # Note: the order matters here, receiving needs to be updated before giving
-        self.update_receiving()
+        # Note: the order ... doesn't actually matter here.
+        self.update_taking()
         self.update_giving()
 
     def to_dict(self, details=False, inquirer=None):
@@ -1532,47 +1505,27 @@ class Participant(Model, MixinTeam):
                  , 'avatar': self.avatar_url
                  , 'number': self.number
                  , 'on': 'gratipay'
-                 }
+                  }
 
         if not details:
             return output
 
-        # Key: npatrons
-        output['npatrons'] = self.npatrons
-
-        # Key: receiving
+        # Key: taking
         # Values:
-        #   null - user is receiving anonymously
-        #   3.00 - user receives this amount in tips
-        if not self.anonymous_receiving:
-            receiving = str(self.receiving)
-        else:
-            receiving = None
-        output['receiving'] = receiving
+        #   3.00 - user takes this amount in payroll
+        output['taking'] = str(self.taking)
+        output['ntaking_from'] = self.ntaking_from
 
         # Key: giving
         # Values:
         #   null - user is giving anonymously
-        #   3.00 - user gives this amount in tips
-        if not self.anonymous_giving:
-            giving = str(self.giving)
-        else:
+        #   3.00 - user gives this amount
+        if self.anonymous_giving:
             giving = None
+        else:
+            giving = str(self.giving)
         output['giving'] = giving
-
-        # Key: my_tip
-        # Values:
-        #   undefined - user is not authenticated
-        #   "self" - user == participant
-        #   null - user has never tipped this person
-        #   0.00 - user used to tip this person but now doesn't
-        #   3.00 - user tips this person this amount
-        if inquirer:
-            if inquirer.username == self.username:
-                my_tip = 'self'
-            else:
-                my_tip = inquirer.get_tip_to(self.username)['amount']
-            output['my_tip'] = str(my_tip)
+        output['ngiving_to'] = self.ngiving_to
 
         # Key: elsewhere
         accounts = self.get_accounts_elsewhere()

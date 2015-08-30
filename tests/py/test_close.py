@@ -135,15 +135,13 @@ class TestClosing(Harness):
     def test_cpi_clears_personal_information(self, mailer):
         alice = self.make_participant( 'alice'
                                      , anonymous_giving=True
-                                     , anonymous_receiving=True
                                      , avatar_url='img-url'
                                      , email_address='alice@example.com'
                                      , claimed_time='now'
                                      , session_token='deadbeef'
                                      , session_expires='2000-01-01'
                                      , giving=20
-                                     , receiving=40
-                                     , npatrons=21
+                                     , taking=40
                                       )
         alice.upsert_statement('en', 'not forgetting to be awesome!')
         alice.add_email('alice@example.net')
@@ -154,14 +152,12 @@ class TestClosing(Harness):
 
         assert alice.get_statement(['en']) == (None, None)
         assert alice.anonymous_giving == new_alice.anonymous_giving == False
-        assert alice.anonymous_receiving == new_alice.anonymous_receiving == False
         assert alice.number == new_alice.number == 'singular'
         assert alice.avatar_url == new_alice.avatar_url == None
         assert alice.email_address == new_alice.email_address == None
         assert alice.claimed_time == new_alice.claimed_time == None
         assert alice.giving == new_alice.giving == 0
-        assert alice.receiving == new_alice.receiving == 0
-        assert alice.npatrons == new_alice.npatrons == 0
+        assert alice.taking == new_alice.taking == 0
         assert alice.session_token == new_alice.session_token == None
         assert alice.session_expires.year == new_alice.session_expires.year == date.today().year
         assert not alice.get_emails()

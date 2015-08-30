@@ -235,7 +235,7 @@ class Harness(unittest.TestCase):
         return e_id
 
 
-    def make_tip(self, tipper, tippee, amount, update_self=True, update_tippee=True, cursor=None):
+    def make_tip(self, tipper, tippee, amount, cursor=None):
         """Given a Participant or username, and amount as str, returns a dict.
 
         We INSERT instead of UPDATE, so that we have history to explore. The
@@ -286,12 +286,6 @@ class Harness(unittest.TestCase):
         args = dict(tipper=tipper.username, tippee=tippee.username, amount=amount)
         t = (cursor or self.db).one(NEW_TIP, args)
 
-        if update_self:
-            # Update giving amount of tipper
-            tipper.update_giving(cursor)
-        if update_tippee:
-            # Update receiving amount of tippee
-            tippee.update_receiving(cursor)
         if tippee.username == 'Gratipay':
             # Update whether the tipper is using Gratipay for free
             tipper.update_is_free_rider(None if amount == 0 else False, cursor)

@@ -93,18 +93,16 @@ limited = getattr(platform, 'api_friends_limited', False)
     <tr>
         <th>{{ _('Name') }}</th>
         <th class="figure">{{ _('On Gratipay?') }}</th>
-        <th class="figure">{{ _('Supporters') }}</th>
-        <th class="figure">{{ _('Receives') }}</th>
         <th class="figure">{{ _('Gives') }}</th>
+        <th class="figure">{{ _('Takes') }}</th>
     </tr>
     {% for friend in friends %}
     {% set p = friend.participant %}
     <tr>
         <td><a href="./{{ friend.gratipay_slug }}/">{{ friend.friendly_name }}</a></td>
         <td class="figure">{{ '&check;'|safe if p.is_claimed }}</td>
-        <td class="figure">{{ _('hidden') if p.anonymous_receiving else p.npatrons }}</td>
-        <td class="figure">{{ _('hidden') if p.anonymous_receiving else p.receiving }}</td>
         <td class="figure">{{ _('hidden') if p.anonymous_giving else p.giving }}</td>
+        <td class="figure">{{ p.taking }}</td>
     </tr>
     {% endfor %}
     {% if pages_urls %}

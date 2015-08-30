@@ -29,9 +29,6 @@ from psycopg2 import IntegrityError
 with open('sql/payday.sql') as f:
     PAYDAY = f.read()
 
-with open('sql/fake_payday.sql') as f:
-    FAKE_PAYDAY = f.read()
-
 
 class ExceptionWrapped(Exception): pass
 
@@ -80,7 +77,6 @@ class Payday(object):
                 update_balances
                 take_over_balances
             update_stats
-            update_cached_amounts
             end
 
     """
@@ -137,7 +133,6 @@ class Payday(object):
             self.mark_stage_done()
         if self.stage < 2:
             self.update_stats()
-            self.update_cached_amounts()
             self.mark_stage_done()
 
         self.end()
@@ -460,12 +455,6 @@ class Payday(object):
 
         """, {'ts_start': self.ts_start})
         log("Updated payday stats.")
-
-
-    def update_cached_amounts(self):
-        with self.db.get_cursor() as cursor:
-            cursor.execute(FAKE_PAYDAY)
-        log("Updated receiving amounts.")
 
 
     def end(self):

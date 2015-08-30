@@ -82,88 +82,6 @@ class TestPayday(BillingHarness):
         after = self.fetch_payday()
         assert after['ncc_failing'] == 1
 
-    @pytest.mark.xfail(reason="#3399")
-    def test_update_cached_amounts(self):
-        team = self.make_participant('team', claimed_time='now', number='plural')
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        bob = self.make_participant('bob', claimed_time='now')
-        carl = self.make_participant('carl', claimed_time='now', last_bill_result="Fail!")
-        dana = self.make_participant('dana', claimed_time='now')
-        emma = self.make_participant('emma')
-        alice.set_tip_to(dana, '3.00')
-        alice.set_tip_to(bob, '6.00')
-        alice.set_tip_to(emma, '1.00')
-        alice.set_tip_to(team, '4.00')
-        bob.set_tip_to(alice, '5.00')
-        team.add_member(bob)
-        team.set_take_for(bob, D('1.00'), bob)
-        bob.set_tip_to(dana, '2.00')  # funded by bob's take
-        bob.set_tip_to(emma, '7.00')  # not funded, insufficient receiving
-        carl.set_tip_to(dana, '2.08')  # not funded, failing card
-
-        def check():
-            alice = Participant.from_username('alice')
-            bob = Participant.from_username('bob')
-            carl = Participant.from_username('carl')
-            dana = Participant.from_username('dana')
-            emma = Participant.from_username('emma')
-            assert alice.giving == D('13.00')
-            assert alice.receiving == D('5.00')
-            assert bob.giving == D('7.00')
-            assert bob.receiving == D('7.00')
-            assert bob.taking == D('1.00')
-            assert carl.giving == D('0.00')
-            assert carl.receiving == D('0.00')
-            assert dana.receiving == D('5.00')
-            assert dana.npatrons == 2
-            assert emma.receiving == D('1.00')
-            assert emma.npatrons == 1
-            funded_tips = self.db.all("SELECT amount FROM tips WHERE is_funded ORDER BY id")
-            assert funded_tips == [3, 6, 1, 4, 5, 2]
-
-        # Pre-test check
-        check()
-
-        # Check that update_cached_amounts doesn't mess anything up
-        Payday.start().update_cached_amounts()
-        check()
-
-        # Check that update_cached_amounts actually updates amounts
-        self.db.run("""
-            UPDATE tips SET is_funded = false;
-            UPDATE participants
-               SET giving = 0
-                 , npatrons = 0
-                 , receiving = 0
-                 , taking = 0;
-        """)
-        Payday.start().update_cached_amounts()
-        check()
-
-    @pytest.mark.xfail(reason="#3399")
-    def test_update_cached_amounts_depth(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        usernames = ('bob', 'carl', 'dana', 'emma', 'fred', 'greg')
-        users = [self.make_participant(username, claimed_time='now') for username in usernames]
-
-        prev = alice
-        for user in reversed(users):
-            prev.set_tip_to(user, '1.00')
-            prev = user
-
-        def check():
-            for username in reversed(usernames[1:]):
-                user = Participant.from_username(username)
-                assert user.giving == D('1.00')
-                assert user.receiving == D('1.00')
-                assert user.npatrons == 1
-            funded_tips = self.db.all("SELECT id FROM tips WHERE is_funded ORDER BY id")
-            assert len(funded_tips) == 6
-
-        check()
-        Payday.start().update_cached_amounts()
-        check()
-
     @mock.patch('gratipay.billing.payday.log')
     def test_start_prepare(self, log):
         self.clear_tables()
@@ -394,8 +312,6 @@ class TestPayin(BillingHarness):
         alice = self.make_participant('alice', claimed_time='now')
         alice.set_payment_instruction(team, 1)
         alice.set_payment_instruction(team, 0)
-        a_team = self.make_participant('a_team', claimed_time='now', number='plural')
-        a_team.add_member(alice)
         Payday.start().payin()
         payments = self.db.all("SELECT * FROM payments WHERE amount = 0")
         assert not payments

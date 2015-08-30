@@ -35,6 +35,7 @@ class TestChartsJson(Harness):
             Payday.start().run()
 
 
+    @pytest.mark.xfail(reason="moved charts.json to %team/ and need to update it")
     def test_no_payday_returns_empty_list(self):
         assert json.loads(self.client.GET('/~carl/charts.json').body) == []
 
@@ -171,17 +172,3 @@ class TestChartsJson(Harness):
         actual = json.loads(self.client.GET('/about/charts.json').body)[0]
 
         assert actual == expected
-
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
-    def test_anonymous_receiver(self):
-        self.run_payday()
-        self.run_payday()
-        self.client.POST('/~carl/privacy.json',
-                         {'toggle': 'anonymous_receiving'},
-                         auth_as='carl')
-
-        r = self.client.GxT('/~carl/charts.json')
-        assert r.code == 401
-
-        r = self.client.GxT('/~carl/charts.json', auth_as='alice')
-        assert r.code == 403

@@ -8,7 +8,7 @@ Gratipay.payments.init = function() {
         root: $('.your-payment.js-edit'),
         success: function(data) {
             Gratipay.notification(data.msg, 'success');
-            Gratipay.payments.afterTipChange(data);
+            Gratipay.payments.afterPaymentChange(data);
         }
     });
 
@@ -58,17 +58,17 @@ Gratipay.payments.initSupportGratipay = function() {
 };
 
 
-Gratipay.payments.afterTipChange = function(data) {
+Gratipay.payments.afterPaymentChange = function(data) {
     $('.my-total-giving').text(data.total_giving_l);
-    $('.total-receiving[data-team="'+data.team_id+'"]').text(data.total_receiving_team_l);
+    $('.total-receiving[data-team="'+data.team_id+'"]').text(data.total_receiving_l);
     $('#payment-prompt').toggleClass('needed', data.amount > 0);
-    $('.nsupporters[data-team="'+data.team_id+'"]').text(data.nsupporters);
+    $('.nreceiving-from[data-team="'+data.team_id+'"]').text(data.nreceiving_from);
 
     var $your_payment = $('.your-payment[data-team="'+data.team_id+'"]');
-    if ($your_payment) {
+    if ($your_payment.length === 1) {
         var $input = $your_payment.find('input');
         $input[0].defaultValue = $input.val();
-        $your_payment.find('span.amount').text(data.amount_l);
+        $your_payment.find('.view span.amount').text(data.amount_l);
         $your_payment.find('.edit').toggleClass('not-zero', data.amount > 0);
         $your_payment.find('.stop').toggleClass('zero', data.amount === 0);
     }
@@ -80,7 +80,7 @@ Gratipay.payments.set = function(team, amount, callback) {
     // send request to set up a recurring payment
     $.post('/' + team + '/payment-instruction.json', { amount: amount }, function(data) {
         if (callback) callback(data);
-        Gratipay.payments.afterTipChange(data);
+        Gratipay.payments.afterPaymentChange(data);
     })
     .fail(Gratipay.error);
 };

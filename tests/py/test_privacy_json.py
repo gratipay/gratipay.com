@@ -21,7 +21,6 @@ class Tests(Harness):
         assert actual == {
             'is_searchable': True,
             'anonymous_giving': False,
-            'anonymous_receiving': False
         }
 
     def test_participant_can_toggle_is_searchable(self):
@@ -46,17 +45,6 @@ class Tests(Harness):
         actual = json.loads(response.body)['anonymous_giving']
         assert actual is False
 
-    def test_participant_can_toggle_anonymous_receiving(self):
-        response = self.hit_privacy('POST', data={'toggle': 'anonymous_receiving'})
-        actual = json.loads(response.body)
-        assert actual['anonymous_receiving'] is True
-
-    def test_participant_can_toggle_anonymous_receiving_back(self):
-        response = self.hit_privacy('POST', data={'toggle': 'anonymous_receiving'})
-        response = self.hit_privacy('POST', data={'toggle': 'anonymous_receiving'})
-        actual = json.loads(response.body)['anonymous_receiving']
-        assert actual is False
-
     # Related to is-searchable
 
     def test_meta_robots_tag_added_on_opt_out(self):
@@ -70,17 +58,3 @@ class Tests(Harness):
     def test_participant_doesnt_show_up_on_search(self):
         self.hit_privacy('POST', data={'toggle': 'is_searchable'})
         assert 'alice' not in self.client.GET("/search.json?q=alice").body
-
-    # Related to anonymous-receiving
-
-    def test_team_cannot_toggle_anonymous_receiving(self):
-        self.make_participant('team', claimed_time='now', number='plural')
-        response = self.client.PxST(
-            '/~team/privacy.json',
-            auth_as='team',
-            data={'toggle': 'anonymous_receiving'}
-        )
-        actual = response.code
-        expected = 403
-        assert actual == expected
-

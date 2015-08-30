@@ -1,4 +1,4 @@
-"""Teams on Gratipay are plural participants with members.
+"""Teams on Gratipay receive payments and distribute payroll.
 """
 from postgres.orm import Model
 
@@ -85,16 +85,24 @@ class Team(Model):
                         AND is_funded
                  )
             UPDATE teams t
-               SET receiving = (COALESCE((
-                       SELECT sum(amount)
-                         FROM our_receiving
-                   ), 0))
-                 , nsupporters = COALESCE((SELECT count(*) FROM our_receiving), 0)
+               SET receiving = COALESCE((SELECT sum(amount) FROM our_receiving), 0)
+                 , nreceiving_from = COALESCE((SELECT count(*) FROM our_receiving), 0)
+                 , distributing = COALESCE((SELECT sum(amount) FROM our_receiving), 0)
+                 , ndistributing_to = 1
              WHERE t.slug = %(slug)s
-         RETURNING receiving, nsupporters
+         RETURNING receiving, nreceiving_from, distributing, ndistributing_to
         """, dict(slug=self.slug))
 
-        self.set_attributes(receiving=r.receiving, nsupporters=r.nsupporters)
+
+        # This next step is easy for now since we don't have payroll.
+        from gratipay.models.participant import Participant
+        Participant.from_username(self.owner).update_taking()
+
+        self.set_attributes( receiving=r.receiving
+                           , nreceiving_from=r.nreceiving_from
+                           , distributing=r.distributing
+                           , ndistributing_to=r.ndistributing_to
+                            )
 
     @property
     def status(self):
