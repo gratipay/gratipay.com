@@ -1,13 +1,12 @@
 #banner {
-
-    a {
-        display: block;
-    }
+    position: relative;
+    z-index: 0;
 
     .avatar {
         position: relative;
         height: 192px;
-        width: 256px; // to allow for blur
+        max-width: 576px; // to allow for blur
+        z-index: 2;
         overflow: hidden;
 
         img {
@@ -36,13 +35,19 @@
 
         .is-suspicious-label {
             text-align: right;
-            font-size: 10px;
+            font-size: 12px;
             text-transform: uppercase;
             display: block;
             color: $white;
             position: absolute;
-            bottom: 0px;
-            right: 80px;
+            bottom: 24px;
+            left: 24px;
+            z-index: 3;
+            background: $black;
+            border: 2px solid $white;
+            @include border-radius(5px);
+
+            padding: 1px 8px;
         }
 
         &.is-suspicious {
@@ -54,13 +59,54 @@
         position: absolute;
         top: 16px;
         right: 16px;
+        z-index: 2;
         color: $white;
         text-shadow: -1px 1px 1px rgba($brown, 1);
         text-align: right;
+        background: $black;
+        padding: 3px 7px;
+        @include border-radius(5px);
+        box-shadow: 0px 0px 32px 16px rgba($black, 0.5);
+        border: 2px solid $white;
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            margin: 0 0 6px auto;
+            th {
+                text-align: right;
+            }
+            td {
+                padding: 0 0 0 12px;
+                &:first-child {
+                    padding-left: 0;
+                }
+            }
+            .label {
+                text-align: center;
+            }
+        }
+    }
+
+    .admin-details {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+        max-width: 45%;
+        padding: 2px 16px 1px;
+        color: white;
+        background: $black;
+        border: 2px solid $white;
+        z-index: 2;
+        @include border-radius(5px);
+        box-shadow: 0px 0px 32px 16px rgba($black, 0.5);
 
         a {
-            color: $white;
             text-decoration: underline;
+            color: $white;
         }
     }
 
@@ -69,6 +115,7 @@
         position: absolute;
         bottom: 4px;
         right: 16px;
+        z-index: 2;
         text-align: right;
         color: $white;
         text-shadow: -1px 1px 1px rgba($brown, 1);
