@@ -90,7 +90,7 @@ banner = name = team.name
     {% endif %}
 
     | {{ _( "owned by {a}~{owner}{_a}"
-          , a=('<a href="/{}/">'.format(team.owner))|safe
+          , a=('<a href="/~{}/">'.format(team.owner))|safe
           , owner=team.owner
           , _a='</a>'|safe
            ) }}
