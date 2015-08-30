@@ -50,7 +50,7 @@ banner = name = team.name
     </table>
     {% endif %}
 
-    <p>
+    <p class="luxury">
     {% if team.is_approved %}
     {{ _('Joined {ago}', ago=to_age(team.ctime, add_direction=True)) }}
     {% else %}

@@ -5,7 +5,7 @@
     .avatar {
         position: relative;
         height: 192px;
-        max-width: 576px; // to allow for blur
+        width: 100%;
         z-index: 2;
         overflow: hidden;
 
@@ -30,6 +30,7 @@
                 left: 136px;
                 bottom: 24px;
                 box-shadow: none;
+                z-index: 4;
             }
         }
 
