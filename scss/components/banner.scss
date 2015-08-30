@@ -79,6 +79,7 @@
             margin: 0 0 6px auto;
             th {
                 text-align: right;
+                border-bottom: 1px solid $white;
             }
             td {
                 padding: 0 0 0 12px;
@@ -87,7 +88,7 @@
                 }
             }
             .label {
-                text-align: center;
+                text-align: left;
             }
         }
     }
