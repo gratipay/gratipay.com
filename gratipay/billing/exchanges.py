@@ -311,6 +311,7 @@ def record_exchange_result(db, exchange_id, status, error, participant):
         """, locals())
         assert participant.username == username
         assert isinstance(route, ExchangeRoute)
+        route.set_attributes(participant=participant)  # XXX Red hot hack!
 
         if amount < 0:
             amount -= fee

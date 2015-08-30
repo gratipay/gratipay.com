@@ -15,11 +15,15 @@ class ExchangeRoute(Model):
 
     @classmethod
     def from_id(cls, id):
-        return cls.db.one("""
+        r = cls.db.one("""
             SELECT r.*::exchange_routes
               FROM exchange_routes r
              WHERE id = %(id)s
         """, locals())
+        if r:
+            from gratipay.models.participant import Participant  # XXX Red hot hack!
+            r.set_attributes(participant=Participant.from_id(r.participant))
+        return r
 
     @classmethod
     def from_network(cls, participant, network):
@@ -31,7 +35,7 @@ class ExchangeRoute(Model):
                AND network = %(network)s
         """, locals())
         if r:
-            r.__dict__['participant'] = participant
+            r.set_attributes(participant=participant)
         return r
 
     @classmethod
@@ -45,7 +49,7 @@ class ExchangeRoute(Model):
                AND address = %(address)s
         """, locals())
         if r:
-            r.__dict__['participant'] = participant
+            r.set_attributes(participant=participant)
         return r
 
     @classmethod
@@ -57,9 +61,9 @@ class ExchangeRoute(Model):
                  VALUES (%(participant_id)s, %(network)s, %(address)s, %(error)s, %(fee_cap)s)
               RETURNING exchange_routes.*::exchange_routes
         """, locals())
-        if network == 'balanced-cc':
+        if network == 'braintree-cc':
             participant.update_giving_and_teams()
-        r.__dict__['participant'] = participant
+        r.set_attributes(participant=participant)
         return r
 
     def invalidate(self):
@@ -69,6 +73,7 @@ class ExchangeRoute(Model):
         # For Paypal, we remove the record entirely to prevent
         # an integrity error if the user tries to add the route again
         if self.network == 'paypal':
+            # XXX This doesn't sound right. Doesn't this corrupt history pages?
             self.db.run("DELETE FROM exchange_routes WHERE id=%s", (self.id,))
         else:
             self.update_error('invalidated')
@@ -90,4 +95,14 @@ class ExchangeRoute(Model):
             return
         if self.participant.is_suspicious or bool(new_error) == bool(old_error):
             return
-        self.participant.update_giving_and_teams()
+
+
+        # XXX *White* hot hack!
+        # =====================
+        # During payday, participant is a record from a select of
+        # payday_participants (or whatever), *not* an actual Participant
+        # object. We need the real deal so we can use a method on it ...
+
+        from gratipay.models.participant import Participant
+        participant = Participant.from_username(self.participant.username)
+        participant.update_giving_and_teams()
