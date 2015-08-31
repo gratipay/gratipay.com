@@ -36,7 +36,7 @@
             <th>n</th>
         </tr>
         <tr>
-            <td class="label">{{ _("Gives") }}</td>
+            <td class="label">{{ _("Giving") }}</td>
             {% if participant.anonymous_giving %}
                 {% if user.ADMIN %}
                 <td>{{ format_currency(participant.giving, 'USD') }}</td>
@@ -52,7 +52,7 @@
             {% endif %}
         </tr>
         <tr>
-            <td class="label">{{ _("Takes") }}</td>
+            <td class="label">{{ _("Taking") }}</td>
             <td>{{ format_currency(participant.taking, 'USD') }}</td>
             <td>{{ participant.ntaking_from }}</td>
         </tr>
