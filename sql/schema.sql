@@ -592,3 +592,12 @@ BEGIN;
         REFERENCES paydays ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3733
+BEGIN;
+
+    ALTER TABLE paydays RENAME COLUMN nactive TO nusers;
+    ALTER TABLE paydays ADD COLUMN nteams integer NOT NULL DEFAULT 0;
+
+END;
