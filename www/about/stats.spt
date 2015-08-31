@@ -1,12 +1,14 @@
-from gratipay import age_in_years
+from datetime import date
+
+birthday = date(2012, 6, 1)
 [--------------------------------------------------------]
 
 banner = _("About")
 title = _("Stats")
 db = website.db
 
+age_in_years = (date.today() - birthday).days // 365
 escrow = db.one("SELECT sum(balance) FROM participants", default=0)
-
 average_payment_amount, average_number_of_payments = db.one("""
 
     SELECT avg(giving/ngiving_to) AS foo
@@ -33,7 +35,7 @@ average_number_of_payments = average_number_of_payments or 0
 {% block content %}
 
     <p>{{ _( "Gratipay is {b}{age}+ years{_b} old and moves a total of about {b}{volume} per week{_b} for about {b}{nactive} users{_b}."
-           , age=age_in_years()
+           , age=age_in_years
            , nactive=website.nactive
            , volume=format_currency(website.volume, 'USD', trailing_zeroes=False)
            , b='<b>'|safe
