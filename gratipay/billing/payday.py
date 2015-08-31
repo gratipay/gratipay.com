@@ -402,7 +402,7 @@ class Payday(object):
                            SELECT tippee FROM our_transfers
                        ) AS foo
                    )
-                 , transfer_volume = (SELECT COALESCE(sum(amount), 0) FROM our_transfers)
+                 , volume = (SELECT COALESCE(sum(amount), 0) FROM our_transfers)
              WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz
 
         """, {'ts_start': self.ts_start})

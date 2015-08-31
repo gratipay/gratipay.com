@@ -3,7 +3,7 @@ paydays = website.db.all("""\
 
     SELECT ts_start
          , ts_end
-         , transfer_volume
+         , volume
          , nactive
       FROM paydays
   ORDER BY ts_start DESC

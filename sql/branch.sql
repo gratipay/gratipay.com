@@ -16,4 +16,6 @@ BEGIN;
     ALTER TABLE paydays DROP COLUMN npachinko;
     ALTER TABLE paydays DROP COLUMN pachinko_volume;
 
+    ALTER TABLE paydays RENAME COLUMN transfer_volume TO volume;
+
 END;

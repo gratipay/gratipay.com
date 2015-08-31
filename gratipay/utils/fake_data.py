@@ -375,7 +375,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
             'ts_start': date,
             'ts_end': end_date,
             'nactive': len(actives),
-            'transfer_volume': sum(x['amount'] for x in week_transfers)
+            'volume': sum(x['amount'] for x in week_transfers)
         }
         _fake_thing(db, "paydays", **payday)
         date = end_date
