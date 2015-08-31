@@ -32,6 +32,8 @@ receiving, ntips = website.db.one( """
 """, (user.participant.username,))
 
 title = _("Apply for a New Team")
+banner = _("New Team")
+suppress_sidebar = True
 [---] text/html
 {% extends "templates/base.html" %}
 
@@ -99,12 +101,12 @@ title = _("Apply for a New Team")
     {% if ntips %}
     <h2>{{ _("Migration of Payments") }}</h2>
 
-    <p>{{ _("The {ntips} weekly payments totalling {receiving} that previously were directed to your {username} user account will be {b}redirected to your new Team{_b}, pending approval of your application."
+    <p>{{ _("The {ntips} weekly tips totalling {receiving} that previously were directed to your ~{username} user account under Gratipay 1.0 will be converted into weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, pending approval of your application."
            , ntips=ntips
            , receiving=format_currency(receiving, 'USD')
            , username=user.participant.username
-           , b='<b>'|safe
-           , _b='</b>'|safe
+           , a='<a href="https://medium.com/gratipay-blog/gratipay-2-0-2453d3c53077">'|safe
+           , _a='</a>'|safe
             ) }}</p>
     {% endif %}
 
