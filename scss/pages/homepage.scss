@@ -1,3 +1,13 @@
-#homepage #sidebar {
-    padding-top: 192px;
+#homepage .welcome {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -144px;
+    width: 288px;
+    font: normal 14px/18px $Ideal;
+    padding: 24px;
+    background: white;
+    border: 2px solid $black;
+    @include border-radius(5px);
+    box-shadow: 0px 0px 32px 16px rgba($black, 0.5);
 }

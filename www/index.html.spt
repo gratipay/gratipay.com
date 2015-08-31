@@ -11,6 +11,8 @@ napproved = len([t for t in teams if t.is_approved])
 nteams = len(teams) if user.ADMIN else napproved
 title = _("Teams (N={0})", nteams)
 
+suppress_sidebar = True
+suppress_welcome = 'suppress-welcome' in request.cookie
 [---]
 {% extends "templates/base.html" %}
 {% block head_early %}
@@ -37,14 +39,16 @@ title = _("Teams (N={0})", nteams)
 </a>
 {% endblock %}
 
-{% block sidebar %}
-<p><b>{{ _("Welcome to Gratipay!") }}</b></p>
-
-<p>{{ _("We have {nteams} Teams receiving and distributing money each week.", nteams=napproved) }}</p>
-
-<p>{{ _('Explore our Teams here, or <a href="/about/">read more about us</a>.'|safe) }}</p>
-{% endblock %}
 {% block content %}
+{% if not suppress_welcome %}
+<div class="welcome">
+    <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
+    <p>{{ _("We have {nteams} Teams receiving and distributing money each week.", nteams=napproved) }}</p>
+    <p>{{ _('Explore our Teams here, or <a href="/about/">read more about us</a>.'|safe) }}</p>
+    <button>Dismiss</button>
+</div>
+{% endif %}
+
 <table class="table">
     <tr>
         <th>{{ _("Name") }}</th>
@@ -61,4 +65,18 @@ title = _("Teams (N={0})", nteams)
     {% endif %}
     {% endfor %}
 </table>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        console.log('hello?');
+        $('.welcome button').click(function() {
+            console.log('suppressing welcome ...');
+            document.cookie = 'suppress-welcome=';
+            $(this).parent().fadeOut(100);
+        });
+    });
+</script>
 {% endblock %}
