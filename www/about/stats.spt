@@ -225,10 +225,9 @@ def out():
     </div>
 
     <div class="chart-wrapper">
-        <a name="gifts"></a>
-        <h2>Weekly Gifts ($)</h2>
-        <p class="note">Money transferred within Gratipay (per week)</p>
-        <div class="chart" data-chart="weekly_gifts"></div>
+        <a name="volume"></a>
+        <h2>Weekly Volume ($)</h2>
+        <div class="chart" data-chart="weekly_volume"></div>
         <div class="x-axis">weeks</div>
     </div>
 
