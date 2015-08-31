@@ -49,7 +49,7 @@ average_number_of_payments = average_number_of_payments or 0
     <p>{{ _( "Gratipay is {b}{age}+ years{_b} old and moves a total of about {b}{volume} per week{_b} for about {b}{nactive} users{_b}."
            , age=age_in_years()
            , nactive=website.nactive
-           , volume=format_currency(website.volume, 'USD')
+           , volume=format_currency(website.volume, 'USD', trailing_zeroes=False)
            , b='<b>'|safe
            , _b='</b>'|safe
             ) }}</p>
