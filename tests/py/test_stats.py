@@ -7,6 +7,7 @@ import json
 import pytest
 
 from gratipay.testing import Harness
+from gratipay.utils import fake_data
 
 
 class DateTime(datetime.datetime): pass
@@ -95,10 +96,17 @@ class TestChartOfReceiving(Harness):
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 
-class TestJson(Harness):
 
+class TestJson(Harness):
     def test_200(self):
         response = self.client.GET('/about/stats.json')
         assert response.code == 200
         body = json.loads(response.body)
         assert len(body) > 0
+
+
+class TestHtml(Harness):
+    def test_200(self):
+        fake_data.populate_db(self.db, 5, 5, 1, 5)
+        response = self.client.GET('/about/stats')
+        assert response.code == 200
