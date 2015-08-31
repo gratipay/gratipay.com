@@ -156,6 +156,7 @@ def out():
     <div class="chart-wrapper">
         <a name="volume"></a>
         <h2>Weekly Volume ($)</h2>
+        <p class="note">Total amount received by Teams on Gratipay (per week)</p>
         <div class="chart" data-chart="weekly_volume"></div>
         <div class="x-axis">weeks</div>
     </div>
@@ -163,7 +164,7 @@ def out():
     <div class="chart-wrapper">
         <a name="active"></a>
         <h2>Active Users</h2>
-        <p class="note">Users that gave and/or received money within Gratipay (per week)</p>
+        <p class="note">Users that gave and/or took money on Gratipay (per week)</p>
         <div class="chart" data-chart="active_users"></div>
         <div class="x-axis">weeks</div>
     </div>
