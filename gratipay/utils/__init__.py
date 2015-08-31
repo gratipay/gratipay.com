@@ -137,8 +137,8 @@ def update_global_stats(website):
         SELECT volume, nactive FROM paydays
         ORDER BY ts_end DESC LIMIT 1
     """, default=(0.0, 0))
-    website.nactive = nactive = stats[0]
-    website.volume = stats[1]
+    website.nactive = nactive = stats[1]
+    website.volume = stats[0]
 
     nreceiving_from = website.db.one("""
         SELECT nreceiving_from
