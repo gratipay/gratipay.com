@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import datetime
 import locale
 from aspen import json
-from gratipay import age
+from gratipay import age_in_years
 
 CARDINALS = ["zero", "one", "two", "three", "four", "five", "six", "seven",
              "eight", "nine"]
@@ -184,8 +184,12 @@ def out():
 
 {% block content %}
 
-    <p>Gratipay is <b>{{ age() }}</b> old and has <b>{{ nactive }} active
-    users</b>.</p>
+    <p>{{ _( "Gratipay is {b}{age}+ years{_b} old and has {b}{nactive} active users{_b}."
+           , age=age_in_years()
+           , nactive=nactive
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
 
     <p>
         {{ ngivers }} participants gave money in the past week.<br />

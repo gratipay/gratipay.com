@@ -20,20 +20,10 @@ CARDINALS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven',
              'eight', 'nine']
 ORDINALS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth',
             'seventh', 'eighth', 'ninth', 'tenth']
-MONTHS = [None, 'January', 'February', 'March', 'April', 'May', 'June', 'July',
-          'August', 'September', 'October', 'November', 'December']
 
-def age():
+def age_in_years():
     today = datetime.date.today()
-    nmonths = (12 - BIRTHDAY.month) \
-            + (12 * (today.year - BIRTHDAY.year - 1)) \
-            + (today.month)
-    plural = 's' if nmonths != 1 else ''
-    if nmonths < 10:
-        nmonths = CARDINALS[nmonths]
-    else:
-        nmonths = str(nmonths)
-    return "%s month%s" % (nmonths, plural)
+    return (today - BIRTHDAY).days // 365
 
 
 class NotSane(Exception):
