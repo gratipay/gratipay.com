@@ -618,6 +618,23 @@ msgstr "Sobre"
 msgid "Welcome!"
 msgstr ""
 
+msgid ""
+"Gratipay is {b}{age}+ years{_b} old and moves a total of about {b}{volume} "
+"per week{_b} for about {b}{nactive} users{_b}."
+msgstr ""
+
+msgid ""
+"On average, people who give payments on Gratipay give {b}{amount} to one "
+"team{_b}."
+msgid_plural ""
+"On average, people who give payments on Gratipay give {b}{amount} each to "
+"{number} teams{_b}."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{b}{escrow}{_b} is escrowed within Gratipay."
+msgstr ""
+
 msgid "The Delpan Incident"
 msgstr "O incidente Delpan"
 

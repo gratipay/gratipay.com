@@ -294,7 +294,7 @@ msgid "hidden"
 msgstr "nascosto"
 
 msgid "Taking"
-msgstr ""
+msgstr "Riceve"
 
 msgid "Joined"
 msgstr "Iscritto"
@@ -494,7 +494,7 @@ msgid "Receiving"
 msgstr "Guadagni"
 
 msgid "Sharing"
-msgstr ""
+msgstr "Condivide"
 
 msgid "Joined {ago}"
 msgstr "Si è unito {ago}"
@@ -614,6 +614,23 @@ msgstr "Chi siamo"
 
 msgid "Welcome!"
 msgstr "Benvenuto!"
+
+msgid ""
+"Gratipay is {b}{age}+ years{_b} old and moves a total of about {b}{volume} "
+"per week{_b} for about {b}{nactive} users{_b}."
+msgstr ""
+
+msgid ""
+"On average, people who give payments on Gratipay give {b}{amount} to one "
+"team{_b}."
+msgid_plural ""
+"On average, people who give payments on Gratipay give {b}{amount} each to "
+"{number} teams{_b}."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{b}{escrow}{_b} is escrowed within Gratipay."
+msgstr ""
 
 msgid "The Delpan Incident"
 msgstr "L'Incidente Delpan"
