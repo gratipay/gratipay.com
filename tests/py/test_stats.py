@@ -5,10 +5,7 @@ from decimal import Decimal
 import json
 
 import pytest
-from mock import patch
 
-from gratipay import wireup
-from gratipay.billing.payday import Payday
 from gratipay.testing import Harness
 
 
@@ -105,42 +102,3 @@ class TestJson(Harness):
         assert response.code == 200
         body = json.loads(response.body)
         assert len(body) > 0
-
-class TestRenderingStatsPage(Harness):
-    def get_stats_page(self):
-        return self.client.GET('/about/stats.html').body
-
-    @patch.object(DateTime, 'utcnow')
-    def test_stats_description_accurate_during_payday_run(self, utcnow):
-        """Test that stats page takes running payday into account.
-
-        This test was originally written to expose the fix required for
-        https://github.com/gratipay/gratipay.com/issues/92.
-        """
-        a_thursday = DateTime(2012, 8, 9, 11, 00, 01)
-        utcnow.return_value = a_thursday
-
-        self.client.hydrate_website()
-
-        env = wireup.env()
-        wireup.billing(env)
-        payday = Payday.start()
-
-        body = self.get_stats_page()
-        assert "is changing hands <b>right now!</b>" in body, body
-        payday.end()
-
-    @patch.object(DateTime, 'utcnow')
-    def test_stats_description_accurate_outside_of_payday(self, utcnow):
-        """Test stats page outside of the payday running"""
-
-        a_monday = DateTime(2012, 8, 6, 11, 00, 01)
-        utcnow.return_value = a_monday
-
-        self.client.hydrate_website()
-
-        payday = Payday.start()
-
-        body = self.get_stats_page()
-        assert "is ready for <b>this Thursday</b>" in body, body
-        payday.end()
