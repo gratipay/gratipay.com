@@ -525,20 +525,6 @@ class Payday(object):
             )
 
 
-    # Record-keeping.
-    # ===============
-
-    def mark_ach_failed(self):
-        self.db.one("""\
-
-            UPDATE paydays
-               SET nach_failing = nach_failing + 1
-             WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz
-         RETURNING id
-
-        """, default=NoPayday)
-
-
     def mark_stage_done(self):
         self.db.one("""\
 
