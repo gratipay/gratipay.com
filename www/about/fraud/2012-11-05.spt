@@ -7,8 +7,9 @@ from decimal import Decimal
 from aspen import Response
 from markupsafe import Markup
 
-from gratipay import CARDINALS
 
+CARDINALS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven',
+             'eight', 'nine']
 [---]
 userids = (9, 1173, 1451, 1531, 1700, 2556, 3604, 4424, 4831, 5614, 6260, 6582, 7075, 7525, 7623,
            7875, 8000, 8152, 9302, 10107, 12007, 12303, 12578, 12690, 14205, 14500, 15303, 16136,

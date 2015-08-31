@@ -206,16 +206,3 @@ CREATE TRIGGER process_draw BEFORE UPDATE OF is_drained ON payday_teams
     FOR EACH ROW
     WHEN (NEW.is_drained IS true AND OLD.is_drained IS NOT true)
     EXECUTE PROCEDURE process_draw();
-
-
--- Save the stats we already have
-
-UPDATE paydays
-   SET nparticipants = (SELECT count(*) FROM payday_participants)
-     , ncc_missing = (
-           SELECT count(*)
-             FROM payday_participants
-            WHERE old_balance < giving_today
-              AND NOT has_credit_card
-       )
- WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz;

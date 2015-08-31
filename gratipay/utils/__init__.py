@@ -132,20 +132,17 @@ def get_team(state):
     return team
 
 
-def update_global_stats(website):
-    stats = website.db.one("""
-        SELECT nactive, transfer_volume FROM paydays
+def update_cta(website):
+    nactive = website.db.one("""
+        SELECT nactive FROM paydays
         ORDER BY ts_end DESC LIMIT 1
-    """, default=(0, 0.0))
-    website.gnactive = stats[0]
-    website.gtransfer_volume = stats[1]
-
+    """, default=(0.0, 0))
     nreceiving_from = website.db.one("""
         SELECT nreceiving_from
           FROM teams
          WHERE slug = 'Gratipay'
     """, default=0)
-    website.support_current = cur = int(round(nreceiving_from / stats[0] * 100)) if stats[0] else 0
+    website.support_current = cur = int(round(nreceiving_from / nactive * 100)) if nactive else 0
     if cur < 10:    goal = 20
     elif cur < 15:  goal = 30
     elif cur < 25:  goal = 40

@@ -156,7 +156,7 @@ class TestChartsJson(Harness):
         assert actual == expected
 
     @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
-    def test_transfer_volume(self):
+    def test_volume(self):
         self.run_payday()
         self.run_payday()
 

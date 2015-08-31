@@ -95,8 +95,8 @@ class TestPages(Harness):
         assert expected in actual
 
     def test_about_stats(self):
-        expected = "have joined Gratipay"
-        actual = self.client.GET('/about/stats.html').body
+        expected = "a total of about"
+        actual = self.client.GET('/about/stats').body
         assert expected in actual
 
     def test_about_charts(self):

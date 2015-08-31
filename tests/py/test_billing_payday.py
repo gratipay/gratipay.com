@@ -296,17 +296,6 @@ class TestPayin(BillingHarness):
             with self.assertRaises(NegativeBalance):
                 payday.update_balances(cursor)
 
-    @mock.patch.object(Payday, 'fetch_card_holds')
-    @mock.patch('braintree.Transaction.sale')
-    def test_card_hold_error(self, bt_sale, fch):
-        team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_payment_instruction(team, '17.00')
-        bt_sale.side_effect = Foobar
-        fch.return_value = {}
-        Payday.start().payin()
-        payday = self.fetch_payday()
-        assert payday['ncc_failing'] == 1
-
     def test_payin_doesnt_make_null_payments(self):
         team = self.make_team('Gratiteam', is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')

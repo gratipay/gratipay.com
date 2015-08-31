@@ -1,17 +1,10 @@
 [---]
 charts = website.db.all("""\
 
-    SELECT ts_start::date           AS date
-         , ts_start::date           AS xTitle
-         , nparticipants::text      AS total_users
-         , nactive::text            AS active_users
-         , ( SELECT sum(transfer_volume)
-               FROM paydays
-              WHERE ts_start <= p.ts_start
-                   )::text          AS total_gifts
-         , transfer_volume::text    AS weekly_gifts
-         , charge_volume::text      AS charges
-         , abs(ach_volume)::text    AS withdrawals
+    SELECT ts_start::date  AS date
+         , ts_start::date  AS xTitle
+         , volume::text    AS weekly_volume
+         , nactive::text   AS active_users
       FROM paydays p
   ORDER BY ts_start DESC
 

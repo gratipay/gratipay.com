@@ -1,6 +1,5 @@
 """This is the Python library behind gratipay.com.
 """
-import datetime
 import locale
 from decimal import Decimal
 
@@ -13,27 +12,6 @@ except locale.Error:
         locale.setlocale(locale.LC_ALL, '')
     else:
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
-
-
-BIRTHDAY = datetime.date(2012, 6, 1)
-CARDINALS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven',
-             'eight', 'nine']
-ORDINALS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth',
-            'seventh', 'eighth', 'ninth', 'tenth']
-MONTHS = [None, 'January', 'February', 'March', 'April', 'May', 'June', 'July',
-          'August', 'September', 'October', 'November', 'December']
-
-def age():
-    today = datetime.date.today()
-    nmonths = (12 - BIRTHDAY.month) \
-            + (12 * (today.year - BIRTHDAY.year - 1)) \
-            + (today.month)
-    plural = 's' if nmonths != 1 else ''
-    if nmonths < 10:
-        nmonths = CARDINALS[nmonths]
-    else:
-        nmonths = str(nmonths)
-    return "%s month%s" % (nmonths, plural)
 
 
 class NotSane(Exception):
