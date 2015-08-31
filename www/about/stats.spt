@@ -1,18 +1,4 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-
-import datetime
-import locale
-from aspen import json
 from gratipay import age_in_years
-
-CARDINALS = ["zero", "one", "two", "three", "four", "five", "six", "seven",
-             "eight", "nine"]
-WEDNESDAY = 2
-THURSDAY = 3
-FRIDAY = 4
-SATURDAY = 5
-
 [--------------------------------------------------------]
 
 banner = _("About")
