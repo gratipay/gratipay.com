@@ -404,6 +404,9 @@ msgstr "Devi collegare un conto PayPal per poterti proporre in un nuovo Team."
 msgid "Apply for a New Team"
 msgstr "Proponiti in un nuovo team."
 
+msgid "New Team"
+msgstr ""
+
 msgid "Team Name"
 msgstr "Nome del Team"
 
@@ -447,10 +450,11 @@ msgid "Migration of Payments"
 msgstr "Migrazione dei Pagamenti"
 
 msgid ""
-"The {ntips} weekly payments totalling {receiving} that previously were "
-"directed to your {username} user account will be {b}redirected to your new "
-"Team{_b}, pending approval of your application."
-msgstr "I {ntips} pagamenti settimanali per un totale di {receiving} che precedentemente venivano indirizzati al tuo account utente {username} saranno {b}reindirizzati al tuo nuovo Team{_b}, in attesa di approvazione della tua domanda."
+"The {ntips} weekly tips totalling {receiving} that previously were directed "
+"to your ~{username} user account under Gratipay 1.0 will be converted into "
+"weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, "
+"pending approval of your application."
+msgstr ""
 
 msgid "Apply"
 msgstr "Proponiti"
