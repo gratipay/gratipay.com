@@ -6,19 +6,15 @@ import gratipay
 amounts = website.db.all("""
 
     SELECT amount
-      FROM (SELECT DISTINCT ON (tipper, tippee)
-                   amount
-              FROM tips
-              JOIN participants p ON p.username = tipper
-              JOIN participants p2 on p2.username = tippee
-             WHERE is_funded
-               AND p2.claimed_time IS NOT NULL
+      FROM (SELECT amount
+              FROM current_payment_instructions cpi
+              JOIN participants p ON p.username = cpi.participant
+              JOIN teams t ON t.slug = cpi.team
+             WHERE cpi.is_funded
+               AND t.is_approved
                AND NOT (p.is_suspicious IS true)
-               AND NOT (p2.is_suspicious IS true)
-          GROUP BY tipper, tippee, mtime, amount
-          ORDER BY tipper, tippee, mtime DESC
-                  ) AS foo
-     WHERE amount > 0
+               AND amount > 0
+            ) AS foo
   ORDER BY amount
 
 """)
@@ -42,19 +38,19 @@ bins = [ (D('0.00'), D('0.10'))
        , (D('500.01'), D('1000.00'))
         ]
 
-ntips = [0 for i in range(len(bins))]
+n = [0 for i in range(len(bins))]
 value = [0 for i in range(len(bins))]
 i = 0
 for amount in amounts:
     while amount > bins[i][1]:
         i += 1
-    ntips[i] += 1
+    n[i] += 1
     value[i] += amount
 
 [---] application/json via json_dump
-[{ 'ntips': str(rec[0])
+[{ 'n': str(rec[0])
  , 'sum': str(rec[1])
  , 'lo': str(rec[2][0])
  , 'hi': str(rec[2][1])
  , 'xText': str(rec[2][1])
-  } for rec in reversed(zip(ntips, value, bins))]
+  } for rec in reversed(zip(n, value, bins))]
