@@ -394,7 +394,7 @@ def env():
         OPENSTREETMAP_CALLBACK          = unicode,
         OPENSTREETMAP_API_URL           = unicode,
         OPENSTREETMAP_AUTH_URL          = unicode,
-        UPDATE_GLOBAL_STATS_EVERY       = int,
+        UPDATE_CTA_EVERY                = int,
         CHECK_DB_EVERY                  = int,
         DEQUEUE_EMAILS_EVERY            = int,
         OPTIMIZELY_ID                   = unicode,

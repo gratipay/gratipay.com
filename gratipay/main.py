@@ -78,7 +78,7 @@ if exc:
 # =============
 
 cron = Cron(website)
-cron(env.update_global_stats_every, lambda: utils.update_global_stats(website))
+cron(env.update_cta_every, lambda: utils.update_cta(website))
 cron(env.check_db_every, website.db.self_check, True)
 cron(env.dequeue_emails_every, Participant.dequeue_emails, True)
 
