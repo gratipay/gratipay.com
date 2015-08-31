@@ -389,23 +389,15 @@ class Payday(object):
         log("Updating stats.")
         self.db.run("""\
 
-            WITH our_transfers AS (
-                     SELECT *
-                       FROM transfers
-                      WHERE "timestamp" >= %(ts_start)s
-                 )
-            UPDATE paydays
-               SET nactive = (
-                       SELECT DISTINCT count(*) FROM (
-                           SELECT tipper FROM our_transfers
-                               UNION
-                           SELECT tippee FROM our_transfers
-                       ) AS foo
-                   )
-                 , volume = (SELECT COALESCE(sum(amount), 0) FROM our_transfers)
-             WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz
+            WITH our_payments AS (SELECT * FROM payments WHERE payday=%(payday)s)
+            UPDATE paydays p
+               SET nactive = (SELECT DISTINCT count(*) FROM (
+                    SELECT participant FROM our_payments WHERE payday=p.id
+                   ) AS foo)
+                 , volume = (SELECT COALESCE(sum(amount), 0) FROM our_payments WHERE payday=p.id)
+             WHERE id=%(payday)s
 
-        """, {'ts_start': self.ts_start})
+        """, {'payday': self.id})
         log("Updated payday stats.")
 
 

@@ -17,5 +17,7 @@ BEGIN;
     ALTER TABLE paydays DROP COLUMN pachinko_volume;
 
     ALTER TABLE paydays RENAME COLUMN transfer_volume TO volume;
+    ALTER TABLE transfers ADD COLUMN payday integer DEFAULT NULL
+        REFERENCES paydays ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 END;
