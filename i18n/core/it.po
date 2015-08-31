@@ -287,20 +287,17 @@ msgstr "PayPal"
 msgid "Weekly"
 msgstr "Settimanale"
 
-msgid "Gives"
-msgstr "Dona"
+msgid "Giving"
+msgstr "Donazioni"
 
 msgid "hidden"
 msgstr "nascosto"
 
-msgid "Takes"
-msgstr "Prende"
+msgid "Taking"
+msgstr ""
 
 msgid "Joined"
 msgstr "Iscritto"
-
-msgid "Giving"
-msgstr "Donazioni"
 
 msgid "History"
 msgstr "Storia"
@@ -405,7 +402,7 @@ msgid "Apply for a New Team"
 msgstr "Proponiti in un nuovo team."
 
 msgid "New Team"
-msgstr ""
+msgstr "Nuovo Team"
 
 msgid "Team Name"
 msgstr "Nome del Team"
@@ -454,7 +451,7 @@ msgid ""
 "to your ~{username} user account under Gratipay 1.0 will be converted into "
 "weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, "
 "pending approval of your application."
-msgstr ""
+msgstr "I {ntips} pagamenti settimanali per un totale di {receiving} che precedentemente venivano indirizzati al tuo account utente ~{username}, con Gratipay 1.0, saranno convertiti in pagamenti volontari al tuo nuovo Team, con {a}Gratipay 2.0{_a}, in attesa di approvazione della tua domanda."
 
 msgid "Apply"
 msgstr "Proponiti"
@@ -493,11 +490,11 @@ msgstr "Sei sicuro di voler uscire?"
 msgid "Yes!"
 msgstr "Sì!"
 
-msgid "Receives"
-msgstr "Riceve"
+msgid "Receiving"
+msgstr "Guadagni"
 
-msgid "Shares"
-msgstr "Condivide"
+msgid "Sharing"
+msgstr ""
 
 msgid "Joined {ago}"
 msgstr "Si è unito {ago}"
@@ -591,9 +588,6 @@ msgstr "Inserisci un nome utente Gratipay."
 msgid "Add"
 msgstr "Aggiungi"
 
-msgid "Receiving"
-msgstr "Guadagni"
-
 msgid "You receive {0} per week"
 msgstr "Ricevi {0} a settimana"
 
@@ -647,6 +641,12 @@ msgstr "Transferire sul tuo ~{username} account?"
 
 msgid "How the accounts are now"
 msgstr "Come gli account sono ora"
+
+msgid "Gives"
+msgstr "Dona"
+
+msgid "Takes"
+msgstr "Prende"
 
 msgid "How the accounts will be after the transfer"
 msgstr "Come gli account saranno dopo il trasferimento"

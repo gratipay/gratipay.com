@@ -289,20 +289,17 @@ msgstr ""
 msgid "Weekly"
 msgstr ""
 
-msgid "Gives"
-msgstr "Geeft"
+msgid "Giving"
+msgstr "Geven"
 
 msgid "hidden"
 msgstr "verborgen"
 
-msgid "Takes"
+msgid "Taking"
 msgstr ""
 
 msgid "Joined"
 msgstr "Lid geworden"
-
-msgid "Giving"
-msgstr "Geven"
 
 msgid "History"
 msgstr "Geschiedenis"
@@ -495,10 +492,10 @@ msgstr "Ben je zeker dat je wil uitloggen?"
 msgid "Yes!"
 msgstr "Ja!"
 
-msgid "Receives"
+msgid "Receiving"
 msgstr "Ontvangt"
 
-msgid "Shares"
+msgid "Sharing"
 msgstr ""
 
 msgid "Joined {ago}"
@@ -593,9 +590,6 @@ msgstr "Geef een Gratipay gebruikersnaam op"
 msgid "Add"
 msgstr "Toevoegen"
 
-msgid "Receiving"
-msgstr "Ontvangt"
-
 msgid "You receive {0} per week"
 msgstr "Je ontvangt {0} per week"
 
@@ -649,6 +643,12 @@ msgstr ""
 
 msgid "How the accounts are now"
 msgstr "Huidige staat van de account"
+
+msgid "Gives"
+msgstr "Geeft"
+
+msgid "Takes"
+msgstr ""
 
 msgid "How the accounts will be after the transfer"
 msgstr "Staat van de account na de overboeking"

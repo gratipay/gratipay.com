@@ -286,20 +286,17 @@ msgstr ""
 msgid "Weekly"
 msgstr ""
 
-msgid "Gives"
-msgstr "Donas"
+msgid "Giving"
+msgstr "Donado"
 
 msgid "hidden"
 msgstr "malvidebla"
 
-msgid "Takes"
+msgid "Taking"
 msgstr ""
 
 msgid "Joined"
 msgstr "Aliĝita"
-
-msgid "Giving"
-msgstr "Donado"
 
 msgid "History"
 msgstr "Historio"
@@ -492,10 +489,10 @@ msgstr "Ĉu vi certas ke vi volas elsaluti?"
 msgid "Yes!"
 msgstr "Jes!"
 
-msgid "Receives"
-msgstr "Ricevas"
+msgid "Receiving"
+msgstr "Ricevanta"
 
-msgid "Shares"
+msgid "Sharing"
 msgstr ""
 
 msgid "Joined {ago}"
@@ -590,9 +587,6 @@ msgstr "Tajpu Gratipay-an uzantnomon"
 msgid "Add"
 msgstr "Aldoni"
 
-msgid "Receiving"
-msgstr "Ricevanta"
-
 msgid "You receive {0} per week"
 msgstr "Vi ricevas {0} ĉiusemajne"
 
@@ -645,6 +639,12 @@ msgid "Transfer it to your ~{username} account?"
 msgstr ""
 
 msgid "How the accounts are now"
+msgstr ""
+
+msgid "Gives"
+msgstr "Donas"
+
+msgid "Takes"
 msgstr ""
 
 msgid "How the accounts will be after the transfer"

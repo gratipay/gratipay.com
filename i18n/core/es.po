@@ -291,20 +291,17 @@ msgstr ""
 msgid "Weekly"
 msgstr ""
 
-msgid "Gives"
-msgstr "Da"
+msgid "Giving"
+msgstr "Dando"
 
 msgid "hidden"
 msgstr "oculto"
 
-msgid "Takes"
+msgid "Taking"
 msgstr ""
 
 msgid "Joined"
 msgstr "Unido"
-
-msgid "Giving"
-msgstr "Dando"
 
 msgid "History"
 msgstr "Historia"
@@ -497,10 +494,10 @@ msgstr "Seguro que quieres desconectar?"
 msgid "Yes!"
 msgstr "¡Si!"
 
-msgid "Receives"
-msgstr "Recibe"
+msgid "Receiving"
+msgstr "Recibiendo"
 
-msgid "Shares"
+msgid "Sharing"
 msgstr ""
 
 msgid "Joined {ago}"
@@ -595,9 +592,6 @@ msgstr "Introduce un nombre de usuario Gratipay"
 msgid "Add"
 msgstr "Añadir"
 
-msgid "Receiving"
-msgstr "Recibiendo"
-
 msgid "You receive {0} per week"
 msgstr ""
 
@@ -650,6 +644,12 @@ msgid "Transfer it to your ~{username} account?"
 msgstr ""
 
 msgid "How the accounts are now"
+msgstr ""
+
+msgid "Gives"
+msgstr "Da"
+
+msgid "Takes"
 msgstr ""
 
 msgid "How the accounts will be after the transfer"
