@@ -1,5 +1,4 @@
 [---]
-
 teams = website.db.all("""
 
     SELECT teams.*::teams
@@ -9,8 +8,13 @@ teams = website.db.all("""
 """)
 napproved = len([t for t in teams if t.is_approved])
 nteams = len(teams) if user.ADMIN else napproved
-title = _("Teams (N={0})", nteams)
 
+statuses = { "unreviewed" : _("under review")
+           , "rejected": _("rejected")
+           , "approved": _("approved")
+            }
+
+title = _("Teams (N={0})", nteams)
 suppress_sidebar = True
 suppress_welcome = 'suppress-welcome' in request.cookie
 [---]
@@ -53,16 +57,20 @@ suppress_welcome = 'suppress-welcome' in request.cookie
     <tr>
         <th>{{ _("Name") }}</th>
         <th>{{ _("Owner") }}</th>
-        {% if user.ADMIN %}<th>{{ _("Status") }}</th>{% endif %}
+        <th>{{ _("Status") }}</th>
+        <th>{{ _("Amount Receiving ($)") }}</th>
+        <th>{{ _("Number of Givers") }}</th>
+        <th>{{ _("Joined") }}</th>
     </tr>
     {% for team in teams %}
-    {% if team.is_approved or user.ADMIN %}
     <tr>
         <td><a href="/{{ team.slug }}/">{{ team.name }}</a></td>
         <td><a href="/~{{ team.owner }}/">~{{ team.owner }}</a></td>
-        {% if user.ADMIN %}<td>{{ team.status }}</td>{% endif %}
+        <td>{{ statuses[team.status] }}</td>
+        <td>{{ team.receiving }}</td>
+        <td>{{ team.nreceiving_from }}</td>
+        <td>{{ team.ctime }}</td>
     </tr>
-    {% endif %}
     {% endfor %}
 </table>
 {% endblock %}
