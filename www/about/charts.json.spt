@@ -3,9 +3,10 @@ charts = website.db.all("""\
 
     SELECT ts_start::date  AS date
          , ts_start::date  AS xTitle
-         , volume::text    AS weekly_volume
-         , nactive::text   AS active_users
-      FROM paydays p
+         , volume::text
+         , nusers::text
+         , nteams::text
+      FROM paydays
   ORDER BY ts_start DESC
 
 """, back_as=dict)

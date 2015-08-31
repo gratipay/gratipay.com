@@ -7,13 +7,12 @@ banner = _("About")
 title = _("Stats")
 one = website.db.one
 
-volume, nusers = one("""
-        SELECT volume, nactive
+volume, nusers, nteams = one("""
+        SELECT volume, nusers, nteams
           FROM paydays
       ORDER BY ts_end DESC
          LIMIT 1
-    """, default=(0.0, 0))
-nteams = one("SELECT count(*) FROM teams WHERE is_approved IS true AND receiving > 0")
+    """, default=(0.0, 0, 0))
 total = one("SELECT sum(amount) FROM exchanges WHERE amount > 0", default=0)
 age_in_years = (date.today() - birthday).days // 365
 escrow = one("SELECT sum(balance) FROM participants", default=0)
@@ -77,15 +76,23 @@ average_number_of_payments = average_number_of_payments or 0
         <a name="volume"></a>
         <h2>Weekly Volume ($)</h2>
         <p class="note">Total amount received by Teams on Gratipay (per week)</p>
-        <div class="chart" data-chart="weekly_volume"></div>
+        <div class="chart" data-chart="volume"></div>
         <div class="x-axis">weeks</div>
     </div>
 
     <div class="chart-wrapper">
-        <a name="active"></a>
+        <a name="users"></a>
         <h2>Active ~users</h2>
         <p class="note">~users that gave and/or took money on Gratipay (per week)</p>
-        <div class="chart" data-chart="active_users"></div>
+        <div class="chart" data-chart="nusers"></div>
+        <div class="x-axis">weeks</div>
+    </div>
+
+    <div class="chart-wrapper">
+        <a name="teams"></a>
+        <h2>Active Teams</h2>
+        <p class="note">Teams that received and shared money on Gratipay (per week)</p>
+        <div class="chart" data-chart="nteams"></div>
         <div class="x-axis">weeks</div>
     </div>
 

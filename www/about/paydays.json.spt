@@ -4,7 +4,8 @@ paydays = website.db.all("""\
     SELECT ts_start
          , ts_end
          , volume
-         , nactive
+         , nusers
+         , nteams
       FROM paydays
   ORDER BY ts_start DESC
 

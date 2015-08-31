@@ -391,10 +391,17 @@ class Payday(object):
 
             WITH our_payments AS (SELECT * FROM payments WHERE payday=%(payday)s)
             UPDATE paydays p
-               SET nactive = (SELECT DISTINCT count(*) FROM (
-                    SELECT participant FROM our_payments WHERE payday=p.id
+               SET nusers = (SELECT count(*) FROM (
+                    SELECT DISTINCT ON (participant) participant FROM our_payments GROUP BY participant
                    ) AS foo)
-                 , volume = (SELECT COALESCE(sum(amount), 0) FROM our_payments WHERE payday=p.id)
+                 , nteams = (SELECT count(*) FROM (
+                    SELECT DISTINCT ON (team) team FROM our_payments GROUP BY team
+                   ) AS foo)
+                 , volume = (
+                    SELECT COALESCE(sum(amount), 0)
+                      FROM our_payments
+                     WHERE payday=p.id AND direction='to-team'
+                   )
              WHERE id=%(payday)s
 
         """, {'payday': self.id})

@@ -14,4 +14,4 @@ class Tests(Harness):
 
         response = self.client.GET("/about/paydays.json")
         paydays = json.loads(response.body)
-        assert paydays[0]['nactive'] == 0
+        assert paydays[0]['nusers'] == 0
