@@ -374,10 +374,6 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         payday = {
             'ts_start': date,
             'ts_end': end_date,
-            'ntips': len(week_tips),
-            'ntransfers': len(week_transfers),
-            'nparticipants': len(week_participants),
-            'ntippers': len(tippers),
             'nactive': len(actives),
             'transfer_volume': sum(x['amount'] for x in week_transfers)
         }

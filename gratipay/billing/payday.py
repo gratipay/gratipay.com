@@ -231,15 +231,7 @@ class Payday(object):
                 return 1
             else:
                 holds[p.id] = hold
-        n_failures = sum(filter(None, threaded_map(f, participants)))
-
-        # Record the number of failures
-        cursor.one("""
-            UPDATE paydays
-               SET ncc_failing = %s
-             WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz
-         RETURNING id
-        """, (n_failures,), default=NoPayday)
+        threaded_map(f, participants)
 
         # Update the values of card_hold_ok in our temporary table
         if not holds:
@@ -402,32 +394,6 @@ class Payday(object):
                        FROM transfers
                       WHERE "timestamp" >= %(ts_start)s
                  )
-               , our_tips AS (
-                     SELECT *
-                       FROM our_transfers
-                      WHERE context = 'tip'
-                 )
-               , our_pachinkos AS (
-                     SELECT *
-                       FROM our_transfers
-                      WHERE context = 'take'
-                 )
-               , our_exchanges AS (
-                     SELECT *
-                       FROM exchanges
-                      WHERE "timestamp" >= %(ts_start)s
-                 )
-               , our_achs AS (
-                     SELECT *
-                       FROM our_exchanges
-                      WHERE amount < 0
-                 )
-               , our_charges AS (
-                     SELECT *
-                       FROM our_exchanges
-                      WHERE amount > 0
-                        AND status <> 'failed'
-                 )
             UPDATE paydays
                SET nactive = (
                        SELECT DISTINCT count(*) FROM (
@@ -436,21 +402,7 @@ class Payday(object):
                            SELECT tippee FROM our_transfers
                        ) AS foo
                    )
-                 , ntippers = (SELECT count(DISTINCT tipper) FROM our_transfers)
-                 , ntips = (SELECT count(*) FROM our_tips)
-                 , npachinko = (SELECT count(*) FROM our_pachinkos)
-                 , pachinko_volume = (SELECT COALESCE(sum(amount), 0) FROM our_pachinkos)
-                 , ntransfers = (SELECT count(*) FROM our_transfers)
                  , transfer_volume = (SELECT COALESCE(sum(amount), 0) FROM our_transfers)
-                 , nachs = (SELECT count(*) FROM our_achs)
-                 , ach_volume = (SELECT COALESCE(sum(amount), 0) FROM our_achs)
-                 , ach_fees_volume = (SELECT COALESCE(sum(fee), 0) FROM our_achs)
-                 , ncharges = (SELECT count(*) FROM our_charges)
-                 , charge_volume = (
-                       SELECT COALESCE(sum(amount + fee), 0)
-                         FROM our_charges
-                   )
-                 , charge_fees_volume = (SELECT COALESCE(sum(fee), 0) FROM our_charges)
              WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz
 
         """, {'ts_start': self.ts_start})
