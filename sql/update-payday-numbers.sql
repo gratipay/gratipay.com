@@ -1,9 +1,9 @@
--- Reset post-Gratipocalypse values
+-- Fix nusers and backfill nteams for post-Gratipocalypse paydays
 UPDATE paydays p
-   SET nactive = (SELECT DISTINCT count(*) FROM (
-        SELECT participant FROM payments WHERE payday=p.id
+   SET nteams = (SELECT count(*) FROM (
+        SELECT DISTINCT ON (team) team FROM payments WHERE payday=p.id GROUP BY team
        ) AS foo)
-     , volume = (SELECT COALESCE(sum(amount), 0)
-                   FROM payments
-                  WHERE payday=p.id AND direction='to-team')
+     , nusers = (SELECT count(*) FROM (
+        SELECT DISTINCT ON (participant) participant FROM payments WHERE payday=p.id GROUP BY participant
+       ) AS foo)
  WHERE ts_start > '2015-05-07'::timestamptz;

@@ -133,8 +133,8 @@ def get_team(state):
 
 
 def update_cta(website):
-    nactive = website.db.one("""
-        SELECT nactive FROM paydays
+    nusers = website.db.one("""
+        SELECT nusers FROM paydays
         ORDER BY ts_end DESC LIMIT 1
     """, default=(0.0, 0))
     nreceiving_from = website.db.one("""
@@ -142,7 +142,7 @@ def update_cta(website):
           FROM teams
          WHERE slug = 'Gratipay'
     """, default=0)
-    website.support_current = cur = int(round(nreceiving_from / nactive * 100)) if nactive else 0
+    website.support_current = cur = int(round(nreceiving_from / nusers * 100)) if nusers else 0
     if cur < 10:    goal = 20
     elif cur < 15:  goal = 30
     elif cur < 25:  goal = 40
