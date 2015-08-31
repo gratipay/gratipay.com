@@ -91,14 +91,14 @@ average_number_of_payments = average_number_of_payments or 0
         <a name="number-by-amount"></a>
         <h2>Number of Weekly Payments by Amount</h2>
         <div class="chart" data-chart="n"></div>
-        <div class="x-axis">weekly payment amount ($)</div>
+        <div class="x-axis">amount ($)</div>
     </div>
 
     <div class="chart-wrapper">
         <a name="sum-by-amount"></a>
         <h2>Sum of Weekly Payments by Amount ($)</h2>
         <div class="chart" data-chart="sum"></div>
-        <div class="x-axis">weekly payment amount ($)</div>
+        <div class="x-axis">amount ($)</div>
     </div>
 
 {% endblock %}
