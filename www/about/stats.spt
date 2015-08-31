@@ -111,26 +111,9 @@ def get_tip_distribution():
         r[str(row.amount)] = (row.count, percentage)
     return r
 
-
-last_payday = db.one("select * from paydays order by ts_end desc limit 1", back_as="dict")
-if last_payday:
-    nactive = last_payday['nactive']
-    ngivers = last_payday['ntippers']
-    nreceivers = db.one("""
-        SELECT count(distinct tippee)
-          FROM transfers
-         WHERE timestamp > %(ts_start)s
-           AND timestamp < %(ts_end)s
-           AND context IN ('tip', 'take')
-    """, last_payday)
-    noverlap = ngivers + nreceivers - nactive
-else:
-    nactive = ngivers = nreceivers = noverlap = 0
-
 def out():
     names = ['ncc', 'pcc', 'other_people', 'average_tip', 'nach',
-             'average_tippees', 'tip_n', 'npaypal', 'escrow',
-             'ngivers', 'nreceivers', 'noverlap', 'nactive']
+             'average_tippees', 'tip_n', 'npaypal', 'escrow']
     d = globals()
     r = {name: d[name] for name in names}
     r['tip_distribution'] = get_tip_distribution()
@@ -156,12 +139,6 @@ def out():
            , b='<b>'|safe
            , _b='</b>'|safe
             ) }}</p>
-
-    <p>
-        {{ ngivers }} participants gave money in the past week.<br />
-        {{ nreceivers }} received money.<br />
-        {{ noverlap }} did both.
-    </p>
 
     <p><b>{{ commaize(npeople) }} people</b> have joined Gratipay. Of those,
     {{ pcc }}% ({{ commaize(ncc) }}) have a working credit card on
