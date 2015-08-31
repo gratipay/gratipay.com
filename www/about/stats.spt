@@ -177,17 +177,17 @@ def out():
     {{ other_people }}. </p>
 
     <div class="chart-wrapper">
-        <a name="active"></a>
-        <h2>Active Users</h2>
-        <p class="note">Users that gave and/or received money within Gratipay (per week)</p>
-        <div class="chart" data-chart="active_users"></div>
+        <a name="volume"></a>
+        <h2>Weekly Volume ($)</h2>
+        <div class="chart" data-chart="weekly_volume"></div>
         <div class="x-axis">weeks</div>
     </div>
 
     <div class="chart-wrapper">
-        <a name="volume"></a>
-        <h2>Weekly Volume ($)</h2>
-        <div class="chart" data-chart="weekly_volume"></div>
+        <a name="active"></a>
+        <h2>Active Users</h2>
+        <p class="note">Users that gave and/or received money within Gratipay (per week)</p>
+        <div class="chart" data-chart="active_users"></div>
         <div class="x-axis">weeks</div>
     </div>
 

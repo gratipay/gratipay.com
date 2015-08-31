@@ -3,8 +3,8 @@ charts = website.db.all("""\
 
     SELECT ts_start::date           AS date
          , ts_start::date           AS xTitle
-         , nactive::text            AS active_users
          , transfer_volume::text    AS weekly_volume
+         , nactive::text            AS active_users
       FROM paydays p
   ORDER BY ts_start DESC
 
