@@ -2,7 +2,6 @@ from __future__ import print_function, unicode_literals
 
 import datetime
 from decimal import Decimal
-import json
 
 import pytest
 
@@ -12,22 +11,6 @@ from gratipay.utils import fake_data
 
 class DateTime(datetime.datetime): pass
 datetime.datetime = DateTime
-
-
-class TestCommaize(Harness):
-    # XXX This really ought to be in helper methods test file
-    def setUp(self):
-        Harness.setUp(self)
-        simplate = self.client.load_resource(b'/about/stats.html')
-        self.commaize = simplate.pages[0]['commaize']
-
-    def test_commaize_commaizes(self):
-        actual = self.commaize(1000.0)
-        assert actual == "1,000"
-
-    def test_commaize_commaizes_and_obeys_decimal_places(self):
-        actual = self.commaize(1000, 4)
-        assert actual == "1,000.0000"
 
 
 class TestChartOfReceiving(Harness):
@@ -95,14 +78,6 @@ class TestChartOfReceiving(Harness):
                     1.0, Decimal('1.00'))
         actual = self.bob.get_tip_distribution()
         assert actual == expected
-
-
-class TestJson(Harness):
-    def test_200(self):
-        response = self.client.GET('/about/stats.json')
-        assert response.code == 200
-        body = json.loads(response.body)
-        assert len(body) > 0
 
 
 class TestHtml(Harness):

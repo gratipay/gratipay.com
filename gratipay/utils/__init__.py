@@ -133,12 +133,13 @@ def get_team(state):
 
 
 def update_global_stats(website):
-    stats = website.db.one("""
+    volume, nactive = website.db.one("""
         SELECT volume, nactive FROM paydays
         ORDER BY ts_end DESC LIMIT 1
     """, default=(0.0, 0))
-    website.nactive = nactive = stats[1]
-    website.volume = stats[0]
+
+    website.volume = int(round(volume, -2))
+    website.nactive = int(round(nactive, -2))
 
     nreceiving_from = website.db.one("""
         SELECT nreceiving_from
