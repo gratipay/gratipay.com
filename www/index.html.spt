@@ -47,9 +47,14 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 {% if not suppress_welcome %}
 <div class="welcome">
     <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
-    <p>{{ _("We have {nteams} Teams receiving and distributing money each week.", nteams=napproved) }}</p>
-    <p>{{ _('Explore our Teams here, or <a href="/about/">read more about us</a>.'|safe) }}</p>
-    <button>Dismiss</button>
+    <p>{{ _( "We have {nteams} Teams receiving and sharing money each week."
+           , nteams=napproved
+            ) }}</p>
+    <p>{{ _( "Explore our Teams here, or {a}read more about us{_a}."
+           , a='<a href="/about/">'|safe
+           , _a='</a>'|safe
+            ) }}</p>
+    <button>{{ _("Dismiss") }}</button>
 </div>
 {% endif %}
 
@@ -61,9 +66,14 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 
             <div class="details">
                 <span class="status">{{ statuses[team.status] }}</span> 
-                <span class="ctime">&middot; {{ _("created {ago}", ago=to_age(team.ctime, add_direction=True)) }}</span>
-                <span class="owner">&middot; owned by
-                    <a class="owner" href="/~{{ team.owner }}/">~{{ team.owner }}</a> 
+                <span class="ctime">&middot; {{ _("created {ago}",
+                    ago=to_age(team.ctime, add_direction=True)) }}</span>
+                <span class="owner">&middot;
+                    {{ _( "owned by {a}{owner}{_a}"
+                        , owner='~'+team.owner
+                        , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
+                        , _a='</a>'|safe
+                         ) }}
                 </span>
             </div>
 
