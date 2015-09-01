@@ -62,6 +62,23 @@ banner = name = team.name
 {% endblock %}
 
 {% block sidebar %}
+{% if user.ADMIN %}
+<form id="status-knob" action="set-status.json">
+    <select name="status">
+        <option {{ 'selected' if team.is_approved == None else '' }}
+            value="unreviewed">Under Review</option>
+        <option {{ 'selected' if team.is_approved == False else '' }}
+            value="rejected">Rejected</option>
+        <option {{ 'selected' if team.is_approved == True else '' }}
+            value="approved">Approved</option>
+    </select>
+    <br>
+    <br>
+    <button type="submit">Set Status</button>
+    <br>
+    <br>
+</form>
+{% endif %}
 {% if team.is_approved %}
 {% include "templates/your-payment.html" %}
 {% endif %}
@@ -101,5 +118,41 @@ banner = name = team.name
 
 {% block scripts %}
 <script>$(document).ready(Gratipay.payments.init);</script>
+{% if user.ADMIN %}
+<script>
+    $(document).ready(function()
+    {
+        console.log('hey!');
+
+        function error(a,b,c)
+        {
+            console.log(a,b,c);
+            alert("Failed!");
+        }
+
+        $('#sidebar #status-knob').submit(function(e)
+        {
+            console.log('bee!');
+            var status = $('select[name=status]', this).val();
+
+            function success(d)
+            {
+                Gratipay.notification('Team status changed to "' + d.status + '".', 'success');
+            }
+
+            jQuery.ajax({ url: $(this).attr('action')
+                        , type: "POST"
+                        , dataType: "json"
+                        , data: {status: status}
+                        , success: success
+                        , error: error
+                         })
+
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    });
+</script>
+{% endif %}
 {{ super() }}
 {% endblock %}
