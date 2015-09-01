@@ -1,4 +1,10 @@
+from collections import OrderedDict
 [---]
+i18ned_statuses = { "unreviewed" : _("Under Review")
+                  , "rejected": _("Rejected")
+                  , "approved": _("Approved")
+                   }
+
 teams = website.db.all("""
 
     SELECT teams.*::teams
@@ -6,13 +12,20 @@ teams = website.db.all("""
   ORDER BY ctime DESC
 
 """)
-napproved = len([t for t in teams if t.is_approved])
-nteams = len(teams) if user.ADMIN else napproved
 
-statuses = { "unreviewed" : _("under review")
-           , "rejected": _("rejected")
-           , "approved": _("approved")
-            }
+tabs = OrderedDict()
+tabs['approved'] = {'teams': []}
+tabs['unreviewed'] = {'teams': []}
+tabs['rejected'] = {'teams': []}
+
+for team in teams:
+    tabs[team.status]['teams'].append(team)
+
+nteams = 0
+for key, tab in tabs.items():
+    n = tab['n'] = len(tab['teams'])
+    nteams += n
+    tab['name'] = "{} (n={})".format(i18ned_statuses[key], n)
 
 title = _("Teams (N={0})", nteams)
 suppress_sidebar = True
@@ -60,56 +73,65 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 </div>
 {% endif %}
 
-<table class="teams">
-    {% for team in teams %}
-    <tr>
-        <td class="team">
-            <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
+<div class="tabs">
+    <ul class="nav" id="tab-nav">
+        {% for tab in tabs %}
+        <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>
+        {% endfor %}
+    </ul>
 
-            <div class="details">
-                <span class="status">{{ statuses[team.status] }}</span> 
-                <span class="ctime">&middot; {{ _("created {ago}",
-                    ago=to_age(team.ctime, add_direction=True)) }}</span>
-                <span class="owner">&middot;
-                    {{ _( "owned by {a}{owner}{_a}"
-                        , owner='~'+team.owner
-                        , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
-                        , _a='</a>'|safe
-                         ) }}
-                </span>
-            </div>
+    {% for tab in tabs %}
+    <table class="teams tab" data-tab="{{ tab }}">
+        {% for team in tabs[tab]['teams'] %}
+        <tr>
+            <td class="team">
+                <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
 
-            {% if team.status == 'approved' %}
-            <table class="numbers mono">
-                <tr>
-                    <th class="label">{{ _("Weekly") }}</th>
-                    <th>&#x03A3; &nbsp;</th>
-                    <th>n</th>
-                </tr>
-                <tr>
-                    <td class="label">{{ _("Receiving") }}</td>
-                    <td>{{ format_currency(team.receiving, 'USD')
-                            if team.receiving else '- &nbsp;'|safe }}</td>
-                    <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="label">{{ _("Sharing") }}</td>
-                    <td>- &nbsp;</td>
-                    <td>-</td>
-                </tr>
-            </table>
-            {% endif %}
-        </td>
-    </tr>
+                <div class="details">
+                    <span class="status">{{ i18ned_statuses[team.status] }}</span>
+                    <span class="ctime">&middot; {{ _("created {ago}",
+                        ago=to_age(team.ctime, add_direction=True)) }}</span>
+                    <span class="owner">&middot;
+                        {{ _( "owned by {a}{owner}{_a}"
+                            , owner='~'+team.owner
+                            , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
+                            , _a='</a>'|safe
+                             ) }}
+                    </span>
+                </div>
+
+                {% if team.status == 'approved' %}
+                <table class="numbers mono">
+                    <tr>
+                        <th class="label">{{ _("Weekly") }}</th>
+                        <th>&#x03A3; &nbsp;</th>
+                        <th>n</th>
+                    </tr>
+                    <tr>
+                        <td class="label">{{ _("Receiving") }}</td>
+                        <td>{{ format_currency(team.receiving, 'USD')
+                                if team.receiving else '- &nbsp;'|safe }}</td>
+                        <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">{{ _("Sharing") }}</td>
+                        <td>- &nbsp;</td>
+                        <td>-</td>
+                    </tr>
+                </table>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
     {% endfor %}
-</table>
+</div>
 {% endblock %}
 
 
 {% block scripts %}
 <script>
     $(document).ready(function () {
-        console.log('hello?');
         $('.welcome button').click(function() {
             console.log('suppressing welcome ...');
             document.cookie = 'suppress-welcome=';

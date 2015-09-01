@@ -37,22 +37,17 @@ tabs = {
 
 {% extends "templates/profile.html" %}
 
-{% block scripts %}
-<script>$(document).ready(Gratipay.giving.init);</script>
-{{ super() }}
-{% endblock %}
-
 {% block content %}
 
-<div class="giving">
+<div class="tabs">
 
 <ul class="nav" id="tab-nav">
     {% for tab in ['active', 'cancelled'] %}
-        <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>
+    <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>
     {% endfor %}
 </ul>
 
-{% for tab in tabs.keys() %}
+{% for tab in tabs %}
     <div class='tab' data-tab='{{ tab }}'>
     {% if tabs[tab]['ngiving'] %}
 
