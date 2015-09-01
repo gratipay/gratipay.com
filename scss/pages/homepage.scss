@@ -61,21 +61,20 @@ table.teams {
             line-height: 13px;
             th {
                 text-align: right;
-                border-bottom: 1px solid $light-brown;
             }
             .label {
                 text-align: left;
             }
             td {
                 text-align: right;
-                padding: 0 0 0 12px;
+                padding: 1px 0 0 12px;
                 &:first-child {
                     padding-left: 0;
                 }
             }
             th, .label {
                 color: $medium-gray;
-                display: none;
+                visibility: hidden;
             }
         }
 
@@ -85,7 +84,10 @@ table.teams {
                 color: $black;
             }
             th, .label {
-                display: table-cell ! important;
+                visibility: visible;
+            }
+            th {
+                border-bottom: 1px solid $light-brown;
             }
         }
     }
