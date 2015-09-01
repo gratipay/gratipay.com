@@ -369,16 +369,13 @@ msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
 msgstr ""
 
-msgid "under review"
+msgid "Under Review"
 msgstr ""
 
-msgid "rejected"
+msgid "Rejected"
 msgstr ""
 
-msgid "approved"
-msgstr ""
-
-msgid "Teams (N={0})"
+msgid "Approved"
 msgstr ""
 
 msgid "Payments{br}and Payroll{br}for Open Work"
@@ -390,7 +387,7 @@ msgstr ""
 msgid "Welcome to Gratipay!"
 msgstr ""
 
-msgid "We have {nteams} Teams receiving and sharing money each week."
+msgid "We have {nteams} Teams receiving and sharing about {volume} each week."
 msgstr ""
 
 msgid "Continue to explore our Teams, or {a}read more about us{_a}."
@@ -516,12 +513,6 @@ msgid "Joined {ago}"
 msgstr ""
 
 msgid "Applied {ago}"
-msgstr ""
-
-msgid "Under Review"
-msgstr ""
-
-msgid "Rejected"
 msgstr ""
 
 msgid "Onboarding"

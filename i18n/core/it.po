@@ -365,17 +365,14 @@ msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
 msgstr "Sostieni il pagamento con una {0}carta di credito{1} per assicurare che venga effettuato!"
 
-msgid "under review"
-msgstr ""
+msgid "Under Review"
+msgstr "In esaminazione"
 
-msgid "rejected"
-msgstr ""
+msgid "Rejected"
+msgstr "Rifiutata"
 
-msgid "approved"
+msgid "Approved"
 msgstr ""
-
-msgid "Teams (N={0})"
-msgstr "Team (N={0})"
 
 msgid "Payments{br}and Payroll{br}for Open Work"
 msgstr "Pagamenti{br}e Libri Paga{br}per Lavori Gratuiti"
@@ -386,7 +383,7 @@ msgstr "Leggi di più"
 msgid "Welcome to Gratipay!"
 msgstr "Benvenuto su Gratipay!"
 
-msgid "We have {nteams} Teams receiving and sharing money each week."
+msgid "We have {nteams} Teams receiving and sharing about {volume} each week."
 msgstr ""
 
 msgid "Continue to explore our Teams, or {a}read more about us{_a}."
@@ -513,12 +510,6 @@ msgstr "Si è unito {ago}"
 
 msgid "Applied {ago}"
 msgstr "Si è proposto {ago}"
-
-msgid "Under Review"
-msgstr "In esaminazione"
-
-msgid "Rejected"
-msgstr "Rifiutata"
 
 msgid "Onboarding"
 msgstr "Formazione Iniziale"
