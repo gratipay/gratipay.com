@@ -368,6 +368,15 @@ msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
 msgstr "Financez votre paiement avec votre {0}carte de crédit{1} !"
 
+msgid "under review"
+msgstr ""
+
+msgid "rejected"
+msgstr ""
+
+msgid "approved"
+msgstr ""
+
 msgid "Teams (N={0})"
 msgstr ""
 
@@ -380,17 +389,26 @@ msgstr ""
 msgid "Welcome to Gratipay!"
 msgstr ""
 
-msgid "We have {nteams} Teams receiving and distributing money each week."
+msgid "We have {nteams} Teams receiving and sharing money each week."
 msgstr ""
 
-msgid "Name"
-msgstr "Nom"
-
-msgid "Owner"
+msgid "Continue to explore our Teams, or {a}read more about us{_a}."
 msgstr ""
 
-msgid "Status"
-msgstr "État"
+msgid "Continue"
+msgstr ""
+
+msgid "created {ago}"
+msgstr ""
+
+msgid "owned by {a}{owner}{_a}"
+msgstr ""
+
+msgid "Receiving"
+msgstr "Revenus"
+
+msgid "Sharing"
+msgstr ""
 
 msgid "You must sign in to apply for a new Team."
 msgstr ""
@@ -492,12 +510,6 @@ msgstr "Êtes-vous sûr de vouloir vous déconnecter?"
 
 msgid "Yes!"
 msgstr "Oui !"
-
-msgid "Receiving"
-msgstr "Revenus"
-
-msgid "Sharing"
-msgstr ""
 
 msgid "Joined {ago}"
 msgstr ""
@@ -714,6 +726,9 @@ msgstr "Connectez votre compte {0}"
 msgid "No friends found."
 msgstr "Aucun ami trouvé."
 
+msgid "Name"
+msgstr "Nom"
+
 msgid "On Gratipay?"
 msgstr "Sur Gratipay?"
 
@@ -782,6 +797,9 @@ msgstr ""
 
 msgid "Member"
 msgstr ""
+
+msgid "Status"
+msgstr "État"
 
 msgid "accepts gifts"
 msgstr "accepte les dons"
