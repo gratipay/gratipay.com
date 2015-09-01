@@ -27,7 +27,7 @@ for key, tab in tabs.items():
     nteams += n
     tab['name'] = "{} (n={})".format(i18ned_statuses[key], n)
 
-title = _("Teams (N={0})", nteams)
+title = _("Teams")
 suppress_sidebar = True
 suppress_welcome = 'suppress-welcome' in request.cookie
 [---]
@@ -61,7 +61,7 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 <div class="welcome">
     <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
     <p>{{ _( "We have {nteams} Teams receiving and sharing money each week."
-           , nteams=napproved
+           , nteams=tabs['approved']['n']
             ) }}</p>
     <p>{{ _( "Continue to explore our Teams, or {a}read more about us{_a}."
            , a='<a href="/about/">'|safe
