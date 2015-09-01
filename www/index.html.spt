@@ -1,5 +1,4 @@
 [---]
-
 teams = website.db.all("""
 
     SELECT teams.*::teams
@@ -9,8 +8,15 @@ teams = website.db.all("""
 """)
 napproved = len([t for t in teams if t.is_approved])
 nteams = len(teams) if user.ADMIN else napproved
-title = _("Teams (N={0})", nteams)
 
+statuses = { "unreviewed" : _("under review")
+           , "rejected": _("rejected")
+           , "approved": _("approved")
+            }
+
+title = _("Teams (N={0})", nteams)
+suppress_sidebar = True
+suppress_welcome = 'suppress-welcome' in request.cookie
 [---]
 {% extends "templates/base.html" %}
 {% block head_early %}
@@ -37,28 +43,78 @@ title = _("Teams (N={0})", nteams)
 </a>
 {% endblock %}
 
-{% block sidebar %}
-<p><b>{{ _("Welcome to Gratipay!") }}</b></p>
-
-<p>{{ _("We have {nteams} Teams receiving and distributing money each week.", nteams=napproved) }}</p>
-
-<p>{{ _('Explore our Teams here, or <a href="/about/">read more about us</a>.'|safe) }}</p>
-{% endblock %}
 {% block content %}
-<table class="table">
-    <tr>
-        <th>{{ _("Name") }}</th>
-        <th>{{ _("Owner") }}</th>
-        {% if user.ADMIN %}<th>{{ _("Status") }}</th>{% endif %}
-    </tr>
+{% if not suppress_welcome %}
+<div class="welcome">
+    <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
+    <p>{{ _( "We have {nteams} Teams receiving and sharing money each week."
+           , nteams=napproved
+            ) }}</p>
+    <p>{{ _( "Continue to explore our Teams, or {a}read more about us{_a}."
+           , a='<a href="/about/">'|safe
+           , _a='</a>'|safe
+            ) }}</p>
+    <div class="continue">
+        <button>{{ _("Continue") }}</button>
+    </div>
+</div>
+{% endif %}
+
+<table class="teams">
     {% for team in teams %}
-    {% if team.is_approved or user.ADMIN %}
     <tr>
-        <td><a href="/{{ team.slug }}/">{{ team.name }}</a></td>
-        <td><a href="/~{{ team.owner }}/">~{{ team.owner }}</a></td>
-        {% if user.ADMIN %}<td>{{ team.status }}</td>{% endif %}
+        <td class="team">
+            <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
+
+            <div class="details">
+                <span class="status">{{ statuses[team.status] }}</span> 
+                <span class="ctime">&middot; {{ _("created {ago}",
+                    ago=to_age(team.ctime, add_direction=True)) }}</span>
+                <span class="owner">&middot;
+                    {{ _( "owned by {a}{owner}{_a}"
+                        , owner='~'+team.owner
+                        , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
+                        , _a='</a>'|safe
+                         ) }}
+                </span>
+            </div>
+
+            {% if team.status == 'approved' %}
+            <table class="numbers mono">
+                <tr>
+                    <th class="label">{{ _("Weekly") }}</th>
+                    <th>&#x03A3; &nbsp;</th>
+                    <th>n</th>
+                </tr>
+                <tr>
+                    <td class="label">{{ _("Receiving") }}</td>
+                    <td>{{ format_currency(team.receiving, 'USD')
+                            if team.receiving else '- &nbsp;'|safe }}</td>
+                    <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="label">{{ _("Sharing") }}</td>
+                    <td>- &nbsp;</td>
+                    <td>-</td>
+                </tr>
+            </table>
+            {% endif %}
+        </td>
     </tr>
-    {% endif %}
     {% endfor %}
 </table>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        console.log('hello?');
+        $('.welcome button').click(function() {
+            console.log('suppressing welcome ...');
+            document.cookie = 'suppress-welcome=';
+            $(this).parent().parent().fadeOut(100);
+        });
+    });
+</script>
 {% endblock %}

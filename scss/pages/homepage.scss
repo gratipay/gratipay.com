@@ -1,3 +1,99 @@
-#homepage #sidebar {
-    padding-top: 192px;
+#homepage .welcome {
+    position: fixed;
+    left: 50%;
+    top: 30%;
+    margin-top: 24px;
+    margin-left: -144px;
+    width: 288px;
+    font: normal 14px/18px $Ideal;
+    padding: 24px;
+    background: white;
+    border: 2px solid $black;
+    @include border-radius(5px);
+    box-shadow: 0px 0px 32px 16px rgba($black, 0.5);
+    z-index: 3;
+
+    .continue {
+        text-align: right;
+    }
+}
+
+table.teams {
+    width: 100%;
+    td.team {
+        color: $medium-gray;
+        border: 1px solid $light-brown;
+        border-style: solid none;
+        position: relative;
+
+        a:hover {
+            background: none !important;
+            color: $green !important;
+        }
+        .name {
+            display: block;
+            color: $black;
+            font: bold 18px/22px $Ideal;
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            padding: 8px 0 0;
+            width: 100%;
+            height: 100%;
+        }
+        .details {
+            font: normal 12px/15px $Ideal;
+            min-height: 48px;
+            padding: 30px 144px 0 0;
+            left: 0;
+            .owner a {
+                color: $medium-gray;
+                position: relative;
+                z-index: 2;
+            }
+            span {
+                white-space: nowrap;
+            }
+        }
+        .numbers {
+            position: absolute;
+            bottom: 3px;
+            right: 0;
+            z-index: 0;
+            font-size: 11px;
+            line-height: 13px;
+            th {
+                text-align: right;
+                border-bottom: 1px solid transparent;
+            }
+            .label {
+                text-align: left;
+            }
+            td {
+                text-align: right;
+                padding: 1px 0 0 12px;
+                &:first-child {
+                    padding-left: 0;
+                }
+            }
+            th, .label {
+                color: $medium-gray;
+                visibility: hidden;
+            }
+        }
+
+        &:hover {
+            color: $black;
+            .owner a {
+                color: $black;
+            }
+            th, .label {
+                visibility: visible;
+            }
+            th {
+                border-bottom: 1px solid $light-brown;
+            }
+        }
+    }
 }

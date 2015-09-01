@@ -9,11 +9,14 @@ $darker-green: darken($green, 10);
 $lighter-green: lighten($green, 10);
 $brown: #630;
 $light-brown: desaturate(lighten($brown, 60), 60);
+
+$black: #454545;
+$darker-gray: #CCC;
+$medium-gray: #999;
 $gray: #555;
 $light-gray: #DDD;
-$darker-gray: #CCC;
 $lighter-gray: #EEE;
-$black: #454545;
+
 $red: #C00;
 $light-red: #F99;
 $gold: #FFC300;
