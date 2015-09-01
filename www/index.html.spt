@@ -79,6 +79,7 @@ suppress_welcome = 'suppress-welcome' in request.cookie
                 </span>
             </div>
 
+            {% if team.status == 'approved' %}
             <table class="numbers mono">
                 <tr>
                     <th class="label">{{ _("Weekly") }}</th>
@@ -97,6 +98,7 @@ suppress_welcome = 'suppress-welcome' in request.cookie
                     <td>-</td>
                 </tr>
             </table>
+            {% endif %}
         </td>
     </tr>
     {% endfor %}
