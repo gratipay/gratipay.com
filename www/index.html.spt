@@ -85,13 +85,14 @@ suppress_welcome = 'suppress-welcome' in request.cookie
                 </tr>
                 <tr>
                     <td class="label">{{ _("Receiving") }}</td>
-                    <td>{{ format_currency(team.receiving, 'USD') }}</td>
-                    <td>{{ team.nreceiving_from }}</td>
+                    <td>{{ format_currency(team.receiving, 'USD')
+                            if team.receiving else '- &nbsp;'|safe }}</td>
+                    <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">{{ _("Sharing") }}</td>
-                    <td>{{ format_currency(0, 'USD') }}</td>
-                    <td>0</td>
+                    <td>- &nbsp;</td>
+                    <td>-</td>
                 </tr>
             </table>
         </td>
