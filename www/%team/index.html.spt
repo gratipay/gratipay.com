@@ -8,9 +8,6 @@ from gratipay.utils import excerpt_intro, get_team, markdown
 [-----------------------------------------------------------------------------]
 
 team = get_team(state)
-if team.is_approved in (None, False):
-    if user.ANON:
-        raise Response(401)
 banner = name = team.name
 
 [-----------------------------------------------------------------------------]
