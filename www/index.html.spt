@@ -59,17 +59,15 @@ suppress_welcome = 'suppress-welcome' in request.cookie
         <td class="team">
             <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
 
-            <div>
+            <div class="details">
                 <span class="status">{{ statuses[team.status] }}</span> 
-                &middot;
-                <span class="ctime">{{ _("created {ago}", ago=to_age(team.ctime, add_direction=True)) }}<span>
-                &middot;
-                <span class="owner">owned by
+                <span class="ctime">&middot; {{ _("created {ago}", ago=to_age(team.ctime, add_direction=True)) }}</span>
+                <span class="owner">&middot; owned by
                     <a class="owner" href="/~{{ team.owner }}/">~{{ team.owner }}</a> 
                 </span>
             </div>
 
-            <table class="details mono">
+            <table class="numbers mono">
                 <tr>
                     <th class="label">{{ _("Weekly") }}</th>
                     <th>&#x03A3; &nbsp;</th>
