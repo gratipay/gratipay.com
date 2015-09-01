@@ -12,6 +12,10 @@
     @include border-radius(5px);
     box-shadow: 0px 0px 32px 16px rgba($black, 0.5);
     z-index: 3;
+
+    .continue {
+        text-align: right;
+    }
 }
 
 table.teams {

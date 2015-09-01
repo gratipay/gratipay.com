@@ -50,11 +50,13 @@ suppress_welcome = 'suppress-welcome' in request.cookie
     <p>{{ _( "We have {nteams} Teams receiving and sharing money each week."
            , nteams=napproved
             ) }}</p>
-    <p>{{ _( "Explore our Teams here, or {a}read more about us{_a}."
+    <p>{{ _( "Continue to explore our Teams, or {a}read more about us{_a}."
            , a='<a href="/about/">'|safe
            , _a='</a>'|safe
             ) }}</p>
-    <button>{{ _("Dismiss") }}</button>
+    <div class="continue">
+        <button>{{ _("Continue") }}</button>
+    </div>
 </div>
 {% endif %}
 
@@ -109,7 +111,7 @@ suppress_welcome = 'suppress-welcome' in request.cookie
         $('.welcome button').click(function() {
             console.log('suppressing welcome ...');
             document.cookie = 'suppress-welcome=';
-            $(this).parent().fadeOut(100);
+            $(this).parent().parent().fadeOut(100);
         });
     });
 </script>
