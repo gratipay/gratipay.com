@@ -53,23 +53,40 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 </div>
 {% endif %}
 
-<table class="table">
-    <tr>
-        <th>{{ _("Name") }}</th>
-        <th>{{ _("Owner") }}</th>
-        <th>{{ _("Status") }}</th>
-        <th>{{ _("Amount Receiving ($)") }}</th>
-        <th>{{ _("Number of Givers") }}</th>
-        <th>{{ _("Joined") }}</th>
-    </tr>
+<table class="teams">
     {% for team in teams %}
     <tr>
-        <td><a href="/{{ team.slug }}/">{{ team.name }}</a></td>
-        <td><a href="/~{{ team.owner }}/">~{{ team.owner }}</a></td>
-        <td>{{ statuses[team.status] }}</td>
-        <td>{{ team.receiving }}</td>
-        <td>{{ team.nreceiving_from }}</td>
-        <td>{{ team.ctime }}</td>
+        <td class="team">
+            <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
+
+            <div>
+                <span class="status">{{ statuses[team.status] }}</span> 
+                &middot;
+                <span class="ctime">{{ _("created {ago}", ago=to_age(team.ctime, add_direction=True)) }}<span>
+                &middot;
+                <span class="owner">owned by
+                    <a class="owner" href="/~{{ team.owner }}/">~{{ team.owner }}</a> 
+                </span>
+            </div>
+
+            <table class="details mono">
+                <tr>
+                    <th class="label">{{ _("Weekly") }}</th>
+                    <th>&#x03A3; &nbsp;</th>
+                    <th>n</th>
+                </tr>
+                <tr>
+                    <td class="label">{{ _("Receiving") }}</td>
+                    <td>{{ format_currency(team.receiving, 'USD') }}</td>
+                    <td>{{ team.nreceiving_from }}</td>
+                </tr>
+                <tr>
+                    <td class="label">{{ _("Sharing") }}</td>
+                    <td>{{ format_currency(0, 'USD') }}</td>
+                    <td>0</td>
+                </tr>
+            </table>
+        </td>
     </tr>
     {% endfor %}
 </table>
