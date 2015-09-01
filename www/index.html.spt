@@ -12,6 +12,8 @@ teams = website.db.all("""
   ORDER BY ctime DESC
 
 """)
+volume = website.db.one("SELECT volume FROM paydays ORDER BY ts_start DESC LIMIT 1", default=0)
+volume = int(round(volume, -2))
 
 tabs = OrderedDict()
 tabs['approved'] = {'teams': []}
@@ -60,8 +62,9 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 {% if not suppress_welcome %}
 <div class="welcome">
     <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
-    <p>{{ _( "We have {nteams} Teams receiving and sharing money each week."
+    <p>{{ _( "We have {nteams} Teams receiving and sharing about {volume} each week."
            , nteams=tabs['approved']['n']
+           , volume=format_currency(volume, 'USD', trailing_zeroes=False)
             ) }}</p>
     <p>{{ _( "Continue to explore our Teams, or {a}read more about us{_a}."
            , a='<a href="/about/">'|safe
