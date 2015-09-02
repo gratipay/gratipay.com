@@ -929,6 +929,22 @@ class Participant(Model):
         return giving, total
 
 
+    def get_old_stats(self):
+        """Returns a tuple: (sum, number) of old-style 1.0 tips.
+        """
+        return self.db.one("""
+         SELECT sum(amount), count(amount)
+           FROM current_tips
+           JOIN participants p ON p.username = tipper
+          WHERE tippee = %s
+            AND p.claimed_time IS NOT null
+            AND p.is_suspicious IS NOT true
+            AND p.is_closed IS NOT true
+            AND is_funded
+            AND amount > 0
+        """, (self.username,))
+
+
     def update_giving_and_teams(self):
         with self.db.get_cursor() as cursor:
             updated_giving = self.update_giving(cursor)

@@ -67,6 +67,15 @@
             {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
         </div>
 
+        <div id="notice">
+            &#x2605;
+            {{ _( "You have until October 1 to {a}apply for a 1.0 payout{_a}."
+                , a='<a href="https://medium.com/gratipay-blog/140-000-97d54e6d40ed">'|safe
+                , _a='</a>'|safe
+                 ) }}
+            &#x2605;
+        </div>
+
         <div id="main">
             {% block main %}
             {% if not suppress_sidebar %}

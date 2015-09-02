@@ -1,0 +1,34 @@
+from aspen import Response
+[---]
+if user.ANON:
+    raise Response(403)
+
+suppress_sidebar = True
+banner = _("Apply")
+title = _("Apply for a 1.0 Payout")
+receiving, ntips = user.participant.get_old_stats()
+[---] text/html
+{% extends "templates/base.html" %}
+{% block content %}
+
+{% if user.participant.balance %}
+    <p>{{ _( "We are planning to {a}refund the money from Gratipay 1.0{_a}."
+           , a='<a href="https://medium.com/gratipay-blog/140-000-97d54e6d40ed">'|safe
+           , _a='</a>'|safe
+            ) }}</p>
+
+    <p><b>{{ _( 'To apply for a one-time payout, please {a}email us{_a}.'
+              , a='<a href="mailto:support@gratipay.com">'|safe
+              , _a='</a>'|safe
+               ) }}</b></p>
+
+    {% if ntips %}
+    <p>{{ _("P.S. You were receiving {receiving} per week from {ntips} people under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
+               , ntips=ntips
+               , receiving=format_currency(receiving, 'USD')
+               , a='<a href="/new">'|safe
+               , _a='</a>'|safe
+                ) }}</p>
+    {% endif %}
+{% endif %}
+{% endblock %}
