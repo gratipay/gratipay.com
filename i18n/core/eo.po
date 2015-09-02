@@ -412,6 +412,9 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
+msgid "Apply for a New Team"
+msgstr ""
+
 msgid "created {ago}"
 msgstr ""
 
@@ -431,9 +434,6 @@ msgid "You must have a verified email address to apply for a new Team."
 msgstr ""
 
 msgid "You must attach a PayPal account to apply for a new Team."
-msgstr ""
-
-msgid "Apply for a New Team"
 msgstr ""
 
 msgid "Team Name"

@@ -413,6 +413,9 @@ msgstr "Continua a esplorare i nostri Team, o {a}leggi di più su di noi{_a}."
 msgid "Continue"
 msgstr "Continua"
 
+msgid "Apply for a New Team"
+msgstr "Proponiti in un nuovo team."
+
 msgid "created {ago}"
 msgstr "creato {ago}"
 
@@ -433,9 +436,6 @@ msgstr "Devi avere un indirizzo email verificato per poterti proporre in un nuov
 
 msgid "You must attach a PayPal account to apply for a new Team."
 msgstr "Devi collegare un conto PayPal per poterti proporre in un nuovo Team."
-
-msgid "Apply for a New Team"
-msgstr "Proponiti in un nuovo team."
 
 msgid "Team Name"
 msgstr "Nome del Team"
