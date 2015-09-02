@@ -19,20 +19,9 @@ if not user.participant.has_payout_route:
 # users, in case someone responds to a "failing card" notification at some
 # point. But let's only tell them about the funded tips.
 
-receiving, ntips = website.db.one( """
- SELECT sum(amount), count(amount)
-   FROM current_tips
-   JOIN participants p ON p.username = tipper
-  WHERE tippee = %s
-    AND p.claimed_time IS NOT null
-    AND p.is_suspicious IS NOT true
-    AND p.is_closed IS NOT true
-    AND is_funded
-    AND amount > 0
-""", (user.participant.username,))
-
+receiving, ntips = user.participant.get_old_stats()
 title = _("Apply for a New Team")
-banner = _("New Team")
+banner = _("Apply")
 suppress_sidebar = True
 [---] text/html
 {% extends "templates/base.html" %}
