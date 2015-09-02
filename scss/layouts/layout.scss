@@ -58,6 +58,12 @@ body {
     overflow: hidden;
 }
 
+#notice {
+    text-align: center;
+    font: normal 12px/14px $Ideal;
+    padding: 3px 0;
+}
+
 #main {
     display: table;
     table-layout: fixed;
