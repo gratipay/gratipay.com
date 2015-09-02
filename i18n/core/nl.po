@@ -197,6 +197,9 @@ msgstr "wk"
 msgid "Sign out"
 msgstr ""
 
+msgid "You have until October 1 to {a}apply for a 1.0 payout{_a}."
+msgstr ""
+
 msgid "Blog"
 msgstr "Blog"
 
@@ -367,6 +370,24 @@ msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
 msgstr "Ondersteun je betaling met een {0}credit card{1} om er zeker van te zijn dat het aankomt!"
 
+msgid "Apply"
+msgstr "Aanmelden"
+
+msgid "Apply for a 1.0 Payout"
+msgstr ""
+
+msgid "We are planning to {a}refund the money from Gratipay 1.0{_a}."
+msgstr ""
+
+msgid "To apply for a one-time payout, please {a}email us{_a}."
+msgstr ""
+
+msgid ""
+"P.S. You were receiving {receiving} per week from {ntips} people under "
+"Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
+"for a new Team{_a} instead of a one-time payout."
+msgstr ""
+
 msgid "Under Review"
 msgstr ""
 
@@ -418,9 +439,6 @@ msgstr ""
 msgid "Apply for a New Team"
 msgstr "Aanmelden voor een nieuw team"
 
-msgid "New Team"
-msgstr ""
-
 msgid "Team Name"
 msgstr "Team naam"
 
@@ -469,9 +487,6 @@ msgid ""
 "weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, "
 "pending approval of your application."
 msgstr ""
-
-msgid "Apply"
-msgstr "Aanmelden"
 
 msgid "Search Gratipay"
 msgstr "Doorzoek Gratipay"
@@ -648,9 +663,6 @@ msgstr "Log in"
 
 msgid "Fraud Review Dashboard"
 msgstr "Fraude controle dashboard"
-
-msgid "Fraud Review Dashboard - (Teams)"
-msgstr "Fraude controle dashboard - (Teams)"
 
 msgid "Transfer?"
 msgstr ""

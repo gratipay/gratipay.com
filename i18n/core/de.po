@@ -203,6 +203,9 @@ msgstr "Woche"
 msgid "Sign out"
 msgstr ""
 
+msgid "You have until October 1 to {a}apply for a 1.0 payout{_a}."
+msgstr ""
+
 msgid "Blog"
 msgstr "Blog"
 
@@ -373,6 +376,24 @@ msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
 msgstr "Gib deine {0}Kreditkateninformationen{1} an um sicherzustellen, dass deine Spenden auch zukünftig ankommen."
 
+msgid "Apply"
+msgstr ""
+
+msgid "Apply for a 1.0 Payout"
+msgstr ""
+
+msgid "We are planning to {a}refund the money from Gratipay 1.0{_a}."
+msgstr ""
+
+msgid "To apply for a one-time payout, please {a}email us{_a}."
+msgstr ""
+
+msgid ""
+"P.S. You were receiving {receiving} per week from {ntips} people under "
+"Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
+"for a new Team{_a} instead of a one-time payout."
+msgstr ""
+
 msgid "Under Review"
 msgstr ""
 
@@ -424,9 +445,6 @@ msgstr ""
 msgid "Apply for a New Team"
 msgstr ""
 
-msgid "New Team"
-msgstr ""
-
 msgid "Team Name"
 msgstr ""
 
@@ -474,9 +492,6 @@ msgid ""
 "to your ~{username} user account under Gratipay 1.0 will be converted into "
 "weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, "
 "pending approval of your application."
-msgstr ""
-
-msgid "Apply"
 msgstr ""
 
 msgid "Search Gratipay"
@@ -653,9 +668,6 @@ msgid "Sign In"
 msgstr ""
 
 msgid "Fraud Review Dashboard"
-msgstr ""
-
-msgid "Fraud Review Dashboard - (Teams)"
 msgstr ""
 
 msgid "Transfer?"
