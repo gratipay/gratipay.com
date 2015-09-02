@@ -7,35 +7,78 @@ suppress_sidebar = True
 banner = _("1.0")
 title = _("Status of your 1.0 Payout")
 receiving, ntips = user.participant.get_old_stats()
+balance = user.participant.balance_1_0
 status = user.participant.status_of_1_0_balance
 [---] text/html
 {% extends "templates/base.html" %}
 {% block content %}
-<p>{{ _( "This page is part of our plan to {a}refund the money from Gratipay 1.0{_a}."
-       , a='<a href="https://medium.com/gratipay-blog/140-000-97d54e6d40ed">'|safe
-       , _a='</a>'|safe
-        ) }}</p>
+<p><i>{{ _( "Read about our plan to {a}refund the money from Gratipay 1.0{_a}."
+          , a='<a href="https://medium.com/gratipay-blog/140-000-97d54e6d40ed">'|safe
+          , _a='</a>'|safe
+           ) }}</i></p>
 
-{% if status == 'resolved' %}
-<p><b>{{ _("You do not have a Gratipay 1.0 balance.") }}</b></p>
-<p><b>{{ _("You're all set! :)") }}</b></p>
+{% if not balance %}
+    {% if status == 'moot' %}
+    <p><b>{{ _("You do not have a Gratipay 1.0 balance.") }}</b></p>
+    <p>{{ _("You're all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
+
+    {% elif status == 'payout-complete' %}
+    <p><b>{{ _("Your Gratipay 1.0 balance has been paid out.") }}</b></p>
+    <p>{{ _("You're all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
+
+    {% endif %}
 {% else %}
-    <p><b>{{ _( "Your Gratipay 1.0 balance is {balance}."
-           , balance=format_currency(user.participant.balance, 'USD')
+    <p>{{ _( "Your Gratipay 1.0 balance is {b}{balance}{_b}."
+           , balance=format_currency(balance, 'USD')
+           , b='<b>'|safe
+           , _b='</b>'|safe
             ) }}</b></p>
 
     {% if status == 'pending-payout' %}
-    <p>{{ _("Your Gratipay 1.0 balance is scheduled for payout during our next weekly cycle.") }}</p>
+    <p>{{ _( "You are {b}scheduled for a payout{_b} during our next weekly cycle."
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
+    <p>{{ _("You should be all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
+
+    {% elif status == 'pending-approval' %}
+    <p>{{ _( "You have applied for a payout. We are reviewing your account and will contact you at {b}{email}{_b} within the next week."
+           , email=user.participant.email_address
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
+    <p>{{ _("Meanwhile ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
+
+    {% elif status == 'rejected' %}
+    <p>{{ _( "You have applied for a payout, and we have rejected your application. You should have received a notification at {b}{email}{_b} from {a}support@gratipay.com{_a}."
+           , email=user.participant.email_address
+           , a='<a href="mailto:support@gratipay.com">'|safe
+           , _a='</a>'|safe
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
+    <p>{{ _("Your balance will be refunded to the original donors on October 8.") }}</p>
+
     {% else %}
     <p><button>{{ _("Apply for a payout") }}</button></p>
-        {% if ntips %}
-    <p>{{ _("P.S. You were receiving {receiving} per week from {ntips} people under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
-               , ntips=ntips
-               , receiving=format_currency(receiving, 'USD')
-               , a='<a href="/new">'|safe
-               , _a='</a>'|safe
-                ) }}</p>
-        {% endif %}
+
+    <p>{{ _( "You have until {b}October 1 at 11:59 PM UTC{_b} to apply for a payout."
+           , balance=format_currency(balance, 'USD')
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</b></p>
+
+    {% if ntips %}
+    <p><i>{{ ngettext(
+             "P.S. You were receiving {receiving} per week from one person under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
+           , "P.S. You were receiving {receiving} per week from {n} people under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
+           , ntips
+           , receiving=format_currency(receiving, 'USD')
+           , a='<a href="/new">'|safe
+           , _a='</a>'|safe
+            ) }}</i></p>
+    {% endif %}
+
     {% endif %}
 {% endif %}
 {% endblock %}
