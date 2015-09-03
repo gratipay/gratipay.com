@@ -78,8 +78,12 @@
         padding: 0 0 40px;
         min-height: 0;
     }
-    #homepage #sidebar {
-        padding-top: 20px ! important;
+    #homepage {
+        #main {
+            .apply {
+                top: 0;
+            }
+        }
     }
     #sidebar {
         padding-top: 20px;

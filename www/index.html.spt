@@ -76,16 +76,16 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 </div>
 {% endif %}
 
+<form action="new" class="apply">
+    <button type="submit">{{ _("Apply for a New Team") }}</button>
+</form>
+
 <div class="tabs">
     <ul class="nav" id="tab-nav">
         {% for tab in tabs %}
         <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>
         {% endfor %}
     </ul>
-
-    <form action="new" class="apply">
-        <button type="submit">{{ _("Apply for a New Team") }}</button>
-    </form>
 
     {% for tab in tabs %}
     <table class="teams tab" data-tab="{{ tab }}">
