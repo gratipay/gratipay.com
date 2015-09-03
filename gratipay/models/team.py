@@ -178,4 +178,13 @@ class Team(Model):
         ) SELECT count(*) FROM rows;
         """, {'slug': self.slug, 'owner': self.owner})
 
+
+    def load_image(self):
+        return self.db.one( "SELECT media_type, data FROM team_images WHERE id=%s"
+                          , (self.id,)
+                          , back_as=tuple
+                          , default=(None, None)
+                           )
+
+
 class AlreadyMigrated(Exception): pass

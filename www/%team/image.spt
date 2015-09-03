@@ -1,0 +1,22 @@
+import os
+import mimetypes
+from gratipay.utils import get_team
+from aspen import Response
+
+filepath = os.path.join(website.www_root, 'assets', 'team-default.png')
+default_data = open(filepath).read()
+[----]
+team = get_team(state)
+
+media_type, data = team.load_image()
+if data is None:
+    media_type, data = "image/png", default_data
+
+wanted = mimetypes.guess_type(request.path.raw)[0]  # I'm sorry, pjz.
+if media_type != wanted:
+    raise Response(404)
+
+[----] image/png
+data
+[----] image/jpeg
+data

@@ -100,6 +100,7 @@ suppress_welcome = 'suppress-welcome' in request.cookie
         {% for team in tabs[tab]['teams'] %}
         <tr>
             <td class="team">
+                <img src="/{{ team.slug }}/image.png">
                 <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
 
                 <div class="details">
