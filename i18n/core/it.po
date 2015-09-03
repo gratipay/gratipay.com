@@ -196,7 +196,7 @@ msgid "Sign out"
 msgstr "Esci"
 
 msgid "You have until October 1 to {a}apply for a 1.0 payout{_a}."
-msgstr ""
+msgstr "Hai tempo fino all'1 Ottobre per {a}chiedere un pagamento 1.0{_a}."
 
 msgid "Blog"
 msgstr "Blog"
@@ -372,28 +372,28 @@ msgid "Apply"
 msgstr "Proponiti"
 
 msgid "Apply for a 1.0 Payout"
-msgstr ""
+msgstr "Chiedi un Pagamento 1.0"
 
 msgid "We are planning to {a}refund the money from Gratipay 1.0{_a}."
-msgstr ""
+msgstr "Stiamo pianificando di {a}restituire il denaro da Gratipay 1.0{_a}."
 
 msgid "To apply for a one-time payout, please {a}email us{_a}."
-msgstr ""
+msgstr "Per chiedere un pagamento singolo, per favore inviaci {a}un'email{_a}."
 
 msgid ""
 "P.S. You were receiving {receiving} per week from {ntips} people under "
 "Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
 "for a new Team{_a} instead of a one-time payout."
-msgstr ""
+msgstr "P.S. Ricevevi {receiving} a settimana da {ntips} persone con Gratipay 1.0. Vuoi ancora ricevere quel denaro con Gratipay 2.0? {a}Proponiti per un nuovo Team{_a} invece di chiedere un pagamento singolo."
 
 msgid "Under Review"
 msgstr "In esaminazione"
 
 msgid "Rejected"
-msgstr "Rifiutata"
+msgstr "Rifiutati"
 
 msgid "Approved"
-msgstr "Approvato"
+msgstr "Approvati"
 
 msgid "Payments{br}and Payroll{br}for Open Work"
 msgstr "Pagamenti{br}e Libri Paga{br}per Lavori Gratuiti"
