@@ -59,9 +59,13 @@ body {
 }
 
 #notice {
-    text-align: center;
-    font: normal 12px/14px $Ideal;
-    padding: 3px 0;
+    margin: 0 auto;
+    td {
+        font: normal 12px/14px $Ideal;
+        padding: 3px;
+        vertical-align: middle;
+        text-align: center;
+    }
 }
 
 #main {
