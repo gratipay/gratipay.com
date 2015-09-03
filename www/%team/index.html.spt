@@ -88,9 +88,9 @@ banner = name = team.name
     <p>
 
     {% if team.status == 'unreviewed' %}
-    {{ _("Under Review") }} |
+    &#9995; {{ _("Under Review") }} |
     {% elif team.status == 'rejected' %}
-    {{ _("Rejected") }} |
+    &#10060; {{ _("Rejected") }} |
     {% endif %}
 
     <a href="{{ team.homepage }}">{{ _("Homepage") }}</a>

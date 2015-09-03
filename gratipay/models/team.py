@@ -2,6 +2,11 @@
 """
 from postgres.orm import Model
 
+status_icons = { "unreviewed": "&#9995;"
+               , "rejected": "&#10060;"
+               , "approved": "&#9989;"
+                }
+
 
 class Team(Model):
     """Represent a Gratipay team.
