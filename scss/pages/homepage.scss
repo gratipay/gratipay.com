@@ -21,6 +21,9 @@
 
     #main {
         position: relative;
+        .nav {
+            margin-bottom: 10px;
+        }
     }
 
     .apply {
@@ -31,11 +34,15 @@
 
     table.teams {
         width: 100%;
+
+        tr:first-child td { border-top: 0; }
+        tr:last-child td { border-bottom: 0; }
+
         td.team {
+            position: relative;
             color: $medium-gray;
             border: 1px solid $light-brown;
             border-style: solid none;
-            position: relative;
 
             a:hover {
                 background: none !important;
