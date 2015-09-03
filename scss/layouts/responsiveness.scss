@@ -78,15 +78,8 @@
     }
     #main {
         display: block;
-        padding: 0 0 40px;
+        margin: 10px 0 40px;
         min-height: 0;
-    }
-    #homepage {
-        #main {
-            .apply {
-                top: 0;
-            }
-        }
     }
     #sidebar {
         padding-top: 20px;
