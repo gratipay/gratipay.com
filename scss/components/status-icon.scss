@@ -1,0 +1,7 @@
+.status-icon {
+    display: inline-block;
+    width: 17px;
+    &.approved {
+        font-size: 90%;
+    }
+}

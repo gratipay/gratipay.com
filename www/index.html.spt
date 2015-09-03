@@ -31,7 +31,11 @@ nteams = 0
 for key, tab in tabs.items():
     n = tab['n'] = len(tab['teams'])
     nteams += n
-    tab['name'] = "{} {} (n={})".format(status_icons[key], i18ned_statuses[key], n)
+    tab['name'] = '<span class="status-icon {}">{}</span> {} (n={})'.format( key
+                                                                           , status_icons[key]
+                                                                           , i18ned_statuses[key]
+                                                                           , n
+                                                                            )
 
 title = _("Teams")
 suppress_sidebar = True
@@ -100,7 +104,7 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 
                 <div class="details">
                     <span class="status">
-                        {{ status_icons[team.status]|safe }}
+                        <span class="status-icon">{{ status_icons[team.status]|safe }}</span>
                         {{ i18ned_statuses[team.status] }}
                     </span>
                     <span class="ctime">&middot; {{ _("created {ago}",

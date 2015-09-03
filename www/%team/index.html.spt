@@ -87,9 +87,9 @@ suppress_sidebar = not(team.is_approved or user.ADMIN)
     <p>
 
     {% if team.status == 'unreviewed' %}
-    &#9995; {{ _("Under Review") }} |
+    <span class="status-icon">&#9995;</span> {{ _("Under Review") }} |
     {% elif team.status == 'rejected' %}
-    &#10060; {{ _("Rejected") }} |
+    <span class="status-icon">&#10060;</span> {{ _("Rejected") }} |
     {% endif %}
 
     <a href="{{ team.homepage }}">{{ _("Homepage") }}</a>
