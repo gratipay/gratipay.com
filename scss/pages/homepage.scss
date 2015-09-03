@@ -85,8 +85,15 @@
                     white-space: nowrap;
                 }
                 .status-icon {
-                    width: 14px;
+                    width: 16px;
+                    height: 15px;
                     font-size: 12px;
+                    position: absolute;
+                    top: 30px;
+                    left: 31px;
+                    @include border-radius(3px);
+                    background: white;
+                    border: 1px solid white;
                 }
             }
             .numbers {
