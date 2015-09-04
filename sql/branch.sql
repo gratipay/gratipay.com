@@ -1,8 +1,14 @@
 BEGIN;
+    \i sql/1.0/all.sql
+
     CREATE TYPE status_of_1_0_payout AS ENUM
         ('pending-application', 'pending-review', 'rejected', 'pending-payout', 'completed');
     ALTER TABLE participants ADD COLUMN status_of_1_0_payout status_of_1_0_payout
-        NOT NULL DEFAULT 'pending-application';
+        NOT NULL DEFAULT 'completed';
+
+    UPDATE participants
+       SET status_of_1_0_payout = 'pending-application'
+     WHERE username = ANY(SELECT participant FROM numbers_1_0 WHERE remaining > 0);
 
     UPDATE participants
        SET status_of_1_0_payout='pending-payout'

@@ -28,7 +28,7 @@ class Tests(Harness):
     def test_user_cant_change_status(self):
         response = self.hit('pending-payout', auth_as='alice')
         assert response.code == 401
-        assert Participant.from_username('alice').status_of_1_0_payout == 'pending-application'
+        assert Participant.from_username('alice').status_of_1_0_payout == 'completed'
 
     def test_invalid_is_400(self):
         response = self.hit('invalid_status')

@@ -5,7 +5,7 @@ if user.ANON:
 
 suppress_sidebar = True
 banner = _("1.0")
-title = _("Status of your 1.0 Payout")
+title = _("Status of Your 1.0 Payout")
 receiving, ntips = user.participant.get_old_stats()
 balance = user.participant.balance
 status = user.participant.status_of_1_0_payout
@@ -18,10 +18,10 @@ status = user.participant.status_of_1_0_payout
            ) }}</i></p>
 
 {% if status == 'completed' %}
-    <p><b>{{ _("You do not have a Gratipay 1.0 balance.") }}</b></p>
+    <p><b>{{ _("You do not have a balance left over from Gratipay 1.0.") }}</b></p>
     <p>{{ _("You're all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
 {% else %}
-    <p>{{ _( "Your Gratipay 1.0 balance is {b}{balance}{_b}."
+    <p>{{ _( "Your balance is {b}{balance}{_b}."
            , balance=format_currency(balance, 'USD')
            , b='<b>'|safe
            , _b='</b>'|safe
