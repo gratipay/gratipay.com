@@ -76,21 +76,6 @@ CREATE INDEX ON payday_payment_instructions (participant);
 CREATE INDEX ON payday_payment_instructions (team);
 ALTER TABLE payday_payment_instructions ADD COLUMN is_funded boolean;
 
-UPDATE payday_payment_instructions ppi
-   SET due = s.due
-  FROM (SELECT participant, team, SUM(due) AS due
-       FROM payment_instructions
-       GROUP BY participant, team) s
- WHERE ppi.participant = s.participant
-   AND ppi.team = s.team;
-
-DROP TABLE IF EXISTS payment_instructions_due;
-CREATE TABLE payment_instructions_due AS
-    SELECT * FROM payday_payment_instructions;
-
-CREATE INDEX ON payment_instructions_due (participant);
-CREATE INDEX ON payment_instructions_due (team);
-
 ALTER TABLE payday_participants ADD COLUMN giving_today numeric(35,2);
 UPDATE payday_participants pp
    SET giving_today = COALESCE((
@@ -141,7 +126,7 @@ RETURNS void AS $$
         UPDATE payday_teams
            SET balance = (balance + team_delta)
          WHERE slug = $2;
-        UPDATE payment_instructions_due
+        UPDATE current_payment_instructions
            SET due = 0
          WHERE participant = $1
            AND team = $2
@@ -176,7 +161,7 @@ RETURNS void AS $$
     BEGIN
         IF ($3 = 0) THEN RETURN; END IF;
 
-        UPDATE payment_instructions_due
+        UPDATE current_payment_instructions
            SET due = $3
          WHERE participant = $1
            AND team = $2;

@@ -92,7 +92,6 @@ class TestPayday(BillingHarness):
         fch.return_value = {}
         Payday.start().run()    # payday 4
 
-
         obama = Participant.from_username('obama')
         picard = Participant.from_username('picard')
 

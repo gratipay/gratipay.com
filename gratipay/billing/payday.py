@@ -347,21 +347,6 @@ class Payday(object):
                 SELECT *, (SELECT id FROM paydays WHERE extract(year from ts_end) = 1970)
                   FROM payday_payments;
         """)
-        # Copy due value back to payment_instructions
-        cursor.run("""
-            UPDATE payment_instructions pi
-               SET due = pi2.due
-              FROM payment_instructions_due pi2
-             WHERE pi.id = pi2.id
-        """)
-        # Reset older due values to zero
-        cursor.run("""
-            UPDATE payment_instructions pi
-               SET due = '0'
-             WHERE pi.id NOT IN (
-                 SELECT id
-                   FROM payment_instructions_due pi2)
-        """)
 
         log("Updated the balances of %i participants." % len(participants))
 
