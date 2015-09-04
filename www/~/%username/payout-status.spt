@@ -3,6 +3,7 @@ from __future__ import print_function, unicode_literals
 from aspen import Response
 from gratipay.utils import get_participant
 
+workflow = ['pending-application', 'pending-review', 'rejected', 'pending-payout', 'completed']
 [-----------------------------------------------------------------------------]
 
 request.allow('POST')
@@ -13,12 +14,12 @@ if not user.ADMIN:
 
 new_status = request.body['to']
 
-if new_status not in ['pending-payout', 'unresolved']:
+if new_status not in workflow:
     raise Response(400, "invalid value for 'to' parameter")
 
 website.db.run("""
     UPDATE participants
-       SET status_of_1_0_balance = %s
+       SET status_of_1_0_payout = %s
      WHERE id = %s
 """, (new_status, participant.id))
 

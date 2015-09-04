@@ -18,11 +18,11 @@ status = user.participant.status_of_1_0_balance
            ) }}</i></p>
 
 {% if not balance %}
-    {% if status == 'moot' %}
+    {% if status == None %}
     <p><b>{{ _("You do not have a Gratipay 1.0 balance.") }}</b></p>
     <p>{{ _("You're all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
 
-    {% elif status == 'payout-complete' %}
+    {% elif status == 'completed' %}
     <p><b>{{ _("Your Gratipay 1.0 balance has been paid out.") }}</b></p>
     <p>{{ _("You're all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
 
@@ -41,7 +41,7 @@ status = user.participant.status_of_1_0_balance
             ) }}</p>
     <p>{{ _("You should be all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
 
-    {% elif status == 'pending-approval' %}
+    {% elif status == 'pending-review' %}
     <p>{{ _( "You have applied for a payout. We are reviewing your account and will contact you at {b}{email}{_b} within the next week."
            , email=user.participant.email_address
            , b='<b>'|safe

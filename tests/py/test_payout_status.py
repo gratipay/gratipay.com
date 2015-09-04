@@ -3,6 +3,8 @@ from __future__ import print_function, unicode_literals
 from gratipay.testing import Harness
 from gratipay.models.participant import Participant
 
+workflow = ['pending-application', 'pending-review', 'rejected', 'pending-payout', 'completed']
+
 
 class Tests(Harness):
     def setUp(self):
@@ -12,24 +14,21 @@ class Tests(Harness):
 
     def hit(self, new_status, auth_as='admin'):
         return self.client.PxST(
-            "/~alice/old-balance-status",
+            "/~alice/payout-status",
             {'to': new_status},
             auth_as=auth_as
         )
 
     def test_admin_can_change_status(self):
-        response = self.hit('pending-payout')
-        assert response.code == 302
-        assert Participant.from_username('alice').status_of_1_0_balance == 'pending-payout'
-
-        response = self.hit('unresolved')
-        assert response.code == 302
-        assert Participant.from_username('alice').status_of_1_0_balance == 'unresolved'
+        for status in workflow:
+            response = self.hit(status)
+            assert response.code == 302
+            assert Participant.from_username('alice').status_of_1_0_payout == status
 
     def test_user_cant_change_status(self):
         response = self.hit('pending-payout', auth_as='alice')
         assert response.code == 401
-        assert Participant.from_username('alice').status_of_1_0_balance == 'unresolved'
+        assert Participant.from_username('alice').status_of_1_0_payout == 'pending-application'
 
     def test_invalid_is_400(self):
         response = self.hit('invalid_status')
