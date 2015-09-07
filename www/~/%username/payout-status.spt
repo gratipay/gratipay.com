@@ -9,6 +9,9 @@ workflow = ['too-little', 'pending-application', 'pending-review', 'rejected', '
 [-----------------------------------------------------------------------------]
 
 request.allow('POST')
+if user.ANON:
+    raise Response(401)
+
 participant = get_participant(state, restrict=True)
 new_status = request.body['to']
 
@@ -20,6 +23,9 @@ if not (user.ADMIN or (user.participant == participant and is_applying)):
 
 if new_status not in workflow:
     raise Response(400, "invalid value for 'to' parameter")
+
+if not participant.has_payout_route:
+    raise Response(400, "Needs a working payout route.")
 
 with website.db.get_cursor() as c:
     new_status = c.one("""

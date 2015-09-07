@@ -10,7 +10,7 @@ workflow = ['too-little', 'pending-application', 'pending-review', 'rejected', '
 class Tests(Harness):
     def setUp(self):
         super(Harness)
-        self.make_participant('alice', claimed_time='now')
+        self.make_participant('alice', claimed_time='now', last_paypal_result='')
         self.make_participant('admin', claimed_time='now', is_admin=True)
 
     def hit(self, new_status, expecting_error=True, auth_as='admin'):
@@ -33,6 +33,12 @@ class Tests(Harness):
 
         response = self.hit('pending-review', auth_as='alice', expecting_error=False)
         assert Participant.from_username('alice').status_of_1_0_payout == 'pending-review'
+
+    def test_user_must_have_a_payout_route(self):
+        self.db.run("DELETE FROM exchange_routes;")
+        response = self.hit('pending-payout', auth_as='admin')
+        assert response.code == 400
+        assert Participant.from_username('alice').status_of_1_0_payout == 'completed'
 
     def test_invalid_is_400(self):
         response = self.hit('invalid_status')
