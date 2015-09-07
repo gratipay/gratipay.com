@@ -35,6 +35,11 @@ with website.db.get_cursor() as c:
         action='set', values=dict(status_of_1_0_payout=new_status)
     ))
 
+    if new_status == 'rejected':
+        participant.send_email('rejected-1.0', include_unsubscribe=False)
+    elif new_status == 'pending-payout':
+        participant.send_email('approved-1.0', include_unsubscribe=False)
+
 out = {"status": new_status}
 [---] application/json via json_dump
 out
