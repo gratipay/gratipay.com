@@ -1,7 +1,7 @@
 from aspen import Response
 [---]
 if user.ANON:
-    raise Response(403)
+    raise Response(401)
 
 suppress_sidebar = True
 banner = _("1.0")
@@ -17,7 +17,13 @@ status = user.participant.status_of_1_0_payout
           , _a='</a>'|safe
            ) }}</i></p>
 
-{% if status == 'completed' %}
+{% if status == 'too-little' %}
+    <p>{{ _( "Your balance from Gratipay 1.0 is {b}below our minimum payout threshold of {minimum}{_b}, and will be refunded to the original donors on October 8."
+           , minimum=format_currency(0.5, 'USD')
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
+{% elif status == 'completed'  %}
     <p><b>{{ _("You do not have a balance left over from Gratipay 1.0.") }}</b></p>
     <p>{{ _("You're all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
 {% else %}

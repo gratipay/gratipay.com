@@ -1,6 +1,12 @@
 BEGIN;
     CREATE TYPE status_of_1_0_payout AS ENUM
-        ('pending-application', 'pending-review', 'rejected', 'pending-payout', 'completed');
+        ( 'too-little'
+        , 'pending-application'
+        , 'pending-review'
+        , 'rejected'
+        , 'pending-payout'
+        , 'completed'
+         );
     ALTER TABLE participants ADD COLUMN status_of_1_0_payout status_of_1_0_payout
         NOT NULL DEFAULT 'completed';
 
