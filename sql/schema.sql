@@ -661,3 +661,14 @@ BEGIN;
         WHEN (OLD.balance > 0 AND NEW.balance = 0)
         EXECUTE PROCEDURE complete_1_0_payout();
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3760
+BEGIN;
+    ALTER TABLE participants DROP COLUMN status_of_1_0_balance;
+    DROP TRIGGER update_status_of_1_0_balance ON participants;
+    DROP FUNCTION set_status_of_1_0_balance_to_resolved();
+
+    DROP TABLE numbers_1_0;
+    DROP TABLE receivers_1_0;
+END;
