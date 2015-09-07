@@ -19,7 +19,7 @@ import braintree
 import aspen.utils
 from aspen import log
 from gratipay.billing.exchanges import (
-    cancel_card_hold, capture_card_hold, create_card_hold, upcharge,
+    cancel_card_hold, capture_card_hold, create_card_hold, upcharge, MINIMUM_CHARGE,
 )
 from gratipay.exceptions import NegativeBalance
 from gratipay.models import check_db
@@ -220,17 +220,23 @@ class Payday(object):
             if p.old_balance < 0:
                 amount -= p.old_balance
             if p.id in holds:
-                charge_amount = upcharge(amount)[0]
-                if holds[p.id].amount >= charge_amount:
-                    return
+                if amount >= MINIMUM_CHARGE:
+                    charge_amount = upcharge(amount)[0]
+                    if holds[p.id].amount >= charge_amount:
+                        return
+                    else:
+                        # The amount is too low, cancel the hold and make a new one
+                        cancel_card_hold(holds.pop(p.id))
                 else:
-                    # The amount is too low, cancel the hold and make a new one
+                    # not up to minimum charge level. cancel the hold
                     cancel_card_hold(holds.pop(p.id))
-            hold, error = create_card_hold(self.db, p, amount)
-            if error:
-                return 1
-            else:
-                holds[p.id] = hold
+                    return
+            if amount >= MINIMUM_CHARGE:
+                hold, error = create_card_hold(self.db, p, amount)
+                if error:
+                    return 1
+                else:
+                    holds[p.id] = hold
         threaded_map(f, participants)
 
         # Update the values of card_hold_ok in our temporary table
@@ -341,6 +347,7 @@ class Payday(object):
                 SELECT *, (SELECT id FROM paydays WHERE extract(year from ts_end) = 1970)
                   FROM payday_payments;
         """)
+
         log("Updated the balances of %i participants." % len(participants))
 
 

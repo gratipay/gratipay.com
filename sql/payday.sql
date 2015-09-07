@@ -55,7 +55,7 @@ CREATE TABLE payday_payments_done AS
 
 DROP TABLE IF EXISTS payday_payment_instructions;
 CREATE TABLE payday_payment_instructions AS
-    SELECT participant, team, amount
+    SELECT s.id, participant, team, amount, due
       FROM ( SELECT DISTINCT ON (participant, team) *
                FROM payment_instructions
               WHERE mtime < %(ts_start)s
@@ -77,11 +77,11 @@ CREATE INDEX ON payday_payment_instructions (team);
 ALTER TABLE payday_payment_instructions ADD COLUMN is_funded boolean;
 
 ALTER TABLE payday_participants ADD COLUMN giving_today numeric(35,2);
-UPDATE payday_participants
+UPDATE payday_participants pp
    SET giving_today = COALESCE((
-           SELECT sum(amount)
+           SELECT sum(amount + due)
              FROM payday_payment_instructions
-            WHERE participant = username
+            WHERE participant = pp.username
        ), 0);
 
 DROP TABLE IF EXISTS payday_takes;
@@ -108,6 +108,7 @@ RETURNS void AS $$
     DECLARE
         participant_delta numeric;
         team_delta numeric;
+        payload json;
     BEGIN
         IF ($3 = 0) THEN RETURN; END IF;
 
@@ -125,6 +126,17 @@ RETURNS void AS $$
         UPDATE payday_teams
            SET balance = (balance + team_delta)
          WHERE slug = $2;
+        UPDATE current_payment_instructions
+           SET due = 0
+         WHERE participant = $1
+           AND team = $2
+           AND due > 0;
+        IF ($4 = 'to-team') THEN
+            payload = '{"action":"pay","participant":"' || $1 || '", "team":"'
+                || $2 || '", "amount":' || $3 || '}';
+            INSERT INTO events(type, payload)
+                VALUES ('payday',payload);
+        END IF;
         INSERT INTO payday_payments
                     (participant, team, amount, direction)
              VALUES ( ( SELECT p.username
@@ -141,6 +153,27 @@ RETURNS void AS $$
     END;
 $$ LANGUAGE plpgsql;
 
+-- Add payments that were not met on to due
+
+CREATE OR REPLACE FUNCTION park(text, text, numeric)
+RETURNS void AS $$
+    DECLARE payload json;
+    BEGIN
+        IF ($3 = 0) THEN RETURN; END IF;
+
+        UPDATE current_payment_instructions
+           SET due = $3
+         WHERE participant = $1
+           AND team = $2;
+
+        payload = '{"action":"due","participant":"' || $1 || '", "team":"'
+            || $2 || '", "due":' || $3 || '}';
+        INSERT INTO events(type, payload)
+            VALUES ('payday',payload);
+
+    END;
+$$ LANGUAGE plpgsql;
+
 
 -- Create a trigger to process payment_instructions
 
@@ -153,9 +186,12 @@ CREATE OR REPLACE FUNCTION process_payment_instruction() RETURNS trigger AS $$
               FROM payday_participants p
              WHERE username = NEW.participant
         );
-        IF (NEW.amount <= participant.new_balance OR participant.card_hold_ok) THEN
-            EXECUTE pay(NEW.participant, NEW.team, NEW.amount, 'to-team');
+        IF (NEW.amount + NEW.due <= participant.new_balance OR participant.card_hold_ok) THEN
+            EXECUTE pay(NEW.participant, NEW.team, NEW.amount + NEW.due, 'to-team');
             RETURN NEW;
+        ELSE
+            EXECUTE park(NEW.participant, NEW.team, NEW.amount + NEW.due);
+            RETURN NULL;
         END IF;
         RETURN NULL;
     END;
@@ -165,7 +201,6 @@ CREATE TRIGGER process_payment_instruction BEFORE UPDATE OF is_funded ON payday_
     FOR EACH ROW
     WHEN (NEW.is_funded IS true AND OLD.is_funded IS NOT true)
     EXECUTE PROCEDURE process_payment_instruction();
-
 
 -- Create a trigger to process takes
 

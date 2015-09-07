@@ -8,7 +8,7 @@ import braintree
 import mock
 import pytest
 
-from gratipay.billing.exchanges import create_card_hold
+from gratipay.billing.exchanges import create_card_hold, MINIMUM_CHARGE
 from gratipay.billing.payday import NoPayday, Payday
 from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
@@ -19,9 +19,9 @@ from gratipay.testing.emails import EmailHarness
 
 class TestPayday(BillingHarness):
 
-    def test_payday_moves_money(self):
+    def test_payday_moves_money_above_min_charge(self):
         Enterprise = self.make_team(is_approved=True)
-        self.obama.set_payment_instruction(Enterprise, '6.00')  # under $10!
+        self.obama.set_payment_instruction(Enterprise, MINIMUM_CHARGE)  # must be >= MINIMUM_CHARGE
         with mock.patch.object(Payday, 'fetch_card_holds') as fch:
             fch.return_value = {}
             Payday.start().run()
@@ -29,8 +29,90 @@ class TestPayday(BillingHarness):
         obama = Participant.from_username('obama')
         picard = Participant.from_username('picard')
 
-        assert picard.balance == D('6.00')
-        assert obama.balance == D('3.41')
+        assert picard.balance == D(MINIMUM_CHARGE)
+        assert obama.balance == D('0.00')
+        assert obama.get_due('TheEnterprise') == D('0.00')
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def test_payday_moves_money_cumulative_above_min_charge(self, fch):
+        Enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(Enterprise, '5.00')  # < MINIMUM_CHARGE
+        # simulate already due amount
+        self.db.run("""
+
+            UPDATE payment_instructions ppi
+               SET due = '5.00'
+             WHERE ppi.participant = 'obama'
+               AND ppi.team = 'TheEnterprise'
+
+        """)
+
+        fch.return_value = {}
+        Payday.start().run()
+
+        obama = Participant.from_username('obama')
+        picard = Participant.from_username('picard')
+
+        assert picard.balance == D('10.00')
+        assert obama.balance == D('0.00')
+        assert obama.get_due('TheEnterprise') == D('0.00')
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def test_payday_preserves_due_until_charged(self, fch):
+        Enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(Enterprise, '2.00')  # < MINIMUM_CHARGE
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 0
+
+        assert self.obama.get_due('TheEnterprise') == D('2.00')
+
+        self.obama.set_payment_instruction(Enterprise, '3.00')  # < MINIMUM_CHARGE
+        self.obama.set_payment_instruction(Enterprise, '2.50')  # cumulatively still < MINIMUM_CHARGE
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 1
+
+        assert self.obama.get_due('TheEnterprise') == D('4.50')
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 2
+
+        assert self.obama.get_due('TheEnterprise') == D('7.00')
+
+        self.obama.set_payment_instruction(Enterprise, '1.00')  # cumulatively still < MINIMUM_CHARGE
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 3
+
+        assert self.obama.get_due('TheEnterprise') == D('8.00')
+
+        self.obama.set_payment_instruction(Enterprise, '4.00')  # cumulatively > MINIMUM_CHARGE
+
+        fch.return_value = {}
+        Payday.start().run()    # payday 4
+
+        obama = Participant.from_username('obama')
+        picard = Participant.from_username('picard')
+
+        assert picard.balance == D('12.00')
+        assert obama.balance == D('0.00')
+        assert obama.get_due('TheEnterprise') == D('0.00')
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def test_payday_does_not_move_money_below_min_charge(self, fch):
+        Enterprise  = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(Enterprise, '6.00')  # not enough to reach MINIMUM_CHARGE
+        fch.return_value = {}
+        Payday.start().run()
+
+        obama = Participant.from_username('obama')
+        picard = Participant.from_username('picard')
+
+        assert picard.balance == D('0.00')
+        assert obama.balance == D('0.00')
+        assert obama.get_due('TheEnterprise') == D('6.00')
+
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_doesnt_move_money_from_a_suspicious_account(self, fch):
@@ -40,7 +122,7 @@ class TestPayday(BillingHarness):
              WHERE username = 'obama'
         """)
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_payment_instruction(team, '6.00')  # under $10!
+        self.obama.set_payment_instruction(team, MINIMUM_CHARGE)  # >= MINIMUM_CHARGE!
         fch.return_value = {}
         Payday.start().run()
 
@@ -58,7 +140,7 @@ class TestPayday(BillingHarness):
              WHERE username = 'homer'
         """)
         team = self.make_team(owner=self.homer, is_approved=True)
-        self.obama.set_payment_instruction(team, '6.00')  # under $10!
+        self.obama.set_payment_instruction(team, MINIMUM_CHARGE)  # >= MINIMUM_CHARGE!
         fch.return_value = {}
         Payday.start().run()
 
@@ -165,10 +247,10 @@ class TestPayin(BillingHarness):
     def test_payin_pays_in(self, sale, sfs, fch):
         fch.return_value = {}
         team = self.make_team('Gratiteam', is_approved=True)
-        self.obama.set_payment_instruction(team, 1)
+        self.obama.set_payment_instruction(team, MINIMUM_CHARGE)        # >= MINIMUM_CHARGE
 
         txn_attrs = {
-            'amount': 1,
+            'amount': MINIMUM_CHARGE,
             'tax_amount': 0,
             'status': 'authorized',
             'custom_fields': {'participant_id': self.obama.id},
@@ -186,7 +268,7 @@ class TestPayin(BillingHarness):
 
         Payday.start().payin()
         payments = self.db.all("SELECT amount, direction FROM payments")
-        assert payments == [(1, 'to-team'), (1, 'to-participant')]
+        assert payments == [(MINIMUM_CHARGE, 'to-team'), (MINIMUM_CHARGE, 'to-participant')]
 
     @mock.patch('braintree.Transaction.sale')
     def test_payin_doesnt_try_failed_cards(self, sale):
