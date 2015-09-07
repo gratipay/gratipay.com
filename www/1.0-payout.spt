@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from aspen import Response
+
 [---]
 if user.ANON:
     raise Response(401)
@@ -9,6 +12,11 @@ title = _("Status of Your 1.0 Payout")
 receiving, ntips = user.participant.get_old_stats()
 balance = user.participant.balance
 status = user.participant.status_of_1_0_payout
+
+deadline = datetime(2015, 10, 2).date()
+now = datetime.utcnow().date()
+delta = (deadline - now).total_seconds()  # will be zero on Oct 2
+applications_open = delta > 0
 [---] text/html
 {% extends "templates/base.html" %}
 {% block content %}
@@ -58,7 +66,7 @@ status = user.participant.status_of_1_0_payout
             ) }}</p>
     <p>{{ _("Your balance will be refunded to the original donors on October 8.") }}</p>
 
-    {% else %}
+    {% elif applications_open %}
     <p><button>{{ _("Apply for a payout") }}</button></p>
 
     <p>{{ _( "You have until {b}October 1 at 11:59 PM UTC{_b} to apply for a payout."
@@ -77,7 +85,8 @@ status = user.participant.status_of_1_0_payout
            , _a='</a>'|safe
             ) }}</i></p>
     {% endif %}
-
+    {% else %}
+    <p>{{ _("The deadline for applications was October 1, 2015 at 11:59 PM UTC, and is now passed. Your balance will be refunded to the original donors on October 8.") }}</p>
     {% endif %}
 {% endif %}
 {% endblock %}
