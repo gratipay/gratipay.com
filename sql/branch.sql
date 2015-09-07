@@ -21,6 +21,7 @@ BEGIN;
         END;
     $$ LANGUAGE plpgsql;
 
-    CREATE TRIGGER update_current_payment_instruction INSTEAD OF UPDATE ON current_payment_instructions
+    CREATE TRIGGER update_current_payment_instruction
+        INSTEAD OF UPDATE ON current_payment_instructions
         FOR EACH ROW EXECUTE PROCEDURE update_payment_instruction();
 END;
