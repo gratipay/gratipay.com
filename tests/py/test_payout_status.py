@@ -23,10 +23,16 @@ class Tests(Harness):
             assert response.code == 200
             assert Participant.from_username('alice').status_of_1_0_payout == status
 
-    def test_user_cant_change_status(self):
+    def test_user_cant_change_status_except_for_applying(self):
+        self.db.run("UPDATE participants SET status_of_1_0_payout='pending-application' "
+                    "WHERE username='alice'")
+
         response = self.hit('pending-payout', auth_as='alice')
         assert response.code == 403
-        assert Participant.from_username('alice').status_of_1_0_payout == 'completed'
+        assert Participant.from_username('alice').status_of_1_0_payout == 'pending-application'
+
+        response = self.hit('pending-review', auth_as='alice', expecting_error=False)
+        assert Participant.from_username('alice').status_of_1_0_payout == 'pending-review'
 
     def test_invalid_is_400(self):
         response = self.hit('invalid_status')
