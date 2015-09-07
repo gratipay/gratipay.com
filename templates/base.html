@@ -69,23 +69,31 @@
 
         {% if request.path.raw != '/1.0-payout' %}
         {% if not user.participant or user.participant.status_of_1_0_payout == 'pending-application' %}
-        <div id="notice">
-            &#x2605;
-            {{ _( "You have until October 1 to {a}apply for a 1.0 payout{_a}."
-                , a='<a href="/1.0-payout">'|safe
-                , _a='</a>'|safe
-                 ) }}
-            &#x2605;
-        </div>
+        <table id="notice">
+            <tr>
+                <td>&#x2605;</td>
+                <td>{{ _( "{nowrap}You have until October 1 to{_nowrap} {nowrap}{a}apply for a 1.0 payout{_a}{_nowrap}."
+                        , nowrap='<span class="nowrap">'|safe
+                        , _nowrap='</span>'|safe
+                        , a='<a href="/1.0-payout">'|safe
+                        , _a='</a>'|safe
+                         ) }}</td>
+                <td>&#x2605;</td>
+            </tr>
+        </table>
         {% elif user.participant and user.participant.status_of_1_0_payout in ('pending-review', 'pending-payout') %}
-        <div id="notice">
-            &#x2605;
-            {{ _( "Check the status of your {a}1.0 payout application{_a}."
-                , a='<a href="/1.0-payout">'|safe
-                , _a='</a>'|safe
-                 ) }}
-            &#x2605;
-        </div>
+        <table id="notice">
+            <tr>
+                <td>&#x2605;</td>
+                <td>{{ _( "{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
+                        , nowrap='<span class="nowrap">'|safe
+                        , _nowrap='</span>'|safe
+                        , a='<a href="/1.0-payout">'|safe
+                        , _a='</a>'|safe
+                         ) }}</td>
+                <td>&#x2605;</td>
+            </tr>
+        </table>
         {% endif %}
         {% endif %}
 

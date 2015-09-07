@@ -73,13 +73,13 @@
             }
         }
     }
+    #notice td {
+        width: 1px;
+    }
     #main {
         display: block;
-        padding: 0 0 40px;
+        margin: 10px 0 40px;
         min-height: 0;
-    }
-    #homepage #sidebar {
-        padding-top: 20px ! important;
     }
     #sidebar {
         padding-top: 20px;

@@ -9,6 +9,7 @@ from gratipay.utils import excerpt_intro, get_team, markdown
 
 team = get_team(state)
 banner = name = team.name
+suppress_sidebar = not(team.is_approved or user.ADMIN)
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/base.html" %}
@@ -26,7 +27,7 @@ banner = name = team.name
 
 {% block banner %}
 
-<div class="details mono">
+<div class="details mono{% if not team.is_approved %} luxury{% endif %}">
     {% if team.is_approved %}
     <table>
         <tr>
@@ -54,8 +55,6 @@ banner = name = team.name
     {{ _('Applied {ago}', ago=to_age(team.ctime, add_direction=True)) }}
     {% endif %}
     </p>
-
-    <!-- data-participant="{ participant.id }" -->
 </div>
 
 {{ super() }}
@@ -88,9 +87,9 @@ banner = name = team.name
     <p>
 
     {% if team.status == 'unreviewed' %}
-    {{ _("Under Review") }} |
+    <span class="status-icon">&#9995;</span> {{ _("Under Review") }} |
     {% elif team.status == 'rejected' %}
-    {{ _("Rejected") }} |
+    <span class="status-icon">&#10060;</span> {{ _("Rejected") }} |
     {% endif %}
 
     <a href="{{ team.homepage }}">{{ _("Homepage") }}</a>
