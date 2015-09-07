@@ -26,8 +26,10 @@ applications_open = delta > 0
            ) }}</i></p>
 
 {% if status == 'too-little' %}
-    <p>{{ _( "Your balance from Gratipay 1.0 is {b}below our minimum payout threshold of {minimum}{_b}, and will be refunded to the original donors on October 8."
+    <p>{{ _( "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout threshold of {minimum}{_b}, and will be refunded to the original donors on October 8."
            , minimum=format_currency(0.5, 'USD')
+           , a='<a href="/about/me/history/">'|safe
+           , _a='</a>'|safe
            , b='<b>'|safe
            , _b='</b>'|safe
             ) }}</p>
