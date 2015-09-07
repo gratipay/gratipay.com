@@ -1,0 +1,13 @@
+from aspen.http import status_strings
+[---]
+banner = "401"
+[---] text/html via jinja2
+{% extends "templates/base.html" %}
+{% block content %}
+Please {% include "templates/sign-in-using.html" %} to continue.
+{% endblock %}
+[---] application/json via stdlib_percent
+{ "error_code": 401
+, "error_message_short": "Unauthenticated"
+, "error_message_long": "Please retry your request with authentication."
+ }
