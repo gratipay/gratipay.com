@@ -76,14 +76,16 @@ applications_open = delta > 0
             ) }}</b></p>
 
     {% if ntips %}
-    <p><i>{{ ngettext(
-             "P.S. You were receiving {receiving} per week from one person under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
-           , "P.S. You were receiving {receiving} per week from {n} people under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
+    <p>{{ ngettext(
+             "P.S. You were receiving {b}{receiving} per week from one person{_b} under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
+           , "P.S. You were receiving {b}{receiving} per week from {n} people{_b} under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
            , ntips
            , receiving=format_currency(receiving, 'USD')
            , a='<a href="/new">'|safe
            , _a='</a>'|safe
-            ) }}</i></p>
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
     {% endif %}
     {% else %}
     <p>{{ _("The deadline for applications was October 1, 2015 at 11:59 PM UTC, and is now passed. Your balance will be refunded to the original donors on October 8.") }}</p>
