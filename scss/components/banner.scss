@@ -54,6 +54,13 @@
         &.is-suspicious {
             background: transparentize($light-red, 0.1);
         }
+
+        .payout-1-0 {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            z-index: 3;
+        }
     }
 
     .details {

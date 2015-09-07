@@ -1,0 +1,5 @@
+{{ _("1.0 Payout: Rejected") }}
+[---] text/html
+{{ _("We've rejected your application for a payout of your Gratipay 1.0 balance, because we couldn't determine what product or service you were offering for which people were paying you on Gratipay. Please reply if you would like to discuss this further.") }}
+[---] text/plain
+{{ _("We've rejected your application for a payout of your Gratipay 1.0 balance, because we couldn't determine what product or service you were offering for which people were paying you on Gratipay. Please reply if you would like to discuss this further.") }}

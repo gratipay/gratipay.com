@@ -1,0 +1,51 @@
+from __future__ import print_function, unicode_literals
+
+from aspen import Response
+from gratipay.utils import get_participant
+from gratipay.models import add_event
+
+workflow = ['too-little', 'pending-application', 'pending-review', 'rejected', 'pending-payout',
+            'completed']
+[-----------------------------------------------------------------------------]
+
+request.allow('POST')
+if user.ANON:
+    raise Response(401)
+
+participant = get_participant(state, restrict=True)
+new_status = request.body['to']
+
+from_to = (participant.status_of_1_0_payout, new_status)
+is_applying = from_to == ('pending-application', 'pending-review')
+
+if not (user.ADMIN or (user.participant == participant and is_applying)):
+    raise Response(403)
+
+if new_status not in workflow:
+    raise Response(400, "invalid value for 'to' parameter")
+
+if not participant.has_payout_route:
+    raise Response(400, "Needs a working payout route.")
+
+with website.db.get_cursor() as c:
+    new_status = c.one("""
+        UPDATE participants
+           SET status_of_1_0_payout = %s
+         WHERE id = %s
+     RETURNING status_of_1_0_payout
+    """, (new_status, participant.id))
+
+    add_event(c, 'participant', dict(
+        id=participant.id,
+        recorder=dict(id=user.participant.id, username=user.participant.username),
+        action='set', values=dict(status_of_1_0_payout=new_status)
+    ))
+
+    if new_status == 'rejected':
+        participant.send_email('rejected-1.0', include_unsubscribe=False)
+    elif new_status == 'pending-payout':
+        participant.send_email('approved-1.0', include_unsubscribe=False)
+
+out = {"status": new_status}
+[---] application/json via json_dump
+out

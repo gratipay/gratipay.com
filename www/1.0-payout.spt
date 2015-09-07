@@ -1,34 +1,120 @@
+from datetime import datetime
+
 from aspen import Response
+
 [---]
 if user.ANON:
-    raise Response(403)
+    raise Response(401)
 
 suppress_sidebar = True
-banner = _("Apply")
-title = _("Apply for a 1.0 Payout")
+banner = _("1.0")
+title = _("Status of Your 1.0 Payout")
 receiving, ntips = user.participant.get_old_stats()
+balance = user.participant.balance
+status = user.participant.status_of_1_0_payout
+
+deadline = datetime(2015, 10, 2).date()
+now = datetime.utcnow().date()
+delta = (deadline - now).total_seconds()  # will be zero on Oct 2
+applications_open = delta > 0
 [---] text/html
 {% extends "templates/base.html" %}
 {% block content %}
+<p><i>{{ _( "Read about our plan to {a}refund the money from Gratipay 1.0{_a}."
+          , a='<a href="https://medium.com/gratipay-blog/140-000-97d54e6d40ed">'|safe
+          , _a='</a>'|safe
+           ) }}</i></p>
 
-{% if user.participant.balance %}
-    <p>{{ _( "We are planning to {a}refund the money from Gratipay 1.0{_a}."
-           , a='<a href="https://medium.com/gratipay-blog/140-000-97d54e6d40ed">'|safe
+{% if status == 'too-little' %}
+    <p>{{ _( "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout threshold of {minimum}{_b}, and will be refunded to the original donors on October 8."
+           , minimum=format_currency(0.5, 'USD')
+           , a='<a href="/about/me/history/">'|safe
+           , _a='</a>'|safe
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
+{% elif status == 'completed'  %}
+    <p><b>{{ _("You do not have a balance left over from Gratipay 1.0.") }}</b></p>
+    <p>{{ _("You're all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
+{% else %}
+    <p>{{ _( "Your balance is {b}{balance}{_b}."
+           , balance=format_currency(balance, 'USD')
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</b></p>
+
+    {% if status == 'pending-payout' %}
+    <p>{{ _( "You are {b}scheduled for a payout{_b} during our next weekly cycle."
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
+    <p>{{ _("You should be all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
+
+    {% elif status == 'pending-review' %}
+    <p>{{ _( "You have applied for a payout. We will review your account and contact you at {b}{email}{_b} within the next week."
+           , email=user.participant.email_address
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
+    <p>{{ _("Meanwhile ... can you help us spread the word and tell your friends to check here, too? Thanks! :)") }}</p>
+
+    {% elif status == 'rejected' %}
+    <p>{{ _( "You have applied for a payout, and we have rejected your application. You should have received a notification at {b}{email}{_b} from {a}support@gratipay.com{_a}."
+           , email=user.participant.email_address
+           , a='<a href="mailto:support@gratipay.com">'|safe
+           , _a='</a>'|safe
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
+    <p>{{ _("Your balance will be refunded to the original donors on October 8.") }}</p>
+
+    {% elif applications_open %}
+    {% if user.participant.has_payout_route %}
+    <p><button class="apply-for-payout">{{ _("Apply for a payout") }}</button></p>
+    {% else %}
+    <p>{{ _( "Please {a}connect a PayPal account{_a} and then return here to apply for payout."
+           , a='<a href="/about/me/routes/paypal">'|safe
            , _a='</a>'|safe
             ) }}</p>
+    {% endif %}
 
-    <p><b>{{ _( 'To apply for a one-time payout, please {a}email us{_a}.'
-              , a='<a href="mailto:support@gratipay.com">'|safe
-              , _a='</a>'|safe
-               ) }}</b></p>
+    <p>{{ _( "You have until {b}October 1 at 11:59 PM UTC{_b} to apply for a payout."
+           , balance=format_currency(balance, 'USD')
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</b></p>
 
     {% if ntips %}
-    <p>{{ _("P.S. You were receiving {receiving} per week from {ntips} people under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
-               , ntips=ntips
-               , receiving=format_currency(receiving, 'USD')
-               , a='<a href="/new">'|safe
-               , _a='</a>'|safe
-                ) }}</p>
+    <p>{{ ngettext(
+             "P.S. You were receiving {b}{receiving} per week from one person{_b} under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
+           , "P.S. You were receiving {b}{receiving} per week from {n} people{_b} under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
+           , ntips
+           , receiving=format_currency(receiving, 'USD')
+           , a='<a href="/new">'|safe
+           , _a='</a>'|safe
+           , b='<b>'|safe
+           , _b='</b>'|safe
+            ) }}</p>
+    {% endif %}
+    {% else %}
+    <p>{{ _("The deadline for 1.0 payout applications was October 1, 2015 at 11:59 PM UTC, and is now passed. Your balance will be refunded to the original donors on October 8.") }}</p>
     {% endif %}
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('.apply-for-payout').click(function(e) {
+            jQuery.ajax({
+                url: '/~{{ user.participant.username }}/payout-status.json',
+                type: 'POST',
+                data: {to: 'pending-review'},
+                dataType: 'json',
+                success: function (data) { window.location.reload(); },
+                error: Gratipay.error
+            });
+        });
+    });
+</script>
 {% endblock %}

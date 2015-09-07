@@ -1,0 +1,10 @@
+{{ _("1.0 Payout: Approved!") }}
+[---] text/html
+{{ _("We've approved your application for a payout of your Gratipay 1.0 balance. Watch for that during our next weekly payment cycle.") }}
+<br>
+<br>
+{{ _("Thanks for using Gratipay! :-)") }}
+[---] text/plain
+{{ _("We've approved your application for a payout of your Gratipay 1.0 balance. Watch for that during our next weekly payment cycle.") }}
+
+{{ _("Thanks for using Gratipay! :-)") }}
