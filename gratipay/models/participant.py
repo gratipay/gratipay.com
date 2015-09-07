@@ -860,7 +860,7 @@ class Participant(Model):
             # Update giving amount of participant
             self.update_giving(cursor)
             # Carry over any existing due
-            self.update_due(t_dict['team'],t_dict['id'],cursor)
+            self.update_due(t_dict['team'], t_dict['id'], cursor)
         if update_team:
             # Update receiving amount of team
             team.update_receiving(cursor)
