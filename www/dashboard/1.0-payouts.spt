@@ -1,0 +1,108 @@
+from aspen import Response
+
+[---]
+if not user.ADMIN:
+    raise Response(403)
+
+
+unreviewed = website.db.all("""
+
+    SELECT username
+         , balance
+      FROM participants
+     WHERE status_of_1_0_payout = 'pending-review' 
+  ORDER BY claimed_time
+
+""")
+
+title = _("1.0 Payout Review")
+[---] text/html
+<script src="{{ website.asset('jquery.min.js') }}"></script>
+<script src="{{ website.asset('gratipay.js') }}"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+    h3 { padding: 0 0 10px; }
+    div { height: 24px; }
+    button {
+        background: white;
+        padding: 2px 4px;
+    }
+    .good {
+        background: #CCFFCC;
+    }
+    .bad {
+        background: #FFCCCC;
+    }
+    .listing {
+        padding: 10px;
+        width: 30%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: auto;
+    }
+    iframe {
+        width: 70%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        background: white;
+    }
+</style>
+<script>
+    $(document).ready(function()
+    {
+        Gratipay.forms.initCSRF();
+
+        function loadNext() {
+            var next = $('.unreviewed a').attr('href') || 'data:text/html,<h1>Done.<%2Fh1>';
+            $('iframe').attr('src', next);
+        };
+
+        function error(a,b,c)
+        {
+            console.log(a,b,c);
+            alert("Failed!");
+        }
+
+        loadNext();
+        $('button').click(function()
+        {
+            var button = $(this);
+            var row = $(this).parent();
+            var to = $(this).text() === 'Good' ? 'pending-payout' : 'rejected';
+            var username = row.attr('username');
+            var url = "/~" + username + "/payout-status";
+
+            function success(d)
+            {
+                button.blur();
+                row.removeClass('unreviewed');
+                loadNext();
+                row.addClass(d.status == 'pending-payout' ? 'good' : 'bad');
+            }
+
+            jQuery.ajax({ url: url
+                        , type: "POST"
+                        , dataType: "json"
+                        , data: {to: to}
+                        , success: success
+                        , error: error
+                         })
+        });
+    });
+</script>
+<div class="listing">
+    <h3>1.0 Payout Applications (N = {{ len(unreviewed) }})</h3>
+    {% for account in unreviewed %}
+    <div username="{{ account.username }}" class="unreviewed">
+        <button>Good</button>
+        <button>Bad</button>
+        &nbsp;
+        <a href="/{{ account.username }}/" target="drill-down">{{ account.username }}</a>
+    </div>
+    {% endfor %}
+</div>
+<iframe name="drill-down"></iframe>
