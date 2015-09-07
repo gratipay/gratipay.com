@@ -39,7 +39,7 @@ emails = participant.get_verified_email_addresses()
     <p>{{ _("Can't find your PayPal email? {0}Add it here{1}.", "<a href='/about/me/emails/'>"|safe, "</a>"|safe) }}</p>
 {% else %}
     <p>{{ _("You must {0}add and verify{1} your PayPal email first.",
-            "<a href='/about/me/settings#emails'>"|safe,
+            "<a href='/about/me/emails/'>"|safe,
             "</a>"|safe) }}</p>
 {% endif %}
 
