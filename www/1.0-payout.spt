@@ -88,7 +88,7 @@ applications_open = delta > 0
             ) }}</p>
     {% endif %}
     {% else %}
-    <p>{{ _("The deadline for applications was October 1, 2015 at 11:59 PM UTC, and is now passed. Your balance will be refunded to the original donors on October 8.") }}</p>
+    <p>{{ _("The deadline for 1.0 payout applications was October 1, 2015 at 11:59 PM UTC, and is now passed. Your balance will be refunded to the original donors on October 8.") }}</p>
     {% endif %}
 {% endif %}
 {% endblock %}
