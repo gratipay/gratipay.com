@@ -219,10 +219,13 @@ msgstr "sem."
 msgid "Sign out"
 msgstr ""
 
-msgid "You have until October 1 to {a}apply for a 1.0 payout{_a}."
+msgid ""
+"{nowrap}You have until October 1 to{_nowrap} {nowrap}{a}apply for a 1.0 "
+"payout{_a}{_nowrap}."
 msgstr ""
 
-msgid "Check the status of your {a}1.0 payout application{_a}."
+msgid ""
+"{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
 msgstr ""
 
 msgid "Blog"
