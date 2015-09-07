@@ -23,6 +23,20 @@
             {% if participant.is_suspicious %}checked="true"{% endif %} />
     </label>
 
+    {% set payout_status = participant.status_of_1_0_payout %}
+    <select class="payout-1-0" data-username="{{ participant.username }}">
+        {% for option in ( 'too-little'
+                         , 'pending-application'
+                         , 'pending-review'
+                         , 'rejected'
+                         , 'pending-payout'
+                         , 'completed'
+                          ) %}
+        <option {{ 'selected' if payout_status == option else '' }}
+            value="{{ option }}">{{ option }}</option>
+        {% endfor %}
+    </select>
+
     {% elif participant.is_suspicious %}
     <div class="is-suspicious-label">Suspicious</div>
     {% endif %}

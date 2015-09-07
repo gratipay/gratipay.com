@@ -2,28 +2,37 @@ from __future__ import print_function, unicode_literals
 
 from aspen import Response
 from gratipay.utils import get_participant
+from gratipay.models import add_event
 
-workflow = ['pending-application', 'pending-review', 'rejected', 'pending-payout', 'completed']
+workflow = ['too-little', 'pending-application', 'pending-review', 'rejected', 'pending-payout',
+            'completed']
 [-----------------------------------------------------------------------------]
 
 request.allow('POST')
 participant = get_participant(state, restrict=True)
 
 if not user.ADMIN:
-    raise Response(401)
+    raise Response(403)
 
 new_status = request.body['to']
 
 if new_status not in workflow:
     raise Response(400, "invalid value for 'to' parameter")
 
-website.db.run("""
-    UPDATE participants
-       SET status_of_1_0_payout = %s
-     WHERE id = %s
-""", (new_status, participant.id))
+with website.db.get_cursor() as c:
+    new_status = c.one("""
+        UPDATE participants
+           SET status_of_1_0_payout = %s
+         WHERE id = %s
+     RETURNING status_of_1_0_payout
+    """, (new_status, participant.id))
 
-website.redirect('settings', base_url='')
+    add_event(c, 'participant', dict(
+        id=participant.id,
+        recorder=dict(id=user.participant.id, username=user.participant.username),
+        action='set', values=dict(status_of_1_0_payout=new_status)
+    ))
 
-[---] text/html
-
+out = {"status": new_status}
+[---] application/json via json_dump
+out
