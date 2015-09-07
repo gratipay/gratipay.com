@@ -67,6 +67,8 @@
             {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
         </div>
 
+        {% if request.path.raw != '/1.0-payout' %}
+        {% if not user.participant or user.participant.status_of_1_0_payout == 'pending-application' %}
         <div id="notice">
             &#x2605;
             {{ _( "You have until October 1 to {a}apply for a 1.0 payout{_a}."
@@ -75,6 +77,17 @@
                  ) }}
             &#x2605;
         </div>
+        {% elif user.participant and user.participant.status_of_1_0_payout in ('pending-review', 'pending-payout') %}
+        <div id="notice">
+            &#x2605;
+            {{ _( "Check the status of your {a}1.0 payout application{_a}."
+                , a='<a href="/1.0-payout">'|safe
+                , _a='</a>'|safe
+                 ) }}
+            &#x2605;
+        </div>
+        {% endif %}
+        {% endif %}
 
         <div id="main">
             {% block main %}
