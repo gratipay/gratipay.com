@@ -33,3 +33,16 @@ class Tests(Harness):
     def test_invalid_is_400(self):
         response = self.hit('invalid_status')
         assert response.code == 400
+
+    def test_can_update_status_via_trigger_on_participant_balance(self):
+        self.db.run("UPDATE participants "
+                    "SET balance=10, status_of_1_0_payout='pending-application' "
+                    "WHERE username='alice'")
+        alice = Participant.from_username('alice')
+        assert alice.balance == 10
+        assert alice.status_of_1_0_payout == 'pending-application';
+
+        self.db.run("UPDATE participants SET balance=0 WHERE username='alice'")
+        alice = Participant.from_username('alice')
+        assert alice.balance == 0
+        assert alice.status_of_1_0_payout == 'completed';
