@@ -104,8 +104,10 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 
                 <div class="details">
                     <span class="status">
-                        <span class="status-icon">{{ status_icons[team.status]|safe }}</span>
-                        {{ i18ned_statuses[team.status] }}
+                        <a href="{{ team.review_url }}">
+                            <span class="status-icon">{{ status_icons[team.status]|safe }}</span>
+                            {{ i18ned_statuses[team.status] }}
+                        </a>
                     </span>
                     <span class="ctime">&middot; {{ _("created {ago}",
                         ago=to_age(team.ctime, add_direction=True)) }}</span>

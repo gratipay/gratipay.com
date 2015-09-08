@@ -21,10 +21,10 @@ Gratipay.new_team.submitForm = function (e) {
         data: data,
         dataType: 'json',
         success: function (d) {
-            $('form').html( "<p>Thank you! We will follow up shortly with an email to <b>"
-                          + d.email + "</b>. Please <a hef=\"mailto:support@gratipay.com\">email "
-                          + "us</a> with any questions.</p>"
-                           )
+            $('a.review_url').attr('href', d.review_url).text(d.review_url);
+            $('form').slideUp(500, function() {
+                $('.application-complete').slideDown(250);
+            });
         },
         error: [Gratipay.error, function () { $input.prop('disable', false); }]
     });
