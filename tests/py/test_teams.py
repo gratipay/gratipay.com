@@ -63,7 +63,8 @@ class TestTeams(Harness):
         assert team.name == 'Gratiteam'
         assert team.homepage == 'http://gratipay.com/'
         assert team.product_or_service == 'We make widgets.'
-        assert team.review_url == REVIEW_URL
+        fallback = 'https://github.com/gratipay/team-review/issues#error-401'
+        assert team.review_url in (REVIEW_URL, fallback)
 
     def test_casing_of_urls_survives(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
