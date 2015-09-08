@@ -669,3 +669,9 @@ BEGIN;
     DROP TRIGGER update_status_of_1_0_balance ON participants;
     DROP FUNCTION set_status_of_1_0_balance_to_resolved();
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3568
+BEGIN;
+    ALTER TABLE teams ADD COLUMN review_url text DEFAULT NULL;
+END;
