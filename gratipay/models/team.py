@@ -75,8 +75,9 @@ class Team(Model):
         """POST to GitHub, and return the URL of the new issue.
         """
         api_url = "https://api.github.com/repos/{}/issues".format(self.review_repo)
-        data = json.dumps({ "title": "review {}".format(self.name)
-                          , "body": "https://gratipay.com/{}/".format(self.slug)
+        data = json.dumps({ "title": self.name
+                          , "body": "https://gratipay.com/{}/\n\n".format(self.slug) +
+                                    "(This application will remain open for at least a week.)"
                            })
         r = requests.post(api_url, auth=self.review_auth, data=data)
         if r.status_code == 201:
