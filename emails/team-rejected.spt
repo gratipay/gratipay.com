@@ -1,0 +1,13 @@
+{{ _("Team Application Rejected") }}
+[---] text/html
+{{ _( "We've rejected your application for the '{team}' Team on Gratipay. For details, please refer to {a}our review ticket{_a}."
+    , team=team.name
+    , a=('<a href="{}">'|safe).format(team.review_url)
+    , _a='</a>'|safe
+     ) }}
+[---] text/plain
+{{ _( "We've rejected your application for the '{team}' Team on Gratipay. For details, please refer to our review ticket:"
+    , team=team.name
+     ) }}
+
+{{ team.review_url }}
