@@ -48,7 +48,7 @@ still_migrating = delta > 0
     <p>{{ _("Thanks! Your public review ticket is:") }}</p>
     <p><a href="" class="review_url"></a></p>
     <p>{{ _( "You can track and participate in our review process there. We will send a notification to {email} when we finish our review."
-           , email=user.participant.email
+           , email=user.participant.email_address
             ) }}</p>
     <p>{{ _("Thanks for applying!") }}</p>
 </div>
