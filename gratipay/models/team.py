@@ -1,6 +1,8 @@
 """Teams on Gratipay receive payments and distribute payroll.
 """
+import requests
 from postgres.orm import Model
+from aspen import json, log
 
 status_icons = { "unreviewed": "&#9995;"
                , "rejected": "&#10060;"
@@ -67,6 +69,29 @@ class Team(Model):
               RETURNING teams.*::teams
 
         """, fields)
+
+
+    def create_github_review_issue(self):
+        """POST to GitHub, and return the URL of the new issue.
+        """
+        api_url = "https://api.github.com/repos/{}/issues".format(self.review_repo)
+        data = json.dumps({ "title": "review {}".format(self.name)
+                          , "body": "https://gratipay.com/{}/".format(self.slug)
+                           })
+        r = requests.post(api_url, auth=self.review_auth, data=data)
+        if r.status_code == 201:
+            out = r.json()['html_url']
+        else:
+            log(r.status_code)
+            log(r.text)
+            out = "https://github.com/gratipay/team-review/issues#error-{}".format(r.status_code)
+        return out
+
+
+    def set_review_url(self, review_url):
+        self.db.run("UPDATE teams SET review_url=%s WHERE id=%s", (review_url, self.id))
+        self.set_attributes(review_url=review_url)
+
 
     def get_og_title(self):
         out = self.name

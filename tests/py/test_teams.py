@@ -1,10 +1,15 @@
 from __future__ import unicode_literals
 
+import json
+import mock
 import pytest
 from decimal import Decimal
 
 from gratipay.testing import Harness
 from gratipay.models.team import Team, AlreadyMigrated
+
+
+REVIEW_URL = "https://github.com/gratipay/test-gremlin/issues/9"
 
 
 class TestTeams(Harness):
@@ -41,12 +46,15 @@ class TestTeams(Harness):
         assert team.name == 'The Enterprise'
         assert team.owner == 'picard'
 
-    def test_can_create_new_team(self):
+    @mock.patch('gratipay.models.team.Team.create_github_review_issue')
+    def test_can_create_new_team(self, cgri):
+        cgri.return_value = REVIEW_URL
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
-        self.post_new(dict(self.valid_data))
+        r = self.post_new(dict(self.valid_data))
         team = self.db.one("SELECT * FROM teams")
         assert team
         assert team.owner == 'alice'
+        assert json.loads(r.body)['review_url'] == team.review_url
 
     def test_all_fields_persist(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
@@ -55,8 +63,7 @@ class TestTeams(Harness):
         assert team.name == 'Gratiteam'
         assert team.homepage == 'http://gratipay.com/'
         assert team.product_or_service == 'We make widgets.'
-        assert team.onboarding_url == 'http://inside.gratipay.com/'
-        assert team.todo_url == 'https://github.com/gratipay'
+        assert team.review_url == REVIEW_URL
 
     def test_casing_of_urls_survives(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')

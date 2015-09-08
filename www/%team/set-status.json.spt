@@ -2,6 +2,7 @@ from aspen import Response
 
 from gratipay.models import add_event
 from gratipay.models.team import Team
+from gratipay.models.participant import Participant
 [---]
 if not user.ADMIN:
     raise Response(403)
@@ -35,6 +36,10 @@ with website.db.get_cursor() as c:
             recorder=dict(id=user.participant.id, username=user.participant.username),
             action='set', values=dict(status=status)
         ))
+
+        if status in ('rejected', 'approved'):
+            owner = Participant.from_username(team.owner)
+            owner.send_email('team-'+status, team=team, include_unsubscribe=False)
 
 [---] application/json via json_dump
 {"status": status}

@@ -54,9 +54,12 @@ if request.method == 'POST':
     fields['slug'] = slugize(fields['name'])
 
     try:
-        Team.insert(user.participant, **fields)
+        team = Team.insert(user.participant, **fields)
     except IntegrityError:
         raise Response(400, _("Sorry, there is already a team using '{}'.", fields['slug']))
 
+    review_url = team.create_github_review_issue()
+    team.set_review_url(review_url)
+
 [---] application/json via json_dump
-{'email': user.participant.email_address}
+{'review_url': review_url}

@@ -1,0 +1,26 @@
+interactions:
+- request:
+    body: '{"body": "https://gratipay.com/TheATeam/", "title": "review The A Team"}'
+    headers: {}
+    method: POST
+    uri: https://api.github.com:443/repos/gratipay/review/issues
+  response:
+    body: {string: !!python/unicode '{"url":"https://api.github.com/repos/gratipay/review/issues/2","labels_url":"https://api.github.com/repos/gratipay/review/issues/2/labels{/name}","comments_url":"https://api.github.com/repos/gratipay/review/issues/2/comments","events_url":"https://api.github.com/repos/gratipay/review/issues/2/events","html_url":"https://github.com/gratipay/review/issues/2","id":89539256,"number":2,"title":"review
+        The A Team","user":{"login":"gratipay-gremlin","id":12961261,"avatar_url":"https://avatars.githubusercontent.com/u/12961261?v=3","gravatar_id":"","url":"https://api.github.com/users/gratipay-gremlin","html_url":"https://github.com/gratipay-gremlin","followers_url":"https://api.github.com/users/gratipay-gremlin/followers","following_url":"https://api.github.com/users/gratipay-gremlin/following{/other_user}","gists_url":"https://api.github.com/users/gratipay-gremlin/gists{/gist_id}","starred_url":"https://api.github.com/users/gratipay-gremlin/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/gratipay-gremlin/subscriptions","organizations_url":"https://api.github.com/users/gratipay-gremlin/orgs","repos_url":"https://api.github.com/users/gratipay-gremlin/repos","events_url":"https://api.github.com/users/gratipay-gremlin/events{/privacy}","received_events_url":"https://api.github.com/users/gratipay-gremlin/received_events","type":"User","site_admin":false},"labels":[],"state":"open","locked":false,"assignee":null,"milestone":null,"comments":0,"created_at":"2015-06-19T11:19:55Z","updated_at":"2015-06-19T11:19:55Z","closed_at":null,"body":"https://gratipay.com/TheATeam/","closed_by":null}'}
+    headers:
+      access-control-allow-credentials: ['true']
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['private, max-age=60, s-maxage=60']
+      content-length: ['1624']
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: ['"38c0f12312600b8f603f62407c845381"']
+      location: ['https://api.github.com/repos/gratipay/review/issues/2']
+      status: [201 Created]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      vary: ['Accept, Authorization, Cookie, X-GitHub-OTP', Accept-Encoding]
+    status: {code: 201, message: Created}
+version: 1

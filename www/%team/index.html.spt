@@ -86,11 +86,15 @@ suppress_sidebar = not(team.is_approved or user.ADMIN)
 {% block content %}
     <p>
 
-    {% if team.status == 'unreviewed' %}
-    <span class="status-icon">&#9995;</span> {{ _("Under Review") }} |
-    {% elif team.status == 'rejected' %}
-    <span class="status-icon">&#10060;</span> {{ _("Rejected") }} |
-    {% endif %}
+    <a href="{{ team.review_url }}">
+        {% if team.status == 'approved' %}
+        <span class="status-icon">&#9989;</span> {{ _("Approved") }}
+        {% elif team.status == 'unreviewed' %}
+        <span class="status-icon">&#9995;</span> {{ _("Under Review") }}
+        {% elif team.status == 'rejected' %}
+        <span class="status-icon">&#10060;</span> {{ _("Rejected") }}
+        {% endif %}
+    </a> |
 
     <a href="{{ team.homepage }}">{{ _("Homepage") }}</a>
 

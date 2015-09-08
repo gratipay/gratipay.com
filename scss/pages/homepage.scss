@@ -44,6 +44,11 @@
             border: 1px solid $light-brown;
             border-style: solid none;
 
+            a {
+                color: $medium-gray;
+                position: relative;
+                z-index: 2;
+            }
             a:hover {
                 background: none !important;
                 color: $green !important;
@@ -65,11 +70,6 @@
                 min-height: 48px;
                 padding: 30px 64px 0 0;
                 left: 0;
-                .owner a {
-                    color: $medium-gray;
-                    position: relative;
-                    z-index: 2;
-                }
                 span {
                     white-space: nowrap;
                 }

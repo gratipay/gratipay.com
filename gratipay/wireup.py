@@ -84,6 +84,12 @@ def billing(env):
         env.braintree_private_key
     )
 
+
+def team_review(env):
+    Team.review_repo = env.team_review_repo
+    Team.review_auth = (env.team_review_username, env.team_review_token)
+
+
 def username_restrictions(website):
     gratipay.RESTRICTED_USERNAMES = os.listdir(website.www_root)
 
@@ -402,6 +408,9 @@ def env():
         LOG_METRICS                     = is_yesish,
         INCLUDE_PIWIK                   = is_yesish,
         MANDRILL_KEY                    = unicode,
+        TEAM_REVIEW_REPO                = unicode,
+        TEAM_REVIEW_USERNAME            = unicode,
+        TEAM_REVIEW_TOKEN               = unicode,
         RAISE_SIGNIN_NOTIFICATIONS      = is_yesish,
 
         # This is used in our Procfile. (PORT is also used but is provided by
