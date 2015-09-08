@@ -9,7 +9,7 @@ from gratipay.testing import Harness
 from gratipay.models.team import Team, AlreadyMigrated
 
 
-REVIEW_URL = "https://github.com/gratipay/review/issues/2"
+REVIEW_URL = "https://github.com/gratipay/test-gremlin/issues/9"
 
 
 class TestTeams(Harness):

@@ -1,0 +1,77 @@
+interactions:
+- request:
+    body: "{\n    \"body\": \"https://gratipay.com/gratiteam/\",\n    \"title\": \"review
+      Gratiteam\"\n}"
+    headers: {}
+    method: POST
+    uri: https://api.github.com:443/repos/gratipay/test-gremlin/issues
+  response:
+    body: {string: !!python/unicode '{"url":"https://api.github.com/repos/gratipay/test-gremlin/issues/9","labels_url":"https://api.github.com/repos/gratipay/test-gremlin/issues/9/labels{/name}","comments_url":"https://api.github.com/repos/gratipay/test-gremlin/issues/9/comments","events_url":"https://api.github.com/repos/gratipay/test-gremlin/issues/9/events","html_url":"https://github.com/gratipay/test-gremlin/issues/9","id":105293440,"number":9,"title":"review
+        Gratiteam","user":{"login":"lgtest","id":1775515,"avatar_url":"https://avatars.githubusercontent.com/u/1775515?v=3","gravatar_id":"","url":"https://api.github.com/users/lgtest","html_url":"https://github.com/lgtest","followers_url":"https://api.github.com/users/lgtest/followers","following_url":"https://api.github.com/users/lgtest/following{/other_user}","gists_url":"https://api.github.com/users/lgtest/gists{/gist_id}","starred_url":"https://api.github.com/users/lgtest/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/lgtest/subscriptions","organizations_url":"https://api.github.com/users/lgtest/orgs","repos_url":"https://api.github.com/users/lgtest/repos","events_url":"https://api.github.com/users/lgtest/events{/privacy}","received_events_url":"https://api.github.com/users/lgtest/received_events","type":"User","site_admin":false},"labels":[],"state":"open","locked":false,"assignee":null,"milestone":null,"comments":0,"created_at":"2015-09-08T03:26:30Z","updated_at":"2015-09-08T03:26:30Z","closed_at":null,"body":"https://gratipay.com/gratiteam/","closed_by":null}'}
+    headers:
+      access-control-allow-credentials: ['true']
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['private, max-age=60, s-maxage=60']
+      content-length: ['1533']
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: ['"fda883470b69e8f697fe0644a8b3e5dc"']
+      location: ['https://api.github.com/repos/gratipay/test-gremlin/issues/9']
+      status: [201 Created]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      vary: ['Accept, Authorization, Cookie, X-GitHub-OTP', Accept-Encoding]
+    status: {code: 201, message: Created}
+- request:
+    body: "{\n    \"body\": \"https://gratipay.com/gratiteam/\",\n    \"title\": \"review
+      Gratiteam\"\n}"
+    headers: {}
+    method: POST
+    uri: https://api.github.com:443/repos/gratipay/test-gremlin/issues
+  response:
+    body: {string: !!python/unicode '{"url":"https://api.github.com/repos/gratipay/test-gremlin/issues/10","labels_url":"https://api.github.com/repos/gratipay/test-gremlin/issues/10/labels{/name}","comments_url":"https://api.github.com/repos/gratipay/test-gremlin/issues/10/comments","events_url":"https://api.github.com/repos/gratipay/test-gremlin/issues/10/events","html_url":"https://github.com/gratipay/test-gremlin/issues/10","id":105293441,"number":10,"title":"review
+        Gratiteam","user":{"login":"lgtest","id":1775515,"avatar_url":"https://avatars.githubusercontent.com/u/1775515?v=3","gravatar_id":"","url":"https://api.github.com/users/lgtest","html_url":"https://github.com/lgtest","followers_url":"https://api.github.com/users/lgtest/followers","following_url":"https://api.github.com/users/lgtest/following{/other_user}","gists_url":"https://api.github.com/users/lgtest/gists{/gist_id}","starred_url":"https://api.github.com/users/lgtest/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/lgtest/subscriptions","organizations_url":"https://api.github.com/users/lgtest/orgs","repos_url":"https://api.github.com/users/lgtest/repos","events_url":"https://api.github.com/users/lgtest/events{/privacy}","received_events_url":"https://api.github.com/users/lgtest/received_events","type":"User","site_admin":false},"labels":[],"state":"open","locked":false,"assignee":null,"milestone":null,"comments":0,"created_at":"2015-09-08T03:26:30Z","updated_at":"2015-09-08T03:26:30Z","closed_at":null,"body":"https://gratipay.com/gratiteam/","closed_by":null}'}
+    headers:
+      access-control-allow-credentials: ['true']
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['private, max-age=60, s-maxage=60']
+      content-length: ['1539']
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: ['"16006dd40973a34b57eaa9c47f389e18"']
+      location: ['https://api.github.com/repos/gratipay/test-gremlin/issues/10']
+      status: [201 Created]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      vary: ['Accept, Authorization, Cookie, X-GitHub-OTP', Accept-Encoding]
+    status: {code: 201, message: Created}
+- request:
+    body: "{\n    \"body\": \"https://gratipay.com/gratiteam/\",\n    \"title\": \"review
+      Gratiteam\"\n}"
+    headers: {}
+    method: POST
+    uri: https://api.github.com:443/repos/gratipay/test-gremlin/issues
+  response:
+    body: {string: !!python/unicode '{"url":"https://api.github.com/repos/gratipay/test-gremlin/issues/11","labels_url":"https://api.github.com/repos/gratipay/test-gremlin/issues/11/labels{/name}","comments_url":"https://api.github.com/repos/gratipay/test-gremlin/issues/11/comments","events_url":"https://api.github.com/repos/gratipay/test-gremlin/issues/11/events","html_url":"https://github.com/gratipay/test-gremlin/issues/11","id":105293442,"number":11,"title":"review
+        Gratiteam","user":{"login":"lgtest","id":1775515,"avatar_url":"https://avatars.githubusercontent.com/u/1775515?v=3","gravatar_id":"","url":"https://api.github.com/users/lgtest","html_url":"https://github.com/lgtest","followers_url":"https://api.github.com/users/lgtest/followers","following_url":"https://api.github.com/users/lgtest/following{/other_user}","gists_url":"https://api.github.com/users/lgtest/gists{/gist_id}","starred_url":"https://api.github.com/users/lgtest/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/lgtest/subscriptions","organizations_url":"https://api.github.com/users/lgtest/orgs","repos_url":"https://api.github.com/users/lgtest/repos","events_url":"https://api.github.com/users/lgtest/events{/privacy}","received_events_url":"https://api.github.com/users/lgtest/received_events","type":"User","site_admin":false},"labels":[],"state":"open","locked":false,"assignee":null,"milestone":null,"comments":0,"created_at":"2015-09-08T03:26:31Z","updated_at":"2015-09-08T03:26:31Z","closed_at":null,"body":"https://gratipay.com/gratiteam/","closed_by":null}'}
+    headers:
+      access-control-allow-credentials: ['true']
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['private, max-age=60, s-maxage=60']
+      content-length: ['1539']
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: ['"f36a625d0f49b0e6555ec814383b5663"']
+      location: ['https://api.github.com/repos/gratipay/test-gremlin/issues/11']
+      status: [201 Created]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      vary: ['Accept, Authorization, Cookie, X-GitHub-OTP', Accept-Encoding]
+    status: {code: 201, message: Created}
+version: 1
