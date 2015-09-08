@@ -2,7 +2,7 @@
 """
 import requests
 from postgres.orm import Model
-from aspen import json
+from aspen import json, log
 
 status_icons = { "unreviewed": "&#9995;"
                , "rejected": "&#10060;"
@@ -79,11 +79,13 @@ class Team(Model):
                           , "body": "https://gratipay.com/{}/".format(self.slug)
                            })
         r = requests.post(api_url, auth=self.review_auth, data=data)
-        if r.status_code != 201:
-            print(r.status_code)
-            print(r.text)
-            raise Heck
-        return r.json()['html_url']
+        if r.status_code == 201:
+            out = r.json()['html_url']
+        else:
+            log(r.status_code)
+            log(r.text)
+            out = "https://github.com/gratipay/team-review/issues#error-{}".format(r.status_code)
+        return out
 
 
     def set_review_url(self, review_url):
