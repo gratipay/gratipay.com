@@ -91,6 +91,32 @@ msgid ""
 "discuss this further."
 msgstr ""
 
+msgid "Team Application Approved!"
+msgstr ""
+
+msgid ""
+"We've approved your application for the '{team}' Team on Gratipay. For "
+"details, please refer to {a}our review ticket{_a}."
+msgstr ""
+
+msgid ""
+"We've approved your application for the '{team}' Team on Gratipay. For "
+"details, please refer to our review ticket:"
+msgstr ""
+
+msgid "Team Application Rejected"
+msgstr ""
+
+msgid ""
+"We've rejected your application for the '{team}' Team on Gratipay. For "
+"details, please refer to {a}our review ticket{_a}."
+msgstr ""
+
+msgid ""
+"We've rejected your application for the '{team}' Team on Gratipay. For "
+"details, please refer to our review ticket:"
+msgstr ""
+
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
 "Sound familiar?"
@@ -536,6 +562,17 @@ msgid "You must attach a PayPal account to apply for a new Team."
 msgstr ""
 
 msgid "Apply"
+msgstr ""
+
+msgid "Thanks! Your public review ticket is:"
+msgstr ""
+
+msgid ""
+"You can track and participate in our review process there. We will send a "
+"notification to {email} when we finish our review."
+msgstr ""
+
+msgid "Thanks for applying!"
 msgstr ""
 
 msgid "Team Name"

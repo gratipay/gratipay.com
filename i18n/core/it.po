@@ -18,15 +18,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "1.0 Payout: Approved!"
-msgstr ""
+msgstr "Pagamento 1.0: Approvato!"
 
 msgid ""
 "We've approved your application for a payout of your Gratipay 1.0 balance. "
 "Watch for that during our next weekly payment cycle."
-msgstr ""
+msgstr "Abbiamo approvato la richiesta di pagamento del tuo saldo Gratipay 1.0 e dovrebbe essere effettuato durante il prossimo ciclo di pagamenti settimanali."
 
 msgid "Thanks for using Gratipay! :-)"
-msgstr ""
+msgstr "Grazie per aver usato Gratipay! :-)"
 
 msgid "Something not right? Reply to this email for help."
 msgstr "Qualcosa non va? Rispondi a questa email per ricevere aiuto."
@@ -74,13 +74,39 @@ msgid "Connect to {0} on Gratipay?"
 msgstr "Connettersi a {0} su Gratipay?"
 
 msgid "1.0 Payout: Rejected"
-msgstr ""
+msgstr "Pagamento 1.0: Rifiutato"
 
 msgid ""
 "We've rejected your application for a payout of your Gratipay 1.0 balance, "
 "because we couldn't determine what product or service you were offering for "
 "which people were paying you on Gratipay. Please reply if you would like to "
 "discuss this further."
+msgstr "Abbiamo rifiutato la tua richiesta di pagamento del tuo saldo Gratipay 1.0 perché non abbiamo potuto determinare quale prodotto o servizio offrivi per il quale venivi pagato tramite Gratipay. Per favore rispondici se desideri discuterne di più."
+
+msgid "Team Application Approved!"
+msgstr ""
+
+msgid ""
+"We've approved your application for the '{team}' Team on Gratipay. For "
+"details, please refer to {a}our review ticket{_a}."
+msgstr ""
+
+msgid ""
+"We've approved your application for the '{team}' Team on Gratipay. For "
+"details, please refer to our review ticket:"
+msgstr ""
+
+msgid "Team Application Rejected"
+msgstr ""
+
+msgid ""
+"We've rejected your application for the '{team}' Team on Gratipay. For "
+"details, please refer to {a}our review ticket{_a}."
+msgstr ""
+
+msgid ""
+"We've rejected your application for the '{team}' Team on Gratipay. For "
+"details, please refer to our review ticket:"
 msgstr ""
 
 msgid ""
@@ -219,11 +245,11 @@ msgstr "Esci"
 msgid ""
 "{nowrap}You have until October 1 to{_nowrap} {nowrap}{a}apply for a 1.0 "
 "payout{_a}{_nowrap}."
-msgstr ""
+msgstr "{nowrap}Hai fino al giorno 1 ottobre per{_nowrap} {nowrap}{a}richiedere un pagamento 1.0{_a}{_nowrap}."
 
 msgid ""
 "{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
-msgstr ""
+msgstr "{nowrap}Controlla lo stato della tua{_nowrap} {a}richiesta di pagamento 1.0{_a}."
 
 msgid "Blog"
 msgstr "Blog"
@@ -396,68 +422,68 @@ msgid ""
 msgstr "Sostieni il pagamento con una {0}carta di credito{1} per assicurare che venga effettuato!"
 
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 msgid "Status of Your 1.0 Payout"
-msgstr ""
+msgstr "Stato del Tuo Pagamento 1.0"
 
 msgid "Read about our plan to {a}refund the money from Gratipay 1.0{_a}."
-msgstr ""
+msgstr "Leggi del nostro piano di {a}rimborso del denaro di Gratipay 1.0{_a}."
 
 msgid ""
 "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout "
 "threshold of {minimum}{_b}, and will be refunded to the original donors on "
 "October 8."
-msgstr ""
+msgstr "Il tuo {a}saldo{_a} da Gratipay 1.0 é {b}al di sotto della nostra soglia minima di pagamento di {minimum}{_b}, e sarà restituito ai donatori originali il giorno 8 ottobre."
 
 msgid "You do not have a balance left over from Gratipay 1.0."
-msgstr ""
+msgstr "Non hai saldo rimanente da Gratipay 1.0."
 
 msgid ""
 "You're all set! But ... can you help us spread the word and tell your "
 "friends to check here, too? Thanks! :)"
-msgstr ""
+msgstr "Sei a posto! Ma... potresti aiutarici a spargere la voce dicendo ai tuoi amici di controllare qui? Grazie! :)"
 
 msgid "Your balance is {b}{balance}{_b}."
-msgstr ""
+msgstr "Il tuo saldo è di {b}{balance}{_b}."
 
 msgid "You are {b}scheduled for a payout{_b} during our next weekly cycle."
-msgstr ""
+msgstr "Il tuo {b}prossimo pagamento{_b} è previsto durante il nostro prossimo ciclo settimanale."
 
 msgid ""
 "You should be all set! But ... can you help us spread the word and tell your"
 " friends to check here, too? Thanks! :)"
-msgstr ""
+msgstr "Dovresti essere a posto! Ma... potresti aiutarici a spargere la voce dicendo ai tuoi amici di controllare qui? Grazie! :)"
 
 msgid ""
 "You have applied for a payout. We will review your account and contact you "
 "at {b}{email}{_b} within the next week."
-msgstr ""
+msgstr "Hai richiesto un pagamento. Esamineremo il tuo account e ti contatteremo su {b}{email}{_b} entro la prossima settimana"
 
 msgid ""
 "Meanwhile ... can you help us spread the word and tell your friends to check"
 " here, too? Thanks! :)"
-msgstr ""
+msgstr "Nel frattempo... potresti aiutarici a spargere la voce dicendo ai tuoi amici di controllare qui? Grazie! :)"
 
 msgid ""
 "You have applied for a payout, and we have rejected your application. You "
 "should have received a notification at {b}{email}{_b} from "
 "{a}support@gratipay.com{_a}."
-msgstr ""
+msgstr "Hai richiesto un pagamento e abbiamo rifiutato la tua richiesta. Dovresti aver ricevuto una notifica su {b}{email}{_b} da {a}support@gratipay.com{_a}."
 
 msgid "Your balance will be refunded to the original donors on October 8."
-msgstr ""
+msgstr "Il tuo saldo verrà restituito ai donatori originali il giorno 8 ottobre."
 
 msgid "Apply for a payout"
-msgstr ""
+msgstr "Richiedi un pagamento"
 
 msgid ""
 "Please {a}connect a PayPal account{_a} and then return here to apply for "
 "payout."
-msgstr ""
+msgstr "Per favore, {a}collega un account PayPay{_a} e poi torna qui per richiedere un pagamento."
 
 msgid "You have until {b}October 1 at 11:59 PM UTC{_b} to apply for a payout."
-msgstr ""
+msgstr "Hai tempo fino al giorno {b}1 ottobre alle ore 11:59 PM UTC {_b} per richiedere un pagamento."
 
 msgid ""
 "P.S. You were receiving {b}{receiving} per week from one person{_b} under "
@@ -467,14 +493,14 @@ msgid_plural ""
 "P.S. You were receiving {b}{receiving} per week from {n} people{_b} under "
 "Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
 "for a new Team{_a} instead of a one-time payout."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "P.S. Ricevevi {b}{receiving} a settimana da una persona{_b} con Gratipay 1.0. Vuoi ricevere nuovamente quel denato con Gratipay 2.0? {a}Proponiti per un nuovo Team {_a} invece di chiedere un pagamento singolo."
+msgstr[1] "P.S. Ricevevi {b}{receiving} a settimana da {n} persone{_b} con Gratipay 1.0. Vuoi ricevere nuovamente quel denato con Gratipay 2.0? {a}Proponiti per un nuovo Team {_a} invece di chiedere un pagamento singolo."
 
 msgid ""
 "The deadline for 1.0 payout applications was October 1, 2015 at 11:59 PM "
 "UTC, and is now passed. Your balance will be refunded to the original donors"
 " on October 8."
-msgstr ""
+msgstr "La scadenza per le richieste di pagamento 1.0 era il giorno 1 ottobre 2015 alle ore 11:59 PM UTC ed è ora passata. Il tuo saldo verrà restituito ai donatori originari il giorno 8 ottobre."
 
 msgid "Under Review"
 msgstr "In esaminazione"
@@ -529,6 +555,17 @@ msgstr "Devi collegare un conto PayPal per poterti proporre in un nuovo Team."
 
 msgid "Apply"
 msgstr "Proponiti"
+
+msgid "Thanks! Your public review ticket is:"
+msgstr ""
+
+msgid ""
+"You can track and participate in our review process there. We will send a "
+"notification to {email} when we finish our review."
+msgstr ""
+
+msgid "Thanks for applying!"
+msgstr ""
 
 msgid "Team Name"
 msgstr "Nome del Team"
@@ -753,7 +790,7 @@ msgid "Sign In"
 msgstr "Accedi"
 
 msgid "1.0 Payout Review"
-msgstr ""
+msgstr "Revisione Pagamento 1.0"
 
 msgid "Fraud Review Dashboard"
 msgstr "Dashboard Recensione Rischio Frodi"
