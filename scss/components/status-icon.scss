@@ -1,7 +1,8 @@
 .status-icon {
     display: inline-block;
-    width: 17px;
-    &.approved {
-        font-size: 90%;
-    }
+    width: 14px;
+    font: normal 14px/14px icomoon;
+    &.approved { color: $green; }
+    &.unreviewed { color: $gold; }
+    &.rejected { color: $red; }
 }
