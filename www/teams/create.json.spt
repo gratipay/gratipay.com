@@ -3,11 +3,13 @@ from aspen import Response
 from gratipay.models.community import slugize
 from gratipay.models.team import Team
 from psycopg2 import IntegrityError
+from gratipay.utils import images
 [---]
 request.allow('POST')
 
 field_names = {
     'name': 'Team Name',
+    'image': 'Image',
     'product_or_service': 'Product or Service',
     'homepage': 'Homepage',
     'onboarding_url': 'Self-onboarding Documentation URL',
@@ -35,14 +37,20 @@ if not request.body.get('agree_terms', False):
 
 if request.method == 'POST':
     fields = {}
+    image = None
+    image_type = None
+
 
     # Validate inputs
 
     for field in field_names.keys():
-        value = request.body.get(field, '').strip(' ')
+        if field == 'image':
+            image = value = request.body[field].value  # file upload
+            image_type = request.body[field].type
+        else:
+            value = request.body.get(field, '').strip(' ')
         if not value:
             raise Response(400, _("Please fill out the '{}' field.", field_names[field]))
-
         fields[field] = value
 
     for field in ('homepage', 'onboarding_url', 'todo_url'):
@@ -53,10 +61,16 @@ if request.method == 'POST':
 
     fields['slug'] = slugize(fields['name'])
 
+    if image_type not in images.acceptable_types:
+        raise Response(400, _("Please upload a PNG, GIF, or JPG image."))
+    image = images.process(image, image_type)
+
     try:
         team = Team.insert(user.participant, **fields)
     except IntegrityError:
         raise Response(400, _("Sorry, there is already a team using '{}'.", fields['slug']))
+
+    team.save_image(image, image_type)
 
     review_url = team.create_github_review_issue()
     team.set_review_url(review_url)

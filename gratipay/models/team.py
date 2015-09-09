@@ -1,13 +1,10 @@
 """Teams on Gratipay receive payments and distribute payroll.
 """
 import requests
-from postgres.orm import Model
 from aspen import json, log
-
-status_icons = { "unreviewed": "&#9995;"
-               , "rejected": "&#10060;"
-               , "approved": "&#9989;"
-                }
+from gratipay.models import add_event
+from postgres.orm import Model
+from psycopg2 import IntegrityError, Binary
 
 
 class Team(Model):
@@ -179,8 +176,22 @@ class Team(Model):
         """, {'slug': self.slug, 'owner': self.owner})
 
 
+    def save_image(self, image, media_type):
+        image = Binary(image)
+        with self.db.get_cursor() as c:
+            try:
+                c.run( "INSERT INTO team_images (id, data, media_type) VALUES (%s, %s, %s)"
+                     , (self.id, image, media_type)
+                      )
+            except IntegrityError:
+                c.run( "UPDATE team_images SET data=%s, media_type=%s WHERE id=%s"
+                     , (image, media_type, self.id)
+                      )
+            add_event(c, 'team', dict(action='upsert_image', id=self.id))
+
+
     def load_image(self):
-        return self.db.one( "SELECT media_type, data FROM team_images WHERE id=%s"
+        return self.db.one( "SELECT data, media_type FROM team_images WHERE id=%s"
                           , (self.id,)
                           , back_as=tuple
                           , default=(None, None)

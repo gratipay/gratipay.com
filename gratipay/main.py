@@ -30,6 +30,7 @@ website.renderer_factories['jinja2_htmlescaped'] = jinja2_htmlescaped.Factory(we
 website.default_renderers_by_media_type['text/html'] = 'jinja2_htmlescaped'
 website.default_renderers_by_media_type['text/plain'] = 'jinja2'  # unescaped is fine here
 website.default_renderers_by_media_type['image/png'] = 'eval'
+website.default_renderers_by_media_type['image/gif'] = 'eval'
 website.default_renderers_by_media_type['image/jpeg'] = 'eval'
 
 website.renderer_factories['jinja2'].Renderer.global_context = {

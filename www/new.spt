@@ -58,6 +58,10 @@ still_migrating = delta > 0
     <label><h2>{{ _("Team Name") }}</h2></label>
     <input type="text" name="name" required autofocus>
 
+    <label><h2>{{ _("Image") }}</h2></label>
+    <p><i>{{ _("PNG, GIF or JPG. Will be cropped square and resized to 160 x 160.") }}</i></p>
+    <input type="file" name="image" required>
+
     <label><h2>{{ _("Product or Service") }}</h2></label>
     <p><i>{{ _("What product or service does your Team provide?") }}</i></p>
     <textarea name="product_or_service" required></textarea>

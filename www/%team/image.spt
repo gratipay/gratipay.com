@@ -8,15 +8,17 @@ default_data = open(filepath).read()
 [----]
 team = get_team(state)
 
-media_type, data = team.load_image()
+data, media_type = team.load_image()
 if data is None:
-    media_type, data = "image/png", default_data
+    data, media_type = default_data, "image/png"
 
 wanted = mimetypes.guess_type(request.path.raw)[0]  # I'm sorry, pjz.
 if media_type != wanted:
     raise Response(404)
 
 [----] image/png
+data
+[----] image/gif
 data
 [----] image/jpeg
 data
