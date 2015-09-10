@@ -5,11 +5,12 @@ from os.path import join
 
 load = lambda s: open(join(website.www_root, 'assets', 'team-default-{}.png'.format(s))).read()
 defaults = {size: load(size) for size in ('large', 'small')}
+defaults['original'] = defaults['large']
 [----]
 team = get_team(state)
 
 size = request.qs.get('size', 'large')
-if size not in ('large', 'small'):
+if size not in team.IMAGE_SIZES:
     raise Response(404)
 
 
