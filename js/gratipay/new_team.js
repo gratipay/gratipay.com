@@ -23,6 +23,7 @@ Gratipay.new_team.submitForm = function (e) {
         contentType: false,
         dataType: 'json',
         success: function (d) {
+            $('a.team_url').attr('href', d.team_url).text(d.team_url);
             $('a.review_url').attr('href', d.review_url).text(d.review_url);
             $('form').slideUp(500, function() {
                 $('.application-complete').slideDown(250);

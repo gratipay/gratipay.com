@@ -75,5 +75,7 @@ if request.method == 'POST':
     review_url = team.create_github_review_issue()
     team.set_review_url(review_url)
 
+    team_url = website.env.base_url + '/{}/'.format(team.slug)
+
 [---] application/json via json_dump
-{'review_url': review_url}
+{'review_url': review_url, 'team_url': team_url}
