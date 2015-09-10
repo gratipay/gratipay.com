@@ -181,27 +181,38 @@ class Team(Model):
         """, {'slug': self.slug, 'owner': self.owner})
 
 
-    @property
-    def image_url(self):
-        return '/{}/image'.format(self.slug)
+    def get_image_url(self, size):
+        assert size in ('large', 'small'), size
+        return '/{}/image?size={}'.format(self.slug, size)
 
-    def save_image(self, image, media_type):
+    def save_image(self, large, small, image_type):
         with self.db.get_cursor() as c:
-            lobject = c.connection.lobject(self.image_oid, mode='wb')
-            loid = lobject.oid
-            c.run( "UPDATE teams SET image_oid=%s, image_type=%s WHERE id=%s"
-                 , (loid, media_type, self.id)
+            _large = c.connection.lobject(self.image_oid_large, mode='wb')
+            _large.write(large)
+            _small = c.connection.lobject(self.image_oid_small, mode='wb')
+            _small.write(large)
+            c.run("""UPDATE teams
+                        SET image_oid_large=%s, image_oid_small=%s, image_type=%s
+                      WHERE id=%s"""
+                 , (_large.oid, _small.oid, image_type, self.id)
                   )
-            lobject.write(image)
-            add_event(c, 'team', dict(action='upsert_image', oid=loid, id=self.id))
-            self.set_attributes(image_oid=loid, image_type=media_type)
-            return loid
+            add_event(c, 'team', dict( action='upsert_image'
+                                     , large=_large.oid
+                                     , small=_small.oid
+                                     , id=self.id
+                                      ))
+            self.set_attributes( image_oid_large=_large.oid
+                               , image_oid_small=_small.oid
+                               , image_type=image_type
+                                )
+            return (_large.oid, _small.oid)
 
-    def load_image(self):
+    def load_image(self, size):
         image = None
-        if self.image_oid != 0:
+        oid = getattr(self, 'image_oid_{}'.format(size))
+        if oid != 0:
             with self.db.get_connection() as c:
-                image = c.lobject(self.image_oid, mode='rb').read()
+                image = c.lobject(oid, mode='rb').read()
         return image
 
 

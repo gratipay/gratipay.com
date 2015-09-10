@@ -76,8 +76,10 @@ if request.method == 'POST':
 
     crops = requests.post('http://gip.rocks/v1', data=image, headers={'Content-Type': image_type})
     if crops.status_code == 200:
-        image = zipfile.ZipFile(StringIO(crops.content)).open('160').read()
-        team.save_image(image, image_type)
+        zf = zipfile.ZipFile(StringIO(crops.content))
+        large = zf.open('160').read()
+        small = zf.open('48').read()
+        team.save_image(large, small, image_type)
 
     review_url = team.create_github_review_issue()
     team.set_review_url(review_url)

@@ -403,24 +403,28 @@ class TestTeams(Harness):
 
     def test_save_image_saves_image(self):
         team = self.make_team()
-        team.save_image(IMAGE, 'image/png')
+        team.save_image(IMAGE, IMAGE, 'image/png')
         media_type = self.db.one('SELECT image_type FROM teams WHERE id=%s', (team.id,))
         assert media_type == 'image/png'
 
     def test_save_image_records_the_event(self):
         team = self.make_team()
-        oid = team.save_image(IMAGE, 'image/png')
+        large_oid, small_oid = team.save_image(IMAGE, IMAGE, 'image/png')
         event = self.db.one('SELECT * FROM events')
-        assert event.payload == {'action': 'upsert_image', 'oid': oid, 'id': team.id}
+        assert event.payload == { 'action': 'upsert_image'
+                                , 'large': large_oid
+                                , 'small': small_oid
+                                , 'id': team.id
+                                 }
 
     def test_load_image_loads_image(self):
         team = self.make_team()
-        team.save_image(IMAGE, 'image/png')
-        image = team.load_image()  # buffer
+        team.save_image(IMAGE, IMAGE, 'image/png')
+        image = team.load_image('large')  # buffer
         assert str(image) == IMAGE
 
     def test_image_endpoint_serves_an_image(self):
         team = self.make_team()
-        team.save_image(IMAGE, 'image/png')
-        image = self.client.GET('/TheEnterprise/image.png').body  # buffer
+        team.save_image(IMAGE, IMAGE, 'image/png')
+        image = self.client.GET('/TheEnterprise/image').body  # buffer
         assert str(image) == IMAGE
