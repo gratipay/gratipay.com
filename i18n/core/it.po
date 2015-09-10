@@ -84,30 +84,30 @@ msgid ""
 msgstr "Abbiamo rifiutato la tua richiesta di pagamento del tuo saldo Gratipay 1.0 perché non abbiamo potuto determinare quale prodotto o servizio offrivi per il quale venivi pagato tramite Gratipay. Per favore rispondici se desideri discuterne di più."
 
 msgid "Team Application Approved!"
-msgstr ""
+msgstr "Richiesta di un Nuovo Team Approvata!"
 
 msgid ""
 "We've approved your application for the '{team}' Team on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr ""
+msgstr "Abbiamo approvato la tua richiesta per il Team '{team}' su Gratipay. Per i dettagli, leggi la {a}nostra revisione{_a}."
 
 msgid ""
 "We've approved your application for the '{team}' Team on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr ""
+msgstr "Abbiamo approvato la tua richiesta per il Team '{team}' su Gratipay. Per i dettagli, leggi la nostra revisione:"
 
 msgid "Team Application Rejected"
-msgstr ""
+msgstr "Richiesta di un Nuobo Team Rifiutata"
 
 msgid ""
 "We've rejected your application for the '{team}' Team on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr ""
+msgstr "Abbiamo rifiutato la tua richiesta per il Team '{team}' su Gratipay, Per i dettagli, leggi la {a}nostra revisione{_a}."
 
 msgid ""
 "We've rejected your application for the '{team}' Team on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr ""
+msgstr "Abbiamo rifiutato la tua richiesta per il Team '{team}' su Gratipay, Per i dettagli, leggi la nostra revisione:"
 
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
@@ -502,14 +502,14 @@ msgid ""
 " on October 8."
 msgstr "La scadenza per le richieste di pagamento 1.0 era il giorno 1 ottobre 2015 alle ore 11:59 PM UTC ed è ora passata. Il tuo saldo verrà restituito ai donatori originari il giorno 8 ottobre."
 
+msgid "Approved"
+msgstr "Approvati"
+
 msgid "Under Review"
 msgstr "In esaminazione"
 
 msgid "Rejected"
 msgstr "Rifiutati"
-
-msgid "Approved"
-msgstr "Approvati"
 
 msgid "Payments{br}and Payroll{br}for Open Work"
 msgstr "Pagamenti{br}e Libri Paga{br}per Lavori Gratuiti"
@@ -557,15 +557,15 @@ msgid "Apply"
 msgstr "Proponiti"
 
 msgid "Thanks! Your public review ticket is:"
-msgstr ""
+msgstr "Grazie! La tua revisione pubblica é:"
 
 msgid ""
 "You can track and participate in our review process there. We will send a "
 "notification to {email} when we finish our review."
-msgstr ""
+msgstr "Qui puoi seguire e partecipare nel nostro processo di revisione. Ti manderemo una notifica su {email} quando il processo di revisione sarà completato."
 
 msgid "Thanks for applying!"
-msgstr ""
+msgstr "Grazie per aver inoltrato la richiesta!"
 
 msgid "Team Name"
 msgstr "Nome del Team"

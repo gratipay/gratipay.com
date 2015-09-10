@@ -505,13 +505,13 @@ msgid ""
 " on October 8."
 msgstr ""
 
+msgid "Approved"
+msgstr ""
+
 msgid "Under Review"
 msgstr ""
 
 msgid "Rejected"
-msgstr ""
-
-msgid "Approved"
 msgstr ""
 
 msgid "Payments{br}and Payroll{br}for Open Work"
