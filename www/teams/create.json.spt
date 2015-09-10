@@ -7,7 +7,6 @@ from aspen import Response
 from gratipay.models.community import slugize
 from gratipay.models.team import Team
 from psycopg2 import IntegrityError
-from gratipay.utils import images
 [---]
 request.allow('POST')
 
@@ -65,9 +64,8 @@ if request.method == 'POST':
 
     fields['slug'] = slugize(fields['name'])
 
-    if image_type not in images.acceptable_types:
-        raise Response(400, _("Please upload a PNG, GIF, or JPG image."))
-    image = images.process(image, image_type)
+    if image_type not in ('image/png', 'image/jpeg'):
+        raise Response(400, _("Please upload a PNG or JPG image."))
 
     try:
         team = Team.insert(user.participant, **fields)
@@ -80,6 +78,13 @@ if request.method == 'POST':
         large = zf.open('160').read()
         small = zf.open('48').read()
         team.save_image(large, small, image_type)
+    elif crops.status_code == 413:
+        raise Response(400, _("Please upload an image smaller than 100 kB."))
+    elif crops.status_code == 415:
+        raise Response(400, _("Please upload a PNG or JPG image."))
+    else:
+        raise Response(500, _("Sorry, there was a problem saving your image. Please try again."))
+
 
     review_url = team.create_github_review_issue()
     team.set_review_url(review_url)
