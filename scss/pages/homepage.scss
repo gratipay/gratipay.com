@@ -75,7 +75,7 @@
             .details {
                 font: normal 12px/15px $Ideal;
                 min-height: 64px;
-                padding: 38px 64px 0 54px;
+                padding: 38px 64px 0 56px;
                 .owner a {
                     color: $medium-gray;
                     position: relative;
@@ -85,15 +85,8 @@
                     white-space: nowrap;
                 }
                 .status-icon {
-                    width: 16px;
-                    height: 15px;
                     font-size: 12px;
-                    @include border-radius(3px);
-                    background: $white;
-                    padding: 1px 2px;
-                    &.rejected {
-                        padding: 1px 3px;
-                    }
+                    padding: 0;
                 }
             }
             .numbers {
