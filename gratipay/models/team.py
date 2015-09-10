@@ -4,7 +4,6 @@ import requests
 from aspen import json, log
 from gratipay.models import add_event
 from postgres.orm import Model
-from psycopg2 import IntegrityError, Binary
 
 
 class Team(Model):
@@ -183,25 +182,24 @@ class Team(Model):
 
 
     def save_image(self, image, media_type):
-        image = Binary(image)
         with self.db.get_cursor() as c:
-            try:
-                c.run( "INSERT INTO team_images (id, data, media_type) VALUES (%s, %s, %s)"
-                     , (self.id, image, media_type)
-                      )
-            except IntegrityError:
-                c.run( "UPDATE team_images SET data=%s, media_type=%s WHERE id=%s"
-                     , (image, media_type, self.id)
-                      )
-            add_event(c, 'team', dict(action='upsert_image', id=self.id))
+            lobject = c.connection.lobject(self.image_oid, mode='wb')
+            loid = lobject.oid
+            c.run( "UPDATE teams SET image_oid=%s, image_type=%s WHERE id=%s"
+                 , (loid, media_type, self.id)
+                  )
+            lobject.write(image)
+            add_event(c, 'team', dict(action='upsert_image', oid=loid, id=self.id))
+            self.set_attributes(image_oid=loid, image_type=media_type)
+            return loid
 
 
     def load_image(self):
-        return self.db.one( "SELECT data, media_type FROM team_images WHERE id=%s"
-                          , (self.id,)
-                          , back_as=tuple
-                          , default=(None, None)
-                           )
+        image = None
+        if self.image_oid != 0:
+            with self.db.get_connection() as c:
+                image = c.lobject(self.image_oid, mode='rb').read()
+        return image
 
 
 class AlreadyMigrated(Exception): pass

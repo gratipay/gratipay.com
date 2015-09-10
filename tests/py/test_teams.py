@@ -404,20 +404,20 @@ class TestTeams(Harness):
     def test_save_image_saves_image(self):
         team = self.make_team()
         team.save_image(IMAGE, 'image/png')
-        media_type = self.db.one('SELECT media_type FROM team_images WHERE id=%s', (team.id,))
+        media_type = self.db.one('SELECT image_type FROM teams WHERE id=%s', (team.id,))
         assert media_type == 'image/png'
 
     def test_save_image_records_the_event(self):
         team = self.make_team()
-        team.save_image(IMAGE, 'image/png')
+        oid = team.save_image(IMAGE, 'image/png')
         event = self.db.one('SELECT * FROM events')
-        assert event.payload == {'action': 'upsert_image', 'id': team.id}
+        assert event.payload == {'action': 'upsert_image', 'oid': oid, 'id': team.id}
 
     def test_load_image_loads_image(self):
         team = self.make_team()
         team.save_image(IMAGE, 'image/png')
-        image, media_type = team.load_image()
-        assert (str(image), media_type) == (IMAGE, 'image/png')
+        image = team.load_image()  # buffer
+        assert str(image) == IMAGE
 
     def test_image_endpoint_serves_an_image(self):
         team = self.make_team()

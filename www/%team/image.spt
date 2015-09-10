@@ -8,7 +8,7 @@ default_data = open(filepath).read()
 [----]
 team = get_team(state)
 
-data, media_type = team.load_image()
+data, media_type = team.load_image(), team.image_type
 if data is None:
     data, media_type = default_data, "image/png"
 
