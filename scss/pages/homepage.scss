@@ -74,8 +74,8 @@
                     white-space: nowrap;
                 }
                 .status-icon {
-                    width: 12px;
-                    font-size: smaller;
+                    width: 14px;
+                    font-size: 12px;
                 }
             }
             .numbers {
@@ -107,6 +107,9 @@
 
             &:hover {
                 color: $black;
+                .status a {
+                    color: $black;
+                }
                 .owner a {
                     color: $black;
                 }

@@ -1,12 +1,12 @@
 from collections import OrderedDict
 [---]
-i18ned_statuses = { "unreviewed" : _("Under Review")
+i18ned_statuses = { "approved": _("Approved")
+                  , "unreviewed" : _("Under Review")
                   , "rejected": _("Rejected")
-                  , "approved": _("Approved")
                    }
-status_icons = { "unreviewed": "&#9995;"
-               , "rejected": "&#10060;"
-               , "approved": "&#9989;"
+status_icons = { "approved": "&#xe008;"
+               , "unreviewed": "&#xe009;"
+               , "rejected": "&#xe010;"
                 }
 
 teams = website.db.all("""
@@ -104,10 +104,10 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 
                 <div class="details">
                     <span class="status">
-                        <a href="{{ team.review_url }}">
-                            <span class="status-icon">{{ status_icons[team.status]|safe }}</span>
-                            {{ i18ned_statuses[team.status] }}
-                        </a>
+                        <a href="{{ team.review_url }}"><span
+                            class="status-icon {{ team.status }}"
+                            >{{ status_icons[team.status]|safe }}</span
+                            >{{ i18ned_statuses[team.status] }}</a>
                     </span>
                     <span class="ctime">&middot; {{ _("created {ago}",
                         ago=to_age(team.ctime, add_direction=True)) }}</span>
