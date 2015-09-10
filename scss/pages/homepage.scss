@@ -54,29 +54,28 @@
                 color: $green !important;
             }
             img {
-                width: 44px;
-                height: 44px;
+                width: 48px;
+                height: 48px;
                 position: absolute;
-                top: 2px;
+                top: 8px;
                 left: 0;
             }
             .name {
                 display: block;
                 color: $black;
-                font: bold 18px/22px $Ideal;
+                font: bold 20px/24px $Ideal;
                 position: absolute;
                 z-index: 1;
                 top: 0;
-                left: 48px;
-                padding: 8px 0 0;
+                left: 56px;
+                padding: 12px 0 0;
                 width: 100%;
                 height: 100%;
             }
             .details {
                 font: normal 12px/15px $Ideal;
-                min-height: 48px;
-                padding: 30px 64px 0 48px;
-                margin-left: -17px;
+                min-height: 64px;
+                padding: 38px 64px 0 54px;
                 .owner a {
                     color: $medium-gray;
                     position: relative;
@@ -99,7 +98,7 @@
             }
             .numbers {
                 position: absolute;
-                bottom: 3px;
+                bottom: 8px;
                 right: 0;
                 z-index: 0;
                 font-size: 11px;
