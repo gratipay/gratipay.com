@@ -4,21 +4,19 @@ from gratipay.utils import get_team
 from aspen import Response
 
 filepath = os.path.join(website.www_root, 'assets', 'team-default.png')
-default_data = open(filepath).read()
+default_image = open(filepath).read()
 [----]
 team = get_team(state)
 
-data, media_type = team.load_image(), team.image_type
-if data is None:
-    data, media_type = default_data, "image/png"
+image, media_type = team.load_image(), team.image_type
+if image is None:
+    image, media_type = default_image, "image/png"
 
-wanted = mimetypes.guess_type(request.path.raw)[0]  # I'm sorry, pjz.
-if media_type != wanted:
-    raise Response(404)
+parts = request.path.raw.split('/')
+if '.' in parts[-1]:
+    parts[-1] = 'image'
+    website.redirect('/'.join(parts))
 
-[----] image/png
-data
-[----] image/gif
-data
-[----] image/jpeg
-data
+response.headers['Content-Type'] = media_type
+[----] image/*
+image

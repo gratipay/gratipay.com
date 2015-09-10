@@ -181,6 +181,10 @@ class Team(Model):
         """, {'slug': self.slug, 'owner': self.owner})
 
 
+    @property
+    def image_url(self):
+        return '/{}/image'.format(self.slug)
+
     def save_image(self, image, media_type):
         with self.db.get_cursor() as c:
             lobject = c.connection.lobject(self.image_oid, mode='wb')
@@ -192,7 +196,6 @@ class Team(Model):
             add_event(c, 'team', dict(action='upsert_image', oid=loid, id=self.id))
             self.set_attributes(image_oid=loid, image_type=media_type)
             return loid
-
 
     def load_image(self):
         image = None
