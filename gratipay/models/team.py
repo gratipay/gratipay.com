@@ -181,33 +181,41 @@ class Team(Model):
         """, {'slug': self.slug, 'owner': self.owner})
 
 
+    # Images
+    # ======
+
+    IMAGE_SIZES = ('original', 'large', 'small')
+
     def get_image_url(self, size):
-        assert size in ('large', 'small'), size
+        assert size in ('original', 'large', 'small'), size
         return '/{}/image?size={}'.format(self.slug, size)
 
-    def save_image(self, large, small, image_type):
+    def save_image(self, original, large, small, image_type):
         with self.db.get_cursor() as c:
-            _large = c.connection.lobject(self.image_oid_large, mode='wb')
-            _large.write(large)
-            _small = c.connection.lobject(self.image_oid_small, mode='wb')
-            _small.write(large)
+            oids = {}
+            for size in self.IMAGE_SIZES:
+                lobject = c.connection.lobject(getattr(self, 'image_oid_'+size), mode='wb')
+                lobject.write(locals()[size])
+                oids[size] = lobject.oid
+                lobject.close()
+
             c.run("""UPDATE teams
-                        SET image_oid_large=%s, image_oid_small=%s, image_type=%s
+                        SET image_oid_original=%s, image_oid_large=%s, image_oid_small=%s
+                          , image_type=%s
                       WHERE id=%s"""
-                 , (_large.oid, _small.oid, image_type, self.id)
+                 , (oids['original'], oids['large'], oids['small'], image_type, self.id)
                   )
             add_event(c, 'team', dict( action='upsert_image'
-                                     , large=_large.oid
-                                     , small=_small.oid
                                      , id=self.id
+                                     , **oids
                                       ))
-            self.set_attributes( image_oid_large=_large.oid
-                               , image_oid_small=_small.oid
-                               , image_type=image_type
+            self.set_attributes( image_type=image_type
+                               , **{'image_oid_'+size: oids[size] for size in oids}
                                 )
-            return (_large.oid, _small.oid)
+            return oids
 
     def load_image(self, size):
+        assert size in self.IMAGE_SIZES, size
         image = None
         oid = getattr(self, 'image_oid_{}'.format(size))
         if oid != 0:
