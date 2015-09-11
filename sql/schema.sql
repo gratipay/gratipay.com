@@ -675,3 +675,13 @@ END;
 BEGIN;
     ALTER TABLE teams ADD COLUMN review_url text DEFAULT NULL;
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3750
+BEGIN;
+    CREATE TYPE supported_image_types AS ENUM ('image/png', 'image/jpeg');
+    ALTER TABLE teams ADD COLUMN image_oid_original oid NOT NULL DEFAULT 0;
+    ALTER TABLE teams ADD COLUMN image_oid_large oid NOT NULL DEFAULT 0;
+    ALTER TABLE teams ADD COLUMN image_oid_small oid NOT NULL DEFAULT 0;
+    ALTER TABLE teams ADD COLUMN image_type supported_image_types;
+END;
