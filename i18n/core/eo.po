@@ -555,11 +555,14 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-msgid "Thanks! Your public review ticket is:"
+msgid "Thanks! Your public team page is:"
+msgstr ""
+
+msgid "And your public review ticket is:"
 msgstr ""
 
 msgid ""
-"You can track and participate in our review process there. We will send a "
+"You can watch and participate in our review process there. We will send a "
 "notification to {email} when we finish our review."
 msgstr ""
 
@@ -568,6 +571,14 @@ msgstr ""
 
 msgid "Team Name"
 msgstr "Teama nomo"
+
+msgid "Image"
+msgstr ""
+
+msgid ""
+"PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and"
+" 48 x 48 (with original saved for later)."
+msgstr ""
 
 msgid "Product or Service"
 msgstr ""
@@ -966,7 +977,16 @@ msgstr ""
 msgid "Please enter an http[s]:// URL for the '{}' field."
 msgstr ""
 
+msgid "Please upload a PNG or JPG image."
+msgstr ""
+
 msgid "Sorry, there is already a team using '{}'."
+msgstr ""
+
+msgid "Please upload an image smaller than 100 kB."
+msgstr ""
+
+msgid "Sorry, there was a problem saving your image. Please try again."
 msgstr ""
 
 msgid "Identity Verification"

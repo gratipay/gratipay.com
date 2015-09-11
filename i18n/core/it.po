@@ -556,19 +556,30 @@ msgstr "Devi collegare un conto PayPal per poterti proporre in un nuovo Team."
 msgid "Apply"
 msgstr "Proponiti"
 
-msgid "Thanks! Your public review ticket is:"
-msgstr "Grazie! La tua revisione pubblica é:"
+msgid "Thanks! Your public team page is:"
+msgstr ""
+
+msgid "And your public review ticket is:"
+msgstr ""
 
 msgid ""
-"You can track and participate in our review process there. We will send a "
+"You can watch and participate in our review process there. We will send a "
 "notification to {email} when we finish our review."
-msgstr "Qui puoi seguire e partecipare nel nostro processo di revisione. Ti manderemo una notifica su {email} quando il processo di revisione sarà completato."
+msgstr ""
 
 msgid "Thanks for applying!"
 msgstr "Grazie per aver inoltrato la richiesta!"
 
 msgid "Team Name"
 msgstr "Nome del Team"
+
+msgid "Image"
+msgstr ""
+
+msgid ""
+"PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and"
+" 48 x 48 (with original saved for later)."
+msgstr ""
 
 msgid "Product or Service"
 msgstr "Prodotto o Servizio"
@@ -967,8 +978,17 @@ msgstr "Per favore, completa il campo '{}'."
 msgid "Please enter an http[s]:// URL for the '{}' field."
 msgstr "Per favore, inserisci un URL http[s]:// per il campo '{}'."
 
+msgid "Please upload a PNG or JPG image."
+msgstr ""
+
 msgid "Sorry, there is already a team using '{}'."
 msgstr "Ci dispiace, un altro team sta già usando '{}'."
+
+msgid "Please upload an image smaller than 100 kB."
+msgstr ""
+
+msgid "Sorry, there was a problem saving your image. Please try again."
+msgstr ""
 
 msgid "Identity Verification"
 msgstr "Verifica Identità"
