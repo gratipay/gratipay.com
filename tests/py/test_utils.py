@@ -1,13 +1,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
+from decimal import Decimal as D
 
 import pytest
 from aspen.http.response import Response
 from gratipay import utils
 from gratipay.testing import Harness
-from gratipay.utils import i18n, markdown
+from gratipay.utils import i18n, markdown, pricing
 from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUsername, \
                                                                            RanOutOfUsernameAttempts
 from psycopg2 import IntegrityError
@@ -186,3 +186,33 @@ class Tests(Harness):
         with self.db.get_cursor() as cursor:
             username = safely_reserve_a_username(cursor, gen_test_username)
             assert username == 'deafbeef'
+
+
+    # sp - suggested_payment
+
+    def test_sp_suggests_five_dollars_on_100(self):
+        assert pricing.suggested_payment(100) == D('5')
+
+    def test_sp_suggests_fifty_cents_on_10_dollars(self):
+        assert pricing.suggested_payment(10) == D('0.5')
+
+    def test_sp_suggests_five_cents_on_1_dollar(self):
+        assert pricing.suggested_payment(1) == D('0.05')
+
+    def test_sp_rounds_to_nearest_five_cents(self):
+        assert pricing.suggested_payment(D('98.33')) == D('4.90')
+
+
+    # splh - suggested_payment_low_high
+
+    def test_splh_suggests_five_dollars_and_ten_on_100(self):
+        assert pricing.suggested_payment_low_high(100) == (D('5'), D('10'))
+
+    def test_splh_suggests_fifty_cents_and_a_dollar_on_10_dollars(self):
+        assert pricing.suggested_payment_low_high(10) == (D('0.5'), D('1'))
+
+    def test_splh_suggests_five_and_ten_cents_on_1_dollar(self):
+        assert pricing.suggested_payment_low_high(1) == (D('0.05'), D('0.1'))
+
+    def test_splh_rounds_to_nearest_five_cents(self):
+        assert pricing.suggested_payment_low_high(D('98.33')) == (D('4.90'), D('9.85'))
