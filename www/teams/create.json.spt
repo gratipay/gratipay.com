@@ -1,3 +1,7 @@
+import zipfile
+from cStringIO import StringIO
+
+import requests
 from aspen import Response
 
 from gratipay.models.community import slugize
@@ -8,6 +12,7 @@ request.allow('POST')
 
 field_names = {
     'name': 'Team Name',
+    'image': 'Image',
     'product_or_service': 'Product or Service',
     'homepage': 'Homepage',
     'onboarding_url': 'Self-onboarding Documentation URL',
@@ -35,14 +40,20 @@ if not request.body.get('agree_terms', False):
 
 if request.method == 'POST':
     fields = {}
+    image = None
+    image_type = None
+
 
     # Validate inputs
 
     for field in field_names.keys():
-        value = request.body.get(field, '').strip(' ')
+        if field == 'image':
+            image = value = request.body[field].value  # file upload
+            image_type = request.body[field].type
+        else:
+            value = request.body.get(field, '').strip(' ')
         if not value:
             raise Response(400, _("Please fill out the '{}' field.", field_names[field]))
-
         fields[field] = value
 
     for field in ('homepage', 'onboarding_url', 'todo_url'):
@@ -53,13 +64,33 @@ if request.method == 'POST':
 
     fields['slug'] = slugize(fields['name'])
 
+    if image_type not in ('image/png', 'image/jpeg'):
+        raise Response(400, _("Please upload a PNG or JPG image."))
+
     try:
         team = Team.insert(user.participant, **fields)
     except IntegrityError:
         raise Response(400, _("Sorry, there is already a team using '{}'.", fields['slug']))
 
+    crops = requests.post('http://gip.rocks/v1', data=image, headers={'Content-Type': image_type})
+    if crops.status_code == 200:
+        zf = zipfile.ZipFile(StringIO(crops.content))
+        original = image
+        large = zf.open('160').read()
+        small = zf.open('48').read()
+        team.save_image(original, large, small, image_type)
+    elif crops.status_code == 413:
+        raise Response(400, _("Please upload an image smaller than 100 kB."))
+    elif crops.status_code == 415:
+        raise Response(400, _("Please upload a PNG or JPG image."))
+    else:
+        raise Response(500, _("Sorry, there was a problem saving your image. Please try again."))
+
+
     review_url = team.create_github_review_issue()
     team.set_review_url(review_url)
 
+    team_url = website.env.base_url + '/{}/'.format(team.slug)
+
 [---] application/json via json_dump
-{'review_url': review_url}
+{'review_url': review_url, 'team_url': team_url}

@@ -45,9 +45,11 @@ still_migrating = delta > 0
     }
 </style>
 <div class="application-complete" style="display: none;">
-    <p>{{ _("Thanks! Your public review ticket is:") }}</p>
+    <p>{{ _("Thanks! Your public team page is:") }}</p>
+    <p><a href="" class="team_url"></a></p>
+    <p>{{ _("And your public review ticket is:") }}</p>
     <p><a href="" class="review_url"></a></p>
-    <p>{{ _( "You can track and participate in our review process there. We will send a notification to {email} when we finish our review."
+    <p>{{ _( "You can watch and participate in our review process there. We will send a notification to {email} when we finish our review."
            , email=user.participant.email_address
             ) }}</p>
     <p>{{ _("Thanks for applying!") }}</p>
@@ -57,6 +59,10 @@ still_migrating = delta > 0
 
     <label><h2>{{ _("Team Name") }}</h2></label>
     <input type="text" name="name" required autofocus>
+
+    <label><h2>{{ _("Image") }}</h2></label>
+    <p><i>{{ _("PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and 48 x 48 (with original saved for later).") }}</i></p>
+    <input type="file" name="image" required>
 
     <label><h2>{{ _("Product or Service") }}</h2></label>
     <p><i>{{ _("What product or service does your Team provide?") }}</i></p>

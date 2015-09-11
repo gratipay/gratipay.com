@@ -1,13 +1,9 @@
 """Teams on Gratipay receive payments and distribute payroll.
 """
 import requests
-from postgres.orm import Model
 from aspen import json, log
-
-status_icons = { "unreviewed": "&#9995;"
-               , "rejected": "&#10060;"
-               , "approved": "&#9989;"
-                }
+from gratipay.models import add_event
+from postgres.orm import Model
 
 
 class Team(Model):
@@ -79,13 +75,19 @@ class Team(Model):
                           , "body": "https://gratipay.com/{}/\n\n".format(self.slug) +
                                     "(This application will remain open for at least a week.)"
                            })
-        r = requests.post(api_url, auth=self.review_auth, data=data)
-        if r.status_code == 201:
-            out = r.json()['html_url']
-        else:
-            log(r.status_code)
-            log(r.text)
-            out = "https://github.com/gratipay/team-review/issues#error-{}".format(r.status_code)
+        out = ''
+        try:
+            r = requests.post(api_url, auth=self.review_auth, data=data)
+            if r.status_code == 201:
+                out = r.json()['html_url']
+            else:
+                log(r.status_code)
+                log(r.text)
+            err = str(r.status_code)
+        except:
+            err = "eep"
+        if not out:
+            out = "https://github.com/gratipay/team-review/issues#error-{}".format(err)
         return out
 
 
@@ -177,5 +179,49 @@ class Team(Model):
 
         ) SELECT count(*) FROM rows;
         """, {'slug': self.slug, 'owner': self.owner})
+
+
+    # Images
+    # ======
+
+    IMAGE_SIZES = ('original', 'large', 'small')
+
+    def get_image_url(self, size):
+        assert size in ('original', 'large', 'small'), size
+        return '/{}/image?size={}'.format(self.slug, size)
+
+    def save_image(self, original, large, small, image_type):
+        with self.db.get_cursor() as c:
+            oids = {}
+            for size in self.IMAGE_SIZES:
+                lobject = c.connection.lobject(getattr(self, 'image_oid_'+size), mode='wb')
+                lobject.write(locals()[size])
+                oids[size] = lobject.oid
+                lobject.close()
+
+            c.run("""UPDATE teams
+                        SET image_oid_original=%s, image_oid_large=%s, image_oid_small=%s
+                          , image_type=%s
+                      WHERE id=%s"""
+                 , (oids['original'], oids['large'], oids['small'], image_type, self.id)
+                  )
+            add_event(c, 'team', dict( action='upsert_image'
+                                     , id=self.id
+                                     , **oids
+                                      ))
+            self.set_attributes( image_type=image_type
+                               , **{'image_oid_'+size: oids[size] for size in oids}
+                                )
+            return oids
+
+    def load_image(self, size):
+        assert size in self.IMAGE_SIZES, size
+        image = None
+        oid = getattr(self, 'image_oid_{}'.format(size))
+        if oid != 0:
+            with self.db.get_connection() as c:
+                image = c.lobject(oid, mode='rb').read()
+        return image
+
 
 class AlreadyMigrated(Exception): pass
