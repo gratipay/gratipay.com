@@ -2,24 +2,9 @@ from decimal import Decimal as D, ROUND_HALF_EVEN
 
 
 def suggested_payment(usage):
-    if usage >= 500:
-        percentage = D('0.02')
-    elif usage >= 20:
-        percentage = D('0.05')
-    else:
-        percentage = D('0.10')
-
+    percentage = D('0.05')
     suggestion = usage * percentage
-    if suggestion == 0:
-        rounded = suggestion
-    elif suggestion < 0.25:
-        rounded = D('0.25')
-    elif suggestion < 0.50:
-        rounded = D('0.50')
-    elif suggestion < 1:
-        rounded = D('1.00')
-    else:
-        rounded = suggestion.quantize(D('0'), ROUND_HALF_EVEN)
+    rounded = suggestion.quantize(D('0'), ROUND_HALF_EVEN)
 
     return rounded
 
