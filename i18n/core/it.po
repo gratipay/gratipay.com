@@ -557,15 +557,15 @@ msgid "Apply"
 msgstr "Proponiti"
 
 msgid "Thanks! Your public team page is:"
-msgstr ""
+msgstr "Grazie! La pagina pubblica del tuo team é:"
 
 msgid "And your public review ticket is:"
-msgstr ""
+msgstr "E la revisione pubblica é:"
 
 msgid ""
 "You can watch and participate in our review process there. We will send a "
 "notification to {email} when we finish our review."
-msgstr ""
+msgstr "Lì puoi guardare e partecipare nel nostro processo di revisione. Invieremo una notifica a {email} quando la revisione sarà compluta."
 
 msgid "Thanks for applying!"
 msgstr "Grazie per aver inoltrato la richiesta!"
@@ -574,12 +574,12 @@ msgid "Team Name"
 msgstr "Nome del Team"
 
 msgid "Image"
-msgstr ""
+msgstr "Immagine"
 
 msgid ""
 "PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and"
 " 48 x 48 (with original saved for later)."
-msgstr ""
+msgstr "PNG o JPG fino a 256 kB. Saranno ritagliate in forma quadrata e ridimensionate a 160x160 e 48x48 (l'originale sarà salvato in caso di futuro utilizzo)."
 
 msgid "Product or Service"
 msgstr "Prodotto o Servizio"
@@ -979,16 +979,16 @@ msgid "Please enter an http[s]:// URL for the '{}' field."
 msgstr "Per favore, inserisci un URL http[s]:// per il campo '{}'."
 
 msgid "Please upload a PNG or JPG image."
-msgstr ""
+msgstr "Per favore, carica un'immagine PNG o JPG."
 
 msgid "Sorry, there is already a team using '{}'."
 msgstr "Ci dispiace, un altro team sta già usando '{}'."
 
 msgid "Please upload an image smaller than 100 kB."
-msgstr ""
+msgstr "Per favore, carica un'immagine di dimensioni inferiori a 100 kB."
 
 msgid "Sorry, there was a problem saving your image. Please try again."
-msgstr ""
+msgstr "Ci dispiace, c'è stato un problema durante il salvataggio dell'immagine. Per favore, prova ancora."
 
 msgid "Identity Verification"
 msgstr "Verifica Identità"
