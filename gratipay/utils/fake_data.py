@@ -381,13 +381,15 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         date = end_date
     print("")
 
-def main():
-    db = wireup.db(wireup.env())
+
+def main(db, *a, **kw):
+    clean_db(db)
     prep_db(db)
-    populate_db(db)
+    populate_db(db, *a, **kw)
     clean_db(db)
     check_db(db)
 
 
 if __name__ == '__main__':
-    main()
+    db = wireup.db(wireup.env())
+    main(db)
