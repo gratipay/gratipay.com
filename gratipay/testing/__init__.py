@@ -71,7 +71,6 @@ class Harness(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.db.run("ALTER SEQUENCE exchanges_id_seq RESTART WITH 1")
         cls.setUpVCR()
 
 
@@ -115,6 +114,7 @@ class Harness(unittest.TestCase):
             except (IntegrityError, InternalError):
                 tablenames.insert(0, tablename)
         self.db.run("ALTER SEQUENCE participants_id_seq RESTART WITH 1")
+        self.db.run("SELECT create_system_accounts()")  # repopulate the `accounts` table
 
 
     def make_elsewhere(self, platform, user_id, user_name, **kw):

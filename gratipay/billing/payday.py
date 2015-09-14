@@ -21,7 +21,6 @@ from aspen import log
 from gratipay.billing.exchanges import (
     cancel_card_hold, capture_card_hold, create_card_hold, upcharge, MINIMUM_CHARGE,
 )
-from gratipay.exceptions import NegativeBalance
 from gratipay.models import check_db
 from psycopg2 import IntegrityError
 
@@ -74,7 +73,7 @@ class Payday(object):
                 transfer_takes
                 process_draws
                 settle_card_holds
-                update_balances
+                make_ledger_entries
                 take_over_balances
             update_stats
             end
@@ -99,14 +98,8 @@ class Payday(object):
             """, back_as=dict)
             log("Starting a new payday.")
         except IntegrityError:  # Collision, we have a Payday already.
-            d = cls.db.one("""
-                SELECT id, (ts_start AT TIME ZONE 'UTC') AS ts_start, stage
-                  FROM paydays
-                 WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz
-            """, back_as=dict)
+            d = cls.db.one("SELECT current_payday();", back_as=dict)
             log("Picking up with an existing payday.")
-
-        d['ts_start'] = d['ts_start'].replace(tzinfo=aspen.utils.utc)
 
         log("Payday started at %s." % d['ts_start'])
 
@@ -149,33 +142,33 @@ class Payday(object):
         money internally between participants.
         """
         with self.db.get_cursor() as cursor:
-            self.prepare(cursor, self.ts_start)
+            self.prepare(cursor)
             holds = self.create_card_holds(cursor)
             self.process_payment_instructions(cursor)
             self.transfer_takes(cursor, self.ts_start)
             self.process_draws(cursor)
-            payments = cursor.all("""
-                SELECT * FROM payments WHERE "timestamp" > %s
+            entries = cursor.all("""
+                SELECT * FROM ledger WHERE "timestamp" > %s
             """, (self.ts_start,))
             try:
                 self.settle_card_holds(cursor, holds)
-                self.update_balances(cursor)
+                self.make_ledger_entries(cursor)
                 check_db(cursor)
             except:
                 # Dump payments for debugging
                 import csv
                 from time import time
-                with open('%s_payments.csv' % time(), 'wb') as f:
-                    csv.writer(f).writerows(payments)
+                with open('%s_ledger.csv' % time(), 'wb') as f:
+                    csv.writer(f).writerows(entries)
                 raise
         self.take_over_balances()
 
 
     @staticmethod
-    def prepare(cursor, ts_start):
+    def prepare(cursor):
         """Prepare the DB: we need temporary tables with indexes and triggers.
         """
-        cursor.run(PAYDAY, dict(ts_start=ts_start))
+        cursor.run(PAYDAY)
         log('Prepared the DB.')
 
 
@@ -319,36 +312,16 @@ class Payday(object):
 
 
     @staticmethod
-    def update_balances(cursor):
-        log("Updating balances.")
-        participants = cursor.all("""
-
-            UPDATE participants p
-               SET balance = (balance + p2.new_balance - p2.old_balance)
-              FROM payday_participants p2
-             WHERE p.id = p2.id
-               AND p2.new_balance <> p2.old_balance
-         RETURNING p.id
-                 , p.username
-                 , balance AS new_balance
-                 , ( SELECT balance
-                       FROM participants p3
-                      WHERE p3.id = p.id
-                   ) AS cur_balance;
-
-        """)
-        # Check that balances aren't becoming (more) negative
-        for p in participants:
-            if p.new_balance < 0 and p.new_balance < p.cur_balance:
-                log(p)
-                raise NegativeBalance()
-        cursor.run("""
-            INSERT INTO payments (timestamp, participant, team, amount, direction, payday)
-                SELECT *, (SELECT id FROM paydays WHERE extract(year from ts_end) = 1970)
-                  FROM payday_payments;
-        """)
-
-        log("Updated the balances of %i participants." % len(participants))
+    def make_ledger_entries(cursor):
+        log("Making ledger entries.")
+        nentries = len(cursor.all("""
+            INSERT INTO ledger
+                        (ts, amount, debit, credit, payday)
+                        (SELECT * FROM payday_ledger)
+            RETURNING id;
+        """))
+        log("Journal entries recorded: %i." % nentries)
+        return nentries
 
 
     def take_over_balances(self):
