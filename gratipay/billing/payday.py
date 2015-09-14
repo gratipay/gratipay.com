@@ -149,7 +149,7 @@ class Payday(object):
         money internally between participants.
         """
         with self.db.get_cursor() as cursor:
-            self.prepare(cursor, self.ts_start)
+            self.prepare(cursor)
             holds = self.create_card_holds(cursor)
             self.process_payment_instructions(cursor)
             self.transfer_takes(cursor, self.ts_start)
@@ -172,10 +172,10 @@ class Payday(object):
 
 
     @staticmethod
-    def prepare(cursor, ts_start):
+    def prepare(cursor):
         """Prepare the DB: we need temporary tables with indexes and triggers.
         """
-        cursor.run(PAYDAY, dict(ts_start=ts_start))
+        cursor.run(PAYDAY)
         log('Prepared the DB.')
 
 
