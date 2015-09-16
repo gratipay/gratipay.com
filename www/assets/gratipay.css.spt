@@ -1,25 +1,68 @@
-import os
-import re
-from urlparse import urlsplit
-
-import sass
-
-filename = os.path.join(website.project_root, 'scss', 'gratipay.scss')
-output_style = 'compressed' if website.compress_assets else 'nested'
-
-def url_sub(m):
-    url = urlsplit(m.group(2))
-    if url.scheme or url.netloc:
-        # We need both tests because "//example.com" has no scheme and "data:"
-        # has no netloc. In either case, we want to leave the URL untouched.
-        return m.group(0)
-    repl = website.asset(url.path) + (url.query and '&'+url.query) + (url.fragment and '#'+url.fragment)
-    return 'url({0}{1}{0})'.format(m.group(1), repl)
-
-url_re = re.compile(r"""\burl\((['"])(.+?)['"]\)""")
 [---]
-css = sass.compile(output_style=str(output_style),filename=str(filename))
-if website.cache_static:
-    css = url_re.sub(url_sub, css)
-[---] via stdlib_format
-{css}
+[---] text/css via scss
+/*
+    This is the top of the Gratipay CSS tree.
+
+    Our code organization here was inspired by Brad Frost's Atomic Web Design:
+
+        http://bradfrost.com/blog/post/atomic-web-design/
+
+    We dropped the "atomic" metaphor and tried to use nomenclature consistent
+    with how the W3C talks about HTML.
+
+*/
+
+@import "scss/mixins/layout";
+@import "scss/mixins/icons";
+@import "scss/mixins/borders-backgrounds-shadows";
+@import "scss/mixins/animation";
+@import "scss/mixins/transform";
+@import "scss/utils";
+@import "scss/variables";
+
+@import "scss/elements/reset";
+@import "scss/elements/buttons-knobs";
+@import "scss/elements/elements";
+
+@import "scss/components/banner";
+@import "scss/components/chart";
+@import "scss/components/chosen";
+@import "scss/components/communities";
+@import "scss/components/cta";
+@import "scss/components/dropdown";
+@import "scss/components/emails";
+@import "scss/components/js-edit";
+@import "scss/components/linear_gradient";
+@import "scss/components/loading-indicators";
+@import "scss/components/memberships";
+@import "scss/components/nav";
+@import "scss/components/payments-by";
+@import "scss/components/profile-statement";
+@import "scss/components/sidebar";
+@import "scss/components/sign_in";
+@import "scss/components/status-icon";
+@import "scss/components/support_gratipay";
+@import "scss/components/table";
+@import "scss/components/tip-distribution";
+@import "scss/components/tipr";
+@import "scss/components/upgrade";
+
+@import "scss/fragments/accounts";
+@import "scss/fragments/members";
+@import "scss/fragments/mini-user";
+@import "scss/fragments/notifications";
+@import "scss/fragments/pagination";
+
+@import "scss/layouts/layout";
+@import "scss/layouts/responsiveness";
+
+@import "scss/pages/homepage";
+@import "scss/pages/history";
+@import "scss/pages/team";
+@import "scss/pages/profile-edit";
+@import "scss/pages/giving";
+@import "scss/pages/settings";
+@import "scss/pages/cc-ba";
+@import "scss/pages/on-confirm";
+@import "scss/pages/search";
+@import "scss/pages/hall-of-fame";
