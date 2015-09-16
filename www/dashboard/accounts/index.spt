@@ -23,16 +23,21 @@ out
         $(document).ready(Dashboard.init);
     </script>
 </head>
-<body class="foo">
+<body id="chart-of-accounts">
     <h1>Chart of Accounts</h1>
-    <table></table>
+    <table>
+        <thead>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Kind</th>
+        </thead>
+        <tbody></tbody>
+    </table>
 
-    <script type="text/template" id="account-row">
-        <tr>
-            <td><%= number %></td>
-            <td><%= name %></td>
-            <td><%= kind %></td>
-        </tr>
+    <script type="text/template" id="AccountRow">
+        <td><%= number %></td>
+        <td><%= name %></td>
+        <td><%= kind %></td>
     </script>
 </body>
 </html>
