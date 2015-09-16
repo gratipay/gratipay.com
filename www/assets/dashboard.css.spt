@@ -1,0 +1,7 @@
+[---]
+[---] text/css via scss
+#dashboard {
+    section {
+        display: none;
+    }
+}

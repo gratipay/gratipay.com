@@ -1,0 +1,12 @@
+from aspen import Response
+[---]
+if user.ANON:
+    raise Response(401)
+if not user.ADMIN:
+    raise Response(403)
+
+out = {"accounts": [ {"number": "100", "name": "accounts receivable", "type": "asset"}
+                   , {"number": "200", "name": "accounts payable", "type": "liability"}
+                    ]}
+[---] application/json via json_dump
+out

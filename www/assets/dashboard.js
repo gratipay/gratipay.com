@@ -1,5 +1,21 @@
 Dashboard = {models: {}, views: {}, collections: {}};
 
+Dashboard.Router = Backbone.Router.extend({
+    routes: {'ledger': 'ledger', 'accounts': 'accounts'},
+    ledger: function() {
+        $('section').hide();
+        $('#general-ledger').show();
+    },
+    accounts: function() {
+        $('section').hide();
+        $('#chart-of-accounts').show();
+    }
+});
+
+
+// Models
+// ======
+
 Dashboard.models.Account = Backbone.Model.extend({
     defaults: {
         number: null,
@@ -8,12 +24,45 @@ Dashboard.models.Account = Backbone.Model.extend({
     }
 });
 
+
+// Collections
+// ===========
+
 Dashboard.collections.Accounts = Backbone.Collection.extend({
-    url: '/dashboard/accounts/',
+    url: '/v2/accounts/',
     model: Dashboard.models.Account,
     parse: function(data) {
         return data.accounts;
     }
+});
+
+
+// Views
+// =====
+
+Dashboard.views.Main = Backbone.View.extend({
+    el: 'body',
+    initialize: function() {
+        new Dashboard.views.GeneralLedger;
+        new Dashboard.views.ChartOfAccounts;
+
+        this.router = new Dashboard.Router;
+        Backbone.history.start({pushState: true, root: "/dashboard/"});
+    },
+    events: {
+        'click #navigation a': 'loadSection'
+    },
+    loadSection: function(e) {
+        this.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
+        e.preventDefault();
+    },
+});
+
+Dashboard.views.GeneralLedger = Backbone.View.extend({
+    el: '#general-ledger',
+    initialize: function() {
+        this.$tbody= this.$('tbody');
+    },
 });
 
 Dashboard.views.ChartOfAccounts = Backbone.View.extend({
@@ -21,8 +70,8 @@ Dashboard.views.ChartOfAccounts = Backbone.View.extend({
     initialize: function() {
         this.$tbody= this.$('tbody');
         this.data = new Dashboard.collections.Accounts();
-        this.data.fetch({reset:true});
         this.listenTo(this.data, 'reset', this.addAll);
+        this.data.fetch({reset:true});
     },
     addOne: function (account) {
         var view = new Dashboard.views.AccountRow({model: account});
@@ -46,6 +95,10 @@ Dashboard.views.AccountRow = Backbone.View.extend({
     }
 });
 
+
+// Entrypoint
+// ==========
+
 Dashboard.init = function() {
-    new Dashboard.views.ChartOfAccounts();
+    new Dashboard.views.Main();
 };

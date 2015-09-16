@@ -1,0 +1,57 @@
+from aspen import Response
+[---]
+if user.ANON:
+    raise Response(401)
+if not user.ADMIN:
+    raise Response(403)
+[---] text/html
+<!doctype html>
+<html>
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ website.asset('dashboard.css') }}" />
+    <script src="{{ website.asset('jquery.min.js') }}"></script>
+    <script src="{{ website.asset('underscore-min.js') }}"></script>
+    <script src="{{ website.asset('backbone-min.js') }}"></script>
+    <script src="{{ website.asset('dashboard.js') }}"></script>
+    <script>
+        $(document).ready(Dashboard.init);
+    </script>
+</head>
+<body id="dashboard">
+    <h1>Dashboard</h1>
+    <ul id="navigation">
+        <li><a href="ledger">General Ledger</a></li>
+        <li><a href="accounts">Chart of Accounts</a></li>
+    </ul>
+
+    <section id="general-ledger">
+        <h2>General Ledger</h2>
+        <table>
+            <thead>
+                <th>Account</th>
+                <th>Debits</th>
+                <th>Credits</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section id="chart-of-accounts">
+        <h2>Chart of Accounts</h2>
+        <table>
+            <thead>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Type</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <script type="text/template" id="AccountRow">
+        <td><%= number %></td>
+        <td><%= name %></td>
+        <td><%= type %></td>
+    </script>
+</body>
+</html>
