@@ -18,7 +18,7 @@ CREATE TABLE payday_participants AS
           , braintree_customer_id
       FROM participants p
      WHERE is_suspicious IS NOT true
-       AND claimed_time < %(ts_start)s
+       AND claimed_time < (SELECT ts_start FROM current_payday())
   ORDER BY claimed_time;
 
 CREATE UNIQUE INDEX ON payday_participants (id);
@@ -51,14 +51,14 @@ DROP TABLE IF EXISTS payday_payments_done;
 CREATE TABLE payday_payments_done AS
     SELECT *
       FROM payments p
-     WHERE p.timestamp > %(ts_start)s;
+     WHERE p.timestamp > (SELECT ts_start FROM current_payday());
 
 DROP TABLE IF EXISTS payday_payment_instructions;
 CREATE TABLE payday_payment_instructions AS
     SELECT s.id, participant, team, amount, due
       FROM ( SELECT DISTINCT ON (participant, team) *
                FROM payment_instructions
-              WHERE mtime < %(ts_start)s
+              WHERE mtime < (SELECT ts_start FROM current_payday())
            ORDER BY participant, team, mtime DESC
            ) s
       JOIN payday_participants p ON p.username = s.participant

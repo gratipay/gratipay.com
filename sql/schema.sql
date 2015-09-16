@@ -675,3 +675,30 @@ END;
 BEGIN;
     ALTER TABLE teams ADD COLUMN review_url text DEFAULT NULL;
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3750
+BEGIN;
+    CREATE TYPE supported_image_types AS ENUM ('image/png', 'image/jpeg');
+    ALTER TABLE teams ADD COLUMN image_oid_original oid NOT NULL DEFAULT 0;
+    ALTER TABLE teams ADD COLUMN image_oid_large oid NOT NULL DEFAULT 0;
+    ALTER TABLE teams ADD COLUMN image_oid_small oid NOT NULL DEFAULT 0;
+    ALTER TABLE teams ADD COLUMN image_type supported_image_types;
+END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3785
+BEGIN;
+
+    CREATE FUNCTION current_payday() RETURNS paydays AS $$
+        SELECT *
+          FROM paydays
+         WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz;
+    $$ LANGUAGE sql;
+
+    CREATE FUNCTION current_payday_id() RETURNS int AS $$
+        -- This is a function so we can use it in DEFAULTS for a column.
+        SELECT id FROM current_payday();
+    $$ LANGUAGE sql;
+
+END;

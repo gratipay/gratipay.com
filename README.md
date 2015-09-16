@@ -352,7 +352,6 @@ deployment.
 Testing [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
 =======
 
-|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
 Our test suite is divided into JavaScript tests and Python tests. The Python 
 part of the test suite is much more extensive than the JavaScript part. You need 
 to install [PhantomJS](http://phantomjs.org/) separately in order to run the 

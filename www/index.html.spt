@@ -97,13 +97,15 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 
     {% for tab in tabs %}
     <table class="teams tab" data-tab="{{ tab }}">
-        {% for team in tabs[tab]['teams'] %}
+        {% for i, team in enumerate(tabs[tab]['teams'], start=1) %}
         <tr>
             <td class="team">
+                <img src="{{ team.get_image_url('small') }}">
                 <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
 
                 <div class="details">
-                    <span class="status">
+                    <span class="i">{{ i }}</span>
+                    <span class="status">&middot;
                         <a href="{{ team.review_url }}"><span
                             class="status-icon {{ team.status }}"
                             >{{ status_icons[team.status]|safe }}</span

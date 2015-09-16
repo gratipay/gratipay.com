@@ -11,7 +11,7 @@ Gratipay.new_team.submitForm = function (e) {
 
     $input = $(this)
     $form = $(this).parent('form');
-    var data = $form.serializeArray();
+    var data = new FormData($form[0]);
 
     $input.prop('disable', true);
 
@@ -19,8 +19,11 @@ Gratipay.new_team.submitForm = function (e) {
         url: $form.attr('action'),
         type: 'POST',
         data: data,
+        processData: false,
+        contentType: false,
         dataType: 'json',
         success: function (d) {
+            $('a.team_url').attr('href', d.team_url).text(d.team_url);
             $('a.review_url').attr('href', d.review_url).text(d.review_url);
             $('form').slideUp(500, function() {
                 $('.application-complete').slideDown(250);
