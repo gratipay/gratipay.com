@@ -1,0 +1,38 @@
+from aspen import Response
+[---]
+if user.ANON:
+    raise Response(401)
+if not user.ADMIN:
+    raise Response(403)
+
+out = {"accounts": [ {"number": "100", "name": "accounts receivable", "kind": "asset"}
+                   , {"number": "200", "name": "accounts payable", "kind": "liability"}
+                    ]}
+[---] application/json via json_dump
+out
+[---] text/html
+<!doctype html>
+<html>
+<head>
+    <title>Chart of Accounts</title>
+    <script src="{{ website.asset('jquery.min.js') }}"></script>
+    <script src="{{ website.asset('underscore-min.js') }}"></script>
+    <script src="{{ website.asset('backbone-min.js') }}"></script>
+    <script src="{{ website.asset('dashboard.js') }}"></script>
+    <script>
+        $(document).ready(Dashboard.init);
+    </script>
+</head>
+<body class="foo">
+    <h1>Chart of Accounts</h1>
+    <table></table>
+
+    <script type="text/template" id="account-row">
+        <tr>
+            <td><%= number %></td>
+            <td><%= name %></td>
+            <td><%= kind %></td>
+        </tr>
+    </script>
+</body>
+</html>
