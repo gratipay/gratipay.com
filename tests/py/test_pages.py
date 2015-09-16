@@ -33,7 +33,8 @@ class TestPages(Harness):
                            .replace('/%exchange_id.int', '/%s' % exchange_id) \
                            .replace('/%redirect_to', '/giving') \
                            .replace('/%endpoint', '/public') \
-                           .replace('/about/me/%sub', '/about/me')
+                           .replace('/about/me/%sub', '/about/me') \
+                           .replace('/dashboard/%index', '')
             assert '/%' not in url
             if 'index' in url.split('/')[-1]:
                 url = url.rsplit('/', 1)[0] + '/'
