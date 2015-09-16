@@ -54,5 +54,30 @@ if not user.ADMIN:
         <td><%= name %></td>
         <td><%= type %></td>
     </script>
+
+    <script type="text/template" id="AddAccountOff">
+        <tr>
+            <td colspan="3">
+                <button>Add Account</button>
+            </td>
+        </tr>
+    </script>
+
+    <script type="text/template" id="AddAccountOn">
+        <tr>
+            <td><input type="text" name="number"></td>
+            <td><input type="text" name="name"></td>
+            <td><select name="type">
+                 <option value="asset">asset</option>
+                 <option value="liability">liability</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <button type="submit">Add Account</button>
+                <button type="cancel">Cancel</button>
+            </td>
+        </tr>
+    </script>
 </body>
 </html>

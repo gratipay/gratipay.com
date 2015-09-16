@@ -72,10 +72,16 @@ Dashboard.views.GeneralLedger = Backbone.View.extend({
 Dashboard.views.ChartOfAccounts = Backbone.View.extend({
     el: '#chart-of-accounts',
     initialize: function() {
-        this.$tbody= this.$('tbody');
+        this.$table = this.$('table');
+        this.$tbody = this.$('tbody');
         this.data = new Dashboard.collections.Accounts();
         this.listenTo(this.data, 'reset', this.addAll);
         this.data.fetch({reset:true});
+
+        this.addAccountOff = new Dashboard.views.AddAccountOff;
+        this.addAccountOn = new Dashboard.views.AddAccountOn;
+
+        this.turnAddAccountOff();
     },
     addOne: function (account) {
         var view = new Dashboard.views.AccountRow({model: account});
@@ -85,6 +91,22 @@ Dashboard.views.ChartOfAccounts = Backbone.View.extend({
     addAll: function () {
         this.$tbody.html('');
         this.data.each(this.addOne, this);
+    },
+    events: {
+        'click .add-account.off button': 'turnAddAccountOn',
+        'click .add-account.on button[type=cancel]': 'turnAddAccountOff',
+        'click .add-account.on button[type=submit]': 'addAccount'
+    },
+    turnAddAccountOn: function() {
+        this.addAccountOff.remove();
+        this.$table.append(this.addAccountOn.render().el);
+    },
+    turnAddAccountOff: function() {
+        this.addAccountOn.remove();
+        this.$table.append(this.addAccountOff.render().el);
+    },
+    addAccount: function() {
+        console.log('adding account ...');
     }
 });
 
@@ -95,6 +117,30 @@ Dashboard.views.AccountRow = Backbone.View.extend({
     },
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
+        return this;
+    }
+});
+
+Dashboard.views.AddAccountOff = Backbone.View.extend({
+    tagName: 'tfoot',
+    className: 'add-account off',
+    initialize: function() {
+        this.template = _.template($('#AddAccountOff').html());
+    },
+    render: function() {
+        this.$el.html(this.template());
+        return this;
+    },
+});
+
+Dashboard.views.AddAccountOn = Backbone.View.extend({
+    tagName: 'tfoot',
+    className: 'add-account on',
+    initialize: function() {
+        this.template = _.template($('#AddAccountOn').html());
+    },
+    render: function() {
+        this.$el.html(this.template());
         return this;
     }
 });
