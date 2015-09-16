@@ -10,7 +10,7 @@ from gratipay.models.participant import Participant
 from gratipay.security import authentication, csrf, security_headers
 from gratipay.utils import erase_cookie, http_caching, i18n, set_cookie, timer
 from gratipay.version import get_version
-from gratipay.renderers import csv_dump, jinja2_htmlescaped, eval_
+from gratipay.renderers import csv_dump, jinja2_htmlescaped, eval_, scss
 
 import aspen
 from aspen.website import Website
@@ -27,8 +27,10 @@ website.renderer_default = 'unspecified'  # require explicit renderer, to avoid 
 website.renderer_factories['csv_dump'] = csv_dump.Factory(website)
 website.renderer_factories['eval'] = eval_.Factory(website)
 website.renderer_factories['jinja2_htmlescaped'] = jinja2_htmlescaped.Factory(website)
+website.renderer_factories['scss'] = scss.Factory(website)
 website.default_renderers_by_media_type['text/html'] = 'jinja2_htmlescaped'
 website.default_renderers_by_media_type['text/plain'] = 'jinja2'  # unescaped is fine here
+website.default_renderers_by_media_type['text/css'] = 'scss'
 website.default_renderers_by_media_type['image/*'] = 'eval'
 
 website.renderer_factories['jinja2'].Renderer.global_context = {
