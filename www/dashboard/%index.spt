@@ -9,6 +9,7 @@ if not user.ADMIN:
 <html>
     <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="{{ website.asset('dashboard.css') }}" />
+    <link rel="stylesheet" type="text/css" href="//cloud.typography.com/6540672/615104/css/fonts.css" />
     <script src="{{ website.asset('jquery.min.js') }}"></script>
     <script src="{{ website.asset('underscore-min.js') }}"></script>
     <script src="{{ website.asset('backbone-min.js') }}"></script>

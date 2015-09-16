@@ -1,7 +1,78 @@
 [---]
 [---] text/css via scss
+@import "scss/elements/reset";
+@import 'scss/variables';
+
 #dashboard {
+    font-family: $Ideal;
+
+    h1 {
+        display: none;
+    }
+    h2 {
+        display: none;
+    }
+
+    #navigation {
+        margin: 10px 0 0;
+        padding: 0 0 0 36px;
+        border-bottom: 2px solid $green;
+        li {
+            display: inline-block;
+            list-style: none;
+            margin: 0 6px 0 0;
+            padding: 0;
+            a {
+                display: block;
+                padding: 10px;
+                position: relative;
+                top: 2px;
+                text-decoration: none;
+                color: $medium-gray;
+                border: 2px solid $medium-gray;
+                border-radius: 5px 5px 0 0;
+                border-bottom-color: $green;
+                &:hover {
+                    background: $green;
+                    color: white;
+                    border-color: $green;
+                }
+                &.selected {
+                    color: $black;
+                    border-color: $green;
+                    border-bottom-color: $white;
+                    cursor: default;
+                    &:hover {
+                        background: $white;
+                    }
+                }
+            }
+        }
+    }
+
     section {
         display: none;
+        padding: 36px;
+    }
+
+    table {
+        border-collapse: collapse;
+        th {
+            font: bold 16px/18px $Ideal;
+            font-weight: bold;
+            border-bottom: 1px solid $light-brown;
+        }
+        td {
+            font: normal 14px/16px $Mono;
+        }
+
+        th, td {
+            text-align: left;
+            margin: 0;
+            padding: 6px 18px 3px 0;
+            &:last-child {
+                padding-right: 0;
+            }
+        }
     }
 }

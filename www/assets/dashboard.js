@@ -4,10 +4,14 @@ Dashboard.Router = Backbone.Router.extend({
     routes: {'ledger': 'ledger', 'accounts': 'accounts'},
     ledger: function() {
         $('section').hide();
+        $('#navigation a.selected').removeClass('selected');
+        $('#navigation a[href=ledger]').addClass('selected');
         $('#general-ledger').show();
     },
     accounts: function() {
         $('section').hide();
+        $('#navigation a.selected').removeClass('selected');
+        $('#navigation a[href=accounts]').addClass('selected');
         $('#chart-of-accounts').show();
     }
 });
