@@ -14,9 +14,11 @@
     }
 
     #navigation {
-        margin: 10px 0 0;
-        padding: 0 0 0 36px;
+        margin: 0;
+        padding: 10px 0 0;
+        text-align: center;
         border-bottom: 2px solid $green;
+        background: $lighter-gray;
         li {
             display: inline-block;
             list-style: none;
@@ -38,6 +40,7 @@
                     border-color: $green;
                 }
                 &.selected {
+                    background: $white;
                     color: $black;
                     border-color: $green;
                     border-bottom-color: $white;
@@ -52,11 +55,13 @@
 
     section {
         display: none;
-        padding: 36px;
+        padding: 48px;
+        background: $white;
     }
 
     table {
         border-collapse: collapse;
+        margin: 0 auto;
         th {
             font: bold 16px/18px $Ideal;
             font-weight: bold;
