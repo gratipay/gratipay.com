@@ -1,3 +1,5 @@
+var ENTER_KEY = 13;
+
 Dashboard = {models: {}, views: {}, collections: {}};
 
 Dashboard.Router = Backbone.Router.extend({
@@ -65,49 +67,35 @@ Dashboard.views.Main = Backbone.View.extend({
 Dashboard.views.GeneralLedger = Backbone.View.extend({
     el: '#general-ledger',
     initialize: function() {
-        this.$tbody= this.$('tbody');
     },
 });
 
 Dashboard.views.ChartOfAccounts = Backbone.View.extend({
     el: '#chart-of-accounts',
     initialize: function() {
-        this.$table = this.$('table');
-        this.$tbody = this.$('tbody');
-        this.data = new Dashboard.collections.Accounts();
-        this.listenTo(this.data, 'reset', this.addAll);
-        this.data.fetch({reset:true});
-
-        this.addAccountOff = new Dashboard.views.AddAccountOff;
-        this.addAccountOn = new Dashboard.views.AddAccountOn;
-
-        this.turnAddAccountOff();
+        new Dashboard.views.AccountsListing;
+        new Dashboard.views.AddAccountWidget;
     },
-    addOne: function (account) {
+});
+
+
+Dashboard.views.AccountsListing = Backbone.View.extend({
+    el: '#chart-of-accounts tbody',
+    initialize: function() {
+        this.data = new Dashboard.collections.Accounts();
+        this.listenTo(this.data, 'reset', this.render);
+        this.data.fetch({reset:true});
+    },
+    render: function() {
+        this.$el.html('');
+        this.data.each(this.addOne, this);
+        return this;
+    },
+    addOne: function(account) {
         var view = new Dashboard.views.AccountRow({model: account});
         var el = view.render().el;
-        this.$tbody.append(el);
+        this.$el.append(el);
     },
-    addAll: function () {
-        this.$tbody.html('');
-        this.data.each(this.addOne, this);
-    },
-    events: {
-        'click .add-account.off button': 'turnAddAccountOn',
-        'click .add-account.on button[type=cancel]': 'turnAddAccountOff',
-        'click .add-account.on button[type=submit]': 'addAccount'
-    },
-    turnAddAccountOn: function() {
-        this.addAccountOff.remove();
-        this.$table.append(this.addAccountOn.render().el);
-    },
-    turnAddAccountOff: function() {
-        this.addAccountOn.remove();
-        this.$table.append(this.addAccountOff.render().el);
-    },
-    addAccount: function() {
-        console.log('adding account ...');
-    }
 });
 
 Dashboard.views.AccountRow = Backbone.View.extend({
@@ -116,32 +104,39 @@ Dashboard.views.AccountRow = Backbone.View.extend({
         this.template = _.template($('#AccountRow').html());
     },
     render: function() {
-        this.$el.html(this.template(this.model.toJSON()));
+        this.el = this.template(this.model.attributes);
         return this;
     }
 });
 
-Dashboard.views.AddAccountOff = Backbone.View.extend({
-    tagName: 'tfoot',
-    className: 'add-account off',
-    initialize: function() {
-        this.template = _.template($('#AddAccountOff').html());
-    },
-    render: function() {
-        this.$el.html(this.template());
-        return this;
-    },
-});
 
-Dashboard.views.AddAccountOn = Backbone.View.extend({
-    tagName: 'tfoot',
-    className: 'add-account on',
+Dashboard.views.AddAccountWidget = Backbone.View.extend({
+    el: '#chart-of-accounts tfoot',
     initialize: function() {
-        this.template = _.template($('#AddAccountOn').html());
+        this.$el.html($('#AddAccountWidget').html());
+        this.turnAddAccountOff();
     },
-    render: function() {
-        this.$el.html(this.template());
-        return this;
+    events: {
+        'click .off button': 'turnAddAccountOn',
+        'click .on button[type=cancel]': 'turnAddAccountOff',
+        'click button[type=submit]': 'addAccount',
+        'keydown input' : 'keyAction'
+    },
+    turnAddAccountOn: function() {
+        this.$('.off').hide();
+        this.$('.on').show();
+        this.$('.on input').first().focus();
+    },
+    turnAddAccountOff: function() {
+        this.$('.on').hide();
+        this.$('.off').show();
+    },
+    keyAction: function(e) {
+        if (e.which === ENTER_KEY)
+            this.addAccount();
+    },
+    addAccount: function() {
+        alert('clicked!');
     }
 });
 

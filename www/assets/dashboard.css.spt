@@ -86,9 +86,9 @@
         }
     }
 
-    .add-account {
+    tfoot {
         border-top: 1px solid $light-brown;
-        tr:last-child td {
+        tr.buttons td {
             text-align: right;
         }
     }

@@ -33,6 +33,7 @@ if not user.ADMIN:
                 <th>Debits</th>
                 <th>Credits</th>
             </thead>
+            <tfoot></tfoot>
             <tbody></tbody>
         </table>
     </section>
@@ -43,36 +44,30 @@ if not user.ADMIN:
             <thead>
                 <th>Number</th>
                 <th>Name</th>
-                <th>Type</th>
             </thead>
+            <tfoot></tfoot>
             <tbody></tbody>
         </table>
     </section>
 
     <script type="text/template" id="AccountRow">
-        <td><%= number %></td>
-        <td><%= name %></td>
-        <td><%= type %></td>
+        <tr>
+            <td class="number"><%= number %></td>
+            <td class="name"><%= name %></td>
+        </tr>
     </script>
 
-    <script type="text/template" id="AddAccountOff">
-        <tr>
+    <script type="text/template" id="AddAccountWidget">
+        <tr class="off buttons">
             <td colspan="3">
                 <button>Add Account</button>
             </td>
         </tr>
-    </script>
-
-    <script type="text/template" id="AddAccountOn">
-        <tr>
-            <td><input type="text" name="number"></td>
-            <td><input type="text" name="name"></td>
-            <td><select name="type">
-                 <option value="asset">asset</option>
-                 <option value="liability">liability</option>
-            </select></td>
+        <tr class="on">
+            <td class="number"><input type="text" name="number"></td>
+            <td class="name"><input type="text" name="name"></td>
         </tr>
-        <tr>
+        <tr class="on buttons">
             <td colspan="3">
                 <button type="submit">Add Account</button>
                 <button type="cancel">Cancel</button>
