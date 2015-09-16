@@ -52,7 +52,7 @@
         <tr>
             <td class="label">{{ _("Giving") }}</td>
             {% if participant.anonymous_giving %}
-                {% if user.ADMIN or user.participant%}
+                {% if user.ADMIN or (user.participant == participant)%}
                 <td>{{ format_currency(participant.giving, 'USD') }}</td>
                 <td>[{{ participant.ngiving_to }}]</td>
                 {% else %}
