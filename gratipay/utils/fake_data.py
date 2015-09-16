@@ -344,7 +344,8 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
     print("")
 
 
-def main(db, *a, **kw):
+def main(db=None, *a, **kw):
+    db = db or wireup.db(wireup.env())
     clean_db(db)
     prep_db(db)
     populate_db(db, *a, **kw)
@@ -353,5 +354,4 @@ def main(db, *a, **kw):
 
 
 if __name__ == '__main__':
-    db = wireup.db(wireup.env())
-    main(db)
+    main()
