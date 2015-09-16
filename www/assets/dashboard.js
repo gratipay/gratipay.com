@@ -4,7 +4,7 @@ Dashboard.models.Account = Backbone.Model.extend({
     defaults: {
         number: null,
         name: null,
-        kind: null
+        type: null
     }
 });
 
@@ -41,7 +41,6 @@ Dashboard.views.AccountRow = Backbone.View.extend({
         this.template = _.template($('#AccountRow').html());
     },
     render: function() {
-        console.log(this);
         this.$el.html(this.template(this.model.toJSON()));
         return this;
     }

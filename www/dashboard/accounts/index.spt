@@ -29,7 +29,7 @@ out
         <thead>
             <th>Number</th>
             <th>Name</th>
-            <th>Kind</th>
+            <th>Type</th>
         </thead>
         <tbody></tbody>
     </table>
