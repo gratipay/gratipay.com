@@ -9,9 +9,11 @@ unreviewed = website.db.all("""
 
     SELECT username
          , balance
+         , giving
+         , ngiving_to
       FROM participants
      WHERE is_suspicious IS NULL
-       AND balanced_customer_href IS NOT NULL
+       AND braintree_customer_id IS NOT NULL
        AND NOT is_closed
   ORDER BY claimed_time
 
@@ -51,9 +53,9 @@ title = _("Fraud Review Dashboard")
 
         $('button').click(function()
         {
-            var row = $(this).parent();
+            var row = $(this).parent().parent();
             var to = $(this).text() !== 'Good';
-            var username = row.attr('username');
+            var username = row.data('username');
             var url = "/~" + username + "/toggle-is-suspicious.json";
 
             function success()
@@ -73,12 +75,19 @@ title = _("Fraud Review Dashboard")
     });
 </script>
 <h3>Unreviewed Accounts (N = {{ len(unreviewed) }})</h3>
+<table>
 {% for account in unreviewed %}
-<div username="{{ account.username }}">
-    <button class="good small selected">Good</button>
-    <button class="bad small">Bad</button>
-    &nbsp;
-    <a href="/{{ account.username }}/" target="drill-down">{{ account.username }}</a>
-</div>
+    <tr data-username="{{ account.username }}">
+        <td>
+            <button class="good small selected">Good</button>
+            <button class="bad small">Bad</button>
+        </td>
+        <td>
+            <a href="/{{ account.username }}/" target="drill-down">{{ account.username }}</a>
+        </td>
+        <td>${{ account.giving }}</td>
+        <td>{{ account.ngiving_to }}</td>
+    </tr>
 {% endfor %}
+</table>
 <iframe name="drill-down"></iframe>
