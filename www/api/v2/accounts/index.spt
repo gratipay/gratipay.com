@@ -29,7 +29,7 @@ Every ~user and Team on Gratipay has an account in the chart of accounts, as
 well as every bank and payments partner that we've used.
 
 
-## Role Required 
+## Role Required
 
 `admin`
 
@@ -45,7 +45,7 @@ $ curl -H \"Accept: application/json\" -u $user_id:$api_key https://gratipay.com
  {\"number\": \"201\": \"name\": \"Accounts Payable\"}]
 ```
 
-## Drill-Down 
+## Drill-Down
 
 [`/api/v2/accounts/%number`](/api/v2/accounts/number)
 
