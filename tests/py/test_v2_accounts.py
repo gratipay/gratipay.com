@@ -9,17 +9,18 @@ class Tests(Harness):
 
     def setUp(self):
         self.make_participant('admin', is_admin=True)
-        self.db.run("INSERT INTO accounts VALUES ('100', 'Accounts Receivable')")
+        self.db.run("INSERT INTO accounts VALUES ('100', 'Cash')")
 
     def load(self, number):
         return json.loads(self.client.GET('/v2/accounts/'+number, auth_as='admin').body)
 
+
     def test_can_list_accounts(self):
         actual = json.loads(self.client.GET('/v2/accounts/', auth_as='admin').body)
-        assert actual == {"accounts": [{"number": "100", "name": "Accounts Receivable"}]}
+        assert actual == {"accounts": [{"number": "100", "name": "Cash"}]}
 
     def test_can_get_one_account(self):
-        assert self.load('100') == {"number": "100", "name": "Accounts Receivable"}
+        assert self.load('100') == {"number": "100", "name": "Cash"}
 
     def test_401_for_anon(self):
         assert self.client.GxT('/v2/accounts/').code == 401
@@ -48,13 +49,47 @@ class Tests(Harness):
                                    )
         assert response.code == 400
         assert json.loads(response.body)['error_message_long'] == 'Invalid name.'
-        assert self.load('100') == {"number": "100", "name": "Accounts Receivable"}
+        assert self.load('100') == {"number": "100", "name": "Cash"}
 
     def test_can_save_new_account(self):
         assert raises(Response, self.load, '101').value.code == 404
         self.client.hit( 'PUT'
                        , '/v2/accounts/101'
-                       , data={'number': '101', 'name': 'Cash'}
+                       , data={'number': '101', 'name': 'Accounts Receivable'}
                        , auth_as='admin'
                         )
-        assert self.load('101') == {"number": "101", "name": "Cash"}
+        assert self.load('101') == {"number": "101", "name": "Accounts Receivable"}
+
+    def test_inserting_a_duplicate_name_is_400(self):
+        response = self.client.hit( 'PUT'
+                                  , '/v2/accounts/101'
+                                  , data={'number': '101', 'name': 'Cash'}
+                                  , auth_as='admin'
+                                  , raise_immediately=False
+                                  , **{b'HTTP_ACCEPT': b'application/json'}
+                                   )
+        assert response.code == 400
+        assert json.loads(response.body)['error_message_long'] == \
+                'Failed to upsert (101, Cash). Probably a duplicate name?'
+        assert self.load('100') == {"number": "100", "name": "Cash"}
+        assert raises(Response, self.load, '101').value.code == 404
+
+    def test_updating_a_duplicate_name_is_400(self):
+        self.client.hit( 'PUT'
+                       , '/v2/accounts/101'
+                       , data={'number': '101', 'name': 'Accounts Receivable'}
+                       , auth_as='admin'
+                        )
+        response = self.client.hit( 'PUT'
+                                  , '/v2/accounts/101'
+                                  , data={'number': '101', 'name': 'Cash'}
+                                  , auth_as='admin'
+                                  , raise_immediately=False
+                                  , **{b'HTTP_ACCEPT': b'application/json'}
+                                   )
+        assert response.code == 400
+        assert json.loads(response.body)['error_message_long'] == \
+                'duplicate key value violates unique constraint "accounts_name_key"\n' \
+                'DETAIL:  Key (name)=(Cash) already exists.\n'
+        assert self.load('100') == {"number": "100", "name": "Cash"}
+        assert self.load('101') == {"number": "101", "name": "Accounts Receivable"}

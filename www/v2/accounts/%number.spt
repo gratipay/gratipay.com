@@ -23,7 +23,11 @@ if request.method == 'PUT':
             website.db.run("INSERT INTO accounts (number, name) VALUES (%s, %s)", (number, name))
         except IntegrityError:
             try:
-                website.db.run("UPDATE accounts SET name=%s WHERE number=%s", (name, number))
+                _number = website.db.one("UPDATE accounts SET name=%s WHERE number=%s "
+                                         "RETURNING number", (name, number))
+                if _number is None:
+                    raise Response(400, "Failed to upsert ({}, {}). Probably a duplicate name?"
+                                        .format(number, name))
             except IntegrityError, err:
                 raise Response(400, err.args[0])
 
