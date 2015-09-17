@@ -12,28 +12,28 @@ class Tests(Harness):
         self.db.run("INSERT INTO accounts VALUES ('100', 'Cash')")
 
     def load(self, number):
-        return json.loads(self.client.GET('/v2/accounts/'+number, auth_as='admin').body)
+        return json.loads(self.client.GET('/api/v2/accounts/'+number, auth_as='admin').body)
 
 
     def test_can_list_accounts(self):
-        actual = json.loads(self.client.GET('/v2/accounts/', auth_as='admin').body)
+        actual = json.loads(self.client.GET('/api/v2/accounts/', auth_as='admin').body)
         assert actual == {"accounts": [{"number": "100", "name": "Cash"}]}
 
     def test_can_get_one_account(self):
         assert self.load('100') == {"number": "100", "name": "Cash"}
 
     def test_401_for_anon(self):
-        assert self.client.GxT('/v2/accounts/').code == 401
-        assert self.client.GxT('/v2/accounts/100').code == 401
+        assert self.client.GxT('/api/v2/accounts/').code == 401
+        assert self.client.GxT('/api/v2/accounts/100').code == 401
 
     def test_403_for_non_admin(self):
         self.make_participant('alice')
-        assert self.client.GxT('/v2/accounts/', auth_as='alice').code == 403
-        assert self.client.GxT('/v2/accounts/100', auth_as='alice').code == 403
+        assert self.client.GxT('/api/v2/accounts/', auth_as='alice').code == 403
+        assert self.client.GxT('/api/v2/accounts/100', auth_as='alice').code == 403
 
     def test_can_change_name(self):
         self.client.hit( 'PUT'
-                       , '/v2/accounts/100'
+                       , '/api/v2/accounts/100'
                        , data={'number': '100', 'name': 'Cash'}
                        , auth_as='admin'
                         )
@@ -41,7 +41,7 @@ class Tests(Harness):
 
     def test_bad_name_is_400(self):
         response = self.client.hit( 'PUT'
-                                  , '/v2/accounts/100'
+                                  , '/api/v2/accounts/100'
                                   , data={'number': '100', 'name': 'Cash!'}
                                   , auth_as='admin'
                                   , raise_immediately=False
@@ -54,7 +54,7 @@ class Tests(Harness):
     def test_can_save_new_account(self):
         assert raises(Response, self.load, '101').value.code == 404
         self.client.hit( 'PUT'
-                       , '/v2/accounts/101'
+                       , '/api/v2/accounts/101'
                        , data={'number': '101', 'name': 'Accounts Receivable'}
                        , auth_as='admin'
                         )
@@ -62,7 +62,7 @@ class Tests(Harness):
 
     def test_inserting_a_duplicate_name_is_400(self):
         response = self.client.hit( 'PUT'
-                                  , '/v2/accounts/101'
+                                  , '/api/v2/accounts/101'
                                   , data={'number': '101', 'name': 'Cash'}
                                   , auth_as='admin'
                                   , raise_immediately=False
@@ -76,12 +76,12 @@ class Tests(Harness):
 
     def test_updating_a_duplicate_name_is_400(self):
         self.client.hit( 'PUT'
-                       , '/v2/accounts/101'
+                       , '/api/v2/accounts/101'
                        , data={'number': '101', 'name': 'Accounts Receivable'}
                        , auth_as='admin'
                         )
         response = self.client.hit( 'PUT'
-                                  , '/v2/accounts/101'
+                                  , '/api/v2/accounts/101'
                                   , data={'number': '101', 'name': 'Cash'}
                                   , auth_as='admin'
                                   , raise_immediately=False
