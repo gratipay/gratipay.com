@@ -1,0 +1,9 @@
+{% extends "templates/base.html" %}
+{% block sidebar %}
+    {% set current_page = request.path.raw.split('/')[3] %}
+    {% set nav_base = "/api/v2" %}
+    {% set pages = [ ('/', _('Overview'))
+                   , ('/accounts/', _('Accounts'))
+                    ] %}
+    {% include "templates/nav.html" %}
+{% endblock %}

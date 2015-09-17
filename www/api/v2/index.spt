@@ -1,0 +1,56 @@
+from gratipay.utils import markdown
+[---]
+banner = _("API")
+title = _("Gratipay Docs")
+[---] text/html
+{% extends "templates/api.html" %}
+{% block content %}{{ markdown.render("""
+
+You've found the Gratipay API, version 2!
+
+These pages also serve as the top-level documentation for all of Gratipay as a
+software application. Technically speaking, we have a few layers:
+
+ - **Database**&mdash;We store our data in [PostgreSQL
+   9.3](http://www.postgresql.org/docs/9.3/static/), and we write a fair amount
+of the [Postgres dialect of
+SQL](http://www.postgresql.org/docs/9.3/static/sql.html). We use and maintain
+the [postgres.py](http://postgres-py.readthedocs.org/) client library.
+
+ - **Website**&mdash;The Gratipay.com website includes UI, API, and admin all
+   in one. This hopefully makes it easier for you to [get up and running
+locally](https://github.com/gratipay/gratipay.com#quick-start): install one
+app, and you have everything you need to hack on Gratipay all in one place. We
+use and maintain our own server-side web framework, [Aspen](http://aspen.io/).
+We use [Python 2](https://docs.python.org/release/2.7.9/), the SCSS syntax for
+[Sass](http://sass-lang.com/), [jQuery 1](https://jquery.com/), and the admin
+dashboard uses [Backbone](http://backbonejs.org/).
+
+ - **Payday**&mdash;We process payments on a weekly cycle, using a combination
+   of Python and Bash scripts.
+
+Conceptually speaking, Gratipay is an
+[accounting](https://en.wikipedia.org/wiki/Accounting) application, with a
+general ledger and chart of [accounts](/api/v2/accounts/) at its heart.
+
+
+## How To Use This API
+
+Many of the HTTP resources under [`/api/v2/`](/api/v2/) that you're browsing
+right now as `text/html` also have JSON representations. Set the `Accept`
+header to `application/json` to request the JSON version:
+
+```
+$ curl -H \"Accept: application/json\" https://gratipay.com/api/v2/foo/
+```
+
+## Authentication
+
+Use the user id and API key from [your settings page](/about/me/settings) to
+authenticate your requests:
+
+```
+$ curl -H \"Accept: application/json\" -u $user_id:$api_key https://gratipay.com/api/v2/foo/
+```
+
+""" )}}{% endblock %}

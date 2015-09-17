@@ -1,9 +1,53 @@
 from aspen import Response
+from gratipay.utils import markdown
 [---]
 if user.ANON:       raise Response(401)
 if not user.ADMIN:  raise Response(403)
 request.allow('GET')
 
-out = {"accounts": website.db.all('SELECT * FROM accounts ORDER BY number ASC')}
+banner = _("API")
+title = _("Chart of Accounts")
+
+listing = {"accounts": website.db.all('SELECT * FROM accounts ORDER BY number ASC')}
 [---] application/json via json_dump
-out
+listing
+[---] text/html
+{% extends "templates/api-accounts.html" %}
+{% block content %}{{ markdown.render("""
+
+Gratipay's chart of accounts is in the `accounts` database table. It's a simple
+mapping of account `number` to `name`, and forms the basis for our general
+ledger. Our convention is to encode the type of account in the account number
+like so:
+
+ - **1xx**&mdash;Assets
+ - **2xx**&mdash;Liabilities
+ - **3xx**&mdash;Income
+ - **4xx**&mdash;Expenses
+
+Every ~user and Team on Gratipay has an account in the chart of accounts, as
+well as every bank and payments partner that we've used.
+
+
+## Role Required 
+
+`admin`
+
+
+## GET
+
+Returns a listing of accounts from the chart of accounts, sorted by `number`
+ascending. Gotcha: account numbers are text and are sorted as such.
+
+```
+$ curl -H \"Accept: application/json\" -u $user_id:$api_key https://gratipay.com/api/v2/accounts/
+[{\"number\": \"101\": \"name\": \"Accounts Receivable\"},
+ {\"number\": \"201\": \"name\": \"Accounts Payable\"}]
+```
+
+## Drill-Down 
+
+[`/api/v2/accounts/%number`](/api/v2/accounts/number)
+
+""") }}
+{% endblock %}

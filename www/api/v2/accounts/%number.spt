@@ -1,5 +1,7 @@
 import re
+
 from aspen import Response
+from gratipay.utils import markdown
 from psycopg2 import IntegrityError
 
 number_re = re.compile(r'^[0-9-]{3,32}$')
@@ -8,11 +10,15 @@ name_re = re.compile(r'^[A-Za-z0-9 ~-]{3,32}$')
 if user.ANON:       raise Response(401)
 if not user.ADMIN:  raise Response(403)
 
-request.allow('GET', 'PUT')
-
 number = request.path['number']
-if not number_re.match(number):
-    raise Response(404)
+if number == 'number':
+    # we're serving API docs
+    request.allow('GET')
+    number = None
+else:
+    request.allow('GET', 'PUT')
+    if not number_re.match(number):
+        raise Response(404)
 
 if request.method == 'PUT':
     name = request.body.get('name')
@@ -31,8 +37,53 @@ if request.method == 'PUT':
             except IntegrityError, err:
                 raise Response(400, err.args[0])
 
-out = website.db.one("SELECT * FROM accounts WHERE number=%s", (number,))
-if out is None:
-    raise Response(404)
+out = {}
+if number:
+    out = website.db.one("SELECT * FROM accounts WHERE number=%s", (number,))
+    if out is None:
+        raise Response(404)
+
+banner = _("API")
+title = _("Account Detail")
 [---] application/json via json_dump
 out
+[---] text/html
+{% extends "templates/api-accounts.html" %}
+{% block content %}{{ markdown.render("""
+
+## Role Required
+
+`admin`
+
+## GET
+
+Returns a single account.
+
+```
+$ curl https://gratipay.com/api/v2/accounts/100 \
+    -H \"Accept: application/json\" \
+    -u $user_id:$api_key
+{\"number\": \"100\": \"name\": \"Cash\"}
+```
+
+
+## PUT
+
+Upserts a single account, returning the account.
+
+```
+$ curl https://gratipay.com/api/v2/accounts/101 \
+    -H \"Accept: application/json\" \
+    -u $user_id:$api_key \
+    -X PUT
+    -d \"\"
+{\"number\": \"101\": \"name\": \"Accounts Receivable\"}
+```
+
+Fails in the following ways:
+
+ - `404` if `number` does not match `^[0-9-]{3,32}$`
+ - `400` if `name` does not match `^[A-Za-z0-9 ~-]{3,32}$`
+ - `400` if there is already an account named `name`
+
+""") }}{% endblock %}
