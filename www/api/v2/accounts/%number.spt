@@ -59,10 +59,10 @@ out
 
 Returns a single account.
 
-```
-$ curl https://gratipay.com/api/v2/accounts/100 \
-    -H \"Accept: application/json\" \
-    -u $user_id:$api_key
+```bash
+$ curl \"https://gratipay.com/api/v2/accounts/100\" \\
+    -H \"Accept: application/json\" \\
+    -u \"$user_id:$api_key\"
 {\"number\": \"100\": \"name\": \"Cash\"}
 ```
 
@@ -71,12 +71,13 @@ $ curl https://gratipay.com/api/v2/accounts/100 \
 
 Upserts a single account, returning the account.
 
-```
-$ curl https://gratipay.com/api/v2/accounts/101 \
-    -H \"Accept: application/json\" \
-    -u $user_id:$api_key \
-    -X PUT
-    -d \"\"
+```bash
+$ curl \"https://gratipay.com/api/v2/accounts/101\" \\
+    -H \"Accept: application/json\" \\
+    -u \"$user_id:$api_key\" \\
+    -X \"PUT\" \\
+    -H \"Content-Type: application/json\" \\
+    -d '{\"number\": \"101\", \"name\": \"Accounts Receivable\"}'
 {\"number\": \"101\": \"name\": \"Accounts Receivable\"}
 ```
 

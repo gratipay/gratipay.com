@@ -15,8 +15,10 @@ Most of the HTTP resources under [`/api/v2/`](/api/v2/) that you're browsing
 right now as `text/html` also have JSON representations. Set the `Accept`
 header to `application/json` to request the JSON version:
 
-```
-$ curl -H \"Accept: application/json\" https://gratipay.com/api/v2/foo/
+```bash
+$ curl \"https://gratipay.com/api/v2/\" \\
+    -H \"Accept: application/json\"
+{\"you\": \"anon\"}
 ```
 
 
@@ -25,8 +27,11 @@ $ curl -H \"Accept: application/json\" https://gratipay.com/api/v2/foo/
 Use the user id and API key from [your settings page](/about/me/settings) to
 authenticate your requests:
 
-```
-$ curl -H \"Accept: application/json\" -u $user_id:$api_key https://gratipay.com/api/v2/foo/
+```bash
+$ curl \"https://gratipay.com/api/v2/\" \\
+    -H \"Accept: application/json\" \\
+    -u $user_id:$api_key
+{\"you\": \"your-username\"}
 ```
 
 
@@ -87,4 +92,14 @@ the [postgres.py](http://postgres-py.readthedocs.org/) client library.
    [PagerDuty](https://gratipay.pagerduty.com/) for monitoring, and we have
    some stats on [a Librato dashboard](https://metrics.librato.com/share/dashboards/42hmoj9j).
 
+
+## Resources
+
+Here are the resources currently exposed in this API:
+
+ - [`accounts/`](/api/v2/accounts/)&mdash;our chart of accounts, requires the
+   `admin` role
+
 """ )}}{% endblock %}
+[---] application/json via json_dump
+{"you": "anon" if user.ANON else user.participant.username}

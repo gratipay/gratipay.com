@@ -7,3 +7,8 @@
                     ] %}
     {% include "templates/nav.html" %}
 {% endblock %}
+{% block scripts %}
+    <link rel="stylesheet" href="{{ website.asset("hljs/agate.css") }}">
+    <script src="{{ website.asset("hljs/highlight.js") }}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}

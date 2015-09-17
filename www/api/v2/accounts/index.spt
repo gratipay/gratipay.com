@@ -40,8 +40,10 @@ ascending. Gotcha: account numbers are text and are sorted as such. Also, we
 only return 128 records. You'll have to wait for us to implement paging to
 receive more than that.
 
-```
-$ curl -H \"Accept: application/json\" -u $user_id:$api_key https://gratipay.com/api/v2/accounts/
+```bash
+$ curl \"https://gratipay.com/api/v2/accounts/\" \\
+    -H \"Accept: application/json\" \\
+    -u $user_id:$api_key
 [{\"number\": \"101\": \"name\": \"Accounts Receivable\"},
  {\"number\": \"201\": \"name\": \"Accounts Payable\"}]
 ```
