@@ -74,6 +74,12 @@
         }
         td {
             font: normal 14px/16px $Mono;
+            &.number {
+                min-width: 96px;
+            }
+            &.name {
+                min-width: 144px;
+            }
         }
 
         th, td {
@@ -90,6 +96,10 @@
         border-top: 1px solid $light-brown;
         tr.buttons td {
             text-align: right;
+        }
+        td {
+            &.number input { width: 92px; }
+            &.name input { width: 140px; }
         }
     }
 }
