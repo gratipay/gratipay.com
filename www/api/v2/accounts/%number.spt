@@ -51,6 +51,9 @@ out
 {% extends "templates/api-accounts.html" %}
 {% block content %}{{ markdown.render("""
 
+See the chart of [`accounts`](/api/v2/accounts/) documentation for a
+description of the accounts format.
+
 ## Role Required
 
 `admin`
