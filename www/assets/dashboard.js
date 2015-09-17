@@ -38,9 +38,6 @@ Dashboard.models.Account = Backbone.Model.extend({
 Dashboard.collections.Accounts = Backbone.Collection.extend({
     url: '/api/v2/accounts/',
     model: Dashboard.models.Account,
-    parse: function(data) {
-        return data.accounts;
-    }
 });
 
 

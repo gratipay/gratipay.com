@@ -8,9 +8,8 @@ request.allow('GET')
 banner = _("API")
 title = _("Chart of Accounts")
 
-listing = {"accounts": website.db.all('SELECT * FROM accounts ORDER BY number ASC')}
 [---] application/json via json_dump
-listing
+website.db.all('SELECT * FROM accounts ORDER BY number ASC')
 [---] text/html
 {% extends "templates/api-accounts.html" %}
 {% block content %}{{ markdown.render("""

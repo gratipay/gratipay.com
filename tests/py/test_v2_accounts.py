@@ -17,7 +17,7 @@ class Tests(Harness):
 
     def test_can_list_accounts(self):
         actual = json.loads(self.client.GET('/api/v2/accounts/', auth_as='admin').body)
-        assert actual == {"accounts": [{"number": "100", "name": "Cash"}]}
+        assert actual == [{"number": "100", "name": "Cash"}]
 
     def test_can_get_one_account(self):
         assert self.load('100') == {"number": "100", "name": "Cash"}
