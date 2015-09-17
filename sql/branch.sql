@@ -1,8 +1,8 @@
 BEGIN;
 
     CREATE TABLE accounts
-    ( number    varchar(32)     unique not null
-    , name      varchar(32)     unique not null
+    ( number    varchar(32)     UNIQUE NOT NULL
+    , name      varchar(32)     UNIQUE NOT NULL
      );
 
 END;

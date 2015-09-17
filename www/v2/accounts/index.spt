@@ -1,9 +1,8 @@
 from aspen import Response
 [---]
-if user.ANON:
-    raise Response(401)
-if not user.ADMIN:
-    raise Response(403)
+if user.ANON:       raise Response(401)
+if not user.ADMIN:  raise Response(403)
+request.allow('GET')
 
 out = {"accounts": website.db.all('SELECT * FROM accounts ORDER BY number ASC')}
 [---] application/json via json_dump
