@@ -9,7 +9,7 @@ banner = _("API")
 title = _("Chart of Accounts")
 
 [---] application/json via json_dump
-website.db.all('SELECT * FROM accounts ORDER BY number ASC')
+website.db.all('SELECT * FROM accounts ORDER BY number ASC LIMIT 128')
 [---] text/html
 {% extends "templates/api-accounts.html" %}
 {% block content %}{{ markdown.render("""
@@ -36,7 +36,9 @@ well as every bank and payments partner that we've used.
 ## GET
 
 Returns a listing of accounts from the chart of accounts, sorted by `number`
-ascending. Gotcha: account numbers are text and are sorted as such.
+ascending. Gotcha: account numbers are text and are sorted as such. Also, we
+only return 128 records. You'll have to wait for us to implement paging to
+receive more than that.
 
 ```
 $ curl -H \"Accept: application/json\" -u $user_id:$api_key https://gratipay.com/api/v2/accounts/
