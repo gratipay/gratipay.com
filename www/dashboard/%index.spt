@@ -70,7 +70,7 @@ if not user.ADMIN:
         <tr class="on buttons">
             <td colspan="3">
                 <button type="submit">Add Account</button>
-                <button type="cancel">Cancel</button>
+                <button type="cancel">Done</button>
             </td>
         </tr>
     </script>

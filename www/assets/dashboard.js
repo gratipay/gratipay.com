@@ -23,10 +23,10 @@ Dashboard.Router = Backbone.Router.extend({
 // ======
 
 Dashboard.models.Account = Backbone.Model.extend({
+    idAttribute: 'number',
     defaults: {
         number: null,
         name: null,
-        type: null
     }
 });
 
@@ -73,8 +73,9 @@ Dashboard.views.GeneralLedger = Backbone.View.extend({
 Dashboard.views.ChartOfAccounts = Backbone.View.extend({
     el: '#chart-of-accounts',
     initialize: function() {
-        new Dashboard.views.AccountsListing;
-        new Dashboard.views.AddAccountWidget;
+        this.collection = new Dashboard.collections.Accounts();
+        new Dashboard.views.AccountsListing({collection: this.collection});
+        new Dashboard.views.AddAccountWidget({collection: this.collection});
     },
 });
 
@@ -82,13 +83,12 @@ Dashboard.views.ChartOfAccounts = Backbone.View.extend({
 Dashboard.views.AccountsListing = Backbone.View.extend({
     el: '#chart-of-accounts tbody',
     initialize: function() {
-        this.data = new Dashboard.collections.Accounts();
-        this.listenTo(this.data, 'reset', this.render);
-        this.data.fetch({reset:true});
+        this.listenTo(this.collection, 'reset', this.render);
+        this.collection.fetch({reset:true});
     },
     render: function() {
         this.$el.html('');
-        this.data.each(this.addOne, this);
+        this.collection.each(this.addOne, this);
         return this;
     },
     addOne: function(account) {
@@ -136,9 +136,50 @@ Dashboard.views.AddAccountWidget = Backbone.View.extend({
             this.addAccount();
     },
     addAccount: function() {
-        alert('clicked!');
+
+        var data = { number: this.$('input[name=number]').val()
+                   , name: this.$('input[name=name]').val()
+                    };
+        if (data.number && data.name)
+            this.collection.create(data);
     }
 });
+
+
+// CSRF
+// ====
+// WET - see js/gratipay/forms.js
+//
+Dashboard.getCookie = function(key) {
+    var o = new RegExp("(?:^|; ?)" + escape(key) + "=([^;]+)").exec(document.cookie);
+    return o && unescape(o[1]);
+}
+
+Dashboard.initCSRF = function() {
+    jQuery(document).ajaxSend(function(event, xhr, settings) {
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            // We have to avoid httponly on the csrf_token cookie because of this.
+            // https://github.com/gratipay/gratipay.com/issues/3030
+            xhr.setRequestHeader("X-CSRF-TOKEN", Dashboard.getCookie('csrf_token'));
+        }
+    });
+};
 
 
 // Entrypoint
@@ -146,4 +187,5 @@ Dashboard.views.AddAccountWidget = Backbone.View.extend({
 
 Dashboard.init = function() {
     new Dashboard.views.Main();
+    Dashboard.initCSRF();
 };
