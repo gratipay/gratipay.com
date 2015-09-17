@@ -84,6 +84,7 @@ Dashboard.views.AccountsListing = Backbone.View.extend({
     el: '#chart-of-accounts tbody',
     initialize: function() {
         this.listenTo(this.collection, 'reset', this.render);
+        this.listenTo(this.collection, 'sync', this.render);
         this.collection.fetch({reset:true});
     },
     render: function() {
@@ -136,12 +137,15 @@ Dashboard.views.AddAccountWidget = Backbone.View.extend({
             this.addAccount();
     },
     addAccount: function() {
-
-        var data = { number: this.$('input[name=number]').val()
-                   , name: this.$('input[name=name]').val()
+        var data = { number: $.trim(this.$('input[name=number]').val())
+                   , name: $.trim(this.$('input[name=name]').val())
                     };
-        if (data.number && data.name)
-            this.collection.create(data);
+        if (data.number && data.name) {
+            function success() {
+                this.$('input').val('').first().focus();
+            }
+            this.collection.create(data, {success: success, wait: true});
+        }
     }
 });
 
