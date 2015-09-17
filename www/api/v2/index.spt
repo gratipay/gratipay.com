@@ -1,48 +1,24 @@
 from gratipay.utils import markdown
 [---]
 banner = _("API")
-title = _("Gratipay Docs")
+title = _("Gratipay API")
 [---] text/html
 {% extends "templates/api.html" %}
 {% block content %}{{ markdown.render("""
 
 You've found the Gratipay API, version 2!
 
-These pages also serve as the top-level documentation for all of Gratipay as a
-software application. Technically speaking, we have a few layers:
-
- - **Database**&mdash;We store our data in [PostgreSQL
-   9.3](http://www.postgresql.org/docs/9.3/static/), and we write a fair amount
-of the [Postgres dialect of
-SQL](http://www.postgresql.org/docs/9.3/static/sql.html). We use and maintain
-the [postgres.py](http://postgres-py.readthedocs.org/) client library.
-
- - **Website**&mdash;The Gratipay.com website includes UI, API, and admin all
-   in one. This hopefully makes it easier for you to [get up and running
-locally](https://github.com/gratipay/gratipay.com#quick-start): install one
-app, and you have everything you need to hack on Gratipay all in one place. We
-use and maintain our own server-side web framework, [Aspen](http://aspen.io/).
-We use [Python 2](https://docs.python.org/release/2.7.9/), the SCSS syntax for
-[Sass](http://sass-lang.com/), [jQuery 1](https://jquery.com/), and the admin
-dashboard uses [Backbone](http://backbonejs.org/).
-
- - **Payday**&mdash;We process payments on a weekly cycle, using a combination
-   of Python and Bash scripts.
-
-Conceptually speaking, Gratipay is an
-[accounting](https://en.wikipedia.org/wiki/Accounting) application, with a
-general ledger and chart of [accounts](/api/v2/accounts/) at its heart.
-
 
 ## How To Use This API
 
-Many of the HTTP resources under [`/api/v2/`](/api/v2/) that you're browsing
+Most of the HTTP resources under [`/api/v2/`](/api/v2/) that you're browsing
 right now as `text/html` also have JSON representations. Set the `Accept`
 header to `application/json` to request the JSON version:
 
 ```
 $ curl -H \"Accept: application/json\" https://gratipay.com/api/v2/foo/
 ```
+
 
 ## Authentication
 
@@ -52,5 +28,63 @@ authenticate your requests:
 ```
 $ curl -H \"Accept: application/json\" -u $user_id:$api_key https://gratipay.com/api/v2/foo/
 ```
+
+
+## Documentation
+
+In addition to serving our JSON API, these pages also provide our HTML
+documentation for Gratipay as a software application.
+
+Conceptually speaking, Gratipay is an
+[accounting](https://en.wikipedia.org/wiki/Accounting) application, with a
+general ledger and chart of [accounts](/api/v2/accounts/) at its heart.
+However, only admins ever interact with the ledger directly.  Normal ~users
+interact with Gratipay by providing `payment_instructions` which we then
+process during a weekly event called `payday`.
+
+Here's a high-level technical overview of the software architecture by which we
+deliver our application:
+
+ - **Database**&mdash;We store our data in [PostgreSQL
+   9.3](http://www.postgresql.org/docs/9.3/static/), and we write a fair amount
+of the [Postgres dialect of
+SQL](http://www.postgresql.org/docs/9.3/static/sql.html). We use and maintain
+the [postgres.py](http://postgres-py.readthedocs.org/) client library.
+
+ - **Website**&mdash;The main [Gratipay.com](https://gratipay.com/) website
+ (hosted at [Heroku](https://dashboard.heroku.com)) includes UI, API, documentation,
+ and admin. This hopefully makes it easier for you to [get up and running
+     locally](https://github.com/gratipay/gratipay.com#quick-start): install
+ one app, and you have everything you need to hack on Gratipay all in one
+ place. We use and maintain our own server-side web framework,
+ [Aspen](http://aspen.io/), which uses [Python
+     2](https://docs.python.org/release/2.7.9/). For the front-end, we use the
+ SCSS syntax for [Sass](http://sass-lang.com/), [jQuery 1](https://jquery.com/), and
+ [Backbone](http://backbonejs.org/) (for the admin dashboard). We route asset
+ requests through [MaxCDN](https://www.maxcdn.com/) in production, with the
+ main web app as the origin server. Fonts come from [H&Co](http://www.typography.com/)
+ and [IcoMoon](https://icomoon.io/).
+
+ - **Images**&mdash;We run a stateless image processor called
+ [`gip.rocks`](http://gip.rocks) (hosted at
+     [Heroku](https://dashboard.heroku.com)), for use in both production and
+     development. Postgres stores the images and the main website serves them.
+
+ - **Widgets**&mdash;We have a static file server at
+   [`grtp.co`](https://grtp.co/) (hosted at [Digital
+       Ocean](https://www.digitalocean.com/)) for serving widgets.
+
+ - **Payday**&mdash;We [process
+         payments](http://inside.gratipay.com/howto/run-payday) on a weekly
+ cycle, using a combination of Python and Bash scripts.
+
+ - **Email**&mdash;Both the website and payday send email notifications. We
+   queue these up in Postgres, and the web app runs a thread for processing the
+   queue. [Mandrill](https://mandrillapp.com/) is our email provider.
+
+ - **Ops**&mdash;The website and payday processes file error reports to
+   [Sentry](https://beta.getsentry.com/gratipay/). We use
+   [PagerDuty](https://gratipay.pagerduty.com/) for monitoring, and we have
+   some stats on [a Librato dashboard](https://metrics.librato.com/share/dashboards/42hmoj9j).
 
 """ )}}{% endblock %}
