@@ -51,15 +51,19 @@ if not user.ADMIN:
     </section>
 
     <script type="text/template" id="AccountRow">
-        <tr>
-            <td class="number"><%= number %></td>
-            <td class="name"><%= name %></td>
-        </tr>
+        <td class="number">
+            <span class="view"><%= number %></span>
+            <input class="edit" name="number" value="<%= number %>">
+        </td>
+        <td class="name">
+            <span class="view"><%= name %></span>
+            <input class="edit" name="name" value="<%= name %>">
+        </td>
     </script>
 
-    <script type="text/template" id="AddAccountWidget">
+    <script type="text/template" id="AddAccount">
         <tr class="off buttons">
-            <td colspan="3">
+            <td colspan="2">
                 <button>Add Account</button>
             </td>
         </tr>
@@ -68,7 +72,7 @@ if not user.ADMIN:
             <td class="name"><input type="text" name="name"></td>
         </tr>
         <tr class="on buttons">
-            <td colspan="3">
+            <td colspan="2">
                 <button type="submit">Add Account</button>
                 <button type="cancel">Done</button>
             </td>

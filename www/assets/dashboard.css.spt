@@ -76,18 +76,33 @@
             font: normal 14px/16px $Mono;
             &.number {
                 min-width: 96px;
+                input { width: 92px; }
             }
             &.name {
                 min-width: 144px;
+                input { width: 140px; }
+            }
+            .edit {
+                display: none;
             }
         }
-
         th, td {
             text-align: left;
             margin: 0;
-            padding: 6px 18px 3px 0;
+            padding: 6px 18px 5px 3px;
             &:last-child {
-                padding-right: 0;
+                padding-right: 3px;
+            }
+        }
+        tr.editing {
+            td {
+                padding: 1px 0 1px 0;
+                input {
+                    display: inline-block;
+                    border: 1px solid $light-brown;
+                    padding: 2px;
+                    outline: none;
+                }
             }
         }
     }
@@ -96,10 +111,6 @@
         border-top: 1px solid $light-brown;
         tr.buttons td {
             text-align: right;
-        }
-        td {
-            &.number input { width: 92px; }
-            &.name input { width: 140px; }
         }
     }
 }

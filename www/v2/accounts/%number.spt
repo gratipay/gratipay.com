@@ -22,7 +22,10 @@ if request.method == 'PUT':
         try:
             website.db.run("INSERT INTO accounts (number, name) VALUES (%s, %s)", (number, name))
         except IntegrityError:
-            website.db.run("UPDATE accounts SET name=%s WHERE number=%s", (name, number))
+            try:
+                website.db.run("UPDATE accounts SET name=%s WHERE number=%s", (name, number))
+            except IntegrityError, err:
+                raise Response(400, err.args[0])
 
 out = website.db.one("SELECT * FROM accounts WHERE number=%s", (number,))
 if out is None:

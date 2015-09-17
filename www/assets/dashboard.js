@@ -1,4 +1,5 @@
 var ENTER_KEY = 13;
+var ESCAPE_KEY = 27;
 
 Dashboard = {models: {}, views: {}, collections: {}};
 
@@ -75,7 +76,7 @@ Dashboard.views.ChartOfAccounts = Backbone.View.extend({
     initialize: function() {
         this.collection = new Dashboard.collections.Accounts();
         new Dashboard.views.AccountsListing({collection: this.collection});
-        new Dashboard.views.AddAccountWidget({collection: this.collection});
+        new Dashboard.views.AddAccount({collection: this.collection});
     },
 });
 
@@ -103,18 +104,54 @@ Dashboard.views.AccountRow = Backbone.View.extend({
     tagName: 'tr',
     initialize: function() {
         this.template = _.template($('#AccountRow').html());
+        this.listenTo(this.model, 'change', this.render);
     },
     render: function() {
-        this.el = this.template(this.model.attributes);
+        this.$el.html(this.template(this.model.attributes));
         return this;
+    },
+    events: {
+        'dblclick td': 'turnEditAccountOn',
+        'keydown input' : 'keyAction'
+    },
+    turnEditAccountOn: function(e) {
+        this.$el.addClass('editing');
+        this.$('.view').hide();
+        this.$('.edit').show();
+        $('input', e.currentTarget).focus();
+    },
+    turnEditAccountOff: function() {
+        this.$el.removeClass('editing');
+        this.$('.view').show();
+        this.$('.edit').hide();
+    },
+    keyAction: function(e) {
+        switch (e.which) {
+            case (ENTER_KEY):
+                this.editAccount();
+                break;
+            case (ESCAPE_KEY):
+                this.turnEditAccountOff();
+                break;
+        }
+    },
+    editAccount: function() {
+        var data = { number: $.trim(this.$('input[name=number]').val())
+                   , name: $.trim(this.$('input[name=name]').val())
+                    };
+        if (data.number && data.name) {
+            this.model.save(data, {wait: true});
+        }
     }
 });
 
 
-Dashboard.views.AddAccountWidget = Backbone.View.extend({
+
+
+Dashboard.views.AddAccount = Backbone.View.extend({
     el: '#chart-of-accounts tfoot',
     initialize: function() {
-        this.$el.html($('#AddAccountWidget').html());
+        this.$el.html($('#AddAccount').html());
         this.turnAddAccountOff();
     },
     events: {
