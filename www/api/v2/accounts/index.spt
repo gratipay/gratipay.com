@@ -43,7 +43,7 @@ receive more than that.
 ```bash
 $ curl \"https://gratipay.com/api/v2/accounts/\" \\
     -H \"Accept: application/json\" \\
-    -u $user_id:$api_key
+    -u \"$user_id:$api_key\"
 [{\"number\": \"101\": \"name\": \"Accounts Receivable\"},
  {\"number\": \"201\": \"name\": \"Accounts Payable\"}]
 ```

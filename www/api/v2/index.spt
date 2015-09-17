@@ -30,7 +30,7 @@ authenticate your requests:
 ```bash
 $ curl \"https://gratipay.com/api/v2/\" \\
     -H \"Accept: application/json\" \\
-    -u $user_id:$api_key
+    -u \"$user_id:$api_key\"
 {\"you\": \"your-username\"}
 ```
 
