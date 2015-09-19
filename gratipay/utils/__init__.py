@@ -136,7 +136,7 @@ def update_cta(website):
     nusers = website.db.one("""
         SELECT nusers FROM paydays
         ORDER BY ts_end DESC LIMIT 1
-    """, default=(0.0, 0))
+    """, default=0)
     nreceiving_from = website.db.one("""
         SELECT nreceiving_from
           FROM teams
