@@ -225,50 +225,12 @@ def prep_db(db):
 
         CREATE TRIGGER process_exchange AFTER INSERT ON exchanges
             FOR EACH ROW EXECUTE PROCEDURE process_exchange();
-
-        CREATE OR REPLACE FUNCTION process_payday() RETURNS trigger AS $$
-            BEGIN
-                SELECT COALESCE(SUM(amount+fee), 0)
-                  FROM exchanges
-                 WHERE timestamp > NEW.ts_start
-                   AND timestamp < NEW.ts_end
-                   AND amount > 0
-                  INTO NEW.charge_volume;
-
-                SELECT COALESCE(SUM(fee), 0)
-                  FROM exchanges
-                 WHERE timestamp > NEW.ts_start
-                   AND timestamp < NEW.ts_end
-                   AND amount > 0
-                  INTO NEW.charge_fees_volume;
-
-                SELECT COALESCE(SUM(amount), 0)
-                  FROM exchanges
-                 WHERE timestamp > NEW.ts_start
-                   AND timestamp < NEW.ts_end
-                   AND amount < 0
-                  INTO NEW.ach_volume;
-
-                SELECT COALESCE(SUM(fee), 0)
-                  FROM exchanges
-                 WHERE timestamp > NEW.ts_start
-                   AND timestamp < NEW.ts_end
-                   AND amount < 0
-                  INTO NEW.ach_fees_volume;
-
-                RETURN NEW;
-            END;
-        $$ language plpgsql;
-
-        CREATE TRIGGER process_payday BEFORE INSERT ON paydays
-            FOR EACH ROW EXECUTE PROCEDURE process_payday();
     """)
 
 def clean_db(db):
     db.run("""
-        DROP FUNCTION process_transfer() CASCADE;
-        DROP FUNCTION process_exchange() CASCADE;
-        DROP FUNCTION process_payday() CASCADE;
+        DROP FUNCTION IF EXISTS process_transfer() CASCADE;
+        DROP FUNCTION IF EXISTS process_exchange() CASCADE;
     """)
 
 
@@ -381,10 +343,12 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         date = end_date
     print("")
 
-def main():
-    db = wireup.db(wireup.env())
+
+def main(db=None, *a, **kw):
+    db = db or wireup.db(wireup.env())
+    clean_db(db)
     prep_db(db)
-    populate_db(db)
+    populate_db(db, *a, **kw)
     clean_db(db)
     check_db(db)
 
