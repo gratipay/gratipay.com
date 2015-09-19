@@ -81,6 +81,13 @@ class Tests(Harness):
         assert '342' in self.client.GET('/~bob/', auth_as='admin').body
         assert '[342]' not in self.client.GET('/~bob/', auth_as='admin').body
 
+    def test_self_can_see_giving_for_non_anonymous_giving(self):
+        self.make_participant('bob', claimed_time='now',
+                              giving=10.79, ngiving_to=342, anonymous_giving=False)
+        assert '10.79' in self.client.GET('/~bob/', auth_as='bob').body.decode('utf8')
+        assert '342' in self.client.GET('/~bob/', auth_as='bob').body.decode('utf8')
+        assert '[342]' not in self.client.GET('/~bob/', auth_as='bob').body.decode('utf8')
+
     def test_anon_cannot_see_giving_for_anonymous_giving(self):
         self.make_participant('bob', claimed_time='now',
                               giving=10.79, ngiving_to=342, anonymous_giving=True)
@@ -99,3 +106,9 @@ class Tests(Harness):
         self.make_participant('admin', is_admin=True)
         assert '10.79' in self.client.GET('/~bob/', auth_as='admin').body
         assert '[342]' in self.client.GET('/~bob/', auth_as='admin').body
+
+    def test_self_can_see_giving_for_anonymous_giving(self):
+        self.make_participant('bob', claimed_time='now',
+                              giving=10.79, ngiving_to=342, anonymous_giving=True)
+        assert '10.79' in self.client.GET('/~bob/', auth_as='bob').body.decode('utf8')
+        assert '[342]' in self.client.GET('/~bob/', auth_as='bob').body.decode('utf8')
