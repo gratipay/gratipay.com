@@ -58,3 +58,44 @@ class Tests(Harness):
     def test_participant_doesnt_show_up_on_search(self):
         self.hit_privacy('POST', data={'toggle': 'is_searchable'})
         assert 'alice' not in self.client.GET("/search.json?q=alice").body
+
+    # Related to anonymous_giving
+
+    def test_anon_can_see_giving_for_non_anonymous_giving(self):
+        self.make_participant('bob', claimed_time='now',
+                              giving=10.79, ngiving_to=342, anonymous_giving=False)
+        assert '10.79' in self.client.GET('/~bob/').body
+        assert '342' in self.client.GET('/~bob/').body
+
+    def test_auth_can_see_giving_for_non_anonymous_giving(self):
+        self.make_participant('bob', claimed_time='now',
+                              giving=10.79, ngiving_to=342, anonymous_giving=False)
+        assert '10.79' in self.client.GET('/~bob/', auth_as='alice').body
+        assert '342' in self.client.GET('/~bob/', auth_as='alice').body
+
+    def test_admin_can_see_giving_for_non_anonymous_giving(self):
+        self.make_participant('bob', claimed_time='now',
+                              giving=10.79, ngiving_to=342, anonymous_giving=False)
+        self.make_participant('admin', is_admin=True)
+        assert '10.79' in self.client.GET('/~bob/', auth_as='admin').body
+        assert '342' in self.client.GET('/~bob/', auth_as='admin').body
+        assert '[342]' not in self.client.GET('/~bob/', auth_as='admin').body
+
+    def test_anon_cannot_see_giving_for_anonymous_giving(self):
+        self.make_participant('bob', claimed_time='now',
+                              giving=10.79, ngiving_to=342, anonymous_giving=True)
+        assert '10.79' not in self.client.GET('/~bob/').body
+        assert '342' not in self.client.GET('/~bob/').body
+
+    def test_auth_cannot_see_giving_for_anonymous_giving(self):
+        self.make_participant('bob', claimed_time='now',
+                              giving=10.79, ngiving_to=342, anonymous_giving=True)
+        assert '10.79' not in self.client.GET('/~bob/', auth_as='alice').body
+        assert '342' not in self.client.GET('/~bob/', auth_as='alice').body
+
+    def test_admin_can_see_giving_for_anonymous_giving(self):
+        self.make_participant('bob', claimed_time='now',
+                              giving=10.79, ngiving_to=342, anonymous_giving=True)
+        self.make_participant('admin', is_admin=True)
+        assert '10.79' in self.client.GET('/~bob/', auth_as='admin').body
+        assert '[342]' in self.client.GET('/~bob/', auth_as='admin').body
