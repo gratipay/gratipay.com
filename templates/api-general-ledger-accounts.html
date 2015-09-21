@@ -1,7 +1,7 @@
 {% extends "templates/api.html" %}
 {% block subnav %}
     {% set current_page = request.path.raw.split('/')[4] %}
-    {% set nav_base = '/api/v2/accounts' %}
+    {% set nav_base = '/api/v2/general-ledger-accounts' %}
     {% set pages = [ ('/', _('Listing'))
                    , ('/number', _('Detail'))
                     ] %}

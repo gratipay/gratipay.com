@@ -97,8 +97,8 @@ the [postgres.py](http://postgres-py.readthedocs.org/) client library.
 
 Here are the resources currently exposed in this API:
 
- - [`accounts/`](/api/v2/accounts/)&mdash;our chart of accounts, requires the
-   `admin` role
+ - [`general-ledger-accounts/`](/api/v2/general-ledger-accounts/)&mdash;our
+   general ledger chart of accounts, requires the `admin` role
 
 """ )}}{% endblock %}
 [---] application/json via json_dump

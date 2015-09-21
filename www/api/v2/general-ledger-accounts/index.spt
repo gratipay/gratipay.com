@@ -11,10 +11,10 @@ title = _("General Ledger Accounts")
 [---] application/json via json_dump
 website.db.all('SELECT * FROM accounts ORDER BY number ASC LIMIT 128')
 [---] text/html
-{% extends "templates/api-accounts.html" %}
+{% extends "templates/api-general-ledger-accounts.html" %}
 {% block content %}{{ markdown.render("""
 
-Gratipay's general ledger accounts are in the `general_ledger_accounts`
+Gratipay's general ledger (GL) accounts are in the `general_ledger_accounts`
 database table, which uses the [continuant
     pattern](/api/v2/database/continuants). The essential property for GL
 account continuants is `id`. Our convention is to encode the type of account in
@@ -49,7 +49,7 @@ $ curl \"https://gratipay.com/api/v2/accounts/\" \\
 
 ## Drill-Down
 
-[`/api/v2/accounts/%number`](/api/v2/accounts/number)
+[`/api/v2/general-ledger-accounts/%number`](/api/v2/general-ledger-accounts/number)
 
 """) }}
 {% endblock %}
