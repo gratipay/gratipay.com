@@ -1,0 +1,26 @@
+from gratipay.utils import markdown
+[---]
+banner = _("API")
+title = _("Continuants")
+[---] text/html
+{% extends "templates/api-database.html" %}
+{% block content %}{{ markdown.render("""
+
+The continuant schema design pattern begins with the notion of a \"foo\" object
+that persists through time (or \"continues,\" hence, \"continuant\") despite
+changes to its accidental properties. We encode such an object as multiple
+records in a `foo` table, which is effectively a log of all changes to all Foos
+over time. A `current_foo` view exposes each Foo as it exists at present.
+
+The `foo` table will have `ctime` and `mtime` fields, timestamps at which the
+notional continuant \"foo\" was created and modified (respectively). The
+`ctime` field is carried forward on each `foo` record for convenience (using
+[`COALESCE`](http://www.postgresql.org/docs/9.3/static/functions-conditional.html#FUNCTIONS-COALESCE-NVL-IFNULL)),
+while the `mtime` field is unique for each record. Certain fields in `foo` are
+essential to the identity of each Foo, and are carried forward along with the
+`ctime`.
+
+Grep the codebase for `payment_instructions` for an instance of this pattern,
+or check out [`accounts`](/api/v2/accounts).
+
+""") }}{% endblock %}

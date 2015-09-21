@@ -1,0 +1,9 @@
+{% extends "templates/api.html" %}
+{% block subnav %}
+    {% set current_page = request.path.raw.split('/')[4] %}
+    {% set nav_base = '/api/v2/database' %}
+    {% set pages = [ ('/', _('Overview'))
+                   , ('/continuants', _('Continuants'))
+                    ] %}
+    {% include "templates/nav.html" %}
+{% endblock %}

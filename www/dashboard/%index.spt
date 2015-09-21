@@ -21,12 +21,18 @@ if not user.ADMIN:
 <body id="dashboard">
     <h1>Dashboard</h1>
     <ul id="navigation">
-        <li><a href="ledger">General Ledger</a></li>
-        <li><a href="accounts">Chart of Accounts</a></li>
+        <li><a href="statements">Statements</a></li>
+        <li><a href="ledgers">Ledgers</a></li>
+        <li><a href="journals">Journals</a></li>
     </ul>
 
     <section id="general-ledger">
         <h2>General Ledger</h2>
+        <div id="sidebar">
+            <ul class="nav">
+                <li><a href="ledgers/general" class="selected">General</a></li>
+            </ul>
+        </div>
         <table>
             <thead>
                 <th>Account</th>

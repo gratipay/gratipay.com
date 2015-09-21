@@ -50,7 +50,7 @@ process during a weekly event called `payday`.
 Here's a high-level technical overview of the software architecture by which we
 deliver our application:
 
- - **Database**&mdash;We store our data in [PostgreSQL
+ - **[Database](/api/v2/database/)**&mdash;We store our data in [PostgreSQL
    9.3](http://www.postgresql.org/docs/9.3/static/), and we write a fair amount
 of the [Postgres dialect of
 SQL](http://www.postgresql.org/docs/9.3/static/sql.html). We use and maintain

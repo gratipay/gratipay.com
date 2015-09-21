@@ -6,7 +6,7 @@ if not user.ADMIN:  raise Response(403)
 request.allow('GET')
 
 banner = _("API")
-title = _("Chart of Accounts")
+title = _("General Ledger Accounts")
 
 [---] application/json via json_dump
 website.db.all('SELECT * FROM accounts ORDER BY number ASC LIMIT 128')
@@ -14,18 +14,17 @@ website.db.all('SELECT * FROM accounts ORDER BY number ASC LIMIT 128')
 {% extends "templates/api-accounts.html" %}
 {% block content %}{{ markdown.render("""
 
-Gratipay's chart of accounts is in the `accounts` database table. It's a simple
-mapping of account `number` to `name`, and forms the basis for our general
-ledger. Our convention is to encode the type of account in the account number
-like so:
+Gratipay's general ledger accounts are in the `general_ledger_accounts`
+database table, which uses the [continuant
+    pattern](/api/v2/database/continuants). The essential property for GL
+account continuants is `id`. Our convention is to encode the type of account in
+the account number like so:
 
  - **1xx**&mdash;Assets
  - **2xx**&mdash;Liabilities
- - **3xx**&mdash;Income
- - **4xx**&mdash;Expenses
-
-Every ~user and Team on Gratipay has an account in the chart of accounts, as
-well as every banking and payments partner that we've used.
+ - **3xx**&mdash;Equity
+ - **4xx**&mdash;Revenue
+ - **5xx**&mdash;Expenses
 
 
 ## Role Required
@@ -35,10 +34,10 @@ well as every banking and payments partner that we've used.
 
 ## GET
 
-Returns a listing of accounts from the chart of accounts, sorted by `number`
+Returns a chart of accounts for Gratipay's general ledger, sorted by `number`
 ascending. Gotcha: account numbers are text and are sorted as such. Also, we
-only return 128 records. You'll have to wait for us to implement paging to
-receive more than that.
+only return 128 records. You'll have to help or wait for us to implement paging
+to receive more than that.
 
 ```bash
 $ curl \"https://gratipay.com/api/v2/accounts/\" \\
