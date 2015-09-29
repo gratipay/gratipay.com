@@ -59,9 +59,9 @@ test-schema: env
 pyflakes: env
 	$(env_bin)/pyflakes *.py bin gratipay tasks tests
 
-test: test-schema pytest jstest
+test: pytest jstest
 
-pytest: env
+pytest: test-schema env
 	$(py_test) --cov gratipay $(pytest)
 	@$(MAKE) --no-print-directory pyflakes
 
@@ -78,7 +78,7 @@ node_modules: package.json
 	npm install --no-bin-links
 	@if [ -d node_modules ]; then touch node_modules; fi
 
-jstest: node_modules
+jstest: test-schema node_modules
 	node_modules/grunt-cli/bin/grunt test
 
 transifexrc:
