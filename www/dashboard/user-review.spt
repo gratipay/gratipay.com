@@ -1,6 +1,8 @@
 from aspen import Response
 
 [---]
+if user.ANON:
+    raise Response(401)
 if not user.ADMIN:
     raise Response(403)
 

@@ -1,0 +1,116 @@
+[---]
+[---] text/css via scss
+@import "scss/mixins/borders-backgrounds-shadows";
+@import 'scss/variables';
+@import "scss/elements/buttons-knobs";
+@import "scss/elements/reset";
+
+#dashboard {
+    font-family: $Ideal;
+
+    h1 {
+        display: none;
+    }
+    h2 {
+        display: none;
+    }
+
+    #navigation {
+        margin: 0;
+        padding: 10px 0 0;
+        text-align: center;
+        border-bottom: 2px solid $green;
+        background: $lighter-gray;
+        li {
+            display: inline-block;
+            list-style: none;
+            margin: 0 6px 0 0;
+            padding: 0;
+            &:last-child {
+                margin-right: 0;
+            }
+            a {
+                display: block;
+                padding: 10px;
+                position: relative;
+                top: 2px;
+                text-decoration: none;
+                color: $medium-gray;
+                border: 2px solid $medium-gray;
+                border-radius: 5px 5px 0 0;
+                border-bottom-color: $green;
+                &:hover {
+                    background: $green;
+                    color: white;
+                    border-color: $green;
+                }
+                &.selected {
+                    background: $white;
+                    color: $black;
+                    border-color: $green;
+                    border-bottom-color: $white;
+                    cursor: default;
+                    &:hover {
+                        background: $white;
+                    }
+                }
+            }
+        }
+    }
+
+    section {
+        display: none;
+        padding: 48px;
+        background: $white;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0 auto;
+        th {
+            font: bold 16px/18px $Ideal;
+            font-weight: bold;
+            border-bottom: 1px solid $light-brown;
+        }
+        td {
+            font: normal 14px/16px $Mono;
+            &.number {
+                min-width: 96px;
+                input { width: 92px; }
+            }
+            &.name {
+                min-width: 144px;
+                input { width: 140px; }
+            }
+            .edit {
+                display: none;
+            }
+        }
+        th, td {
+            text-align: left;
+            margin: 0;
+            padding: 6px 18px 5px 3px;
+            &:last-child {
+                padding-right: 3px;
+            }
+        }
+        tr.editing {
+            td {
+                padding: 1px 0 1px 0;
+                input {
+                    display: inline-block;
+                    border: 1px solid $light-brown;
+                    padding: 2px;
+                    outline: none;
+                }
+            }
+        }
+    }
+
+    tfoot {
+        border-top: 1px solid $light-brown;
+        tr.buttons td {
+            text-align: right;
+        }
+    }
+}

@@ -1,0 +1,3 @@
+[---]
+website.redirect('./v2', base_url='')
+[---]

@@ -114,6 +114,9 @@ table.simple {
         padding-right: 42px;
     }
 }
+b, strong {
+    font-weight: bold;
+}
 .mono {
     font: normal 12px/16px $Mono;
 }

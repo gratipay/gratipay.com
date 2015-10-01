@@ -1,0 +1,55 @@
+from aspen import Response
+from gratipay.utils import markdown
+[---]
+if user.ANON:       raise Response(401)
+if not user.ADMIN:  raise Response(403)
+request.allow('GET')
+
+banner = _("API")
+title = _("General Ledger Accounts")
+
+[---] application/json via json_dump
+website.db.all('SELECT * FROM accounts ORDER BY number ASC LIMIT 128')
+[---] text/html
+{% extends "templates/api-general-ledger-accounts.html" %}
+{% block content %}{{ markdown.render("""
+
+Gratipay's general ledger (GL) accounts are in the `general_ledger_accounts`
+database table, which uses the [continuant
+    pattern](/api/v2/database/continuants). The essential property for GL
+account continuants is `id`. Our convention is to encode the type of account in
+the account number like so:
+
+ - **1xx**&mdash;Assets
+ - **2xx**&mdash;Liabilities
+ - **3xx**&mdash;Equity
+ - **4xx**&mdash;Revenue
+ - **5xx**&mdash;Expenses
+
+
+## Role Required
+
+`admin`
+
+
+## GET
+
+Returns a chart of accounts for Gratipay's general ledger, sorted by `number`
+ascending. Gotcha: account numbers are text and are sorted as such. Also, we
+only return 128 records. You'll have to help or wait for us to implement paging
+to receive more than that.
+
+```bash
+$ curl \"https://gratipay.com/api/v2/accounts/\" \\
+    -H \"Accept: application/json\" \\
+    -u \"$user_id:$api_key\"
+[{\"number\": \"101\": \"name\": \"Accounts Receivable\"},
+ {\"number\": \"201\": \"name\": \"Accounts Payable\"}]
+```
+
+## Drill-Down
+
+[`/api/v2/general-ledger-accounts/%number`](/api/v2/general-ledger-accounts/number)
+
+""") }}
+{% endblock %}

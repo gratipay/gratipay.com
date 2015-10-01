@@ -1,0 +1,33 @@
+from gratipay.utils import markdown
+[---]
+banner = _("API")
+title = _("Database")
+[---] text/html
+{% extends "templates/api-database.html" %}
+{% block content %}{{ markdown.render("""
+
+We store our data in [PostgreSQL
+9.3](http://www.postgresql.org/docs/9.3/static/), and we write a fair amount of
+the [Postgres dialect of
+SQL](http://www.postgresql.org/docs/9.3/static/sql.html). We use and maintain
+the [postgres.py](http://postgres-py.readthedocs.org/) client library.
+
+Our database schema is a mish-mash of different techniques and patterns.
+Ideally we can standardize and be consistent, but that's gonna take some work.
+Let's start with some documentation! Shall we? :-)
+
+
+## Auditability Patterns
+
+One of the things we want our database schema to support is auditability: we
+want both ~users and admins to be able to review the history of changes to data
+over time. We have two competing patterns for this:
+
+ - the [\"continuant\"](/api/v2/database/continuants) pattern, and
+ - an `events` table (not documented yet).
+
+The continuant pattern came first historically. We started replacing it with an
+`events` table, but we never finished. See
+[1549](https://github.com/gratipay/gratipay.com/issues/1549) for backstory.
+
+""") }}{% endblock %}
