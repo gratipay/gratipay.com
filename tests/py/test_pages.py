@@ -195,7 +195,6 @@ class TestPages(Harness):
         assert self.client.GET("/TheEnterprise/").code == 200
         assert self.client.GxT("/~TheEnterprise/").code == 404
 
-
     def test_security_headers_sets_x_frame_options(self):
         headers = self.client.GET('/about/').headers
         assert headers['X-Frame-Options'] == 'SAMEORIGIN'
@@ -207,3 +206,8 @@ class TestPages(Harness):
     def test_security_headers_sets_x_xss_protection(self):
         headers = self.client.GET('/about/').headers
         assert headers['X-XSS-Protection'] == '1; mode=block'
+
+     def test_balanced_removed_from_credit_card_page(self, foo, bar):
+        self.make_participant('alice', claimed_time='now')
+        body = self.client.GET("/~alice/routes/credit-card.html", auth_as="alice").body
+        assert "Braintree Payment Services" in self.client.GET('/~alice/routes/credit-card').body.decode('utf8')
