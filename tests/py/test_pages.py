@@ -208,4 +208,4 @@ class TestPages(Harness):
         assert headers['X-XSS-Protection'] == '1; mode=block'
 
     def test_balanced_removed_from_credit_card_page(self):
-        assert "Braintree Payment Services" in self.client.GET('/~alice/routes/credit-card').body.decode('utf8')
+        assert "Braintree Payment Services" in self.client.GET('/~alice/routes/credit-card.html').body.decode('utf8')
