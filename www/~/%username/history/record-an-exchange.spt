@@ -39,7 +39,7 @@ if request.method == 'POST':
 
     try:
         route_id = int(request.body['route_id'])
-    except (KeyError, ValueError):
+    except (KeyError, ValueError, Response):
         raise Response(400, "Invalid route_id")
 
     route = ExchangeRoute.from_id(route_id)
