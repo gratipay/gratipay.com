@@ -20,11 +20,14 @@ if request.method == 'POST':
         fee = Decimal(request.body['fee'])
     except InvalidOperation:
         raise Response(400)
+
     note = request.body['note'].strip()
     if not note:
         raise Response(400)
-    status = request.body['status']
 
+    status = request.body['status']
+    if not status in ['pre', 'pending', 'failed', 'succeeded']:
+        raise Response(400)
 
     with website.db.get_cursor() as cursor:
         cursor.run("""
