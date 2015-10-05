@@ -2,6 +2,7 @@ from decimal import Decimal, InvalidOperation
 
 from aspen import Response
 from gratipay.utils import get_participant
+from gratipay.models.exchange_route import ExchangeRoute
 
 [---------------------------------------------]
 
@@ -14,24 +15,43 @@ participant = get_participant(state)
 banner = '~' + participant.username
 title = "Record an exchange"
 
+if request.method == 'GET':
+    routes = website.db.all("""
+       SELECT r.*::exchange_routes
+         FROM exchange_routes r
+        WHERE participant=%s
+    """, (participant.id, ))
+
 if request.method == 'POST':
     try:
         amount = Decimal(request.body['amount'])
         fee = Decimal(request.body['fee'])
     except InvalidOperation:
-        raise Response(400)
+        raise Response(400, "Invalid amount/fee")
+
     note = request.body['note'].strip()
     if not note:
-        raise Response(400)
-    status = request.body['status']
+        raise Response(400, "Invalid note")
 
+    status = request.body['status']
+    if not status in ['pre', 'pending', 'failed', 'succeeded']:
+        raise Response(400, "Invalid status")
+
+    try:
+        route_id = int(request.body['route_id'])
+    except (KeyError, ValueError, Response):
+        raise Response(400, "Invalid route_id")
+
+    route = ExchangeRoute.from_id(route_id)
+    if not route or route.participant.id != participant.id:
+        raise Response(400, "Route doesn't exist")
 
     with website.db.get_cursor() as cursor:
         cursor.run("""
             INSERT INTO exchanges
-                        (amount, fee, participant, recorder, note, status)
-                 VALUES (%s, %s, %s, %s, %s, %s)
-        """, (amount, fee, participant.username, user.participant.username, note, status))
+                        (amount, fee, route, participant, recorder, note, status)
+                 VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (amount, fee, route_id, participant.username, user.participant.username, note, status))
 
         if amount < 0:
             # For payouts, we need to take the fee out of their Gratipay balance.
@@ -67,6 +87,11 @@ if request.method == 'POST':
 </p>
 <form action="" method="POST">
     <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
+    <h3>Routes</h3>
+    {% for route in routes %}
+        <input type="radio" name="route_id" value="{{ route.id }}">
+        {{ "%s - %s (%s)" % (route.network, route.address, route.error or "working") }}<br>
+    {% endfor %}
     <input name="amount" placeholder="amount" />
     <input name="fee" placeholder="fee" />
     <select name="status">
