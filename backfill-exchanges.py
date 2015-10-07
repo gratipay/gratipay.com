@@ -172,6 +172,9 @@ def get_customers():
 
 
 with db.get_cursor() as cur:
-    customers = get_customers()
-    walk(cur, lambda *a: link_exchange_to_transaction(*a, customers=customers))
-    raise Exception  # trigger rollback
+    try:
+        customers = get_customers()
+        walk(cur, lambda *a: link_exchange_to_transaction(*a, customers=customers))
+    finally:
+        print('Rolling back ...')
+        cur.connection.rollback()
