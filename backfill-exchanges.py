@@ -188,6 +188,7 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
         route = ExchangeRoute.insert( Participant.from_username(username)
                                     , 'balanced-cc'
                                     , '/cards/'+transaction['links']['source']
+                                    , cursor=cur
                                      )
         route_id = route.id
     if route_id:

@@ -53,9 +53,9 @@ class ExchangeRoute(Model):
         return r
 
     @classmethod
-    def insert(cls, participant, network, address, error='', fee_cap=None):
+    def insert(cls, participant, network, address, error='', fee_cap=None, cursor=None):
         participant_id = participant.id
-        r = cls.db.one("""
+        r = (cursor or cls.db).one("""
             INSERT INTO exchange_routes
                         (participant, network, address, error, fee_cap)
                  VALUES (%(participant_id)s, %(network)s, %(address)s, %(error)s, %(fee_cap)s)
