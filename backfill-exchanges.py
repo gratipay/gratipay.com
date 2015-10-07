@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json, os, sys, traceback
+from collections import defaultdict
 from gratipay import wireup
 from decimal import Decimal as D
 from pprint import pprint
@@ -12,9 +13,13 @@ db = wireup.db(wireup.env())
 dirname = os.path.join(os.path.dirname(__file__), 'balanced', 'transactions')
 
 
-class UnknownExchange(Exception): pass
+class UnknownExchange(Exception):
+    def __str__(self):
+        return "\n\n{}".format(self.args[0])
+
 class UnknownCustomer(Exception): pass
 class UnknownRoute(Exception): pass
+class AmbiguousCustomer(Exception): pass
 class AmbiguousRoute(Exception): pass
 
 
@@ -22,19 +27,19 @@ def log(msg):
     print(msg, end=' | ')
 
 
-def get_username(cur, customers, transaction):
+def get_usernames(cur, customers, transaction):
 
     # First strategy: check known customers.
-    username = customers.get(transaction['links']['customer'])
-    if username:
-        log('known customer')
-        return username
+    usernames = customers.get(transaction['links']['customer'])
+    if usernames:
+        log('known customer ({} participant(s))'.format(len(usernames)))
+        return usernames
 
     # Second strategy: blah
     raise UnknownCustomer()
 
 
-def get_exchange_id(cur, transaction, username):
+def get_exchange_id(cur, transaction, usernames):
 
     # First strategy: use the one in the transaction!
     exchange_id = transaction['meta'].get('exchange_id')
@@ -43,13 +48,13 @@ def get_exchange_id(cur, transaction, username):
         return exchange_id
 
     # Second strategy: triangulate.
-    params = dict( username = username
-                 , amount   = D(transaction['amount']) / 100
-                 , ts       = transaction['created_at']
+    params = dict( usernames = usernames
+                 , amount    = D(transaction['amount']) / 100
+                 , ts        = transaction['created_at']
                   )
-    exchange_id = cur.one("""\
+    mogrified = cur.mogrify("""\
         SELECT id FROM exchanges
-         WHERE participant = %(username)s
+         WHERE participant = ANY(%(usernames)s)
            AND amount + fee = %(amount)s
            AND ((   (%(ts)s::timestamptz - "timestamp") < interval '0'
                 AND (%(ts)s::timestamptz - "timestamp") > interval '-15m'
@@ -58,14 +63,15 @@ def get_exchange_id(cur, transaction, username):
                 AND (%(ts)s::timestamptz - "timestamp") < interval '15m'
                 ))
     """, params)
+    exchange_id = cur.one(mogrified)
     if exchange_id:
         log("triangulated an exchange")
         return exchange_id
 
-    raise UnknownExchange()
+    raise UnknownExchange(mogrified)
 
 
-def get_route_id(cur, transaction, username, exchange_id):
+def get_route_id(cur, transaction, usernames, exchange_id):
 
     # First strategy: match on exchange id.
     route_id = cur.one("SELECT route FROM exchanges WHERE id=%s", (exchange_id,))
@@ -89,6 +95,11 @@ def get_route_id(cur, transaction, username, exchange_id):
 
     # Third strategy: make a route!
     if not route_id:
+        if len(usernames) > 1:
+            # XXX Pick the username of the non-archived participant (or the one that makes sense
+            # in the special case).
+            raise AmbiguousCustomer()
+        username = usernames[0]
         route = ExchangeRoute.insert( Participant.from_username(username)
                                     , 'balanced-cc'
                                     , '/cards/'+transaction['links']['source']
@@ -104,10 +115,10 @@ def get_route_id(cur, transaction, username, exchange_id):
 def link_exchange_to_transaction(cur, transaction, customers):
     print("{created_at} | {description} | ".format(**transaction), end='')
 
-    username = get_username(cur, customers, transaction)
-    exchange_id = get_exchange_id(cur, transaction, username)
+    usernames = get_usernames(cur, customers, transaction)
+    exchange_id = get_exchange_id(cur, transaction, usernames)
     status = transaction['status']
-    route_id = get_route_id(cur, transaction, username, exchange_id)
+    route_id = get_route_id(cur, transaction, usernames, exchange_id)
     ref = transaction['id']
 
     existing = cur.one("SELECT * FROM exchanges WHERE id=%s", (exchange_id,), Exception)
@@ -152,6 +163,8 @@ def walk(cur, visit):
                 continue  # Let's start with credit card charges.
 
             for transaction in transactions:
+                if transaction['links']['source'].startswith('BA'):
+                    continue  # Filter out escrow shuffles (we didn't do any other ACH debits).
                 try:
                     visit(cur, transaction)
                 except KeyboardInterrupt:
@@ -168,7 +181,11 @@ def walk(cur, visit):
 def get_customers():
     customers = cur.all("SELECT balanced_customer_href, username FROM participants "
                         "WHERE balanced_customer_href is not null")
-    return {rec[0][len('/customers/'):]: rec[1] for rec in customers}
+    out = defaultdict(list)
+    for balanced_customer_href, username in customers:
+        customer_id = balanced_customer_href[len('/customers/'):]
+        out[customer_id].append(username)
+    return out
 
 
 with db.get_cursor() as cur:
