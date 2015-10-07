@@ -18,8 +18,7 @@ def report(*patterns):
 
 
 title("Hi-level")
-report("Linking", "Already linked", "raise UnknownCustomer", "raise UnknownExchange",
-       "raise UnknownRoute")
+report("Linking", "Already linked", "raise")
 
 title("Participants")
 report("known customer", "raise UnknownCustomer")
@@ -28,7 +27,8 @@ title("Exchanges")
 report("exchange_id in transaction", "triangulated an exchange", "raise UnknownExchange")
 
 title("Routes")
-report("exchange has a route", "card matches a route", "created a route", "raise UnknownRoute")
+report("exchange has a route", "card matches a route", "created a route",
+       "raise AmbiguousRoute", "raise AmbiguousCustomer", "raise UnknownRoute")
 
 title("Check")
 report("^201\d-")
