@@ -152,6 +152,25 @@ def get_exchange_id(cur, transaction, counts, usernames):
     raise UnknownExchange(mogrified)
 
 
+def resolve_ambiguous_route(cur, transaction, counts, u2r):
+    keys = u2r.keys()
+    absorption = cur.one("""\
+        SELECT *
+          FROM absorptions
+         WHERE (archived_as=%(one)s AND absorbed_by=%(two)s)
+            OR (archived_as=%(two)s AND absorbed_by=%(one)s)
+    """, dict(one=keys[0], two=keys[1]))
+    if absorption is None:
+        counts.route_ambiguous += 1
+        raise AmbiguousRoute()
+    if transaction['created_at'] < str(absorption.timestamp).replace('+00:00', 'Z'):
+        key = absorption.archived_as
+    else:
+        assert transaction['created_at'] > str(absorption.timestamp).replace('+00:00', 'Z')
+        key = absorption.absorbed_by
+    return u2r[key]
+
+
 def get_route_id(cur, transaction, counts, usernames, exchange_id):
 
     # First strategy: match on exchange id.
@@ -170,13 +189,15 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
         if len(routes) == 1:
             route_id = routes[0].id
         elif len(routes) > 1:
+            # Pick the route for the participant that was active at the time of the transaction.
             user_ids = [r.participant for r in routes]
-            route_usernames = cur.all( "SELECT username FROM participants WHERE id = ANY(%s)"
-                                     , (user_ids,)
-                                      )
-            assert sorted(route_usernames) == sorted(usernames)
-            counts.route_ambiguous += 1
-            raise AmbiguousRoute()
+            i2n = dict(cur.all( "SELECT id, username FROM participants WHERE id = ANY(%s)"
+                              , (user_ids,)
+                               ))
+            assert sorted(i2n.values()) == sorted(usernames)
+            u2r = {i2n[r.participant]: r.id for r in routes}
+            route_id = resolve_ambiguous_route(cur, transaction, counts, u2r)
+            log('picked {}'.format(route_id))
     if route_id:
         counts.route_matched_to_card += 1
         log("card matches a route")
@@ -185,8 +206,6 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
     # Third strategy: make a route!
     if not route_id:
         if len(usernames) > 1:
-            # XXX Pick the username of the non-archived participant (or the one that makes sense
-            # in the special case).
             counts.route_ambiguous_customer += 1
             raise AmbiguousCustomer()
         username = usernames[0]
