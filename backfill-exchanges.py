@@ -99,8 +99,8 @@ class Counts(object):
                             )
 
 
-def log(msg):
-    print(msg, end=' | ')
+def log(msg, w=0):
+    print("{msg:<{w}}".format(msg=msg, w=w), end=' | ')
 
 
 def get_usernames(cur, transaction, customers, counts):
@@ -109,7 +109,8 @@ def get_usernames(cur, transaction, customers, counts):
     usernames = customers.get(transaction['links']['customer'])
     if usernames:
         counts.customer_known += 1
-        log('known customer ({} participant(s))'.format(len(usernames)))
+        log('known customer')
+        log('participants: {}'.format(len(usernames)))
         return usernames
 
     # Second strategy: blah
@@ -123,7 +124,7 @@ def get_exchange_id(cur, transaction, counts, usernames):
     exchange_id = transaction['meta'].get('exchange_id')
     if exchange_id:
         counts.exchange_in_transaction += 1
-        log("exchange_id in transaction")
+        log("exchange_id in transaction", 26)
         return exchange_id
 
     # Second strategy: triangulate.
@@ -145,7 +146,7 @@ def get_exchange_id(cur, transaction, counts, usernames):
     exchange_id = cur.one(mogrified)
     if exchange_id:
         counts.exchange_triangulated += 1
-        log("triangulated an exchange")
+        log("triangulated an exchange", 26)
         return exchange_id
 
     counts.exchange_unknown += 1
@@ -177,7 +178,7 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
     route_id = cur.one("SELECT route FROM exchanges WHERE id=%s", (exchange_id,))
     if route_id:
         counts.route_in_exchange += 1
-        log("exchange has a route")
+        log("exchange has a route", 20)
         return route_id
 
     # Second strategy: match on known cards.
@@ -197,10 +198,10 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
             assert sorted(i2n.values()) == sorted(usernames)
             u2r = {i2n[r.participant]: r.id for r in routes}
             route_id = resolve_ambiguous_route(cur, transaction, counts, u2r)
-            log('picked {}'.format(route_id))
+        log('routes: {routes:<12}'.format(routes=', '.join(str(r.id) for r in routes)))
     if route_id:
         counts.route_matched_to_card += 1
-        log("card matches a route")
+        log("card matches {}".format(route_id), 20)
         return route_id
 
     # Third strategy: make a route!
@@ -217,7 +218,7 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
         route_id = route.id
     if route_id:
         counts.route_created += 1
-        log("created a route")
+        log("created a route", 20)
         return route_id
 
     counts.route_unknown += 1
@@ -225,7 +226,7 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
 
 
 def link_exchange_to_transaction(cur, transaction, customers, counts):
-    print("{created_at} | {description} | ".format(**transaction), end='')
+    print("{created_at} | {description:>24} | ".format(**transaction), end='')
     counts.z_n += 1
 
     usernames = get_usernames(cur, transaction, customers, counts)
@@ -266,7 +267,7 @@ def link_participant_to_customer(cur, transaction, customers):
 
 
 def log_exc(transaction):
-    print("Exception! Thing:")
+    print("Exception! Transaction:")
     pprint(transaction)
     print('-'*78)
     traceback.print_exc(file=sys.stdout)
