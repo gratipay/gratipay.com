@@ -32,7 +32,7 @@ class CountsOff(Exception):
             if name[0] != cur:
                 cur = name[0]
                 out.append('')
-            out.append("{:<23} {:>5}".format(name, val))
+            out.append("{:<24} {:>5}".format(name, val))
         return '\n'.join(out)
 
 
@@ -170,6 +170,11 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
         if len(routes) == 1:
             route_id = routes[0].id
         elif len(routes) > 1:
+            user_ids = [r.participant for r in routes]
+            route_usernames = cur.all( "SELECT username FROM participants WHERE id = ANY(%s)"
+                                     , (user_ids,)
+                                      )
+            assert sorted(route_usernames) == sorted(usernames)
             counts.route_ambiguous += 1
             raise AmbiguousRoute()
     if route_id:
