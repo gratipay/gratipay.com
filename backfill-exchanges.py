@@ -6,7 +6,6 @@ from collections import defaultdict
 from gratipay import wireup
 from decimal import Decimal as D
 from pprint import pprint
-from gratipay.models.participant import Participant
 from gratipay.models.exchange_route import ExchangeRoute
 
 db = wireup.db(wireup.env())
@@ -47,7 +46,8 @@ class Counts(object):
 
         self.route_in_exchange = 0
         self.route_ambiguous = 0
-        self.route_matched_to_card = 0
+        self.route_matched_via_card = 0
+        self.route_matched_via_customer = 0
         self.route_ambiguous_customer = 0
         self.route_created = 0
         self.route_unknown = 0
@@ -87,7 +87,8 @@ class Counts(object):
                           ))
         nroutes = sum(( self.route_in_exchange
                       , self.route_ambiguous
-                      , self.route_matched_to_card
+                      , self.route_matched_via_card
+                      , self.route_matched_via_customer
                       , self.route_ambiguous_customer
                       , self.route_created
                       , self.route_unknown
@@ -153,23 +154,45 @@ def get_exchange_id(cur, transaction, counts, usernames):
     raise UnknownExchange(mogrified)
 
 
-def resolve_ambiguous_route(cur, transaction, counts, u2r):
-    keys = u2r.keys()
-    absorption = cur.one("""\
-        SELECT *
-          FROM absorptions
-         WHERE (archived_as=%(one)s AND absorbed_by=%(two)s)
-            OR (archived_as=%(two)s AND absorbed_by=%(one)s)
-    """, dict(one=keys[0], two=keys[1]))
-    if absorption is None:
+def resolve_route(cur, transaction, counts, routes, usernames):
+    log('routes: {routes:<12}'.format(routes=', '.join(str(r.id) for r in routes)))
+
+    nroutes = len(routes)
+    if nroutes == 0:    return None
+    elif nroutes == 1:  return routes[0].id
+    assert nroutes == 2
+    # Pick the route for the participant that was active at the time of the transaction.
+
+    nusernames = len(usernames)
+    assert nusernames in (1, 2), (usernames, routes)
+    if nusernames == 1:
         counts.route_ambiguous += 1
         raise AmbiguousRoute()
-    if transaction['created_at'] < str(absorption.timestamp).replace('+00:00', 'Z'):
-        key = absorption.archived_as
     else:
-        assert transaction['created_at'] > str(absorption.timestamp).replace('+00:00', 'Z')
-        key = absorption.absorbed_by
-    return u2r[key]
+        # See if we can assume it's a case of absorption.
+        user_ids = [r.participant for r in routes]
+        i2n = dict(cur.all( "SELECT id, username FROM participants WHERE id = ANY(%s)"
+                          , (user_ids,)
+                           ))
+        assert sorted(i2n.values()) == sorted(usernames)
+        u2r = {i2n[r.participant]: r.id for r in routes}
+
+        keys = u2r.keys()
+        absorption = cur.one("""\
+            SELECT *
+              FROM absorptions
+             WHERE (archived_as=%(one)s AND absorbed_by=%(two)s)
+                OR (archived_as=%(two)s AND absorbed_by=%(one)s)
+        """, dict(one=keys[0], two=keys[1]))
+        if absorption is None:
+            counts.route_ambiguous += 1
+            raise AmbiguousRoute()
+        if transaction['created_at'] < str(absorption.timestamp).replace('+00:00', 'Z'):
+            key = absorption.archived_as
+        else:
+            assert transaction['created_at'] > str(absorption.timestamp).replace('+00:00', 'Z')
+            key = absorption.absorbed_by
+        return u2r[key]
 
 
 def get_route_id(cur, transaction, counts, usernames, exchange_id):
@@ -178,39 +201,47 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
     route_id = cur.one("SELECT route FROM exchanges WHERE id=%s", (exchange_id,))
     if route_id:
         counts.route_in_exchange += 1
-        log("exchange has a route", 20)
+        log("exchange has a route", 22)
         return route_id
 
     # Second strategy: match on known cards.
     if not route_id:
         routes = cur.all( "SELECT * FROM exchange_routes "
-                          "WHERE network='balanced-cc' and address='/cards/'||%s"
+                          "WHERE network='balanced-cc' AND address='/cards/'||%s"
                         , (transaction['links']['source'],)
                          )
-        if len(routes) == 1:
-            route_id = routes[0].id
-        elif len(routes) > 1:
-            # Pick the route for the participant that was active at the time of the transaction.
-            user_ids = [r.participant for r in routes]
-            i2n = dict(cur.all( "SELECT id, username FROM participants WHERE id = ANY(%s)"
-                              , (user_ids,)
-                               ))
-            assert sorted(i2n.values()) == sorted(usernames)
-            u2r = {i2n[r.participant]: r.id for r in routes}
-            route_id = resolve_ambiguous_route(cur, transaction, counts, u2r)
-        log('routes: {routes:<12}'.format(routes=', '.join(str(r.id) for r in routes)))
+        route_id = resolve_route(cur, transaction, counts, routes, usernames)
     if route_id:
-        counts.route_matched_to_card += 1
-        log("card matches {}".format(route_id), 20)
+        counts.route_matched_via_card += 1
+        log("card matches {}".format(route_id), 22)
         return route_id
 
-    # Third strategy: make a route!
+    # Third strategy: match on usernames.
+    if not route_id:
+        routes = cur.all("""\
+            SELECT *
+              FROM exchange_routes
+             WHERE network='balanced-cc' and participant in (
+                    SELECT id
+                      FROM participants
+                     WHERE username=ANY(%s)
+                   )
+        """, (usernames,))
+        route_id = resolve_route(cur, transaction, counts, routes, usernames)
+    if route_id:
+        counts.route_matched_via_customer += 1
+        log("customer matches {}".format(route_id), 22)
+        return route_id
+
+    # Fourth strategy: make a route!
     if not route_id:
         if len(usernames) > 1:
             counts.route_ambiguous_customer += 1
             raise AmbiguousCustomer()
         username = usernames[0]
-        route = ExchangeRoute.insert( Participant.from_username(username)
+        participant = cur.one("SELECT participants.*::participants FROM participants "
+                              "WHERE username=%s", (username,))
+        route = ExchangeRoute.insert( participant
                                     , 'balanced-cc'
                                     , '/cards/'+transaction['links']['source']
                                     , cursor=cur
@@ -218,7 +249,7 @@ def get_route_id(cur, transaction, counts, usernames, exchange_id):
         route_id = route.id
     if route_id:
         counts.route_created += 1
-        log("created a route", 20)
+        log("created a route", 22)
         return route_id
 
     counts.route_unknown += 1

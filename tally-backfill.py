@@ -27,7 +27,7 @@ title("Exchanges")
 report("exchange_id in transaction", "triangulated an exchange", "raise UnknownExchange")
 
 title("Routes")
-report("exchange has a route", "card matches", "created a route",
+report("exchange has a route", "card matches", "customer matches", "created a route",
        "raise AmbiguousRoute", "raise AmbiguousCustomer", "raise UnknownRoute")
 
 title("Check")
