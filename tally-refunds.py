@@ -18,7 +18,10 @@ def report(*patterns):
 
 
 title("Hi-level")
-report(" yes ", " no ", " BAD ")
+report(" yes ", " no ")
+
+title("Network")
+report("balanced-cc", "braintree-cc", "<unknown>")
 
 title("Check")
-report("^201\d-")
+report("^.*$")
