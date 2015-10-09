@@ -84,7 +84,6 @@ def create_card_hold(db, participant, amount):
         })
 
         if result.is_success and result.transaction.status == 'authorized':
-            log(msg + "succeeded.")
             error = ""
             hold = result.transaction
         elif result.is_success:
@@ -92,14 +91,12 @@ def create_card_hold(db, participant, amount):
         else:
             error = result.message
 
-        if error == '':
-            log(msg + "succeeded.")
-        else:
-            log(msg + "failed: %s" % error)
-            record_exchange(db, route, amount, fee, participant, 'failed', error)
-
     except Exception as e:
         error = repr_exception(e)
+
+    if error == '':
+        log(msg + "succeeded.")
+    else:
         log(msg + "failed: %s" % error)
         record_exchange(db, route, amount, fee, participant, 'failed', error)
 
