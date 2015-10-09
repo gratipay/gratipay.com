@@ -6,7 +6,7 @@ from aspen.utils import utcnow
 from gratipay.testing import Harness
 
 
-class TestTipJson(Harness):
+class TestPaymentInstructionJson(Harness):
 
     def test_api_returns_amount_and_totals(self):
         "Test that we get correct amounts and totals back on POSTs to payment-instruction.json"
@@ -36,8 +36,8 @@ class TestTipJson(Harness):
         assert second_data['amount'] == "3.00"
 
         # Bring these back when cached values are updated
-        # assert first_data['total_giving'] == "1.50"
-        # assert second_data['total_giving'] == "4.50"
+        assert first_data['total_giving'] == "1.50"
+        assert second_data['total_giving'] == "4.50"
 
 
     def test_setting_payment_instruction_out_of_range_gets_bad_amount(self):
