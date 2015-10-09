@@ -299,6 +299,19 @@ class TestPayin(BillingHarness):
         self.create_card_holds()
         assert cch.call_args[0][-1] == 35
 
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    @mock.patch('gratipay.billing.payday.create_card_hold')
+    def test_hold_amount_excludes_balance(self, cch, fch):
+        self.db.run("""
+            UPDATE participants SET balance = 5 WHERE username='obama'
+        """)
+        team = self.make_team('The Enterprise', is_approved=True)
+        self.obama.set_payment_instruction(team, 25)
+        fch.return_value = {}
+        cch.return_value = (None, 'some error')
+        self.create_card_holds()
+        assert cch.call_args[0][-1] == 20
+
     def test_payin_fetches_and_uses_existing_holds(self):
         team = self.make_team(owner=self.homer, is_approved=True)
         self.obama.set_payment_instruction(team, '20.00')
