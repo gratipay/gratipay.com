@@ -977,7 +977,7 @@ class Participant(Model):
         # Update is_funded on payment_instructions
         has_credit_card = self.get_credit_card_error() == ''
         updated = (cursor or self.db).all("""
-            UPDATE current_payment_instructions
+            UPDATE payment_instructions
                SET is_funded = %(has_credit_card)s
              WHERE participant = %(username)s
                AND is_funded <> %(has_credit_card)s

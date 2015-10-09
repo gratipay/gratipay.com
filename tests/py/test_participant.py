@@ -542,7 +542,7 @@ class Tests(Harness):
         ExchangeRoute.insert(alice, 'braintree-cc', '/cards/bar', '')
 
         assert alice.giving == Decimal('5.00')
-        assert Team.from_slug(team.slug).receiving == Decimal('0.00')
+        assert Team.from_slug(team.slug).receiving == Decimal('5.00')
 
     @mock.patch('braintree.PaymentMethod.delete')
     def test_giving_is_updated_when_credit_card_fails(self, btd):
