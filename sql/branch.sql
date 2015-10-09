@@ -1,3 +1,0 @@
-BEGIN;
-    ALTER TABLE exchanges ADD COLUMN ref text DEFAULT NULL;
-END;

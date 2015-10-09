@@ -702,3 +702,9 @@ BEGIN;
     $$ LANGUAGE sql;
 
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3807
+BEGIN;
+    ALTER TABLE exchanges ADD COLUMN ref text DEFAULT NULL;
+END;
