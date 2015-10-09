@@ -18,13 +18,13 @@ from gratipay.testing.emails import EmailHarness
 
 
 class TestPayday(BillingHarness):
-
-    def test_payday_moves_money_above_min_charge(self):
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def test_payday_moves_money_above_min_charge(self, fch):
         Enterprise = self.make_team(is_approved=True)
         self.obama.set_payment_instruction(Enterprise, MINIMUM_CHARGE)  # must be >= MINIMUM_CHARGE
-        with mock.patch.object(Payday, 'fetch_card_holds') as fch:
-            fch.return_value = {}
-            Payday.start().run()
+
+        fch.return_value = {}
+        Payday.start().run()
 
         obama = Participant.from_username('obama')
         picard = Participant.from_username('picard')
@@ -46,6 +46,8 @@ class TestPayday(BillingHarness):
                AND ppi.team = 'TheEnterprise'
 
         """)
+
+        assert self.obama.get_due('TheEnterprise') == D('5.00')
 
         fch.return_value = {}
         Payday.start().run()
