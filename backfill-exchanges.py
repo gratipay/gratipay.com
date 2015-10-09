@@ -272,6 +272,7 @@ def link_exchange_to_transaction(cur, transaction, customers, counts):
         assert existing.status == status, exchange_id
         counts.z_linked_already += 1
         print("Already linked: {} & {}.".format(transaction['id'], exchange_id))
+        cur.run( "UPDATE exchanges SET ref=%s WHERE id=%s", (ref, exchange_id))
     else:
         assert existing.status in (None, status), exchange_id  # don't want to mutate status
         counts.z_linking_now += 1
