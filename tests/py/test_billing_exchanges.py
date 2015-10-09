@@ -14,8 +14,7 @@ from gratipay.billing.exchanges import (
     capture_card_hold,
     create_card_hold,
     record_exchange,
-    record_exchange_result,
-    skim_credit
+    record_exchange_result
 )
 from gratipay.exceptions import NegativeBalance, NotWhitelisted
 from gratipay.models.exchange_route import ExchangeRoute
@@ -228,10 +227,6 @@ class TestFees(Harness):
         actual = self.prep(u'9.42')
         expected = (1002, D('10.02'), D('0.60'))
         assert actual == expected
-
-    def test_skim_credit(self):
-        actual = skim_credit(D('10.00'))
-        assert actual == (D('10.00'), D('0.00'))
 
 
 class TestRecordExchange(Harness):

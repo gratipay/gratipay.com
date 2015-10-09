@@ -13,37 +13,6 @@ from gratipay.exceptions import NegativeBalance, NotWhitelisted
 from gratipay.models.exchange_route import ExchangeRoute
 
 
-BALANCED_CLASSES = {
-    "bank_accounts": balanced.BankAccount,
-    "cards": balanced.Card,
-}
-
-BALANCED_LINKS = {
-    "bank_accounts": {
-        "bank_accounts.bank_account_verification": "/verifications/{bank_accounts.bank_account_verification}",
-        "bank_accounts.bank_account_verifications": "/bank_accounts/{bank_accounts.id}/verifications",
-        "bank_accounts.credits": "/bank_accounts/{bank_accounts.id}/credits",
-        "bank_accounts.customer": "/customers/{bank_accounts.customer}",
-        "bank_accounts.debits": "/bank_accounts/{bank_accounts.id}/debits",
-        "bank_accounts.settlements": "/bank_accounts/{bank_accounts.id}/settlements"
-    },
-    "cards": {
-        "cards.card_holds": "/cards/{cards.id}/card_holds",
-        "cards.customer": "/customers/{cards.customer}",
-        "cards.debits": "/cards/{cards.id}/debits",
-        "cards.disputes": "/cards/{cards.id}/disputes"
-    }
-}
-
-def thing_from_href(things, href):
-    """This is a temporary hack, we'll get rid of it when we migrate to Stripe.
-    """
-    id = href.rsplit('/', 1)[1]
-    d = {'href': href, 'id': id, 'links': {}, 'meta': {}}
-    C = BALANCED_CLASSES[things]
-    return C(**{things: [d], 'links': BALANCED_LINKS[things]})
-
-
 # Balanced has a $0.50 minimum. We go even higher to avoid onerous
 # per-transaction fees. See:
 # https://github.com/gratipay/gratipay.com/issues/167
@@ -54,9 +23,6 @@ MINIMUM_CREDIT = Decimal("10.00")
 FEE_CHARGE = ( Decimal("0.30")   # $0.30
              , Decimal("0.029")  #  2.9%
               )
-FEE_CREDIT = Decimal("0.00")    # Balanced doesn't actually charge us for this,
-                                # because we were in the door early enough.
-
 
 def upcharge(amount):
     """Given an amount, return a higher amount and the difference.
@@ -67,13 +33,6 @@ def upcharge(amount):
     return charge_amount, charge_amount - amount
 
 assert upcharge(MINIMUM_CHARGE) == (Decimal('10.00'), Decimal('0.59'))
-
-
-def skim_credit(amount):
-    """Given an amount, return a lower amount and the difference.
-    """
-    typecheck(amount, Decimal)
-    return amount - FEE_CREDIT, FEE_CREDIT
 
 
 def repr_exception(e):
