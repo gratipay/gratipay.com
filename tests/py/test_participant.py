@@ -23,6 +23,7 @@ from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import (
     LastElsewhere, NeedConfirmation, NonexistingElsewhere, Participant, TeamCantBeOnlyAuth
 )
+from gratipay.models.team import Team
 from gratipay.testing import Harness
 
 
@@ -534,12 +535,14 @@ class Tests(Harness):
         alice.set_payment_instruction(team, '5.00') # Not funded, failing card
 
         assert alice.giving == Decimal('0.00')
+        assert Team.from_slug(team.slug).receiving == Decimal('0.00')
 
         # Alice updates her card..
         ExchangeRoute.from_network(alice, 'braintree-cc').invalidate()
         ExchangeRoute.insert(alice, 'braintree-cc', '/cards/bar', '')
 
         assert alice.giving == Decimal('5.00')
+        assert Team.from_slug(team.slug).receiving == Decimal('0.00')
 
     @mock.patch('braintree.PaymentMethod.delete')
     def test_giving_is_updated_when_credit_card_fails(self, btd):
@@ -549,10 +552,12 @@ class Tests(Harness):
         alice.set_payment_instruction(team, '5.00') # funded
 
         assert alice.giving == Decimal('5.00')
+        assert Team.from_slug(team.slug).receiving == Decimal('5.00')
 
         ExchangeRoute.from_network(alice, 'braintree-cc').update_error("Card expired")
 
         assert Participant.from_username('alice').giving == Decimal('0.00')
+        assert Team.from_slug(team.slug).receiving == Decimal('0.00')
 
 
     # get_age_in_seconds - gais
