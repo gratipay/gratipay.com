@@ -60,7 +60,7 @@ def process_participant(cur, participant, counts):
                  , yesno = ' no'
                   )
     if exchange:
-        params['refund_amount'] = max(current_balance, exchange['amount'])
+        params['refund_amount'] = min(current_balance, exchange['amount'])
         params.update( timestamp = str(exchange['timestamp'])
                      , network = exchange['network'] if exchange['network'] else '<unknown>'
                      , exchange_id = exchange['id']
