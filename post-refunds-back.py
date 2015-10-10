@@ -1,24 +1,20 @@
 #!/usr/bin/env python -u
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import csv, os, requests
+import csv
+from gratipay import wireup
+from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.models.participant import Participant
+from gratipay.billing.exchanges import record_exchange
 
-gratipay_base_url = 'https://gratipay.com'
-gratipay_base_url = 'http://localhost:8537'
-gratipay_api_key = os.environ['GRATIPAY_API_KEY']
-
+db = wireup.db(wireup.env())
 inp = csv.reader(open('refunds.completed.csv'))
+note = 'refund of advance payment; see https://medium.com/gratipay-blog/charging-in-arrears-18cacf779bee'
 
 for ts, id, amount, username, route_id, status_code, content in inp:
     if status_code != '200': continue
-    url = '{}/~{}/history/record-an-exchange'.format(gratipay_base_url, username)
-    note = 'refund of advance payment; see https://medium.com/gratipay-blog/charging-in-arrears-18cacf779bee'
-
-    data = { 'amount': amount[:-2] + '.' + amount[-2:]
-           , 'fee': 0
-           , 'note': note
-           , 'status': 'pending'
-           , 'route_id': route_id
-            }
-    response = requests.post(url, auth=(gratipay_api_key, ''), data=data)
-    print(response.status_code, response.content)
+    route = ExchangeRoute.from_id(route_id)
+    rp = route.participant
+    participant = Participant.from_id(rp) if type(rp) is long else rp  # Such a hack. :(
+    route.set_attributes(participant=participant)
+    record_exchange(db, route, -int(amount), 0, participant, 'pending', note)
