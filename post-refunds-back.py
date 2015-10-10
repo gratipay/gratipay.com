@@ -12,7 +12,7 @@ inp = csv.reader(open('refunds.completed.csv'))
 note = 'refund of advance payment; see https://medium.com/gratipay-blog/charging-in-arrears-18cacf779bee'
 
 for ts, id, amount, username, route_id, status_code, content in inp:
-    if status_code != '200': continue
+    if status_code != '201': continue
     route = ExchangeRoute.from_id(route_id)
     rp = route.participant
     participant = Participant.from_id(rp) if type(rp) is long else rp  # Such a hack. :(
