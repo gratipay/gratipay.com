@@ -9,8 +9,8 @@ username = os.environ['BALANCED_API_USER']
 inp = csv.reader(open('refunds.csv'))
 inp.next()  # headers
 
-out = csv.reader(open('refunds.completed.csv', 'w+'))
-out.writerow('ts', 'id', 'amount', 'code', 'body')
+out = csv.writer(open('refunds.completed.csv', 'w+'))
+out.writerow(('ts', 'id', 'amount', 'code', 'body'))
 
 for ts, id, amount in inp:
     response = requests.post( url.format(id)
