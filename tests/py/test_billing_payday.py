@@ -18,13 +18,13 @@ from gratipay.testing.emails import EmailHarness
 
 
 class TestPayday(BillingHarness):
-
-    def test_payday_moves_money_above_min_charge(self):
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def test_payday_moves_money_above_min_charge(self, fch):
         Enterprise = self.make_team(is_approved=True)
         self.obama.set_payment_instruction(Enterprise, MINIMUM_CHARGE)  # must be >= MINIMUM_CHARGE
-        with mock.patch.object(Payday, 'fetch_card_holds') as fch:
-            fch.return_value = {}
-            Payday.start().run()
+
+        fch.return_value = {}
+        Payday.start().run()
 
         obama = Participant.from_username('obama')
         picard = Participant.from_username('picard')
@@ -46,6 +46,8 @@ class TestPayday(BillingHarness):
                AND ppi.team = 'TheEnterprise'
 
         """)
+
+        assert self.obama.get_due('TheEnterprise') == D('5.00')
 
         fch.return_value = {}
         Payday.start().run()
@@ -296,6 +298,19 @@ class TestPayin(BillingHarness):
         cch.return_value = (None, 'some error')
         self.create_card_holds()
         assert cch.call_args[0][-1] == 35
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    @mock.patch('gratipay.billing.payday.create_card_hold')
+    def test_hold_amount_excludes_balance(self, cch, fch):
+        self.db.run("""
+            UPDATE participants SET balance = 5 WHERE username='obama'
+        """)
+        team = self.make_team('The Enterprise', is_approved=True)
+        self.obama.set_payment_instruction(team, 25)
+        fch.return_value = {}
+        cch.return_value = (None, 'some error')
+        self.create_card_holds()
+        assert cch.call_args[0][-1] == 20
 
     def test_payin_fetches_and_uses_existing_holds(self):
         team = self.make_team(owner=self.homer, is_approved=True)

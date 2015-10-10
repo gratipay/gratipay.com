@@ -216,9 +216,8 @@ class Payday(object):
 
         # Create new holds and check amounts of existing ones
         def f(p):
-            amount = p.giving_today
-            if p.old_balance < 0:
-                amount -= p.old_balance
+            amount = p.giving_today - p.old_balance
+
             if p.id in holds:
                 if amount >= MINIMUM_CHARGE:
                     charge_amount = upcharge(amount)[0]

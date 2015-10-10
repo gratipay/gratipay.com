@@ -974,16 +974,15 @@ class Participant(Model):
 
 
     def update_giving(self, cursor=None):
-        updated = []
         # Update is_funded on payment_instructions
-        if self.get_credit_card_error() == '':
-            updated = (cursor or self.db).all("""
-                UPDATE current_payment_instructions
-                   SET is_funded = true
-                 WHERE participant = %s
-                   AND is_funded IS NOT true
-             RETURNING *
-            """, (self.username,))
+        has_credit_card = self.get_credit_card_error() == ''
+        updated = (cursor or self.db).all("""
+            UPDATE payment_instructions
+               SET is_funded = %(has_credit_card)s
+             WHERE participant = %(username)s
+               AND is_funded <> %(has_credit_card)s
+         RETURNING *
+        """, dict(username=self.username, has_credit_card=has_credit_card))
 
         r = (cursor or self.db).one("""
         WITH pi AS (
