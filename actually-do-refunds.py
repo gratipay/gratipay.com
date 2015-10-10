@@ -4,17 +4,14 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import csv, os, requests
 
 url = 'https://api.balancedpayments.com/debits/{}/refunds'
-username = os.environ['BALANCED_API_USER']
+balanced_api_user = os.environ['BALANCED_API_USER']
 
 inp = csv.reader(open('refunds.csv'))
-inp.next()  # headers
-
 out = csv.writer(open('refunds.completed.csv', 'w+'))
-out.writerow(('ts', 'id', 'amount', 'code', 'body'))
 
-for ts, id, amount in inp:
+for ts, id, amount, username, route_id in inp:
     response = requests.post( url.format(id)
                             , data={'amount': amount}
-                            , auth=(username, '')
+                            , auth=(balanced_api_user, '')
                              )
-    out.writerow((ts,id,amount,response.status_code,response.content))
+    out.writerow((ts,id,amount,username,route_id,response.status_code,response.content))

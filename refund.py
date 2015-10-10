@@ -70,11 +70,12 @@ def process_participant(cur, participant, counts):
         counts.total += params['refund_amount']
         counts.by_network[params['network']] += params['refund_amount']
         if exchange['network'] == 'balanced-cc':
-            print('{},{},{},{}'.format( params['timestamp']
-                                      , exchange['ref']
-                                      , str(params['refund_amount']).replace('.', '')
-                                      , exchange['route']
-                                       ))
+            print('{},{},{},{},{}'.format( params['timestamp']
+                                         , exchange['ref']
+                                         , str(params['refund_amount']).replace('.', '')
+                                         , exchange['participant']
+                                         , exchange['route']
+                                          ))
     print('{timestamp:<33} {yesno} {exchange_id:>6} {network:>16} {exchange_amount:>7} '
           '{refund_amount:>7} {username}'
           .format(**params), file=sys.stderr)
@@ -93,7 +94,6 @@ class Counts(object):
 with db.get_cursor(back_as=dict) as cur:
     try:
         counts = Counts()
-        print('ts,id,amount')
         for participant in get_participants(cur):
             process_participant(cur, participant, counts)
         print(counts, file=sys.stderr)
