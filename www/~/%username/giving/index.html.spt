@@ -5,7 +5,7 @@ from datetime import timedelta
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-giving, total = participant.get_giving_for_profile()
+giving, totals = participant.get_giving_for_profile()
 banner = '~' + participant.username
 title = _("Giving")
 recently = utcnow() - timedelta(days=30)
@@ -21,14 +21,14 @@ tabs = {
         'ngiving': len(giving),
         'name': _("Active"),
         'note': None,
-        'total': total
+        'totals': totals
     },
     'cancelled': {
         'giving': cancelled_giving,
         'ngiving': len(cancelled_giving),
         'name': _("Cancelled"),
         'note': _("These are payments that you recently cancelled."),
-        'total': 0
+        'totals': {}
     }
 }
 
@@ -61,7 +61,7 @@ tabs = {
             <p class="note">{{ tabs[tab]['note'] }}</p>
         {% endif %}
 
-        {{ giving_table(tab, tabs[tab]['giving'], tabs[tab]['total']) }}
+        {{ giving_table(tab, tabs[tab]['giving'], tabs[tab]['totals']) }}
 
     {% else %}
 

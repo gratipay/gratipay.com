@@ -921,6 +921,7 @@ class Participant(Model):
                 SELECT DISTINCT ON (pi.team)
                        pi.team  AS team_slug
                      , pi.amount
+                     , pi.due
                      , pi.ctime
                      , pi.mtime
                      , t.name   AS team_name
@@ -939,15 +940,15 @@ class Participant(Model):
         giving = self.db.all(GIVING, (self.username,))
 
 
-        # Compute the total.
+        # Compute the totals.
         # ==================
 
-        total = sum([rec.amount for rec in giving])
-        if not total:
-            # If giving is an empty list, total is int 0. We want a Decimal.
-            total = Decimal('0.00')
+        totals = {
+            'amount': sum([rec.amount for rec in giving]) or Decimal('0.00'),
+            'due': sum([rec.due for rec in giving]) or Decimal('0.00')
+        }
 
-        return giving, total
+        return giving, totals
 
 
     def get_old_stats(self):
