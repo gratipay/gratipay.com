@@ -152,7 +152,6 @@ class TestClosing(Harness):
 
         assert alice.get_statement(['en']) == (None, None)
         assert alice.anonymous_giving == new_alice.anonymous_giving == False
-        assert alice.number == new_alice.number == 'singular'
         assert alice.avatar_url == new_alice.avatar_url == None
         assert alice.email_address == new_alice.email_address == None
         assert alice.claimed_time == new_alice.claimed_time == None
@@ -161,12 +160,6 @@ class TestClosing(Harness):
         assert alice.session_token == new_alice.session_token == None
         assert alice.session_expires.year == new_alice.session_expires.year == date.today().year
         assert not alice.get_emails()
-
-        team = self.make_participant('team', number='plural')
-        with self.db.get_cursor() as cursor:
-            team.clear_personal_information(cursor)
-        team2 = Participant.from_username('team')
-        assert team.number == team2.number == 'singular'
 
     def test_cpi_clears_communities(self):
         alice = self.make_participant('alice')

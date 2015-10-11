@@ -124,13 +124,6 @@ class AccountElsewhere(Model):
                                 (participant, {0})
                          VALUES (%s, {1})
                 """.format(cols, placeholders), (username,)+vals)
-                # Propagate elsewhere.is_team to participants.number
-                if i.is_team:
-                    cursor.execute("""
-                        UPDATE participants
-                           SET number = 'plural'::participant_number
-                         WHERE username = %s
-                    """, (username,))
         except IntegrityError:
             # The account is already in the DB, update it instead
             username = cls.db.one("""

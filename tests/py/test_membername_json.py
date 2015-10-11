@@ -9,7 +9,7 @@ class TestMembernameJson(Harness):
 
     def setUp(self):
         Harness.setUp(self)
-        self.make_participant("team", claimed_time=utcnow(), number='plural')
+        self.make_participant("team", claimed_time=utcnow())
         self.make_participant("alice", claimed_time=utcnow())
 
     def test_post_team_is_not_team_returns_404(self):

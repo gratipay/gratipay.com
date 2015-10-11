@@ -48,7 +48,7 @@ def fake_sentence(start=1, stop=100):
     return faker.sentence(random.randrange(start,stop))
 
 
-def fake_participant(db, number="singular", is_admin=False):
+def fake_participant(db, is_admin=False):
     """Create a fake User.
     """
     username = faker.first_name() + fake_text_id(3)
@@ -64,10 +64,9 @@ def fake_participant(db, number="singular", is_admin=False):
                    , balanced_customer_href=faker.uri()
                    , is_suspicious=False
                    , claimed_time=faker.date_time_this_year()
-                   , number=number
                     )
     except IntegrityError:
-      return fake_participant(db, number, is_admin)
+      return fake_participant(db, is_admin)
 
     #Call participant constructor to perform other DB initialization
     return Participant.from_username(username)

@@ -288,17 +288,6 @@ class TestParticipant(Harness):
             p = self.make_participant(username, claimed_time=now, elsewhere='twitter')
             setattr(self, username, p)
 
-    def test_bob_is_singular(self):
-        expected = True
-        actual = self.bob.IS_SINGULAR
-        assert actual == expected
-
-    def test_john_is_plural(self):
-        expected = True
-        self.make_participant('john', number='plural')
-        actual = Participant.from_username('john').IS_PLURAL
-        assert actual == expected
-
     def test_comparison(self):
         assert self.alice == self.alice
         assert not (self.alice != self.alice)
