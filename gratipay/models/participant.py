@@ -33,6 +33,7 @@ from gratipay.exceptions import (
     TooManyEmailAddresses,
 )
 
+from gratipay.billing.instruments import CreditCard
 from gratipay.models import add_event
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
@@ -619,10 +620,10 @@ class Participant(Model):
             self.add_notification('credit_card_expires')
 
     def credit_card_expiring(self):
-        route = ExchangeRoute.from_network(self, 'balanced-cc')
+        route = ExchangeRoute.from_network(self, 'braintree-cc')
         if not route:
             return
-        card = balanced.Card.fetch(route.address)
+        card = CreditCard.from_route(route)
         year, month = card.expiration_year, card.expiration_month
         if not (year and month):
             return False
