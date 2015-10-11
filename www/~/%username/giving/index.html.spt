@@ -27,7 +27,7 @@ tabs = {
         'giving': cancelled_giving,
         'ngiving': len(cancelled_giving),
         'name': _("Cancelled"),
-        'note': _("These are giving that you recently cancelled."),
+        'note': _("These are payments that you recently cancelled."),
         'total': 0
     }
 }
@@ -43,7 +43,13 @@ tabs = {
 
 <ul class="nav" id="tab-nav">
     {% for tab in ['active', 'cancelled'] %}
-    <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>
+    <li>
+        <a href="#"
+           data-tab="{{ tab }}"
+           title="{{ tabs[tab]['note'] or '' }}">
+            {{ tabs[tab]['name'] }}
+        </a>
+    </li>
     {% endfor %}
 </ul>
 
@@ -59,7 +65,7 @@ tabs = {
 
     {% else %}
 
-        <p>{{ _("No giving to show") }}</p>
+        <p>{{ _("No results to show") }}</p>
 
     {% endif %}
     </div>
