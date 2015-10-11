@@ -549,6 +549,7 @@ class Tests(Harness):
         assert Participant.from_username('alice').giving == Decimal('0.00')
         assert Team.from_slug(team.slug).receiving == Decimal('0.00')
 
+
     # credit_card_expiring
 
     def test_credit_card_expiring_no_card(self):
@@ -574,6 +575,40 @@ class Tests(Harness):
         )
 
         assert alice.credit_card_expiring() == True
+
+
+    # dues
+
+    def test_dues_are_cancelled_along_with_payment_instruction(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team(is_approved=True)
+
+        alice.set_payment_instruction(team, '5.00')
+
+        # Fake dues
+        self.db.run("""
+
+            UPDATE payment_instructions ppi
+               SET due = '5.00'
+             WHERE ppi.participant = 'alice'
+               AND ppi.team = %s
+
+        """, (team.slug, ))
+
+        assert alice.get_due(team) == Decimal('5.00')
+
+        # Increase subscription amount
+        alice.set_payment_instruction(team, '10.00')
+        assert alice.get_due(team) == Decimal('5.00')
+
+        # Cancel the subscription
+        alice.set_payment_instruction(team, '0.00')
+        assert alice.get_due(team) == Decimal('0.00')
+
+        # Revive the subscription
+        alice.set_payment_instruction(team, '5.00')
+        assert alice.get_due(team) == Decimal('0.00')
+
 
     # get_age_in_seconds - gais
 
