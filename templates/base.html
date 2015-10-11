@@ -48,7 +48,7 @@
                     <a href="/~{{user.participant.username}}/"{% if on_own_profile %} class="selected"{% endif %}>
                         ~{{ user.participant.username }}
                         <div class="quick-stats">
-                            <span class="my-total-giving">{{ format_currency(user.participant.get_giving_for_profile()[1], "USD") }}</span>/{{ _("wk") }}
+                            <span class="my-total-giving">{{ format_currency(user.participant.giving, "USD") }}</span>/{{ _("wk") }}
                         </div>
                     </a>
                 </li>
@@ -115,7 +115,7 @@
                 <li class="left">
                 <a href="/about/">{{ ("About") }}</a>
                 </li><li>
-                    <a href="https://medium.com/gratipay-blog" 
+                    <a href="https://medium.com/gratipay-blog"
                        title="our blog on Medium">
                         <span class="icon">&#xe006;</span>
                         <span class="screen-reader-text">{{ _("Blog") }}</span>
