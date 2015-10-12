@@ -23,8 +23,8 @@ env: requirements.txt requirements_tests.txt setup.py
 				--extra-search-dir=./vendor/ \
 				--always-copy \
 				./env/
-	$(pip) install --no-index -f ./vendor/ -r requirements.txt
-	$(pip) install --no-index -f ./vendor/ -r requirements_tests.txt
+	$(pip) install --no-index -r requirements.txt
+	$(pip) install --no-index -r requirements_tests.txt
 	$(pip) install -e ./
 	touch env
 
