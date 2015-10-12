@@ -543,11 +543,13 @@ class Tests(Harness):
 
         assert alice.giving == Decimal('5.00')
         assert Team.from_slug(team.slug).receiving == Decimal('5.00')
+        assert Participant.from_username(team.owner).taking == Decimal('5.00')
 
         ExchangeRoute.from_network(alice, 'braintree-cc').update_error("Card expired")
 
         assert Participant.from_username('alice').giving == Decimal('0.00')
         assert Team.from_slug(team.slug).receiving == Decimal('0.00')
+        assert Participant.from_username(team.owner).taking == Decimal('0.00')
 
     # credit_card_expiring
 
