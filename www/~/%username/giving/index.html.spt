@@ -5,7 +5,7 @@ from datetime import timedelta
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
-giving, total = participant.get_giving_for_profile()
+giving, totals = participant.get_giving_for_profile()
 banner = '~' + participant.username
 title = _("Giving")
 recently = utcnow() - timedelta(days=30)
@@ -21,14 +21,14 @@ tabs = {
         'ngiving': len(giving),
         'name': _("Active"),
         'note': None,
-        'total': total
+        'totals': totals
     },
     'cancelled': {
         'giving': cancelled_giving,
         'ngiving': len(cancelled_giving),
         'name': _("Cancelled"),
-        'note': _("These are giving that you recently cancelled."),
-        'total': 0
+        'note': _("These are payments that you recently cancelled."),
+        'totals': {}
     }
 }
 
@@ -43,7 +43,13 @@ tabs = {
 
 <ul class="nav" id="tab-nav">
     {% for tab in ['active', 'cancelled'] %}
-    <li><a href="#" data-tab="{{ tab }}">{{ tabs[tab]['name'] }}</a></li>
+    <li>
+        <a href="#"
+           data-tab="{{ tab }}"
+           title="{{ tabs[tab]['note'] or '' }}">
+            {{ tabs[tab]['name'] }}
+        </a>
+    </li>
     {% endfor %}
 </ul>
 
@@ -55,11 +61,11 @@ tabs = {
             <p class="note">{{ tabs[tab]['note'] }}</p>
         {% endif %}
 
-        {{ giving_table(tab, tabs[tab]['giving'], tabs[tab]['total']) }}
+        {{ giving_table(tab, tabs[tab]['giving'], tabs[tab]['totals']) }}
 
     {% else %}
 
-        <p>{{ _("No giving to show") }}</p>
+        <p>{{ _("No results to show") }}</p>
 
     {% endif %}
     </div>

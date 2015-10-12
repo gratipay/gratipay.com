@@ -1,12 +1,14 @@
-{% macro giving_table(state, giving, total) %}
+{% macro giving_table(state, giving, totals) %}
     <table class="table">
         <thead>
             <tr>
                 <th>{{ _("Team") }}</th>
                 {% if state != 'cancelled' %}
                     <th class="figure">{{ _("Amount ($)") }}</th>
+                    {% if totals.due > 0 %}
+                        <th class="figure">{{ _("Due ($)") }}</th>
+                    {% endif %}
                 {% endif %}
-                <th class="figure">{{ _("Last Set") }}</th>
                 <th class="figure">{{ _("First Set") }}</th>
             </tr>
         </thead>
@@ -14,7 +16,10 @@
             <tr>
                 <td></td>
                 {% if state != 'cancelled' %}
-                    <td class="figure total">{{ total }}</td>
+                    <td class="figure total">{{ totals.amount }}</td>
+                    {% if totals.due > 0 %}
+                        <td class="figure total">{{ totals.due }}</td>
+                    {% endif %}
                 {% endif %}
                 <td></td>
                 <td></td>
@@ -28,9 +33,11 @@
             </td>
             {% if state != 'cancelled' %}
                 <td class="figure">{{ payment_instruction.amount }}</td>
+                {% if totals.due > 0 %}
+                    <td class="figure">{{ payment_instruction.due or '0.00' }}</td>
+                {% endif %}
             {% endif %}
-            <td class="figure">{{ to_age(payment_instruction.mtime) }}</td>
-            <td class="figure">{{ to_age(payment_instruction.ctime) }}</td>
+            <td class="figure">{{ _("{0} ago", to_age(payment_instruction.ctime)) }}</td>
         </tr>
         {% endfor %}
         </tbody>
