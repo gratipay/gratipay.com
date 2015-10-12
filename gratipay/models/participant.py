@@ -833,11 +833,15 @@ class Participant(Model):
         t = (cursor or self.db).one(NEW_PAYMENT_INSTRUCTION, args)
         t_dict = t._asdict()
 
+        if amount > 0:
+            # Carry over any existing due
+            self._update_due(t_dict['team'], t_dict['id'], cursor)
+        else:
+            self._reset_due(t_dict['team'], cursor=cursor)
+
         if update_self:
             # Update giving amount of participant
             self.update_giving(cursor)
-            # Carry over any existing due
-            self.update_due(t_dict['team'], t_dict['id'], cursor)
         if update_team:
             # Update receiving amount of team
             team.update_receiving(cursor)
@@ -982,7 +986,7 @@ class Participant(Model):
 
         return updated
 
-    def update_due(self, team, id, cursor=None):
+    def _update_due(self, team, id, cursor=None):
         """Transfer existing due value to newly inserted record
         """
         # Copy due to new record
@@ -999,6 +1003,7 @@ class Participant(Model):
         """, dict(username=self.username,team=team,id=id))
 
         # Reset older due values to 0
+        self._reset_due(team, except_for=id, cursor=cursor)
         (cursor or self.db).run("""
             UPDATE payment_instructions p
                SET due = 0
@@ -1007,6 +1012,16 @@ class Participant(Model):
                AND due > 0
                AND p.id != %(id)s
         """, dict(username=self.username,team=team,id=id))
+
+    def _reset_due(self, team, except_for=-1, cursor=None):
+        (cursor or self.db).run("""
+            UPDATE payment_instructions p
+               SET due = 0
+             WHERE participant = %(username)s
+               AND team = %(team)s
+               AND due > 0
+               AND p.id != %(id)s
+        """, dict(username=self.username,team=team,id=except_for))
 
     def update_taking(self, cursor=None):
         (cursor or self.db).run("""
