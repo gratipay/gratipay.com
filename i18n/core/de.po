@@ -301,10 +301,13 @@ msgstr "Team"
 msgid "Amount ($)"
 msgstr ""
 
-msgid "Last Set"
+msgid "Due ($)"
 msgstr ""
 
 msgid "First Set"
+msgstr ""
+
+msgid "{0} ago"
 msgstr ""
 
 msgid "Previous"
@@ -1170,10 +1173,10 @@ msgstr ""
 msgid "Cancelled"
 msgstr "Abgebrochen"
 
-msgid "These are giving that you recently cancelled."
+msgid "These are payments that you recently cancelled."
 msgstr ""
 
-msgid "No giving to show"
+msgid "No results to show"
 msgstr ""
 
 msgid "Export History"

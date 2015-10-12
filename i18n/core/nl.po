@@ -295,11 +295,14 @@ msgstr "Team"
 msgid "Amount ($)"
 msgstr "Bedrag ($)"
 
-msgid "Last Set"
-msgstr "Laatste serie"
+msgid "Due ($)"
+msgstr ""
 
 msgid "First Set"
 msgstr "Eerste serie"
+
+msgid "{0} ago"
+msgstr ""
 
 msgid "Previous"
 msgstr "Vorige"
@@ -1164,10 +1167,10 @@ msgstr "Actief"
 msgid "Cancelled"
 msgstr "Geannuleerd"
 
-msgid "These are giving that you recently cancelled."
+msgid "These are payments that you recently cancelled."
 msgstr ""
 
-msgid "No giving to show"
+msgid "No results to show"
 msgstr ""
 
 msgid "Export History"

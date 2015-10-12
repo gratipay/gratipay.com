@@ -293,11 +293,14 @@ msgstr "Team"
 msgid "Amount ($)"
 msgstr "Ammontare ($)"
 
-msgid "Last Set"
-msgstr "Modificati"
+msgid "Due ($)"
+msgstr ""
 
 msgid "First Set"
 msgstr "Creati"
+
+msgid "{0} ago"
+msgstr ""
 
 msgid "Previous"
 msgstr "Precedente"
@@ -1162,11 +1165,11 @@ msgstr "Attive"
 msgid "Cancelled"
 msgstr "Cancellate"
 
-msgid "These are giving that you recently cancelled."
-msgstr "Queste sono le donazioni che hai recentemente cancellato."
+msgid "These are payments that you recently cancelled."
+msgstr ""
 
-msgid "No giving to show"
-msgstr "Nessuna donazione da mostrare"
+msgid "No results to show"
+msgstr ""
 
 msgid "Export History"
 msgstr "Storia Export"
