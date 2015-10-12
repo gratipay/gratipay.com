@@ -294,13 +294,13 @@ msgid "Amount ($)"
 msgstr "Ammontare ($)"
 
 msgid "Due ($)"
-msgstr ""
+msgstr "($) Dovuti"
 
 msgid "First Set"
 msgstr "Creati"
 
 msgid "{0} ago"
-msgstr ""
+msgstr "{0} fa"
 
 msgid "Previous"
 msgstr "Precedente"
@@ -1166,10 +1166,10 @@ msgid "Cancelled"
 msgstr "Cancellate"
 
 msgid "These are payments that you recently cancelled."
-msgstr ""
+msgstr "Questi sono i pagamenti che hai recentemente cancellato."
 
 msgid "No results to show"
-msgstr ""
+msgstr "Nessun risultato da mostrare"
 
 msgid "Export History"
 msgstr "Storia Export"
