@@ -9,6 +9,7 @@ import pytest
 
 from aspen.utils import utcnow
 from gratipay import NotSane
+from gratipay.billing.instruments import CreditCard
 from gratipay.exceptions import (
     UsernameIsEmpty,
     UsernameTooLong,
@@ -559,6 +560,31 @@ class Tests(Harness):
         assert Participant.from_username('alice').giving == Decimal('0.00')
         assert Team.from_slug(team.slug).receiving == Decimal('0.00')
 
+    # credit_card_expiring
+
+    def test_credit_card_expiring_no_card(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        assert alice.credit_card_expiring() == None
+
+    @mock.patch.object(CreditCard, "from_route")
+    def test_credit_card_expiring_valid_card(self, cc):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        cc.return_value = CreditCard(
+            expiration_year=2050,
+            expiration_month=12
+        )
+
+        assert alice.credit_card_expiring() == False
+
+    @mock.patch.object(CreditCard, "from_route")
+    def test_credit_card_expiring_expired_card(self, cc):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        cc.return_value = CreditCard(
+            expiration_year=2010,
+            expiration_month=12
+        )
+
+        assert alice.credit_card_expiring() == True
 
     # get_age_in_seconds - gais
 
