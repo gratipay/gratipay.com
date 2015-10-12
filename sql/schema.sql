@@ -708,3 +708,7 @@ END;
 BEGIN;
     ALTER TABLE exchanges ADD COLUMN ref text DEFAULT NULL;
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3814
+ALTER TABLE participants REMOVE COLUMN number;
