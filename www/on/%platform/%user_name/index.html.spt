@@ -34,7 +34,7 @@ if is_team:
                                     "{0} is a team with {n} public members",
                                     nmembers, friendly_name)
     allow_team_connect = platform.allows_team_connect
-    if user.ANON or not user.participant.IS_PLURAL:
+    if user.ANON:
         allow_team_connect = False
     if allow_team_connect:
         user_accounts = user.participant.get_accounts_elsewhere()

@@ -177,29 +177,6 @@ class Participant(Model):
         """, (str(self.id),))
 
 
-    # Number
-    # ======
-
-    @property
-    def IS_SINGULAR(self):
-        return self.number == 'singular'
-
-    @property
-    def IS_PLURAL(self):
-        return self.number == 'plural'
-
-    def update_number(self, number):
-        with self.db.get_cursor() as c:
-            add_event(c, 'participant', dict(action='set', id=self.id, values=dict(number=number)))
-            self.remove_all_members(c)
-            c.execute("""
-                UPDATE participants
-                   SET number=%s
-                 WHERE id=%s
-            """, (number, self.id))
-        self.set_attributes(number=number)
-
-
     # Statement
     # =========
 
@@ -374,7 +351,6 @@ class Participant(Model):
 
             UPDATE participants
                SET anonymous_giving=False
-                 , number='singular'
                  , avatar_url=NULL
                  , email_address=NULL
                  , claimed_time=NULL
@@ -1566,7 +1542,6 @@ class Participant(Model):
         output = { 'id': self.id
                  , 'username': self.username
                  , 'avatar': self.avatar_url
-                 , 'number': self.number
                  , 'on': 'gratipay'
                   }
 
