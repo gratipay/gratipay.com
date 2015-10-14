@@ -129,7 +129,7 @@ class Team(Model):
 
         # This next step is easy for now since we don't have payroll.
         from gratipay.models.participant import Participant
-        Participant.from_username(self.owner).update_taking()
+        Participant.from_username(self.owner).update_taking(cursor or self.db)
 
         self.set_attributes( receiving=r.receiving
                            , nreceiving_from=r.nreceiving_from
