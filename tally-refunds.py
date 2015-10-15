@@ -11,7 +11,7 @@ def title(title):
 def report(*patterns):
     N = 0
     for pattern in patterns:
-        n = int(commands.getoutput('grep "{}" refund.log | wc -l'.format(pattern)))
+        n = int(commands.getoutput('grep "{}" refunds.log | wc -l'.format(pattern)))
         N += n
         print("{:<28} {:>5}".format(pattern, n))
     print("{:<28} {:>5}".format('', N))

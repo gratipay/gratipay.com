@@ -69,10 +69,10 @@ def process_participant(cur, participant, counts):
                       )
         counts.total += params['refund_amount']
         counts.by_network[params['network']] += params['refund_amount']
-        if exchange['network'] == 'balanced-cc':
+        if exchange['network'] == 'braintree-cc':
             print('{},{},{},{},{}'.format( params['timestamp']
                                          , exchange['ref']
-                                         , str(params['refund_amount']).replace('.', '')
+                                         , params['refund_amount']
                                          , exchange['participant']
                                          , exchange['route']
                                           ))
