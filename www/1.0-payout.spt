@@ -12,11 +12,6 @@ title = _("Status of Your 1.0 Payout")
 receiving, ntips = user.participant.get_old_stats()
 balance = user.participant.balance
 status = user.participant.status_of_1_0_payout
-
-deadline = datetime(2115, 10, 2).date()
-now = datetime.utcnow().date()
-delta = (deadline - now).total_seconds()  # will be zero on Oct 2
-applications_open = delta > 0
 [---] text/html
 {% extends "templates/base.html" %}
 {% block content %}
@@ -26,7 +21,7 @@ applications_open = delta > 0
            ) }}</i></p>
 
 {% if status == 'too-little' %}
-    <p>{{ _( "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout threshold of {minimum}{_b}, and will be refunded to the original donors on October 8."
+    <p>{{ _( "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout threshold of {minimum}{_b}."
            , minimum=format_currency(0.5, 'USD')
            , a='<a href="/about/me/history/">'|safe
            , _a='</a>'|safe
@@ -66,9 +61,8 @@ applications_open = delta > 0
            , b='<b>'|safe
            , _b='</b>'|safe
             ) }}</p>
-    <p>{{ _("Your balance will be refunded to the original donors on October 8.") }}</p>
 
-    {% elif applications_open %}
+    {% else %}
     {% if user.participant.has_payout_route %}
     <p><button class="apply-for-payout">{{ _("Apply for a payout") }}</button></p>
     {% else %}
@@ -77,12 +71,6 @@ applications_open = delta > 0
            , _a='</a>'|safe
             ) }}</p>
     {% endif %}
-
-    <p>{{ _( "You have until {b}October 1 at 11:59 PM UTC{_b} to apply for a payout."
-           , balance=format_currency(balance, 'USD')
-           , b='<b>'|safe
-           , _b='</b>'|safe
-            ) }}</b></p>
 
     {% if ntips %}
     <p>{{ ngettext(
@@ -96,8 +84,6 @@ applications_open = delta > 0
            , _b='</b>'|safe
             ) }}</p>
     {% endif %}
-    {% else %}
-    <p>{{ _("The deadline for 1.0 payout applications was October 1, 2015 at 11:59 PM UTC, and is now passed. Your balance will be refunded to the original donors on October 8.") }}</p>
     {% endif %}
 {% endif %}
 {% endblock %}
