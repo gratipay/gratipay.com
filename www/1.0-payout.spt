@@ -13,7 +13,7 @@ receiving, ntips = user.participant.get_old_stats()
 balance = user.participant.balance
 status = user.participant.status_of_1_0_payout
 
-deadline = datetime(2015, 10, 2).date()
+deadline = datetime(2115, 10, 2).date()
 now = datetime.utcnow().date()
 delta = (deadline - now).total_seconds()  # will be zero on Oct 2
 applications_open = delta > 0
