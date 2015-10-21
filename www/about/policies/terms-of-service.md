@@ -220,15 +220,12 @@ responsible for the activity.
 
 1. Gratipay's Service Providers
 
-  1. Gratipay uses Pound Payments Inc., Braintree Payments as a third
-     party service provider for payment services (e.g. card acceptance,
-merchant settlement, and related services). By making use of some or all of
-these payment services on Gratipay you agree to be bound by Braintree's [Braintree Payment Services Agreement](https://www.braintreepayments.com/legal/payment-services-agreement) and [privacy
-policy](https://www.paypal.com/us/webapps/mpp/ua/privacy-full), and hereby consent and
-authorize us to delegate the authorizations and share the information you
-provide to us with Braintree to the extent required to provide the payment
-services to you.  Braintree may also be contacted directly for payments support
-either by email at support@braintreepayments.com or by phone at +1 (877) 434-2894.
+  1. Gratipay uses Braintree, a division of PayPal, Inc. ("Braintree") for
+     payment processing services. By using the Braintree payment processing
+services you agree to the [Braintree Payment Services
+Agreement](https://www.braintreepayments.com/legal/payment-services-agreement),
+and the applicable [bank
+agreement](https://www.braintreepayments.com/legal/bank-agreement-us).
 
 1. Nonprofits and Charities using Gratipay
 
