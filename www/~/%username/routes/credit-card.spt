@@ -110,9 +110,7 @@ else:
 
         <p class="info">Credit card information is stored and processed by
             <a href="https://www.braintreepayments.com/">Braintree</a>. Here
-            are their <a href="https://www.braintreepayments.com/legal/payment-services-agreement">Braintree Payment Services Agreement</a>
-            and <a href="https://www.paypal.com/us/webapps/mpp/ua/privacy-full">Privacy Policy</a> (NB: The PayPal Privacy Policy applies to your usage of the Braintree Services).
-        </p>
+            are their <a href="https://www.braintreepayments.com/legal">legal agreements</a>.</p>
 
         <a href="https://www.braintreegateway.com/merchants/msjyyvtsvvnc4ny6/verified" target="_blank">
             <img src="https://s3.amazonaws.com/braintree-badges/braintree-badge-dark.png" width="164px" height ="44px" border="0"/>
