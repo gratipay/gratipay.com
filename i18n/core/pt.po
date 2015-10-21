@@ -1296,8 +1296,7 @@ msgstr ""
 
 msgid ""
 "To minimize processing fees, we charge your credit card at least $10 at a "
-"time (anything extra stays in Gratipay to use in future weeks). {0}Read "
-"More{1}"
+"time. {0}Read more ...{1}"
 msgstr ""
 
 msgid "Full Name on Card"
