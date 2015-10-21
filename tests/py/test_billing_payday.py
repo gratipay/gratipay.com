@@ -152,6 +152,28 @@ class TestPayday(BillingHarness):
         assert obama.balance == D('0.00')
         assert homer.balance == D('0.00')
 
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def test_refund_of_excess_balance(self, fch):
+        Simpsons = self.make_team('simpsons','homer',is_approved=True)
+        self.db.run("""
+            insert into payments (participant, team, amount, direction) values('obama','simpsons',20,'to-participant')
+        """)
+        self.db.run("""
+            UPDATE participants SET balance = 20 WHERE username='obama'
+        """)
+        Enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(Enterprise, '5.00')
+
+        fch.return_value = {}
+        Payday.start().run()
+
+        obama = Participant.from_username('obama')
+        picard = Participant.from_username('picard')
+
+        assert picard.balance == D('5.00')
+        assert obama.balance == D('0.00')
+        assert obama.get_due('TheEnterprise') == D('0.00')
+
     @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
     @mock.patch('gratipay.billing.payday.create_card_hold')

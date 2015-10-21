@@ -42,6 +42,68 @@ def repr_exception(e):
         return repr(e)
 
 
+def create_card_credit_hold(db, participant, amount):
+    """Create a hold on the participant's credit card for a refund.
+
+    Amount should be the nominal amount.
+
+    """
+
+    typecheck(amount, Decimal)
+
+    username = participant.username
+
+    # Perform some last-minute checks.
+    # ================================
+
+    if participant.is_suspicious is not False:
+        raise NotWhitelisted      # Participant not trusted.
+
+    route = ExchangeRoute.from_network(participant, 'braintree-cc')
+    if not route:
+        return None, 'No credit card'
+
+    # Go to Braintree.
+    # ================
+
+    cents, amount_str, charge_amount, fee = _prep_hit(amount)
+    cents = int(amount * 100)
+    msg = "Holding " + str(amount) + " on Braintree for " + username + " ... "
+
+    hold = None
+    error = ""
+    try:
+        result = braintree.Transaction.credit({
+            'amount': str(cents/100.0),
+            'customer_id': route.participant.braintree_customer_id,
+            'payment_method_token': route.address,
+            'options': { 'submit_for_settlement': False },
+            'custom_fields': {'participant_id': participant.id}
+        })
+
+        if result.is_success and result.transaction.status == 'authorized':
+            log(msg + "succeeded.")
+            error = ""
+            hold = result.transaction
+        elif result.is_success:
+            error = "Transaction status was %s" % result.transaction.status
+        else:
+            error = result.message
+
+        if error == '':
+            log(msg + "succeeded.")
+        else:
+            log(msg + "failed: %s" % error)
+            record_exchange(db, route, amount, fee, participant, 'failed', error)
+
+    except Exception as e:
+        error = repr_exception(e)
+        log(msg + "failed: %s" % error)
+        record_exchange(db, route, amount, fee, participant, 'failed', error)
+
+    return hold, error
+
+
 def create_card_hold(db, participant, amount):
     """Create a hold on the participant's credit card.
 
@@ -103,7 +165,7 @@ def create_card_hold(db, participant, amount):
     return hold, error
 
 
-def capture_card_hold(db, participant, amount, hold):
+def capture_card_hold(db, participant, amount, hold, trantype='sale'):
     """Capture the previously created hold on the participant's credit card.
     """
     typecheck( hold, braintree.Transaction
@@ -116,9 +178,14 @@ def capture_card_hold(db, participant, amount, hold):
     route = ExchangeRoute.from_address(participant, 'braintree-cc', hold.credit_card['token'])
     assert isinstance(route, ExchangeRoute)
 
-    cents, amount_str, charge_amount, fee = _prep_hit(amount)
-    amount = charge_amount - fee  # account for possible rounding
-    e_id = record_exchange(db, route, amount, fee, participant, 'pre')
+    if trantype == 'sale':
+        cents, amount_str, charge_amount, fee = _prep_hit(amount)
+        amount = charge_amount - fee  # account for possible rounding
+        e_id = record_exchange(db, route, amount, fee, participant, 'pre')
+    else:
+        amount_str = str(amount)
+        cents = int(amount * 100)
+        e_id = record_exchange(db, route, -amount, 0, participant, 'pre')
 
     # TODO: Find a way to link transactions and corresponding exchanges
     # meta = dict(participant_id=participant.id, exchange_id=e_id)

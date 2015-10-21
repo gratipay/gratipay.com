@@ -19,7 +19,7 @@ import braintree
 import aspen.utils
 from aspen import log
 from gratipay.billing.exchanges import (
-    cancel_card_hold, capture_card_hold, create_card_hold, upcharge, MINIMUM_CHARGE,
+    cancel_card_hold, capture_card_hold, create_card_hold, create_card_credit_hold, upcharge, MINIMUM_CHARGE,
 )
 from gratipay.exceptions import NegativeBalance
 from gratipay.models import check_db
@@ -152,12 +152,15 @@ class Payday(object):
             self.prepare(cursor)
             holds = self.create_card_holds(cursor)
             self.process_payment_instructions(cursor)
+            crholds = self.create_card_credit_holds(cursor)
             self.transfer_takes(cursor, self.ts_start)
             self.process_draws(cursor)
             payments = cursor.all("""
                 SELECT * FROM payments WHERE "timestamp" > %s
             """, (self.ts_start,))
             try:
+                for key in crholds:
+                    holds[key] = crholds[key]
                 self.settle_card_holds(cursor, holds)
                 self.update_balances(cursor)
                 check_db(cursor)
@@ -194,6 +197,41 @@ class Payday(object):
                 holds[p_id] = hold
             else:
                 cancel_card_hold(hold)
+        return holds
+
+
+    def create_card_credit_holds(self, cursor):
+        holds = {}
+        participants = cursor.all("""
+            SELECT *
+              FROM payday_participants
+             WHERE new_balance > 0
+               AND has_credit_card
+               AND is_suspicious IS false
+        """)
+        if not participants:
+            return {}
+
+        # Fetch existing holds
+        participant_ids = set(p.id for p in participants)
+        holds = self.fetch_card_holds(participant_ids)
+
+        # Create new holds and check amounts of existing ones
+        def f(p):
+            amount = p.new_balance
+            if p.id in holds:
+                if holds[p.id].amount > 0:
+                    return
+                else:
+                    # The amount is too low, cancel the hold and make a new one
+                    cancel_card_hold(holds.pop(p.id))
+            hold, error = create_card_credit_hold(self.db, p, amount)
+            if error:
+                return 1
+            else:
+                holds[p.id] = hold
+        threaded_map(f, participants)
+
         return holds
 
 
@@ -310,6 +348,21 @@ class Payday(object):
             capture_card_hold(self.db, p, amount, holds.pop(p.id))
         threaded_map(capture, participants)
         log("Captured %i card holds." % len(participants))
+
+        participants = cursor.all("""
+            SELECT *
+              FROM payday_participants
+             WHERE new_balance > 0
+        """)
+        participants = [p for p in participants if p.id in holds]
+
+        log("Capturing card refund holds.")
+        # Capture holds to refund excess balances
+        def capture(p):
+            amount = p.new_balance
+            capture_card_hold(self.db, p, amount, holds.pop(p.id),'credit')
+        threaded_map(capture, participants)
+        log("Captured %i card refund holds." % len(participants))
 
         log("Canceling card holds.")
         # Cancel the remaining holds

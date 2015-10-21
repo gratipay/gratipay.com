@@ -3,20 +3,20 @@ interactions:
     body: <customer></customer>
     headers: {}
     method: POST
-    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/customers
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/tptcphgdr6c3kvkr/customers
   response:
     body:
       string: !!binary |
-        H4sIAG3ak1UAA5SRQVODMBCF7/0VmdwjSS3WdgK9+QvqxdvKLpBKApMEC/9eip3WGfTg8b0vb/fN
-        Rh8G27BP8sG0LuPqQXJGrmjRuCrjr8cX8cwP+UoXfYitJZ+vGNMG88dUPslUbnQyiYs3saIGF8Wk
-        T7vqjOUJP4bR1lh5nfykl9el8SEKB5aYM03Go++JJzNq4C9StLYDNy58smCahdvVrVvOKGFYeGd6
-        Dyb+ss8TREIBkcWxo4zjJKOxxPO1VKmQWyHVUa33arvf7N50cg/M+b7D/+Xvge/9881FaajBcKuE
-        JooCPIbrUPAexmtjQPQUAi3Y1O32gV8AAAD//wMA0gM70fMBAAA=
+        H4sIADRKDlYAA5SRwW7CMBBE73yF5bubGEoKyAm3fgG99La1N8Qidix7Q8nfN6QIKqU99DjzPLuj
+        tdpfXMvOGJPtfMnlU84Zet0Z648lfzu8ig3fVwul+0Sdw1gtGFPWVMVmvXre5i8qG8XVG5luwJMY
+        NQXSoTmaWOjV6XyKKvtJr69rGxMJDw6Zt23JKfbIswm18BfRnQvgh5mPDmw7c0PT+fmMGi4z7xM/
+        kqVf9kUEQiOAGA0BS25GSdYhr5a5XAuZi3x5yLc7KXeyeFfZIzDl+2D+l38EvvdPNxe1xdakeyVj
+        SWiIJt2GQoww3BqDMRFTwhkbu90/8AsAAP//AwB2Vt7o8wEAAA==
     headers:
       cache-control: ['max-age=0, private, must-revalidate']
       content-encoding: [gzip]
       content-type: [application/xml; charset=utf-8]
-      etag: ['"c0a8976b346e51bb42e6128bb3fac612"']
+      etag: ['"155e9aacfabfbb9f8c3f533c3391ff26"']
       strict-transport-security: [max-age=31536000, max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
       vary: [Accept-Encoding]
@@ -25,50 +25,50 @@ interactions:
     body: <customer></customer>
     headers: {}
     method: POST
-    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/customers
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/tptcphgdr6c3kvkr/customers
   response:
     body:
       string: !!binary |
-        H4sIAG/ak1UAA5SRwW6DMBBE7/kKy3cXTEBpI0Nu/YL00tuWXcApNsg2Cfx9CY2SSrSHHmeeZ3e0
-        VofRtOxMzuvO5lw+xZyRLTvUts752/FVPPNDsVHl4ENnyBUbxpTGQso03WZJqqJZXL2ZlQ3YIGZ9
-        eqkvWJ3wc5xMg7VT0U96fV1p54OwYIhZ3eY8uIF4tKAW/iJlZ3qw08onA7pduX3T2fWMCsaVd6EP
-        r8Mv+xxBIBQQWJh6yjnOMmhDvEhimYl4J2J5lMle7vaZfFfRI7Dkhx7/l38EvvcvNxeVphb9vRLq
-        IEpw6G9DwTmYbo0B0ZH3tGJzt/sHfgEAAP//AwBna82J8wEAAA==
+        H4sIADVKDlYAA5SRzW7DIBCE73kKxJ0aXOWnEXZufYL00tsWNjGKwQjWafz2ddwoqeT20OPMx+yO
+        Fr27+JadMWXXhYqrJ8kZBtNZF44Vf9u/ig3f1Qtt+kydx1QvGNPO1uuV3JRLJXUxiqs3MtNAIDFq
+        imRic7RpZZ5P51PSxU96fX1wKZMI4JEF11acUo+8mFALfxHT+QhhmPnowbUzNzZdmM84wGXmfeJH
+        dvTLvoRAaAUQoyFixe0oyXnkdSnVUigpZLmXL1ultmr9rotHYMr30f4v/wh8759uLg4OW5vvlawj
+        YSDZfBsKKcFwawzWJswZZ2zsdv/ALwAAAP//AwBOFi3S8wEAAA==
     headers:
       cache-control: ['max-age=0, private, must-revalidate']
       content-encoding: [gzip]
       content-type: [application/xml; charset=utf-8]
-      etag: ['"b179a0644dabf894a946a41b7ca3b25f"']
+      etag: ['"89af244931b80b7c1acfe4501772cd5d"']
       strict-transport-security: [max-age=31536000, max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
       vary: [Accept-Encoding]
     status: {code: 201, message: Created}
 - request:
-    body: !!python/unicode '<payment_method><customer_id>11443524</customer_id><payment_method_nonce>fake-valid-nonce</payment_method_nonce></payment_method>'
+    body: !!python/unicode '<payment_method><customer_id>76082510</customer_id><payment_method_nonce>fake-valid-nonce</payment_method_nonce></payment_method>'
     headers: {}
     method: POST
-    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/payment_methods
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/tptcphgdr6c3kvkr/payment_methods
   response:
     body:
       string: !!binary |
-        H4sIAHHak1UAA6xVTXPaMBC98ysY34U/MAnJGGV66bGXJj30kpGlNdYgS44kk/DvuzIGHAJpO+2N
-        ffu0H89Ponh4a9R0C9ZJo1dROkuiKWhuhNTrVfT0+JUsowc6KbgFIT3hzAo6mU6LUiqFFMKEsOBc
-        wBCVguavRSzFEPPOedOAJYikaZ7PF1lexGN0z6ukdZ5o1sBUS7WKvO0gioekYtdz3DQt07sLGect
-        gD/Md4EAbx60APEJRRnOlPSXyltYo2AXEq1xnimCCgK9y9PktojH0GHsTnu76yHCVFuz7OJy56z5
-        71i6Q10l/4R2TUgLzAcx/NTvWlhFAkMvG4holqQLktySJH1Ms/v09n6R/cSPeDwwVOha8XcVTgd6
-        R8UXLIU20zRP0my5DHndY8GDJLSgP6RjOMkxPmRrowTa69KqwTEoEZdM0Se90eZVY4UTNhlJZSoi
-        neuY5kCfvn8JvI+Jyb+L92fX5MQKtvToPhxqxDqigSuglP604D7cJyrWqcOcpTEKmI5oECjQ+uSe
-        2FkUnKDPOxVmHRU7z0z629RK2/cnjdG+pmlWxB/AM+YOmEWFsuQdtUePTBDns1ZMORhODN1rYMrX
-        +OnhNOYICxTZsDWQzipae9+6+zhmzoF3s9IyqcNjscZlXtluhm6IW7ZrQPvnBnxtxLMyaxNv0W2z
-        Vq8fQG+lNToQVo5pUZo3fPOO9ftuaI/g5ZLpzWmkd+jk8LTlNF0u0yIegoBje2vUyKEHoE9aaBl6
-        4ptBfPgdcNeVjlvZBhHdIBqzlu0G53uzAU3LTd2+NEW8jwLeafnS9U9H2ZsN15KVBEvzOV/maSU4
-        n/N5dXMzv1lUsEiTOYcllByv5NWjk//wIGxBN4Y4sbligGN+YFtsvb8CH7bvb9zp/+sXAAAA//8D
-        AM/WZvz1BgAA
+        H4sIADZKDlYAA6xVu3LbMBDs9RUa9hAfoiPKQ8GTJmWa2CnSZEDiSCECAQYAZfPvc6Coh2XKSSbp
+        dHuLeywXUP7w0sj5HowVWm2CeBEFc1Cl5kLVm+Dp8RPJggc6y0sDXDhSMsPpbD7PCyElUgjj3IC1
+        HkNUcNryPBR8jMvOOt2AIYisPkRZchdHeXiJHniVMNYRxRqYKyE3gTMdBOGYlOx2rtRNy1Q/kbHO
+        ALjjfBMEeHGgOPB3KFKXTAo3Vd5AjYJNJFptHZMEFQS6TuNolYeX0HHsTjnTDxBhst2yZHK5a9by
+        dyzVoa6ifId2S0gDzHkx3Nz1LWwCjqETDQQ0ieI7EkckSh6j9X0c38fZN/yIpwNjha7lf1fhfGBw
+        VDhhKbSZomkUJ1nm82rAvAeJb0G/CstwklN8zG615GivqVW9Y1CiUjBJn9RO6WeFFc7Y7EIqXRFh
+        bcdUCfTpy0fPe5uY/bt4f3ZNzixvS4fuw6EuWCfUczkUwp0XPISHRMU6eZyz0FoCUwH1AnnakDwQ
+        O4OCE/R5J/2sF8WuM7PhNrXCDP1Jo5Xb0jjJwzfgFbMHZlChJHpFHdATE/j1rBWTFsYTY/ctMOm2
+        +OnhPOYF5imiYTWQzki6da6192HIrAVnF4VhQvnHosZlnlm/QDeELesbUO57A26r+Xepax3u0W2L
+        VtUPoPbCaOUJG8sUL/QLvnmn+kM3tIf3csHU7jzSK3R2fNpSGmdZnIdj4HFsb7S8cOgRGJIGWoae
+        +KwRH3973HaFLY1ovYh2FI0Zw/rR+U7vQNFqWS9/1Hl4iDzeKfGzG56OYjAbriUqAYZW6TqL09Wq
+        WKZJmaXlah1Vq7Rg63WSpVW8xit86+jsPzwIe1CNJpbvbhjglB/ZBlsfrsCb7Ycbd/7/+gUAAP//
+        AwDcqanq9QYAAA==
     headers:
       cache-control: ['max-age=0, private, must-revalidate']
       content-encoding: [gzip]
       content-type: [application/xml; charset=utf-8]
-      etag: ['"d5c1968be63e8a7a1e806856b74d2680"']
+      etag: ['"aca26c1f969bdbb850574f18065a7edd"']
       strict-transport-security: [max-age=31536000, max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
       vary: [Accept-Encoding]
