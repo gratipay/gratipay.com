@@ -4,6 +4,7 @@ import re
 
 from aspen import Response
 
+import mock
 import pytest
 from gratipay.security.user import SESSION
 from gratipay.testing import Harness
@@ -207,7 +208,9 @@ class TestPages(Harness):
         headers = self.client.GET('/about/').headers
         assert headers['X-XSS-Protection'] == '1; mode=block'
 
-    def test_braintree_linked_from_credit_card_page(self):
+    @mock.patch('gratipay.models.participant.Participant.get_braintree_account')
+    @mock.patch('gratipay.models.participant.Participant.get_braintree_token')
+    def test_braintree_linked_from_credit_card_page(self, foo, bar):
         self.make_participant('alice', claimed_time='now')
         body = self.client.GET("/~alice/routes/credit-card.html", auth_as="alice").body
         assert  "Braintree" in body
