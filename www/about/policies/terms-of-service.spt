@@ -238,17 +238,15 @@ responsible for the activity.</li>
 <li><p>Gratipay&#39;s Service Providers</p>
 
 <ol>
-<li>Gratipay uses Pound Payments Inc., DBA Balanced (&ldquo;Balanced&rdquo;) as a third
-party service provider for payment services (e.g. card acceptance,
-merchant settlement, and related services). By making use of some or all of
-these payment services on Gratipay you agree to be bound by Balanced&#39;s <a href="https://www.balancedpayments.com/terms">terms
-and conditions</a> and <a href="https://www.balancedpayments.com/privacy">privacy
-policy</a>, and hereby consent and
-authorize us to delegate the authorizations and share the information you
-provide to us with Balanced to the extent required to provide the payment
-services to you.  Balanced may also be contacted directly for payments support
-either by email at <a href="mailto:support@balancedpayments.com">support@balancedpayments.com</a> or by phone at +1 (888)
-744-2622.</li>
+
+<li>Gratipay uses Braintree, a division of PayPal, Inc.
+(&ldquo;Braintree&rdquo;) for payment processing services. By using the
+Braintree payment processing services you agree to the <a
+    href="https://www.braintreepayments.com/legal/payment-services-agreement">Braintree
+    Payment Services Agreement</a>, and the applicable <a
+    href="https://www.braintreepayments.com/legal/bank-agreement-us">bank
+    agreement</a>.</li>
+
 </ol></li>
 <li><p>Nonprofits and Charities using Gratipay</p>
 
