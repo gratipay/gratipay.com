@@ -82,9 +82,10 @@ take a cut.<p>
 maximum is $1,000 per week, and is intended to reduce income volatility by
 reducing how dependent a Team is on a few sources of income.</p>
 
-<p>Our minimum credit/debit card charge is $10. We charge in arrears. For
-example, we'll charge $10 (+ fees) at the end of ten weeks for a $1/wk
-subscription.</p>
+<p>Our minimum credit/debit card charge is $10. We <a
+    href="https://medium.com/gratipay-blog/charging-in-arrears-18cacf779bee#.z92kxeqt6">charge
+    in arrears</a>. For example, we'll charge $10 (+ fees) at the end of ten
+weeks for a $1/wk subscription.</p>
 
 
 <h2 id="promoting">What can I do to promote my Gratipay Team?
@@ -111,6 +112,10 @@ little money.</p>
 happened (most likely first):</p>
 
 <ol>
+    <li>Due to the way we handle <a href="#limits">minimum charges</a>, it's
+    possible that (for example) you might see a $10 payment every 10
+    weeks.</li>
+
     <li>A ~user decreased or entirely removed their payment to your Team,
       or their Gratipay account was closed. As Gratipay payments are
       anonymous, we cannot tell you who.</li>
