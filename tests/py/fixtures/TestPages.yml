@@ -7,14 +7,14 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA52TP0/DMBDFv4vntE5S2oIlBBsjCxNL5SQmOcmxLf8JKlG/O+c4QOiAFKbE1r3f
-        PT/djUTqFhRhpLXcg+FnkhFoCCuONzf5cZcRPnDP7SlYiUWd98YxStOl27bgu1AFJ2ytlRfKb2vd
-        00Bn9cNwv0MeohMkggleXMEMzKCkRpqjCzud7+VV/9R3Kl8Uvmkp9Tuqr93+1YB+q9BY+gfV/oOA
-        qpFq3wkMC59wiQ8H59eZmRQjjZ8TNJHhMH0rmlWGZg3aeVfoZKRWGD3BQuVqC8aDVuuM/VIiSduW
-        K/jAmVlLQqVDQLS0zsKkQKUYcNDWSZNkpMbCwOtzjMKKWsCAwf4Dd6VFmj8bgbP9vEglxg1enHjT
-        xwV749KJjCjex8Knn23DITZcnQlTQcqMVLiQi037Gu9p1hEpdT1lnhZJ9BziXrpgjLb+cVmNxR1Y
-        wSuJDWc26KQzoZJQn1KibHeXkflmmj/C8q9VwGVanHDEp1ONWI/RcY+4Mi/KTb7fFIeXvGD5ke33
-        r9g7mOZXzX6THzbl8aW4ZbtbVpav5PIJh7jgZn0EAAA=
+        H4sIAAAAAAAAA52TT0+EMBDFv0vPrAXWFdPE6M2jlz152RSoMElpm/5hsxK/u1OKinswwRO0mfeb
+        15eZiUjdgSKMdJZ7MPxCMgItYUV1e5tX+4zwkXtuT8FKLOq9N45Rmi7dTQe+D3VwwjZaeaH8TaMH
+        Guiifhwf9shDdIJEMMGLK5iBBZTUSHN0Zaf3g7zqn/rO5avCNy2lPqP62u1fDei3Co2lf1DdPwio
+        mqj2vcCw8Akf8eHg/DYzs2Ki8XOCNjIcpm9Fu8nQokE7Z4VOJmqF0TMs1K6xYDxotc3YLyWStO24
+        gnecma0kVDoEREvbLMwKVIoRB22bNEkmaiyMvLnEKKxoBIwY7D9wV1qk+YsRONsvq1Ri3ODFibdD
+        XLA3Lp3IiOJDLHz+2TYcYsPVhTAVpMxIjQu52rSv8Z5nHZFSN3PmaZHEwCHupQvGaOuf1tVY3IMV
+        vJbYcGGDTjoTagnNKSXK9lVGlpt5/gjLv1YBl2l1whGfTw1iPUbHPeLKvCh3+WFX3B3zguUVOxxe
+        sXcw7a+awy6/25XVsbhn+3tWlq/k4xOQ9WwgfQQAAA==
     headers:
       access-control-allow-credentials: ['true']
       access-control-allow-origin: ['*']
@@ -25,140 +25,7 @@ interactions:
       content-encoding: [gzip]
       content-security-policy: [default-src 'none']
       content-type: [application/json; charset=utf-8]
-      etag: [W/"ac0d5021f958c09dd3f37c46cdb4a338"]
-      last-modified: ['Sat, 27 Jun 2015 18:38:22 GMT']
-      status: [200 OK]
-      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
-      transfer-encoding: [chunked]
-      vary: [Accept, Accept-Encoding]
-    status: {code: 200, message: OK}
-- request:
-    body: null
-    headers: {}
-    method: GET
-    uri: https://api.github.com:443/orgs/gratipay/public_members
-  response:
-    body:
-      string: !!binary |
-        H4sIAAAAAAAAA63Y326bMBQG8HfhuioQAiWVpmkXe4Jt2sU0VTRxiTcCCEyiNuq7z8b4D1SlOz7u
-        Tav0fB8nND85za9rUDUlrYP74Ou3n1++BzcBPQT3WbrN8pugOBes6B6GruK/PzLW9vdhKB/sb0vK
-        jsPj0JNu39SM1Ox235zCIRyzn8+fEt5VdlOFKA34A4uqlk41Msu7+lDtcWSnanFpeclxVk09NVXV
-        XHhuueW71aGO8H3kz7QuoXEeuYYNOxJ+e/jar+LJ0p4B1hjHr6H49kAPoqDnN7sjh/9fZQrwRS41
-        3+EadqRtxqbhsd93tGW0qQErzWK8punKoqYvBbCGx3qeFssALj6O8xg589cSICfnr2Hb0XOxfxZP
-        vyN7Qs/8TkK7FkFexZ5bwl+6P/jfWNxXyshDcTgJME9F1ZPXGwNoX7SsTk4RnxMv9zTfbtLEEZEM
-        IxRZy6xDsgZBllTOndOiASNKV6FQ6RZ/rkylLdKFlm6C6tJBODAd9WPM2mTmE8isamoSR3E+Odts
-        sixxPaxkGOPM2uYDaNYkTJoKIqgtKlDWdBcOm67xqM10ornpKrA3nXQAp7OexFm7IMiVHSnLiojT
-        WZxsyW6TOr89lGGEOGuZdXDWIMibyrlzWzRgtOkqFDbd4s+aqcRS001QaToIh6ajfpxZmyCYtX9e
-        JmFxHEeR41vHMYvwJbdYpyVnQKp4xB2UCWMsiRYUI1HgT9DYhsUjSqBuRAZORqT8aJHXR0DpmiNl
-        bTFUf9WJlO+S9M71n61EphFmZgut05mNggSZpDukNx0YT1YZipXV40+XXYpFZnVBrVlRODkr7Efe
-        bBsMwOF0ogpflkS7aOd4Wskwhp5a5QN2agxGbkwhuNl5FDVZhGMmOzwSmwrRvGQPmJaMObCSQU+k
-        1BYITj0p6orWfUWepwMty/lX5mpqDCNMzfdZhzWfBemyou7E3pZgnNltKGx2kT9xs1YsO7sMas/O
-        wgHaaT8K5/sgKDKyP7Km1odbGqd57nq4yTACor3NOkN7EoRQB90JLiswAE0Xip+p8YfP6sTSM1VQ
-        eCYJZ2eyftDZu2DIXZrqqW/q6ejbRZtt7vp5vgxjxJllPgBnBmHephyC27wBpU1V4bCpFo/WdCWa
-        mmoCS1NBB2gq6smZ2QTB7MI/M0mTO/UJY7LdpqnjG8x4DCOUmV3WkZk5kLEp5k5sXoARpppQwFSJ
-        P1+6EctLFUF1qRwcl0r6sWX2gNL6/Q+sTyNoPCUAAA==
-    headers:
-      access-control-allow-credentials: ['true']
-      access-control-allow-origin: ['*']
-      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
-          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
-          X-Poll-Interval']
-      cache-control: ['public, max-age=60, s-maxage=60']
-      content-encoding: [gzip]
-      content-security-policy: [default-src 'none']
-      content-type: [application/json; charset=utf-8]
-      etag: [W/"9642a45aeac05a600f2814bb6dd33663"]
-      status: [200 OK]
-      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
-      transfer-encoding: [chunked]
-      vary: [Accept, Accept-Encoding]
-    status: {code: 200, message: OK}
-- request:
-    body: !!python/unicode <customer><custom_fields><participant_id type="integer">1</participant_id></custom_fields></customer>
-    headers: {}
-    method: POST
-    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/customers
-  response:
-    body:
-      string: !!binary |
-        H4sIAF26mlUAA5SRzXKCMBSF9z4Fk30awEHUCbjrE9hNd7fci0RJYJJY4e1LLB07pV10ec7Jd/8i
-        D4Nuo3eyTnWmYMlTzCIyVYfKnAr2cnzmW3YoV7K6Ot9psuUqiqTCMlvn23SXbqSYRPCmrGrAeD7p
-        8+50w/qMl2HUDZ6sFN/T8LpW1nluQFNkVFswb6/ExD1q4a+k6nQPZlz4pEG1C7dvOrOsUcOw8G70
-        5pT/pZ8l8IQcfOTHngqGk/RKEyvTOMl4nPN4c0zyfbrZZ+tXKR7Anb/2+D/+AXz2v9+c14padMEJ
-        W4H1qlL9fMtEih9OAMWCDLug8rwCi26eBqyFcV4VEC05R4vsq1b4+Q8AAAD//wMA+6q9diwCAAA=
-    headers:
-      cache-control: ['max-age=0, private, must-revalidate']
-      content-encoding: [gzip]
-      content-type: [application/xml; charset=utf-8]
-      etag: ['"9f935c55a89628a8dccfdb460e31ad05"']
-      strict-transport-security: [max-age=31536000, max-age=31536000; includeSubDomains]
-      transfer-encoding: [chunked]
-      vary: [Accept-Encoding]
-    status: {code: 201, message: Created}
-- request:
-    body: !!python/unicode <client_token><customer_id>53782926</customer_id><version
-      type="integer">2</version></client_token>
-    headers: {}
-    method: POST
-    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/client_token
-  response:
-    body:
-      string: !!binary |
-        H4sIAF66mlUAA7xVXW+jOhB976+o+r53wTS9i9R2lS8IKDgbkgD2GzakgdiQJgQCv/6O0+ym1VZX
-        K13pPkSR8HjmzDlnxo/fT1Lc1un+kJXF053+l3Z3mxa8TLLi5elutbS+fLv7/nzzyEWWFtWXqtym
-        xfPN7e1jHYtj+py2LqKR28WheXTysp0O3U0S+SUz3F0qLU1996U4UhS0fOLuWDHPZpkrPORvSehn
-        ON/qVHqah7x2ZpPGC4lGll7jSUf3upeOhKsO2/MWviMautJb9o3ZyNriJc0wWul4yU847/eInGtr
-        G7c0tDQa+msSzU0v75/wQmtwCz8xP+GubHFe6nh4r3nduIdHpMFdf++N+o1nnXT4b7HEOjf8moVB
-        GyGx/bGE+t1LO1s6KJqsGm/kIHVG0GbDCn8dh3MzzkWRIF/G0t+nE1HFtl9wcclXDHQiTzuim3sa
-        bU1P0h4PdxqOrM5DXEuK5EQz5+BIXDNJd1QPWjZ0Hhy50ZLJoJtl32oSDXbTAm+Y9DNmvBxJ4W7i
-        sKdxGQiKoN8o2aSLXs6Q9oBH826KdMElLomKac3XWZgY1Kav1K7u01AvqZ20U4QPcRgcE8vccHtb
-        J/m4Jsg8Ugm9RKChLWr2hgvynA407BU08rKZqBLQWLCC7rg0j0zlUHiv+DI4z5ktIMYfcFsEXDZK
-        8zKZ+A3vynqKrCZe9EDb3pZI834q3ZaE4phMXEHDBGoHBom2R8BTzfK55rVmBR7LY9uCGK/+lO/M
-        /FlzrfhysiYjEe5o5HdB5B7Am1k88TU+8R6mLfRsYAG5/o3L7KeXP7uvvk8LKpjU6z/U5pyPSeuQ
-        Rv6OGMBlcciS33Nf+phXwM+GTQTMEO7+tMZ60WSJvYE5CMYrFOSQX/iQBzwoKOgEHOv0kxgn3/3t
-        yFPNUKVz63/yoOGX6n6E/DW/4JiiC4ahawJfDYlEA/6zgLeM2cEWcGq8CMT1rDnzSG3Rcfu0SVfA
-        WbhSfptwtX+iAeA6+/jN72OhchwT8LTKwaVAJMS9DxqPlEeDexLqDbNXZx9OjUGjPJVEWPCtVSjc
-        Z+9/4Kqv9BOpbVWARUzVTC9MjYHWUEv5UfwXL77F4U/mCZc0xHtmBNq0gH6hZzb8dW8bA6/E8IfX
-        +r/63zD7VCfaGTvw6LdJuAKuoC8pWoZ6Fcy9tpTmDObIgJ2+f8f/7ztAmpLCrmNyperqcA54fUHH
-        Vy/AfQl6dsqD7/udo9NO1VqE5/ehAqyamvnLLHSK+3d7d0AQrpNrfJfYTi/u5kZa7LI4d2HPB6/n
-        HWDAuwP9EEO4HJkjhnyh+A8CPHYK7bx3AcNZm/dzQmFOOVJcXLFfan3q5bM3oA4Lv6mYmkqSredP
-        T49f397Jm8evH1/QfwAAAP//AwC1MKnVeAcAAA==
-    headers:
-      cache-control: ['max-age=0, private, must-revalidate']
-      content-encoding: [gzip]
-      content-type: [application/xml; charset=utf-8]
-      etag: ['"7a5b6669d8897bd66b33599f76cef58f"']
-      strict-transport-security: [max-age=31536000, max-age=31536000; includeSubDomains]
-      transfer-encoding: [chunked]
-      vary: [Accept-Encoding]
-    status: {code: 201, message: Created}
-- request:
-    body: null
-    headers: {}
-    method: GET
-    uri: https://api.github.com:443/users/gratipay
-  response:
-    body:
-      string: !!binary |
-        H4sIAAAAAAAAA52TP0/DMBDFv4vntE5S2oIlBBsjCxNL5SQmOcmxLf8JKlG/O+c4QOiAFKbE1r3f
-        PT/djUTqFhRhpLXcg+FnkhFoCCuONzf5cZcRPnDP7SlYiUWd98YxStOl27bgu1AFJ2ytlRfKb2vd
-        00Bn9cNwv0MeohMkggleXMEMzKCkRpqjCzud7+VV/9R3Kl8Uvmkp9Tuqr93+1YB+q9BY+gfV/oOA
-        qpFq3wkMC59wiQ8H59eZmRQjjZ8TNJHhMH0rmlWGZg3aeVfoZKRWGD3BQuVqC8aDVuuM/VIiSduW
-        K/jAmVlLQqVDQLS0zsKkQKUYcNDWSZNkpMbCwOtzjMKKWsCAwf4Dd6VFmj8bgbP9vEglxg1enHjT
-        xwV749KJjCjex8Knn23DITZcnQlTQcqMVLiQi037Gu9p1hEpdT1lnhZJ9BziXrpgjLb+cVmNxR1Y
-        wSuJDWc26KQzoZJQn1KibHeXkflmmj/C8q9VwGVanHDEp1ONWI/RcY+4Mi/KTb7fFIeXvGD5ke33
-        r9g7mOZXzX6THzbl8aW4ZbtbVpav5PIJh7jgZn0EAAA=
-    headers:
-      access-control-allow-credentials: ['true']
-      access-control-allow-origin: ['*']
-      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
-          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
-          X-Poll-Interval']
-      cache-control: ['public, max-age=60, s-maxage=60']
-      content-encoding: [gzip]
-      content-security-policy: [default-src 'none']
-      content-type: [application/json; charset=utf-8]
-      etag: [W/"ac0d5021f958c09dd3f37c46cdb4a338"]
+      etag: [W/"c9af3cd0085b6eda64b21753a149b3d9"]
       last-modified: ['Sat, 27 Jun 2015 18:38:22 GMT']
       status: [200 OK]
       strict-transport-security: [max-age=31536000; includeSubdomains; preload]
@@ -214,14 +81,14 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA52TP0/DMBDFv4vntE5S2oIlBBsjCxNL5SQmOcmxLf8JKlG/O+c4QOiAFKbE1r3f
-        PT/djUTqFhRhpLXcg+FnkhFoCCuONzf5cZcRPnDP7SlYiUWd98YxStOl27bgu1AFJ2ytlRfKb2vd
-        00Bn9cNwv0MeohMkggleXMEMzKCkRpqjCzud7+VV/9R3Kl8Uvmkp9Tuqr93+1YB+q9BY+gfV/oOA
-        qpFq3wkMC59wiQ8H59eZmRQjjZ8TNJHhMH0rmlWGZg3aeVfoZKRWGD3BQuVqC8aDVuuM/VIiSduW
-        K/jAmVlLQqVDQLS0zsKkQKUYcNDWSZNkpMbCwOtzjMKKWsCAwf4Dd6VFmj8bgbP9vEglxg1enHjT
-        xwV749KJjCjex8Knn23DITZcnQlTQcqMVLiQi037Gu9p1hEpdT1lnhZJ9BziXrpgjLb+cVmNxR1Y
-        wSuJDWc26KQzoZJQn1KibHeXkflmmj/C8q9VwGVanHDEp1ONWI/RcY+4Mi/KTb7fFIeXvGD5ke33
-        r9g7mOZXzX6THzbl8aW4ZbtbVpav5PIJh7jgZn0EAAA=
+        H4sIAAAAAAAAA52TT0+EMBDFv0vPrAXWFdPE6M2jlz152RSoMElpm/5hsxK/u1OKinswwRO0mfeb
+        15eZiUjdgSKMdJZ7MPxCMgItYUV1e5tX+4zwkXtuT8FKLOq9N45Rmi7dTQe+D3VwwjZaeaH8TaMH
+        Guiifhwf9shDdIJEMMGLK5iBBZTUSHN0Zaf3g7zqn/rO5avCNy2lPqP62u1fDei3Co2lf1DdPwio
+        mqj2vcCw8Akf8eHg/DYzs2Ki8XOCNjIcpm9Fu8nQokE7Z4VOJmqF0TMs1K6xYDxotc3YLyWStO24
+        gnecma0kVDoEREvbLMwKVIoRB22bNEkmaiyMvLnEKKxoBIwY7D9wV1qk+YsRONsvq1Ri3ODFibdD
+        XLA3Lp3IiOJDLHz+2TYcYsPVhTAVpMxIjQu52rSv8Z5nHZFSN3PmaZHEwCHupQvGaOuf1tVY3IMV
+        vJbYcGGDTjoTagnNKSXK9lVGlpt5/gjLv1YBl2l1whGfTw1iPUbHPeLKvCh3+WFX3B3zguUVOxxe
+        sXcw7a+awy6/25XVsbhn+3tWlq/k4xOQ9WwgfQQAAA==
     headers:
       access-control-allow-credentials: ['true']
       access-control-allow-origin: ['*']
@@ -232,7 +99,81 @@ interactions:
       content-encoding: [gzip]
       content-security-policy: [default-src 'none']
       content-type: [application/json; charset=utf-8]
-      etag: [W/"ac0d5021f958c09dd3f37c46cdb4a338"]
+      etag: [W/"c9af3cd0085b6eda64b21753a149b3d9"]
+      last-modified: ['Sat, 27 Jun 2015 18:38:22 GMT']
+      status: [200 OK]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      transfer-encoding: [chunked]
+      vary: [Accept, Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://api.github.com:443/orgs/gratipay/public_members
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA63Y326bMBQG8HfhuioQAiWVpmkXe4Jt2sU0VTRxiTcCCEyiNuq7z8b4D1SlOz7u
+        Tav0fB8nND85za9rUDUlrYP74Ou3n1++BzcBPQT3WbrN8pugOBes6B6GruK/PzLW9vdhKB/sb0vK
+        jsPj0JNu39SM1Ox235zCIRyzn8+fEt5VdlOFKA34A4uqlk41Msu7+lDtcWSnanFpeclxVk09NVXV
+        XHhuueW71aGO8H3kz7QuoXEeuYYNOxJ+e/jar+LJ0p4B1hjHr6H49kAPoqDnN7sjh/9fZQrwRS41
+        3+EadqRtxqbhsd93tGW0qQErzWK8punKoqYvBbCGx3qeFssALj6O8xg589cSICfnr2Hb0XOxfxZP
+        vyN7Qs/8TkK7FkFexZ5bwl+6P/jfWNxXyshDcTgJME9F1ZPXGwNoX7SsTk4RnxMv9zTfbtLEEZEM
+        IxRZy6xDsgZBllTOndOiASNKV6FQ6RZ/rkylLdKFlm6C6tJBODAd9WPM2mTmE8isamoSR3E+Odts
+        sixxPaxkGOPM2uYDaNYkTJoKIqgtKlDWdBcOm67xqM10ornpKrA3nXQAp7OexFm7IMiVHSnLiojT
+        WZxsyW6TOr89lGGEOGuZdXDWIMibyrlzWzRgtOkqFDbd4s+aqcRS001QaToIh6ajfpxZmyCYtX9e
+        JmFxHEeR41vHMYvwJbdYpyVnQKp4xB2UCWMsiRYUI1HgT9DYhsUjSqBuRAZORqT8aJHXR0DpmiNl
+        bTFUf9WJlO+S9M71n61EphFmZgut05mNggSZpDukNx0YT1YZipXV40+XXYpFZnVBrVlRODkr7Efe
+        bBsMwOF0ogpflkS7aOd4Wskwhp5a5QN2agxGbkwhuNl5FDVZhGMmOzwSmwrRvGQPmJaMObCSQU+k
+        1BYITj0p6orWfUWepwMty/lX5mpqDCNMzfdZhzWfBemyou7E3pZgnNltKGx2kT9xs1YsO7sMas/O
+        wgHaaT8K5/sgKDKyP7Km1odbGqd57nq4yTACor3NOkN7EoRQB90JLiswAE0Xip+p8YfP6sTSM1VQ
+        eCYJZ2eyftDZu2DIXZrqqW/q6ejbRZtt7vp5vgxjxJllPgBnBmHephyC27wBpU1V4bCpFo/WdCWa
+        mmoCS1NBB2gq6smZ2QTB7MI/M0mTO/UJY7LdpqnjG8x4DCOUmV3WkZk5kLEp5k5sXoARpppQwFSJ
+        P1+6EctLFUF1qRwcl0r6sWX2gNL6/Q+sTyNoPCUAAA==
+    headers:
+      access-control-allow-credentials: ['true']
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['public, max-age=60, s-maxage=60']
+      content-encoding: [gzip]
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: [W/"9642a45aeac05a600f2814bb6dd33663"]
+      status: [200 OK]
+      strict-transport-security: [max-age=31536000; includeSubdomains; preload]
+      transfer-encoding: [chunked]
+      vary: [Accept, Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://api.github.com:443/users/gratipay
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA52TT0+EMBDFv0vPrAXWFdPE6M2jlz152RSoMElpm/5hsxK/u1OKinswwRO0mfeb
+        15eZiUjdgSKMdJZ7MPxCMgItYUV1e5tX+4zwkXtuT8FKLOq9N45Rmi7dTQe+D3VwwjZaeaH8TaMH
+        Guiifhwf9shDdIJEMMGLK5iBBZTUSHN0Zaf3g7zqn/rO5avCNy2lPqP62u1fDei3Co2lf1DdPwio
+        mqj2vcCw8Akf8eHg/DYzs2Ki8XOCNjIcpm9Fu8nQokE7Z4VOJmqF0TMs1K6xYDxotc3YLyWStO24
+        gnecma0kVDoEREvbLMwKVIoRB22bNEkmaiyMvLnEKKxoBIwY7D9wV1qk+YsRONsvq1Ri3ODFibdD
+        XLA3Lp3IiOJDLHz+2TYcYsPVhTAVpMxIjQu52rSv8Z5nHZFSN3PmaZHEwCHupQvGaOuf1tVY3IMV
+        vJbYcGGDTjoTagnNKSXK9lVGlpt5/gjLv1YBl2l1whGfTw1iPUbHPeLKvCh3+WFX3B3zguUVOxxe
+        sXcw7a+awy6/25XVsbhn+3tWlq/k4xOQ9WwgfQQAAA==
+    headers:
+      access-control-allow-credentials: ['true']
+      access-control-allow-origin: ['*']
+      access-control-expose-headers: ['ETag, Link, X-GitHub-OTP, X-RateLimit-Limit,
+          X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,
+          X-Poll-Interval']
+      cache-control: ['public, max-age=60, s-maxage=60']
+      content-encoding: [gzip]
+      content-security-policy: [default-src 'none']
+      content-type: [application/json; charset=utf-8]
+      etag: [W/"c9af3cd0085b6eda64b21753a149b3d9"]
       last-modified: ['Sat, 27 Jun 2015 18:38:22 GMT']
       status: [200 OK]
       strict-transport-security: [max-age=31536000; includeSubdomains; preload]
