@@ -242,8 +242,8 @@ msgid "Sign out"
 msgstr ""
 
 msgid ""
-"{nowrap}You have until October 1 to{_nowrap} {nowrap}{a}apply for a 1.0 "
-"payout{_a}{_nowrap}."
+"{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available "
+"{a2}indefinitely{_a}{_nowrap}."
 msgstr ""
 
 msgid ""
@@ -434,8 +434,7 @@ msgstr ""
 
 msgid ""
 "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout "
-"threshold of {minimum}{_b}, and will be refunded to the original donors on "
-"October 8."
+"threshold of {minimum}{_b}."
 msgstr ""
 
 msgid "You do not have a balance left over from Gratipay 1.0."
@@ -473,18 +472,12 @@ msgid ""
 "{a}support@gratipay.com{_a}."
 msgstr ""
 
-msgid "Your balance will be refunded to the original donors on October 8."
-msgstr ""
-
 msgid "Apply for a payout"
 msgstr ""
 
 msgid ""
 "Please {a}connect a PayPal account{_a} and then return here to apply for "
 "payout."
-msgstr ""
-
-msgid "You have until {b}October 1 at 11:59 PM UTC{_b} to apply for a payout."
 msgstr ""
 
 msgid ""
@@ -497,12 +490,6 @@ msgid_plural ""
 "for a new Team{_a} instead of a one-time payout."
 msgstr[0] ""
 msgstr[1] ""
-
-msgid ""
-"The deadline for 1.0 payout applications was October 1, 2015 at 11:59 PM "
-"UTC, and is now passed. Your balance will be refunded to the original donors"
-" on October 8."
-msgstr ""
 
 msgid "Approved"
 msgstr ""
