@@ -393,22 +393,57 @@ class Payday(object):
 
     def update_stats(self):
         log("Updating stats.")
-        self.db.run("""\
+        self.db.run("""
 
-            WITH our_payments AS (SELECT * FROM payments WHERE payday=%(payday)s)
-            UPDATE paydays p
-               SET nusers = (SELECT count(*) FROM (
-                    SELECT DISTINCT ON (participant) participant FROM our_payments GROUP BY participant
-                   ) AS foo)
-                 , nteams = (SELECT count(*) FROM (
-                    SELECT DISTINCT ON (team) team FROM our_payments GROUP BY team
-                   ) AS foo)
-                 , volume = (
-                    SELECT COALESCE(sum(amount), 0)
-                      FROM our_payments
-                     WHERE payday=p.id AND direction='to-team'
-                   )
-             WHERE id=%(payday)s
+          WITH payments_and_dues AS (
+
+              -- Participants who have either received/given money
+
+              SELECT participant, team, amount, direction FROM payments WHERE payday = %(payday)s
+
+              UNION
+
+              -- Participants who weren't charged due to amount + due < MINIMUM_CHARGE
+
+              SELECT payload->>'participant' AS participant
+                   , payload->>'team' AS team
+                   , '0' AS amount
+                   , 'to-team' AS direction
+                FROM events
+               WHERE (
+                      (SELECT ts_end FROM paydays WHERE id = %(payday)s) = '1970-01-01T00:00:00+00'::timestamptz
+
+                      OR
+
+                      ts < (SELECT ts_end FROM paydays WHERE id = %(payday)s)
+                    )
+                 AND ts > (SELECT ts_start FROM paydays WHERE id = %(payday)s)
+                 AND type='payday'
+                 AND payload->>'action' IN ('due')
+
+                 -- Filter out participants with bad CCs
+
+                 AND (
+                   SELECT COUNT(*)
+                     FROM current_exchange_routes r
+                     JOIN participants p ON p.id = r.participant
+                    WHERE p.username = payload->>'participant'
+                      AND network = 'braintree-cc'
+                      AND error = ''
+                 ) > 0
+          )
+
+          UPDATE paydays p
+             SET nusers = (
+                  SELECT COUNT(DISTINCT(participant)) FROM payments_and_dues
+                 )
+               , nteams = (
+                  SELECT COUNT(DISTINCT(team)) FROM payments_and_dues
+                 )
+               , volume = (
+                  SELECT COALESCE(sum(amount), 0) FROM payments_and_dues WHERE direction='to-team'
+                 )
+           WHERE id=%(payday)s
 
         """, {'payday': self.id})
         log("Updated payday stats.")
