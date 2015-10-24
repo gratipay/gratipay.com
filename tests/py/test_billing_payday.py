@@ -152,6 +152,18 @@ class TestPayday(BillingHarness):
         assert obama.balance == D('0.00')
         assert homer.balance == D('0.00')
 
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def test_nusers_includes_dues(self, fch):
+        Enterprise  = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(Enterprise, '6.00')  # below MINIMUM_CHARGE
+        fch.return_value = {}
+        Payday.start().run()
+
+        assert self.obama.get_due(Enterprise) == D('6.00')
+
+        nusers = self.db.one("SELECT nusers FROM paydays")
+        assert nusers == 1
+
     @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
     @mock.patch.object(Payday, 'fetch_card_holds')
     @mock.patch('gratipay.billing.payday.create_card_hold')
