@@ -711,11 +711,9 @@ END;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3814
-ALTER TABLE participants REMOVE COLUMN number;
+ALTER TABLE participants DROP COLUMN number;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3829
-BEGIN;
-    ALTER TYPE payment_net ADD VALUE 'cash';
-    ALTER TYPE payment_net ADD VALUE 'transferwise';
-END;
+ALTER TYPE payment_net ADD VALUE 'cash';
+ALTER TYPE payment_net ADD VALUE 'transferwise';
