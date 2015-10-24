@@ -30,10 +30,12 @@ class Tests(Harness):
         actual = [x['username'] for x in self.hit_members_json(auth_as='Enterprise')]
         assert actual == ['Enterprise']
 
+    @pytest.mark.xfail(reason='migrating to Teams; see #3399')
     def test_anon_cant_get_bare_bones_list(self):
         self.make_participant('Enterprise', number='plural', claimed_time='now')
         assert pytest.raises(Response, self.hit_members_json).value.code == 404
 
+    @pytest.mark.xfail(reason='migrating to Teams; see #3399')
     def test_non_admin_cant_get_bare_bones_list(self):
         self.make_participant('Enterprise', number='plural', claimed_time='now')
         self.make_participant('alice', claimed_time='now')
