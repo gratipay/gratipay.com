@@ -15,22 +15,24 @@ cancelled_giving = [x for x in giving if x.amount == 0 and x.mtime >= recently]
 giving = [s for s in giving if s.amount > 0]
 
 
-tabs = {
-    'active': {
+tabs = [
+    {
+        'tab_name': 'active',
         'giving': giving,
         'ngiving': len(giving),
         'name': _("Active"),
         'note': None,
         'totals': totals
     },
-    'cancelled': {
+    {
+        'tab_name': 'cancelled',
         'giving': cancelled_giving,
         'ngiving': len(cancelled_giving),
         'name': _("Cancelled"),
         'note': _("These are payments that you recently cancelled."),
         'totals': {}
     }
-}
+]
 
 [-----------------------------------------------------------------------------]
 {% from 'templates/giving-table.html' import giving_table with context %}
@@ -42,26 +44,26 @@ tabs = {
 <div class="tabs">
 
 <ul class="nav" id="tab-nav">
-    {% for tab in ['active', 'cancelled'] %}
+    {% for tab in tabs %}
     <li>
         <a href="#"
-           data-tab="{{ tab }}"
-           title="{{ tabs[tab]['note'] or '' }}">
-            {{ tabs[tab]['name'] }}
+           data-tab="{{ tab.tab_name }}"
+           title="{{ tab.note or '' }}">
+            {{ tab.name }}
         </a>
     </li>
     {% endfor %}
 </ul>
 
 {% for tab in tabs %}
-    <div class='tab' data-tab='{{ tab }}'>
-    {% if tabs[tab]['ngiving'] %}
+    <div class='tab' data-tab='{{ tab.tab_name }}'>
+    {% if tab.ngiving %}
 
-        {% if tabs[tab]['note'] %}
-            <p class="note">{{ tabs[tab]['note'] }}</p>
+        {% if tab.note %}
+            <p class="note">{{ tab.note }}</p>
         {% endif %}
 
-        {{ giving_table(tab, tabs[tab]['giving'], tabs[tab]['totals']) }}
+        {{ giving_table(tab.tab_name, tab.giving, tab.totals) }}
 
     {% else %}
 
