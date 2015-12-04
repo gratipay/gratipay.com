@@ -330,12 +330,17 @@ issue](https://github.com/gratipay/gratipay.com/issues/new) here on GitHub.
 Thanks for installing Gratipay! :smiley:
 
 
-Modifying CSS
-=============
+Modifying CSS and JavaScript
+============================
 
 We use SCSS, with files stored in `scss/`. All of the individual files are
 combined in `scss/gratipay.scss` which itself is compiled by `libsass` in
-`www/assets/%version/gratipay.css.spt` on each request.
+[`www/assets/gratipay.css.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.css.spt)
+on each request (it's behind a CDN in production).
+
+We use a similar pattern for JavaScript. Individual files are in `js/`, and 
+they're concatenated on the fly (and put behind a CDN in production) in 
+[`www/assets/gratipay.js.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.js.spt)
 
 
 Modifying the Database
