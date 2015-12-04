@@ -10,6 +10,7 @@
 # Gratipay <vendors@gratipay.com>, 2015
 # Loris Reiff <loris.reiff@hotmail.com>, 2014
 # Loris Reiff <loris.reiff@hotmail.com>, 2014-2015
+# Lukas Haselauer <l.haselauer@gmail.com>, 2015
 # Paul Kreuzer <paulkreuzer@riseup.net>, 2015
 # Peter <trash@stadler.mobi>, 2014
 # plusyannik <yrk@gonevil.com>, 2015

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Colin Dean <colindean+transifex@gmail.com>, 2014-2015
+# kircxo <kircxo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
