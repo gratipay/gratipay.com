@@ -378,7 +378,8 @@ and/or:
     
 
 To invoke `py.test` directly you should use the `honcho` utility that comes 
-with the install. First `make tests/env`, activate the virtualenv and then:
+with the install. First `make tests/env`, the activate the virtualenv by running 
+`$ source env/bin/activate`, and then:
 
     [gratipay] $ cd tests/
     [gratipay] $ honcho run -e defaults.env,local.env py.test
