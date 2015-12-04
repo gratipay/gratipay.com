@@ -255,19 +255,20 @@ With Vagrant, you can run Gratipay by running `vagrant up` from the project
 directory. Please note that if you ever switch between running Gratipay on your
 own machine to Vagrant or vice versa, you will need to run `make clean`.
 
-The `Vagrantfile` will download pristine Ubuntu image (base box), save it
-and create virtual machine (VM) in VirtualBox, then it will setup Gratipay
-prerequisites (the process known as provisioning) and show welcome message.
+The `Vagrantfile` will download a pristine Ubuntu image (base box), save it,
+and create a virtual machine (VM) in VirtualBox. Then it will set up Gratipay
+prerequisites (the process is known as "provisioning") and show a welcome message.
 
 The next time you run `vagrant up`, it will reuse the VM. Vagrant uses SSH
-based authentication. To login into VM use `vagrant ssh` command. If you're
-prompted for a password when logging in please use `vagrant`.
+based authentication. To login to VM, use the `vagrant ssh` command. If you're
+prompted for a password when logging in, please use `vagrant`.
 
-**Mac users:** If you're prompted for a password during initial installation, it's sudo and you should enter your Mac OS password.
+**Mac users:** If you're prompted for a password during initial installation, 
+it's sudo and you should enter your Mac OS password.
 
 **Ubuntu users:** If you experience problems, please see [this
 issue](https://github.com/gratipay/gratipay.com/pull/2321#issuecomment-41455169).
-As mentioned, you will also need to be wary of projects that are nested
+As mentioned there, you will also need to be wary of projects that are nested
 in encrypted directories.
 
 Docker
