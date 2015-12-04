@@ -717,3 +717,7 @@ ALTER TABLE participants DROP COLUMN number;
 -- https://github.com/gratipay/gratipay.com/pull/3829
 ALTER TYPE payment_net ADD VALUE 'cash';
 ALTER TYPE payment_net ADD VALUE 'transferwise';
+
+
+-- https://github.com/gratipay/gratipay.com/pull/3861
+ALTER TYPE payment_net ADD VALUE 'dwolla';
