@@ -171,6 +171,29 @@ class Team(Model):
                                   ))
         self.set_attributes(**kw)
 
+
+    def get_dues(self):
+        rec = self.db.one("""
+            WITH our_cpi AS (
+                SELECT due, is_funded
+                  FROM current_payment_instructions cpi
+                 WHERE team=%(slug)s
+            )
+            SELECT (
+                    SELECT SUM(due)
+                      FROM our_cpi
+                     WHERE is_funded
+                   ) AS funded
+                 , (
+                    SELECT SUM(due)
+                      FROM our_cpi
+                     WHERE NOT is_funded
+                   ) AS unfunded
+        """, {'slug': self.slug})
+
+        return rec.funded, rec.unfunded
+
+
     def create_github_review_issue(self):
         """POST to GitHub, and return the URL of the new issue.
         """
