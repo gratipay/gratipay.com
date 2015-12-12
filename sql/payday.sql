@@ -186,13 +186,14 @@ CREATE OR REPLACE FUNCTION process_payment_instruction() RETURNS trigger AS $$
               FROM payday_participants p
              WHERE username = NEW.participant
         );
+
         IF (NEW.amount + NEW.due <= participant.new_balance OR participant.card_hold_ok) THEN
             EXECUTE pay(NEW.participant, NEW.team, NEW.amount + NEW.due, 'to-team');
             RETURN NEW;
-        ELSE
+        ELSIF NEW.amount + NEW.due <= %(minimum_charge)s THEN
             EXECUTE park(NEW.participant, NEW.team, NEW.amount + NEW.due);
-            RETURN NULL;
         END IF;
+
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;
