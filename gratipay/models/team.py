@@ -9,6 +9,7 @@ from gratipay.exceptions import InvalidTeamName
 from gratipay.models import add_event
 from postgres.orm import Model
 
+from gratipay.billing.exchanges import MINIMUM_CHARGE
 
 # Should have at least one letter.
 TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,-_ ]+)$')
@@ -180,18 +181,34 @@ class Team(Model):
                  WHERE team=%(slug)s
             )
             SELECT (
-                    SELECT SUM(due)
+                    SELECT COALESCE(SUM(due), 0)
                       FROM our_cpi
                      WHERE is_funded
                    ) AS funded
                  , (
-                    SELECT SUM(due)
+                    SELECT COALESCE(SUM(due), 0)
                       FROM our_cpi
                      WHERE NOT is_funded
                    ) AS unfunded
         """, {'slug': self.slug})
 
         return rec.funded, rec.unfunded
+
+
+    def get_upcoming_payment(self):
+        return self.db.one("""
+            SELECT COALESCE(SUM(amount + due), 0)
+              FROM current_payment_instructions cpi
+              JOIN participants p ON cpi.participant = p.username
+             WHERE team = %(slug)s
+               AND is_funded                        -- Check whether the payment is funded
+               AND (                                -- Check whether the user will hit the minimum charge
+                    SELECT SUM(amount + due)
+                      FROM current_payment_instructions cpi2
+                     WHERE cpi2.participant = p.username
+                       AND cpi2.is_funded
+                   ) >= %(mcharge)s
+        """, {'slug': self.slug, 'mcharge': MINIMUM_CHARGE})
 
 
     def create_github_review_issue(self):
