@@ -18,7 +18,7 @@ title = _("Receiving")
 {% block content %}
 
 {% set receiving = format_currency(team.receiving, "USD") %}
-<h2>{{ _("{0} receives {1} per week", team.name, receiving) }}</h2>
+<p>{{ _("{0} receives {1} per week from {2} ~users.", team.name, "<b>%s</b>"|safe % receiving, team.nreceiving_from) }}</p>
 
 <div class="chart-wrapper">
     <a name="gifts"></a>
@@ -32,6 +32,17 @@ title = _("Receiving")
     <div class="chart" data-chart="nreceiving_from"></div>
     <div class="x-axis">{{ _("weeks") }}</div>
 </div>
+
+<h2>Dues</h2>
+
+{% set funded_dues, unfunded_dues = team.get_dues() %}
+
+Funded Dues: <b>{{ format_currency(funded_dues, "USD") }}</b>
+<br>
+Unfunded Dues: <b>{{ format_currency(unfunded_dues, "USD") }}</b>
+<br><br>
+
+Estimated payment for next week: {{ format_currency(team.get_upcoming_payment(), "USD") }}
 
 {% if team.receiving > 0 %}
     {% set payment_distribution = team.get_payment_distribution()[0] %}
