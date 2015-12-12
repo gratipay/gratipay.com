@@ -58,7 +58,7 @@
 </form>
 {% endif %}
 
-{% if user.participant == team.owner or user.ADMIN %}
+{% if team.is_approved and (user.participant == team.owner or user.ADMIN) %}
     {% set current_page = request.path.raw.split('/')[2] %}
     {% set nav_base = '/' + team.slug %}
     {% set pages = [ ('/',            _('Profile'))
