@@ -65,6 +65,7 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
 {% endblock %}
 
 {% block sidebar %}
+
 {% if user.ADMIN %}
 <form id="status-knob" action="set-status.json">
     <select name="status">
@@ -82,9 +83,23 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
     <br>
 </form>
 {% endif %}
-{% if team.is_approved %}
-{% include "templates/your-payment.html" %}
+
+{% if user.participant == team.owner or user.ADMIN %}
+    {% set current_page = request.path.raw.split('/')[2] %}
+    {% set nav_base = '/' + team.slug %}
+    {% set pages = [ ('/',            _('Profile'))
+                   , ('/receiving/',  _('Receiving'))
+                    ] %}
+    {% if pages %}
+    {% include "templates/nav.html" %}
+    <br>
+    {% endif %}
 {% endif %}
+
+{% if (user.participant.username != team.owner) and team.is_approved %}
+    {% include "templates/your-payment.html" %}
+{% endif %}
+
 {% endblock %}
 
 {% block content %}

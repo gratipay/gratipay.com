@@ -112,10 +112,6 @@
                 ] %}
 {% set pages = filter_profile_nav(user, participant, pages) %}
 {% if pages %}
-<ul class="nav">
-    {% for slug, name, show_them, show_others in pages %}
-    <li><a href="{{ nav_base }}{{ slug }}"{% if slug.strip('/') == current_page.strip('/') %} class="selected"{% endif %}>{{ _(name) }}</a></li>
-    {% endfor %}
-</ul>
+{% include "templates/filtered-nav.html" %}
 {% endif %}
 {% endblock %}

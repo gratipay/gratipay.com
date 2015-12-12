@@ -1,0 +1,9 @@
+<ul class="nav">
+    {% for slug, name, show_them, show_others in pages %}
+    <li>
+        <a href="{{ nav_base }}{{ slug }}"{% if slug.strip('/') == current_page.strip('/') %} class="selected"{% endif %}>
+            {{ _(name) }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
