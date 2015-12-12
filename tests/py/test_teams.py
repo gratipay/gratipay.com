@@ -340,6 +340,9 @@ class TestTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Please fill out the 'Team Name' field." in r.body
 
+    # Migrate Tips
+    # ============
+
     def test_migrate_tips_to_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now')
         bob = self.make_participant('bob', claimed_time='now')
@@ -390,7 +393,40 @@ class TestTeams(Harness):
         assert len(payment_instructions) == 1
 
 
-    # cached values - receiving, nreceiving_from
+    # Dues, Upcoming Payment
+    # ======================
+
+    def test_get_dues(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        bob = self.make_participant('bob', claimed_time='now', last_bill_result='Fail!')
+        team = self.make_team(is_approved=True)
+
+        alice.set_payment_instruction(team, '3.00') # Funded
+        bob.set_payment_instruction(team, '5.00') # Unfunded
+
+        # Simulate dues
+        self.db.run("UPDATE payment_instructions SET due = amount")
+
+        assert team.get_dues() == (3, 5)
+
+
+    def test_upcoming_payment(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        bob = self.make_participant('bob', claimed_time='now', last_bill_result='')
+        carl = self.make_participant('carl', claimed_time='now', last_bill_result='Fail!')
+        team = self.make_team(is_approved=True)
+
+        alice.set_payment_instruction(team, '5.00') # Funded
+        bob.set_payment_instruction(team, '3.00') # Funded, but won't hit minimum charge
+        carl.set_payment_instruction(team, '10.00') # Unfunded
+
+        # Simulate dues
+        self.db.run("UPDATE payment_instructions SET due = amount")
+
+        assert team.get_upcoming_payment() == 10 # 2 * Alice's $5
+
+    # Cached Values
+    # =============
 
     def test_receiving_only_includes_funded_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
