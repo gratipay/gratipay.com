@@ -1,6 +1,8 @@
 """Teams on Gratipay receive payments and distribute payroll.
 """
 import re
+from decimal import Decimal
+
 import requests
 from aspen import json, log
 from gratipay.exceptions import InvalidTeamName
@@ -86,6 +88,60 @@ class Team(Model):
               RETURNING teams.*::teams
 
         """, fields)
+
+    def get_payment_distribution(self):
+        """
+            Returns a data structure in the form of::
+                [
+                    [PAYMENT1, PAYMENT2...PAYMENTN],
+                    nreceiving_from,
+                    total_amount_received
+                ]
+            where each PAYMENTN is in the form::
+                [
+                    amount,
+                    number_of_tippers_for_this_amount,
+                    total_amount_given_at_this_amount,
+                    proportion_of_payments_at_this_amount,
+                    proportion_of_total_amount_at_this_amount
+                ]
+        """
+        SQL = """
+            SELECT amount
+                 , count(amount) AS nreceiving_from
+              FROM ( SELECT DISTINCT ON (participant)
+                            amount
+                          , participant
+                       FROM payment_instructions
+                       JOIN participants p ON p.username = participant
+                      WHERE team=%s
+                        AND is_funded
+                        AND p.is_suspicious IS NOT true
+                   ORDER BY participant
+                          , mtime DESC
+                    ) AS foo
+             WHERE amount > 0
+          GROUP BY amount
+          ORDER BY amount
+        """
+
+        tip_amounts = []
+
+        npatrons = 0.0  # float to trigger float division
+        total_amount = Decimal('0.00')
+        for rec in self.db.all(SQL, (self.slug,)):
+            tip_amounts.append([ rec.amount
+                               , rec.nreceiving_from
+                               , rec.amount * rec.nreceiving_from
+                                ])
+            total_amount += tip_amounts[-1][2]
+            npatrons += rec.nreceiving_from
+
+        for row in tip_amounts:
+            row.append((row[1] / npatrons) if npatrons > 0 else 0)
+            row.append((row[2] / total_amount) if total_amount > 0 else 0)
+
+        return tip_amounts, npatrons, total_amount
 
 
     def update(self, **kw):
