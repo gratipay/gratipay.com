@@ -12,10 +12,15 @@ title = _("Payment Routes")
 
 {% block content %}
 <h2>{{ _("Adding Money") }}
-    {% if user.ADMIN and participant.balanced_customer_href %}
-        <a href="https://dashboard.balancedpayments.com/#/{{ participant.balanced_customer_href }}"
-           title="Go to Balanced Dashboard">
-            <span class="payments-by"></span>
+    {% if user.ADMIN and participant.braintree_customer_id %}
+        {% if website.env.braintree_sandbox_mode %}
+            {% set braintree_base_url = "https://sandbox.braintreegateway.com" %}
+        {% else %}
+            {% set braintree_base_url = "https://braintreegateway.com" %}
+        {% endif %}
+        <a href="{{ braintree_base_url }}/merchants/{{ website.env.braintree_merchant_id }}/customers/{{ participant.braintree_customer_id }}"
+           title="Go to Braintree Dashboard">
+            <div class="payments-by"></div>
         </a>
     {% else %}
         <span class="payments-by"></span>
@@ -43,14 +48,7 @@ title = _("Payment Routes")
     </tr>
 </table>
 
-<h2>{{ _("Withdrawing Money") }}
-    {% if user.ADMIN and participant.balanced_customer_href %}
-        <a href="https://dashboard.balancedpayments.com/#/marketplaces/MP12Xw5lL6iaILtqImIoroDL{{ participant.balanced_customer_href }}"
-           title="Go to Balanced Dashboard">
-            <div class="payments-by"></div>
-        </a>
-    {% endif %}
-</h2>
+<h2>{{ _("Withdrawing Money") }}</h2>
 <table class="accounts">
     <tr>
         {% set paypal = ExchangeRoute.from_network(participant, 'paypal') %}
