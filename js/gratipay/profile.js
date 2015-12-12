@@ -74,7 +74,7 @@ Gratipay.profile.init = function() {
                 $root.addClass('not-empty');
             },
         });
-        $root.find('button.delete').click(Gratipay.payments.deleteRoute);
+        $root.find('button.delete').click(Gratipay.routes.deleteRoute);
     });
 
 
