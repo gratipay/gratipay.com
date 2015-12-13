@@ -57,7 +57,7 @@ test-schema: env
 	$(honcho) run -e $(test_env_files) ./recreate-schema.sh
 
 pyflakes: env
-	$(env_bin)/pyflakes *.py bin gratipay tasks tests
+	$(env_bin)/pyflakes *.py bin gratipay tests
 
 test: pytest jstest
 
