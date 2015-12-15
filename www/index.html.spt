@@ -136,6 +136,10 @@ suppress_welcome = 'suppress-welcome' in request.cookie
                         <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
                     </tr>
                     <tr>
+                        <td class="label">{{ _("Due") }}</td>
+                        <td>{{ format_currency(team.due, 'USD') }}</td>
+                    </tr>
+                    <tr>
                         <td class="label">{{ _("Sharing") }}</td>
                         <td>- &nbsp;</td>
                         <td>-</td>

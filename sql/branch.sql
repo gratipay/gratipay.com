@@ -1,0 +1,2 @@
+ALTER TABLE teams ADD COLUMN due numeric(35,2) DEFAULT 0;
+ALTER TABLE teams ADD COLUMN ndue integer DEFAULT 0;
