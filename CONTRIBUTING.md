@@ -22,13 +22,10 @@ Whether you are a programmer or not, you can contribute to Gratipay. Below are s
 11. Create an example.
 12. Answer a question.
 13. Write a blog post.
-14. Improve the website (either [gratipay.com](http://gratipay.com) or [inside.gratipay.com](inside.gratipay.com)).
+14. Improve the website (either [gratipay.com](http://gratipay.com) or [http://inside.gratipay.com](inside.gratipay.com)).
 
 ###More info
-If you want to really get involved, then check out our full
-documentation for contributors:
-
-http://inside.gratipay.com/
+If you want to really get involved, then check out our full documentation for contributors: http://inside.gratipay.com/
 
 ##License
 Gratipay is [licensed under CC0](https://github.com/gratipay/gratipay.com/tree/master/COPYING).
