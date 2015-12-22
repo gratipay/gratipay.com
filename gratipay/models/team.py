@@ -144,6 +144,19 @@ class Team(Model):
                , True: 'approved'
                 }[self.is_approved]
 
+    def to_dict(self):
+        return {
+            'homepage': self.homepage,
+            'name': self.name,
+            'nreceiving_from': self.nreceiving_from,
+            'onboarding_url': self.onboarding_url,
+            'owner': '~' + self.owner,
+            'receiving': self.receiving,
+            'slug': self.slug,
+            'status': self.status,
+            'todo_url': self.todo_url
+        }
+
     def migrate_tips(self):
         payment_instructions = self.db.all("""
             SELECT pi.*
