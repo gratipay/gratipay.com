@@ -43,6 +43,9 @@ class EmailNotVerified(ProblemChangingEmail):
 class TooManyEmailAddresses(ProblemChangingEmail):
     msg = "You've reached the maximum number of email addresses we allow."
 
+class ResendingTooFast(ProblemChangingEmail):
+    msg = "Sorry, please try resending the verification email again in a minute or two."
+
 
 class ProblemChangingNumber(Exception):
     def __str__(self):

@@ -27,7 +27,7 @@ if not participant.email_lang:
 
 msg = None
 if action in ('add-email', 'resend'):
-    r = participant.add_email(address)
+    r = participant.add_email(address, website.env.resend_verification_threshold)
     if r:
         msg = _("A verification email has been sent to {0}.", address)
     else:

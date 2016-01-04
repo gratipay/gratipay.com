@@ -1,7 +1,8 @@
 import json
+import time
 
 from gratipay.exceptions import CannotRemovePrimaryEmail, EmailAlreadyTaken, EmailNotVerified
-from gratipay.exceptions import TooManyEmailAddresses
+from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
 from gratipay.models.participant import Participant
 from gratipay.testing.emails import EmailHarness
 from gratipay.utils import emails
@@ -12,6 +13,11 @@ class TestEmail(EmailHarness):
     def setUp(self):
         EmailHarness.setUp(self)
         self.alice = self.make_participant('alice', claimed_time='now')
+        self._old_threshold = self.client.website.env.resend_verification_threshold
+        self.client.website.env.resend_verification_threshold = '0 seconds'
+
+    def tearDown(self):
+        self.client.website.env.resend_verification_threshold = self._old_threshold
 
     def hit_email_spt(self, action, address, user='alice', should_fail=False):
         P = self.client.PxST if should_fail else self.client.POST
@@ -166,6 +172,17 @@ class TestEmail(EmailHarness):
         self.alice.add_email('alice@gratipay.py')
         with self.assertRaises(TooManyEmailAddresses):
             self.alice.add_email('alice@gratipay.coop')
+
+    def test_cannot_resend_verification_too_frequently(self):
+        self.alice.add_email('alice@gratipay.coop')
+        time.sleep(0.05)
+        with self.assertRaises(ResendingTooFast):
+            self.alice.add_email('alice@gratipay.coop', '0.1 seconds')
+
+    def test_can_resend_verification_after_a_while(self):
+        self.alice.add_email('alice@gratipay.coop')
+        time.sleep(0.15)
+        self.alice.add_email('alice@gratipay.coop', '0.1 seconds')
 
     def test_emails_page_shows_emails(self):
         self.verify_and_change_email('alice@example.com', 'alice@example.net')

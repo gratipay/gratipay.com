@@ -31,6 +31,7 @@ from gratipay.exceptions import (
     CannotRemovePrimaryEmail,
     EmailNotVerified,
     TooManyEmailAddresses,
+    ResendingTooFast,
 )
 
 from gratipay.billing.instruments import CreditCard
@@ -368,7 +369,7 @@ class Participant(Model):
     # Emails
     # ======
 
-    def add_email(self, email):
+    def add_email(self, email, resend_threshold='3 minutes'):
         """
             This is called when
             1) Adding a new email address
@@ -395,6 +396,14 @@ class Participant(Model):
 
         nonce = str(uuid.uuid4())
         verification_start = utcnow()
+
+        nrecent = self.db.one( "SELECT count(*) FROM emails WHERE address=%s AND "
+                               "%s - verification_start < %s"
+                             , (email, verification_start, resend_threshold)
+                              )
+        if nrecent:
+            raise ResendingTooFast()
+
         try:
             with self.db.get_cursor() as c:
                 add_event(c, 'participant', dict(id=self.id, action='add', values=dict(email=email)))
@@ -420,9 +429,9 @@ class Participant(Model):
         quoted_email = quote(email)
         link = "{base_url}/~{username}/emails/verify.html?email={quoted_email}&nonce={nonce}"
         r = self.send_email('verification',
-                        email=email,
-                        link=link.format(**locals()),
-                        include_unsubscribe=False)
+                            email=email,
+                            link=link.format(**locals()),
+                            include_unsubscribe=False)
         assert r == 1 # Make sure the verification email was sent
         if self.email_address:
             self.send_email('verification_notice',

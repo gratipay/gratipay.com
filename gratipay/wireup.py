@@ -412,6 +412,7 @@ def env():
         TEAM_REVIEW_USERNAME            = unicode,
         TEAM_REVIEW_TOKEN               = unicode,
         RAISE_SIGNIN_NOTIFICATIONS      = is_yesish,
+        RESEND_VERIFICATION_THRESHOLD   = unicode, # anything Postgres can interpret as an interval
 
         # This is used in our Procfile. (PORT is also used but is provided by
         # Heroku; we don't set it ourselves in our app config.)
