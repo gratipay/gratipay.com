@@ -57,6 +57,9 @@ def db(env):
         db.register_model(model)
     gratipay.billing.payday.Payday.db = db
 
+    from gratipay.billing.exchanges import MINIMUM_CHARGE
+    db.run('UPDATE settings SET minimum_charge=%s', (MINIMUM_CHARGE,))
+
     return db
 
 def mail(env, project_root='.'):

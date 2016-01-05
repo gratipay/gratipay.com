@@ -27,7 +27,7 @@ from psycopg2 import IntegrityError
 
 
 with open('sql/payday.sql') as f:
-    PAYDAY = f.read() % {'minimum_charge': MINIMUM_CHARGE}
+    PAYDAY = f.read()
 
 
 class ExceptionWrapped(Exception): pass

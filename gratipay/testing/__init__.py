@@ -115,6 +115,7 @@ class Harness(unittest.TestCase):
             except (IntegrityError, InternalError):
                 tablenames.insert(0, tablename)
         self.db.run("ALTER SEQUENCE participants_id_seq RESTART WITH 1")
+        self.db.run("INSERT INTO settings DEFAULT VALUES")
 
 
     def make_elsewhere(self, platform, user_id, user_name, **kw):
