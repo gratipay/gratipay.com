@@ -22,12 +22,5 @@ before_script:
 script: make test
 notifications:
   email: false
-  irc:
-    channels:
-      - "chat.freenode.net#gratipay"
-    on_success: change
-    on_failure: always
-    template:
-      - "%{repository} (%{branch}:%{commit} by %{author}): %{message} (%{build_url})"
-    skip_join: true
+  irc: false
 sudo: false
