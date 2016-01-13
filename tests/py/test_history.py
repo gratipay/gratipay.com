@@ -39,6 +39,7 @@ def make_history(harness):
 class TestHistory(BillingHarness):
 
     def test_iter_payday_events(self):
+        now = datetime.now()
         Payday().start().run()
 
         Enterprise = self.make_team(is_approved=True)
@@ -66,7 +67,19 @@ class TestHistory(BillingHarness):
 
         Payday().start()  # to demonstrate that we ignore any open payday?
 
-        events = list(iter_payday_events(self.db, picard))
+        # Make all events in the same year.
+        delta = '%s days' % (364 - (now - datetime(now.year, 1, 1)).days)
+        self.db.run("""
+            UPDATE paydays
+                SET ts_start = ts_start + interval %(delta)s
+                  , ts_end = ts_end + interval %(delta)s;
+            UPDATE payments
+                SET timestamp = "timestamp" + interval %(delta)s;
+            UPDATE transfers
+                SET timestamp = "timestamp" + interval %(delta)s;
+        """, dict(delta=delta))
+
+        events = list(iter_payday_events(self.db, picard, now.year))
         assert len(events) == 7
         assert events[0]['kind'] == 'totals'
         assert events[0]['given'] == 0
