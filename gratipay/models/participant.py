@@ -409,9 +409,9 @@ class Participant(Model):
                 add_event(c, 'participant', dict(id=self.id, action='add', values=dict(email=email)))
                 c.run("""
                     INSERT INTO emails
-                                (address, nonce, verification_start, participant)
-                         VALUES (%s, %s, %s, %s)
-                """, (email, nonce, verification_start, self.username))
+                                (address, nonce, verification_start, participant, participant_id)
+                         VALUES (%s, %s, %s, %s, %s)
+                """, (email, nonce, verification_start, self.username, self.id))
         except IntegrityError:
             nonce = self.db.one("""
                 UPDATE emails
