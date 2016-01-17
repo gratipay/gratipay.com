@@ -721,3 +721,9 @@ ALTER TYPE payment_net ADD VALUE 'transferwise';
 
 -- https://github.com/gratipay/gratipay.com/pull/3861
 ALTER TYPE payment_net ADD VALUE 'dwolla';
+
+-- https://github.com/gratipay/gratipay.com/pull/3893
+ALTER TABLE emails ADD COLUMN participant_id bigint DEFAULT NULL
+	REFERENCES participants(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+ALTER TABLE emails ADD UNIQUE (participant_id, address);
