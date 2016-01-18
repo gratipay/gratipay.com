@@ -75,28 +75,31 @@ average_number_of_payments = average_number_of_payments or 0
     <div class="chart-wrapper">
         <a name="volume"></a>
         <h2>Weekly Volume ($)</h2>
-        <p class="note">Total amount received by Teams on Gratipay (per week)</p>
+        <p class="note">Total amount received by Teams on Gratipay (per week) *</p>
         <div class="chart" data-chart="volume"></div>
         <div class="x-axis">weeks</div>
-	<p class="note">Week 153 was <a href="https://medium.com/gratipay-blog/gratipocalypse-42fd0ec0d9e8#.5dwu7h5qi">Gratipocalypse</a></p>
+        <p class="note">* Week 153 was the <a
+        href="https://medium.com/gratipay-blog/gratipocalypse-42fd0ec0d9e8">Gratipocalypse</a>.</p>
     </div>
 
     <div class="chart-wrapper">
         <a name="users"></a>
         <h2>Active ~users</h2>
-        <p class="note">~users that gave and/or took money on Gratipay (per week)</p>
+        <p class="note">~users that gave and/or took money on Gratipay (per week) *</p>
         <div class="chart" data-chart="nusers"></div>
         <div class="x-axis">weeks</div>
-	<p class="note">Week 153 was <a href="https://medium.com/gratipay-blog/gratipocalypse-42fd0ec0d9e8#.5dwu7h5qi">Gratipocalypse</a></p>
+        <p class="note">* Week 153 was the <a
+        href="https://medium.com/gratipay-blog/gratipocalypse-42fd0ec0d9e8">Gratipocalypse</a>.</p>
     </div>
 
     <div class="chart-wrapper">
         <a name="teams"></a>
         <h2>Active Teams</h2>
-        <p class="note">Teams that received and shared money on Gratipay (per week)</p>
+        <p class="note">Teams that received and shared money on Gratipay (per week) *</p>
         <div class="chart" data-chart="nteams"></div>
         <div class="x-axis">weeks</div>
-	<p class="note"><a href="https://medium.com/gratipay-blog/gratipay-2-0-2453d3c53077#.6vdzi26t8">Gratipay 2.0</a> launched in Week 154</p>
+        <p class="note">* <a href="https://medium.com/gratipay-blog/gratipay-2-0-2453d3c53077">Gratipay 
+        2.0</a> launched in Week 154.</p>
     </div>
 
     <div class="chart-wrapper">

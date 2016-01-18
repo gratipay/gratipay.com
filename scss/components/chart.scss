@@ -54,5 +54,8 @@
         font-style: italic;
         font-size: 8pt;
         line-height: 10pt;
+        &:last-child {
+            padding-top: 10pt;
+        }
     }
 }
