@@ -1,0 +1,112 @@
+import calendar
+import datetime
+from decimal import Decimal as D
+
+[---]
+_by_month = website.db.all("""
+
+    SELECT date_trunc('month', "timestamp") as month
+         , sum(case when amount > 0 then amount end) as payins
+         , -(sum(case when amount < 0 then amount end)) as payouts
+         , sum(fee) as income
+
+      FROM exchanges
+  GROUP BY month
+  ORDER BY month ASC
+
+""")
+def by_month():
+    balance = D(0)
+    for month, payins, payouts, income in _by_month:
+        balance = balance + payins - payouts
+        yield month, payins, payouts, balance, income
+by_month = by_month()
+
+if user.ADMIN:
+    by_day = website.db.all("""
+        SELECT date_trunc('day', timestamp)::date as day
+             , sum(case when amount > 0 then amount + fee else 0 end) as charge_amount
+             , sum(case when amount < 0 then -(amount - fee) else 0 end) as payout_amount
+             , sum(amount) as liability_delta
+             , sum(fee) as income
+
+          FROM exchanges
+      GROUP BY day
+      ORDER BY day ASC;
+    """)
+
+fmt = lambda x: "{:,.2f}".format(x)
+[---] text/html
+<html>
+    <head>
+        <title>Escrow Reconciliation Report</title>
+        <style>
+            body {
+                font-family: monospace;
+            }
+            table {
+                border-collapse: collapse;
+            }
+            tr:hover {
+                background: #CCC;
+            }
+            th {
+                text-align: left;
+                font-family: monospace;
+            }
+            td {
+                text-align: right;
+                padding-right: 20px;
+                font-family: monospace;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Reconciliation Reports</h1>
+        <p>These reports are used as part of Gratipay's <a
+            href="https://github.com/gratipay/finances">financial accounting</a>
+            process.</p>
+
+        <h2>Escrow and Income by Month</h2>
+        <table>
+            <tr>
+                <th>Month</th>
+                <th>Payins ($)</th>
+                <th>Payouts ($)</th>
+                <th>Balance ($)</th>
+                <th>Fee Income ($)</th>
+            </tr>
+            {% for month, payins, payouts, balance, fees in by_month %}
+            <tr>
+                <td>{{ str(month)[:7] }}</td>
+                <td>{{ fmt(payins) }}</td>
+                <td>{{ fmt(payouts) }}</td>
+                <td>{{ fmt(balance) }}</td>
+                <td>{{ fmt(fees) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% if user.ADMIN %}
+        <h2>By Day</h2>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Charge Amount ($)</th>
+                <th>Payout Amount ($)</th>
+                <th>Fee Income ($)</th>
+                <th>Liability &Delta; ($)</th>
+            </tr>
+            {% for day, charge_amount, payout_amount, liability_delta, fee in by_day %}
+            <tr>
+                <td>{{ day }}</td>
+                <td>{{ fmt(charge_amount) }}</td>
+                <td>{{ fmt(payout_amount) }}</td>
+                <td>{{ fmt(fee) }}</td>
+                <td>{{ fmt(liability_delta) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </body>
+</html>
