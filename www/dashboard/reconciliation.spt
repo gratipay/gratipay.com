@@ -22,17 +22,18 @@ def by_month():
         yield month, payins, payouts, balance, income
 by_month = by_month()
 
-by_day = website.db.all("""
-    SELECT date_trunc('day', timestamp)::date as day
-         , sum(case when amount > 0 then amount + fee else 0 end) as charge_amount
-         , sum(case when amount < 0 then -(amount - fee) else 0 end) as payout_amount
-         , sum(amount) as liability_delta
-         , sum(fee) as income
+if user.ADMIN:
+    by_day = website.db.all("""
+        SELECT date_trunc('day', timestamp)::date as day
+             , sum(case when amount > 0 then amount + fee else 0 end) as charge_amount
+             , sum(case when amount < 0 then -(amount - fee) else 0 end) as payout_amount
+             , sum(amount) as liability_delta
+             , sum(fee) as income
 
-      FROM exchanges
-  GROUP BY day
-  ORDER BY day ASC;
-""")
+          FROM exchanges
+      GROUP BY day
+      ORDER BY day ASC;
+    """)
 
 fmt = lambda x: "{:,.2f}".format(x)
 [---] text/html
@@ -86,6 +87,7 @@ fmt = lambda x: "{:,.2f}".format(x)
             {% endfor %}
         </table>
 
+        {% if user.ADMIN %}
         <h2>By Day</h2>
         <table>
             <tr>
@@ -105,5 +107,6 @@ fmt = lambda x: "{:,.2f}".format(x)
             </tr>
             {% endfor %}
         </table>
+        {% endif %}
     </body>
 </html>
