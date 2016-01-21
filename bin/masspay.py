@@ -198,7 +198,7 @@ def post_back_to_gratipay():
     try:
         gratipay_api_key = os.environ['GRATIPAY_API_KEY']
     except KeyError:
-        gratipay_api_key = getpass.getpass("Gratipay API key: ")
+        gratipay_api_key = getpass.getpass("Your admin user Gratipay API key: ")
 
     try:
         gratipay_base_url = os.environ['GRATIPAY_BASE_URL']
