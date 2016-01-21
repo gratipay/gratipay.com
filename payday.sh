@@ -67,9 +67,9 @@ start () {
 # ====
 
 if [ "$2" == "for_real_please" ]; then
-    LOG="../paydays/gratipay-$1.log"
+    LOG="../logs/paydays/gratipay-$1.log"
 else
-    LOG="../paydays/test-$1.log"
+    LOG="../logs/paydays/test-$1.log"
 fi
 
 if [ -f $LOG ]; then

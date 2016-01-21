@@ -33,7 +33,7 @@ from gratipay.billing.exchanges import get_ready_payout_routes_by_network
 from httplib import IncompleteRead
 
 
-os.chdir('../masspay')
+os.chdir('../logs/masspay')
 ts = datetime.datetime.now().strftime('%Y-%m-%d')
 INPUT_CSV = '{}.input.csv'.format(ts)
 PAYPAL_CSV = '{}.output.paypal.csv'.format(ts)
