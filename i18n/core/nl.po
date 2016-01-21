@@ -6,7 +6,7 @@
 # Changaco <changaco@changaco.oy.lc>, 2014-2015
 # Peter Tillemans <pti@snamellit.com>, 2014-2015
 # Sidney Gijzen, 2014
-# Sidney Gijzen, 2014-2015
+# Sidney Gijzen, 2014-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
