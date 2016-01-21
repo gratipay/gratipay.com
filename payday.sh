@@ -51,7 +51,7 @@ confirm () {
 require () {
     if [ ! `which $1` ]; then
         echo "The '$1' command was not found."
-        return 1 
+        return 1
     fi
     return 0
 }
@@ -91,7 +91,7 @@ case "$2" in
     "for_real_please")
         confirm "$RUN payday #$1 FOR REAL?!?!?!??!?!?" || exit 0
         start
-        heroku config -s | honcho run -e /dev/stdin ./env/bin/payday >>$LOG 2>&1 &
+        heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin ./env/bin/payday >>$LOG 2>&1 &
         ;;
     *)
         echo "Your second arg was $2. Wazzat mean?"
