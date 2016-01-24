@@ -44,7 +44,7 @@ else:
         out["msg"] = _("Payment changed to {0} per week. ", out["amount_l"])
         out["msg"] += _("Thank you so much for supporting {0}!", team.name)
     else:
-        out["msg"] = _("You have successfully canceled your payment to {0}.", team.name)
+        out["msg"] = _("You have canceled your payment to {0}.", team.name)
     out["nreceiving_from"] = team.nreceiving_from
     out["team_id"] = team.id
     out["total_giving"] = str(total_giving)
