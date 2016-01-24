@@ -730,3 +730,6 @@ ALTER TABLE emails ADD UNIQUE (participant_id, address);
 
 -- https://github.com/gratipay/gratipay.com/pull/3896
 ALTER TABLE emails ALTER COLUMN participant_id SET NOT NULL;
+
+-- https://github.com/gratipay/gratipay.com/pull/3898
+ALTER TABLE emails DROP COLUMN participant;
