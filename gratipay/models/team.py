@@ -162,8 +162,7 @@ class Team(Model):
             SELECT pi.*
               FROM payment_instructions pi
               JOIN teams t ON t.slug = pi.team
-              JOIN participants p ON t.owner = p.username
-             WHERE p.username = %s
+             WHERE t.owner = %s
                AND pi.ctime < t.ctime
         """, (self.owner, ))
 
