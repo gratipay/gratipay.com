@@ -6,14 +6,15 @@ db = db(env())
 teams = db.all("""
     SELECT distinct ON (t.slug) t.*::teams
       FROM teams t
-      JOIN tips ON t.owner = tips.tippee    -- Only fetch teams whose owner have tips.
-     WHERE t.is_approved IS TRUE            -- Only fetch approved teams.
-       AND NOT EXISTS (                     -- Make sure not already migrated.
+      JOIN tips ON t.owner = tips.tippee    -- Only fetch teams whose owners had tips under Gratipay 1.0
+     WHERE t.is_approved IS TRUE            -- Only fetch approved teams
+       AND NOT EXISTS (                     -- Make sure tips haven't been migrated for any teams with same owner
             SELECT 1
               FROM payment_instructions pi
-             WHERE t.slug = pi.team
-               AND pi.ctime < t.ctime
-	     )
+              JOIN teams t2 ON t2.slug = pi.team
+             WHERE t2.owner = t.owner
+               AND pi.ctime < t2.ctime
+       )
 """)
 
 for team in teams:
