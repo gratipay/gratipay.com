@@ -105,7 +105,7 @@ class TestPayday(BillingHarness):
     def test_payday_keeps_dues_under_minimum_charge(self, fch):
         Enterprise = self.make_team(is_approved=True)
         self.obama.set_payment_instruction(Enterprise, '4.00')
-        self.obama_route.update_error("failed") # Failing card
+        assert self.obama.get_due('TheEnterprise') == D('0.00')
 
         fch.return_value = {}
         Payday.start().run()    # payday 0
@@ -113,14 +113,15 @@ class TestPayday(BillingHarness):
         assert self.obama.get_due('TheEnterprise') == D('4.00')
 
         fch.return_value = {}
+        self.obama_route.update_error("failed") # card fails
         Payday.start().run()    # payday 1
 
-        assert self.obama.get_due('TheEnterprise') == D('8.00')
+        assert self.obama.get_due('TheEnterprise') == D('4.00')
 
         fch.return_value = {}
         Payday.start().run()    # payday 2
 
-        assert self.obama.get_due('TheEnterprise') == D('8.00')
+        assert self.obama.get_due('TheEnterprise') == D('4.00')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_does_not_move_money_below_min_charge(self, fch):
