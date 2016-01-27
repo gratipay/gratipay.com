@@ -57,10 +57,12 @@ def db(env):
         db.register_model(model)
     gratipay.billing.payday.Payday.db = db
 
-    from gratipay.billing.exchanges import MINIMUM_CHARGE
-    db.run('UPDATE settings SET minimum_charge=%s', (MINIMUM_CHARGE,))
-
     return db
+
+def settings(db):
+    from gratipay.billing.exchanges import MINIMUM_CHARGE
+    db.run('DELETE FROM settings')
+    db.run('INSERT INTO settings VALUES (%s)', (MINIMUM_CHARGE, ))
 
 def mail(env, project_root='.'):
     Participant._mailer = mandrill.Mandrill(env.mandrill_key)
