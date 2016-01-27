@@ -116,8 +116,6 @@ class Harness(unittest.TestCase):
                 tablenames.insert(0, tablename)
         self.db.run("ALTER SEQUENCE participants_id_seq RESTART WITH 1")
 
-        gratipay.wireup.settings(self.db)
-
 
     def make_elsewhere(self, platform, user_id, user_name, **kw):
         info = UserInfo( platform=platform
