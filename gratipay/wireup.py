@@ -61,8 +61,9 @@ def db(env):
 
 def settings(db):
     from gratipay.billing.exchanges import MINIMUM_CHARGE
-    db.run('DELETE FROM settings')
-    db.run('INSERT INTO settings VALUES (%s)', (MINIMUM_CHARGE, ))
+    with db.get_cursor() as cursor:
+        cursor.run('DELETE FROM settings')
+        cursor.run('INSERT INTO settings VALUES (%s)', (MINIMUM_CHARGE, ))
 
 def mail(env, project_root='.'):
     Participant._mailer = mandrill.Mandrill(env.mandrill_key)
