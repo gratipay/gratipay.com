@@ -1,0 +1,26 @@
+""" Get or change authenticated user's subscriptions.
+"""
+from aspen import Response
+
+[--------------------------------------------------------]
+
+if user.ANON:
+    raise Response(403, _("Please sign in first."))
+
+else:
+    participant = user.participant
+
+    if request.method == 'GET':
+        subscriptions, totals = participant.get_giving_for_profile()
+        out = []
+        for s in subscriptions:
+            out.append({ "team_slug": s.team_slug,
+                         "team_name": s.team_name,
+                            "amount": str(s.amount),
+                               "due": str(s.due),
+                             "ctime": s.ctime,
+                             "mtime": s.mtime
+                       })
+
+[---] application/json
+out
