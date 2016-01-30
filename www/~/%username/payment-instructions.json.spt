@@ -1,26 +1,56 @@
 """ Get or change authenticated user's subscriptions.
 """
 from aspen import Response
+from gratipay.models.team import Team
+from gratipay.utils import get_participant
 
-[--------------------------------------------------------]
+[------------------------------------------------------------------------]
 
-if user.ANON:
-    raise Response(403, _("Please sign in first."))
+def format_subscription(s):
+    return {
+        "team_name": s.team_name,
+        "team_slug": s.team_slug,
+           "amount": s.amount,
+              "due": s.due,
+            "ctime": s.ctime,
+            "mtime": s.mtime
+    }
 
-else:
-    participant = user.participant
+participant = get_participant(state, restrict=True)
 
-    if request.method == 'GET':
-        subscriptions, totals = participant.get_giving_for_profile()
-        out = []
+if request.method == 'GET':
+
+    # Fetch all subscriptions for this user.
+    subscriptions, totals = participant.get_giving_for_profile()
+
+    slug = request.qs.get("team_slug", "")
+
+    if slug: # Filter subscription info only for this team from the list.
+
+        # get_giving_for_profile() does not raise an error if team
+        # doesn't exist. To avoid ambiguity make sure queried team exists.
+        team = Team.from_slug(slug)
+        if not team:
+            raise Response(400, _("Invalid team slug."))
+
+        out = {}
         for s in subscriptions:
-            out.append({ "team_slug": s.team_slug,
-                         "team_name": s.team_name,
-                            "amount": str(s.amount),
-                               "due": str(s.due),
-                             "ctime": s.ctime,
-                             "mtime": s.mtime
-                       })
+            if s.team_slug == slug:
+                out = format_subscription(s)
+                break
+        if not out:
+            # Subscription info for this team not found.
+            # Return default.
+            out = {
+                "team_name": team.name,
+                "team_slug": team.slug,
+                   "amount": "0.00",
+                      "due": "0.00",
+                    "ctime": None,
+                    "mtime": None
+            }
+    else:
+        out = [format_subscription(s) for s in subscriptions]
 
 [---] application/json
 out
