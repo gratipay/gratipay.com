@@ -448,7 +448,7 @@ an object giving a point-in-time snapshot of Gratipay. The
 
 **/`%username`/public.json**
 ([example](https://gratipay.com/Gratipay/public.json),
-[source](https://github.com/gratipay/gratipay.com/tree/master/www/%25username/public.json.spt))&mdash;<i>public</i>&mdash;Returns an object with these keys:
+[source](https://github.com/gratipay/gratipay.com/blob/master/www/~/%25username/public.json.spt))&mdash;<i>public</i>&mdash;Returns an object with these keys:
 
   - "taking"&mdash;an estimate of the amount the given participant will
     take from Teams this week
