@@ -1,45 +1,49 @@
-""" Get or change authenticated user's subscriptions.
+""" Get or change authenticated user's payment instructions.
 """
 from aspen import Response
 from gratipay.models.team import Team
 from gratipay.utils import get_participant
 
-[------------------------------------------------------------------------]
+[-----------------------------------------------------------------------------]
 
-def format_subscription(s):
+def format_payment_instruction(p):
     return {
-        "team_name": s.team_name,
-        "team_slug": s.team_slug,
-           "amount": s.amount,
-              "due": s.due,
-            "ctime": s.ctime,
-            "mtime": s.mtime
+        "team_name": p.team_name,
+        "team_slug": p.team_slug,
+           "amount": str(p.amount),
+              "due": str(p.due),
+            "ctime": p.ctime,
+            "mtime": p.mtime
+    }
+
+def format_error(team_slug, error):
+    return {
+        "team_slug": team_slug,
+            "error": error
     }
 
 participant = get_participant(state, restrict=True)
 
 if request.method == 'GET':
 
-    # Fetch all subscriptions for this user.
-    subscriptions, totals = participant.get_giving_for_profile()
-
     slug = request.qs.get("team_slug", "")
 
-    if slug: # Filter subscription info only for this team from the list.
+    if slug:
 
-        # get_giving_for_profile() does not raise an error if team
-        # doesn't exist. To avoid ambiguity make sure queried team exists.
+        # Make sure queried team exists.
         team = Team.from_slug(slug)
         if not team:
             raise Response(400, _("Invalid team slug."))
 
+        pi, totals = participant.get_giving_for_profile()
+
         out = {}
-        for s in subscriptions:
-            if s.team_slug == slug:
-                out = format_subscription(s)
+        for p in pi:
+            if p.team_slug == slug:
+                out = format_payment_instruction(p)
                 break
         if not out:
-            # Subscription info for this team not found.
+            # Payment instruction for this team not found.
             # Return default.
             out = {
                 "team_name": team.name,
@@ -50,7 +54,46 @@ if request.method == 'GET':
                     "mtime": None
             }
     else:
-        out = [format_subscription(s) for s in subscriptions]
+        pi, totals = participant.get_giving_for_profile()
+        out = [format_payment_instruction(p) for p in pi]
+
+elif request.method == 'POST':
+    out = []
+    new_payment_instructions = request.body
+
+    for pi in new_payment_instructions:
+        if 'team_slug' not in pi:
+            one = format_error(None, "No team slug.")
+        elif 'amount' not in pi:
+            one = format_error(pi['team_slug'], "No amount.")
+        else:
+            team = Team.from_slug(pi['team_slug'])
+            if team and team.is_approved and not team.is_closed:
+                try:
+                    created_pi = participant.set_payment_instruction(
+                        team, parse_decimal(pi['amount'])
+                    )
+                except Exception, exc:
+                    one = format_error(team.slug, exc.__class__.__name__)
+                else:
+                    # Payment instruction successfully created.
+                    # Create response.
+                    one = {
+                        "team_name": team.name,
+                        "team_slug": team.slug,
+                            "ctime": created_pi['ctime'],
+                            "mtime": created_pi['mtime'],
+                           "amount": str(created_pi['amount']),
+                              "due": str(created_pi['due'])
+                    }
+            else:
+                one = format_error(pi['team_slug'],"Invalid or inactive team.")
+
+        out.append(one)
+
+else:
+    # Only allow GET, POST.
+    raise Response(405, "", {"Allow": "GET, POST"})
 
 [---] application/json
 out
