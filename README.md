@@ -22,14 +22,21 @@ cd gratipay.com
 sudo -u postgres createuser --superuser $USER
 createdb gratipay
 make schema data
+```
+
+And then run
+
+```shell
 make run
 ```
 
-And/or:
+to boot the app and/or:
 
 ```shell
 make test
 ```
+
+to run the tests.
 
 [Read more](#table-of-contents).
 
