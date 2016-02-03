@@ -19,8 +19,7 @@ Given Python 2.7, Postgres 9.3, and a C/make toolchain:
 ```shell
 git clone git@github.com:gratipay/gratipay.com.git
 cd gratipay.com
-sudo -u postgres createuser --superuser $USER
-createdb gratipay
+script/bootstrap_debian.sh
 make schema data
 ```
 
