@@ -76,7 +76,7 @@ Table of Contents
   - [Vagrant](#vagrant)
   - [Docker](#docker)
   - [Help!](#help)
- - [Modifying CSS](#modifying-css)
+ - [Modifying CSS and Javascript](#modifying-css-and-javascript)
  - [Modifying the Database](#modifying-the-database)
  - [Testing](#testing-)
  - [Setting up a Database](#local-database-setup)
