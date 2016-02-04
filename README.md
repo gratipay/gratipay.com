@@ -16,20 +16,26 @@ Local
 
 Given Python 2.7, Postgres 9.3, and a C/make toolchain:
 
-```
-$ git clone git@github.com:gratipay/gratipay.com.git
-$ cd gratipay.com
-$ sudo -u postgres createuser --superuser $USER
-$ createdb gratipay
-$ make schema data
-$ make run
+```shell
+git clone git@github.com:gratipay/gratipay.com.git
+cd gratipay.com
+script/bootstrap_debian.sh
+make schema data
 ```
 
-And/or:
+And then run
 
+```shell
+make run
 ```
-$ make test
+
+to boot the app and/or:
+
+```shell
+make test
 ```
+
+to run the tests.
 
 [Read more](#table-of-contents).
 
@@ -39,8 +45,8 @@ Vagrant
 
 Given VirtualBox 4.3 and Vagrant 1.7.x:
 
-```
-$ vagrant up
+```shell
+vagrant up
 ```
 
 [Read more](#vagrant-1).
@@ -51,9 +57,9 @@ Docker
 
 Given some version(?) of Docker:
 
-```
-$ docker build -t gratipay .
-$ docker run -p 8537:8537 gratipay
+```shell
+docker build -t gratipay .
+docker run -p 8537:8537 gratipay
 ```
 
 [Read more](#docker-1).
@@ -70,7 +76,7 @@ Table of Contents
   - [Vagrant](#vagrant)
   - [Docker](#docker)
   - [Help!](#help)
- - [Modifying CSS](#modifying-css)
+ - [Modifying CSS and Javascript](#modifying-css-and-javascript)
  - [Modifying the Database](#modifying-the-database)
  - [Testing](#testing-)
  - [Setting up a Database](#local-database-setup)
@@ -99,16 +105,22 @@ met](http://initd.org/psycopg/docs/faq.html#problems-compiling-and-deploying-psy
 
 On Debian or Ubuntu you will need the following packages:
 
-    $ sudo apt-get install postgresql-9.3 postgresql-contrib libpq-dev python-dev
+```shell
+sudo apt-get install postgresql-9.3 postgresql-contrib libpq-dev python-dev
+```
 
 On OS X you can [download Postgres directly](http://www.postgresql.org/download/macosx/) or install through [Homebrew](http://brew.sh/):
 
-    $ brew install postgresql
+```shell
+brew install postgresql
+```
 
 To configure local Postgres create default role (if it hasn’t been created already) and database.
 
-    $ sudo -u postgres createuser --superuser $USER
-    $ createdb gratipay
+```shell
+sudo -u postgres createuser --superuser $USER
+createdb gratipay
+```
 
 If you are getting an error about `unknown argument: '-mno-fused-madd'` when
 running `make`, then add
@@ -116,7 +128,9 @@ running `make`, then add
 `ARCHFLAGS` environment variable and run `make clean env` again (see [this Stack Overflow answer
 for more information](http://stackoverflow.com/a/22355874/347246)):
 
-    $ ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future make clean env
+```shell
+ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future make clean env
+```
 
 
 Building
@@ -133,16 +147,22 @@ are stored in default_local.env file while overrides are in local.env.
 To create virtualenv enviroment with all python dependencies installed
 in a sandbox:
 
-    $ make env
+```shell
+make env
+```
 
 If you haven't run Gratipay for a while, you can reinstall the dependencies:
 
-    $ make clean env
+```shell
+make clean env
+```
 
 Add the necessary schemas and insert dummy data into postgres:
 
-    $ make schema
-    $ make fake
+```shell
+make schema
+make fake
+```
 
 
 Launching
@@ -151,7 +171,9 @@ Launching
 Once you've installed Python and Postgres and set up a database, you can use
 make to build and launch Gratipay:
 
-    $ make run
+```shell
+make run
+```
 
 If you don't have make, look at the Makefile to see what steps you need
 to perform to build and launch Gratipay. The Makefile is pretty simple and
@@ -159,7 +181,7 @@ straightforward.
 
 If Gratipay launches successfully it will look like this:
 
-```
+```shell
 $ make run
 PATH=env/bin:{lots-more-of-your-own-PATH} env/bin/honcho run -e defaults.env,local.env web
 2014-07-22 14:53:09 [1258] [INFO] Starting gunicorn 18.0
@@ -263,7 +285,7 @@ The next time you run `vagrant up`, it will reuse the VM. Vagrant uses SSH
 based authentication. To login to VM, use the `vagrant ssh` command. If you're
 prompted for a password when logging in, please use `vagrant`.
 
-**Mac users:** If you're prompted for a password during initial installation, 
+**Mac users:** If you're prompted for a password during initial installation,
 it's sudo and you should enter your Mac OS password.
 
 **Ubuntu users:** If you experience problems, please see [this
@@ -278,7 +300,7 @@ You can also install/run Gratipay with Docker.
 
 Build it with the included Dockerfile:
 
-```
+```shell
 $ git clone git@github.com:gratipay/gratipay.com.git
 $ cd gratipay.com
 $ docker build -t gratipay .
@@ -287,7 +309,7 @@ $ docker build -t gratipay .
 Once you've built the image, you can launch a container:
 
 
-```
+```shell
 $ docker run -d -p 8537:8537 gratipay
 ```
 
@@ -296,7 +318,7 @@ Check it out at [localhost:8537](http://localhost:8537/)!
 
 To edit files and have those changes reflect in the running container, mount your local folder when you execute the run command:
 
-```
+```shell
 $ docker run -d -v $PWD:/srv/gratipay.com -p 8537:8537 gratipay
 ```
 
@@ -304,20 +326,20 @@ You can get the running container's ID with `docker ps`. With that, you can
 
 - view the logs:
 
-```
+```shell
 $ docker logs [container_id]
 ```
 
 - run commands within the project root:
 
-```
+```shell
 $ docker exec [container_id] make schema
 $ docker exec [container_id] make fake
 ```
 
 Once you're done, kill the running container:
 
-```
+```shell
 $ docker kill [container_id]
 ```
 
@@ -338,8 +360,8 @@ combined in `scss/gratipay.scss` which itself is compiled by `libsass` in
 [`www/assets/gratipay.css.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.css.spt)
 on each request (it's behind a CDN in production).
 
-We use a similar pattern for JavaScript. Individual files are in `js/`, and 
-they're concatenated on the fly (and put behind a CDN in production) in 
+We use a similar pattern for JavaScript. Individual files are in `js/`, and
+they're concatenated on the fly (and put behind a CDN in production) in
 [`www/assets/gratipay.js.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.js.spt)
 
 
@@ -358,28 +380,33 @@ deployment.
 Testing [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
 =======
 
-Our test suite is divided into JavaScript tests and Python tests. The Python 
-part of the test suite is much more extensive than the JavaScript part. You need 
-to install [PhantomJS](http://phantomjs.org/) separately in order to run the 
-JavaScript tests. For Python we use the [pytest](http://pytest.org/) test runner; 
+Our test suite is divided into JavaScript tests and Python tests. The Python
+part of the test suite is much more extensive than the JavaScript part. You need
+to install [PhantomJS](http://phantomjs.org/) separately in order to run the
+JavaScript tests. For Python we use the [pytest](http://pytest.org/) test runner;
 it's installed automatically as part of `make env`.
 
 The easiest way to run the whole test suite is:
 
-    $ make test
-    
+```shell
+make test
+```
+
 You can also do:
 
-    $ make jstest
-    
+```shell
+make jstest
+```
+
 and/or:
 
-    $ make pytest
-    
+```shell
+make pytest
+```
 
-To invoke `py.test` directly you should use the `honcho` utility that comes 
-with the install. First `make tests/env`, the activate the virtualenv by running 
-`$ source env/bin/activate`, and then:
+To invoke `py.test` directly you should use the `honcho` utility that comes
+with the install. First `make tests/env`, the activate the virtualenv by running
+`source env/bin/activate`, and then:
 
     [gratipay] $ cd tests/
     [gratipay] $ honcho run -e defaults.env,local.env py.test
@@ -402,19 +429,25 @@ specify a URI to `psql`, and that was added in 9.2.
 
 To setup the instance for gratipay's needs run:
 
-    $ sudo -u postgres createuser --superuser $USER
-    $ createdb gratipay
-    $ createdb gratipay-test
+```shell
+sudo -u postgres createuser --superuser $USER
+createdb gratipay
+createdb gratipay-test
+```
 
 You can speed up the test suite when using a regular HDD by running:
 
-    $ psql -q gratipay-test -c 'alter database "gratipay-test" set synchronous_commit to off'
+```shell
+psql -q gratipay-test -c 'alter database "gratipay-test" set synchronous_commit to off'
+```
 
 ### Schema
 
 Once Postgres is set up, run:
 
-    $ make schema
+```shell
+make schema
+```
 
 Which populates the database named by `DATABASE_URL` with the schema from `sql/schema.sql`.
 
@@ -423,7 +456,9 @@ Which populates the database named by `DATABASE_URL` with the schema from `sql/s
 The gratipay database created in the last step is empty. To populate it with
 some fake data, so that more of the site is functional, run this command:
 
-    $ make fake
+```shell
+make fake
+```
 
 
 API
