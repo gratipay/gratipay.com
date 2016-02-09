@@ -677,8 +677,8 @@ msgstr "Betaling is veranderd naar {0} per week."
 msgid "Thank you so much for supporting {0}!"
 msgstr "Hartelijk dank voor het steunen van {0}!"
 
-msgid "You have successfully canceled your payment to {0}."
-msgstr "U heeft uw betaling aan {0} succesvol geannuleerd."
+msgid "You have canceled your payment to {0}."
+msgstr ""
 
 msgid "User not found."
 msgstr "Gebruiker is niet gevonden."
@@ -1044,6 +1044,9 @@ msgid "with {n} other"
 msgid_plural "with {n} others"
 msgstr[0] "met {n} andere"
 msgstr[1] "met {n} anderen"
+
+msgid "Invalid team slug."
+msgstr ""
 
 msgid "Your privacy setting has been changed."
 msgstr "Uw privacy instellingen zijn gewijzigd."

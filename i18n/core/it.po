@@ -675,8 +675,8 @@ msgstr "Donazioni cambiate a {0} a settimana."
 msgid "Thank you so much for supporting {0}!"
 msgstr "Grazie per aver sostenuto {0}!"
 
-msgid "You have successfully canceled your payment to {0}."
-msgstr "I tuoi pagamenti verso {0} sono stati annullati con successo."
+msgid "You have canceled your payment to {0}."
+msgstr ""
 
 msgid "User not found."
 msgstr "Utente non trovato."
@@ -1042,6 +1042,9 @@ msgid "with {n} other"
 msgid_plural "with {n} others"
 msgstr[0] "con {n} altro"
 msgstr[1] "con {n} altri"
+
+msgid "Invalid team slug."
+msgstr ""
 
 msgid "Your privacy setting has been changed."
 msgstr "Le impostazioni della tua privacy sono state cambiate."

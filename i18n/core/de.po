@@ -684,7 +684,7 @@ msgstr ""
 msgid "Thank you so much for supporting {0}!"
 msgstr ""
 
-msgid "You have successfully canceled your payment to {0}."
+msgid "You have canceled your payment to {0}."
 msgstr ""
 
 msgid "User not found."
@@ -1051,6 +1051,9 @@ msgid "with {n} other"
 msgid_plural "with {n} others"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Invalid team slug."
+msgstr ""
 
 msgid "Your privacy setting has been changed."
 msgstr "Ihre Privatsphäre-Einstellungen wurden geändert."
