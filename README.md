@@ -504,9 +504,20 @@ an object giving a point-in-time snapshot of Gratipay. The
           - `http://www.openstreetmap.org/user/%openstreetmap_username`
 
 **/`%username`/payment-instructions.json**
-([source](https://github.com/gratipay/gratipay.com/www/~/%username/payment-instructions.json.spt))&mdash;*private*&mdash;Responds to `GET` with an array of objects representing your current payment instructions. A payment instruction is created when a ~user instructs Gratipay to make voluntary payments to a Team. Pass a `team_slug` with `GET` to fetch payment instruction only for that particular team. `POST` an array of objects containing `team_slug` and `amount` to bulk upsert payment instructions(make sure to set `Content-Type` to `application/json`). The `amount` must be encoded as a string rather than a number. In case the upsert is not successful for any object, there will be an `error` attribute in the response explaining the error along with the `team_slug` to identify the object for which the error occured.
+([source](https://github.com/gratipay/gratipay.com/www/~/%username/payment-instructions.json.spt))&mdash;*private*&mdash;Responds
+to `GET` with an array of objects representing your current payment
+instructions. A payment instruction is created when a ~user instructs Gratipay
+to make voluntary payments to a Team. Pass a `team_slug` with `GET` to fetch
+payment instruction only for that particular team. `POST` an array of objects
+containing `team_slug` and `amount` to bulk upsert payment instructions (make
+sure to set `Content-Type` to `application/json`). The `amount` must be encoded
+as a string rather than a number. In case the upsert is not successful for any
+object, there will be an `error` attribute in the response explaining the error
+along with the `team_slug` to identify the object for which the error occured.
 
-This endpoint requires authentication. Look up your user ID and API key on your [account page](https://gratipay.com/about/me/settings/) and pass them using basic auth.
+This endpoint requires authentication. Look up your user ID and API key on your
+[account page](https://gratipay.com/about/me/settings/) and pass them using
+basic auth.
 
 E.g.:
 Request
