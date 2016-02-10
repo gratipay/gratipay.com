@@ -481,7 +481,7 @@ charts page used to use this.
 an object giving a point-in-time snapshot of Gratipay. The
 [stats](https://gratipay.com/about/stats.html) page displays the same info.
 
-**/`%username`/public.json**
+**/`~username`/public.json**
 ([example](https://gratipay.com/Gratipay/public.json),
 [source](https://github.com/gratipay/gratipay.com/blob/master/www/~/%25username/public.json.spt))&mdash;<i>public</i>&mdash;Returns an object with these keys:
 
@@ -503,7 +503,7 @@ an object giving a point-in-time snapshot of Gratipay. The
           - `undefined` (key not present)&mdash;no OpenStreetMap account connected
           - `http://www.openstreetmap.org/user/%openstreetmap_username`
 
-**/`%username`/payment-instructions.json**
+**/`~username`/payment-instructions.json**
 ([source](https://github.com/gratipay/gratipay.com/www/~/%username/payment-instructions.json.spt))&mdash;*private*&mdash;Responds
 to `GET` with an array of objects representing your current payment
 instructions. A payment instruction is created when a ~user instructs Gratipay
