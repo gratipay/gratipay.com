@@ -523,11 +523,11 @@ E.g.:
 Request
 
 ```
-curl -L https://gratipay.com/username/payment-instructions.json \
-     -u $userid:$api_key \
-     -X POST \
-     -d '[{"amount": "1.00", "team_slug": "foobar"}]' \
-     -H "Content-Type: application/json"
+curl https://gratipay.com/~username/payment-instructions.json \
+    -u $userid:$api_key \
+    -X POST \
+    -d '[{"amount": "1.00", "team_slug": "foobar"}]' \
+    -H "Content-Type: application/json"
 ```
 
 Response
