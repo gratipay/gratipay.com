@@ -31,6 +31,16 @@ class TestElsewhere(Harness):
             assert r.user_id is not None
             assert len(r.user_id) > 0
 
+    @mock.patch('gratipay.elsewhere.Platform.api_get')
+    def test_get_user_info_quotes_values_in_query_string(self, api_get):
+        self.platforms.twitter.get_user_info('user_name', "'")
+        api_get.assert_called_with("/users/show.json?screen_name=%27", sess=None)
+
+    @mock.patch('gratipay.elsewhere.bitbucket.Bitbucket.api_get')
+    def test_get_user_info_does_not_quotes_values_in_url(self, api_get):
+        self.platforms.bitbucket.get_user_info('user_name', "'")
+        api_get.assert_called_with("/2.0/users/'", sess=None)
+
     def test_opt_in_can_change_username(self):
         account = self.make_elsewhere('twitter', 1, 'alice')
         expected = 'bob'

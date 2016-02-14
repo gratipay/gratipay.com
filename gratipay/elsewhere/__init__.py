@@ -8,6 +8,7 @@ import hashlib
 import json
 import logging
 from urllib import quote
+from urlparse import urlparse, urlunparse
 import xml.etree.ElementTree as ET
 
 from aspen import log, Response
@@ -238,9 +239,19 @@ class Platform(object):
         path = getattr(self, path, None)
         if not path:
             raise Response(400)
-        path = path.format(**{key: value})
+        path = self._format_path(path, {key: value})
         info = self.api_parser(self.api_get(path, sess=sess))
         return self.extract_user_info(info)
+
+    def _format_path(self, path, values):
+        parsed = urlparse(path)
+
+        quoted_values = {k: quote(v) for k, v in values.items()}
+
+        parsed = parsed._replace(path=parsed.path.format(**values))
+        parsed = parsed._replace(query=parsed.query.format(**quoted_values))
+
+        return urlunparse(parsed)
 
     def get_user_self_info(self, sess):
         """Get the authenticated user's info from the API.
