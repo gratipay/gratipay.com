@@ -4,10 +4,10 @@ import base64
 
 import gratipay
 import gratipay.wireup
-from gratipay import utils
+from gratipay import utils, security
 from gratipay.cron import Cron
 from gratipay.models.participant import Participant
-from gratipay.security import authentication, csrf, security_headers
+from gratipay.security import authentication, csrf
 from gratipay.utils import erase_cookie, http_caching, i18n, set_cookie, timer
 from gratipay.version import get_version
 from gratipay.renderers import csv_dump, jinja2_htmlescaped, eval_, scss
@@ -97,7 +97,8 @@ algorithm.functions = [
     timer.start,
     algorithm['parse_environ_into_request'],
     algorithm['parse_body_into_request'],
-    algorithm['raise_200_for_OPTIONS'],
+
+    security.only_allow_certain_methods,
 
     utils.use_tildes_for_participants,
     algorithm['redirect_to_base_url'],
@@ -124,7 +125,7 @@ algorithm.functions = [
     authentication.add_auth_to_response,
     csrf.add_token_to_response,
     http_caching.add_caching_to_response,
-    security_headers,
+    security.add_headers_to_response,
 
     algorithm['log_traceback_for_5xx'],
     algorithm['delegate_error_to_simplate'],
