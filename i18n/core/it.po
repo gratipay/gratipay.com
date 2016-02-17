@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Changaco <changaco@changaco.oy.lc>, 2015
-# Davide Andreotti <andreottidavide@yahoo.it>, 2015
+# Davide Andreotti <andreottidavide@yahoo.it>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
@@ -676,7 +676,7 @@ msgid "Thank you so much for supporting {0}!"
 msgstr "Grazie per aver sostenuto {0}!"
 
 msgid "You have canceled your payment to {0}."
-msgstr ""
+msgstr "Hai annullato il tuo pagamento verso {0}."
 
 msgid "User not found."
 msgstr "Utente non trovato."
@@ -1044,7 +1044,7 @@ msgstr[0] "con {n} altro"
 msgstr[1] "con {n} altri"
 
 msgid "Invalid team slug."
-msgstr ""
+msgstr "Slug del team non valido."
 
 msgid "Your privacy setting has been changed."
 msgstr "Le impostazioni della tua privacy sono state cambiate."
