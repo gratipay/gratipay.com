@@ -1,4 +1,13 @@
-def security_headers(response):
+from aspen import Response
+
+
+def only_allow_certain_methods(request):
+    whitelisted = ['GET', 'HEAD', 'POST']
+    if request.method.upper() not in whitelisted:
+        raise Response(405)
+
+
+def add_headers_to_response(response):
     """Add security headers.
     """
 

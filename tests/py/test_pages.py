@@ -196,18 +196,6 @@ class TestPages(Harness):
         assert self.client.GET("/TheEnterprise/").code == 200
         assert self.client.GxT("/~TheEnterprise/").code == 404
 
-    def test_security_headers_sets_x_frame_options(self):
-        headers = self.client.GET('/about/').headers
-        assert headers['X-Frame-Options'] == 'SAMEORIGIN'
-
-    def test_security_headers_sets_x_content_type_options(self):
-        headers = self.client.GET('/about/').headers
-        assert headers['X-Content-Type-Options'] == 'nosniff'
-
-    def test_security_headers_sets_x_xss_protection(self):
-        headers = self.client.GET('/about/').headers
-        assert headers['X-XSS-Protection'] == '1; mode=block'
-
     @mock.patch('gratipay.models.participant.Participant.get_braintree_account')
     @mock.patch('gratipay.models.participant.Participant.get_braintree_token')
     def test_braintree_linked_from_credit_card_page(self, foo, bar):
