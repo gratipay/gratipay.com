@@ -26,7 +26,7 @@ suppress_sidebar = True
 {% extends "templates/base.html" %}
 
 {% block scripts %}
-<script>$(document).ready(Gratipay.team.initEditForm);</script>
+<script>$(document).ready(Gratipay.edit_team.initForm);</script>
 {% endblock %}
 
 {% block content %}
