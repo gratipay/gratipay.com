@@ -6,6 +6,8 @@ from aspen import Response
 
 from gratipay.models.community import slugize
 from gratipay.models.team import Team
+from gratipay.utils.images import imgize
+
 from psycopg2 import IntegrityError
 [---]
 request.allow('POST')
@@ -72,16 +74,12 @@ if request.method == 'POST':
     except IntegrityError:
         raise Response(400, _("Sorry, there is already a team using '{}'.", fields['slug']))
 
-    crops = requests.post('http://gip.rocks/v1', data=image, headers={'Content-Type': image_type})
-    if crops.status_code == 200:
-        zf = zipfile.ZipFile(StringIO(crops.content))
-        original = image
-        large = zf.open('160').read()
-        small = zf.open('48').read()
-        team.save_image(original, large, small, image_type)
-    elif crops.status_code == 413:
+    code, large, small = imgize(image, image_type)
+    if code == 200:
+        team.save_image(image, large, small, image_type)
+    elif code == 413:
         raise Response(400, _("Please upload an image smaller than 100 kB."))
-    elif crops.status_code == 415:
+    elif code == 415:
         raise Response(400, _("Please upload a PNG or JPG image."))
     else:
         raise Response(500, _("Sorry, there was a problem saving your image. Please try again."))
