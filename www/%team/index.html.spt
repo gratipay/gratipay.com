@@ -109,8 +109,8 @@ suppress_sidebar = not(team.is_approved or user.ADMIN)
     | <a href="{{ team.todo_url }}">{{ _("To-do") }}</a>
     {% endif %}
 
-    {% if not user.ANON and team.owner == user.participant.username %}
-    |{{ _( "{a} Edit your team {_a}"
+    {% if user.ADMIN or (not user.ANON and team.owner == user.participant.username) %}
+    |{{ _( "{a} Edit team {_a}"
           , a='<a href="./edit">'|safe
           , _a='</a>'|safe
            ) }}
