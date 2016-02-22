@@ -67,6 +67,26 @@ class Team(Model):
         """, fields)
 
 
+    def update(self, **kw):
+      updateable = frozenset(['name', 'product_or_service', 'homepage',
+                              'onboarding_url', 'todo_url'])
+
+      cols, vals = zip(*kw.items())
+      assert set(cols).issubset(updateable)
+
+      cols = ', '.join(cols)
+      placeholders = ', '.join(['%s']*len(vals))
+
+      return self.db.one("""
+
+        UPDATE teams
+           SET ({0}) = ({1})
+         WHERE id = %s
+     RETURNING teams.*::teams
+
+        """.format(cols, placeholders), vals+(self.id,))
+
+
     def create_github_review_issue(self):
         """POST to GitHub, and return the URL of the new issue.
         """
