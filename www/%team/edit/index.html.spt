@@ -66,6 +66,7 @@ suppress_sidebar = True
     <br>
     <br>
     <button type="submit">{{ _("Modify") }}</button>
+    <button onclick="window.location='../';return false;">{{ _("Cancel") }}</button>
 
 </form>
 {% endblock %}

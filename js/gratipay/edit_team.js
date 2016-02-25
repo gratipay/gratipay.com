@@ -2,6 +2,7 @@ Gratipay.edit_team = {}
 
 Gratipay.edit_team.initForm = function() {
     $form = $("#edit-team");
+    $buttons = $form.find("button");
 
     $form.find(":input").each(function() {
         // Save original values.
@@ -30,6 +31,7 @@ Gratipay.edit_team.submitForm = function(e) {
     });
 
     if(modified) {
+        $buttons.prop("disabled", true);
         $.ajax({
             url: $form.attr("action"),
             type: $form.attr("method"),
@@ -39,9 +41,11 @@ Gratipay.edit_team.submitForm = function(e) {
             contentType: false,
             success: function(d) {
                 Gratipay.notification("Successfully edited team.", 'success');
-                setTimeout(function() { window.location.reload(); }, 1000);
+                setTimeout(function() {
+                    window.location.href = "../";
+                }, 1000);
             },
-            error: Gratipay.error
+            error: [Gratipay.error, function () { $buttons.prop("disabled", false); }]
         });
     }
 }
