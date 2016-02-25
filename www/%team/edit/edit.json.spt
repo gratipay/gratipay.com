@@ -27,7 +27,8 @@ team = get_team(state)
 if team.is_closed:
     raise Response(403, _("You can't edit a closed team."))
 
-# TODO - Add check for rejected team.
+if team.is_approved is False: # for teams under review, is_approved is None.
+    raise Response(403, _("You can't edit a rejected team."))
 
 if not user.ADMIN and user.participant.username != team.owner:
     raise Response(403, _("You are not authorized to access this page."))
