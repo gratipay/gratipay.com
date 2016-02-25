@@ -10,7 +10,7 @@ If you'd like to contribute to Gratipay, check out <http://inside.gratipay.com>.
 
 Quick Start
 ===========
-
+boo
 Local
 -----
 
@@ -19,7 +19,7 @@ Given Python 2.7, Postgres 9.3, and a C/make toolchain:
 ```shell
 git clone git@github.com:gratipay/gratipay.com.git
 cd gratipay.com
-scripts/bootstrap_debian.sh
+scripts/bootstrap-debian.sh
 make schema data
 ```
 
