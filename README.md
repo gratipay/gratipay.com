@@ -10,7 +10,7 @@ If you'd like to contribute to Gratipay, check out <http://inside.gratipay.com>.
 
 Quick Start
 ===========
-boo
+
 Local
 -----
 
