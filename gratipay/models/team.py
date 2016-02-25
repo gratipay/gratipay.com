@@ -74,18 +74,25 @@ class Team(Model):
       cols, vals = zip(*kw.items())
       assert set(cols).issubset(updateable)
 
+      old_value = {}
+      for col in cols:
+        old_value[col] = getattr(self, col)
+
       cols = ', '.join(cols)
       placeholders = ', '.join(['%s']*len(vals))
 
-      return self.db.one("""
-
-        UPDATE teams
-           SET ({0}) = ({1})
-         WHERE id = %s
-     RETURNING teams.*::teams
-
-        """.format(cols, placeholders), vals+(self.id,))
-
+      with self.db.get_cursor() as c:
+        c.run("""
+          UPDATE teams
+             SET ({0}) = ({1})
+           WHERE id = %s
+          """.format(cols, placeholders), vals+(self.id,)
+        )
+        add_event(c, 'team', dict( action='update'
+                                 , id=self.id
+                                 , **old_value
+                                  ))
+        self.set_attributes(**kw)
 
     def create_github_review_issue(self):
         """POST to GitHub, and return the URL of the new issue.

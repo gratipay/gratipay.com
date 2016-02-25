@@ -58,7 +58,7 @@ for field in data.keys():
             fields[field] = value
 
 if fields:
-    team = team.update(**fields)
+    team.update(**fields)
 
 if image:
     code, large, small = imgize(image, image_type)
