@@ -42,7 +42,7 @@ for field in data.keys():
         if field == 'image':
             image = data[field].value  # file upload
             image_type = data[field].type
-            if image_type not in ('image/png', 'image/jpeg'):
+            if image and image_type not in ('image/png', 'image/jpeg'):
                 raise Response(400, _("Please upload a PNG or JPG image."))
         else:
             value = data.get(field, '').strip(' ')
