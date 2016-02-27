@@ -432,3 +432,49 @@ class TestTeams(Harness):
         team.save_image(IMAGE, IMAGE, IMAGE, 'image/png')
         image = self.client.GET('/TheEnterprise/image').body  # buffer
         assert str(image) == IMAGE
+
+
+    # Update
+    # ======
+
+    def test_update_works(self):
+        team = self.make_team(slug='enterprise')
+        update_data = {
+            'name': 'Enterprise',
+            'product_or_service': 'We save galaxies.',
+            'homepage': 'http://starwars-enterprise.com/',
+            'onboarding_url': 'http://starwars-enterprise.com/onboarding',
+            'todo_url': 'http://starwars-enterprise.com/todos',
+        }
+        team.update(**update_data)
+        team = Team.from_slug('enterprise')
+        for field in update_data:
+            assert getattr(team, field) == update_data[field]
+
+    def test_can_only_update_allowed_fields(self):
+        allowed_fields = set(['name', 'product_or_service', 'homepage',
+                              'onboarding_url', 'todo_url'])
+
+        team = self.make_team(slug='enterprise')
+
+        fields = vars(team).keys()
+        for field in fields:
+            if field not in allowed_fields:
+                with pytest.raises(AssertionError):
+                    team.update(field='foo')
+
+    def test_update_records_the_old_values_as_events(self):
+        team = self.make_team(slug='enterprise', product_or_service='Product')
+        team.update(name='Enterprise', product_or_service='We save galaxies.')
+        event = self.db.one('SELECT * FROM events')
+        assert event.payload == { 'action': 'update'
+                                , 'id': team.id
+                                , 'name': 'The Enterprise'
+                                , 'product_or_service': 'Product'
+                                 }
+
+    def test_update_updates_object_attributes(self):
+        team = self.make_team(slug='enterprise')
+        team.update(name='Enterprise', product_or_service='We save galaxies.')
+        assert team.name == 'Enterprise'
+        assert team.product_or_service == 'We save galaxies.'
