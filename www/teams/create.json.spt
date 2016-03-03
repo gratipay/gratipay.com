@@ -6,7 +6,12 @@ from aspen import Response
 
 from gratipay.models.community import slugize
 from gratipay.models.team import Team
-from gratipay.utils.images import imgize
+from gratipay.utils.images import (
+    imgize,
+    ImageTooLarge,
+    InvalidImageType,
+    UnknownImageError
+)
 
 from psycopg2 import IntegrityError
 [---]
@@ -45,13 +50,14 @@ if request.method == 'POST':
     image = None
     image_type = None
 
-
     # Validate inputs
 
     for field in field_names.keys():
         if field == 'image':
             image = value = request.body[field].value  # file upload
             image_type = request.body[field].type
+            if image_type not in ('image/png', 'image/jpeg'):
+                raise Response(400, _("Please upload a PNG or JPG image."))
         else:
             value = request.body.get(field, '').strip(' ')
         if not value:
@@ -64,26 +70,23 @@ if request.method == 'POST':
                                  , field_names[field]
                                   ))
 
-    fields['slug'] = slugize(fields['name'])
-
-    if image_type not in ('image/png', 'image/jpeg'):
+    try:
+        large, small = imgize(image, image_type)
+    except ImageTooLarge:
+        raise Response(400, _("Please upload an image smaller than 100 kB."))
+    except InvalidImageType:
         raise Response(400, _("Please upload a PNG or JPG image."))
+    except UnknownImageError:
+        raise Response(500, _("Sorry, there was a problem saving your image. Please try again."))
+
+    fields['slug'] = slugize(fields['name'])
 
     try:
         team = Team.insert(user.participant, **fields)
     except IntegrityError:
         raise Response(400, _("Sorry, there is already a team using '{}'.", fields['slug']))
 
-    code, large, small = imgize(image, image_type)
-    if code == 200:
-        team.save_image(image, large, small, image_type)
-    elif code == 413:
-        raise Response(400, _("Please upload an image smaller than 100 kB."))
-    elif code == 415:
-        raise Response(400, _("Please upload a PNG or JPG image."))
-    else:
-        raise Response(500, _("Sorry, there was a problem saving your image. Please try again."))
-
+    team.save_image(image, large, small, image_type)
 
     review_url = team.create_github_review_issue()
     team.set_review_url(review_url)
