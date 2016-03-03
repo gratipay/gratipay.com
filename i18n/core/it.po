@@ -663,6 +663,9 @@ msgstr "Formazione Iniziale"
 msgid "To-do"
 msgstr "Cose da fare"
 
+msgid "{a} Edit team {_a}"
+msgstr ""
+
 msgid "owned by {a}~{owner}{_a}"
 msgstr "Proprietà di {a}~{owner}{_a}"
 
@@ -677,6 +680,33 @@ msgstr "Grazie per aver sostenuto {0}!"
 
 msgid "You have canceled your payment to {0}."
 msgstr "Hai annullato il tuo pagamento verso {0}."
+
+msgid "You can't edit a closed team."
+msgstr ""
+
+msgid "You can't edit a rejected team."
+msgstr ""
+
+msgid "Please upload a PNG or JPG image."
+msgstr "Per favore, carica un'immagine PNG o JPG."
+
+msgid "Please fill out the '{}' field."
+msgstr "Per favore, completa il campo '{}'."
+
+msgid "Please enter an http[s]:// URL for the '{}' field."
+msgstr "Per favore, inserisci un URL http[s]:// per il campo '{}'."
+
+msgid "Please upload an image smaller than 100 kB."
+msgstr "Per favore, carica un'immagine di dimensioni inferiori a 100 kB."
+
+msgid "Sorry, there was a problem saving your image. Please try again."
+msgstr "Ci dispiace, c'è stato un problema durante il salvataggio dell'immagine. Per favore, prova ancora."
+
+msgid "Edit your team"
+msgstr ""
+
+msgid "Modify"
+msgstr ""
 
 msgid "User not found."
 msgstr "Utente non trovato."
@@ -962,23 +992,8 @@ msgstr "Scusa, devi accettare di essere responsabile del libro paga."
 msgid "Sorry, you must agree to the terms of service."
 msgstr "Scusa, devi accettare i termini di servizio."
 
-msgid "Please fill out the '{}' field."
-msgstr "Per favore, completa il campo '{}'."
-
-msgid "Please enter an http[s]:// URL for the '{}' field."
-msgstr "Per favore, inserisci un URL http[s]:// per il campo '{}'."
-
-msgid "Please upload a PNG or JPG image."
-msgstr "Per favore, carica un'immagine PNG o JPG."
-
 msgid "Sorry, there is already a team using '{}'."
 msgstr "Ci dispiace, un altro team sta già usando '{}'."
-
-msgid "Please upload an image smaller than 100 kB."
-msgstr "Per favore, carica un'immagine di dimensioni inferiori a 100 kB."
-
-msgid "Sorry, there was a problem saving your image. Please try again."
-msgstr "Ci dispiace, c'è stato un problema durante il salvataggio dell'immagine. Per favore, prova ancora."
 
 msgid "Identity Verification"
 msgstr "Verifica Identità"

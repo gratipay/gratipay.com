@@ -666,6 +666,9 @@ msgstr ""
 msgid "To-do"
 msgstr ""
 
+msgid "{a} Edit team {_a}"
+msgstr ""
+
 msgid "owned by {a}~{owner}{_a}"
 msgstr ""
 
@@ -679,6 +682,33 @@ msgid "Thank you so much for supporting {0}!"
 msgstr ""
 
 msgid "You have canceled your payment to {0}."
+msgstr ""
+
+msgid "You can't edit a closed team."
+msgstr ""
+
+msgid "You can't edit a rejected team."
+msgstr ""
+
+msgid "Please upload a PNG or JPG image."
+msgstr ""
+
+msgid "Please fill out the '{}' field."
+msgstr ""
+
+msgid "Please enter an http[s]:// URL for the '{}' field."
+msgstr ""
+
+msgid "Please upload an image smaller than 100 kB."
+msgstr ""
+
+msgid "Sorry, there was a problem saving your image. Please try again."
+msgstr ""
+
+msgid "Edit your team"
+msgstr ""
+
+msgid "Modify"
 msgstr ""
 
 msgid "User not found."
@@ -965,22 +995,7 @@ msgstr ""
 msgid "Sorry, you must agree to the terms of service."
 msgstr ""
 
-msgid "Please fill out the '{}' field."
-msgstr ""
-
-msgid "Please enter an http[s]:// URL for the '{}' field."
-msgstr ""
-
-msgid "Please upload a PNG or JPG image."
-msgstr ""
-
 msgid "Sorry, there is already a team using '{}'."
-msgstr ""
-
-msgid "Please upload an image smaller than 100 kB."
-msgstr ""
-
-msgid "Sorry, there was a problem saving your image. Please try again."
 msgstr ""
 
 msgid "Identity Verification"
