@@ -504,7 +504,7 @@ an object giving a point-in-time snapshot of Gratipay. The
           - `http://www.openstreetmap.org/user/%openstreetmap_username`
 
 **/`~username`/payment-instructions.json**
-([source](https://github.com/gratipay/gratipay.com/www/~/%username/payment-instructions.json.spt))&mdash;*private*&mdash;Responds
+([source](https://github.com/gratipay/gratipay.com/blob/master/www/~/%25username/payment-instructions.json.spt))&mdash;*private*&mdash;Responds
 to `GET` with an array of objects representing your current payment
 instructions. A payment instruction is created when a ~user instructs Gratipay
 to make voluntary payments to a Team. Pass a `team_slug` with `GET` to fetch
