@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from aspen import Response
-from gratipay.models.community import slugize
 from gratipay.models.team import Team
 [---]
 request.allow('GET')
@@ -58,6 +57,7 @@ still_migrating = delta > 0
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
     <label><h2>{{ _("Team Name") }}</h2></label>
+    <p><i>{{ _("Must contain alphabets. Can optionally contain numbers, dashes (-), underscores (_), periods (.), comma (,) and whitespaces.") }}</i></p>
     <input type="text" name="name" required autofocus>
 
     <label><h2>{{ _("Image") }}</h2></label>
