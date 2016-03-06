@@ -296,6 +296,14 @@ class TestTeams(Harness):
         r = self.post_new(dict(self.valid_data, todo_url='foo'), expected=400)
         assert "Please enter an http[s]:// URL for the 'To-do URL' field." in r.body
 
+    def test_error_message_for_invalid_team_name(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        data = dict(self.valid_data)
+        data['name'] = '~Invalid:Name;'
+        r = self.post_new(data, expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Sorry, team name contains invalid characters." in r.body
+
     def test_error_message_for_slug_collision(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         self.post_new(dict(self.valid_data))
