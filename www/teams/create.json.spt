@@ -4,8 +4,8 @@ from cStringIO import StringIO
 import requests
 from aspen import Response
 
-from gratipay.models.community import slugize
-from gratipay.models.team import Team
+from gratipay.exceptions import InvalidTeamName
+from gratipay.models.team import slugize, Team
 from gratipay.utils.images import (
     imgize,
     ImageTooLarge,
@@ -71,6 +71,11 @@ if request.method == 'POST':
                                   ))
 
     try:
+        fields['slug'] = slugize(fields['name'])
+    except AssertionError:
+        raise Response(400, _("Sorry, team name contains invalid characters."))
+
+    try:
         large, small = imgize(image, image_type)
     except ImageTooLarge:
         raise Response(400, _("Please upload an image smaller than 100 kB."))
@@ -78,8 +83,6 @@ if request.method == 'POST':
         raise Response(400, _("Please upload a PNG or JPG image."))
     except UnknownImageError:
         raise Response(500, _("Sorry, there was a problem saving your image. Please try again."))
-
-    fields['slug'] = slugize(fields['name'])
 
     try:
         team = Team.insert(user.participant, **fields)
