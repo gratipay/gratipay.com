@@ -72,7 +72,7 @@ if request.method == 'POST':
 
     try:
         fields['slug'] = slugize(fields['name'])
-    except AssertionError:
+    except InvalidTeamName:
         raise Response(400, _("Sorry, team name contains invalid characters."))
 
     try:

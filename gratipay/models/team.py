@@ -1,10 +1,28 @@
 """Teams on Gratipay receive payments and distribute payroll.
 """
+import re
 import requests
 from aspen import json, log
+from gratipay.exceptions import InvalidTeamName
 from gratipay.models import add_event
 from postgres.orm import Model
 
+# Should have at least one alphabet.
+TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,-_ ]+)$')
+
+def slugize(name):
+    """ Create a slug from a team name.
+    """
+    if TEAM_NAME_PATTERN.match(name) is None:
+      raise InvalidTeamName
+
+    slug = name.strip()
+    for c in (',', ' '):
+        slug = slug.replace(c, '-') # Avoid % encoded characters in slug url.
+    while '--' in slug:
+        slug = slug.replace('--', '-')
+    slug = slug.strip('-')
+    return slug
 
 class Team(Model):
     """Represent a Gratipay team.
