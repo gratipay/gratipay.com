@@ -235,6 +235,15 @@ class TestTeams(Harness):
         assert team.onboarding_url == 'http://INSIDE.GRATipay.com/'
         assert team.todo_url == 'hTTPS://github.com/GRATIPAY'
 
+    def test_casing_of_slug_survives(self):
+        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
+        data = dict(self.valid_data)
+        data['name'] = 'GratiTeam'
+        self.post_new(dict(data))
+        team = Team.from_slug('GratiTeam')
+        assert team is not None
+        assert team.slug_lower == 'gratiteam'
+
     def test_401_for_anon_creating_new_team(self):
         self.post_new(self.valid_data, auth_as=None, expected=401)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
