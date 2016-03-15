@@ -7,7 +7,7 @@ from gratipay.exceptions import InvalidTeamName
 from gratipay.models import add_event
 from postgres.orm import Model
 
-# Should have at least one alphabet.
+# Should have at least one letter.
 TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,-_ ]+)$')
 
 def slugize(name):
