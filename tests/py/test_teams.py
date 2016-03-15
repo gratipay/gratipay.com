@@ -302,14 +302,14 @@ class TestTeams(Harness):
         data['name'] = '~Invalid:Name;'
         r = self.post_new(data, expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
-        assert "Sorry, team name contains invalid characters." in r.body
+        assert "Sorry, your team name is invalid." in r.body
 
     def test_error_message_for_slug_collision(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         self.post_new(dict(self.valid_data))
         r = self.post_new(dict(self.valid_data), expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 1
-        assert "Sorry, there is already a team using 'gratiteam'." in r.body
+        assert "Sorry, there is already a team using 'Gratiteam'." in r.body
 
     def test_approved_team_shows_up_on_homepage(self):
         self.make_team(is_approved=True)
