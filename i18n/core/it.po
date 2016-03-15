@@ -563,6 +563,11 @@ msgstr "Grazie per aver inoltrato la richiesta!"
 msgid "Team Name"
 msgstr "Nome del Team"
 
+msgid ""
+"At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
+"periods (.), comma (,) and whitespace."
+msgstr ""
+
 msgid "Image"
 msgstr "Immagine"
 
@@ -664,7 +669,7 @@ msgid "To-do"
 msgstr "Cose da fare"
 
 msgid "{a} Edit team {_a}"
-msgstr ""
+msgstr "{a} Modifica team {_a}"
 
 msgid "owned by {a}~{owner}{_a}"
 msgstr "Proprietà di {a}~{owner}{_a}"
@@ -682,10 +687,10 @@ msgid "You have canceled your payment to {0}."
 msgstr "Hai annullato il tuo pagamento verso {0}."
 
 msgid "You can't edit a closed team."
-msgstr ""
+msgstr "Non puoi modificare un team chiuso."
 
 msgid "You can't edit a rejected team."
-msgstr ""
+msgstr "Non puoi modificare un team rifiutato."
 
 msgid "Please upload a PNG or JPG image."
 msgstr "Per favore, carica un'immagine PNG o JPG."
@@ -703,10 +708,10 @@ msgid "Sorry, there was a problem saving your image. Please try again."
 msgstr "Ci dispiace, c'è stato un problema durante il salvataggio dell'immagine. Per favore, prova ancora."
 
 msgid "Edit your team"
-msgstr ""
+msgstr "Modifica il tuo team"
 
 msgid "Modify"
-msgstr ""
+msgstr "Modifica"
 
 msgid "User not found."
 msgstr "Utente non trovato."
@@ -991,6 +996,9 @@ msgstr "Scusa, devi accettare di essere responsabile del libro paga."
 
 msgid "Sorry, you must agree to the terms of service."
 msgstr "Scusa, devi accettare i termini di servizio."
+
+msgid "Sorry, your team name is invalid."
+msgstr ""
 
 msgid "Sorry, there is already a team using '{}'."
 msgstr "Ci dispiace, un altro team sta già usando '{}'."

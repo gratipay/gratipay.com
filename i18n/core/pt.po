@@ -566,6 +566,11 @@ msgstr ""
 msgid "Team Name"
 msgstr "Nome do Time"
 
+msgid ""
+"At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
+"periods (.), comma (,) and whitespace."
+msgstr ""
+
 msgid "Image"
 msgstr ""
 
@@ -993,6 +998,9 @@ msgid "Sorry, you must agree to be responsible for payroll."
 msgstr ""
 
 msgid "Sorry, you must agree to the terms of service."
+msgstr ""
+
+msgid "Sorry, your team name is invalid."
 msgstr ""
 
 msgid "Sorry, there is already a team using '{}'."
