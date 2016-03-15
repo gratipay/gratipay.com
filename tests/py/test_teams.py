@@ -8,7 +8,7 @@ from decimal import Decimal
 
 from aspen.testing.client import FileUpload
 from gratipay.testing import Harness
-from gratipay.models.team import Team, AlreadyMigrated
+from gratipay.models.team import Team, AlreadyMigrated, slugize, InvalidTeamName
 
 
 REVIEW_URL = "https://github.com/gratipay/test-gremlin/issues/9"
@@ -486,3 +486,39 @@ class TestTeams(Harness):
         team.update(name='Enterprise', product_or_service='We save galaxies.')
         assert team.name == 'Enterprise'
         assert team.product_or_service == 'We save galaxies.'
+
+
+    # slugize
+
+    def test_slugize_slugizes(self):
+        assert slugize('Foo') == 'Foo'
+
+    def test_slugize_requires_a_letter(self):
+        assert pytest.raises(InvalidTeamName, slugize, '123')
+
+    def test_slugize_accepts_letter_in_middle(self):
+        assert slugize('1a23') == '1a23'
+
+    def test_slugize_converts_comma_to_dash(self):
+        assert slugize('foo,bar') == 'foo-bar'
+
+    def test_slugize_converts_space_to_dash(self):
+        assert slugize('foo bar') == 'foo-bar'
+
+    def test_slugize_allows_underscore(self):
+        assert slugize('foo_bar') == 'foo_bar'
+
+    def test_slugize_allows_period(self):
+        assert slugize('foo.bar') == 'foo.bar'
+
+    def test_slugize_trims_whitespace(self):
+        assert slugize('  Foo Bar  ') == 'Foo-Bar'
+
+    def test_slugize_trims_dashes(self):
+        assert slugize('--Foo Bar--') == 'Foo-Bar'
+
+    def test_slugize_trims_replacement_dashes(self):
+        assert slugize(',,Foo Bar,,') == 'Foo-Bar'
+
+    def test_slugize_folds_dashes_together(self):
+        assert slugize('1a----------------23') == '1a-23'
