@@ -8,7 +8,7 @@ from decimal import Decimal
 
 from aspen.testing.client import FileUpload
 from gratipay.testing import Harness
-from gratipay.models.team import Team, AlreadyMigrated
+from gratipay.models.team import Team, AlreadyMigrated, slugize, InvalidTeamName
 
 
 REVIEW_URL = "https://github.com/gratipay/test-gremlin/issues/9"
@@ -235,6 +235,15 @@ class TestTeams(Harness):
         assert team.onboarding_url == 'http://INSIDE.GRATipay.com/'
         assert team.todo_url == 'hTTPS://github.com/GRATIPAY'
 
+    def test_casing_of_slug_survives(self):
+        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
+        data = dict(self.valid_data)
+        data['name'] = 'GratiTeam'
+        self.post_new(dict(data))
+        team = Team.from_slug('GratiTeam')
+        assert team is not None
+        assert team.slug_lower == 'gratiteam'
+
     def test_401_for_anon_creating_new_team(self):
         self.post_new(self.valid_data, auth_as=None, expected=401)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
@@ -296,12 +305,20 @@ class TestTeams(Harness):
         r = self.post_new(dict(self.valid_data, todo_url='foo'), expected=400)
         assert "Please enter an http[s]:// URL for the 'To-do URL' field." in r.body
 
+    def test_error_message_for_invalid_team_name(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        data = dict(self.valid_data)
+        data['name'] = '~Invalid:Name;'
+        r = self.post_new(data, expected=400)
+        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
+        assert "Sorry, your team name is invalid." in r.body
+
     def test_error_message_for_slug_collision(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         self.post_new(dict(self.valid_data))
         r = self.post_new(dict(self.valid_data), expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 1
-        assert "Sorry, there is already a team using 'gratiteam'." in r.body
+        assert "Sorry, there is already a team using 'Gratiteam'." in r.body
 
     def test_approved_team_shows_up_on_homepage(self):
         self.make_team(is_approved=True)
@@ -478,3 +495,39 @@ class TestTeams(Harness):
         team.update(name='Enterprise', product_or_service='We save galaxies.')
         assert team.name == 'Enterprise'
         assert team.product_or_service == 'We save galaxies.'
+
+
+    # slugize
+
+    def test_slugize_slugizes(self):
+        assert slugize('Foo') == 'Foo'
+
+    def test_slugize_requires_a_letter(self):
+        assert pytest.raises(InvalidTeamName, slugize, '123')
+
+    def test_slugize_accepts_letter_in_middle(self):
+        assert slugize('1a23') == '1a23'
+
+    def test_slugize_converts_comma_to_dash(self):
+        assert slugize('foo,bar') == 'foo-bar'
+
+    def test_slugize_converts_space_to_dash(self):
+        assert slugize('foo bar') == 'foo-bar'
+
+    def test_slugize_allows_underscore(self):
+        assert slugize('foo_bar') == 'foo_bar'
+
+    def test_slugize_allows_period(self):
+        assert slugize('foo.bar') == 'foo.bar'
+
+    def test_slugize_trims_whitespace(self):
+        assert slugize('  Foo Bar  ') == 'Foo-Bar'
+
+    def test_slugize_trims_dashes(self):
+        assert slugize('--Foo Bar--') == 'Foo-Bar'
+
+    def test_slugize_trims_replacement_dashes(self):
+        assert slugize(',,Foo Bar,,') == 'Foo-Bar'
+
+    def test_slugize_folds_dashes_together(self):
+        assert slugize('1a----------------23') == '1a-23'

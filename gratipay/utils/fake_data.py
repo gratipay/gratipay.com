@@ -10,7 +10,7 @@ from psycopg2 import IntegrityError
 from gratipay import wireup, MAX_TIP, MIN_TIP
 from gratipay.elsewhere import PLATFORMS
 from gratipay.models.participant import Participant
-from gratipay.models.team import Team
+from gratipay.models.team import slugize, Team
 from gratipay.models import community
 from gratipay.models import check_db
 
@@ -82,8 +82,7 @@ def fake_team(db, teamowner):
     teamslugname = faker.city()
 
     try:
-        #using community.slugize
-        teamslug = community.slugize(teamslugname)
+        teamslug = slugize(teamslugname)
         homepage = 'http://www.example.org/' + fake_text_id(3)
         _fake_thing( db
                    , "teams"
