@@ -7,8 +7,10 @@ from gratipay.exceptions import InvalidTeamName
 from gratipay.models import add_event
 from postgres.orm import Model
 
+
 # Should have at least one letter.
 TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,-_ ]+)$')
+
 
 def slugize(name):
     """ Create a slug from a team name.
@@ -23,6 +25,7 @@ def slugize(name):
         slug = slug.replace('--', '-')
     slug = slug.strip('-')
     return slug
+
 
 class Team(Model):
     """Represent a Gratipay team.
