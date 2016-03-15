@@ -1,6 +1,7 @@
 import json
 import time
 
+import mock
 from gratipay.exceptions import CannotRemovePrimaryEmail, EmailAlreadyTaken, EmailNotVerified
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
 from gratipay.models.participant import Participant
@@ -218,6 +219,13 @@ class TestEmail(EmailHarness):
         last_email = self.get_last_email()
         assert 'foo&#39;bar' in last_email['html']
         assert '&#39;' not in last_email['text']
+
+    @mock.patch('gratipay.models.participant.Participant.send_email')
+    def test_emails_with_plus_are_linked_properly(self, send_email):
+        send_email.return_value = 1
+        self.alice.add_email("foo+bar@example.com")
+        link = send_email.args[1]
+        assert link.startswith('/~alice/emails/verify.html?email=foo%2Bbar%40example.com&nonce=')
 
     def test_can_dequeue_an_email(self):
         larry = self.make_participant('larry', email_address='larry@example.com')
