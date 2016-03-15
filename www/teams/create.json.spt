@@ -73,7 +73,7 @@ if request.method == 'POST':
     try:
         fields['slug'] = slugize(fields['name'])
     except InvalidTeamName:
-        raise Response(400, _("Sorry, team name contains invalid characters."))
+        raise Response(400, _("Sorry, your team name is invalid."))
 
     try:
         large, small = imgize(image, image_type)
