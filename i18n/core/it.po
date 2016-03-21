@@ -566,7 +566,7 @@ msgstr "Nome del Team"
 msgid ""
 "At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
 "periods (.), comma (,) and whitespace."
-msgstr ""
+msgstr "Almeno una lettera dalla A alla Z, più numeri, trattini (-), underscore (_), punti (.), virgole (,)  e spazi."
 
 msgid "Image"
 msgstr "Immagine"
@@ -998,7 +998,7 @@ msgid "Sorry, you must agree to the terms of service."
 msgstr "Scusa, devi accettare i termini di servizio."
 
 msgid "Sorry, your team name is invalid."
-msgstr ""
+msgstr "Ci dispiace, questo numero routing non è valido."
 
 msgid "Sorry, there is already a team using '{}'."
 msgstr "Ci dispiace, un altro team sta già usando '{}'."
