@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from base64 import b64decode, b64encode
 from datetime import datetime, timedelta
 
 from aspen import Response, json
@@ -130,6 +131,46 @@ def get_team(state):
         raise Response(410)
 
     return team
+
+
+def b64encode_s(s):
+    prefix = b''
+    if not isinstance(s, bytes):
+        s = s.encode('utf8')
+    else:
+        # Check whether the string is binary or already utf8
+        try:
+            s.decode('utf8')
+        except UnicodeError:
+            prefix = b'.'
+    return prefix + b64encode(s, b'-_').replace(b'=', b'~')
+
+
+def b64decode_s(s, **kw):
+    def error():
+        if 'default' in kw:
+            return kw['default']
+        raise Response(400, "invalid base64 input")
+
+    try:
+        s = s.encode('ascii')
+    except UnicodeError:
+        return error()
+
+    udecode = lambda a: a.decode('utf8')
+    if s[:1] == b'.':
+        udecode = lambda a: a
+        s = s[1:]
+    s = s.replace(b'~', b'=')
+    try:
+        return udecode(b64decode(s, '-_'))
+    except Exception:
+        try:
+            # For retrocompatibility
+            return udecode(b64decode(s))
+        except Exception:
+            pass
+        return error()
 
 
 def update_cta(website):
