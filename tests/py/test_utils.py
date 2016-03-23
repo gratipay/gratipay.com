@@ -7,7 +7,7 @@ import pytest
 from aspen.http.response import Response
 from gratipay import utils
 from gratipay.testing import Harness
-from gratipay.utils import i18n, markdown, pricing
+from gratipay.utils import i18n, markdown, pricing, b64encode_s, b64decode_s
 from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUsername, \
                                                                            RanOutOfUsernameAttempts
 from psycopg2 import IntegrityError
@@ -216,3 +216,25 @@ class Tests(Harness):
 
     def test_splh_rounds_to_nearest_five_cents(self):
         assert pricing.suggested_payment_low_high(D('98.33')) == (D('4.90'), D('9.85'))
+
+
+    # Base64 encoding/decoding
+    # ========================
+
+    def test_b64encode_s_replaces_slash_with_underscore(self):
+        # TheEnter?prise => VGhlRW50ZXI/cHJpc2U=
+        assert b64encode_s('TheEnter?prise') == 'VGhlRW50ZXI_cHJpc2U~'
+
+    def test_b64encode_s_replaces_equals_with_tilde(self):
+        assert b64encode_s('TheEnterprise') == 'VGhlRW50ZXJwcmlzZQ~~'
+
+    def test_b64decode_s_decodes(self):
+        assert b64decode_s('VGhlRW50ZXI_cHJpc2U~') == 'TheEnter?prise'
+
+    def test_b64decode_s_raises_response_on_error(self):
+        with self.assertRaises(Response) as cm:
+            b64decode_s('abcd')
+        assert cm.exception.code == 400
+
+    def test_b64decode_s_returns_default_if_passed_on_error(self):
+        assert b64decode_s('abcd', default='error') == 'error'
