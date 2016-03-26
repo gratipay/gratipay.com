@@ -6,7 +6,7 @@ from gratipay.exceptions import CannotRemovePrimaryEmail, EmailAlreadyTaken, Ema
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
 from gratipay.models.participant import Participant
 from gratipay.testing.emails import EmailHarness
-from gratipay.utils import emails
+from gratipay.utils import emails, b64encode_s
 
 
 class TestEmail(EmailHarness):
@@ -27,7 +27,8 @@ class TestEmail(EmailHarness):
         return P('/~alice/emails/modify.json', data, auth_as=user, **headers)
 
     def verify_email(self, email, nonce, username='alice', should_fail=False):
-        url = '/~%s/emails/verify.html?email=%s&nonce=%s' % (username, email, nonce)
+        # Email address is base64 encoded in url.
+        url = '/~%s/emails/verify.html?email64=%s&nonce=%s' % (username, b64encode_s(email), nonce)
         G = self.client.GxT if should_fail else self.client.GET
         return G(url, auth_as=username)
 
@@ -49,6 +50,13 @@ class TestEmail(EmailHarness):
         assert last_email['to'][0]['email'] == 'alice@gratipay.com'
         expected = "We've received a request to connect alice@gratipay.com to the alice account on Gratipay"
         assert expected in last_email['text']
+
+    def test_email_address_is_base64_encoded_in_sent_verification_link(self):
+        address = 'alice@gratipay.com'
+        encoded = b64encode_s(address)
+        self.hit_email_spt('add-email', address)
+        last_email = self.get_last_email()
+        assert "~alice/emails/verify.html?email64="+encoded in last_email['text']
 
     def test_verification_email_doesnt_contain_unsubscribe(self):
         self.hit_email_spt('add-email', 'alice@gratipay.com')
@@ -115,6 +123,17 @@ class TestEmail(EmailHarness):
         self.hit_email_spt('add-email', 'alice@example.com')
         nonce = self.alice.get_email('alice@example.com').nonce
         self.verify_email('alice@example.com', nonce)
+        expected = 'alice@example.com'
+        actual = Participant.from_username('alice').email_address
+        assert expected == actual
+
+    def test_email_verification_is_backwards_compatible(self):
+        """Test email verification still works with unencoded email in verifcation link.
+        """
+        self.hit_email_spt('add-email', 'alice@example.com')
+        nonce = self.alice.get_email('alice@example.com').nonce
+        url = '/~alice/emails/verify.html?email=alice@example.com&nonce='+nonce
+        self.client.GET(url, auth_as='alice')
         expected = 'alice@example.com'
         actual = Participant.from_username('alice').email_address
         assert expected == actual
