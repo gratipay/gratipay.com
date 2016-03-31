@@ -101,7 +101,7 @@ title = _("1.0 Payout Review")
         <button>Good</button>
         <button>Bad</button>
         &nbsp;
-        <a href="/{{ account.username }}/" target="drill-down">{{ account.username }}</a>
+        <a href="/~{{ account.username }}/" target="drill-down">{{ account.username }}</a>
     </div>
     {% endfor %}
 </div>
