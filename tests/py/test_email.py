@@ -128,7 +128,7 @@ class TestEmail(EmailHarness):
         assert expected == actual
 
     def test_email_verification_is_backwards_compatible(self):
-        """Test email verification still works with unencoded email in verifcation link.
+        """Test email verification still works with unencoded email in verification link.
         """
         self.hit_email_spt('add-email', 'alice@example.com')
         nonce = self.alice.get_email('alice@example.com').nonce
