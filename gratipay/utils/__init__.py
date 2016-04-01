@@ -149,6 +149,7 @@ def b64encode_s(s):
 def b64decode_s(s, **kw):
     def error():
         if 'default' in kw:
+            # Enable callers to handle errors without using try/except.
             return kw['default']
         raise Response(400, "invalid base64 input")
 
