@@ -45,7 +45,7 @@ from gratipay.utils import (
     emails,
     notifications,
     pricing,
-    b64encode_s,
+    encode_for_querystring,
 )
 from gratipay.utils.username import safely_reserve_a_username
 
@@ -433,7 +433,7 @@ class Participant(Model):
 
         base_url = gratipay.base_url
         username = self.username_lower
-        base64_email = b64encode_s(email)
+        base64_email = encode_for_querystring(email)
         link = "{base_url}/~{username}/emails/verify.html?email64={base64_email}&nonce={nonce}"
         r = self.send_email('verification',
                             email=email,
