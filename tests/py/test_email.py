@@ -28,7 +28,7 @@ class TestEmail(EmailHarness):
 
     def verify_email(self, email, nonce, username='alice', should_fail=False):
         # Email address is encoded in url.
-        url = '/~%s/emails/verify.html?email64=%s&nonce=%s'
+        url = '/~%s/emails/verify.html?email2=%s&nonce=%s'
         url %= (username, encode_for_querystring(email), nonce)
         G = self.client.GxT if should_fail else self.client.GET
         return G(url, auth_as=username)
@@ -57,7 +57,7 @@ class TestEmail(EmailHarness):
         encoded = encode_for_querystring(address)
         self.hit_email_spt('add-email', address)
         last_email = self.get_last_email()
-        assert "~alice/emails/verify.html?email64="+encoded in last_email['text']
+        assert "~alice/emails/verify.html?email2="+encoded in last_email['text']
 
     def test_verification_email_doesnt_contain_unsubscribe(self):
         self.hit_email_spt('add-email', 'alice@gratipay.com')

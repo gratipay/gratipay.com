@@ -151,7 +151,7 @@ def decode_from_querystring(s, **kw):
         if 'default' in kw:
             # Enable callers to handle errors without using try/except.
             return kw['default']
-        raise Response(400, "invalid base64 input")
+        raise Response(400, "invalid input")
 
     try:
         s = s.encode('ascii')

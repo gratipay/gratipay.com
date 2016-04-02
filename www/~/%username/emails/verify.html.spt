@@ -19,7 +19,7 @@ if participant == user.participant:
 
         email = request.qs['email']
     else:
-        email = decode_from_querystring(request.qs.get('email64', ''), default='')
+        email = decode_from_querystring(request.qs.get('email2', ''), default='')
     nonce = request.qs.get('nonce', '')
     result = participant.verify_email(email, nonce)
     if not participant.email_lang:
