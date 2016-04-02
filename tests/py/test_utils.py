@@ -218,8 +218,8 @@ class Tests(Harness):
         assert pricing.suggested_payment_low_high(D('98.33')) == (D('4.90'), D('9.85'))
 
 
-    # querystring encoding/decoding
-    # =============================
+    # encoding/decoding querystring values
+    # ====================================
 
     # efq = encode_for_querystring
 
@@ -230,11 +230,20 @@ class Tests(Harness):
     def test_efq_replaces_equals_with_tilde(self):
         assert encode_for_querystring('TheEnterprise') == 'VGhlRW50ZXJwcmlzZQ~~'
 
+    def test_efq_doesnt_accept_bytes(self):
+        with self.assertRaises(TypeError):
+            encode_for_querystring(b'TheEnterprise')
+
 
     # dfq - decode_from_querystring
 
-    def test_dfq_decodes(self):
+    def test_dfq_decodes_properly(self):
         assert decode_from_querystring('VGhlRW50ZXI_cHJpc2U~') == 'TheEnter?prise'
+        assert decode_from_querystring('VGhlRW50ZXJwcmlzZQ~~') == 'TheEnterprise'
+
+    def test_dfq_doesnt_accept_bytes(self):
+        with self.assertRaises(TypeError):
+            decode_from_querystring(b'VGhlRW50ZXI_cHJpc2U~')
 
     def test_dfq_raises_response_on_error(self):
         with self.assertRaises(Response) as cm:

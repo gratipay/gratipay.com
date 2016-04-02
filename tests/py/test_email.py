@@ -1,3 +1,5 @@
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import json
 import time
 
@@ -23,7 +25,7 @@ class TestEmail(EmailHarness):
     def hit_email_spt(self, action, address, user='alice', should_fail=False):
         P = self.client.PxST if should_fail else self.client.POST
         data = {'action': action, 'address': address}
-        headers = {'HTTP_ACCEPT_LANGUAGE': 'en'}
+        headers = {b'HTTP_ACCEPT_LANGUAGE': b'en'}
         return P('/~alice/emails/modify.json', data, auth_as=user, **headers)
 
     def verify_email(self, email, nonce, username='alice', should_fail=False):
