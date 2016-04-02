@@ -134,44 +134,25 @@ def get_team(state):
 
 
 def encode_for_querystring(s):
-    prefix = b''
-    if not isinstance(s, bytes):
-        s = s.encode('utf8')
-    else:
-        # Check whether the string is binary or already utf8
-        try:
-            s.decode('utf8')
-        except UnicodeError:
-            prefix = b'.'
-    return prefix + b64encode(s, b'-_').replace(b'=', b'~')
+    """Given a unicode, return a unicode that's safe for transport across a querystring.
+    """
+    if not isinstance(s, unicode):
+        raise TypeError('unicode required')
+    return b64encode(s.encode('utf8'), b'-_').replace(b'=', b'~').decode('ascii')
 
 
 def decode_from_querystring(s, **kw):
-    def error():
+    """Given a unicode computed by encode_for_querystring, return the inverse.
+    """
+    if not isinstance(s, unicode):
+        raise TypeError('unicode required')
+    try:
+        return b64decode(s.encode('ascii').replace(b'~', b'='), b'-_').decode('utf8')
+    except:
         if 'default' in kw:
             # Enable callers to handle errors without using try/except.
             return kw['default']
         raise Response(400, "invalid input")
-
-    try:
-        s = s.encode('ascii')
-    except UnicodeError:
-        return error()
-
-    udecode = lambda a: a.decode('utf8')
-    if s[:1] == b'.':
-        udecode = lambda a: a
-        s = s[1:]
-    s = s.replace(b'~', b'=')
-    try:
-        return udecode(b64decode(s, '-_'))
-    except Exception:
-        try:
-            # For retrocompatibility
-            return udecode(b64decode(s))
-        except Exception:
-            pass
-        return error()
 
 
 def update_cta(website):
