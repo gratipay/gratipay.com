@@ -433,8 +433,8 @@ class Participant(Model):
 
         base_url = gratipay.base_url
         username = self.username_lower
-        base64_email = encode_for_querystring(email)
-        link = "{base_url}/~{username}/emails/verify.html?email64={base64_email}&nonce={nonce}"
+        encoded_email = encode_for_querystring(email)
+        link = "{base_url}/~{username}/emails/verify.html?email2={encoded_email}&nonce={nonce}"
         r = self.send_email('verification',
                             email=email,
                             link=link.format(**locals()),
