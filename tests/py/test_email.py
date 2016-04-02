@@ -6,7 +6,7 @@ from gratipay.exceptions import CannotRemovePrimaryEmail, EmailAlreadyTaken, Ema
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
 from gratipay.models.participant import Participant
 from gratipay.testing.emails import EmailHarness
-from gratipay.utils import emails, b64encode_s
+from gratipay.utils import emails, encode_for_querystring
 
 
 class TestEmail(EmailHarness):
@@ -27,8 +27,9 @@ class TestEmail(EmailHarness):
         return P('/~alice/emails/modify.json', data, auth_as=user, **headers)
 
     def verify_email(self, email, nonce, username='alice', should_fail=False):
-        # Email address is base64 encoded in url.
-        url = '/~%s/emails/verify.html?email64=%s&nonce=%s' % (username, b64encode_s(email), nonce)
+        # Email address is encoded in url.
+        url = '/~%s/emails/verify.html?email64=%s&nonce=%s'
+        url %= (username, encode_for_querystring(email), nonce)
         G = self.client.GxT if should_fail else self.client.GET
         return G(url, auth_as=username)
 
@@ -51,9 +52,9 @@ class TestEmail(EmailHarness):
         expected = "We've received a request to connect alice@gratipay.com to the alice account on Gratipay"
         assert expected in last_email['text']
 
-    def test_email_address_is_base64_encoded_in_sent_verification_link(self):
+    def test_email_address_is_encoded_in_sent_verification_link(self):
         address = 'alice@gratipay.com'
-        encoded = b64encode_s(address)
+        encoded = encode_for_querystring(address)
         self.hit_email_spt('add-email', address)
         last_email = self.get_last_email()
         assert "~alice/emails/verify.html?email64="+encoded in last_email['text']

@@ -133,7 +133,7 @@ def get_team(state):
     return team
 
 
-def b64encode_s(s):
+def encode_for_querystring(s):
     prefix = b''
     if not isinstance(s, bytes):
         s = s.encode('utf8')
@@ -146,7 +146,7 @@ def b64encode_s(s):
     return prefix + b64encode(s, b'-_').replace(b'=', b'~')
 
 
-def b64decode_s(s, **kw):
+def decode_from_querystring(s, **kw):
     def error():
         if 'default' in kw:
             # Enable callers to handle errors without using try/except.
