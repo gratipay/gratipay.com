@@ -65,7 +65,7 @@ still_migrating = delta > 0
     <input type="file" name="image" required>
 
     <label><h2>{{ _("Product or Service") }}</h2></label>
-    <p><i>{{ _("What product or service does your Team provide?") }}</i></p>
+    <p><i>{{ _("What product or service does your Team provide? ") }}</i></p>
     <textarea name="product_or_service" required></textarea>
 
     <label><h2>{{ _("Homepage") }}</h2></label>
@@ -73,7 +73,10 @@ still_migrating = delta > 0
     <input type="text" name="homepage" required>
 
     <label><h2>{{ _("Self-onboarding Documentation URL") }}</h2></label>
-    <p><i>{{ _("Where can people find instructions on how to do your work for you?") }}</i></p>
+    <p><i>{{ _("Where can people find instructions on how to do your work for you? {0}Example{1}"
+                , '<a href="https://github.com/gratipay/gratipay.com/blob/master/CONTRIBUTING.md">'|safe
+                , '</a>'|safe
+                ) }}</i></p>
     <input type="text" name="onboarding_url" required>
 
     <label><h2>{{ _("To-do URL") }}</h2></label>
