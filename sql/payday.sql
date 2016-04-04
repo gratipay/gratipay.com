@@ -186,13 +186,14 @@ CREATE OR REPLACE FUNCTION process_payment_instruction() RETURNS trigger AS $$
               FROM payday_participants p
              WHERE username = NEW.participant
         );
+
         IF (NEW.amount + NEW.due <= participant.new_balance OR participant.card_hold_ok) THEN
             EXECUTE pay(NEW.participant, NEW.team, NEW.amount + NEW.due, 'to-team');
             RETURN NEW;
-        ELSE
+        ELSIF participant.has_credit_card THEN
             EXECUTE park(NEW.participant, NEW.team, NEW.amount + NEW.due);
-            RETURN NULL;
         END IF;
+
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;
@@ -201,6 +202,7 @@ CREATE TRIGGER process_payment_instruction BEFORE UPDATE OF is_funded ON payday_
     FOR EACH ROW
     WHEN (NEW.is_funded IS true AND OLD.is_funded IS NOT true)
     EXECUTE PROCEDURE process_payment_instruction();
+
 
 -- Create a trigger to process takes
 
