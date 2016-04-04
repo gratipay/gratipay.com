@@ -143,6 +143,10 @@ def encode_for_querystring(s):
 
 def decode_from_querystring(s, **kw):
     """Given a unicode computed by encode_for_querystring, return the inverse.
+
+    We raise Response(400) if the input value can't be decoded (i.e., it's not
+    ASCII, not padded properly, or not decodable as UTF-8 once Base64-decoded).
+
     """
     if not isinstance(s, unicode):
         raise TypeError('unicode required')
