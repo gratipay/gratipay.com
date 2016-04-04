@@ -2,7 +2,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from base64 import b64decode, b64encode
+from base64 import urlsafe_b64encode, urlsafe_b64decode
 from datetime import datetime, timedelta
 
 from aspen import Response, json
@@ -138,7 +138,7 @@ def encode_for_querystring(s):
     """
     if not isinstance(s, unicode):
         raise TypeError('unicode required')
-    return b64encode(s.encode('utf8'), b'-_').replace(b'=', b'~').decode('ascii')
+    return urlsafe_b64encode(s.encode('utf8')).replace(b'=', b'~').decode('ascii')
 
 
 def decode_from_querystring(s, **kw):
@@ -147,7 +147,7 @@ def decode_from_querystring(s, **kw):
     if not isinstance(s, unicode):
         raise TypeError('unicode required')
     try:
-        return b64decode(s.encode('ascii').replace(b'~', b'='), b'-_').decode('utf8')
+        return urlsafe_b64decode(s.encode('ascii').replace(b'~', b'=')).decode('utf8')
     except:
         if 'default' in kw:
             # Enable callers to handle errors without using try/except.
