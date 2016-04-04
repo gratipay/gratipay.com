@@ -4,14 +4,22 @@ from datetime import timedelta
 
 from aspen import Response
 from aspen.utils import utcnow
-from gratipay.utils import emails, get_participant
+from gratipay.utils import emails, get_participant, decode_from_querystring
 
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=False)
 banner = '~' + participant.username
 if participant == user.participant:
-    email = request.qs.get('email', '')
+    if 'email' in request.qs:
+
+        # Deprecated in GH-3965. We shouldn't be generating any more of these,
+        # and this can be removed when we're confident that there are no more
+        # old-style verification links hanging out there.
+
+        email = request.qs['email']
+    else:
+        email = decode_from_querystring(request.qs.get('email2', ''), default='')
     nonce = request.qs.get('nonce', '')
     result = participant.verify_email(email, nonce)
     if not participant.email_lang:

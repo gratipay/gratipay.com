@@ -7,7 +7,7 @@ import pytest
 from aspen.http.response import Response
 from gratipay import utils
 from gratipay.testing import Harness
-from gratipay.utils import i18n, markdown, pricing
+from gratipay.utils import i18n, markdown, pricing, encode_for_querystring, decode_from_querystring
 from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUsername, \
                                                                            RanOutOfUsernameAttempts
 from psycopg2 import IntegrityError
@@ -216,3 +216,39 @@ class Tests(Harness):
 
     def test_splh_rounds_to_nearest_five_cents(self):
         assert pricing.suggested_payment_low_high(D('98.33')) == (D('4.90'), D('9.85'))
+
+
+    # encoding/decoding querystring values
+    # ====================================
+
+    # efq = encode_for_querystring
+
+    def test_efq_replaces_slash_with_underscore(self):
+        # TheEnter?prise => VGhlRW50ZXI/cHJpc2U=
+        assert encode_for_querystring('TheEnter?prise') == 'VGhlRW50ZXI_cHJpc2U~'
+
+    def test_efq_replaces_equals_with_tilde(self):
+        assert encode_for_querystring('TheEnterprise') == 'VGhlRW50ZXJwcmlzZQ~~'
+
+    def test_efq_doesnt_accept_bytes(self):
+        with self.assertRaises(TypeError):
+            encode_for_querystring(b'TheEnterprise')
+
+
+    # dfq - decode_from_querystring
+
+    def test_dfq_decodes_properly(self):
+        assert decode_from_querystring('VGhlRW50ZXI_cHJpc2U~') == 'TheEnter?prise'
+        assert decode_from_querystring('VGhlRW50ZXJwcmlzZQ~~') == 'TheEnterprise'
+
+    def test_dfq_doesnt_accept_bytes(self):
+        with self.assertRaises(TypeError):
+            decode_from_querystring(b'VGhlRW50ZXI_cHJpc2U~')
+
+    def test_dfq_raises_response_on_error(self):
+        with self.assertRaises(Response) as cm:
+            decode_from_querystring('abcd')
+        assert cm.exception.code == 400
+
+    def test_dfq_returns_default_if_passed_on_error(self):
+        assert decode_from_querystring('abcd', default='error') == 'error'

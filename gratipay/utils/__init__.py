@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from base64 import urlsafe_b64encode, urlsafe_b64decode
 from datetime import datetime, timedelta
 
 from aspen import Response, json
@@ -130,6 +131,32 @@ def get_team(state):
         raise Response(410)
 
     return team
+
+
+def encode_for_querystring(s):
+    """Given a unicode, return a unicode that's safe for transport across a querystring.
+    """
+    if not isinstance(s, unicode):
+        raise TypeError('unicode required')
+    return urlsafe_b64encode(s.encode('utf8')).replace(b'=', b'~').decode('ascii')
+
+
+def decode_from_querystring(s, **kw):
+    """Given a unicode computed by encode_for_querystring, return the inverse.
+
+    We raise Response(400) if the input value can't be decoded (i.e., it's not
+    ASCII, not padded properly, or not decodable as UTF-8 once Base64-decoded).
+
+    """
+    if not isinstance(s, unicode):
+        raise TypeError('unicode required')
+    try:
+        return urlsafe_b64decode(s.encode('ascii').replace(b'~', b'=')).decode('utf8')
+    except:
+        if 'default' in kw:
+            # Enable callers to handle errors without using try/except.
+            return kw['default']
+        raise Response(400, "invalid input")
 
 
 def update_cta(website):

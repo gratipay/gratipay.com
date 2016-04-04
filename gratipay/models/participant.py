@@ -6,7 +6,6 @@ from datetime import timedelta
 from decimal import Decimal
 import pickle
 from time import sleep
-from urllib import quote
 import uuid
 
 from aspen.utils import utcnow
@@ -40,7 +39,14 @@ from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.team import Team
 from gratipay.security.crypto import constant_time_compare
-from gratipay.utils import i18n, is_card_expiring, emails, notifications, pricing
+from gratipay.utils import (
+    i18n,
+    is_card_expiring,
+    emails,
+    notifications,
+    pricing,
+    encode_for_querystring,
+)
 from gratipay.utils.username import safely_reserve_a_username
 
 
@@ -427,8 +433,8 @@ class Participant(Model):
 
         base_url = gratipay.base_url
         username = self.username_lower
-        quoted_email = quote(email)
-        link = "{base_url}/~{username}/emails/verify.html?email={quoted_email}&nonce={nonce}"
+        encoded_email = encode_for_querystring(email)
+        link = "{base_url}/~{username}/emails/verify.html?email2={encoded_email}&nonce={nonce}"
         r = self.send_email('verification',
                             email=email,
                             link=link.format(**locals()),
