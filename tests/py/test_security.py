@@ -25,6 +25,9 @@ class TestSecurity(Harness):
             response = raises(Response, security.only_allow_certain_methods, request).value
             assert response.code == 405
 
+    def test_oacm_doesnt_choke_error_handling(self):
+        assert self.client.hit("OPTIONS", "/", raise_immediately=False).code == 405
+
 
     # ahtr - add_headers_to_response
 
