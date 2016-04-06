@@ -32,7 +32,7 @@ suppress_sidebar = True
 {% block scripts %}
 <script>
     $(document).ready(function() {
-        $('button.resend').on('click', Gratipay.settings.post_email);
+        $('button.resend').on('click', Gratipay.emails.post);
     });
 </script>
 {{ super() }}
