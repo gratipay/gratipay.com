@@ -27,14 +27,15 @@ username = sys.argv[1]
 session_token = uuid.uuid4().hex
 session_expires = utcnow() + timedelta(hours=6)
 
-
-try:
-    participant = Participant.from_username(username)
-    participant.db = db
-except:
+participant = Participant.from_username(username)
+if not participant:
     participant = Participant.with_random_username()
-    participant.db = db
     participant.change_username(username)
+    db.run("""
+        INSERT INTO elsewhere
+                    (platform, user_id, user_name, participant)
+             VALUES ('twitter', %s, %s, %s)
+    """, (participant.id, username, username))
     participant.set_as_claimed()
 
 participant.update_session(session_token, session_expires)
