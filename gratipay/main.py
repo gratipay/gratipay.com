@@ -98,8 +98,6 @@ algorithm.functions = [
     algorithm['parse_environ_into_request'],
     algorithm['parse_body_into_request'],
 
-    security.only_allow_certain_methods,
-
     utils.use_tildes_for_participants,
     algorithm['redirect_to_base_url'],
     i18n.set_up_i18n,
@@ -107,6 +105,7 @@ algorithm.functions = [
     authentication.authenticate_user_if_possible,
     csrf.extract_token_from_cookie,
     csrf.reject_forgeries,
+    security.only_allow_certain_methods,
 
     algorithm['dispatch_request_to_filesystem'],
 
