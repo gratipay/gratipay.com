@@ -92,6 +92,9 @@ body {
         color: $black;
         font: bold 28px/33px $Ideal;
         margin: 0 0 5px 0;
+        text-overflow: ellipsis; // not just for aesthetics; also mitigates spoofing
+        overflow: hidden !important;
+        white-space: nowrap;
     }
     a:hover {
         background: transparentize($gold, 0.8);
