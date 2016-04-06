@@ -9,11 +9,16 @@ unreviewed = website.db.all("""
 
     SELECT username
          , balance
-         , giving
-         , ngiving_to
-      FROM participants
+         , (SELECT SUM(amount) FROM current_payment_instructions WHERE participant = p.username) AS giving
+         , (SELECT COUNT(*) FROM current_payment_instructions WHERE participant = p.username AND amount > 0) AS ngiving_to
+      FROM participants p
      WHERE is_suspicious IS NULL
-       AND braintree_customer_id IS NOT NULL
+       AND (                                  -- They have a payin/payout route set up.
+             SELECT COUNT(*)
+               FROM current_exchange_routes r
+              WHERE r.participant = p.id
+           ) > 0
+       AND giving > 0
        AND NOT is_closed
   ORDER BY claimed_time
 
