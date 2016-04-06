@@ -88,7 +88,7 @@ title = _("Fraud Review Dashboard")
             <button class="bad small">Bad</button>
         </td>
         <td>
-            <a href="/{{ account.username }}/" target="drill-down">{{ account.username }}</a>
+            <a href="/~{{ account.username }}/" target="drill-down">{{ account.username }}</a>
         </td>
         <td>${{ account.giving }}</td>
         <td>{{ account.ngiving_to }}</td>
