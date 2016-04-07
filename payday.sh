@@ -51,7 +51,7 @@ confirm () {
 require () {
     if [ ! `which $1` ]; then
         echo "The '$1' command was not found."
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -81,7 +81,10 @@ else
 fi
 
 export PATH="./env/bin:$PATH"
-require honcho
+
+require ./env/bin/honcho
+require heroku
+
 confirm "$RUN payday #$1?" || exit 0
 case "$2" in
     "")
