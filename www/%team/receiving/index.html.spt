@@ -1,26 +1,24 @@
 from aspen import Response
-from gratipay.utils import get_participant
+from gratipay.utils import get_team
 
 [-----------------------------------------------------------------------------]
 
-website.redirect('../', base_url='')
 team = get_team(state)
 if team.is_approved in (None, False):
-    if user.ANON:
-        raise Response(401)
+    raise Response(404)
+
+if not (user.ADMIN or user.participant.username == team.owner):
+    raise Response(401)
+
 banner = team.name
 title = _("Receiving")
 
 [-----------------------------------------------------------------------------]
-{% extends "templates/profile.html" %}
+{% extends "templates/team-base.html" %}
 {% block content %}
 
-{% set receiving = format_currency(participant.receiving, "USD") %}
-{% if participant == user.participant %}
-<h2>{{ _( "You receive {0} per week", receiving) }}</h2>
-{% else %}
-<h2>{{ _("{0} receives {1} per week", participant.username, receiving) }}</h2>
-{% endif %}
+{% set receiving = format_currency(team.receiving, "USD") %}
+<p>{{ _("{0} receives {1} per week from {2} ~users.", team.name, "<b>%s</b>"|safe % receiving, team.nreceiving_from) }}</p>
 
 <div class="chart-wrapper">
     <a name="gifts"></a>
@@ -34,31 +32,28 @@ title = _("Receiving")
     <div class="chart" data-chart="nreceiving_from"></div>
     <div class="x-axis">{{ _("weeks") }}</div>
 </div>
-</div>
 
-{% if participant.receiving > 0 and
-      not user.ANON and (user.participant == participant or user.ADMIN) %}
-{% set tip_distribution = participant.get_tip_distribution()[0] %}
+<h2>Dues</h2>
 
-<h2>{{ _("Tips Received, by Number of Tips") }}</h2>
-{% include "templates/tip-distribution.html" %}
+{% set funded_dues, unfunded_dues = team.get_dues() %}
 
-<h2>{{ _("Tips Received, by Dollar Amount") }}</h2>
-<table class="tip-distribution">
-    {% for amount, ncontributors, summed, pcontributors, psummed in tip_distribution %}
-    <tr>
-        <td class="dollar-sign">$</td>
-        <td class="amount">{{ amount }}</td>
-        <td colspan="2"></td>
-        <td class="count">
-            <span class="green bar" style="width: {{ psummed * 240 }}pt"></span>
-            {{ "%5.1f" % (psummed * 100) }}%
-            <span class="number">(${{ summed }})</span>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+Funded Dues: <b>{{ format_currency(funded_dues, "USD") }}</b>
+<br>
+Unfunded Dues: <b>{{ format_currency(unfunded_dues, "USD") }}</b>
+<br><br>
+
+Estimated payment for next week: {{ format_currency(team.get_upcoming_payment(), "USD") }}
+
+{% if team.receiving > 0 %}
+    {% set payment_distribution = team.get_payment_distribution()[0] %}
+
+    <h2>{{ _("Payments Received, by Number of Payments") }}</h2>
+    {% include "templates/payment-distribution-number.html" %}
+
+    <h2>{{ _("Payments Received, by Dollar Amount") }}</h2>
+    {% include "templates/payment-distribution-amount.html" %}
 {% endif %}
+
 {% endblock %}
 
 {% block scripts %}

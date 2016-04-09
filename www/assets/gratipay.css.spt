@@ -43,7 +43,7 @@
 @import "scss/components/status-icon";
 @import "scss/components/support_gratipay";
 @import "scss/components/table";
-@import "scss/components/tip-distribution";
+@import "scss/components/payment-distribution";
 @import "scss/components/tipr";
 @import "scss/components/upgrade";
 

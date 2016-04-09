@@ -1,0 +1,14 @@
+<table class="payment-distribution">
+    {% for amount, ncontributors, summed, pcontributors, psummed in payment_distribution %}
+    <tr>
+        <td class="dollar-sign">$</td>
+        <td class="amount">{{ amount }}</td>
+        <td colspan="2"></td>
+        <td class="count">
+            <span class="green bar" style="width: {{ psummed * 240 }}pt"></span>
+            {{ "%5.1f" % (psummed * 100) }}%
+            <span class="number">(${{ summed }})</span>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

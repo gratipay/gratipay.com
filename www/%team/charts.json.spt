@@ -1,18 +1,12 @@
-"""Return an array of objects with interesting data for the user.
+"""Return an array of objects with interesting data for the team.
 
-We want one object per payday, but the user probably didn't participate in
-every payday. Our solution is to fetch all paydays and all of the user's
-transfers, and then loop through transfers and aggregate into the relevant
+We want one object per payday, but the team probably didn't participate in
+every payday. Our solution is to fetch all paydays and all of the team's
+payments, and then loop through payments and aggregate into the relevant
 payday object.
 
-If the user has never received, we return an empty array. Client code can take
+If the team has never received, we return an empty array. Client code can take
 this to mean, "no chart."
-
-We specifically don't worry about double-counting npatrons for out-of-band
-transfers. That's a rare case right now, pretty much only when someone
-deactivates their account and distributes their balance as a final gift. It
-could become much more common in a one-off payments world, depending on how the
-implementation.
 
 """
 import re
@@ -25,22 +19,7 @@ callback_pattern = re.compile(r'^[_A-Za-z0-9.]+$')
 
 [---]
 
-username = request.path['username']
-
-anonymous = website.db.one("""
-
-    SELECT anonymous_receiving
-      FROM participants
-     WHERE username = %s
-
-""", (username,))
-
-if anonymous:
-    if user.ANON:
-        raise Response(401)
-    elif user.participant.username != username and not user.ADMIN:
-        raise Response(403)
-
+slug = request.path['team']
 
 # Fetch data from the database.
 # =============================
@@ -49,29 +28,29 @@ paydays = website.db.all("""
 
       SELECT p.ts_start
            , p.ts_start::date   AS date
-           , 0                  AS npatrons
+           , 0                  AS nreceiving_from
            , 0.00               AS receipts
         FROM paydays p
+       WHERE id > 198 -- (Gratipay 2.0)
     ORDER BY ts_start DESC
 
 """, back_as=dict)
 
-transfers = website.db.all("""\
+payments = website.db.all("""\
 
    SELECT timestamp
         , amount
-        , tipper
-     FROM transfers
-    WHERE tippee=%s
-      AND context <> 'take-over'
+     FROM payments
+    WHERE team=%s
+      AND direction='to-team'
  ORDER BY timestamp DESC
 
-""", (username,), back_as=dict)
+""", (slug,), back_as=dict)
 
 
-if not transfers:
+if not payments:
 
-    # This user has never received money.
+    # This team has never received money.
     # ===================================
     # Send out an empty array, to trigger no charts.
 
@@ -84,30 +63,33 @@ if paydays:
     # =============================================
 
     def genpaydays():
+        cur_week = 153 + len(paydays) # 154 was the first week of Gratipay 2.0
         for payday in paydays:
+            payday['xText'] = cur_week
+            cur_week -= 1
             yield payday
+
     paydaygen = genpaydays()
 
     curpayday = next(paydaygen)
 
-
     # Loop through transfers, advancing payday cursor as appropriate.
     # ===============================================================
 
-    for transfer in transfers:
-        while transfer['timestamp'] < curpayday['ts_start']:
-            del curpayday['ts_start']   # done with it, don't want it in output
+    for payment in payments:
+        while payment['timestamp'] < curpayday['ts_start']:
+            del curpayday['ts_start'] # done with it, don't want it in output
             curpayday = next(paydaygen)
 
-        curpayday['npatrons'] += 1
-        curpayday['receipts'] += transfer['amount']
+        curpayday['nreceiving_from'] += 1
+        curpayday['receipts'] += payment['amount']
 
 
 # Prepare response.
 # =================
 
 response.headers["Access-Control-Allow-Origin"] = "*"
-out = paydays[:-1]  # don't show Gratipay #0
+out = paydays
 
 # JSONP - see https://github.com/gratipay/aspen-python/issues/138
 callback = request.qs.get('callback')

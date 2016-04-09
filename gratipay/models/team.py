@@ -1,12 +1,15 @@
 """Teams on Gratipay receive payments and distribute payroll.
 """
 import re
+from decimal import Decimal
+
 import requests
 from aspen import json, log
 from gratipay.exceptions import InvalidTeamName
 from gratipay.models import add_event
 from postgres.orm import Model
 
+from gratipay.billing.exchanges import MINIMUM_CHARGE
 
 # Should have at least one letter.
 TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,-_ ]+)$')
@@ -87,6 +90,60 @@ class Team(Model):
 
         """, fields)
 
+    def get_payment_distribution(self):
+        """
+            Returns a data structure in the form of::
+                [
+                    [PAYMENT1, PAYMENT2...PAYMENTN],
+                    nreceiving_from,
+                    total_amount_received
+                ]
+            where each PAYMENTN is in the form::
+                [
+                    amount,
+                    number_of_tippers_for_this_amount,
+                    total_amount_given_at_this_amount,
+                    proportion_of_payments_at_this_amount,
+                    proportion_of_total_amount_at_this_amount
+                ]
+        """
+        SQL = """
+            SELECT amount
+                 , count(amount) AS nreceiving_from
+              FROM ( SELECT DISTINCT ON (participant)
+                            amount
+                          , participant
+                       FROM payment_instructions
+                       JOIN participants p ON p.username = participant
+                      WHERE team=%s
+                        AND is_funded
+                        AND p.is_suspicious IS NOT true
+                   ORDER BY participant
+                          , mtime DESC
+                    ) AS foo
+             WHERE amount > 0
+          GROUP BY amount
+          ORDER BY amount
+        """
+
+        tip_amounts = []
+
+        npatrons = 0.0  # float to trigger float division
+        total_amount = Decimal('0.00')
+        for rec in self.db.all(SQL, (self.slug,)):
+            tip_amounts.append([ rec.amount
+                               , rec.nreceiving_from
+                               , rec.amount * rec.nreceiving_from
+                                ])
+            total_amount += tip_amounts[-1][2]
+            npatrons += rec.nreceiving_from
+
+        for row in tip_amounts:
+            row.append((row[1] / npatrons) if npatrons > 0 else 0)
+            row.append((row[2] / total_amount) if total_amount > 0 else 0)
+
+        return tip_amounts, npatrons, total_amount
+
 
     def update(self, **kw):
       updateable = frozenset(['name', 'product_or_service', 'homepage',
@@ -114,6 +171,45 @@ class Team(Model):
                                  , **old_value
                                   ))
         self.set_attributes(**kw)
+
+
+    def get_dues(self):
+        rec = self.db.one("""
+            WITH our_cpi AS (
+                SELECT due, is_funded
+                  FROM current_payment_instructions cpi
+                 WHERE team=%(slug)s
+            )
+            SELECT (
+                    SELECT COALESCE(SUM(due), 0)
+                      FROM our_cpi
+                     WHERE is_funded
+                   ) AS funded
+                 , (
+                    SELECT COALESCE(SUM(due), 0)
+                      FROM our_cpi
+                     WHERE NOT is_funded
+                   ) AS unfunded
+        """, {'slug': self.slug})
+
+        return rec.funded, rec.unfunded
+
+
+    def get_upcoming_payment(self):
+        return self.db.one("""
+            SELECT COALESCE(SUM(amount + due), 0)
+              FROM current_payment_instructions cpi
+              JOIN participants p ON cpi.participant = p.username
+             WHERE team = %(slug)s
+               AND is_funded                        -- Check whether the payment is funded
+               AND (                                -- Check whether the user will hit the minimum charge
+                    SELECT SUM(amount + due)
+                      FROM current_payment_instructions cpi2
+                     WHERE cpi2.participant = p.username
+                       AND cpi2.is_funded
+                   ) >= %(mcharge)s
+        """, {'slug': self.slug, 'mcharge': MINIMUM_CHARGE})
+
 
     def create_github_review_issue(self):
         """POST to GitHub, and return the URL of the new issue.
