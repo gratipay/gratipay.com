@@ -404,6 +404,18 @@ msgstr "Wij financieren Gratipay uitsluitend door uw vrijwillige bijdragen! "
 msgid "Learn more"
 msgstr "Leer meer"
 
+msgid "Receiving"
+msgstr "Ontvangt"
+
+msgid "Sharing"
+msgstr ""
+
+msgid "Joined {ago}"
+msgstr ""
+
+msgid "Applied {ago}"
+msgstr ""
+
 msgid "Teams"
 msgstr "Teams"
 
@@ -530,12 +542,6 @@ msgstr ""
 msgid "owned by {a}{owner}{_a}"
 msgstr ""
 
-msgid "Receiving"
-msgstr "Ontvangt"
-
-msgid "Sharing"
-msgstr ""
-
 msgid "You must sign in to apply for a new Team."
 msgstr ""
 
@@ -658,12 +664,6 @@ msgstr "Ben je zeker dat je wil uitloggen?"
 msgid "Yes!"
 msgstr "Ja!"
 
-msgid "Joined {ago}"
-msgstr ""
-
-msgid "Applied {ago}"
-msgstr ""
-
 msgid "Onboarding"
 msgstr ""
 
@@ -774,11 +774,8 @@ msgstr "Geef een Gratipay gebruikersnaam op"
 msgid "Add"
 msgstr "Toevoegen"
 
-msgid "You receive {0} per week"
-msgstr "Je ontvangt {0} per week"
-
-msgid "{0} receives {1} per week"
-msgstr "{0} ontvangt {1} per week"
+msgid "{0} receives {1} per week from {2} ~users."
+msgstr ""
 
 msgid "Dollars Received Per Week"
 msgstr "Dollar ontvangen per week"
@@ -789,11 +786,11 @@ msgstr "weken"
 msgid "Number of Payments Per Week"
 msgstr ""
 
-msgid "Tips Received, by Number of Tips"
-msgstr "Fooien ontvangen, per aantal fooien"
+msgid "Payments Received, by Number of Payments"
+msgstr ""
 
-msgid "Tips Received, by Dollar Amount"
-msgstr "Fooien Ontvangen, per bedrag"
+msgid "Payments Received, by Dollar Amount"
+msgstr ""
 
 msgid "About"
 msgstr "Omtrent"

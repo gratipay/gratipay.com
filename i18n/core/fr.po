@@ -405,6 +405,18 @@ msgstr "Gratipay n'est financé que par vos dons !"
 msgid "Learn more"
 msgstr "En savoir plus"
 
+msgid "Receiving"
+msgstr "Revenus"
+
+msgid "Sharing"
+msgstr ""
+
+msgid "Joined {ago}"
+msgstr ""
+
+msgid "Applied {ago}"
+msgstr ""
+
 msgid "Teams"
 msgstr "Équipes"
 
@@ -531,12 +543,6 @@ msgstr ""
 msgid "owned by {a}{owner}{_a}"
 msgstr ""
 
-msgid "Receiving"
-msgstr "Revenus"
-
-msgid "Sharing"
-msgstr ""
-
 msgid "You must sign in to apply for a new Team."
 msgstr ""
 
@@ -659,12 +665,6 @@ msgstr "Êtes-vous sûr de vouloir vous déconnecter?"
 msgid "Yes!"
 msgstr "Oui !"
 
-msgid "Joined {ago}"
-msgstr ""
-
-msgid "Applied {ago}"
-msgstr ""
-
 msgid "Onboarding"
 msgstr ""
 
@@ -775,11 +775,8 @@ msgstr "Entrez un nom d'utilisateur Gratipay"
 msgid "Add"
 msgstr "Ajouter"
 
-msgid "You receive {0} per week"
-msgstr "Vous recevez {0} par semaine"
-
-msgid "{0} receives {1} per week"
-msgstr "{0} reçoit {1} par semaine"
+msgid "{0} receives {1} per week from {2} ~users."
+msgstr ""
 
 msgid "Dollars Received Per Week"
 msgstr "Revenus par semaine (en dollars)"
@@ -790,11 +787,11 @@ msgstr "semaines"
 msgid "Number of Payments Per Week"
 msgstr ""
 
-msgid "Tips Received, by Number of Tips"
-msgstr "Dons reçus, par nombre de dons"
+msgid "Payments Received, by Number of Payments"
+msgstr ""
 
-msgid "Tips Received, by Dollar Amount"
-msgstr "Dons reçus, par montant en dollars"
+msgid "Payments Received, by Dollar Amount"
+msgstr ""
 
 msgid "About"
 msgstr "À propos"

@@ -402,6 +402,18 @@ msgstr "Ni fondusas Gratipay sole tra via libervolaj pagoj!"
 msgid "Learn more"
 msgstr "Lernu pli"
 
+msgid "Receiving"
+msgstr "Ricevanta"
+
+msgid "Sharing"
+msgstr ""
+
+msgid "Joined {ago}"
+msgstr ""
+
+msgid "Applied {ago}"
+msgstr ""
+
 msgid "Teams"
 msgstr "Teamoj"
 
@@ -528,12 +540,6 @@ msgstr ""
 msgid "owned by {a}{owner}{_a}"
 msgstr ""
 
-msgid "Receiving"
-msgstr "Ricevanta"
-
-msgid "Sharing"
-msgstr ""
-
 msgid "You must sign in to apply for a new Team."
 msgstr ""
 
@@ -656,12 +662,6 @@ msgstr "Ĉu vi certas ke vi volas elsaluti?"
 msgid "Yes!"
 msgstr "Jes!"
 
-msgid "Joined {ago}"
-msgstr ""
-
-msgid "Applied {ago}"
-msgstr ""
-
 msgid "Onboarding"
 msgstr ""
 
@@ -772,11 +772,8 @@ msgstr "Tajpu Gratipay-an uzantnomon"
 msgid "Add"
 msgstr "Aldoni"
 
-msgid "You receive {0} per week"
-msgstr "Vi ricevas {0} ĉiusemajne"
-
-msgid "{0} receives {1} per week"
-msgstr "{0} ricevas {1} ĉiusemajne"
+msgid "{0} receives {1} per week from {2} ~users."
+msgstr ""
 
 msgid "Dollars Received Per Week"
 msgstr "Ricevitaj dolaroj per semajno"
@@ -787,11 +784,11 @@ msgstr "semajnoj"
 msgid "Number of Payments Per Week"
 msgstr ""
 
-msgid "Tips Received, by Number of Tips"
-msgstr "Trinkmonoj ricevitaj, laŭ nombro de trinkmonoj"
+msgid "Payments Received, by Number of Payments"
+msgstr ""
 
-msgid "Tips Received, by Dollar Amount"
-msgstr "Trinkmonoj ricevitaj, laŭ kvanto"
+msgid "Payments Received, by Dollar Amount"
+msgstr ""
 
 msgid "About"
 msgstr "Pri"

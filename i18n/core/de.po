@@ -411,6 +411,18 @@ msgstr "Gratipay ist ausschließlich durch freiwillige Spenden finanziert."
 msgid "Learn more"
 msgstr "Mehr erfahren"
 
+msgid "Receiving"
+msgstr "erhält"
+
+msgid "Sharing"
+msgstr ""
+
+msgid "Joined {ago}"
+msgstr ""
+
+msgid "Applied {ago}"
+msgstr ""
+
 msgid "Teams"
 msgstr "Teams"
 
@@ -537,12 +549,6 @@ msgstr ""
 msgid "owned by {a}{owner}{_a}"
 msgstr ""
 
-msgid "Receiving"
-msgstr "erhält"
-
-msgid "Sharing"
-msgstr ""
-
 msgid "You must sign in to apply for a new Team."
 msgstr ""
 
@@ -665,12 +671,6 @@ msgstr "Bist du sicher, dass du dich abmelden möchtest?"
 msgid "Yes!"
 msgstr "Ja!"
 
-msgid "Joined {ago}"
-msgstr ""
-
-msgid "Applied {ago}"
-msgstr ""
-
 msgid "Onboarding"
 msgstr ""
 
@@ -781,11 +781,8 @@ msgstr "Geben Sie einen Gratipay Usernamen ein"
 msgid "Add"
 msgstr "Hinzufügen"
 
-msgid "You receive {0} per week"
-msgstr "Du bekommst {0} pro Woche."
-
-msgid "{0} receives {1} per week"
-msgstr "{0} bekommt {1} pro Woche."
+msgid "{0} receives {1} per week from {2} ~users."
+msgstr ""
 
 msgid "Dollars Received Per Week"
 msgstr "Einkommen pro Woche (in Dollar)"
@@ -796,11 +793,11 @@ msgstr "Wochen"
 msgid "Number of Payments Per Week"
 msgstr ""
 
-msgid "Tips Received, by Number of Tips"
-msgstr "Trinkgeld erhalten, geordnet nach Anzahl der Spenden"
+msgid "Payments Received, by Number of Payments"
+msgstr ""
 
-msgid "Tips Received, by Dollar Amount"
-msgstr "Trinkgeld erhalten, geordnet nach Dollar-Betrag"
+msgid "Payments Received, by Dollar Amount"
+msgstr ""
 
 msgid "About"
 msgstr "Über"
