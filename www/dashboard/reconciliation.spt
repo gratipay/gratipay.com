@@ -5,17 +5,18 @@ from decimal import Decimal as D
 [---]
 _by_month = website.db.all("""
 
-SELECT date_trunc('month', "timestamp") AS month
-                 , COALESCE(sum(case when amount > 0 then amount end), 0) as payins
-                 , COALESCE(-(sum(case when amount < 0 then amount end)), 0) as payouts
-                 , COALESCE(sum(case when amount > 0 then fee end), 0) as payins_income
-                 , COALESCE(sum(case when amount < 0 then fee end), 0) as payouts_income
-                 , status
-                 , network
-FROM exchanges, exchange_routes
-WHERE exchanges.route = exchange_routes.id
-GROUP BY month, network, status
-ORDER BY month ASC;
+    SELECT date_trunc('month', "timestamp") AS month
+         , COALESCE(sum(case when amount > 0 then amount end), 0) as payins
+         , COALESCE(-(sum(case when amount < 0 then amount end)), 0) as payouts
+         , COALESCE(sum(case when amount > 0 then fee end), 0) as payins_income
+         , COALESCE(sum(case when amount < 0 then fee end), 0) as payouts_income
+         , status
+         , network
+      FROM exchanges, exchange_routes
+     WHERE exchanges.route = exchange_routes.id
+  GROUP BY month, network, status
+  ORDER BY month ASC;
+
 """)
 
 def by_month():
