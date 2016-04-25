@@ -362,6 +362,9 @@ def other_stuff(website, env):
 
 def env():
     env = Environment(
+        AWS_ACCESS_KEY_ID               = unicode,
+        AWS_SECRET_ACCESS_KEY           = unicode,
+        AWS_DEFAULT_REGION              = unicode,
         BASE_URL                        = unicode,
         DATABASE_URL                    = unicode,
         DATABASE_MAXCONN                = int,
