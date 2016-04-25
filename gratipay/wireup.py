@@ -14,11 +14,11 @@ from babel.core import Locale
 from babel.messages.pofile import read_po
 from babel.numbers import parse_pattern
 import balanced
+import boto3
 import braintree
 import gratipay
 import gratipay.billing.payday
 import raven
-import mandrill
 from environment import Environment, is_yesish
 from gratipay.elsewhere import PlatformRegistry
 from gratipay.elsewhere.bitbucket import Bitbucket
@@ -60,7 +60,7 @@ def db(env):
     return db
 
 def mail(env, project_root='.'):
-    Participant._mailer = mandrill.Mandrill(env.mandrill_key)
+    Participant._mailer = boto3.client('ses') # Creds are directly picked up from environment variables
     emails = {}
     emails_dir = project_root+'/emails/'
     i = len(emails_dir)

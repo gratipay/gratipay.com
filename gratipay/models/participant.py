@@ -539,15 +539,24 @@ class Participant(Model):
         def render(t, context):
             b = base_spt[t].render(context).strip()
             return b.replace('$body', spt[t].render(context).strip())
-        message = {}
-        message['from_email'] = 'support@gratipay.com'
-        message['from_name'] = 'Gratipay Support'
-        message['to'] = [{'email': email, 'name': self.username}]
-        message['subject'] = spt['subject'].render(context)
-        message['html'] = render('text/html', context_html)
-        message['text'] = render('text/plain', context)
 
-        self._mailer.messages.send(message=message)
+        message = {}
+        message['Source'] = 'Gratipay Support <support@gratipay.com>'
+        message['Destination'] = {}
+        message['Destination']['ToAddresses'] = ["%s <%s>" % (self.username, email)] # "Name <email@domain.com>"
+        message['Message'] = {}
+        message['Message']['Subject'] = {}
+        message['Message']['Subject']['Data'] = spt['subject'].render(context)
+        message['Message']['Body'] = {
+            'Text': {
+                'Data': render('text/plain', context)
+            },
+            'Html': {
+                'Data': render('text/html', context_html)
+            }
+        }
+
+        self._mailer.send_email(**message)
         return 1 # Sent
 
     def queue_email(self, spt_name, **context):
