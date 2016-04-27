@@ -546,7 +546,7 @@ class Participant(Model):
         message['Destination']['ToAddresses'] = ["%s <%s>" % (self.username, email)] # "Name <email@domain.com>"
         message['Message'] = {}
         message['Message']['Subject'] = {}
-        message['Message']['Subject']['Data'] = spt['subject'].render(context)
+        message['Message']['Subject']['Data'] = spt['subject'].render(context).strip()
         message['Message']['Body'] = {
             'Text': {
                 'Data': render('text/plain', context)

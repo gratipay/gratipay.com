@@ -35,7 +35,7 @@ from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
 from gratipay.models.team import Team
 from gratipay.models import GratipayDB
-from gratipay.utils.emails import compile_email_spt
+from gratipay.utils.emails import compile_email_spt, ConsoleMailer
 from gratipay.utils.http_caching import asset_etag
 from gratipay.utils.i18n import (
     ALIASES, ALIASES_R, COUNTRIES, LANGUAGES_2, LOCALES,
@@ -60,7 +60,11 @@ def db(env):
     return db
 
 def mail(env, project_root='.'):
-    Participant._mailer = boto3.client('ses') # Creds are directly picked up from environment variables
+    if env.aws_access_key_id and env.aws_secret_access_key:
+        Participant._mailer = boto3.client('ses') # will read creds directly from the environment
+    else:
+        aspen.log_dammit('AWS not configured! Mail will be dumped to the console here.')
+        Participant._mailer = ConsoleMailer()
     emails = {}
     emails_dir = project_root+'/emails/'
     i = len(emails_dir)

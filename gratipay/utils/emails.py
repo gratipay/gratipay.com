@@ -1,4 +1,6 @@
-from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+import sys
 
 from aspen.simplates.pagination import parse_specline, split_and_escape
 from aspen_jinja2_renderer import SimplateLoader
@@ -28,3 +30,27 @@ def compile_email_spt(fpath):
         env = jinja_env_html if content_type == 'text/html' else jinja_env
         r[key] = SimplateLoader(fpath, tmpl).load(env, fpath)
     return r
+
+
+class ConsoleMailer(object):
+    """Dumps mail to stdout.
+    """
+
+    def __init__(self, fp=sys.stdout):
+        self.fp = fp
+
+    def send_email(self, **email):
+        p = lambda *a, **kw: print(*a, file=self.fp)
+        p('-'*78, )
+        for i, address in enumerate(email['Destination']['ToAddresses']):
+            if not i:
+                p('To:      ', address)
+            else:
+                p('         ', address)
+        p('Subject: ', email['Message']['Subject']['Data'])
+        p('Body:')
+        p()
+        for line in email['Message']['Body']['Text']['Data'].splitlines():
+            p('   ', line)
+        p()
+        p('-'*78)
