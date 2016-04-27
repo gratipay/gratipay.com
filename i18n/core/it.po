@@ -773,7 +773,7 @@ msgid "Add"
 msgstr "Aggiungi"
 
 msgid "{0} receives {1} per week from {2} ~users."
-msgstr ""
+msgstr "{0} riceve {1} a settimana da {2} ~utenti."
 
 msgid "Dollars Received Per Week"
 msgstr "Dollari Ricevuti A Settimana"
@@ -785,10 +785,10 @@ msgid "Number of Payments Per Week"
 msgstr "Numero di Pagamenti A Settimana"
 
 msgid "Payments Received, by Number of Payments"
-msgstr ""
+msgstr "Pagamenti Ricevuti, in Ordine di Quantità di Pagamenti"
 
 msgid "Payments Received, by Dollar Amount"
-msgstr ""
+msgstr "Pagamenti Ricevuti, in Ordine di Valore in Dollari"
 
 msgid "About"
 msgstr "Chi siamo"
