@@ -60,10 +60,15 @@ def db(env):
     return db
 
 def mail(env, project_root='.'):
-    if env.aws_access_key_id and env.aws_secret_access_key:
-        Participant._mailer = boto3.client('ses') # will read creds directly from the environment
+    if env.aws_ses_access_key_id and env.aws_ses_secret_access_key and env.aws_ses_default_region:
+        aspen.log_dammit("AWS SES is configured! We'll send mail through SES.")
+        Participant._mailer = boto3.client( service_name='ses'
+                                          , region_name=env.aws_ses_default_region
+                                          , aws_access_key_id=env.aws_ses_access_key_id
+                                          , aws_secret_access_key=env.aws_ses_secret_access_key
+                                           )
     else:
-        aspen.log_dammit('AWS not configured! Mail will be dumped to the console here.')
+        aspen.log_dammit("AWS SES is not configured! Mail will be dumped to the console here.")
         Participant._mailer = ConsoleMailer()
     emails = {}
     emails_dir = project_root+'/emails/'
@@ -366,9 +371,9 @@ def other_stuff(website, env):
 
 def env():
     env = Environment(
-        AWS_ACCESS_KEY_ID               = unicode,
-        AWS_SECRET_ACCESS_KEY           = unicode,
-        AWS_DEFAULT_REGION              = unicode,
+        AWS_SES_ACCESS_KEY_ID           = unicode,
+        AWS_SES_SECRET_ACCESS_KEY       = unicode,
+        AWS_SES_DEFAULT_REGION          = unicode,
         BASE_URL                        = unicode,
         DATABASE_URL                    = unicode,
         DATABASE_MAXCONN                = int,
