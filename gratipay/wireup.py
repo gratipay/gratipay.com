@@ -410,7 +410,6 @@ def env():
         SENTRY_DSN                      = unicode,
         LOG_METRICS                     = is_yesish,
         INCLUDE_PIWIK                   = is_yesish,
-        MANDRILL_KEY                    = unicode,
         TEAM_REVIEW_REPO                = unicode,
         TEAM_REVIEW_USERNAME            = unicode,
         TEAM_REVIEW_TOKEN               = unicode,
