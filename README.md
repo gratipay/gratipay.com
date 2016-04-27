@@ -258,11 +258,13 @@ should override the `DATABASE_URL` in `local.env` using the following format:
 
     DATABASE_URL=postgres://<username>@localhost/<database name>
 
-The `MANDRILL_KEY` value in `defaults.env` is for a test mail server, which
-won't actually send email to you. If you need to receive email during
-development then sign up for an account of your own at
-[Mandrill](http://mandrill.com/) and override `MANDRILL_KEY` in your
-`local.env`.
+We use Amazon Web Services' Simple Email Service (AWS SES) for sending emails.
+In development, we dump outbound mail to the console by default. This is fine
+if all you need to do is, e.g., copy/paste verification links. If you need to
+receive emails within a proper mail client during development, then sign up for
+[AWS's free tier](https://aws.amazon.com/free) and override the `AWS_*`
+credentials from `defaults.env` in your `local.env`. You'll have to verify the
+email addresses you want to receive email with on SES.
 
 
 Vagrant

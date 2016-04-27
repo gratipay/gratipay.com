@@ -49,29 +49,29 @@ class TestEmail(EmailHarness):
         self.hit_email_spt('add-email', 'alice@gratipay.com')
         assert self.mailer.call_count == 1
         last_email = self.get_last_email()
-        assert last_email['to'][0]['email'] == 'alice@gratipay.com'
+        assert last_email['to'] == 'alice <alice@gratipay.com>'
         expected = "We've received a request to connect alice@gratipay.com to the alice account on Gratipay"
-        assert expected in last_email['text']
+        assert expected in last_email['body_text']
 
     def test_email_address_is_encoded_in_sent_verification_link(self):
         address = 'alice@gratipay.com'
         encoded = encode_for_querystring(address)
         self.hit_email_spt('add-email', address)
         last_email = self.get_last_email()
-        assert "~alice/emails/verify.html?email2="+encoded in last_email['text']
+        assert "~alice/emails/verify.html?email2="+encoded in last_email['body_text']
 
     def test_verification_email_doesnt_contain_unsubscribe(self):
         self.hit_email_spt('add-email', 'alice@gratipay.com')
         last_email = self.get_last_email()
-        assert "To stop receiving" not in last_email['text']
+        assert "To stop receiving" not in last_email['body_text']
 
     def test_adding_second_email_sends_verification_notice(self):
         self.verify_and_change_email('alice1@example.com', 'alice2@example.com')
         assert self.mailer.call_count == 3
         last_email = self.get_last_email()
-        assert last_email['to'][0]['email'] == 'alice1@example.com'
+        assert last_email['to'] == 'alice <alice1@example.com>'
         expected = "We are connecting alice2@example.com to the alice account on Gratipay"
-        assert expected in last_email['text']
+        assert expected in last_email['body_text']
 
     def test_post_anon_returns_403(self):
         response = self.hit_email_spt('add-email', 'anon@gratipay.com', user=None, should_fail=True)
@@ -238,8 +238,8 @@ class TestEmail(EmailHarness):
     def test_html_escaping(self):
         self.alice.add_email("foo'bar@example.com")
         last_email = self.get_last_email()
-        assert 'foo&#39;bar' in last_email['html']
-        assert '&#39;' not in last_email['text']
+        assert 'foo&#39;bar' in last_email['body_html']
+        assert '&#39;' not in last_email['body_text']
 
     def test_can_dequeue_an_email(self):
         larry = self.make_participant('larry', email_address='larry@example.com')
@@ -249,9 +249,9 @@ class TestEmail(EmailHarness):
         Participant.dequeue_emails()
         assert self.mailer.call_count == 1
         last_email = self.get_last_email()
-        assert last_email['to'][0]['email'] == 'larry@example.com'
+        assert last_email['to'] == 'larry <larry@example.com>'
         expected = "connect larry"
-        assert expected in last_email['text']
+        assert expected in last_email['body_text']
         assert self.db.one("SELECT spt_name FROM email_queue") is None
 
     def test_dequeueing_an_email_without_address_just_skips_it(self):

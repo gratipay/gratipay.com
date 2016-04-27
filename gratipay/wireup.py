@@ -14,11 +14,11 @@ from babel.core import Locale
 from babel.messages.pofile import read_po
 from babel.numbers import parse_pattern
 import balanced
+import boto3
 import braintree
 import gratipay
 import gratipay.billing.payday
 import raven
-import mandrill
 from environment import Environment, is_yesish
 from gratipay.elsewhere import PlatformRegistry
 from gratipay.elsewhere.bitbucket import Bitbucket
@@ -35,7 +35,7 @@ from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
 from gratipay.models.team import Team
 from gratipay.models import GratipayDB
-from gratipay.utils.emails import compile_email_spt
+from gratipay.utils.emails import compile_email_spt, ConsoleMailer
 from gratipay.utils.http_caching import asset_etag
 from gratipay.utils.i18n import (
     ALIASES, ALIASES_R, COUNTRIES, LANGUAGES_2, LOCALES,
@@ -60,7 +60,16 @@ def db(env):
     return db
 
 def mail(env, project_root='.'):
-    Participant._mailer = mandrill.Mandrill(env.mandrill_key)
+    if env.aws_ses_access_key_id and env.aws_ses_secret_access_key and env.aws_ses_default_region:
+        aspen.log_dammit("AWS SES is configured! We'll send mail through SES.")
+        Participant._mailer = boto3.client( service_name='ses'
+                                          , region_name=env.aws_ses_default_region
+                                          , aws_access_key_id=env.aws_ses_access_key_id
+                                          , aws_secret_access_key=env.aws_ses_secret_access_key
+                                           )
+    else:
+        aspen.log_dammit("AWS SES is not configured! Mail will be dumped to the console here.")
+        Participant._mailer = ConsoleMailer()
     emails = {}
     emails_dir = project_root+'/emails/'
     i = len(emails_dir)
@@ -362,6 +371,9 @@ def other_stuff(website, env):
 
 def env():
     env = Environment(
+        AWS_SES_ACCESS_KEY_ID           = unicode,
+        AWS_SES_SECRET_ACCESS_KEY       = unicode,
+        AWS_SES_DEFAULT_REGION          = unicode,
         BASE_URL                        = unicode,
         DATABASE_URL                    = unicode,
         DATABASE_MAXCONN                = int,
@@ -407,7 +419,6 @@ def env():
         SENTRY_DSN                      = unicode,
         LOG_METRICS                     = is_yesish,
         INCLUDE_PIWIK                   = is_yesish,
-        MANDRILL_KEY                    = unicode,
         TEAM_REVIEW_REPO                = unicode,
         TEAM_REVIEW_USERNAME            = unicode,
         TEAM_REVIEW_TOKEN               = unicode,

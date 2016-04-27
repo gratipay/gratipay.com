@@ -587,5 +587,6 @@ class TestNotifyParticipants(EmailHarness):
             assert emails.spt_name == 'charge_'+status
 
             Participant.dequeue_emails()
-            assert self.get_last_email()['to'][0]['email'] == 'kalel@example.net'
-            assert 'Gratiteam' in self.get_last_email()['text']
+            assert self.get_last_email()['to'] == 'kalel <kalel@example.net>'
+            assert 'Gratiteam' in self.get_last_email()['body_text']
+            assert 'Gratiteam' in self.get_last_email()['body_html']
