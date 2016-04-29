@@ -3,7 +3,7 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = ../env/bin/swaddle ../tests/env ../env/bin/sphinx-build
+SPHINXBUILD   = ../env/bin/honcho -e ../tests/env run ../env/bin/sphinx-build
 BUILDDIR      = _build
 
 # User-friendly check for sphinx-build
