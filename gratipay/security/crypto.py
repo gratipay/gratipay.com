@@ -1,9 +1,12 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import hashlib
+import json
 import random
 import string
 import time
+
+from cryptography.fernet import Fernet, MultiFernet
 
 
 # utils
@@ -61,3 +64,39 @@ def constant_time_compare(val1, val2):
     for x, y in zip(val1, val2):
         result |= ord(x) ^ ord(y)
     return result == 0
+
+
+# Encrypting Packer
+# =================
+
+class EncryptingPacker(object):
+    """Implement conversion of Python objects to/from encrypted bytestrings.
+
+    :param bytes key: a Fernet key as ``bytes``, for encryption and decryption via
+        ``cryptography.fernet.MultiFernet``
+    :param list old_keys: additional Fernet keys as ``bytes`` for decryption via
+        ``cryptography.fernet.MultiFernet``
+
+    """
+
+    def __init__(self, key, *old_keys):
+        keys = [key] + list(old_keys)
+        self.fernet = MultiFernet([Fernet(k) for k in keys])
+
+    def pack(self, obj):
+        """Given a JSON-serializable object, return an encrypted byte string.
+        """
+        obj = json.dumps(obj)           # serialize to unicode
+        obj = obj.encode('utf8')        # convert to bytes
+        obj = self.fernet.encrypt(obj)  # encrypt
+        return obj
+
+    def unpack(self, obj):
+        """Given an encrypted byte string, return a Python object.
+        """
+        if not type(obj) is bytes:
+            raise TypeError("need bytes, got {}".format(type(obj)))
+        obj = self.fernet.decrypt(obj)  # decrypt
+        obj = obj.decode('utf8')        # convert to unicode
+        obj = json.loads(obj)           # deserialize from unicode
+        return obj
