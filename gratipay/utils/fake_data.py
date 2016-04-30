@@ -1,3 +1,5 @@
+"""This module contains utilities for populating a non-production environment with fake data.
+"""
 import datetime
 from decimal import Decimal as D
 import random
@@ -16,7 +18,15 @@ from gratipay.models import check_db
 
 faker = Factory.create()
 
-def _fake_thing(db, tablename, **kw):
+
+def insert_fake_data(db, tablename, **kw):
+    """Insert fake data into the database.
+
+    :param Postgres db: a ``Postgres`` or ``Cursor`` object
+    :param unicode tablename: the name of the table to insert into
+    :param dict **kw: a mapping of column names to values
+
+    """
     column_names = []
     column_value_placeholders = []
     column_values = []
@@ -53,20 +63,20 @@ def fake_participant(db, is_admin=False):
     """
     username = faker.first_name() + fake_text_id(3)
     try:
-        _fake_thing( db
-                   , "participants"
-                   , username=username
-                   , username_lower=username.lower()
-                   , ctime=faker.date_time_this_year()
-                   , is_admin=is_admin
-                   , balance=0
-                   , anonymous_giving=(random.randrange(5) == 0)
-                   , balanced_customer_href=faker.uri()
-                   , is_suspicious=False
-                   , claimed_time=faker.date_time_this_year()
-                    )
+        insert_fake_data( db
+                        , "participants"
+                        , username=username
+                        , username_lower=username.lower()
+                        , ctime=faker.date_time_this_year()
+                        , is_admin=is_admin
+                        , balance=0
+                        , anonymous_giving=(random.randrange(5) == 0)
+                        , balanced_customer_href=faker.uri()
+                        , is_suspicious=False
+                        , claimed_time=faker.date_time_this_year()
+                         )
     except IntegrityError:
-      return fake_participant(db, is_admin)
+        return fake_participant(db, is_admin)
 
     #Call participant constructor to perform other DB initialization
     return Participant.from_username(username)
@@ -84,36 +94,38 @@ def fake_team(db, teamowner):
     try:
         teamslug = slugize(teamslugname)
         homepage = 'http://www.example.org/' + fake_text_id(3)
-        _fake_thing( db
-                   , "teams"
-                   , slug=teamslug
-                   , slug_lower=teamslug.lower()
-                   , name=teamname
-                   , homepage=homepage
-                   , product_or_service=random.sample(productorservice,1)[0]
-                   , todo_url=homepage + '/tickets'
-                   , onboarding_url=homepage + '/contributing'
-                   , owner=teamowner.username
-                   , is_approved=random.sample(isapproved,1)[0]
-                   , receiving=0.1
-                   , nreceiving_from=3
-                   )
+        insert_fake_data( db
+                        , "teams"
+                        , slug=teamslug
+                        , slug_lower=teamslug.lower()
+                        , name=teamname
+                        , homepage=homepage
+                        , product_or_service=random.sample(productorservice,1)[0]
+                        , todo_url=homepage + '/tickets'
+                        , onboarding_url=homepage + '/contributing'
+                        , owner=teamowner.username
+                        , is_approved=random.sample(isapproved,1)[0]
+                        , receiving=0.1
+                        , nreceiving_from=3
+                         )
     except IntegrityError:
         return fake_team(db, teamowner)
 
     return Team.from_slug(teamslug)
 
+
 def fake_payment_instruction(db, participant, team):
     """Create a fake payment_instruction
     """
-    return _fake_thing( db
-                      , "payment_instructions"
-                      , ctime=faker.date_time_this_year()
-                      , mtime=faker.date_time_this_month()
-                      , participant=participant.username
-                      , team=team.slug
-                      , amount=fake_tip_amount()
-                       )
+    return insert_fake_data( db
+                           , "payment_instructions"
+                           , ctime=faker.date_time_this_year()
+                           , mtime=faker.date_time_this_month()
+                           , participant=participant.username
+                           , team=team.slug
+                           , amount=fake_tip_amount()
+                            )
+
 
 def fake_community(db, creator):
     """Create a fake community
@@ -143,48 +155,50 @@ def fake_tip_amount():
 def fake_tip(db, tipper, tippee):
     """Create a fake tip.
     """
-    return _fake_thing( db
-                      , "tips"
-                      , ctime=faker.date_time_this_year()
-                      , mtime=faker.date_time_this_month()
-                      , tipper=tipper.username
-                      , tippee=tippee.username
-                      , amount=fake_tip_amount()
-                       )
+    return insert_fake_data( db
+                           , "tips"
+                           , ctime=faker.date_time_this_year()
+                           , mtime=faker.date_time_this_month()
+                           , tipper=tipper.username
+                           , tippee=tippee.username
+                           , amount=fake_tip_amount()
+                            )
 
 
 def fake_elsewhere(db, participant, platform):
     """Create a fake elsewhere.
     """
-    _fake_thing( db
-               , "elsewhere"
-               , platform=platform
-               , user_id=fake_text_id()
-               , user_name=participant.username
-               , participant=participant.username
-               , extra_info=None
-                )
+    insert_fake_data( db
+                    , "elsewhere"
+                    , platform=platform
+                    , user_id=fake_text_id()
+                    , user_name=participant.username
+                    , participant=participant.username
+                    , extra_info=None
+                     )
 
 
 def fake_transfer(db, tipper, tippee):
-    return _fake_thing( db
-           , "transfers"
-           , timestamp=faker.date_time_this_year()
-           , tipper=tipper.username
-           , tippee=tippee.username
-           , amount=fake_tip_amount()
-           , context='tip'
-            )
+    return insert_fake_data( db
+                           , "transfers"
+                           , timestamp=faker.date_time_this_year()
+                           , tipper=tipper.username
+                           , tippee=tippee.username
+                           , amount=fake_tip_amount()
+                           , context='tip'
+                            )
+
 
 def fake_exchange(db, participant, amount, fee, timestamp):
-    return _fake_thing( db
-                      , "exchanges"
-                      , timestamp=timestamp
-                      , participant=participant.username
-                      , amount=amount
-                      , fee=fee
-                      , status='succeeded'
-                       )
+    return insert_fake_data( db
+                           , "exchanges"
+                           , timestamp=timestamp
+                           , participant=participant.username
+                           , amount=amount
+                           , fee=fee
+                           , status='succeeded'
+                            )
+
 
 def prep_db(db):
     db.run("""
@@ -224,6 +238,7 @@ def prep_db(db):
         CREATE TRIGGER process_exchange AFTER INSERT ON exchanges
             FOR EACH ROW EXECUTE PROCEDURE process_exchange();
     """)
+
 
 def clean_db(db):
     db.run("""
@@ -337,7 +352,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
             'nusers': len(actives),
             'volume': sum(x['amount'] for x in week_transfers)
         }
-        _fake_thing(db, "paydays", **payday)
+        insert_fake_data(db, "paydays", **payday)
         date = end_date
     print("")
 
