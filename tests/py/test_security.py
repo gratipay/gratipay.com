@@ -8,7 +8,7 @@ from aspen.http.request import Request
 from base64 import urlsafe_b64decode
 from cryptography.fernet import Fernet, InvalidToken
 from gratipay import security
-from gratipay.models.participant import Participant
+from gratipay.models.participant.mixins import Identity
 from gratipay.security.crypto import EncryptingPacker
 from gratipay.testing import Harness
 from pytest import raises
@@ -57,11 +57,11 @@ class TestSecurity(Harness):
              b'5TdyoJsll5nMAicg=='
 
     def test_ep_packs_encryptingly(self):
-        packed = Participant.encrypting_packer.pack({"foo": "bar"})
+        packed = Identity.encrypting_packer.pack({"foo": "bar"})
         assert urlsafe_b64decode(packed)[0] == b'\x80'  # Fernet version
 
     def test_ep_unpacks_decryptingly(self):
-        assert Participant.encrypting_packer.unpack(self.packed) == {"foo": "bar"}
+        assert Identity.encrypting_packer.unpack(self.packed) == {"foo": "bar"}
 
     def test_ep_fails_to_unpack_old_data_with_a_new_key(self):
         encrypting_packer = EncryptingPacker(Fernet.generate_key())
@@ -78,5 +78,5 @@ class TestSecurity(Harness):
         assert datetime.datetime.fromtimestamp(timestamp).year == 2016
 
     def test_ep_demands_bytes(self):
-        raises(TypeError, Participant.encrypting_packer.unpack, buffer('buffer'))
-        raises(TypeError, Participant.encrypting_packer.unpack, 'unicode')
+        raises(TypeError, Identity.encrypting_packer.unpack, buffer('buffer'))
+        raises(TypeError, Identity.encrypting_packer.unpack, 'unicode')

@@ -34,6 +34,7 @@ from gratipay.models.community import Community
 from gratipay.models.country import Country
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
+from gratipay.models.participant.mixins import Identity
 from gratipay.models.team import Team
 from gratipay.models import GratipayDB
 from gratipay.security.crypto import EncryptingPacker
@@ -63,7 +64,7 @@ def db(env):
 
 def crypto(env):
     keys = [k.encode('ASCII') for k in env.crypto_keys.split()]
-    Participant.encrypting_packer = EncryptingPacker(*keys)
+    Identity.encrypting_packer = EncryptingPacker(*keys)
 
 def mail(env, project_root='.'):
     if env.aws_ses_access_key_id and env.aws_ses_secret_access_key and env.aws_ses_default_region:

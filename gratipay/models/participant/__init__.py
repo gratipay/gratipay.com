@@ -38,6 +38,7 @@ from gratipay.models import add_event
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.team import Team
+from gratipay.models.participant import mixins
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import (
     i18n,
@@ -60,7 +61,7 @@ EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 USERNAME_MAX_SIZE = 32
 
-class Participant(Model):
+class Participant(Model, mixins.Identity):
     """Represent a Gratipay participant.
     """
 
