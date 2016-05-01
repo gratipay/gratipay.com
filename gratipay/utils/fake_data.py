@@ -58,8 +58,13 @@ def fake_sentence(start=1, stop=100):
     return faker.sentence(random.randrange(start,stop))
 
 
-def fake_participant(db, is_admin=False):
+def fake_participant(db, is_admin=False, random_identities=True):
     """Create a fake User.
+
+    :param Postgres db: a ``Postgres`` or ``Cursor`` object
+    :param bool is_admin: whether to make the participant an admin
+    :param bool random_identities: whether to give the participant random identities
+
     """
     username = faker.first_name() + fake_text_id(3)
     try:
@@ -77,12 +82,13 @@ def fake_participant(db, is_admin=False):
                          )
         participant = Participant.from_username(username)
 
-        if random.randrange(100) < 66:
-            fake_participant_identity(participant)
-            if random.randrange(100) < 33:
+        if random_identities:
+            if random.randrange(100) < 66:
                 fake_participant_identity(participant)
-                if random.randrange(100) < 50:
+                if random.randrange(100) < 33:
                     fake_participant_identity(participant)
+                    if random.randrange(100) < 50:
+                        fake_participant_identity(participant)
 
     except IntegrityError:
         return fake_participant(db, is_admin)
@@ -284,6 +290,20 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
     participants = []
     for i in xrange(num_participants):
         participants.append(fake_participant(db))
+
+
+    # make a participant for testing weird flags
+    flag_testing = fake_participant(db, random_identities=False)
+    participants.append(flag_testing)
+
+    nepal = db.one("SELECT id FROM countries WHERE code2='NP'")
+    flag_testing.store_identity_info(nepal, 'nothing-enforced', {})
+    flag_testing.set_identity_verification(nepal, True)
+
+    vatican = db.one("SELECT id FROM countries WHERE code2='VA'")
+    flag_testing.store_identity_info(vatican, 'nothing-enforced', {})
+    flag_testing.set_identity_verification(vatican, True)
+
 
     print("Making Teams")
     teams = []
