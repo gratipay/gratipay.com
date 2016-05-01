@@ -77,8 +77,10 @@ def fake_participant(db, is_admin=False):
                          )
         participant = Participant.from_username(username)
 
-        if random.randrange(3) in (1, 2):  # 66%
+        if random.randrange(100) < 66:
             fake_participant_identity(participant)
+            if random.randrange(100) < 33:
+                fake_participant_identity(participant)
 
     except IntegrityError:
         return fake_participant(db, is_admin)
