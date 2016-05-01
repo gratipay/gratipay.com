@@ -58,8 +58,13 @@ def fake_sentence(start=1, stop=100):
     return faker.sentence(random.randrange(start,stop))
 
 
-def fake_participant(db, is_admin=False):
+def fake_participant(db, is_admin=False, random_identities=True):
     """Create a fake User.
+
+    :param Postgres db: a ``Postgres`` or ``Cursor`` object
+    :param bool is_admin: whether to make the participant an admin
+    :param bool random_identities: whether to give the participant random identities
+
     """
     username = faker.first_name() + fake_text_id(3)
     try:
@@ -74,12 +79,40 @@ def fake_participant(db, is_admin=False):
                         , balanced_customer_href=faker.uri()
                         , is_suspicious=False
                         , claimed_time=faker.date_time_this_year()
+                        , email_address='{}@example.com'.format(username)
                          )
+        participant = Participant.from_username(username)
+
+        if random_identities:
+            if random.randrange(100) < 66:
+                fake_participant_identity(participant)
+                if random.randrange(100) < 33:
+                    fake_participant_identity(participant)
+                    if random.randrange(100) < 50:
+                        fake_participant_identity(participant)
+
     except IntegrityError:
         return fake_participant(db, is_admin)
 
-    #Call participant constructor to perform other DB initialization
-    return Participant.from_username(username)
+    return participant
+
+
+def fake_participant_identity(participant, verification=None):
+    """Pick a country and make an identity for the participant there.
+
+    :param Participant participant: a participant object
+    :param bool verification: the value to set verification to; None will result in a 50% chance
+        either way
+    :returns: a country id
+
+    """
+    country_id = random_country_id(participant.db)
+    participant.store_identity_info(country_id, 'nothing-enforced', {})
+    if verification:
+        participant.set_identity_verification(country_id, verification)
+    elif (random.randrange(2) == 0):   # 50%
+        participant.set_identity_verification(country_id, True)
+    return country_id
 
 
 def fake_team(db, teamowner):
@@ -200,6 +233,10 @@ def fake_exchange(db, participant, amount, fee, timestamp):
                             )
 
 
+def random_country_id(db):
+    return db.one("SELECT id FROM countries ORDER BY random() LIMIT 1")
+
+
 def prep_db(db):
     db.run("""
         CREATE OR REPLACE FUNCTION process_transfer() RETURNS trigger AS $$
@@ -251,9 +288,24 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
     """Populate DB with fake data.
     """
     print("Making Participants")
+    make_flag_tester = num_participants > 1
+
     participants = []
-    for i in xrange(num_participants):
+    for i in xrange(num_participants - 1 if make_flag_tester else num_participants):
         participants.append(fake_participant(db))
+
+    if make_flag_tester:
+        # make a participant for testing weird flags
+        flag_tester = fake_participant(db, random_identities=False)
+        participants.append(flag_tester)
+
+        nepal = db.one("SELECT id FROM countries WHERE code2='NP'")
+        flag_tester.store_identity_info(nepal, 'nothing-enforced', {})
+        flag_tester.set_identity_verification(nepal, True)
+
+        vatican = db.one("SELECT id FROM countries WHERE code2='VA'")
+        flag_tester.store_identity_info(vatican, 'nothing-enforced', {})
+        flag_tester.set_identity_verification(vatican, True)
 
     print("Making Teams")
     teams = []
@@ -357,8 +409,15 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
     print("")
 
 
+def _wireup():
+    env = wireup.env()
+    db = wireup.db(env)
+    wireup.crypto(env)
+    return db
+
+
 def main(db=None, *a, **kw):
-    db = db or wireup.db(wireup.env())
+    db = db or _wireup()
     clean_db(db)
     prep_db(db)
     populate_db(db, *a, **kw)
