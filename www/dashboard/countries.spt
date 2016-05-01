@@ -1,0 +1,34 @@
+from aspen import Response
+
+[---]
+if not user.ADMIN:
+    raise Response(403)
+
+countries = website.db.all("""
+
+    SELECT name
+         , array_agg(username) as usernames
+         , array_agg(is_verified) as verifications
+      FROM participant_identities pi 
+      JOIN participants p 
+        ON p.id = participant_id 
+      JOIN countries c 
+        ON c.id = country_id
+  GROUP BY c.name
+
+""")
+
+zip = zip
+[---] text/html
+
+{% for country in countries %}
+<b>{{ country.name }}</b> 
+{% for username, is_verified in zip(country.usernames, country.verifications) %}
+{% if is_verified %}
+<b><a href="/~{{ username }}/">{{ username }}</a></b>
+{% else %}
+<a href="/~{{ username }}/">{{ username }}</a>
+{% endif %}
+{% endfor %}
+<br>
+{% endfor %}
