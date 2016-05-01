@@ -28,3 +28,9 @@ class TestFakeData(Harness):
             assert len(payment_instructions) == num_tips
         else:
             assert len(payment_instructions) == (num_participants - num_teams)
+
+
+    def test_fake_participant_identity(self):
+        crusher = self.make_participant('crusher', email_address='crusher@example.com')
+        country_id = fake_data.fake_participant_identity(crusher)
+        assert [x.country.id for x in crusher.list_identity_metadata()] == [country_id]
