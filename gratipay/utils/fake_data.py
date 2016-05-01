@@ -75,11 +75,33 @@ def fake_participant(db, is_admin=False):
                         , is_suspicious=False
                         , claimed_time=faker.date_time_this_year()
                          )
+        participant = Participant.from_username(username)
+
+        if random.randrange(3) in (1, 2):  # 66%
+            fake_participant_identity(participant)
+
     except IntegrityError:
         return fake_participant(db, is_admin)
 
-    #Call participant constructor to perform other DB initialization
-    return Participant.from_username(username)
+    return participant
+
+
+def fake_participant_identity(participant, verification=None):
+    """Pick a country and make an identity for the participant there.
+
+    :param Participant participant: a participant object
+    :param bool verification: the value to set verification to; None will result in a 50% chance
+        either way
+    :returns: a country id
+
+    """
+    country_id = random_country_id(participant.db)
+    participant.store_identity_info(country_id, 'nothing-enforced', {})
+    if verification:
+        participant.set_identity_verification(country_id, verification)
+    elif (random.randrange(2) == 0):   # 50%
+        participant.set_identity_verification(country_id, True)
+    return country_id
 
 
 def fake_team(db, teamowner):
@@ -198,6 +220,10 @@ def fake_exchange(db, participant, amount, fee, timestamp):
                            , fee=fee
                            , status='succeeded'
                             )
+
+
+def random_country_id(db):
+    return db.one("SELECT id FROM countries ORDER BY random() LIMIT 1")
 
 
 def prep_db(db):
@@ -357,8 +383,15 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
     print("")
 
 
+def _wireup():
+    env = wireup.env()
+    db = wireup.db(env)
+    wireup.crypto(env)
+    return db
+
+
 def main(db=None, *a, **kw):
-    db = db or wireup.db(wireup.env())
+    db = db or _wireup()
     clean_db(db)
     prep_db(db)
     populate_db(db, *a, **kw)
