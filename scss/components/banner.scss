@@ -63,6 +63,14 @@
         }
     }
 
+    .countries {
+        position: absolute;
+        bottom: 6px;
+        left: 192px;
+        width: 32px;
+        z-index: 3;
+    }
+
     .details {
         position: absolute;
         top: 16px;

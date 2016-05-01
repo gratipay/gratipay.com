@@ -32,9 +32,9 @@ Gratipay.warnOffUsersFromDeveloperConsole = function() {
 Gratipay.adaptToLongUsernames = function() {
     var h1 = $('#banner h1');
     var nchars = h1.text().length;
-    if (nchars > 16)
+    if (nchars > 15)
         h1.addClass('really-long');
-    else if (nchars > 8)
+    else if (nchars > 7)
         h1.addClass('long');
     h1.show();
 };
