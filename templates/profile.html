@@ -42,6 +42,19 @@
     {% endif %}
 </div>
 
+{% if participant.has_verified_identity %}
+<div class="countries">
+    {% for identity in participant.list_identity_metadata() %}
+    {% if identity.is_verified %}
+    <img class="flag {{ identity.country.code2 }}"
+        alt="verified in {{ identity.country.name }}"
+        title="verified in {{ identity.country.name }}"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="details mono">
     <table>
         <tr>

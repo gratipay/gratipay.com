@@ -63,6 +63,15 @@
         }
     }
 
+    .countries {
+        position: absolute;
+        top: 16px;
+        right: 180px;
+        width: 32px;
+        height: 100px;
+        z-index: 3;
+    }
+
     .details {
         position: absolute;
         top: 16px;
