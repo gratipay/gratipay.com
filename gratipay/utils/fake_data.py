@@ -81,6 +81,8 @@ def fake_participant(db, is_admin=False):
             fake_participant_identity(participant)
             if random.randrange(100) < 33:
                 fake_participant_identity(participant)
+                if random.randrange(100) < 50:
+                    fake_participant_identity(participant)
 
     except IntegrityError:
         return fake_participant(db, is_admin)
