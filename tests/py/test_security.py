@@ -50,7 +50,7 @@ class TestSecurity(Harness):
 
     def test_ep_packs_encryptingly(self):
         packed = Participant.encrypting_packer.pack({"foo": "bar"})
-        assert urlsafe_b64decode(packed)[0] == b'\x80'  # Frenet version
+        assert urlsafe_b64decode(packed)[0] == b'\x80'  # Fernet version
 
     def test_ep_unpacks_decryptingly(self):
         packed = b'gAAAAABXJMbdriJ984uMCMKfQ5p2UUNHB1vG43K_uJyzUffbu2Uwy0d71kAnqOKJ7Ww_FEQz9Dliw8'\
