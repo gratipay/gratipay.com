@@ -47,9 +47,9 @@
     {% for identity in participant.list_identity_metadata()[:2] %}
     {% if identity.is_verified %}
     <img class="flag {{ identity.country.code2 }}"
-        alt="verified in {{ identity.country.name }}"
-        title="verified in {{ identity.country.name }}"
-        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
+         alt="{{ _('verified in: {country}', country=locale.countries[identity.country.code2]) }}"
+         title="{{ _('verified in: {country}', country=locale.countries[identity.country.code2]) }}"
+         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
     {% endif %}
     {% endfor %}
 </div>
