@@ -17,6 +17,7 @@
 @import "scss/mixins/borders-backgrounds-shadows";
 @import "scss/mixins/animation";
 @import "scss/mixins/transform";
+@import "scss/mixins/flags";
 @import "scss/utils";
 @import "scss/variables";
 

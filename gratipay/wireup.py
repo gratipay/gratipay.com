@@ -31,10 +31,13 @@ from gratipay.elsewhere.twitter import Twitter
 from gratipay.elsewhere.venmo import Venmo
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.community import Community
+from gratipay.models.country import Country
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
+from gratipay.models.participant.mixins import Identity
 from gratipay.models.team import Team
 from gratipay.models import GratipayDB
+from gratipay.security.crypto import EncryptingPacker
 from gratipay.utils.emails import compile_email_spt, ConsoleMailer
 from gratipay.utils.http_caching import asset_etag
 from gratipay.utils.i18n import (
@@ -53,11 +56,15 @@ def db(env):
     maxconn = env.database_maxconn
     db = GratipayDB(dburl, maxconn=maxconn)
 
-    for model in (AccountElsewhere, Community, ExchangeRoute, Participant, Team):
+    for model in (AccountElsewhere, Community, Country, ExchangeRoute, Participant, Team):
         db.register_model(model)
     gratipay.billing.payday.Payday.db = db
 
     return db
+
+def crypto(env):
+    keys = [k.encode('ASCII') for k in env.crypto_keys.split()]
+    Identity.encrypting_packer = EncryptingPacker(*keys)
 
 def mail(env, project_root='.'):
     if env.aws_ses_access_key_id and env.aws_ses_secret_access_key and env.aws_ses_default_region:
@@ -377,6 +384,7 @@ def env():
         BASE_URL                        = unicode,
         DATABASE_URL                    = unicode,
         DATABASE_MAXCONN                = int,
+        CRYPTO_KEYS                     = unicode,
         GRATIPAY_ASSET_URL              = unicode,
         GRATIPAY_CACHE_STATIC           = is_yesish,
         GRATIPAY_COMPRESS_ASSETS        = is_yesish,

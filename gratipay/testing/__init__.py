@@ -65,7 +65,7 @@ class Harness(unittest.TestCase):
     db = client.website.db
     platforms = client.website.platforms
     tablenames = db.all("SELECT tablename FROM pg_tables "
-                        "WHERE schemaname='public'")
+                        "WHERE schemaname='public' AND tablename != 'countries'")
     seq = itertools.count(0)
 
 
