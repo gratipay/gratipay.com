@@ -17,3 +17,15 @@ class PayrollMixin(object):
         """Remove a participant from the team's payroll.
         """
         raise NotImplementedError
+
+
+    def invite_to_payroll(self, participant):
+        """Invite a participant to the team's payroll.
+        """
+        raise NotImplementedError
+
+
+    def uninvite_from_payroll(self, participant):
+        """Uninvite a participant from the team's payroll.
+        """
+        raise NotImplementedError

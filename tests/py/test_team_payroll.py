@@ -28,3 +28,15 @@ class Tests(Harness):
         enterprise.add_to_payroll(crusher)
         enterprise.remove_from_payroll(crusher)
         assert crusher not in enterprise
+
+
+    # itp - invite_to_payroll
+
+    def test_itp_invites_to_payroll(self):
+        assert 0
+
+
+    # ufp - uninvite_from_payroll
+
+    def test_ufp_uninvites_from_payroll(self):
+        assert 0
