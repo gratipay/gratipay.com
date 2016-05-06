@@ -68,3 +68,8 @@ CREATE TRIGGER propagate_is_verified_removal
     EXECUTE PROCEDURE update_has_verified_identity();
 
 -- We don't need an INSERT trigger, because of the way the defaults play out.
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4017
+
+ALTER TABLE teams ADD COLUMN takes_enabled bool NOT NULL DEFAULT false;
