@@ -26,3 +26,15 @@ class TakesMixin(object):
                            , new_value=to
                             )
                       )
+
+
+    def set_takes_for(self, participant, ntakes):
+        raise NotImplementedError
+
+
+    def add_taker(self, participant):
+        self.set_takes_for(participant, 1)
+
+
+    def remove_taker(self, participant):
+        self.set_takes_for(participant, 0)
