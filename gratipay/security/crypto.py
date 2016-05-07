@@ -72,10 +72,17 @@ def constant_time_compare(val1, val2):
 class EncryptingPacker(object):
     """Implement conversion of Python objects to/from encrypted bytestrings.
 
-    :param bytes key: a Fernet key as ``bytes``, for encryption and decryption via
-        ``cryptography.fernet.MultiFernet``
-    :param list old_keys: additional Fernet keys as ``bytes`` for decryption via
-        ``cryptography.fernet.MultiFernet``
+    :param str key: a `Fernet`_ key to use for encryption and decryption
+    :param list old_keys: additional `Fernet`_ keys to use for decryption
+
+    .. note::
+
+        Encrypted messages contain the timestamp at which they were generated
+        *in plaintext*. See `our audit`_ for discussion of this and other
+        considerations with `Fernet`_.
+
+    .. _Fernet: https://cryptography.io/en/latest/fernet/
+    .. _our audit: https://github.com/gratipay/gratipay.com/pull/3998#issuecomment-216227070
 
     """
 
