@@ -91,16 +91,17 @@ class EncryptingPacker(object):
         self.fernet = MultiFernet([Fernet(k) for k in keys])
 
     def pack(self, obj):
-        """Given a JSON-serializable object, return an encrypted byte string.
+        """Given a JSON-serializable object, return a `Fernet`_ token.
         """
         obj = json.dumps(obj)           # serialize to unicode
         obj = obj.encode('utf8')        # convert to bytes
         obj = self.fernet.encrypt(obj)  # encrypt
         return obj
 
-    def unpack(self, obj):
-        """Given an encrypted byte string, return a Python object.
+    def unpack(self, token):
+        """Given a `Fernet`_ token with JSON in the ciphertext, return a Python object.
         """
+        obj = token
         if not type(obj) is bytes:
             raise TypeError("need bytes, got {}".format(type(obj)))
         obj = self.fernet.decrypt(obj)  # decrypt
