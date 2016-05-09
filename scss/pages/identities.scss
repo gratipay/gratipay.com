@@ -15,6 +15,19 @@
             margin-right: 0;
         }
 
+        &.add {
+            background: #f6f6f6;
+            color: #aaa;
+            border-style: dashed;
+            @include box-shadow(0,0,0);
+            border: 2px dashed #ccc;
+
+            &:hover {
+                color: $black;
+                background-image: radial-gradient(ellipse farthest-corner at 50% 50%, #ffffff 0%, #f6f6f6 70px);
+            }
+        }
+
         img {
             position: absolute;
             bottom: 20px;
