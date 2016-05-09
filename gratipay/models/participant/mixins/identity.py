@@ -89,7 +89,9 @@ class IdentityMixin(object):
                 """, params)
                 _add_event('insert')
 
-        except IntegrityError:
+        except IntegrityError as exc:
+            if exc.pgcode != '23505':
+                raise
             with self.db.get_cursor() as cursor:
                 identity_id, old_schema_name = cursor.one("""
 
