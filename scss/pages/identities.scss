@@ -15,16 +15,26 @@
             margin-right: 0;
         }
 
+        &.verified {
+            background-image: radial-gradient( circle at 36px 60px
+                                             , lighten($green, 55%) 0%
+                                             , lighten($green, 30%) 100%
+                                              );
+        }
+
         &.add {
-            background: #f6f6f6;
-            color: #aaa;
+            background: $lightest-gray;
+            color: $medium-gray;
             border-style: dashed;
             @include box-shadow(0,0,0);
-            border: 2px dashed #ccc;
+            border: 2px dashed $darker-gray;
 
             &:hover {
                 color: $black;
-                background-image: radial-gradient(ellipse farthest-corner at 50% 50%, #ffffff 0%, #f6f6f6 70px);
+                background-image: radial-gradient( ellipse farthest-corner at 50% 50%
+                                                 , $white 0%
+                                                 , $lightest-gray 50%
+                                                  );
             }
         }
 
@@ -38,12 +48,15 @@
             white-space: nowrap;
             margin: 0;
             padding: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .status {
             position: absolute;
             bottom: 20px;
             right: 20px;
+            font: normal 9px $Mono;
         }
     }
 }

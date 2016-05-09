@@ -8,23 +8,22 @@ title = _("Identities")
 {% block content %}
 <div id="identities">
 {% for identity in participant.list_identity_metadata() %}
-<div class="card">
+<div class="card {% if identity.is_verified %}verified{% else %}unverified{% endif %}">
     <h2>{{ locale.countries[identity.country.code2] }}</h2>
     <img class="flag {{ identity.country.code2 }}"
-         alt="{{ _('verified in: {country}', country=locale.countries[identity.country.code2]) }}"
-         title="{{ _('verified in: {country}', country=locale.countries[identity.country.code2]) }}"
          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
     <div class="status">
         {% if identity.is_verified %}
-        &check;
+        {{ _("Verified") }}
         {% else %}
+        {{ _("Unverified") }}
         {% endif %}
     </div>
 </div>
 {% endfor %}
 
 <button class="card add">
-    Add Identity
+    {{ _("Add Identity") }}
 </button>
 
 </div>
