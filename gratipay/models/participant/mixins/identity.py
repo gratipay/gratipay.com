@@ -164,3 +164,54 @@ class IdentityMixin(object):
           ORDER BY c.code
 
         """, (self.id,))
+
+
+# Rekeying
+# ========
+
+def rekey(db, packer):
+    """Rekey the encrypted participant identity information in our database.
+
+    :param GratipayDB db: used to access the database
+    :param EncryptingPacker packer: used to decrypt and encrypt data
+
+    This function features prominently in our procedure for rekeying our
+    encrypted data, as documented in the "`Keep Secrets`_" howto. It operates
+    by loading records from `participant_identities` that haven't been updated
+    in the present month, in batches of 100. It updates a timestamp atomically
+    with each rekeyed `info`, so it can be safely rerun in the face of network
+    failure, etc.
+
+    .. _Keep Secrets: http://inside.gratipay.com/howto/keep-secrets
+
+    """
+    n = 0
+    while 1:
+        m = _rekey_one_batch(db, packer)
+        if m == 0:
+            break
+        n += m
+    return n
+
+
+def _rekey_one_batch(db, packer):
+    batch = db.all("""
+
+        SELECT id, info
+          FROM participant_identities
+         WHERE _info_last_keyed < date_trunc('month', now())
+      ORDER BY _info_last_keyed ASC
+         LIMIT 100
+
+    """)
+    if not batch:
+        return 0
+
+    for rec in batch:
+        plaintext = packer.unpack(bytes(rec.info))
+        new_token = packer.pack(plaintext)
+        db.run( "UPDATE participant_identities SET info=%s, _info_last_keyed=now() WHERE id=%s"
+              , (new_token, rec.id)
+               )
+
+    return len(batch)

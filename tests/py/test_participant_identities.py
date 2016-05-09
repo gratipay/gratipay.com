@@ -1,10 +1,12 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from cryptography.fernet import InvalidToken
 from gratipay.testing import Harness
 from gratipay.models.participant.mixins import identity, Identity
-from gratipay.models.participant.mixins.identity import _validate_info
+from gratipay.models.participant.mixins.identity import _validate_info, rekey
 from gratipay.models.participant.mixins.identity import ParticipantIdentityInfoInvalid
 from gratipay.models.participant.mixins.identity import ParticipantIdentitySchemaUnknown
+from gratipay.security.crypto import EncryptingPacker, Fernet
 from psycopg2 import IntegrityError
 from pytest import raises
 
@@ -149,3 +151,29 @@ class Tests(Harness):
                        ).value
         assert error.pgcode == '23100'
         assert bruiser.list_identity_metadata() == []
+
+
+    # rekey
+
+    def rekey_setup(self):
+        self.crusher.store_identity_info(self.US, 'nothing-enforced', {'name': 'Crusher'})
+        self.db.run("UPDATE participant_identities "
+                    "SET _info_last_keyed=_info_last_keyed - '6 months'::interval")
+        old_key = str(self.client.website.env.crypto_keys)
+        return EncryptingPacker(Fernet.generate_key(), old_key)
+
+    def test_rekey_rekeys(self):
+        assert rekey(self.db, self.rekey_setup()) == 1
+
+    def test_rekeying_causes_old_packer_to_fail(self):
+        rekey(self.db, self.rekey_setup())
+        raises(InvalidToken, self.crusher.retrieve_identity_info, self.US)
+
+    def test_rekeyed_data_is_accessible_with_new_key(self):
+        self.crusher.encrypting_packer = self.rekey_setup()
+        assert self.crusher.retrieve_identity_info(self.US) == {'name': 'Crusher'}
+
+    def test_rekey_ignores_recently_keyed_records(self):
+        self.crusher.encrypting_packer = self.rekey_setup()
+        assert rekey(self.db, self.crusher.encrypting_packer) == 1
+        assert rekey(self.db, self.crusher.encrypting_packer) == 0

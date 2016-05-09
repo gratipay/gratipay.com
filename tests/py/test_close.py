@@ -179,13 +179,13 @@ class TestClosing(Harness):
         US = self.db.one("SELECT id FROM countries WHERE code='US'")
         alice.store_identity_info(US, 'nothing-enforced', {'name': 'Alice'})
         assert len(alice.list_identity_metadata()) == 1
-        assert len(self.db.all('SELECT * FROM participant_identities;')) == 1
+        assert self.db.one('SELECT count(*) FROM participant_identities;') == 1
 
         with self.db.get_cursor() as cursor:
             alice.clear_personal_information(cursor)
 
         assert len(alice.list_identity_metadata()) == 0
-        assert len(self.db.all('SELECT * FROM participant_identities;')) == 0
+        assert self.db.one('SELECT count(*) FROM participant_identities;') == 0
 
 
     # uic = update_is_closed
