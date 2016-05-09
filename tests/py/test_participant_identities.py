@@ -5,6 +5,7 @@ from gratipay.models.participant.mixins import identity, Identity
 from gratipay.models.participant.mixins.identity import _validate_info
 from gratipay.models.participant.mixins.identity import ParticipantIdentityInfoInvalid
 from gratipay.models.participant.mixins.identity import ParticipantIdentitySchemaUnknown
+from psycopg2 import IntegrityError
 from pytest import raises
 
 
@@ -134,3 +135,17 @@ class Tests(Harness):
     def test__vi_chokes_on_unknown_schema(self):
         err = raises(ParticipantIdentitySchemaUnknown, _validate_info, 'floo-floo', {'foo': 'bar'})
         assert err.value.message == "unknown schema 'floo-floo'"
+
+
+    # fine - fail_if_no_email
+
+    def test_fine_fails_if_no_email(self):
+        bruiser = self.make_participant('bruiser')
+        error = raises( IntegrityError
+                      , bruiser.store_identity_info
+                      , self.US
+                      , 'nothing-enforced'
+                      , {'name': 'Bruiser'}
+                       ).value
+        assert error.pgcode == '23100'
+        assert bruiser.list_identity_metadata() == []
