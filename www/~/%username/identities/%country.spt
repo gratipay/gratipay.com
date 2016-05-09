@@ -1,0 +1,41 @@
+from aspen import Response
+from gratipay.utils import get_participant
+[---]
+participant = get_participant(state, restrict=True)
+identities = participant.list_identity_metadata()
+country = request.path['country']
+if country not in locale.countries:
+    raise Response(404)
+title = locale.countries[country]
+identity = None
+for identity in identities:
+    if identity.country.code2 == country:
+        identity = participant.retrieve_identity_info(identity.country.id)
+        break
+[---] text/html
+{% extends "templates/profile.html" %}
+{% block content %}
+<img class="flag {{ country }}"
+     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
+<form>
+    Legal Name: <input type="text" name="legal_name"><br>
+    Address: <textarea name="legal_name"></textarea><br>
+    Date of Birth: <input type="text"><br>
+    <br>
+    ID Number: <input type="text" name="legal_name"><br>
+    ID Type:<br>
+    &nbsp; <input type="radio" name="id_type" value="nin"> National ID<br>
+    &nbsp; <input type="radio" name="id_type" value="passport"> Passport<br>
+    &nbsp; <input type="radio" name="id_type" value="license"> Driver's License<br>
+    <br>
+
+    <button>Save</button>
+</form>
+
+{% if identity != None %}
+<div class="danger-zone">
+<h2>Remove this Identity</h2>
+<button>Remove</button>
+</div>
+{% endif %}
+{% endblock %}

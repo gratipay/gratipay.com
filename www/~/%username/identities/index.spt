@@ -1,7 +1,7 @@
 from gratipay.utils import get_participant
 [---]
-request.allow('GET', 'POST')
-participant = get_participant(state, restrict=False)
+request.allow('GET')
+participant = get_participant(state, restrict=True)
 title = _("Identities")
 [---] text/html
 {% extends "templates/profile.html" %}
