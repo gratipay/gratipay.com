@@ -64,7 +64,8 @@ def db(env):
 
 def crypto(env):
     keys = [k.encode('ASCII') for k in env.crypto_keys.split()]
-    Identity.encrypting_packer = EncryptingPacker(*keys)
+    out = Identity.encrypting_packer = EncryptingPacker(*keys)
+    return out
 
 def mail(env, project_root='.'):
     if env.aws_ses_access_key_id and env.aws_ses_secret_access_key and env.aws_ses_default_region:
