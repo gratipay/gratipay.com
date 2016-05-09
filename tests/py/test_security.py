@@ -6,8 +6,10 @@ import datetime
 from aspen import Response
 from aspen.http.request import Request
 from base64 import urlsafe_b64decode
+from cryptography.fernet import Fernet, InvalidToken
 from gratipay import security
 from gratipay.models.participant import Participant
+from gratipay.security.crypto import EncryptingPacker
 from gratipay.testing import Harness
 from pytest import raises
 
@@ -60,6 +62,15 @@ class TestSecurity(Harness):
 
     def test_ep_unpacks_decryptingly(self):
         assert Participant.encrypting_packer.unpack(self.packed) == {"foo": "bar"}
+
+    def test_ep_fails_to_unpack_old_data_with_a_new_key(self):
+        encrypting_packer = EncryptingPacker(Fernet.generate_key())
+        raises(InvalidToken, encrypting_packer.unpack, self.packed)
+
+    def test_ep_can_unpack_if_old_key_is_provided(self):
+        old_key = str(self.client.website.env.crypto_keys)
+        encrypting_packer = EncryptingPacker(Fernet.generate_key(), old_key)
+        assert encrypting_packer.unpack(self.packed) == {"foo": "bar"}
 
     def test_ep_leaks_timestamp_derp(self):
         # https://github.com/pyca/cryptography/issues/2714
