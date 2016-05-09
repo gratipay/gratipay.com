@@ -1,0 +1,36 @@
+#identities {
+    padding-top: 20px;
+
+    .card {
+        height: 96px;
+        width: 46%;
+        float: left;
+        margin: 0 8% 8% 0;
+        padding: 20px;
+        position: relative;
+        @include border-radius(5px);
+        @include box-shadow(0, 0, 10px, $black);
+
+        &:nth-child(even) {
+            margin-right: 0;
+        }
+
+        img {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        h2 {
+            white-space: nowrap;
+            margin: 0;
+            padding: 0;
+        }
+
+        .status {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+    }
+}
