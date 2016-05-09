@@ -356,6 +356,7 @@ class Participant(Model, mixins.Identity):
 
             DELETE FROM emails WHERE participant_id = %(participant_id)s;
             DELETE FROM statements WHERE participant=%(participant_id)s;
+            DELETE FROM participant_identities WHERE participant_id=%(participant_id)s;
 
             UPDATE participants
                SET anonymous_giving=False

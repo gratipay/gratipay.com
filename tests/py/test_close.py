@@ -174,6 +174,19 @@ class TestClosing(Harness):
 
         assert Community.from_slug('test').nmembers == 1
 
+    def test_cpi_clears_personal_identities(self):
+        alice = self.make_participant('alice', email_address='alice@example.com')
+        US = self.db.one("SELECT id FROM countries WHERE code='US'")
+        alice.store_identity_info(US, 'nothing-enforced', {'name': 'Alice'})
+        assert len(alice.list_identity_metadata()) == 1
+        assert len(self.db.all('SELECT * FROM participant_identities;')) == 1
+
+        with self.db.get_cursor() as cursor:
+            alice.clear_personal_information(cursor)
+
+        assert len(alice.list_identity_metadata()) == 0
+        assert len(self.db.all('SELECT * FROM participant_identities;')) == 0
+
 
     # uic = update_is_closed
 
