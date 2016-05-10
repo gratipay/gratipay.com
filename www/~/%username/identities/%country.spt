@@ -1,31 +1,43 @@
 from aspen import Response
 from gratipay.utils import get_participant
+from gratipay.models.country import Country
 [---]
 participant = get_participant(state, restrict=True)
-identities = participant.list_identity_metadata()
+
+# load country
 country = request.path['country']
 if country not in locale.countries:
     raise Response(404)
-title = locale.countries[country]
+country = Country.from_code2(country)
+title = locale.countries[country.code2]
+
+# load identity & info
 identity = None
 info = {}
-for identity in identities:
-    if identity.country.code2 == country:
+for identity in participant.list_identity_metadata():
+    if identity.country.code2 == country.code2:
         info = participant.retrieve_identity_info(identity.country.id)
         break
 
+# handle POST requests
 if request.method == 'POST':
-    info = {}
-    info['id_type'] = request.body['id_type']
-    info['id_number'] = request.body['id_number']
-    info['legal_name'] = request.body['legal_name']
-    info['address_1'] = request.body['address_1']
-    info['address_2'] = request.body['address_2']
-    info['city'] = request.body['city']
-    info['region'] = request.body['region']
-    info['postcode'] = request.body['postcode']
-    participant.store_identity_info(info)
-    request.redirect('..')
+    action = request.body['action']
+    if action == 'remove':
+        participant.remove_identity_info(country.id)
+    elif action == 'store':
+        info = {}
+        info['id_type'] = request.body['id_type']
+        info['id_number'] = request.body['id_number']
+        info['legal_name'] = request.body['legal_name']
+        info['address_1'] = request.body['address_1']
+        info['address_2'] = request.body['address_2']
+        info['city'] = request.body['city']
+        info['region'] = request.body['region']
+        info['postcode'] = request.body['postcode']
+        participant.store_identity_info(country.id, 'nothing-enforced', info)
+    else:
+        raise Response(400)
+    website.redirect('./', base_url='')
 
 [---] text/html
 {% extends "templates/profile.html" %}
@@ -91,14 +103,16 @@ if request.method == 'POST':
 
         <br>
 
-        <button class="selected larger" type="submit">{{ _("Save") }}</button>
+        <button class="selected larger" type="submit"
+            name="action" value="store">{{ _("Save") }}</button>
         <button class="cancel" type="reset"
             onclick="javascript: window.location='./'" formnovalidate>Cancel</button>
 
         {% if identity != None %}
         <div class="danger-zone">
             <h2>{{ _("Danger Zone") }}</h2>
-            <button type="submit">{{ _("Remove This Identity") }}</button>
+            <button type="submit"
+                name="action" value="remove">{{ _("Remove This Identity") }}</button>
         </div>
         {% endif %}
     </form>
