@@ -48,7 +48,8 @@ if request.method == 'POST':
 
         <label>
             <span>{{ _("ID Number") }}</span>
-            <input id="id_number" name="id_number" required value="{{ info['id_number'] }}">
+            <input id="id_number" name="id_number" required autofocus
+                value="{{ info['id_number'] }}">
         </label>
 
         <label>
@@ -88,7 +89,11 @@ if request.method == 'POST':
 
         <div class="clear"></div>
 
-        <button class="selected larger" id="save" type="submit">{{ _("Save") }}</button>
+        <br>
+
+        <button class="selected larger" type="submit">{{ _("Save") }}</button>
+        <button class="cancel" type="reset"
+            onclick="javascript: window.location='./'" formnovalidate>Cancel</button>
 
         {% if identity != None %}
         <div class="danger-zone">
