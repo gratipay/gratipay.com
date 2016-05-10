@@ -201,12 +201,13 @@ class IdentityMixin(object):
 
             """, dict(locals(), participant_id=self.id))
 
-            cursor.run("""
+            has_verified_identity = cursor.one("""
 
                 UPDATE participant_identities
                    SET is_verified=%(is_verified)s
                  WHERE participant_id=%(participant_id)s
                    AND country_id=%(country_id)s
+             RETURNING (SELECT has_verified_identity FROM participants WHERE id=%(participant_id)s)
 
             """, dict(locals(), participant_id=self.id))
 
@@ -218,6 +219,8 @@ class IdentityMixin(object):
                           , action=action + ' identity'
                            )
 
+            import pdb; pdb.set_trace()
+            self.set_attributes(has_verified_identity=has_verified_identity)
             add_event(cursor, 'participant', payload)
 
 

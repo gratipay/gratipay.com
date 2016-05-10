@@ -31,7 +31,7 @@ def slugize(name):
     return slug
 
 
-class Team(Model, mixins.Takes):
+class Team(Model, mixins.Membership):
     """Represent a Gratipay team.
     """
 

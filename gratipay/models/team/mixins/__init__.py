@@ -1,3 +1,3 @@
-from .takes import TakesMixin as Takes
+from .membership import MembershipMixin as Membership
 
-__all__ = ['Takes']
+__all__ = ['Membership']
