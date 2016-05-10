@@ -35,6 +35,7 @@
 @import "scss/components/js-edit";
 @import "scss/components/linear_gradient";
 @import "scss/components/loading-indicators";
+@import "scss/components/long-form";
 @import "scss/components/memberships";
 @import "scss/components/nav";
 @import "scss/components/payments-by";
@@ -64,7 +65,6 @@
 @import "scss/pages/profile-edit";
 @import "scss/pages/giving";
 @import "scss/pages/settings";
-@import "scss/pages/cc-ba";
 @import "scss/pages/on-confirm";
 @import "scss/pages/search";
 @import "scss/pages/hall-of-fame";
