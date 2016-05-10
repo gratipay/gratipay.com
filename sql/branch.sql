@@ -41,3 +41,8 @@ CREATE TRIGGER enforce_email_for_participant_identity
 -- participants.has_verified_identity
 
 ALTER TABLE participants ADD COLUMN has_verified_identity bool NOT NULL DEFAULT false;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4017
+
+ALTER TABLE teams ADD COLUMN takes_enabled bool NOT NULL DEFAULT false;

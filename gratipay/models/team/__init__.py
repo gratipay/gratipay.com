@@ -7,6 +7,7 @@ import requests
 from aspen import json, log
 from gratipay.exceptions import InvalidTeamName
 from gratipay.models import add_event
+from gratipay.models.team import mixins
 from postgres.orm import Model
 
 from gratipay.billing.exchanges import MINIMUM_CHARGE
@@ -30,7 +31,7 @@ def slugize(name):
     return slug
 
 
-class Team(Model):
+class Team(Model, mixins.Takes):
     """Represent a Gratipay team.
     """
 
