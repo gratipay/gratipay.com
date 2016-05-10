@@ -73,3 +73,44 @@ CREATE TRIGGER propagate_is_verified_removal
 -- https://github.com/gratipay/gratipay.com/pull/4017
 
 ALTER TABLE teams ADD COLUMN takes_enabled bool NOT NULL DEFAULT false;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4018
+
+BEGIN;
+
+    -- Farewell, old takes table!
+    DROP VIEW current_takes;
+    DROP TABLE takes;
+
+    -- Be gone, payroll! I never knew you.
+    DROP VIEW current_payroll;
+    DROP TABLE payroll;
+
+    -- memberships - which participants are part of which teams
+    CREATE TABLE memberships
+    ( id                bigserial                   PRIMARY KEY
+    , ctime             timestamp with time zone    NOT NULL
+    , mtime             timestamp with time zone    NOT NULL DEFAULT now()
+    , participant_id    bigint                      NOT NULL REFERENCES participants(id)
+    , team_id           bigint                      NOT NULL REFERENCES teams(id)
+    , ntakes            int                         NOT NULL
+    , recorder_id       bigint                      NOT NULL REFERENCES participants(id)
+    , CONSTRAINT not_negative CHECK (ntakes >= 0)
+     );
+
+    CREATE VIEW current_memberships AS
+        SELECT * FROM (
+             SELECT DISTINCT ON (participant_id, team_id) m.*
+               FROM memberships m
+               JOIN participants p ON p.id = m.participant_id
+              WHERE p.is_suspicious IS NOT TRUE
+           ORDER BY participant_id
+                  , team_id
+                  , mtime DESC
+        ) AS anon WHERE ntakes > 0;
+
+    ALTER TABLE teams ADD COLUMN ntakes_claimed int default 0;
+    ALTER TABLE teams ADD COLUMN ntakes_remaining int default 1000;
+
+END;
