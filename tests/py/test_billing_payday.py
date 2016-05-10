@@ -569,6 +569,13 @@ class TestPayin(BillingHarness):
         assert filename.endswith('_payments.csv')
         os.unlink(filename)
 
+
+class TestTakes(BillingHarness):
+
+    def test_payday_distributes_takes(self):
+        assert 0
+
+
 class TestNotifyParticipants(EmailHarness):
 
     def test_it_notifies_participants(self):
