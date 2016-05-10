@@ -8,34 +8,94 @@ if country not in locale.countries:
     raise Response(404)
 title = locale.countries[country]
 identity = None
+info = {}
 for identity in identities:
     if identity.country.code2 == country:
-        identity = participant.retrieve_identity_info(identity.country.id)
+        info = participant.retrieve_identity_info(identity.country.id)
         break
+
+if request.method == 'POST':
+    info = {}
+    info['id_type'] = request.body['id_type']
+    info['id_number'] = request.body['id_number']
+    info['legal_name'] = request.body['legal_name']
+    info['address_1'] = request.body['address_1']
+    info['address_2'] = request.body['address_2']
+    info['city'] = request.body['city']
+    info['region'] = request.body['region']
+    info['postcode'] = request.body['postcode']
+    participant.store_identity_info(info)
+    request.redirect('..')
+
 [---] text/html
 {% extends "templates/profile.html" %}
 {% block content %}
 <img class="flag {{ country }}"
      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
-<form>
-    Legal Name: <input type="text" name="legal_name"><br>
-    Address: <textarea name="legal_name"></textarea><br>
-    Date of Birth: <input type="text"><br>
-    <br>
-    ID Number: <input type="text" name="legal_name"><br>
-    ID Type:<br>
-    &nbsp; <input type="radio" name="id_type" value="nin"> National ID<br>
-    &nbsp; <input type="radio" name="id_type" value="passport"> Passport<br>
-    &nbsp; <input type="radio" name="id_type" value="license"> Driver's License<br>
-    <br>
+<div class="long-form">
+    <form autocomplete="off" action="" method="POST">
 
-    <button>Save</button>
-</form>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-{% if identity != None %}
-<div class="danger-zone">
-<h2>Remove this Identity</h2>
-<button>Remove</button>
+        <label>
+            <span>{{ _("ID Type") }}</span>
+            <select name="id_type">
+                <option value="tax_id">{{ _("Tax ID") }}</option>
+                <option value="passport">{{ _("Passport") }}</option>
+                <option value="license">{{ _("Driver's License") }}</option>
+            </select>
+        </label>
+
+        <label>
+            <span>{{ _("ID Number") }}</span>
+            <input id="id_number" name="id_number" required value="{{ info['id_number'] }}">
+        </label>
+
+        <label>
+            <span>{{ _("Full Legal Name") }}</span>
+            <input id="legal_name" name="legal_name" required value="{{ info['legal_name'] }}">
+        </label>
+
+        <label class="half">
+            <span>{{ _("Date of Birth") }}</span>
+            <input id="dob" name="dob" required>
+        </label>
+
+        <label>
+            <span>{{ _("Address, Line 1") }}</span>
+            <input id="address_1" name="address_1" required value="{{ info['address_1'] }}">
+        </label>
+
+        <label>
+            <span>{{ _("Address, Line 2") }}</span>
+            <input id="address_2" name="address_2" required value="{{ info['address_2'] }}">
+        </label>
+
+        <label>
+            <span>{{ _("City") }}</span>
+            <input id="city" name="city" required value="{{ info['city'] }}">
+        </label>
+
+        <label>
+            <span>{{ _("Region (State, Province)") }}</span>
+            <input id="region" name="region" required value="{{ info['region'] }}">
+        </label>
+
+        <label class="half">
+            <span>{{ _("Postcode (ZIP)") }}</span>
+            <input id="postcode" name="postcode" required value="{{ info['postcode'] }}">
+        </label>
+
+        <div class="clear"></div>
+
+        <button class="selected larger" id="save" type="submit">{{ _("Save") }}</button>
+
+        {% if identity != None %}
+        <div class="danger-zone">
+            <h2>{{ _("Danger Zone") }}</h2>
+            <button type="submit">{{ _("Remove This Identity") }}</button>
+        </div>
+        {% endif %}
+    </form>
 </div>
-{% endif %}
 {% endblock %}

@@ -3,30 +3,47 @@ from gratipay.utils import get_participant
 request.allow('GET')
 participant = get_participant(state, restrict=True)
 title = _("Identities")
+countries = sorted({v:k for k,v in locale.countries.items()}.items())
 [---] text/html
 {% extends "templates/profile.html" %}
 {% block content %}
 <div id="identities">
-{% for identity in participant.list_identity_metadata() %}
-<div class="card {% if identity.is_verified %}verified{% else %}unverified{% endif %}">
-    <h2>{{ locale.countries[identity.country.code2] }}</h2>
-    <img class="flag {{ identity.country.code2 }}"
-         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
-    <div class="status">
-        {% if identity.is_verified %}
-        {{ _("Verified") }}
-        {% else %}
-        {{ _("Unverified") }}
-        {% endif %}
+    {% for identity in participant.list_identity_metadata() %}
+    <div class="card {% if identity.is_verified %}verified{% else %}unverified{% endif %}">
+        <h2>{{ locale.countries[identity.country.code2] }}</h2>
+        <img class="flag {{ identity.country.code2 }}"
+             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
+        <div class="status">
+            {% if identity.is_verified %}
+            {{ _("Verified") }}
+            {% else %}
+            {{ _("Unverified") }}
+            {% endif %}
+        </div>
     </div>
+    {% endfor %}
+
+    <button class="card add open-country-chooser">
+        {{ _("Add Identity") }}
+    </button>
+
+    <div class="clear"></div>
+
+    <div id="country-chooser">
+        <header>
+            <h2>Which Country?</h2>
+            <button class="close-country-chooser">&times;</button>
+        </header>
+        <section>
+            {% for name, code in countries %}
+            <a href="{{ code }}">
+                <img class="flag {{ code }}"
+                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
+                <span>{{ name }}</span>
+            </a>
+            {% endfor %}
+        </section>
+    </div>
+    <div id="grayout"></div>
 </div>
-{% endfor %}
-
-<button class="card add">
-    {{ _("Add Identity") }}
-</button>
-
-</div>
-
-<div class="clear"></div>
 {% endblock %}

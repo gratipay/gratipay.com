@@ -59,4 +59,76 @@
             font: normal 9px $Mono;
         }
     }
+
+    #country-chooser {
+        z-index: 1001;
+        display: none;
+        background: white;
+        @include border-radius(5px);
+        @include box-shadow(0, 0, 10px, $black);
+        position: fixed;
+        width: 240px;
+        height: 50vh;
+        top: 25%;
+        left: 50%;
+        margin-left: -120px;
+
+        header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 240px;
+            height: 36px;
+            background: white;
+            border-bottom: 1px solid $black;
+            @include border-radius(5px 5px 0 0);
+            @include box-shadow(0, 0, 10px, $black);
+
+            h2 {
+                margin: 0;
+                padding: 12px 20px 0;
+            }
+            button {
+                position: absolute;
+                top: 5px;
+                right: 20px;
+            }
+        }
+
+        section {
+            overflow: auto;
+            height: 50vh;
+            z-index: 0;
+            margin-top: 36px;
+            background: $lightest-gray;
+            @include border-radius(0 0 5px 5px);
+            @include box-shadow(0, 0, 10px, $black);
+
+            a {
+                padding: 5px 20px;
+                display: block;
+                img {
+                    margin: 0 5px -10px 0;
+                }
+                span {
+                    font: bold 18px/18px $Ideal;
+                }
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    #grayout {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: transparentize($black, 0.3);
+        z-index: 1000;
+        display: none;
+    }
 }

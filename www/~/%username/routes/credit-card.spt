@@ -46,7 +46,7 @@ else:
     <div class="details"><p>{{ last_bill_result }}</p></div>
     {% endif %}</div>
 
-    <div class="cc-ba">
+    <div class="long-form">
         <form id="credit-card" autocomplete="off">
 
             <h2>{{ _("Required") }}</h2>
