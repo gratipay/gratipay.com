@@ -14,21 +14,29 @@ title = locale.countries[country.code2]
 # load identity & info
 identity = None
 info = {}
-for identity in participant.list_identity_metadata():
-    if identity.country.code2 == country.code2:
-        info = participant.retrieve_identity_info(identity.country.id)
+identities = participant.list_identity_metadata()
+nidentities = len(identities)
+for _identity in identities:
+    if _identity.country.code2 == country.code2:
+        identity = _identity
+        info = participant.retrieve_identity_info(_identity.country.id)
         break
+if identity is None and nidentities >= 3:
+    website.redirect('./', base_url='')  # Not allowed to add any more!
 
 # handle POST requests
 if request.method == 'POST':
     action = request.body['action']
     if action == 'remove':
-        participant.remove_identity_info(country.id)
+        participant.clear_identity(country.id)
     elif action == 'store':
+        if identity is None and nidentities > 3:
+            raise Response(400, 'Only three identities allowed.')  # How'd you get here?
         info = {}
         info['id_type'] = request.body['id_type']
         info['id_number'] = request.body['id_number']
         info['legal_name'] = request.body['legal_name']
+        info['dob'] = request.body['dob']
         info['address_1'] = request.body['address_1']
         info['address_2'] = request.body['address_2']
         info['city'] = request.body['city']
@@ -42,7 +50,7 @@ if request.method == 'POST':
 [---] text/html
 {% extends "templates/profile.html" %}
 {% block content %}
-<img class="flag {{ country }}"
+<img class="flag {{ country.code2 }}"
      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
 <div class="long-form">
     <form autocomplete="off" action="" method="POST">
@@ -71,7 +79,7 @@ if request.method == 'POST':
 
         <label class="half">
             <span>{{ _("Date of Birth") }}</span>
-            <input id="dob" name="dob" required>
+            <input id="dob" name="dob" required value="{{ info['dob'] }}">
         </label>
 
         <label>
