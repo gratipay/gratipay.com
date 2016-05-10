@@ -4,12 +4,15 @@ request.allow('GET')
 participant = get_participant(state, restrict=True)
 title = _("Identities")
 countries = sorted({v:k for k,v in locale.countries.items()}.items())
+identities = participant.list_identity_metadata()
+nidentities = len(identities)
 [---] text/html
 {% extends "templates/profile.html" %}
 {% block content %}
 <div id="identities">
-    {% for identity in participant.list_identity_metadata() %}
-    <div class="card {% if identity.is_verified %}verified{% else %}unverified{% endif %}">
+    {% for identity in identities %}
+    <a class="card {% if identity.is_verified %}verified{% else %}unverified{% endif %}"
+       href="{{ identity.country.code2 }}">
         <h2>{{ locale.countries[identity.country.code2] }}</h2>
         <img class="flag {{ identity.country.code2 }}"
              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
@@ -20,18 +23,20 @@ countries = sorted({v:k for k,v in locale.countries.items()}.items())
             {{ _("Unverified") }}
             {% endif %}
         </div>
-    </div>
+    </a>
     {% endfor %}
 
+    {% if nidentities < 3 %}
     <button class="card add open-country-chooser">
         {{ _("Add Identity") }}
     </button>
+    {% endif %}
 
     <div class="clear"></div>
 
     <div id="country-chooser">
         <header>
-            <h2>Which Country?</h2>
+            <h2>{{ _("Which Country?") }}</h2>
             <button class="close-country-chooser">&times;</button>
         </header>
         <section>

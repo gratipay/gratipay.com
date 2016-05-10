@@ -20,6 +20,11 @@
                                              , lighten($green, 55%) 0%
                                              , lighten($green, 30%) 100%
                                               );
+            color: $green;
+        }
+
+        &.unverified {
+            color: $red;
         }
 
         &.add {
