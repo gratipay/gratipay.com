@@ -343,6 +343,9 @@ msgstr "Carta di Credito"
 msgid "PayPal"
 msgstr "PayPal"
 
+msgid "verified in: {country}"
+msgstr ""
+
 msgid "Weekly"
 msgstr "Settimanale"
 
