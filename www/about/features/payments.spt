@@ -85,7 +85,7 @@ reducing how dependent a Team is on a few sources of income.</p>
 <p>Our minimum credit/debit card charge is $10. We <a
     href="https://medium.com/gratipay-blog/charging-in-arrears-18cacf779bee#.z92kxeqt6">charge
     in arrears</a>. For example, we'll charge $10 (+ fees) at the end of ten
-weeks for a $1/wk subscription.</p>
+weeks for a $1/wk subscription. This may cause your Team's receiving to <a href="#receiving-less">fluctuate</a>.</p>
 
 
 <h2 id="promoting">What can I do to promote my Gratipay Team?
@@ -103,6 +103,12 @@ weeks for a $1/wk subscription.</p>
 feel overly entitled to special treatment because they've given your Team a
 little money.</p>
 
+<p>You <em>can</em> see overall statistics for your Team under "Receiving" on your Team page.</p>
+<ul>
+    <li>Funded Dues: Incoming payments that are backed by working credit cards.</li>
+    <li>Unfunded Dues: Incoming payments that are not backed by a working credit card.</li>
+    <li>Estimated payment for next week: Payments that the Team will receive next <a href="#when">payday</a>.</li>
+</ul>
 
 <h2 id="receiving-less">Why is my Team receiving less now than it was before?
     <a class="permalink" title="permalink" href="#receiving-less">&#182;</a>
