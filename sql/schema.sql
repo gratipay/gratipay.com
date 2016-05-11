@@ -778,3 +778,8 @@ CREATE TRIGGER enforce_email_for_participant_identity
 -- https://github.com/gratipay/gratipay.com/pull/4031
 
 ALTER TABLE participant_identities ADD COLUMN is_verified boolean NOT NULL DEFAULT false;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4033
+
+ALTER TABLE participants ADD COLUMN has_verified_identity bool NOT NULL DEFAULT false;
