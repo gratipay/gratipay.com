@@ -733,3 +733,11 @@ ALTER TABLE emails ALTER COLUMN participant_id SET NOT NULL;
 
 -- https://github.com/gratipay/gratipay.com/pull/3898
 ALTER TABLE emails DROP COLUMN participant;
+
+-- https://github.com/gratipay/gratipay.com/pull/4027
+CREATE TABLE countries -- http://www.iso.org/iso/country_codes
+( id    bigserial   primary key
+, code  text        NOT NULL UNIQUE
+ );
+
+\i sql/countries.sql
