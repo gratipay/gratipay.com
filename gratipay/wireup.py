@@ -31,6 +31,7 @@ from gratipay.elsewhere.twitter import Twitter
 from gratipay.elsewhere.venmo import Venmo
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.community import Community
+from gratipay.models.country import Country
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
 from gratipay.models.team import Team
@@ -54,7 +55,7 @@ def db(env):
     maxconn = env.database_maxconn
     db = GratipayDB(dburl, maxconn=maxconn)
 
-    for model in (AccountElsewhere, Community, ExchangeRoute, Participant, Team):
+    for model in (AccountElsewhere, Community, Country, ExchangeRoute, Participant, Team):
         db.register_model(model)
     gratipay.billing.payday.Payday.db = db
 
