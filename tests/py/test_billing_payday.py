@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import os
 
-import balanced
 import braintree
 import mock
 import pytest
@@ -186,20 +185,6 @@ class TestPayday(BillingHarness):
         nusers = self.db.one("SELECT nusers FROM paydays")
         assert nusers == 1
 
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
-    @mock.patch.object(Payday, 'fetch_card_holds')
-    @mock.patch('gratipay.billing.payday.create_card_hold')
-    def test_ncc_failing(self, cch, fch):
-        self.janet.set_tip_to(self.homer, 24)
-        fch.return_value = {}
-        cch.return_value = (None, 'oops')
-        payday = Payday.start()
-        before = self.fetch_payday()
-        assert before['ncc_failing'] == 0
-        payday.payin()
-        after = self.fetch_payday()
-        assert after['ncc_failing'] == 1
-
     @mock.patch('gratipay.billing.payday.log')
     def test_start_prepare(self, log):
         self.clear_tables()
@@ -373,29 +358,7 @@ class TestPayin(BillingHarness):
             assert holds[self.obama.id] is fake_hold
             assert hold.status == 'voided'
 
-    @pytest.mark.xfail(reason="Don't think we'll need this anymore since we aren't using balanced, "
-                              "leaving it here till I'm sure.")
-    @mock.patch('gratipay.billing.payday.CardHold')
-    @mock.patch('gratipay.billing.payday.cancel_card_hold')
-    def test_fetch_card_holds_handles_extra_holds(self, cancel, CardHold):
-        fake_hold = mock.MagicMock()
-        fake_hold.meta = {'participant_id': 0}
-        fake_hold.amount = 1061
-        fake_hold.save = mock.MagicMock()
-        CardHold.query.filter.return_value = [fake_hold]
-        for attr, state in (('failure_reason', 'failed'),
-                            ('voided_at', 'cancelled'),
-                            ('debit_href', 'captured')):
-            holds = Payday.fetch_card_holds(set())
-            assert fake_hold.meta['state'] == state
-            fake_hold.save.assert_called_with()
-            assert len(holds) == 0
-            setattr(fake_hold, attr, None)
-        holds = Payday.fetch_card_holds(set())
-        cancel.assert_called_with(fake_hold)
-        assert len(holds) == 0
-
-    @pytest.mark.xfail(reason="haven't migrated transfer_takes yet")
+    @pytest.mark.xfail(reason="turned this off during Gratipocalypse; turn back on!")
     @mock.patch('gratipay.billing.payday.log')
     def test_payin_cancels_uncaptured_holds(self, log):
         self.janet.set_tip_to(self.homer, 42)
@@ -459,39 +422,6 @@ class TestPayin(BillingHarness):
         assert payment.amount == D('0.51')
         assert payment.direction == 'to-team'
 
-    @pytest.mark.xfail(reason="haven't migrated_transfer_takes yet")
-    def test_transfer_takes(self):
-        a_team = self.make_participant('a_team', claimed_time='now', number='plural', balance=20)
-        alice = self.make_participant('alice', claimed_time='now')
-        a_team.add_member(alice)
-        a_team.add_member(self.make_participant('bob', claimed_time='now'))
-        a_team.set_take_for(alice, D('1.00'), alice)
-
-        payday = Payday.start()
-
-        # Test that payday ignores takes set after it started
-        a_team.set_take_for(alice, D('2.00'), alice)
-
-        # Run the transfer multiple times to make sure we ignore takes that
-        # have already been processed
-        for i in range(3):
-            with self.db.get_cursor() as cursor:
-                payday.prepare(cursor)
-                payday.transfer_takes(cursor, payday.ts_start)
-                payday.update_balances(cursor)
-
-        participants = self.db.all("SELECT username, balance FROM participants")
-
-        for p in participants:
-            if p.username == 'a_team':
-                assert p.balance == D('18.99')
-            elif p.username == 'alice':
-                assert p.balance == D('1.00')
-            elif p.username == 'bob':
-                assert p.balance == D('0.01')
-            else:
-                assert p.balance == 0
-
     def test_process_remainder(self):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
         picard = self.make_participant('picard', claimed_time='now', last_paypal_result='')
@@ -515,38 +445,31 @@ class TestPayin(BillingHarness):
         payment = self.db.one("SELECT * FROM payments WHERE direction='to-participant'")
         assert payment.amount == D('0.51')
 
-    @pytest.mark.xfail(reason="haven't migrated_transfer_takes yet")
-    @mock.patch.object(Payday, 'fetch_card_holds')
-    def test_transfer_takes_doesnt_make_negative_transfers(self, fch):
-        hold = balanced.CardHold(amount=1500, meta={'participant_id': self.janet.id},
-                                 card_href=self.card_href)
-        hold.capture = lambda *a, **kw: None
-        hold.save = lambda *a, **kw: None
-        fch.return_value = {self.janet.id: hold}
-        self.janet.update_number('plural')
-        self.janet.set_tip_to(self.homer, 10)
-        self.janet.add_member(self.david)
-        Payday.start().payin()
-        assert P('david').balance == 0
-        assert P('homer').balance == 10
-        assert P('janet').balance == 0
-
-    @pytest.mark.xfail(reason="haven't migrated take_over_balances yet")
+    @pytest.mark.xfail(reason="team owners can't be taken over because of #3602")
     def test_take_over_during_payin(self):
         alice = self.make_participant('alice', claimed_time='now', balance=50)
-        bob = self.make_participant('bob', claimed_time='now', elsewhere='twitter')
-        alice.set_tip_to(bob, 18)
+        enterprise = self.make_team('The Enterprise', is_approved=True)
+        picard = Participant.from_username(enterprise.owner)
+        self.make_participant('bob', claimed_time='now', elsewhere='twitter')
+        alice.set_payment_instruction(enterprise, 18)
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
+
+            # bruce takes over picard
             bruce = self.make_participant('bruce', claimed_time='now')
-            bruce.take_over(('twitter', str(bob.id)), have_confirmation=True)
+            bruce.take_over(('github', str(picard.id)), have_confirmation=True)
             payday.process_payment_instructions(cursor)
-            bruce.delete_elsewhere('twitter', str(bob.id))
+
+            # billy takes over bruce
+            bruce.delete_elsewhere('twitter', str(picard.id))
             billy = self.make_participant('billy', claimed_time='now')
             billy.take_over(('github', str(bruce.id)), have_confirmation=True)
+
             payday.update_balances(cursor)
         payday.take_over_balances()
+
+        # billy ends up with the money
         assert P('bob').balance == 0
         assert P('bruce').balance == 0
         assert P('billy').balance == 18
