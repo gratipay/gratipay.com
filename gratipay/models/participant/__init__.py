@@ -1439,6 +1439,15 @@ class Participant(Model, mixins.Identity):
                 return
 
 
+            # Hard fail if the other participant has an identity.
+            # ===================================================
+            # Our identity system is very young. Maybe some day we'll do
+            # something smarter here.
+
+            if other.list_identity_metadata():
+                raise WontTakeOverWithIdentities()
+
+
             # Make sure we have user confirmation if needed.
             # ==============================================
             # We need confirmation in whatever combination of the following
@@ -1653,3 +1662,5 @@ class LastElsewhere(Exception): pass
 class NonexistingElsewhere(Exception): pass
 
 class TeamCantBeOnlyAuth(Exception): pass
+
+class WontTakeOverWithIdentities(Exception): pass
