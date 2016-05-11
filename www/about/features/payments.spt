@@ -103,11 +103,11 @@ weeks for a $1/wk subscription. This may cause your Team's receiving to <a href=
 feel overly entitled to special treatment because they've given your Team a
 little money.</p>
 
-<p>You <em>can</em> see overall statistics for your Team under "Receiving" on your Team page.</p>
+<p>You <em>can</em> see overall statistics for your Team under "Receiving" on your Team page, including:</p>
 <ul>
-    <li>Funded Dues: Incoming payments that are backed by working credit cards.</li>
-    <li>Unfunded Dues: Incoming payments that are not backed by a working credit card.</li>
-    <li>Estimated payment for next week: Payments that the Team will receive next <a href="#when">payday</a>.</li>
+    <li>Funded Dues: incoming payments from ~users who have not reached the <a href="#limits">charge threshold</a>, backed by working credit cards.</li>
+    <li>Unfunded Dues: incoming payments that are not backed by working credit cards.</li>
+    <li>Estimated payment for next week: payments that the Team will receive next <a href="#when">payday</a>.</li>
 </ul>
 
 <h2 id="receiving-less">Why is my Team receiving less now than it was before?
