@@ -773,3 +773,8 @@ CREATE TRIGGER enforce_email_for_participant_identity
     BEFORE INSERT ON participant_identities
     FOR EACH ROW
     EXECUTE PROCEDURE fail_if_no_email();
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4031
+
+ALTER TABLE participant_identities ADD COLUMN is_verified boolean NOT NULL DEFAULT false;
