@@ -225,6 +225,31 @@ class Tests(Harness):
                            )
 
 
+    # ci - clear_identity
+
+    def test_ci_clears_identity(self):
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
+        assert self.crusher.clear_identity(self.TT) is None
+        assert self.crusher.list_identity_metadata() == []
+
+    def test_ci_is_a_noop_when_there_is_no_identity(self):
+        assert self.crusher.clear_identity(self.TT) is None
+        assert self.crusher.list_identity_metadata() == []
+
+    def test_ci_logs_an_event(self):
+        iid = self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
+        self.crusher.clear_identity(self.TT)
+        self.assert_events( self.crusher.id
+                          , [iid, iid]
+                          , [self.TT, self.TT]
+                          , ['insert identity', 'clear identity']
+                           )
+
+    def test_ci_still_logs_an_event_when_noop(self):
+        self.crusher.clear_identity(self.TT)
+        self.assert_events(self.crusher.id, [None], [self.TT], ['clear identity'])
+
+
     # fine - fail_if_no_email
 
     def test_fine_fails_if_no_email(self):
