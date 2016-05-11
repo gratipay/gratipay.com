@@ -1,0 +1,9 @@
+from gratipay.utils import get_team
+[---]
+team = get_team(state)
+title = _("Team Takes")
+[---] text/html
+{% extends "templates/team-base.html" %}
+{% block content %}
+<p>Team takes!</p>
+{% endblock %}
