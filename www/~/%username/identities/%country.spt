@@ -8,8 +8,8 @@ participant = get_participant(state, restrict=True)
 country = request.path['country']
 if country not in locale.countries:
     raise Response(404)
-country = Country.from_code2(country)
-title = locale.countries[country.code2]
+country = Country.from_code(country)
+title = locale.countries[country.code]
 
 # load identity & info
 identity = None
@@ -17,7 +17,7 @@ info = {}
 identities = participant.list_identity_metadata()
 nidentities = len(identities)
 for _identity in identities:
-    if _identity.country.code2 == country.code2:
+    if _identity.country.code == country.code:
         identity = _identity
         info = participant.retrieve_identity_info(_identity.country.id)
         break
@@ -50,7 +50,7 @@ if request.method == 'POST':
 [---] text/html
 {% extends "templates/profile.html" %}
 {% block content %}
-<img class="flag {{ country.code2 }}"
+<img class="flag {{ country.code }}"
      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
 <div class="long-form">
     <form autocomplete="off" action="" method="POST">

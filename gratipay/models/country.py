@@ -15,5 +15,5 @@ class Country(Model):
     typname = 'countries'
 
     @classmethod
-    def from_code2(cls, code2):
-        return cls.db.one("SELECT countries.*::countries FROM countries WHERE code2=%s", (code2,))
+    def from_code(cls, code):
+        return cls.db.one("SELECT countries.*::countries FROM countries WHERE code=%s", (code,))
