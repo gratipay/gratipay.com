@@ -2,11 +2,13 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from cryptography.fernet import InvalidToken
 from gratipay.testing import Harness
+from gratipay.models.participant import Participant
 from gratipay.models.participant.mixins import identity, Identity
 from gratipay.models.participant.mixins.identity import _validate_info, rekey
 from gratipay.models.participant.mixins.identity import ParticipantIdentityInfoInvalid
 from gratipay.models.participant.mixins.identity import ParticipantIdentitySchemaUnknown
 from gratipay.security.crypto import EncryptingPacker, Fernet
+from postgres.orm import ReadOnly
 from psycopg2 import IntegrityError
 from pytest import raises
 
@@ -248,6 +250,97 @@ class Tests(Harness):
     def test_ci_still_logs_an_event_when_noop(self):
         self.crusher.clear_identity(self.TT)
         self.assert_events(self.crusher.id, [None], [self.TT], ['clear identity'])
+
+
+    # hvi - has_verified_identity
+
+    def test_hvi_defaults_to_false(self):
+        assert self.crusher.has_verified_identity is False
+
+    def test_hvi_is_read_only(self):
+        with raises(ReadOnly):
+            self.crusher.has_verified_identity = True
+
+    def test_hvi_becomes_true_when_an_identity_is_verified(self):
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.TT, True)
+        assert self.crusher.has_verified_identity
+        assert Participant.from_username('crusher').has_verified_identity
+
+    def test_hvi_becomes_false_when_the_identity_is_unverified(self):
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.TT, True)
+        self.crusher.set_identity_verification(self.TT, False)
+        assert not self.crusher.has_verified_identity
+        assert not Participant.from_username('crusher').has_verified_identity
+
+    def test_hvi_stays_true_when_a_secondary_identity_is_verified(self):
+        self.crusher.store_identity_info(self.US, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.US, True)
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.TT, True)
+        assert self.crusher.has_verified_identity
+        assert Participant.from_username('crusher').has_verified_identity
+
+    def test_hvi_stays_true_when_the_secondary_identity_is_unverified(self):
+        self.crusher.store_identity_info(self.US, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.US, True)
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.TT, True)
+        self.crusher.set_identity_verification(self.TT, False)
+        assert self.crusher.has_verified_identity
+        assert Participant.from_username('crusher').has_verified_identity
+
+    def test_hvi_goes_back_to_false_when_both_are_unverified(self):
+        self.crusher.store_identity_info(self.US, 'nothing-enforced', {})
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.TT, True)
+        self.crusher.set_identity_verification(self.US, True)
+        self.crusher.set_identity_verification(self.TT, False)
+        self.crusher.set_identity_verification(self.US, False)
+        assert not self.crusher.has_verified_identity
+        assert not Participant.from_username('crusher').has_verified_identity
+
+    def test_hvi_changes_are_scoped_to_a_participant(self):
+        self.crusher.store_identity_info(self.US, 'nothing-enforced', {})
+
+        bruiser = self.make_participant('bruiser', email_address='bruiser@example.com')
+        bruiser.store_identity_info(self.US, 'nothing-enforced', {})
+
+        self.crusher.set_identity_verification(self.US, True)
+
+        assert self.crusher.has_verified_identity
+        assert Participant.from_username('crusher').has_verified_identity
+        assert not bruiser.has_verified_identity
+        assert not Participant.from_username('bruiser').has_verified_identity
+
+    def test_hvi_resets_when_identity_is_cleared(self):
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.TT, True)
+        self.crusher.clear_identity(self.TT)
+        assert not self.crusher.has_verified_identity
+        assert not Participant.from_username('crusher').has_verified_identity
+
+    def test_hvi_doesnt_reset_when_penultimate_identity_is_cleared(self):
+        self.crusher.store_identity_info(self.US, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.US, True)
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.TT, True)
+        self.crusher.set_identity_verification(self.TT, False)
+        self.crusher.clear_identity(self.TT)
+        assert self.crusher.has_verified_identity
+        assert Participant.from_username('crusher').has_verified_identity
+
+    def test_hvi_does_reset_when_both_identities_are_cleared(self):
+        self.crusher.store_identity_info(self.US, 'nothing-enforced', {})
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {})
+        self.crusher.set_identity_verification(self.US, True)
+        self.crusher.set_identity_verification(self.TT, True)
+        self.crusher.set_identity_verification(self.TT, False)
+        self.crusher.set_identity_verification(self.US, False)
+        self.crusher.clear_identity(self.TT)
+        assert not self.crusher.has_verified_identity
+        assert not Participant.from_username('crusher').has_verified_identity
 
 
     # fine - fail_if_no_email
