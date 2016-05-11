@@ -6,7 +6,7 @@ if not user.ADMIN:
 
 countries = website.db.all("""
 
-    SELECT name
+    SELECT code
          , array_agg(username) as usernames
          , array_agg(is_verified) as verifications
       FROM participant_identities pi
@@ -14,7 +14,7 @@ countries = website.db.all("""
         ON p.id = participant_id
       JOIN countries c
         ON c.id = country_id
-  GROUP BY c.name
+  GROUP BY c.code
 
 """)
 
@@ -40,9 +40,9 @@ zip = zip
 <a href="/~{{ participant.username }}/">{{ participant.username }}</a>
 {% for identity in participant.list_identity_metadata() %}
 | {% if identity.is_verified %}
-<b>{{ identity.country.name }}</b>
+<b>{{ locale.countries[identity.country.code] }}</b>
 {% else %}
-{{ identity.country.name }}
+{{ locale.countries[identity.country.code] }}
 {% endif %}
 {% endfor %}
 <br>
@@ -50,7 +50,7 @@ zip = zip
 
 <h1>By Country</h1>
 {% for country in countries %}
-<b>{{ country.name }}</b>
+<b>{{ locale.countries[country.code] }}</b>
 {% for username, is_verified in zip(country.usernames, country.verifications) %}
 | {% if is_verified %}
 <b><a href="/~{{ username }}/">{{ username }}</a></b>
