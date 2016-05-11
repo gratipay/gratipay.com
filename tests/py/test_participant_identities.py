@@ -80,10 +80,36 @@ class Tests(Harness):
         self.crusher.store_identity_info(self.US, 'nothing-enforced', {'name': 'Crusher'})
         assert [x.country.code for x in self.crusher.list_identity_metadata()] == ['US']
 
+    def test_lim_lists_the_latest_identity_metadata(self):
+        self.crusher.store_identity_info(self.US, 'nothing-enforced', {'name': 'Crusher'})
+        self.crusher.set_identity_verification(self.US, True)
+        self.crusher.store_identity_info(self.US, 'nothing-enforced', {'name': 'Bruiser'})
+        assert [x.is_verified for x in self.crusher.list_identity_metadata()] == [False]
+
     def test_lim_lists_metadata_for_multiple_identities(self):
         for country in (self.US, self.TT):
             self.crusher.store_identity_info(country, 'nothing-enforced', {'name': 'Crusher'})
         assert [x.country.code for x in self.crusher.list_identity_metadata()] == ['TT', 'US']
+
+    def test_lim_lists_latest_metadata_for_multiple_identities(self):
+        for country_id in (self.US, self.TT):
+            self.crusher.store_identity_info(country_id, 'nothing-enforced', {'name': 'Crusher'})
+            self.crusher.set_identity_verification(country_id, True)
+            self.crusher.store_identity_info(country_id, 'nothing-enforced', {'name': 'Bruiser'})
+        ids = self.crusher.list_identity_metadata()
+        assert [x.country.code for x in ids] == ['TT', 'US']
+        assert [x.is_verified for x in ids] == [False, False]
+
+    def test_lim_can_filter_on_is_verified(self):
+        for country_id in (self.US, self.TT):
+            self.crusher.store_identity_info(country_id, 'nothing-enforced', {'name': 'Crusher'})
+        self.crusher.set_identity_verification(self.TT, True)
+
+        ids = self.crusher.list_identity_metadata(is_verified=True)
+        assert [x.country.code for x in ids] == ['TT']
+
+        ids = self.crusher.list_identity_metadata(is_verified=False)
+        assert [x.country.code for x in ids] == ['US']
 
 
     # sii - store_identity_info
@@ -102,6 +128,15 @@ class Tests(Harness):
         self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Bruiser'})
         assert [x.country.code for x in self.crusher.list_identity_metadata()] == ['TT']
         assert self.crusher.retrieve_identity_info(self.TT)['name'] == 'Bruiser'
+
+    def test_sii_resets_is_verified(self):
+        check = lambda: [x.is_verified for x in self.crusher.list_identity_metadata()]
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
+        assert check() == [False]
+        self.crusher.set_identity_verification(self.TT, True)
+        assert check() == [True]
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Bruiser'})
+        assert check() == [False]
 
     def test_sii_validates_identity(self):
         raises( ParticipantIdentityInfoInvalid
@@ -137,6 +172,57 @@ class Tests(Harness):
     def test__vi_chokes_on_unknown_schema(self):
         err = raises(ParticipantIdentitySchemaUnknown, _validate_info, 'floo-floo', {'foo': 'bar'})
         assert err.value.message == "unknown schema 'floo-floo'"
+
+
+    # siv - set_identity_verification
+
+    def test_is_verified_defaults_to_false(self):
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
+        assert [x.is_verified for x in self.crusher.list_identity_metadata()] == [False]
+
+    def test_siv_sets_identity_verification(self):
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
+        self.crusher.set_identity_verification(self.TT, True)
+        assert [x.is_verified for x in self.crusher.list_identity_metadata()] == [True]
+
+    def test_siv_can_set_identity_verification_back_to_false(self):
+        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
+        self.crusher.set_identity_verification(self.TT, True)
+        self.crusher.set_identity_verification(self.TT, False)
+        assert [x.is_verified for x in self.crusher.list_identity_metadata()] == [False]
+
+    def test_siv_is_a_noop_when_there_is_no_identity(self):
+        assert self.crusher.set_identity_verification(self.TT, True) is None
+        assert self.crusher.set_identity_verification(self.TT, False) is None
+        assert [x.is_verified for x in self.crusher.list_identity_metadata()] == []
+
+    def test_siv_logs_event_when_successful(self):
+        iid = self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
+        self.crusher.set_identity_verification(self.TT, True) is None
+        self.assert_events( self.crusher.id
+                          , [iid, iid]
+                          , [self.TT, self.TT]
+                          , ['insert identity', 'verify identity']
+                           )
+
+    def test_siv_logs_event_when_set_to_false(self):
+        iid = self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
+        self.crusher.set_identity_verification(self.TT, True) is None
+        self.crusher.set_identity_verification(self.TT, False) is None
+        self.assert_events( self.crusher.id
+                          , [iid, iid, iid]
+                          , [self.TT, self.TT, self.TT]
+                          , ['insert identity', 'verify identity', 'unverify identity']
+                           )
+
+    def test_siv_still_logs_an_event_when_noop(self):
+        self.crusher.set_identity_verification(self.TT, True)
+        self.crusher.set_identity_verification(self.TT, False)
+        self.assert_events( self.crusher.id
+                          , [None, None]
+                          , [self.TT, self.TT]
+                          , ['verify identity', 'unverify identity']
+                           )
 
 
     # fine - fail_if_no_email

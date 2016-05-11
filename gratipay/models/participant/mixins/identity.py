@@ -59,6 +59,9 @@ class IdentityMixin(object):
         field is opaque in the database layer). For now there is only one
         available schema: ``nothing-enforced``.
 
+        New participant identity information for a given country always starts
+        out unverified.
+
         """
         _validate_info(schema_name, info)
         info = self.encrypting_packer.pack(info)
@@ -96,7 +99,7 @@ class IdentityMixin(object):
                 identity_id, old_schema_name = cursor.one("""
 
                     UPDATE participant_identities
-                       SET schema_name=%(schema_name)s, info=%(info)s
+                       SET schema_name=%(schema_name)s, info=%(info)s, is_verified=false
                      WHERE participant_id=%(participant_id)s
                        AND country_id=%(country_id)s
                  RETURNING id, schema_name
@@ -140,14 +143,18 @@ class IdentityMixin(object):
         return info
 
 
-    def list_identity_metadata(self):
+    def list_identity_metadata(self, is_verified=None):
         """Return a list of identity metadata records, sorted by country name.
+
+        :param bool is_verified: filter records by whether or not the
+            information is verified; ``None`` returns both
 
         Identity metadata records have the following attributes:
 
         :var int id: the record's primary key in the ``participant_identities`` table
         :var Country country: the country this identity applies to
         :var unicode schema_name: the name of the schema that the data itself conforms to
+        :var bool is_verified: whether or not the information has been verified
 
         The national identity information itself is not included, only
         metadata. Use :py:meth:`retrieve_identity_info` to get the actual data.
@@ -158,12 +165,60 @@ class IdentityMixin(object):
             SELECT pi.id
                  , c.*::countries AS country
                  , schema_name
+                 , is_verified
               FROM participant_identities pi
               JOIN countries c ON pi.country_id=c.id
              WHERE participant_id=%s
+               AND COALESCE(is_verified = %s, true)
           ORDER BY c.code
 
-        """, (self.id,))
+        """, (self.id, is_verified))
+        # The COALESCE lets us pass in is_verified instead of concatenating SQL
+        # (recall that `* = null` evaluates to null, while `true = false` is
+        # false).
+
+
+    def set_identity_verification(self, country_id, is_verified):
+        """Set the verification status of the participant's national identity for a given country.
+
+        :param int country_id: an ``id`` from the ``countries`` table
+        :param bool is_verified: whether the information has been verified or not
+
+        This is a no-op if the participant has no identity on file for the
+        given ``country_id``.
+
+        """
+        is_verified = bool(is_verified)
+        action = 'verify' if is_verified else 'unverify'
+
+        with self.db.get_cursor() as cursor:
+            old = cursor.one("""
+
+                SELECT id, is_verified
+                  FROM participant_identities
+                 WHERE participant_id=%(participant_id)s
+                   AND country_id=%(country_id)s
+
+            """, dict(locals(), participant_id=self.id))
+
+            cursor.run("""
+
+                UPDATE participant_identities
+                   SET is_verified=%(is_verified)s
+                 WHERE participant_id=%(participant_id)s
+                   AND country_id=%(country_id)s
+
+            """, dict(locals(), participant_id=self.id))
+
+            payload = dict( id=self.id
+                          , identity_id=old.id if old else None
+                          , country_id=country_id
+                          , new_value=is_verified
+                          , old_value=old.is_verified if old else None
+                          , action=action + ' identity'
+                           )
+
+            add_event(cursor, 'participant', payload)
 
 
 # Rekeying
