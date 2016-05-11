@@ -38,6 +38,7 @@ from gratipay.models import add_event
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.team import Team
+from gratipay.models.participant import mixins
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import (
     i18n,
@@ -60,7 +61,7 @@ EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 USERNAME_MAX_SIZE = 32
 
-class Participant(Model):
+class Participant(Model, mixins.Identity):
     """Represent a Gratipay participant.
     """
 
@@ -355,6 +356,7 @@ class Participant(Model):
 
             DELETE FROM emails WHERE participant_id = %(participant_id)s;
             DELETE FROM statements WHERE participant=%(participant_id)s;
+            DELETE FROM participant_identities WHERE participant_id=%(participant_id)s;
 
             UPDATE participants
                SET anonymous_giving=False
@@ -1437,6 +1439,15 @@ class Participant(Model):
                 return
 
 
+            # Hard fail if the other participant has an identity.
+            # ===================================================
+            # Our identity system is very young. Maybe some day we'll do
+            # something smarter here.
+
+            if other.list_identity_metadata():
+                raise WontTakeOverWithIdentities()
+
+
             # Make sure we have user confirmation if needed.
             # ==============================================
             # We need confirmation in whatever combination of the following
@@ -1651,3 +1662,5 @@ class LastElsewhere(Exception): pass
 class NonexistingElsewhere(Exception): pass
 
 class TeamCantBeOnlyAuth(Exception): pass
+
+class WontTakeOverWithIdentities(Exception): pass
