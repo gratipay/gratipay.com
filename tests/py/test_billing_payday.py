@@ -11,6 +11,7 @@ from gratipay.billing.exchanges import create_card_hold, MINIMUM_CHARGE
 from gratipay.billing.payday import NoPayday, Payday
 from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
+from gratipay.models.team.mixins.takes import NotAllowed
 from gratipay.testing import Foobar, D,P
 from gratipay.testing.billing import BillingHarness
 from gratipay.testing.emails import EmailHarness
@@ -501,8 +502,8 @@ class TestPayin(BillingHarness):
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
             payday.process_payment_instructions(cursor)
-            payday.transfer_takes(cursor, payday.ts_start)
             payday.process_remainder(cursor)
+            payday.process_takes(cursor, payday.ts_start)
             assert cursor.one("select new_balance from payday_participants "
                               "where username='picard'") == D('0.51')
             assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == 0
@@ -567,6 +568,125 @@ class TestPayin(BillingHarness):
         filename = open_.call_args_list[-1][0][0]
         assert filename.endswith('_payments.csv')
         os.unlink(filename)
+
+
+class TestTakes(BillingHarness):
+
+    tearDownClass = None
+
+    def setUp(self):
+        self.enterprise = self.make_team('The Enterprise', is_approved=True)
+        self.set_available(500)
+        self.picard = P('picard')
+
+    def make_member(self, username, take):
+        member = self.make_participant( username
+                                      , email_address=username+'@x.y'
+                                      , claimed_time='now'
+                                      , verified_in='TT'
+                                       )
+        self.enterprise.add_member(member, self.picard)
+        self.enterprise.set_take_for(member, take, member)
+        return member
+
+    def set_available(self, available):
+        # hack since we don't have Python API for this yet
+        self.db.run('UPDATE teams SET available=%s', (available,))
+        self.enterprise.set_attributes(available=available)
+
+
+    payday = None
+    def start_payday(self):
+        self.payday = Payday.start()
+
+    def run_through_takes(self):
+        if not self.payday:
+            self.start_payday()
+        with self.db.get_cursor() as cursor:
+            self.payday.prepare(cursor)
+            cursor.run("UPDATE payday_teams SET balance=537")
+            self.payday.process_takes(cursor, self.payday.ts_start)
+            self.payday.update_balances(cursor)
+
+
+    # pt - process_takes
+
+    def test_pt_processes_takes(self):
+        self.make_member('crusher', 150)
+        self.make_member('bruiser', 250)
+        self.run_through_takes()
+        assert P('crusher').balance == D('150.00')
+        assert P('bruiser').balance == D('250.00')
+        assert P('picard').balance  == D('  0.00')
+
+    def test_pt_processes_takes_again(self):
+        # This catches a bug where payday_takes.amount was an int!
+        self.make_member('crusher', D('0.01'))
+        self.make_member('bruiser', D('5.37'))
+        self.run_through_takes()
+        assert P('crusher').balance == D('0.01')
+        assert P('bruiser').balance == D('5.37')
+        assert P('picard').balance  == D('0.00')
+
+    def test_pt_ignores_takes_set_after_the_start_of_payday(self):
+        self.make_member('crusher', 150)
+        self.start_payday()
+        self.make_member('bruiser', 250)
+        self.run_through_takes()
+        assert P('crusher').balance == D('150.00')
+        assert P('bruiser').balance == D('  0.00')
+        assert P('picard').balance  == D('  0.00')
+
+    def test_pt_ignores_takes_that_have_already_been_processed(self):
+        self.make_member('crusher', 150)
+        self.start_payday()
+        self.make_member('bruiser', 250)
+        self.run_through_takes()
+        self.run_through_takes()
+        self.run_through_takes()
+        self.run_through_takes()
+        self.run_through_takes()
+        assert P('crusher').balance == D('150.00')
+        assert P('bruiser').balance == D('  0.00')
+        assert P('picard').balance  == D('  0.00')
+
+    def test_pt_clips_to_available(self):
+        self.make_member('alice', 350)
+        self.make_member('bruiser', 250)
+        self.make_member('crusher', 150)
+        self.make_member('zorro', 450)
+        self.run_through_takes()
+        assert P('crusher').balance == D('150.00')
+        assert P('bruiser').balance == D('250.00')
+        assert P('alice').balance   == D('100.00')
+        assert P('zorro').balance   == D('  0.00')
+        assert P('picard').balance  == D('  0.00')
+
+    def test_pt_clips_to_balance_when_less_than_available(self):
+        self.set_available(1000)
+        self.make_member('alice', 350)
+        self.make_member('bruiser', 250)
+        self.make_member('crusher', 150)
+        self.make_member('zorro', 450)
+        self.run_through_takes()
+        assert P('crusher').balance == D('150.00')
+        assert P('bruiser').balance == D('250.00')
+        assert P('alice').balance   == D('137.00')
+        assert P('zorro').balance   == D('  0.00')
+        assert P('picard').balance  == D('  0.00')
+
+    def test_pt_is_NOT_happy_to_deal_the_owner_in(self):
+        self.make_member('crusher', 150)
+        self.make_member('bruiser', 250)
+        self.enterprise.set_take_for(self.picard, D('0.01'), self.picard)
+        with pytest.raises(NotAllowed):
+            self.enterprise.set_take_for(self.picard, 50, self.picard)
+        return  # XXX allow owners to join teams!
+        self.run_through_takes()
+        assert P('crusher').balance == D('150.00')
+        assert P('bruiser').balance == D('250.00')
+        assert P('picard').balance  == D(' 50.00')
+
 
 class TestNotifyParticipants(EmailHarness):
 

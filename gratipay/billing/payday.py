@@ -72,7 +72,7 @@ class Payday(object):
                 prepare
                 create_card_holds
                 process_payment_instructions
-                transfer_takes
+                process_takes
                 process_remainder
                 settle_card_holds
                 update_balances
@@ -153,7 +153,7 @@ class Payday(object):
             self.prepare(cursor)
             holds = self.create_card_holds(cursor)
             self.process_payment_instructions(cursor)
-            self.transfer_takes(cursor, self.ts_start)
+            self.process_takes(cursor, self.ts_start)
             self.process_remainder(cursor)
             _payments_for_debugging = cursor.all("""
                 SELECT * FROM payments WHERE "timestamp" > %s
@@ -261,28 +261,30 @@ class Payday(object):
 
 
     @staticmethod
-    def transfer_takes(cursor, ts_start):
-        return  # XXX Bring me back!
+    def process_takes(cursor, ts_start):
+        log("Processing takes.")
         cursor.run("""
 
         INSERT INTO payday_takes
-            SELECT team, member, amount
-              FROM ( SELECT DISTINCT ON (team, member)
-                            team, member, amount, ctime
-                       FROM takes
-                      WHERE mtime < %(ts_start)s
-                   ORDER BY team, member, mtime DESC
-                   ) t
-             WHERE t.amount > 0
-               AND t.team IN (SELECT username FROM payday_participants)
-               AND t.member IN (SELECT username FROM payday_participants)
-               AND ( SELECT id
-                       FROM payday_transfers_done t2
-                      WHERE t.team = t2.tipper
-                        AND t.member = t2.tippee
-                        AND context = 'take'
-                   ) IS NULL
-          ORDER BY t.team, t.ctime DESC;
+             SELECT team_id, participant_id, amount
+               FROM ( SELECT DISTINCT ON (team_id, participant_id)
+                             team_id, participant_id, amount, ctime
+                        FROM takes
+                       WHERE mtime < %(ts_start)s
+                    ORDER BY team_id, participant_id, mtime DESC
+                    ) t
+              WHERE t.amount > 0
+                AND t.team_id IN (SELECT id FROM payday_teams)
+                AND t.participant_id IN (SELECT id FROM payday_participants)
+                AND ( SELECT ppd.id
+                        FROM payday_payments_done ppd
+                        JOIN participants ON participants.id = t.participant_id
+                        JOIN teams ON teams.id = t.team_id
+                       WHERE participants.username = ppd.participant
+                         AND teams.slug = ppd.team
+                         AND direction = 'to-participant'
+                    ) IS NULL
+           ORDER BY t.team_id, t.amount ASC;
 
         """, dict(ts_start=ts_start))
 

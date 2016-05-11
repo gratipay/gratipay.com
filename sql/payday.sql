@@ -29,6 +29,7 @@ CREATE TABLE payday_teams AS
     SELECT t.id
          , slug
          , owner
+         , available
          , 0::numeric(35, 2) AS balance
          , false AS is_drained
       FROM teams t
@@ -86,9 +87,9 @@ UPDATE payday_participants pp
 
 DROP TABLE IF EXISTS payday_takes;
 CREATE TABLE payday_takes
-( team text
-, member text
-, amount numeric(35,2)
+( team_id           bigint
+, participant_id    bigint
+, amount            numeric(35,2)
  );
 
 DROP TABLE IF EXISTS payday_payments;
@@ -204,30 +205,37 @@ CREATE TRIGGER process_payment_instruction BEFORE UPDATE OF is_funded ON payday_
     WHEN (NEW.is_funded IS true AND OLD.is_funded IS NOT true)
     EXECUTE PROCEDURE process_payment_instruction();
 
--- Create a trigger to process takes
 
-CREATE OR REPLACE FUNCTION process_take() RETURNS trigger AS $$
+-- Create a trigger to process distributions based on takes
+
+CREATE OR REPLACE FUNCTION process_distribution() RETURNS trigger AS $$
     DECLARE
-        actual_amount numeric(35,2);
-        team_balance numeric(35,2);
+        amount      numeric(35,2);
+        balance_    numeric(35,2);
+        available_  numeric(35,2);
     BEGIN
-        team_balance := (
-            SELECT new_balance
-              FROM payday_participants
-             WHERE username = NEW.team
-        );
-        IF (team_balance <= 0) THEN RETURN NULL; END IF;
-        actual_amount := NEW.amount;
-        IF (team_balance < NEW.amount) THEN
-            actual_amount := team_balance;
+        amount := NEW.amount;
+
+        balance_ := (SELECT balance FROM payday_teams WHERE id = NEW.team_id);
+        IF balance_ < amount THEN
+            amount := balance_;
         END IF;
-        EXECUTE transfer(NEW.team, NEW.member, actual_amount, 'take');
+
+        available_ := (SELECT available FROM payday_teams WHERE id = NEW.team_id);
+        IF available_ < amount THEN
+            amount := available_;
+        END IF;
+
+        IF amount > 0 THEN
+            UPDATE payday_teams SET available = (available - amount) WHERE id = NEW.team_id;
+            EXECUTE pay(NEW.participant_id, NEW.team_id, amount, 'to-participant');
+        END IF;
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER process_take AFTER INSERT ON payday_takes
-    FOR EACH ROW EXECUTE PROCEDURE process_take();
+CREATE TRIGGER process_takes AFTER INSERT ON payday_takes
+    FOR EACH ROW EXECUTE PROCEDURE process_distribution();
 
 
 -- Create a trigger to process draws
