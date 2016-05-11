@@ -221,6 +221,30 @@ class IdentityMixin(object):
             add_event(cursor, 'participant', payload)
 
 
+    def clear_identity(self, country_id):
+        """Clear the participant's national identity record for a given country.
+
+        :param int country_id: an ``id`` from the ``countries`` table
+
+        """
+        with self.db.get_cursor() as cursor:
+            identity_id = cursor.one("""
+
+                DELETE
+                  FROM participant_identities
+                 WHERE participant_id=%(participant_id)s
+                   AND country_id=%(country_id)s
+             RETURNING id
+
+            """, dict(locals(), participant_id=self.id))
+            payload = dict( id=self.id
+                          , identity_id=identity_id
+                          , country_id=country_id
+                          , action='clear identity'
+                           )
+            add_event(cursor, 'participant', payload)
+
+
 # Rekeying
 # ========
 
