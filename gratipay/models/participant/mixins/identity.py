@@ -37,6 +37,12 @@ class IdentityMixin(object):
 
     """
 
+    #: ``True`` if the participant has at least one verified identity on file,
+    #: ``False`` otherwise. This attribute is read-only. It is updated with
+    #: :py:meth:`set_identity_verification` and :py:meth:`clear_identity`.
+
+    has_verified_identity = False
+
     def store_identity_info(self, country_id, schema_name, info):
         """Store the participant's national identity information for a given country.
 
@@ -219,6 +225,7 @@ class IdentityMixin(object):
                            )
 
             add_event(cursor, 'participant', payload)
+            self._update_has_verified_identity(cursor)
 
 
     def clear_identity(self, country_id):
@@ -243,6 +250,25 @@ class IdentityMixin(object):
                           , action='clear identity'
                            )
             add_event(cursor, 'participant', payload)
+            self._update_has_verified_identity(cursor)
+
+
+    def _update_has_verified_identity(self, cursor):
+        has_verified_identity = cursor.one("""
+
+            WITH verified_identities AS
+            ( SELECT *
+                FROM participant_identities
+               WHERE participant_id=%(participant_id)s
+                 AND is_verified
+             )
+            UPDATE participants
+               SET has_verified_identity=(SELECT count(*) FROM verified_identities) > 0
+             WHERE id=%(participant_id)s
+         RETURNING has_verified_identity
+
+        """, dict(participant_id=self.id))
+        self.set_attributes(has_verified_identity=has_verified_identity)
 
 
 # Rekeying
