@@ -1,0 +1,14 @@
+{{ _("Identity Viewed") }}
+[---] text/html
+{{ _( "This is a transactional email to let you know that {a_viewer}{viewer}{_a} viewed your identity information for {a_country}{country_name}{_a} on Gratipay."
+    , viewer=viewer
+    , country_name=country_name
+    , a_viewer=('<a href="https://gratipay.com/~{}/">'|safe).format(viewer)
+    , a_country=('<a href="https://gratipay.com/about/me/identities/{}">'|safe).format(country_code)
+    , _a='</a>'|safe
+     ) }}
+[---] text/plain
+{{ _( "This is a transactional email to let you know that {viewer} viewed your identity information for {country_name} on Gratipay."
+    , viewer=viewer
+    , country_name=country_name
+     ) }}

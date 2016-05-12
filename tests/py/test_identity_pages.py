@@ -1,11 +1,14 @@
-from gratipay.testing import Harness
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from gratipay.models.country import Country
 from gratipay.models.participant import Participant
+from gratipay.testing.emails import EmailHarness
 
 
-class Tests(Harness):
+class Tests(EmailHarness):
 
     def setUp(self):
+        super(Tests, self).setUp()
         self.make_participant('alice', claimed_time='now', is_admin=True)
         self.make_participant('whit537', id=1451, email_address='chad@zetaweb.com',
             claimed_time='now', is_admin=True)
@@ -57,8 +60,12 @@ class Tests(Harness):
     def test_ip_is_403_for_most_admins(self):
         assert self.client.GxT('/~bob/identities/TT', auth_as='alice').code == 403
 
-    def test_ip_is_200_for_whit537_yikes(self):
+    def test_ip_is_200_for_whit537_yikes_O_O(self):
         assert self.client.GET('/~bob/identities/TT', auth_as='whit537').code == 200
+
+    def test_ip_notifies_participant_when_whit537_views(self):
+        self.client.GET('/~bob/identities/TT', auth_as='whit537')
+        assert 'whit537 viewed your identity' in self.get_last_email()['body_text']
 
     def test_ip_is_404_for_unknown_code(self):
         assert self.client.GxT('/~bob/identities/XX', auth_as='bob').code == 404
