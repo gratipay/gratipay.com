@@ -48,6 +48,9 @@ class Tests(EmailHarness):
 
     # ip - identity page
 
+    def test_ip_disallows_methods(self):
+        assert self.client.hxt('HEAD', '/~bob/identities/TT').code == 405
+
     def test_ip_is_403_for_anon(self):
         assert self.client.GxT('/~bob/identities/TT').code == 403
 

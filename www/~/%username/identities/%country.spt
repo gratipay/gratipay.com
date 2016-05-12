@@ -2,6 +2,7 @@ from aspen import Response
 from gratipay.utils import get_participant
 from gratipay.models.country import Country
 [---]
+request.allow('GET', 'POST')
 participant = get_participant(state, restrict=True)
 
 # hard-code HR auth group for Team Gratipay O.O
