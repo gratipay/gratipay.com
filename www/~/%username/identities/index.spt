@@ -12,9 +12,9 @@ nidentities = len(identities)
 <div id="identities">
     {% for identity in identities %}
     <a class="card {% if identity.is_verified %}verified{% else %}unverified{% endif %}"
-       href="{{ identity.country.code2 }}">
-        <h2>{{ locale.countries[identity.country.code2] }}</h2>
-        <img class="flag {{ identity.country.code2 }}"
+       href="{{ identity.country.code }}">
+        <h2>{{ locale.countries[identity.country.code] }}</h2>
+        <img class="flag {{ identity.country.code }}"
              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
         <div class="status">
             {% if identity.is_verified %}

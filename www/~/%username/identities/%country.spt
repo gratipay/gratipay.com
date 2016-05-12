@@ -108,7 +108,7 @@ if request.method == 'POST':
 
         <label>
             <span>{{ _("Address, Line 2") }}</span>
-            <input id="address_2" name="address_2" required value="{{ info['address_2'] }}">
+            <input id="address_2" name="address_2" value="{{ info['address_2'] }}">
         </label>
 
         <label>
