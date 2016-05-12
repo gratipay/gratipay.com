@@ -1,0 +1,147 @@
+from aspen import Response
+from gratipay.utils import get_participant
+from gratipay.models.country import Country
+[---]
+request.allow('GET', 'POST')
+participant = get_participant(state, restrict=True)
+
+# hard-code HR auth group for Team Gratipay O.O
+if participant != user.participant:
+    w = user.participant
+    assert user.ADMIN, w.username # sanity check
+    if (w.id, w.username, w.email_address) != (1451, 'whit537', 'chad@zetaweb.com'):
+        raise Response(403)
+
+# require email
+if not participant.email_address:
+    website.redirect('/about/me/emails/')
+
+# load country
+country_code = request.path['country']
+country = Country.from_code(country_code)
+title = country_name = locale.countries.get(country_code)
+if country is None or title is None:
+    raise Response(404)
+
+# load identities & info
+identity = None
+info = {}
+identities = participant.list_identity_metadata()
+nidentities = len(identities)
+for _identity in identities:
+    if _identity.country.code == country.code:
+        identity = _identity
+        info = participant.retrieve_identity_info(_identity.country.id)
+        break
+if identity is None and nidentities >= 3:
+    website.redirect('./', base_url='')  # Not allowed to add any more!
+
+# notify users whenever someone views their info
+if identity is not None and participant != user.participant:
+    participant.send_email( 'identity-viewed'
+                          , viewer=user.participant.username
+                          , country_name=country_name
+                          , country_code=country.code
+                          , include_unsubscribe=False
+                           )
+
+# handle POST requests
+if request.method == 'POST':
+    action = request.body['action']
+    if action == 'remove':
+        participant.clear_identity(country.id)
+    elif action == 'store':
+        info = {}
+        info['id_type'] = request.body['id_type']
+        info['id_number'] = request.body['id_number']
+        info['legal_name'] = request.body['legal_name']
+        info['dob'] = request.body['dob']
+        info['address_1'] = request.body['address_1']
+        info['address_2'] = request.body['address_2']
+        info['city'] = request.body['city']
+        info['region'] = request.body['region']
+        info['postcode'] = request.body['postcode']
+        participant.store_identity_info(country.id, 'nothing-enforced', info)
+    else:
+        raise Response(400)
+    website.redirect('./', base_url='')
+
+[---] text/html
+{% extends "templates/profile.html" %}
+{% block content %}
+<img class="flag {{ country.code }}"
+     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
+<div class="long-form">
+    <form autocomplete="off" action="" method="POST">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <label>
+            <span>{{ _("ID Type") }}</span>
+            <select name="id_type">
+                <option value="tax_id">{{ _("Tax ID") }}</option>
+                <option value="passport">{{ _("Passport") }}</option>
+                <option value="license">{{ _("Driver's License") }}</option>
+            </select>
+        </label>
+
+        <label>
+            <span>{{ _("ID Number") }}</span>
+            <input id="id_number" name="id_number" required autofocus
+                value="{{ info['id_number'] }}">
+        </label>
+
+        <label>
+            <span>{{ _("Full Legal Name") }}</span>
+            <input id="legal_name" name="legal_name" required value="{{ info['legal_name'] }}">
+        </label>
+
+        <label class="half">
+            <span>{{ _("Date of Birth") }}</span>
+            <input id="dob" name="dob" required value="{{ info['dob'] }}">
+        </label>
+
+        <label>
+            <span>{{ _("Address, Line 1") }}</span>
+            <input id="address_1" name="address_1" required value="{{ info['address_1'] }}">
+        </label>
+
+        <label>
+            <span>{{ _("Address, Line 2") }}</span>
+            <input id="address_2" name="address_2" required value="{{ info['address_2'] }}">
+        </label>
+
+        <label>
+            <span>{{ _("City") }}</span>
+            <input id="city" name="city" required value="{{ info['city'] }}">
+        </label>
+
+        <label>
+            <span>{{ _("Region (State, Province)") }}</span>
+            <input id="region" name="region" required value="{{ info['region'] }}">
+        </label>
+
+        <label class="half">
+            <span>{{ _("Postcode (ZIP)") }}</span>
+            <input id="postcode" name="postcode" required value="{{ info['postcode'] }}">
+        </label>
+
+        <div class="clear"></div>
+
+        <br>
+
+        <button class="selected larger" type="submit"
+            name="action" value="store">{{ _("Save") }}</button>
+        <button class="cancel" type="reset"
+            onclick="javascript: window.location='./'" formnovalidate>Cancel</button>
+
+        {% if identity != None %}
+        <div class="danger-zone">
+            <h2>{{ _("Danger Zone") }}</h2>
+            <button type="submit"
+                name="action" value="remove">{{ _("Remove This Identity") }}</button>
+        </div>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

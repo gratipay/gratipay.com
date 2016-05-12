@@ -1,0 +1,139 @@
+#identities {
+    padding-top: 20px;
+
+    .card {
+        height: 96px;
+        width: 46%;
+        float: left;
+        margin: 0 8% 8% 0;
+        padding: 20px;
+        position: relative;
+        @include border-radius(5px);
+        @include box-shadow(0, 0, 10px, $black);
+
+        &:nth-child(even) {
+            margin-right: 0;
+        }
+
+        &.verified {
+            background-image: radial-gradient( circle at 36px 60px
+                                             , lighten($green, 55%) 0%
+                                             , lighten($green, 30%) 100%
+                                              );
+            color: $green;
+        }
+
+        &.unverified {
+            color: $red;
+        }
+
+        &.add {
+            background: $lightest-gray;
+            color: $medium-gray;
+            border-style: dashed;
+            @include box-shadow(0,0,0);
+            border: 2px dashed $darker-gray;
+
+            &:hover {
+                color: $black;
+                background-image: radial-gradient( ellipse farthest-corner at 50% 50%
+                                                 , $white 0%
+                                                 , $lightest-gray 50%
+                                                  );
+            }
+        }
+
+        img {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        h2 {
+            white-space: nowrap;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .status {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font: normal 9px $Mono;
+        }
+    }
+
+    #country-chooser {
+        z-index: 1001;
+        display: none;
+        background: white;
+        @include border-radius(5px);
+        @include box-shadow(0, 0, 10px, $black);
+        position: fixed;
+        width: 240px;
+        height: 50vh;
+        top: 25%;
+        left: 50%;
+        margin-left: -120px;
+
+        header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 240px;
+            height: 36px;
+            background: white;
+            border-bottom: 1px solid $black;
+            @include border-radius(5px 5px 0 0);
+            @include box-shadow(0, 0, 10px, $black);
+
+            h2 {
+                margin: 0;
+                padding: 12px 20px 0;
+            }
+            button {
+                position: absolute;
+                top: 5px;
+                right: 20px;
+            }
+        }
+
+        section {
+            overflow: auto;
+            height: 50vh;
+            z-index: 0;
+            margin-top: 36px;
+            background: $lightest-gray;
+            @include border-radius(0 0 5px 5px);
+            @include box-shadow(0, 0, 10px, $black);
+
+            a {
+                padding: 5px 20px;
+                display: block;
+                img {
+                    margin: 0 5px -10px 0;
+                }
+                span {
+                    font: bold 18px/18px $Ideal;
+                }
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    #grayout {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: transparentize($black, 0.3);
+        z-index: 1000;
+        display: none;
+    }
+}

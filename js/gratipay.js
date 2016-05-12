@@ -18,6 +18,7 @@ Gratipay.init = function() {
     Gratipay.signOut();
     Gratipay.payments.initSupportGratipay();
     Gratipay.tabs.init();
+    Gratipay.countryChooser.init();
 };
 
 Gratipay.warnOffUsersFromDeveloperConsole = function() {
