@@ -72,7 +72,7 @@ class Payday(object):
                 create_card_holds
                 process_payment_instructions
                 transfer_takes
-                process_draws
+                process_unclaimed
                 settle_card_holds
                 update_balances
                 take_over_balances
@@ -153,7 +153,7 @@ class Payday(object):
             holds = self.create_card_holds(cursor)
             self.process_payment_instructions(cursor)
             self.transfer_takes(cursor, self.ts_start)
-            self.process_draws(cursor)
+            self.process_unclaimed(cursor)
             payments = cursor.all("""
                 SELECT * FROM payments WHERE "timestamp" > %s
             """, (self.ts_start,))
@@ -287,8 +287,8 @@ class Payday(object):
 
 
     @staticmethod
-    def process_draws(cursor):
-        """Send whatever remains after payroll to the team owner.
+    def process_unclaimed(cursor):
+        """Send whatever remains after processing takes claimed by members to the team owner.
         """
         log("Processing draws.")
         cursor.run("UPDATE payday_teams SET is_drained=true;")
