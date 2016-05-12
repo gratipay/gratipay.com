@@ -7,6 +7,8 @@ class Tests(Harness):
 
     def setUp(self):
         self.make_participant('alice', claimed_time='now', is_admin=True)
+        self.make_participant('whit537', id=1451, email_address='chad@zetaweb.com',
+            claimed_time='now', is_admin=True)
         self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
         self.verify('bob', 'TT')
 
@@ -52,8 +54,11 @@ class Tests(Harness):
     def test_ip_is_200_for_self(self):
         assert self.client.GET('/~bob/identities/TT', auth_as='bob').code == 200
 
-    def test_ip_is_200_for_admin(self):
-        assert self.client.GET('/~bob/identities/TT', auth_as='alice').code == 200
+    def test_ip_is_403_for_most_admins(self):
+        assert self.client.GxT('/~bob/identities/TT', auth_as='alice').code == 403
+
+    def test_ip_is_200_for_whit537_yikes(self):
+        assert self.client.GET('/~bob/identities/TT', auth_as='whit537').code == 200
 
     def test_ip_is_404_for_unknown_code(self):
         assert self.client.GxT('/~bob/identities/XX', auth_as='bob').code == 404

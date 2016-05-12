@@ -4,6 +4,13 @@ from gratipay.models.country import Country
 [---]
 participant = get_participant(state, restrict=True)
 
+# hard-code HR auth group for Team Gratipay O.O
+if participant != user.participant:
+    w = user.participant
+    assert user.ADMIN, w.username # sanity check
+    if (w.id, w.username, w.email_address) != (1451, 'whit537', 'chad@zetaweb.com'):
+        raise Response(403)
+
 # require email
 if not participant.email_address:
     website.redirect('/about/me/emails/')
