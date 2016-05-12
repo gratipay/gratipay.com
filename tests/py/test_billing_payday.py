@@ -491,7 +491,7 @@ class TestPayin(BillingHarness):
             else:
                 assert p.balance == 0
 
-    def test_process_draws(self):
+    def test_process_remainder(self):
         alice = self.make_participant('alice', claimed_time='now', balance=1)
         picard = self.make_participant('picard', claimed_time='now', last_paypal_result='')
         Enterprise = self.make_team('The Enterprise', picard, is_approved=True)
@@ -502,7 +502,7 @@ class TestPayin(BillingHarness):
             payday.prepare(cursor)
             payday.process_payment_instructions(cursor)
             payday.transfer_takes(cursor, payday.ts_start)
-            payday.process_draws(cursor)
+            payday.process_remainder(cursor)
             assert cursor.one("select new_balance from payday_participants "
                               "where username='picard'") == D('0.51')
             assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == 0
