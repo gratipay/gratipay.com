@@ -27,7 +27,7 @@ class IdentityMixin(object):
     A participant may have zero or more national identities on file with
     Gratipay, with at most one for any given country at any given time. When at
     least one of a participant's national identities has been verified, then
-    they may join the payroll of one or more Teams.
+    they may join one or more Teams.
 
     Since national identity information is more sensitive than other
     information in our database, we encrypt it in the application layer before

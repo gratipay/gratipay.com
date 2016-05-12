@@ -1,4 +1,4 @@
-"""Teams on Gratipay receive payments and distribute payroll.
+"""Teams on Gratipay receive payments and distribute payouts.
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -273,7 +273,7 @@ class Team(Model):
         """, dict(team_id=self.id))
 
 
-        # This next step is easy for now since we don't have payroll.
+        # This next step is easy for now since we don't have payouts.
         from gratipay.models.participant import Participant
         Participant.from_username(self.owner).update_taking(cursor or self.db)
 
