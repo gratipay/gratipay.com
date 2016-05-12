@@ -79,6 +79,20 @@ msgstr ""
 msgid "Follow this link if you want to view or modify your payments:"
 msgstr ""
 
+msgid "Identity Viewed"
+msgstr ""
+
+msgid ""
+"This is a transactional email to let you know that {a_viewer}{viewer}{_a} "
+"viewed your identity information for {a_country}{country_name}{_a} on "
+"Gratipay."
+msgstr ""
+
+msgid ""
+"This is a transactional email to let you know that {viewer} viewed your "
+"identity information for {country_name} on Gratipay."
+msgstr ""
+
 msgid "Connect to {0} on Gratipay?"
 msgstr "Mit {0} auf Gratipay verbinden?"
 
@@ -1012,58 +1026,6 @@ msgstr ""
 msgid "Sorry, there is already a team using '{}'."
 msgstr ""
 
-msgid "Identity Verification"
-msgstr "Identitätsüberprüfung"
-
-msgid "Invalid date of birth."
-msgstr "Ungültiges Geburtsdatum."
-
-msgid "Unable to verify your identity"
-msgstr ""
-
-msgid ""
-"Your identity is verified, which means you may add a {0}bank account{1}."
-msgstr "Ihre Identität wurde bestätigt. Sie können nun Ihr {0}Bankkonto hinzufügen{1}."
-
-msgid "Your Legal Name"
-msgstr "Dein offizieller Name"
-
-msgid "Address"
-msgstr "Adresse"
-
-msgid "Address (second line)"
-msgstr "Adresse (Zusatz)"
-
-msgid "City"
-msgstr "Stadt"
-
-msgid "State or Province"
-msgstr "Land oder Region"
-
-msgid "ZIP or Postal Code"
-msgstr "Postleitzahl"
-
-msgid "Country"
-msgstr "Land"
-
-msgid "non-US?"
-msgstr "außerhalb der USA?"
-
-msgid "Contact Phone Number"
-msgstr "Telefonnummer"
-
-msgid "Date of Birth"
-msgstr "Geburtsdatum"
-
-msgid "YYYY-MM-DD"
-msgstr "JJJJ-MM-TT"
-
-msgid "Last four SSN digits"
-msgstr "Letzte 4 Sozialversicherungsnummerstellen"
-
-msgid "(Not required)"
-msgstr "(Nicht erforderlich)"
-
 msgid "You don't have a profile statement in this language yet."
 msgstr "Sie haben noch kein Statement in dieser Sprache geschrieben"
 
@@ -1265,6 +1227,60 @@ msgstr "Rechnung"
 msgid "No transactions to show."
 msgstr "Es gibt keine Transaktionen zu anzeigen."
 
+msgid "ID Type"
+msgstr ""
+
+msgid "Tax ID"
+msgstr ""
+
+msgid "Passport"
+msgstr ""
+
+msgid "Driver's License"
+msgstr ""
+
+msgid "ID Number"
+msgstr ""
+
+msgid "Full Legal Name"
+msgstr ""
+
+msgid "Date of Birth"
+msgstr "Geburtsdatum"
+
+msgid "Address, Line 1"
+msgstr ""
+
+msgid "Address, Line 2"
+msgstr ""
+
+msgid "City"
+msgstr "Stadt"
+
+msgid "Region (State, Province)"
+msgstr ""
+
+msgid "Postcode (ZIP)"
+msgstr ""
+
+msgid "Danger Zone"
+msgstr ""
+
+msgid "Remove This Identity"
+msgstr ""
+
+msgid "Identities"
+msgstr ""
+
+msgid "Verified"
+msgstr ""
+
+msgid "Add Identity"
+msgstr ""
+
+msgid "Which Country?"
+msgstr ""
+
 msgid "The address cannot be empty."
 msgstr ""
 
@@ -1312,6 +1328,9 @@ msgstr "CVV"
 
 msgid "This verification code is invalid."
 msgstr "Der Bestätigungscode ist falsch."
+
+msgid "ZIP or Postal Code"
+msgstr "Postleitzahl"
 
 msgid ""
 "To minimize processing fees, we charge your credit card at least $10 at a "

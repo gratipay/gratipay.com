@@ -70,6 +70,20 @@ msgstr "Segui questo link per vedere la tua ricevuta:"
 msgid "Follow this link if you want to view or modify your payments:"
 msgstr "Segui questo link se vuoi vedere o modificare i tuoi pagamenti:"
 
+msgid "Identity Viewed"
+msgstr ""
+
+msgid ""
+"This is a transactional email to let you know that {a_viewer}{viewer}{_a} "
+"viewed your identity information for {a_country}{country_name}{_a} on "
+"Gratipay."
+msgstr ""
+
+msgid ""
+"This is a transactional email to let you know that {viewer} viewed your "
+"identity information for {country_name} on Gratipay."
+msgstr ""
+
 msgid "Connect to {0} on Gratipay?"
 msgstr "Connettersi a {0} su Gratipay?"
 
@@ -344,7 +358,7 @@ msgid "PayPal"
 msgstr "PayPal"
 
 msgid "verified in: {country}"
-msgstr ""
+msgstr "Verificato in: {country}"
 
 msgid "Weekly"
 msgstr "Settimanale"
@@ -1003,58 +1017,6 @@ msgstr "Ci dispiace, questo numero routing non è valido."
 msgid "Sorry, there is already a team using '{}'."
 msgstr "Ci dispiace, un altro team sta già usando '{}'."
 
-msgid "Identity Verification"
-msgstr "Verifica Identità"
-
-msgid "Invalid date of birth."
-msgstr "Data di nascita non valida."
-
-msgid "Unable to verify your identity"
-msgstr "Verifica d'identità non riuscita"
-
-msgid ""
-"Your identity is verified, which means you may add a {0}bank account{1}."
-msgstr "La tua identità è verificata, ora puoi aggiungere un {0}conto bancario{1}."
-
-msgid "Your Legal Name"
-msgstr "Nome e Cognome"
-
-msgid "Address"
-msgstr "Indirizzo"
-
-msgid "Address (second line)"
-msgstr "Indirizzo (seconda riga)"
-
-msgid "City"
-msgstr "Città"
-
-msgid "State or Province"
-msgstr "Regione o Provincia"
-
-msgid "ZIP or Postal Code"
-msgstr "ZIP o Codice Postale"
-
-msgid "Country"
-msgstr "Stato"
-
-msgid "non-US?"
-msgstr "Non negli Stati Uniti?"
-
-msgid "Contact Phone Number"
-msgstr "Numero di telefono"
-
-msgid "Date of Birth"
-msgstr "Data di Nascita"
-
-msgid "YYYY-MM-DD"
-msgstr "AAAA-MM-GG"
-
-msgid "Last four SSN digits"
-msgstr "Ultime quattro cifre del Social Security Number - solo USA"
-
-msgid "(Not required)"
-msgstr "(Facoltativo)"
-
 msgid "You don't have a profile statement in this language yet."
 msgstr "Non hai ancora una presentazione del tuo profilo in questa lingua."
 
@@ -1256,6 +1218,60 @@ msgstr "Ricevuta"
 msgid "No transactions to show."
 msgstr "Nessuna transazione da mostrare."
 
+msgid "ID Type"
+msgstr ""
+
+msgid "Tax ID"
+msgstr ""
+
+msgid "Passport"
+msgstr ""
+
+msgid "Driver's License"
+msgstr ""
+
+msgid "ID Number"
+msgstr ""
+
+msgid "Full Legal Name"
+msgstr ""
+
+msgid "Date of Birth"
+msgstr "Data di Nascita"
+
+msgid "Address, Line 1"
+msgstr ""
+
+msgid "Address, Line 2"
+msgstr ""
+
+msgid "City"
+msgstr "Città"
+
+msgid "Region (State, Province)"
+msgstr ""
+
+msgid "Postcode (ZIP)"
+msgstr ""
+
+msgid "Danger Zone"
+msgstr ""
+
+msgid "Remove This Identity"
+msgstr ""
+
+msgid "Identities"
+msgstr ""
+
+msgid "Verified"
+msgstr ""
+
+msgid "Add Identity"
+msgstr ""
+
+msgid "Which Country?"
+msgstr ""
+
 msgid "The address cannot be empty."
 msgstr "L'indirizzo non può essere vuoto."
 
@@ -1303,6 +1319,9 @@ msgstr "CVV"
 
 msgid "This verification code is invalid."
 msgstr "Questo codice di verifica non è valido."
+
+msgid "ZIP or Postal Code"
+msgstr "ZIP o Codice Postale"
 
 msgid ""
 "To minimize processing fees, we charge your credit card at least $10 at a "

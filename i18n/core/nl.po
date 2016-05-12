@@ -72,6 +72,20 @@ msgstr "Volg deze link voor je ontvangstbewijs:"
 msgid "Follow this link if you want to view or modify your payments:"
 msgstr "Volg deze link als je je betaling wilt zien of veranderen:"
 
+msgid "Identity Viewed"
+msgstr ""
+
+msgid ""
+"This is a transactional email to let you know that {a_viewer}{viewer}{_a} "
+"viewed your identity information for {a_country}{country_name}{_a} on "
+"Gratipay."
+msgstr ""
+
+msgid ""
+"This is a transactional email to let you know that {viewer} viewed your "
+"identity information for {country_name} on Gratipay."
+msgstr ""
+
 msgid "Connect to {0} on Gratipay?"
 msgstr "Verbind met {0} op Gratipay?"
 
@@ -1005,58 +1019,6 @@ msgstr ""
 msgid "Sorry, there is already a team using '{}'."
 msgstr "Sorry, er is al een team dat '{}' gebruikt."
 
-msgid "Identity Verification"
-msgstr "Identiteits controle"
-
-msgid "Invalid date of birth."
-msgstr "Geboortedatum is ongeldig."
-
-msgid "Unable to verify your identity"
-msgstr "Het is niet gelukt om uw identiteit te verifiëren"
-
-msgid ""
-"Your identity is verified, which means you may add a {0}bank account{1}."
-msgstr "Uw identiteit is geverifieerd. U mag nu een {0}bankrekening{1} toevoegen."
-
-msgid "Your Legal Name"
-msgstr "Uw officiele naam"
-
-msgid "Address"
-msgstr "Adres"
-
-msgid "Address (second line)"
-msgstr "Adres (tweede regel)"
-
-msgid "City"
-msgstr "Stad"
-
-msgid "State or Province"
-msgstr "Staat of Provincie"
-
-msgid "ZIP or Postal Code"
-msgstr "ZIP of postcode"
-
-msgid "Country"
-msgstr "Land"
-
-msgid "non-US?"
-msgstr "Buiten US?"
-
-msgid "Contact Phone Number"
-msgstr "Contact telefoonnummer"
-
-msgid "Date of Birth"
-msgstr "Geboortedatum"
-
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
-
-msgid "Last four SSN digits"
-msgstr "Laatste vier SSN nummers"
-
-msgid "(Not required)"
-msgstr "(Niet verplicht)"
-
 msgid "You don't have a profile statement in this language yet."
 msgstr "Je hebt nog geen profiel verklaring in deze taal."
 
@@ -1258,6 +1220,60 @@ msgstr "Ontvangstbewijs"
 msgid "No transactions to show."
 msgstr "Er zijn geen overboekingen aanwezig in het systeem."
 
+msgid "ID Type"
+msgstr ""
+
+msgid "Tax ID"
+msgstr ""
+
+msgid "Passport"
+msgstr ""
+
+msgid "Driver's License"
+msgstr ""
+
+msgid "ID Number"
+msgstr ""
+
+msgid "Full Legal Name"
+msgstr ""
+
+msgid "Date of Birth"
+msgstr "Geboortedatum"
+
+msgid "Address, Line 1"
+msgstr ""
+
+msgid "Address, Line 2"
+msgstr ""
+
+msgid "City"
+msgstr "Stad"
+
+msgid "Region (State, Province)"
+msgstr ""
+
+msgid "Postcode (ZIP)"
+msgstr ""
+
+msgid "Danger Zone"
+msgstr ""
+
+msgid "Remove This Identity"
+msgstr ""
+
+msgid "Identities"
+msgstr ""
+
+msgid "Verified"
+msgstr ""
+
+msgid "Add Identity"
+msgstr ""
+
+msgid "Which Country?"
+msgstr ""
+
 msgid "The address cannot be empty."
 msgstr "Het adres moet worden ingevuld."
 
@@ -1305,6 +1321,9 @@ msgstr "CVV"
 
 msgid "This verification code is invalid."
 msgstr "Deze verificatiecode is ongeldig."
+
+msgid "ZIP or Postal Code"
+msgstr "ZIP of postcode"
 
 msgid ""
 "To minimize processing fees, we charge your credit card at least $10 at a "

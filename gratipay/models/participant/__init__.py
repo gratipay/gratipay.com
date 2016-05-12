@@ -334,14 +334,6 @@ class Participant(Model, mixins.Identity):
             self.set_payment_instruction(team, '0.00', update_self=False, cursor=cursor)
 
 
-    def clear_takes(self, cursor):
-        """Leave all teams by zeroing all takes.
-        """
-        for team, nmembers in self.get_old_teams():
-            t = Participant.from_username(team)
-            t.set_take_for(self, Decimal(0), self, cursor)
-
-
     def clear_personal_information(self, cursor):
         """Clear personal information such as statements.
         """
@@ -1095,22 +1087,6 @@ class Participant(Model, mixins.Identity):
         return teams
 
 
-    def get_old_teams(self):
-        """Return a list of old-style teams this user was a member of.
-        """
-        return self.db.all("""
-
-            SELECT team AS name
-                 , ( SELECT count(*)
-                       FROM current_takes
-                      WHERE team=x.team
-                    ) AS nmembers
-              FROM current_takes x
-             WHERE member=%s;
-
-        """, (self.username,))
-
-
     def insert_into_communities(self, is_member, name, slug):
         participant_id = self.id
         self.db.run("""
@@ -1527,8 +1503,6 @@ class Participant(Model, mixins.Identity):
             # We want to do this whether or not other is a stub participant.
 
             if this_is_others_last_login_account:
-
-                other.clear_takes(cursor)
 
                 # Take over tips.
                 # ===============
