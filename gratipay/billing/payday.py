@@ -71,8 +71,13 @@ class Payday(object):
                 prepare
                 create_card_holds
                 process_payment_instructions
+<<<<<<< HEAD
                 transfer_takes
                 process_unclaimed
+=======
+                process_takes
+                process_draws
+>>>>>>> e58792b... bring back takes in payday
                 settle_card_holds
                 update_balances
                 take_over_balances
@@ -152,8 +157,8 @@ class Payday(object):
             self.prepare(cursor)
             holds = self.create_card_holds(cursor)
             self.process_payment_instructions(cursor)
-            self.transfer_takes(cursor, self.ts_start)
             self.process_unclaimed(cursor)
+            self.process_takes(cursor, self.ts_start)
             payments = cursor.all("""
                 SELECT * FROM payments WHERE "timestamp" > %s
             """, (self.ts_start,))
@@ -260,28 +265,29 @@ class Payday(object):
 
 
     @staticmethod
-    def transfer_takes(cursor, ts_start):
-        return  # XXX Bring me back!
+    def process_takes(cursor, ts_start):
         cursor.run("""
 
         INSERT INTO payday_takes
-            SELECT team, member, amount
-              FROM ( SELECT DISTINCT ON (team, member)
-                            team, member, amount, ctime
-                       FROM takes
-                      WHERE mtime < %(ts_start)s
-                   ORDER BY team, member, mtime DESC
-                   ) t
-             WHERE t.amount > 0
-               AND t.team IN (SELECT username FROM payday_participants)
-               AND t.member IN (SELECT username FROM payday_participants)
-               AND ( SELECT id
-                       FROM payday_transfers_done t2
-                      WHERE t.team = t2.tipper
-                        AND t.member = t2.tippee
-                        AND context = 'take'
-                   ) IS NULL
-          ORDER BY t.team, t.ctime DESC;
+             SELECT team_id, participant_id, ntakes
+               FROM ( SELECT DISTINCT ON (team_id, participant_id)
+                             team_id, participant_id, ntakes, ctime
+                        FROM takes
+                       WHERE mtime < %(ts_start)s
+                    ORDER BY team_id, participant_id, mtime DESC
+                    ) t
+              WHERE t.ntakes > 0
+                AND t.team_id IN (SELECT id FROM payday_teams)
+                AND t.participant_id IN (SELECT id FROM payday_participants)
+                AND ( SELECT ppd.id
+                        FROM payday_payments_done ppd
+                        JOIN participants ON participants.id = t.participant_id
+                        JOIN teams ON teams.id = t.team_id
+                       WHERE participants.username = ppd.participant
+                         AND teams.slug = ppd.team
+                         AND direction = 'to-participant'
+                    ) IS NULL
+           ORDER BY t.team_id, t.ntakes ASC;
 
         """, dict(ts_start=ts_start))
 
@@ -291,7 +297,19 @@ class Payday(object):
         """Send whatever remains after processing takes claimed by members to the team owner.
         """
         log("Processing draws.")
-        cursor.run("UPDATE payday_teams SET is_drained=true;")
+        cursor.run("""
+
+         UPDATE payday_teams pt
+            SET is_drained=true
+          WHERE ( SELECT ppd.id
+                    FROM payday_payments_done ppd
+                    JOIN teams ON teams.slug = ppd.team
+                   WHERE ppd.team = pt.slug             -- from the team
+                     AND ppd.participant = teams.owner  -- to the owner
+                     AND direction = 'to-participant'
+                 ) IS NULL
+
+        """)
 
 
     def settle_card_holds(self, cursor, holds):

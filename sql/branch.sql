@@ -45,3 +45,8 @@ BEGIN;
     ALTER TABLE teams ADD CONSTRAINT ntakes_sum CHECK (ntakes = ntakes_claimed + ntakes_unclaimed);
 
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4025
+
+ALTER TABLE teams ADD COLUMN baseline numeric(35,2) NOT NULL DEFAULT 0.0;
