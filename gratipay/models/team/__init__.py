@@ -1,4 +1,4 @@
-"""Teams on Gratipay receive payments and distribute payroll.
+"""Teams on Gratipay receive payments and distribute payouts.
 """
 import re
 from decimal import Decimal
@@ -271,7 +271,7 @@ class Team(Model):
         """, dict(slug=self.slug))
 
 
-        # This next step is easy for now since we don't have payroll.
+        # This next step is easy for now since we don't have payouts.
         from gratipay.models.participant import Participant
         Participant.from_username(self.owner).update_taking(cursor or self.db)
 
