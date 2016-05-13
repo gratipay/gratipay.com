@@ -71,18 +71,18 @@ msgid "Follow this link if you want to view or modify your payments:"
 msgstr "Segui questo link se vuoi vedere o modificare i tuoi pagamenti:"
 
 msgid "Identity Viewed"
-msgstr ""
+msgstr "Identità Visualizzata"
 
 msgid ""
 "This is a transactional email to let you know that {a_viewer}{viewer}{_a} "
 "viewed your identity information for {a_country}{country_name}{_a} on "
 "Gratipay."
-msgstr ""
+msgstr "Questa è una email di transazione per farti sapere che un {a_viewer}{viewer}{_a} ha visualizzato le tue informazioni di identità per {a_country}{country_name}{_a} su Gratipay."
 
 msgid ""
 "This is a transactional email to let you know that {viewer} viewed your "
 "identity information for {country_name} on Gratipay."
-msgstr ""
+msgstr "Questa è una email di transazione per farti sapere che un {viewer} ha visualizzato le tue informazioni di identità per {country_name} su Gratipay."
 
 msgid "Connect to {0} on Gratipay?"
 msgstr "Connettersi a {0} su Gratipay?"
@@ -614,8 +614,10 @@ msgstr "Qual è la pagina web del tuo prodotto o servizio rivolta ai tuoi client
 msgid "Self-onboarding Documentation URL"
 msgstr "URL Documentazione Formazione Iniziale Autonoma"
 
-msgid "Where can people find instructions on how to do your work for you?"
-msgstr "Dove si possono trovare istruzioni su come lavorare per voi?"
+msgid ""
+"Where can people find instructions on how to do your work for you "
+"({0}example{1})? "
+msgstr ""
 
 msgid "To-do URL"
 msgstr "URL cose da fare"
@@ -1219,58 +1221,58 @@ msgid "No transactions to show."
 msgstr "Nessuna transazione da mostrare."
 
 msgid "ID Type"
-msgstr ""
+msgstr "Tipo di documento identificativo"
 
 msgid "Tax ID"
-msgstr ""
+msgstr "Tessera di Previdenza Sociale"
 
 msgid "Passport"
-msgstr ""
+msgstr "Passaporto"
 
 msgid "Driver's License"
-msgstr ""
+msgstr "Patente"
 
 msgid "ID Number"
-msgstr ""
+msgstr "Numero del documento identificativo"
 
 msgid "Full Legal Name"
-msgstr ""
+msgstr "Nome Legale Completo"
 
 msgid "Date of Birth"
 msgstr "Data di Nascita"
 
 msgid "Address, Line 1"
-msgstr ""
+msgstr "Indirizzo, Riga 1"
 
 msgid "Address, Line 2"
-msgstr ""
+msgstr "Indirizzo, Riga 2"
 
 msgid "City"
 msgstr "Città"
 
 msgid "Region (State, Province)"
-msgstr ""
+msgstr "Regione (Stato, Provincia)"
 
 msgid "Postcode (ZIP)"
-msgstr ""
+msgstr "Codice Postale (ZIP)"
 
 msgid "Danger Zone"
-msgstr ""
+msgstr "Zona di Pericolo"
 
 msgid "Remove This Identity"
-msgstr ""
+msgstr "Rimuovi Questa Identità"
 
 msgid "Identities"
-msgstr ""
+msgstr "Identità"
 
 msgid "Verified"
-msgstr ""
+msgstr "Verificato"
 
 msgid "Add Identity"
-msgstr ""
+msgstr "Aggiungi Identità"
 
 msgid "Which Country?"
-msgstr ""
+msgstr "Quale Stato?"
 
 msgid "The address cannot be empty."
 msgstr "L'indirizzo non può essere vuoto."

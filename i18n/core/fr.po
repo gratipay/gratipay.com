@@ -617,7 +617,9 @@ msgstr ""
 msgid "Self-onboarding Documentation URL"
 msgstr ""
 
-msgid "Where can people find instructions on how to do your work for you?"
+msgid ""
+"Where can people find instructions on how to do your work for you "
+"({0}example{1})? "
 msgstr ""
 
 msgid "To-do URL"
