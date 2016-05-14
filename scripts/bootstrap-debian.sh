@@ -10,7 +10,9 @@ echo "[*] Installing base dependencies..
       postgresql
       postgresql-contrib  - pg_trgm, pg_stat_statements
       python
-      python-dev  - for building misaka"
+      python-dev  - for building misaka
+      libffi-dev 
+      libssl-dev  - for building cryptography"
 sudo apt-get update
 sudo apt-get install -y \
     g++ \
@@ -21,7 +23,9 @@ sudo apt-get install -y \
     postgresql-contrib \
     python \
     language-pack-en \
-    python-dev
+    python-dev \
+    libffi-dev \
+    libssl-dev
 
 echo "[*] Installing dependencies for tests..
       default-jre     - jstests need java to run selenium
