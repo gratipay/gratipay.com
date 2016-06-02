@@ -909,10 +909,10 @@ class Participant(Model, mixins.Identity):
 
             SELECT due
               FROM current_payment_instructions
-             WHERE participant = %s
-               AND team = %s
+             WHERE participant_id = %s
+               AND team_id = %s
 
-        """, (self.username, team.slug))
+        """, (self.id, team.id))
 
 
     def get_giving_for_profile(self):
@@ -975,7 +975,7 @@ class Participant(Model, mixins.Identity):
         with self.db.get_cursor() as cursor:
             updated_giving = self.update_giving(cursor)
             for payment_instruction in updated_giving:
-                Team.from_slug(payment_instruction.team).update_receiving(cursor)
+                Team.from_id(payment_instruction.team_id).update_receiving(cursor)
 
 
     def update_giving(self, cursor=None):
