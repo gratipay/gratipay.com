@@ -154,8 +154,8 @@ def fake_payment_instruction(db, participant, team):
                            , "payment_instructions"
                            , ctime=faker.date_time_this_year()
                            , mtime=faker.date_time_this_month()
-                           , participant=participant.username
-                           , team=team.slug
+                           , participant_id=participant.id
+                           , team_id=team.id
                            , amount=fake_tip_amount()
                             )
 
