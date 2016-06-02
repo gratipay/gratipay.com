@@ -323,13 +323,13 @@ class Participant(Model, mixins.Identity):
 
             SELECT ( SELECT teams.*::teams
                        FROM teams
-                      WHERE slug=team
+                      WHERE id=team_id
                     ) AS team
               FROM current_payment_instructions
-             WHERE participant = %s
+             WHERE participant_id = %s
                AND amount > 0
 
-        """, (self.username,))
+        """, (self.id,))
         for team in teams:
             self.set_payment_instruction(team, '0.00', update_self=False, cursor=cursor)
 
@@ -922,26 +922,26 @@ class Participant(Model, mixins.Identity):
         GIVING = """\
 
             SELECT * FROM (
-                SELECT DISTINCT ON (pi.team)
-                       pi.team  AS team_slug
+                SELECT DISTINCT ON (pi.team_id)
+                       t.slug AS team_slug
                      , pi.amount
                      , pi.due
                      , pi.ctime
                      , pi.mtime
                      , t.name   AS team_name
                   FROM payment_instructions pi
-                  JOIN teams t ON pi.team = t.slug
-                 WHERE participant = %s
+                  JOIN teams t ON pi.team_id = t.id
+                 WHERE participant_id = %s
                    AND t.is_approved is true
                    AND t.is_closed is not true
-              ORDER BY pi.team
+              ORDER BY pi.team_id
                      , pi.mtime DESC
             ) AS foo
             ORDER BY amount DESC
                    , team_slug
 
         """
-        giving = self.db.all(GIVING, (self.username,))
+        giving = self.db.all(GIVING, (self.id,))
 
 
         # Compute the totals.
