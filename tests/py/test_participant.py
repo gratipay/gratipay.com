@@ -16,7 +16,6 @@ from gratipay.exceptions import (
     UsernameAlreadyTaken,
     UsernameContainsInvalidCharacters,
     UsernameIsRestricted,
-    NoTeam,
     BadAmount,
 )
 from gratipay.models.account_elsewhere import AccountElsewhere
@@ -471,10 +470,6 @@ class Tests(Harness):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team()
         self.assertRaises(BadAmount, alice.set_payment_instruction, team, '-0.01')
-
-    def test_spi_fails_to_set_a_payment_instruction_to_an_unknown_team(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.assertRaises(NoTeam, alice.set_payment_instruction, 'The Stargazer', '1.00')
 
     def test_spi_is_free_rider_defaults_to_none(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
