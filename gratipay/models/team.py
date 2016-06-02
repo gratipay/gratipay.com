@@ -257,8 +257,8 @@ class Team(Model):
             WITH our_receiving AS (
                      SELECT amount
                        FROM current_payment_instructions
-                       JOIN participants p ON p.username = participant
-                      WHERE team = %(slug)s
+                       JOIN participants p ON p.id = participant_id
+                      WHERE team_id = %(team_id)s
                         AND p.is_suspicious IS NOT true
                         AND amount > 0
                         AND is_funded
@@ -268,9 +268,9 @@ class Team(Model):
                  , nreceiving_from = COALESCE((SELECT count(*) FROM our_receiving), 0)
                  , distributing = COALESCE((SELECT sum(amount) FROM our_receiving), 0)
                  , ndistributing_to = 1
-             WHERE t.slug = %(slug)s
+             WHERE t.id = %(team_id)s
          RETURNING receiving, nreceiving_from, distributing, ndistributing_to
-        """, dict(slug=self.slug))
+        """, dict(team_id=self.id))
 
 
         # This next step is easy for now since we don't have payroll.
