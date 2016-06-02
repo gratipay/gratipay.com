@@ -75,6 +75,9 @@ class Team(Model):
 
         """.format(thing), (value,))
 
+    def refresh(self):
+        self.__dict__.update(self.__class__.from_id(self.id).__dict__)
+
     @classmethod
     def insert(cls, owner, **fields):
         fields['slug_lower'] = fields['slug'].lower()

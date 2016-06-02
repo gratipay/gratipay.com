@@ -124,6 +124,9 @@ class Participant(Model, mixins.Identity):
 
         """.format(thing), (value,))
 
+    def refresh(self):
+        self.__dict__.update(self.__class__.from_id(self.id).__dict__)
+
 
     # Session Management
     # ==================
@@ -330,7 +333,7 @@ class Participant(Model, mixins.Identity):
 
         """, (self.id,))
         for team in teams:
-            self.set_payment_instruction(team, '0.00', update_self=False, cursor=cursor)
+            self.set_payment_instruction(team, '0.00', cursor=cursor)
 
 
     def clear_takes(self, cursor):
@@ -815,8 +818,7 @@ class Participant(Model, mixins.Identity):
     # Giving and Taking
     # =================
 
-    def set_payment_instruction(self, team, amount, update_self=True, update_team=True,
-                                                                                      cursor=None):
+    def set_payment_instruction(self, team, amount, cursor=None):
         """Given a Team instance, and amount as str, return a dict.
 
         We INSERT instead of UPDATE, so that we have history to explore. The
@@ -862,12 +864,9 @@ class Participant(Model, mixins.Identity):
         else:
             self._reset_due(t_dict['team_id'], cursor=cursor)
 
-        if update_self:
-            # Update giving amount of participant
-            self.update_giving(cursor)
-        if update_team:
-            # Update receiving amount of team
-            team.update_receiving(cursor)
+        self.refresh()
+        team.refresh()
+
         if team.slug == 'Gratipay':
             # Update whether the participant is using Gratipay for free
             self.update_is_free_rider(None if amount == 0 else False, cursor)
