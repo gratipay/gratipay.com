@@ -48,3 +48,11 @@ BEGIN;  -- Step 3
         FOR EACH ROW EXECUTE PROCEDURE update_payment_instruction();
 
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4045
+
+\i sql/triggers/payment_instructions.sql
+
+DROP FUNCTION update_payment_instruction();
+\i sql/triggers/current_payment_instructions.sql
