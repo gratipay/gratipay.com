@@ -10,16 +10,8 @@ BEGIN;
     DROP VIEW current_payment_instructions;
 
     UPDATE payment_instructions AS pi
-       SET participant_id = p.id
-      FROM participants AS p
-     WHERE p.username = pi.participant
-       AND pi.participant_id IS NULL;
-
-    UPDATE payment_instructions AS pi
-       SET team_id = t.id
-      FROM teams AS t
-     WHERE t.slug = pi.team
-       AND pi.team_id IS NULL;
+       SET participant_id = (SELECT id FROM participants p WHERE p.username = pi.participant)
+         , team_id = (SELECT id FROM teams t WHERE t.slug = pi.team);
 
     ALTER TABLE payment_instructions DROP COLUMN participant;
     ALTER TABLE payment_instructions DROP COLUMN team;
