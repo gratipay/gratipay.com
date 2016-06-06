@@ -112,15 +112,15 @@ class Team(Model):
         SQL = """
             SELECT amount
                  , count(amount) AS nreceiving_from
-              FROM ( SELECT DISTINCT ON (participant)
+              FROM ( SELECT DISTINCT ON (participant_id)
                             amount
-                          , participant
+                          , participant_id
                        FROM payment_instructions
-                       JOIN participants p ON p.username = participant
-                      WHERE team=%s
+                       JOIN participants p ON p.id = participant_id
+                      WHERE team_id=%s
                         AND is_funded
                         AND p.is_suspicious IS NOT true
-                   ORDER BY participant
+                   ORDER BY participant_id
                           , mtime DESC
                     ) AS foo
              WHERE amount > 0
@@ -132,7 +132,7 @@ class Team(Model):
 
         npatrons = 0.0  # float to trigger float division
         total_amount = Decimal('0.00')
-        for rec in self.db.all(SQL, (self.slug,)):
+        for rec in self.db.all(SQL, (self.id,)):
             tip_amounts.append([ rec.amount
                                , rec.nreceiving_from
                                , rec.amount * rec.nreceiving_from
