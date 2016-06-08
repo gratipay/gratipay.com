@@ -8,7 +8,7 @@ from decimal import Decimal
 
 from aspen.testing.client import FileUpload
 from gratipay.testing import Harness
-from gratipay.models.team import Team, AlreadyMigrated, slugize, InvalidTeamName
+from gratipay.models.team import Team, slugize, InvalidTeamName
 
 
 REVIEW_URL = "https://github.com/gratipay/test-gremlin/issues/9"
@@ -339,58 +339,6 @@ class TestTeams(Harness):
         r = self.post_new(data, expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Please fill out the 'Team Name' field." in r.body
-
-    # Migrate Tips
-    # ============
-
-    def test_migrate_tips_to_payment_instructions(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        bob = self.make_participant('bob', claimed_time='now')
-        self.make_participant('old_team')
-        self.make_tip(alice, 'old_team', '1.00')
-        self.make_tip(bob, 'old_team', '2.00')
-        new_team = self.make_team('new_team', owner='old_team')
-
-        ntips = new_team.migrate_tips()
-        assert ntips == 2
-
-        payment_instructions = self.db.all("SELECT * FROM payment_instructions ORDER BY participant ASC")
-        assert len(payment_instructions) == 2
-        assert payment_instructions[0].participant == 'alice'
-        assert payment_instructions[0].team == 'new_team'
-        assert payment_instructions[0].amount == 1
-        assert payment_instructions[1].participant == 'bob'
-        assert payment_instructions[1].team == 'new_team'
-        assert payment_instructions[1].amount == 2
-
-    def test_migrate_tips_only_runs_once(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        self.make_participant('old_team')
-        self.make_tip(alice, 'old_team', '1.00')
-        new_team = self.make_team('new_team', owner='old_team')
-
-        new_team.migrate_tips()
-
-        with pytest.raises(AlreadyMigrated):
-            new_team.migrate_tips()
-
-        payment_instructions = self.db.all("SELECT * FROM payment_instructions")
-        assert len(payment_instructions) == 1
-
-    def test_migrate_tips_checks_for_multiple_teams(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        self.make_participant('old_team')
-        self.make_tip(alice, 'old_team', '1.00')
-        new_team = self.make_team('new_team', owner='old_team')
-        new_team.migrate_tips()
-
-        newer_team = self.make_team('newer_team', owner='old_team')
-
-        with pytest.raises(AlreadyMigrated):
-            newer_team.migrate_tips()
-
-        payment_instructions = self.db.all("SELECT * FROM payment_instructions")
-        assert len(payment_instructions) == 1
 
 
     # Dues, Upcoming Payment
