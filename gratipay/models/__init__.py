@@ -18,6 +18,8 @@ def just_yield(obj):
 
 
 class GratipayDB(Postgres):
+    """Model the Gratipay database.
+    """
 
     def get_cursor(self, cursor=None, **kw):
         if cursor:
