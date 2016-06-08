@@ -340,6 +340,13 @@ class TestTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Please fill out the 'Team Name' field." in r.body
 
+    def test_receiving_page_basically_works(self):
+        team = self.make_team(is_approved=True)
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        alice.set_payment_instruction(team, '3.00')
+        body = self.client.GET('/TheEnterprise/receiving/', auth_as='picard').body
+        assert '100.0%' in body
+
 
     # Dues, Upcoming Payment
     # ======================
