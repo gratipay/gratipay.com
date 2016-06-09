@@ -11,8 +11,8 @@ in order to cultivate an economy of gratitude, generosity, and love.
 
 | Scope  | Location |
 |:-------|:------|
-| **About Us**<br>*customer-facing pages* | https://gratipay.com/about |
-| **company handbook**<br>*policies, procedures, etc.* | *Inside Gratipay*<br>http://inside.gratipay.com | 
+| **product**<br>*customer-facing pages* | https://gratipay.com/about |
+| **company**<br>*policies, procedures, etc.* | http://inside.gratipay.com |
 | **software** | http://gratipay.readthedocs.io/ |
 | **installation** | You're there! Read on ... |
 
