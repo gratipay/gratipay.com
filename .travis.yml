@@ -6,6 +6,7 @@ branches:
     - master
 before_install:
  - node --version
+ - git branch -vv | grep '^*'
 cache:
   directories:
     - env/bin
