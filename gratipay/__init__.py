@@ -5,13 +5,16 @@ from decimal import Decimal
 
 
 try:  # XXX This can't be right.
-    locale.setlocale(locale.LC_ALL, "en_US.utf8")
+    locale.setlocale(locale.LC_ALL, "en_US.utf8")           # Heroku
 except locale.Error:
     import sys
     if sys.platform == 'win32':
-        locale.setlocale(locale.LC_ALL, '')
+        locale.setlocale(locale.LC_ALL, '')                 # Windows
     else:
-        locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+        try:
+            locale.setlocale(locale.LC_ALL, "en_US.UTF-8")  # Mac OS
+        except locale.Error:
+            locale.setlocale(locale.LC_ALL, "C.UTF-8")      # Read the Docs
 
 
 class NotSane(Exception):
