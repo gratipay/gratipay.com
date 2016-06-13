@@ -5,8 +5,17 @@
 
 [Gratipay](http://gratipay.com) provides payments and payroll for open work,
 in order to cultivate an economy of gratitude, generosity, and love.
-If you'd like to learn more, check out <https://gratipay.com/about>.
-If you'd like to contribute to Gratipay, check out <http://inside.gratipay.com>.
+
+
+# Documentation
+
+| Scope  | Location |
+|:-------|:------|
+| **product**<br>*customer-facing pages* | https://gratipay.com/about |
+| **company**<br>*policies, procedures, etc.* | http://inside.gratipay.com |
+| **software** | http://gratipay.readthedocs.io/ |
+| **installation** | You're there! Read on ... |
+
 
 Quick Start
 ===========
