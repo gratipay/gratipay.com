@@ -1,5 +1,5 @@
 # Translations template for PROJECT.
-# Copyright (C) 2015 ORGANIZATION
+# Copyright (C) 2016 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # 
 # Translators:
@@ -7,8 +7,9 @@
 # Changaco <changaco@changaco.oy.lc>, 2014-2015
 # JoseLuis Torres <jl@joseluistorres.me>, 2014
 # Juan Luis Cano <juanlu001@gmail.com>, 2014
-# Marco Antonio Mora Huizar <marcomorahuizar@gmail.com>, 2014
-# Pablo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>, 2015
+# Marco Mora-Huizar <marcomorahuizar@gmail.com>, 2014
+# Pablo Roberto “Jristz” Lezaeta Reyes <prflr88@gmail.com>, 2015
+# Sergi Alonso <sseerrggii@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
@@ -72,6 +73,20 @@ msgid "Follow this link to view your receipt:"
 msgstr ""
 
 msgid "Follow this link if you want to view or modify your payments:"
+msgstr ""
+
+msgid "Identity Viewed"
+msgstr ""
+
+msgid ""
+"This is a transactional email to let you know that {a_viewer}{viewer}{_a} "
+"viewed your identity information for {a_country}{country_name}{_a} on "
+"Gratipay."
+msgstr ""
+
+msgid ""
+"This is a transactional email to let you know that {viewer} viewed your "
+"identity information for {country_name} on Gratipay."
 msgstr ""
 
 msgid "Connect to {0} on Gratipay?"
@@ -247,8 +262,8 @@ msgid "Sign out"
 msgstr ""
 
 msgid ""
-"{nowrap}You have until October 1 to{_nowrap} {nowrap}{a}apply for a 1.0 "
-"payout{_a}{_nowrap}."
+"{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available "
+"{a2}indefinitely{_a}{_nowrap}."
 msgstr ""
 
 msgid ""
@@ -297,10 +312,13 @@ msgstr "Equipo"
 msgid "Amount ($)"
 msgstr ""
 
-msgid "Last Set"
+msgid "Due ($)"
 msgstr ""
 
 msgid "First Set"
+msgstr ""
+
+msgid "{0} ago"
 msgstr ""
 
 msgid "Previous"
@@ -342,6 +360,9 @@ msgid "Credit Card"
 msgstr "Tarjeta de Crédito"
 
 msgid "PayPal"
+msgstr ""
+
+msgid "verified in: {country}"
 msgstr ""
 
 msgid "Weekly"
@@ -403,6 +424,18 @@ msgstr "¡Nosotros financiamos Gratipay únicamente a través de tus pagos volun
 msgid "Learn more"
 msgstr "Aprender más"
 
+msgid "Receiving"
+msgstr "Recibiendo"
+
+msgid "Sharing"
+msgstr ""
+
+msgid "Joined {ago}"
+msgstr ""
+
+msgid "Applied {ago}"
+msgstr ""
+
 msgid "Teams"
 msgstr "Equipos"
 
@@ -436,8 +469,7 @@ msgstr ""
 
 msgid ""
 "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout "
-"threshold of {minimum}{_b}, and will be refunded to the original donors on "
-"October 8."
+"threshold of {minimum}{_b}."
 msgstr ""
 
 msgid "You do not have a balance left over from Gratipay 1.0."
@@ -475,18 +507,12 @@ msgid ""
 "{a}support@gratipay.com{_a}."
 msgstr ""
 
-msgid "Your balance will be refunded to the original donors on October 8."
-msgstr ""
-
 msgid "Apply for a payout"
 msgstr ""
 
 msgid ""
 "Please {a}connect a PayPal account{_a} and then return here to apply for "
 "payout."
-msgstr ""
-
-msgid "You have until {b}October 1 at 11:59 PM UTC{_b} to apply for a payout."
 msgstr ""
 
 msgid ""
@@ -499,12 +525,6 @@ msgid_plural ""
 "for a new Team{_a} instead of a one-time payout."
 msgstr[0] ""
 msgstr[1] ""
-
-msgid ""
-"The deadline for 1.0 payout applications was October 1, 2015 at 11:59 PM "
-"UTC, and is now passed. Your balance will be refunded to the original donors"
-" on October 8."
-msgstr ""
 
 msgid "Approved"
 msgstr ""
@@ -542,12 +562,6 @@ msgstr ""
 msgid "owned by {a}{owner}{_a}"
 msgstr ""
 
-msgid "Receiving"
-msgstr "Recibiendo"
-
-msgid "Sharing"
-msgstr ""
-
 msgid "You must sign in to apply for a new Team."
 msgstr ""
 
@@ -560,11 +574,14 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-msgid "Thanks! Your public review ticket is:"
+msgid "Thanks! Your public team page is:"
+msgstr ""
+
+msgid "And your public review ticket is:"
 msgstr ""
 
 msgid ""
-"You can track and participate in our review process there. We will send a "
+"You can watch and participate in our review process there. We will send a "
 "notification to {email} when we finish our review."
 msgstr ""
 
@@ -572,6 +589,19 @@ msgid "Thanks for applying!"
 msgstr ""
 
 msgid "Team Name"
+msgstr ""
+
+msgid ""
+"At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
+"periods (.), comma (,) and whitespace."
+msgstr ""
+
+msgid "Image"
+msgstr ""
+
+msgid ""
+"PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and"
+" 48 x 48 (with original saved for later)."
 msgstr ""
 
 msgid "Product or Service"
@@ -589,7 +619,9 @@ msgstr ""
 msgid "Self-onboarding Documentation URL"
 msgstr ""
 
-msgid "Where can people find instructions on how to do your work for you?"
+msgid ""
+"Where can people find instructions on how to do your work for you "
+"({0}example{1})? "
 msgstr ""
 
 msgid "To-do URL"
@@ -654,16 +686,13 @@ msgstr "Seguro que quieres desconectar?"
 msgid "Yes!"
 msgstr "¡Si!"
 
-msgid "Joined {ago}"
-msgstr ""
-
-msgid "Applied {ago}"
-msgstr ""
-
 msgid "Onboarding"
 msgstr ""
 
 msgid "To-do"
+msgstr ""
+
+msgid "{a} Edit team {_a}"
 msgstr ""
 
 msgid "owned by {a}~{owner}{_a}"
@@ -678,7 +707,34 @@ msgstr ""
 msgid "Thank you so much for supporting {0}!"
 msgstr ""
 
-msgid "You have successfully canceled your payment to {0}."
+msgid "You have canceled your payment to {0}."
+msgstr ""
+
+msgid "You can't edit a closed team."
+msgstr ""
+
+msgid "You can't edit a rejected team."
+msgstr ""
+
+msgid "Please upload a PNG or JPG image."
+msgstr ""
+
+msgid "Please fill out the '{}' field."
+msgstr ""
+
+msgid "Please enter an http[s]:// URL for the '{}' field."
+msgstr ""
+
+msgid "Please upload an image smaller than 100 kB."
+msgstr ""
+
+msgid "Sorry, there was a problem saving your image. Please try again."
+msgstr ""
+
+msgid "Edit your team"
+msgstr ""
+
+msgid "Modify"
 msgstr ""
 
 msgid "User not found."
@@ -740,10 +796,7 @@ msgstr "Introduce un nombre de usuario Gratipay"
 msgid "Add"
 msgstr "Añadir"
 
-msgid "You receive {0} per week"
-msgstr ""
-
-msgid "{0} receives {1} per week"
+msgid "{0} receives {1} per week from {2} ~users."
 msgstr ""
 
 msgid "Dollars Received Per Week"
@@ -755,11 +808,11 @@ msgstr "semanas"
 msgid "Number of Payments Per Week"
 msgstr ""
 
-msgid "Tips Received, by Number of Tips"
-msgstr "Tips recibidos, por cantidad de tip"
+msgid "Payments Received, by Number of Payments"
+msgstr ""
 
-msgid "Tips Received, by Dollar Amount"
-msgstr "Tips recibidos, por cantidad en dólares"
+msgid "Payments Received, by Dollar Amount"
+msgstr ""
 
 msgid "About"
 msgstr "Acerca"
@@ -965,66 +1018,11 @@ msgstr ""
 msgid "Sorry, you must agree to the terms of service."
 msgstr ""
 
-msgid "Please fill out the '{}' field."
-msgstr ""
-
-msgid "Please enter an http[s]:// URL for the '{}' field."
+msgid "Sorry, your team name is invalid."
 msgstr ""
 
 msgid "Sorry, there is already a team using '{}'."
 msgstr ""
-
-msgid "Identity Verification"
-msgstr "Verificación de Identidad"
-
-msgid "Invalid date of birth."
-msgstr ""
-
-msgid "Unable to verify your identity"
-msgstr ""
-
-msgid ""
-"Your identity is verified, which means you may add a {0}bank account{1}."
-msgstr ""
-
-msgid "Your Legal Name"
-msgstr "Tu Nombre Legal Completo"
-
-msgid "Address"
-msgstr ""
-
-msgid "Address (second line)"
-msgstr ""
-
-msgid "City"
-msgstr "Ciudad"
-
-msgid "State or Province"
-msgstr "Estado o Provincia"
-
-msgid "ZIP or Postal Code"
-msgstr "Código Postal"
-
-msgid "Country"
-msgstr "País"
-
-msgid "non-US?"
-msgstr "¿ciudadano no estadounidense?"
-
-msgid "Contact Phone Number"
-msgstr "Número de Teléfono de Contacto"
-
-msgid "Date of Birth"
-msgstr "Fecha de Nacimiento"
-
-msgid "YYYY-MM-DD"
-msgstr ""
-
-msgid "Last four SSN digits"
-msgstr "Últimos cuatro dígitos de número de seguro social"
-
-msgid "(Not required)"
-msgstr "(No requerido)"
 
 msgid "You don't have a profile statement in this language yet."
 msgstr "No tienes una declaración de perfil en este lenguaje todavía."
@@ -1036,6 +1034,9 @@ msgid "with {n} other"
 msgid_plural "with {n} others"
 msgstr[0] "con otro"
 msgstr[1] "con {n} más"
+
+msgid "Invalid team slug."
+msgstr ""
 
 msgid "Your privacy setting has been changed."
 msgstr ""
@@ -1146,10 +1147,10 @@ msgstr ""
 msgid "Cancelled"
 msgstr ""
 
-msgid "These are giving that you recently cancelled."
+msgid "These are payments that you recently cancelled."
 msgstr ""
 
-msgid "No giving to show"
+msgid "No results to show"
 msgstr ""
 
 msgid "Export History"
@@ -1224,6 +1225,60 @@ msgstr "Recibo"
 msgid "No transactions to show."
 msgstr ""
 
+msgid "ID Type"
+msgstr ""
+
+msgid "Tax ID"
+msgstr ""
+
+msgid "Passport"
+msgstr ""
+
+msgid "Driver's License"
+msgstr ""
+
+msgid "ID Number"
+msgstr ""
+
+msgid "Full Legal Name"
+msgstr ""
+
+msgid "Date of Birth"
+msgstr "Fecha de Nacimiento"
+
+msgid "Address, Line 1"
+msgstr ""
+
+msgid "Address, Line 2"
+msgstr ""
+
+msgid "City"
+msgstr "Ciudad"
+
+msgid "Region (State, Province)"
+msgstr ""
+
+msgid "Postcode (ZIP)"
+msgstr ""
+
+msgid "Danger Zone"
+msgstr ""
+
+msgid "Remove This Identity"
+msgstr ""
+
+msgid "Identities"
+msgstr ""
+
+msgid "Verified"
+msgstr ""
+
+msgid "Add Identity"
+msgstr ""
+
+msgid "Which Country?"
+msgstr ""
+
 msgid "The address cannot be empty."
 msgstr ""
 
@@ -1272,10 +1327,12 @@ msgstr "CVV"
 msgid "This verification code is invalid."
 msgstr ""
 
+msgid "ZIP or Postal Code"
+msgstr "Código Postal"
+
 msgid ""
 "To minimize processing fees, we charge your credit card at least $10 at a "
-"time (anything extra stays in Gratipay to use in future weeks). {0}Read "
-"More{1}"
+"time. {0}Read more ...{1}"
 msgstr ""
 
 msgid "Full Name on Card"

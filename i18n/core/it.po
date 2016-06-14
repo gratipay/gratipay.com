@@ -617,7 +617,7 @@ msgstr "URL Documentazione Formazione Iniziale Autonoma"
 msgid ""
 "Where can people find instructions on how to do your work for you "
 "({0}example{1})? "
-msgstr ""
+msgstr "Dove si possono trovare istruzioni su come fare del lavoro per te({0}example{1})?"
 
 msgid "To-do URL"
 msgstr "URL cose da fare"
