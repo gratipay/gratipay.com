@@ -1,1 +1,1 @@
-web: gunicorn gratipay.main:website --bind :$PORT $GUNICORN_OPTS
+web: gunicorn gratipay.main:website --conf hide_gunicorn_version.py --bind :$PORT $GUNICORN_OPTS
