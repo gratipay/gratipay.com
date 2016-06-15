@@ -489,6 +489,13 @@ class Tests(Harness):
         assert alice.is_free_rider is None
         assert Participant.from_username('alice').is_free_rider is None
 
+    def test_spi_sets_id_fields(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team()
+        actual = alice.set_payment_instruction(team, '1.00')
+        assert actual['participant_id'] == alice.id
+        assert actual['team_id'] == team.id
+
 
     # get_teams - gt
 
