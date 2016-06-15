@@ -5,8 +5,10 @@ import json
 
 from aspen import Response
 
+import braintree
 import mock
 import pytest
+from braintree.test.nonces import Nonces
 from gratipay.security.user import SESSION
 from gratipay.testing import Harness
 from gratipay.wireup import find_files
@@ -19,7 +21,19 @@ class TestPages(Harness):
 
     def browse(self, setup=None, **kw):
         alice = self.make_participant('alice', claimed_time='now')
-        exchange_id = self.make_exchange('braintree-cc', 19, 0, alice)
+
+        # for pricing page
+        self.make_team('Gratipay')
+
+        # for the receipt page
+        result = braintree.PaymentMethod.create({
+            "customer_id": alice.get_braintree_account().id,
+            "payment_method_nonce": Nonces.Transactable
+        })
+        assert result.is_success
+        address = result.payment_method.token
+        exchange_id = self.make_exchange('braintree-cc', 19, 0, alice, address=address)
+
         if setup:
             setup(alice)
         i = len(self.client.www_root)
