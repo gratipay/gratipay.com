@@ -9,11 +9,11 @@ class Tests(Harness):
 
     def setUp(self):
         self.admin = self.make_participant('admin', is_admin=True)
-        alice = self.make_participant('alice', claimed_time='now')
-        bob = self.make_participant('bob', claimed_time='now')
+        self.alice = self.make_participant('alice', claimed_time='now')
+        self.bob = self.make_participant('bob', claimed_time='now')
         self.make_participant('old_team')
-        self.make_tip(alice, 'old_team', '1.00')
-        self.make_tip(bob, 'old_team', '2.00')
+        self.make_tip(self.alice, 'old_team', '1.00')
+        self.make_tip(self.bob, 'old_team', '2.00')
         self.new_team = self.make_team('new_team', owner='old_team', is_approved=True)
 
     def setTeamStatus(self, status):
@@ -31,13 +31,18 @@ class Tests(Harness):
     def test_mt_migrates_tips_to_payment_instructions(self):
         assert self.new_team.migrate_tips() == 2
 
-        payment_instructions = self.db.all("SELECT * FROM payment_instructions ORDER BY participant ASC")
+        payment_instructions = self.db.all("SELECT * FROM payment_instructions "
+                                           "ORDER BY participant ASC")
         assert len(payment_instructions) == 2
         assert payment_instructions[0].participant == 'alice'
+        assert payment_instructions[0].participant_id == self.alice.id
         assert payment_instructions[0].team == 'new_team'
+        assert payment_instructions[0].team_id == self.new_team.id
         assert payment_instructions[0].amount == 1
         assert payment_instructions[1].participant == 'bob'
+        assert payment_instructions[1].participant_id == self.bob.id
         assert payment_instructions[1].team == 'new_team'
+        assert payment_instructions[1].team_id == self.new_team.id
         assert payment_instructions[1].amount == 2
 
     def test_mt_only_runs_once(self):
