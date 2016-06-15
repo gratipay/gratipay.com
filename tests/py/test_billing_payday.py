@@ -31,7 +31,7 @@ class TestPayday(BillingHarness):
 
         assert picard.balance == D(MINIMUM_CHARGE)
         assert obama.balance == D('0.00')
-        assert obama.get_due('TheEnterprise') == D('0.00')
+        assert obama.get_due(Enterprise) == D('0.00')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_moves_money_cumulative_above_min_charge(self, fch):
@@ -47,7 +47,7 @@ class TestPayday(BillingHarness):
 
         """)
 
-        assert self.obama.get_due('TheEnterprise') == D('5.00')
+        assert self.obama.get_due(Enterprise) == D('5.00')
 
         fch.return_value = {}
         Payday.start().run()
@@ -57,7 +57,7 @@ class TestPayday(BillingHarness):
 
         assert picard.balance == D('10.00')
         assert obama.balance == D('0.00')
-        assert obama.get_due('TheEnterprise') == D('0.00')
+        assert obama.get_due(Enterprise) == D('0.00')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_preserves_due_until_charged(self, fch):
@@ -67,7 +67,7 @@ class TestPayday(BillingHarness):
         fch.return_value = {}
         Payday.start().run()    # payday 0
 
-        assert self.obama.get_due('TheEnterprise') == D('2.00')
+        assert self.obama.get_due(Enterprise) == D('2.00')
 
         self.obama.set_payment_instruction(Enterprise, '3.00')  # < MINIMUM_CHARGE
         self.obama.set_payment_instruction(Enterprise, '2.50')  # cumulatively still < MINIMUM_CHARGE
@@ -75,19 +75,19 @@ class TestPayday(BillingHarness):
         fch.return_value = {}
         Payday.start().run()    # payday 1
 
-        assert self.obama.get_due('TheEnterprise') == D('4.50')
+        assert self.obama.get_due(Enterprise) == D('4.50')
 
         fch.return_value = {}
         Payday.start().run()    # payday 2
 
-        assert self.obama.get_due('TheEnterprise') == D('7.00')
+        assert self.obama.get_due(Enterprise) == D('7.00')
 
         self.obama.set_payment_instruction(Enterprise, '1.00')  # cumulatively still < MINIMUM_CHARGE
 
         fch.return_value = {}
         Payday.start().run()    # payday 3
 
-        assert self.obama.get_due('TheEnterprise') == D('8.00')
+        assert self.obama.get_due(Enterprise) == D('8.00')
 
         self.obama.set_payment_instruction(Enterprise, '4.00')  # cumulatively > MINIMUM_CHARGE
 
@@ -99,29 +99,29 @@ class TestPayday(BillingHarness):
 
         assert picard.balance == D('12.00')
         assert obama.balance == D('0.00')
-        assert obama.get_due('TheEnterprise') == D('0.00')
+        assert obama.get_due(Enterprise) == D('0.00')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_only_adds_to_dues_if_valid_cc_exists(self, fch):
         Enterprise = self.make_team(is_approved=True)
         self.obama.set_payment_instruction(Enterprise, '4.00')
-        assert self.obama.get_due('TheEnterprise') == D('0.00')
+        assert self.obama.get_due(Enterprise) == D('0.00')
 
         fch.return_value = {}
         Payday.start().run()    # payday 0
 
-        assert self.obama.get_due('TheEnterprise') == D('4.00')
+        assert self.obama.get_due(Enterprise) == D('4.00')
 
         fch.return_value = {}
         self.obama_route.update_error("failed") # card fails
         Payday.start().run()    # payday 1
 
-        assert self.obama.get_due('TheEnterprise') == D('4.00')
+        assert self.obama.get_due(Enterprise) == D('4.00')
 
         fch.return_value = {}
         Payday.start().run()    # payday 2
 
-        assert self.obama.get_due('TheEnterprise') == D('4.00')
+        assert self.obama.get_due(Enterprise) == D('4.00')
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     def test_payday_does_not_move_money_below_min_charge(self, fch):
@@ -135,7 +135,7 @@ class TestPayday(BillingHarness):
 
         assert picard.balance == D('0.00')
         assert obama.balance == D('0.00')
-        assert obama.get_due('TheEnterprise') == D('6.00')
+        assert obama.get_due(Enterprise) == D('6.00')
 
 
     @mock.patch.object(Payday, 'fetch_card_holds')

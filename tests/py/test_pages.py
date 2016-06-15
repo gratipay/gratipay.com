@@ -171,16 +171,16 @@ class TestPages(Harness):
         assert expected in actual
 
     def test_giving_page(self):
-        self.make_team(is_approved=True)
+        Enterprise = self.make_team(is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_payment_instruction('TheEnterprise', "1.00")
+        alice.set_payment_instruction(Enterprise, "1.00")
         assert "The Enterprise" in self.client.GET("/~alice/giving/", auth_as="alice").body
 
     def test_giving_page_shows_cancelled(self):
-        self.make_team(is_approved=True)
+        Enterprise = self.make_team(is_approved=True)
         alice = self.make_participant('alice', claimed_time='now')
-        alice.set_payment_instruction('TheEnterprise', "1.00")
-        alice.set_payment_instruction('TheEnterprise', "0.00")
+        alice.set_payment_instruction(Enterprise, "1.00")
+        alice.set_payment_instruction(Enterprise, "0.00")
         assert "Cancelled" in self.client.GET("/~alice/giving/", auth_as="alice").body
 
     def test_new_participant_can_edit_profile(self):

@@ -5,7 +5,7 @@
     </div>
 {% else %}
     <div class="cta">
-        {% set payment_instruction = user.participant.get_payment_instruction(team.slug) %}
+        {% set payment_instruction = user.participant.get_payment_instruction(team) %}
         <h2>{{ _('You Give') }}</h2>
         <div class="js-edit your-payment {{ 'anon' if user.ANON }}" data-team="{{ team.id }}">
             <div class="view">
