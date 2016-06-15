@@ -235,3 +235,8 @@ class TestPages(Harness):
     def test_dashboard_barely_works(self):
         self.make_participant('admin', is_admin=True)
         assert 'Unreviewed Accounts' in self.client.GET('/dashboard/', auth_as='admin').body
+
+    def test_your_payment_template_basically_works(self):
+        self.make_team(is_approved=True)
+        self.make_participant('alice')
+        assert 'your-payment' in self.client.GET('/TheEnterprise/', auth_as='alice').body
