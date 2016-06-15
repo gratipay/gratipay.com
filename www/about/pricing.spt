@@ -1,7 +1,10 @@
 # encoding=utf8
+from gratipay.models.team import Team
 [---]
 banner = _("About")
 title = _("Pricing")
+
+Gratipay = Team.from_slug('Gratipay')
 [---] text/html
 {% extends "templates/about-basic-info.html" %}
 {% block content %}
@@ -32,7 +35,7 @@ href="http://en.wikipedia.org/wiki/Pay_what_you_want">pay-what-you-want</a>.&rdq
 
 {% if not user.ANON %}
     {% set p = user.participant %}
-    {% set payment = p.get_payment_instruction('Gratipay')['amount'] %}
+    {% set payment = p.get_payment_instruction(Gratipay)['amount'] %}
 
     <div class="payment">
     {% if payment > 0 %}
