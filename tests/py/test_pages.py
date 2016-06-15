@@ -40,7 +40,7 @@ class TestPages(Harness):
             assert '/%' not in url
             if 'index' in url.split('/')[-1]:
                 url = url.rsplit('/', 1)[0] + '/'
-                urls.append(url)
+            urls.append(url)
         urls.extend("""
            /about/me
            /about/me/
