@@ -16,7 +16,6 @@ from gratipay.exceptions import (
     UsernameAlreadyTaken,
     UsernameContainsInvalidCharacters,
     UsernameIsRestricted,
-    NoTeam,
     BadAmount,
 )
 from gratipay.models.account_elsewhere import AccountElsewhere
@@ -472,10 +471,6 @@ class Tests(Harness):
         team = self.make_team()
         self.assertRaises(BadAmount, alice.set_payment_instruction, team, '-0.01')
 
-    def test_spi_fails_to_set_a_payment_instruction_to_an_unknown_team(self):
-        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
-        self.assertRaises(NoTeam, alice.set_payment_instruction, 'The Stargazer', '1.00')
-
     def test_spi_is_free_rider_defaults_to_none(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         assert alice.is_free_rider is None
@@ -493,6 +488,13 @@ class Tests(Harness):
         alice.set_payment_instruction(gratipay, '0.00')
         assert alice.is_free_rider is None
         assert Participant.from_username('alice').is_free_rider is None
+
+    def test_spi_sets_id_fields(self):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        team = self.make_team()
+        actual = alice.set_payment_instruction(team, '1.00')
+        assert actual['participant_id'] == alice.id
+        assert actual['team_id'] == team.id
 
 
     # get_teams - gt
@@ -532,7 +534,7 @@ class Tests(Harness):
         assert carl.giving == Decimal('0.00')
 
         funded_tip = self.db.one("SELECT * FROM payment_instructions WHERE is_funded ORDER BY id")
-        assert funded_tip.participant == alice.username
+        assert funded_tip.participant_id == alice.id
 
     def test_giving_only_includes_the_latest_payment_instruction(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
@@ -618,10 +620,10 @@ class Tests(Harness):
 
             UPDATE payment_instructions ppi
                SET due = '5.00'
-             WHERE ppi.participant = 'alice'
-               AND ppi.team = %s
+             WHERE ppi.participant_id = %s
+               AND ppi.team_id = %s
 
-        """, (team.slug, ))
+        """, (alice.id, team.id, ))
 
         assert alice.get_due(team) == Decimal('5.00')
 
