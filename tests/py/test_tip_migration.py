@@ -34,14 +34,10 @@ class Tests(Harness):
         payment_instructions = self.db.all("SELECT * FROM payment_instructions "
                                            "ORDER BY participant_id ASC")
         assert len(payment_instructions) == 2
-        assert payment_instructions[0].participant == 'alice'
         assert payment_instructions[0].participant_id == self.alice.id
-        assert payment_instructions[0].team == 'new_team'
         assert payment_instructions[0].team_id == self.new_team.id
         assert payment_instructions[0].amount == 1
-        assert payment_instructions[1].participant == 'bob'
         assert payment_instructions[1].participant_id == self.bob.id
-        assert payment_instructions[1].team == 'new_team'
         assert payment_instructions[1].team_id == self.new_team.id
         assert payment_instructions[1].amount == 2
 

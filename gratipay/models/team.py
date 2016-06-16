@@ -329,13 +329,10 @@ class Team(Model):
         WITH rows AS (
 
             INSERT INTO payment_instructions
-                        (ctime, mtime, participant, participant_id, team, team_id, amount,
-                                                                                         is_funded)
+                        (ctime, mtime, participant_id, team_id, amount, is_funded)
                  SELECT ct.ctime
                       , ct.mtime
-                      , ct.tipper
                       , (SELECT id FROM participants WHERE username=ct.tipper)
-                      , %(slug)s
                       , %(team_id)s
                       , ct.amount
                       , ct.is_funded
@@ -348,7 +345,7 @@ class Team(Model):
               RETURNING 1
 
         ) SELECT count(*) FROM rows;
-        """, {'slug': self.slug, 'team_id': self.id, 'owner': self.owner})
+        """, {'team_id': self.id, 'owner': self.owner})
 
 
     # Images
