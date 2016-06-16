@@ -84,9 +84,11 @@ class TestClosing(Harness):
     def test_cpi_clears_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         alice.set_payment_instruction(self.make_team(), D('1.00'))
-        npayment_instructions = lambda: self.db.one("SELECT count(*) "
-                                                    "FROM current_payment_instructions "
-                                                    "WHERE participant='alice' AND amount > 0")
+        npayment_instructions = lambda: self.db.one( "SELECT count(*) "
+                                                     "FROM current_payment_instructions "
+                                                     "WHERE participant_id=%s AND amount > 0"
+                                                   , (alice.id,)
+                                                    )
         assert npayment_instructions() == 1
         with self.db.get_cursor() as cursor:
             alice.clear_payment_instructions(cursor)
@@ -98,7 +100,7 @@ class TestClosing(Harness):
         alice.set_payment_instruction(A, D('1.00'))
         alice.set_payment_instruction(A, D('0.00'))
         npayment_instructions = lambda: self.db.one("SELECT count(*) FROM payment_instructions "
-                                                    "WHERE participant='alice'")
+                                                    "WHERE participant_id=%s", (alice.id,))
         assert npayment_instructions() == 2
         with self.db.get_cursor() as cursor:
             alice.clear_payment_instructions(cursor)
@@ -107,7 +109,7 @@ class TestClosing(Harness):
     def test_cpi_doesnt_zero_when_theres_no_payment_instruction(self):
         alice = self.make_participant('alice')
         npayment_instructions = lambda: self.db.one("SELECT count(*) FROM payment_instructions "
-                                                    "WHERE participant='alice'")
+                                                    "WHERE participant_id=%s", (alice.id,))
         assert npayment_instructions() == 0
         with self.db.get_cursor() as cursor:
             alice.clear_payment_instructions(cursor)
@@ -120,9 +122,11 @@ class TestClosing(Harness):
         alice.set_payment_instruction(self.make_team('C'), D('1.00'))
         alice.set_payment_instruction(self.make_team('D'), D('1.00'))
         alice.set_payment_instruction(self.make_team('E'), D('1.00'))
-        npayment_instructions = lambda: self.db.one("SELECT count(*) "
-                                                    "FROM current_payment_instructions "
-                                                    "WHERE participant='alice' AND amount > 0")
+        npayment_instructions = lambda: self.db.one( "SELECT count(*) "
+                                                     "FROM current_payment_instructions "
+                                                     "WHERE participant_id=%s AND amount > 0"
+                                                   , (alice.id,)
+                                                    )
         assert npayment_instructions() == 5
         with self.db.get_cursor() as cursor:
             alice.clear_payment_instructions(cursor)

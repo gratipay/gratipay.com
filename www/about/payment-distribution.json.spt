@@ -8,8 +8,8 @@ amounts = website.db.all("""
     SELECT amount
       FROM (SELECT amount
               FROM current_payment_instructions cpi
-              JOIN participants p ON p.username = cpi.participant
-              JOIN teams t ON t.slug = cpi.team
+              JOIN participants p ON p.id = cpi.participant_id
+              JOIN teams t ON t.id = cpi.team_id
              WHERE cpi.is_funded
                AND t.is_approved
                AND NOT (p.is_suspicious IS true)
