@@ -112,15 +112,15 @@ class Team(Model):
         SQL = """
             SELECT amount
                  , count(amount) AS nreceiving_from
-              FROM ( SELECT DISTINCT ON (participant)
+              FROM ( SELECT DISTINCT ON (participant_id)
                             amount
-                          , participant
+                          , participant_id
                        FROM payment_instructions
-                       JOIN participants p ON p.username = participant
-                      WHERE team=%s
+                       JOIN participants p ON p.id = participant_id
+                      WHERE team_id=%s
                         AND is_funded
                         AND p.is_suspicious IS NOT true
-                   ORDER BY participant
+                   ORDER BY participant_id
                           , mtime DESC
                     ) AS foo
              WHERE amount > 0
@@ -132,7 +132,7 @@ class Team(Model):
 
         npatrons = 0.0  # float to trigger float division
         total_amount = Decimal('0.00')
-        for rec in self.db.all(SQL, (self.slug,)):
+        for rec in self.db.all(SQL, (self.id,)):
             tip_amounts.append([ rec.amount
                                , rec.nreceiving_from
                                , rec.amount * rec.nreceiving_from
@@ -180,7 +180,7 @@ class Team(Model):
             WITH our_cpi AS (
                 SELECT due, is_funded
                   FROM current_payment_instructions cpi
-                 WHERE team=%(slug)s
+                 WHERE team_id=%(team_id)s
             )
             SELECT (
                     SELECT COALESCE(SUM(due), 0)
@@ -192,7 +192,7 @@ class Team(Model):
                       FROM our_cpi
                      WHERE NOT is_funded
                    ) AS unfunded
-        """, {'slug': self.slug})
+        """, {'team_id': self.id})
 
         return rec.funded, rec.unfunded
 
@@ -201,16 +201,16 @@ class Team(Model):
         return self.db.one("""
             SELECT COALESCE(SUM(amount + due), 0)
               FROM current_payment_instructions cpi
-              JOIN participants p ON cpi.participant = p.username
-             WHERE team = %(slug)s
-               AND is_funded                        -- Check whether the payment is funded
-               AND (                                -- Check whether the user will hit the minimum charge
+              JOIN participants p ON cpi.participant_id = p.id
+             WHERE team_id = %(team_id)s
+               AND is_funded                -- Check whether the payment is funded
+               AND (                        -- Check whether the user will hit the minimum charge
                     SELECT SUM(amount + due)
                       FROM current_payment_instructions cpi2
-                     WHERE cpi2.participant = p.username
+                     WHERE cpi2.participant_id = p.id
                        AND cpi2.is_funded
                    ) >= %(mcharge)s
-        """, {'slug': self.slug, 'mcharge': MINIMUM_CHARGE})
+        """, {'team_id': self.id, 'mcharge': MINIMUM_CHARGE})
 
 
     def create_github_review_issue(self):
@@ -257,8 +257,8 @@ class Team(Model):
             WITH our_receiving AS (
                      SELECT amount
                        FROM current_payment_instructions
-                       JOIN participants p ON p.username = participant
-                      WHERE team = %(slug)s
+                       JOIN participants p ON p.id = participant_id
+                      WHERE team_id = %(team_id)s
                         AND p.is_suspicious IS NOT true
                         AND amount > 0
                         AND is_funded
@@ -268,9 +268,9 @@ class Team(Model):
                  , nreceiving_from = COALESCE((SELECT count(*) FROM our_receiving), 0)
                  , distributing = COALESCE((SELECT sum(amount) FROM our_receiving), 0)
                  , ndistributing_to = 1
-             WHERE t.slug = %(slug)s
+             WHERE t.id = %(team_id)s
          RETURNING receiving, nreceiving_from, distributing, ndistributing_to
-        """, dict(slug=self.slug))
+        """, dict(team_id=self.id))
 
 
         # This next step is easy for now since we don't have payroll.
@@ -316,7 +316,7 @@ class Team(Model):
         payment_instructions = self.db.all("""
             SELECT pi.*
               FROM payment_instructions pi
-              JOIN teams t ON t.slug = pi.team
+              JOIN teams t ON t.id = pi.team_id
              WHERE t.owner = %s
                AND pi.ctime < t.ctime
         """, (self.owner, ))
@@ -413,14 +413,14 @@ def migrate_all_tips(db, print=print):
 
     """
     teams = db.all("""
-        SELECT distinct ON (t.slug) t.*::teams
+        SELECT distinct ON (t.id) t.*::teams
           FROM teams t
           JOIN tips ON t.owner = tips.tippee    -- Only fetch teams whose owners had tips under Gratipay 1.0
          WHERE t.is_approved IS TRUE            -- Only fetch approved teams
            AND NOT EXISTS (                     -- Make sure tips haven't been migrated for any teams with same owner
                 SELECT 1
                   FROM payment_instructions pi
-                  JOIN teams t2 ON t2.slug = pi.team
+                  JOIN teams t2 ON t2.id = pi.team_id
                  WHERE t2.owner = t.owner
                    AND pi.ctime < t2.ctime
            )
