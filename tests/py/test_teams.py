@@ -396,7 +396,7 @@ class TestTeams(Harness):
 
         funded_payment_instruction = self.db.one("SELECT * FROM payment_instructions "
                                                  "WHERE is_funded ORDER BY id")
-        assert funded_payment_instruction.participant == alice.username
+        assert funded_payment_instruction.participant_id == alice.id
 
     def test_receiving_only_includes_latest_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')

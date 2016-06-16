@@ -32,7 +32,7 @@ class Tests(Harness):
         assert self.new_team.migrate_tips() == 2
 
         payment_instructions = self.db.all("SELECT * FROM payment_instructions "
-                                           "ORDER BY participant ASC")
+                                           "ORDER BY participant_id ASC")
         assert len(payment_instructions) == 2
         assert payment_instructions[0].participant == 'alice'
         assert payment_instructions[0].participant_id == self.alice.id

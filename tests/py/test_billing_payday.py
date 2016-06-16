@@ -42,10 +42,10 @@ class TestPayday(BillingHarness):
 
             UPDATE payment_instructions ppi
                SET due = '5.00'
-             WHERE ppi.participant = 'obama'
-               AND ppi.team = 'TheEnterprise'
+             WHERE ppi.participant_id = %s
+               AND ppi.team_id = %s
 
-        """)
+        """, (self.obama.id, Enterprise.id))
 
         assert self.obama.get_due(Enterprise) == D('5.00')
 
