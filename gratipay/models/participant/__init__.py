@@ -839,7 +839,7 @@ class Participant(Model, mixins.Identity):
         NEW_PAYMENT_INSTRUCTION = """\
 
             INSERT INTO payment_instructions
-                        (ctime, participant, participant_id, team, team_id, amount)
+                        (ctime, participant_id, team_id, amount)
                  VALUES ( COALESCE (( SELECT ctime
                                         FROM payment_instructions
                                        WHERE (   participant_id=%(participant_id)s
@@ -847,13 +847,12 @@ class Participant(Model, mixins.Identity):
                                               )
                                        LIMIT 1
                                       ), CURRENT_TIMESTAMP)
-                        , %(participant)s, %(participant_id)s, %(team)s, %(team_id)s, %(amount)s
+                        , %(participant_id)s, %(team_id)s, %(amount)s
                          )
               RETURNING *
 
         """
-        args = dict(participant=self.username, participant_id=self.id, team=team.slug,
-                                                                    team_id=team.id, amount=amount)
+        args = dict(participant_id=self.id, team_id=team.id, amount=amount)
         t = (cursor or self.db).one(NEW_PAYMENT_INSTRUCTION, args)
         t_dict = t._asdict()
 
