@@ -534,7 +534,7 @@ class Tests(Harness):
         assert carl.giving == Decimal('0.00')
 
         funded_tip = self.db.one("SELECT * FROM payment_instructions WHERE is_funded ORDER BY id")
-        assert funded_tip.participant == alice.username
+        assert funded_tip.participant_id == alice.id
 
     def test_giving_only_includes_the_latest_payment_instruction(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
@@ -620,10 +620,10 @@ class Tests(Harness):
 
             UPDATE payment_instructions ppi
                SET due = '5.00'
-             WHERE ppi.participant = 'alice'
-               AND ppi.team = %s
+             WHERE ppi.participant_id = %s
+               AND ppi.team_id = %s
 
-        """, (team.slug, ))
+        """, (alice.id, team.id, ))
 
         assert alice.get_due(team) == Decimal('5.00')
 
