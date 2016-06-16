@@ -322,13 +322,13 @@ class Participant(Model, mixins.Identity):
 
             SELECT ( SELECT teams.*::teams
                        FROM teams
-                      WHERE slug=team
+                      WHERE id=team_id
                     ) AS team
               FROM current_payment_instructions
-             WHERE participant = %s
+             WHERE participant_id = %s
                AND amount > 0
 
-        """, (self.username,))
+        """, (self.id,))
         for team in teams:
             self.set_payment_instruction(team, '0.00', update_self=False, cursor=cursor)
 
@@ -842,7 +842,9 @@ class Participant(Model, mixins.Identity):
                         (ctime, participant, participant_id, team, team_id, amount)
                  VALUES ( COALESCE (( SELECT ctime
                                         FROM payment_instructions
-                                       WHERE (participant=%(participant)s AND team=%(team)s)
+                                       WHERE (   participant_id=%(participant_id)s
+                                             AND team_id=%(team_id)s
+                                              )
                                        LIMIT 1
                                       ), CURRENT_TIMESTAMP)
                         , %(participant)s, %(participant_id)s, %(team)s, %(team_id)s, %(amount)s
@@ -857,9 +859,9 @@ class Participant(Model, mixins.Identity):
 
         if amount > 0:
             # Carry over any existing due
-            self._update_due(t_dict['team'], t_dict['id'], cursor)
+            self._update_due(t_dict['team_id'], t_dict['id'], cursor)
         else:
-            self._reset_due(t_dict['team'], cursor=cursor)
+            self._reset_due(t_dict['team_id'], cursor=cursor)
 
         if update_self:
             # Update giving amount of participant
@@ -882,12 +884,12 @@ class Participant(Model, mixins.Identity):
 
             SELECT *
               FROM payment_instructions
-             WHERE participant=%s
-               AND team=%s
+             WHERE participant_id=%s
+               AND team_id=%s
           ORDER BY mtime DESC
              LIMIT 1
 
-        """, (self.username, team.slug), back_as=dict, default=default)
+        """, (self.id, team.id), back_as=dict, default=default)
 
 
     def get_due(self, team):
@@ -897,10 +899,10 @@ class Participant(Model, mixins.Identity):
 
             SELECT due
               FROM current_payment_instructions
-             WHERE participant = %s
-               AND team = %s
+             WHERE participant_id = %s
+               AND team_id = %s
 
-        """, (self.username, team.slug))
+        """, (self.id, team.id))
 
 
     def get_giving_for_profile(self):
@@ -910,26 +912,26 @@ class Participant(Model, mixins.Identity):
         GIVING = """\
 
             SELECT * FROM (
-                SELECT DISTINCT ON (pi.team)
-                       pi.team  AS team_slug
+                SELECT DISTINCT ON (pi.team_id)
+                       t.slug AS team_slug
                      , pi.amount
                      , pi.due
                      , pi.ctime
                      , pi.mtime
                      , t.name   AS team_name
                   FROM payment_instructions pi
-                  JOIN teams t ON pi.team = t.slug
-                 WHERE participant = %s
+                  JOIN teams t ON pi.team_id = t.id
+                 WHERE participant_id = %s
                    AND t.is_approved is true
                    AND t.is_closed is not true
-              ORDER BY pi.team
+              ORDER BY pi.team_id
                      , pi.mtime DESC
             ) AS foo
             ORDER BY amount DESC
                    , team_slug
 
         """
-        giving = self.db.all(GIVING, (self.username,))
+        giving = self.db.all(GIVING, (self.id,))
 
 
         # Compute the totals.
@@ -963,7 +965,7 @@ class Participant(Model, mixins.Identity):
         with self.db.get_cursor() as cursor:
             updated_giving = self.update_giving(cursor)
             for payment_instruction in updated_giving:
-                Team.from_slug(payment_instruction.team).update_receiving(cursor)
+                Team.from_id(payment_instruction.team_id).update_receiving(cursor)
 
 
     def update_giving(self, cursor=None):
@@ -972,17 +974,17 @@ class Participant(Model, mixins.Identity):
         updated = (cursor or self.db).all("""
             UPDATE payment_instructions
                SET is_funded = %(has_credit_card)s
-             WHERE participant = %(username)s
+             WHERE participant_id = %(participant_id)s
                AND is_funded <> %(has_credit_card)s
          RETURNING *
-        """, dict(username=self.username, has_credit_card=has_credit_card))
+        """, dict(participant_id=self.id, has_credit_card=has_credit_card))
 
         r = (cursor or self.db).one("""
         WITH pi AS (
             SELECT amount
               FROM current_payment_instructions cpi
-              JOIN teams t ON t.slug = cpi.team
-             WHERE participant = %(username)s
+              JOIN teams t ON t.id = cpi.team_id
+             WHERE participant_id = %(participant_id)s
                AND amount > 0
                AND is_funded
                AND t.is_approved
@@ -990,14 +992,14 @@ class Participant(Model, mixins.Identity):
             UPDATE participants p
                SET giving = COALESCE((SELECT sum(amount) FROM pi), 0)
                  , ngiving_to = COALESCE((SELECT count(amount) FROM pi), 0)
-             WHERE p.username=%(username)s
+             WHERE p.id=%(participant_id)s
          RETURNING giving, ngiving_to
-        """, dict(username=self.username))
+        """, dict(participant_id=self.id))
         self.set_attributes(giving=r.giving, ngiving_to=r.ngiving_to)
 
         return updated
 
-    def _update_due(self, team, id, cursor=None):
+    def _update_due(self, team_id, id, cursor=None):
         """Transfer existing due value to newly inserted record
         """
         # Copy due to new record
@@ -1006,33 +1008,33 @@ class Participant(Model, mixins.Identity):
                SET due = COALESCE((
                       SELECT due
                         FROM payment_instructions s
-                       WHERE participant=%(username)s
-                         AND team = %(team)s
+                       WHERE participant_id = %(participant_id)s
+                         AND team_id = %(team_id)s
                          AND due > 0
                    ), 0)
              WHERE p.id = %(id)s
-        """, dict(username=self.username,team=team,id=id))
+        """, dict(participant_id=self.id, team_id=team_id, id=id))
 
         # Reset older due values to 0
-        self._reset_due(team, except_for=id, cursor=cursor)
+        self._reset_due(team_id, except_for=id, cursor=cursor)
         (cursor or self.db).run("""
             UPDATE payment_instructions p
                SET due = 0
-             WHERE participant = %(username)s
-               AND team = %(team)s
+             WHERE participant_id = %(participant_id)s
+               AND team_id = %(team_id)s
                AND due > 0
                AND p.id != %(id)s
-        """, dict(username=self.username,team=team,id=id))
+        """, dict(participant_id=self.id, team_id=team_id, id=id))
 
-    def _reset_due(self, team, except_for=-1, cursor=None):
+    def _reset_due(self, team_id, except_for=-1, cursor=None):
         (cursor or self.db).run("""
             UPDATE payment_instructions p
                SET due = 0
-             WHERE participant = %(username)s
-               AND team = %(team)s
+             WHERE participant_id = %(participant_id)s
+               AND team_id = %(team_id)s
                AND due > 0
                AND p.id != %(id)s
-        """, dict(username=self.username,team=team,id=except_for))
+        """, dict(participant_id=self.id, team_id=team_id, id=except_for))
 
     def update_taking(self, cursor=None):
         (cursor or self.db).run("""
