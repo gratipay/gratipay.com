@@ -55,25 +55,25 @@ CREATE TABLE payday_payments_done AS
 
 DROP TABLE IF EXISTS payday_payment_instructions;
 CREATE TABLE payday_payment_instructions AS
-    SELECT s.id, participant, team, amount, due
-      FROM ( SELECT DISTINCT ON (participant, team) *
+    SELECT s.id, participant_id, team_id, amount, due
+      FROM ( SELECT DISTINCT ON (participant_id, team_id) *
                FROM payment_instructions
               WHERE mtime < (SELECT ts_start FROM current_payday())
-           ORDER BY participant, team, mtime DESC
+           ORDER BY participant_id, team_id, mtime DESC
            ) s
-      JOIN payday_participants p ON p.username = s.participant
-      JOIN payday_teams t ON t.slug = s.team
+      JOIN payday_participants p ON p.id = s.participant_id
+      JOIN payday_teams t ON t.id = s.team_id
      WHERE s.amount > 0
        AND ( SELECT id
                FROM payday_payments_done done
-              WHERE s.participant = done.participant
-                AND s.team = done.team
+              WHERE p.username = done.participant
+                AND t.slug = done.team
                 AND direction = 'to-team'
            ) IS NULL
   ORDER BY p.claimed_time ASC, s.ctime ASC;
 
-CREATE INDEX ON payday_payment_instructions (participant);
-CREATE INDEX ON payday_payment_instructions (team);
+CREATE INDEX ON payday_payment_instructions (participant_id);
+CREATE INDEX ON payday_payment_instructions (team_id);
 ALTER TABLE payday_payment_instructions ADD COLUMN is_funded boolean;
 
 ALTER TABLE payday_participants ADD COLUMN giving_today numeric(35,2);
@@ -81,7 +81,7 @@ UPDATE payday_participants pp
    SET giving_today = COALESCE((
            SELECT sum(amount + due)
              FROM payday_payment_instructions
-            WHERE participant = pp.username
+            WHERE participant_id = pp.id
        ), 0);
 
 DROP TABLE IF EXISTS payday_takes;
@@ -103,7 +103,7 @@ CREATE TABLE payday_payments
 
 -- Prepare a statement that makes and records a payment
 
-CREATE OR REPLACE FUNCTION pay(text, text, numeric, payment_direction)
+CREATE OR REPLACE FUNCTION pay(bigint, bigint, numeric, payment_direction)
 RETURNS void AS $$
     DECLARE
         participant_delta numeric;
@@ -122,17 +122,17 @@ RETURNS void AS $$
 
         UPDATE payday_participants
            SET new_balance = (new_balance + participant_delta)
-         WHERE username = $1;
+         WHERE id = $1;
         UPDATE payday_teams
            SET balance = (balance + team_delta)
-         WHERE slug = $2;
+         WHERE id = $2;
         UPDATE current_payment_instructions
            SET due = 0
-         WHERE participant = $1
-           AND team = $2
+         WHERE participant_id = $1
+           AND team_id = $2
            AND due > 0;
         IF ($4 = 'to-team') THEN
-            payload = '{"action":"pay","participant":"' || $1 || '", "team":"'
+            payload = '{"action":"pay","participant_id":"' || $1 || '", "team_id":"'
                 || $2 || '", "amount":' || $3 || '}';
             INSERT INTO events(type, payload)
                 VALUES ('payday',payload);
@@ -142,11 +142,11 @@ RETURNS void AS $$
              VALUES ( ( SELECT p.username
                           FROM participants p
                           JOIN payday_participants p2 ON p.id = p2.id
-                         WHERE p2.username = $1 )
+                         WHERE p2.id = $1 )
                     , ( SELECT t.slug
                           FROM teams t
                           JOIN payday_teams t2 ON t.id = t2.id
-                         WHERE t2.slug = $2 )
+                         WHERE t2.id = $2 )
                     , $3
                     , $4
                      );
@@ -155,7 +155,7 @@ $$ LANGUAGE plpgsql;
 
 -- Add payments that were not met on to due
 
-CREATE OR REPLACE FUNCTION park(text, text, numeric)
+CREATE OR REPLACE FUNCTION park(bigint, bigint, numeric)
 RETURNS void AS $$
     DECLARE payload json;
     BEGIN
@@ -163,10 +163,10 @@ RETURNS void AS $$
 
         UPDATE current_payment_instructions
            SET due = $3
-         WHERE participant = $1
-           AND team = $2;
+         WHERE participant_id = $1
+           AND team_id = $2;
 
-        payload = '{"action":"due","participant":"' || $1 || '", "team":"'
+        payload = '{"action":"due","participant_id":"' || $1 || '", "team_id":"'
             || $2 || '", "due":' || $3 || '}';
         INSERT INTO events(type, payload)
             VALUES ('payday',payload);
@@ -184,14 +184,14 @@ CREATE OR REPLACE FUNCTION process_payment_instruction() RETURNS trigger AS $$
         participant := (
             SELECT p.*::payday_participants
               FROM payday_participants p
-             WHERE username = NEW.participant
+             WHERE id = NEW.participant_id
         );
 
         IF (NEW.amount + NEW.due <= participant.new_balance OR participant.card_hold_ok) THEN
-            EXECUTE pay(NEW.participant, NEW.team, NEW.amount + NEW.due, 'to-team');
+            EXECUTE pay(NEW.participant_id, NEW.team_id, NEW.amount + NEW.due, 'to-team');
             RETURN NEW;
         ELSIF participant.has_credit_card THEN
-            EXECUTE park(NEW.participant, NEW.team, NEW.amount + NEW.due);
+            EXECUTE park(NEW.participant_id, NEW.team_id, NEW.amount + NEW.due);
             RETURN NULL;
         END IF;
 
@@ -234,7 +234,11 @@ CREATE TRIGGER process_take AFTER INSERT ON payday_takes
 
 CREATE OR REPLACE FUNCTION process_draw() RETURNS trigger AS $$
     BEGIN
-        EXECUTE pay(NEW.owner, NEW.slug, NEW.balance, 'to-participant');
+        EXECUTE pay( (SELECT id FROM participants WHERE username=NEW.owner)
+                   , NEW.id
+                   , NEW.balance
+                   , 'to-participant'
+                    );
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;

@@ -9,8 +9,8 @@ unreviewed = website.db.all("""
 
     SELECT username
          , balance
-         , (SELECT SUM(amount) FROM current_payment_instructions WHERE participant = p.username) AS giving
-         , (SELECT COUNT(*) FROM current_payment_instructions WHERE participant = p.username AND amount > 0) AS ngiving_to
+         , (SELECT SUM(amount) FROM current_payment_instructions WHERE participant_id = p.id) AS giving
+         , (SELECT COUNT(*) FROM current_payment_instructions WHERE participant_id = p.id AND amount > 0) AS ngiving_to
       FROM participants p
      WHERE is_suspicious IS NULL
        AND (                                  -- They have a payin/payout route set up.

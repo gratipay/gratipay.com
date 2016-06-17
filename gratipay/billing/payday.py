@@ -399,14 +399,21 @@ class Payday(object):
 
               -- Participants who have either received/given money
 
-              SELECT participant, team, amount, direction FROM payments WHERE payday = %(payday)s
+              SELECT p.id as participant_id
+                   , t.id as team_id
+                   , amount
+                   , direction
+                FROM payments
+                JOIN participants p ON p.username = payments.participant
+                JOIN teams t ON t.slug = payments.team
+               WHERE payday = %(payday)s
 
               UNION
 
               -- Participants who weren't charged due to amount + due < MINIMUM_CHARGE
 
-              SELECT payload->>'participant' AS participant
-                   , payload->>'team' AS team
+              SELECT (payload->>'participant_id')::bigint AS participant_id
+                   , (payload->>'team_id')::bigint AS team_id
                    , '0' AS amount
                    , 'to-team' AS direction
                 FROM events
@@ -427,7 +434,7 @@ class Payday(object):
                    SELECT COUNT(*)
                      FROM current_exchange_routes r
                      JOIN participants p ON p.id = r.participant
-                    WHERE p.username = payload->>'participant'
+                    WHERE p.id = (payload->>'participant_id')::bigint
                       AND network = 'braintree-cc'
                       AND error = ''
                  ) > 0
@@ -435,10 +442,10 @@ class Payday(object):
 
           UPDATE paydays p
              SET nusers = (
-                  SELECT COUNT(DISTINCT(participant)) FROM payments_and_dues
+                  SELECT COUNT(DISTINCT(participant_id)) FROM payments_and_dues
                  )
                , nteams = (
-                  SELECT COUNT(DISTINCT(team)) FROM payments_and_dues
+                  SELECT COUNT(DISTINCT(team_id)) FROM payments_and_dues
                  )
                , volume = (
                   SELECT COALESCE(sum(amount), 0) FROM payments_and_dues WHERE direction='to-team'
@@ -480,17 +487,17 @@ class Payday(object):
             p = e.participant
             if p.notify_charge & i == 0:
                 continue
-            username = p.username
+            participant_id = p.id
             nteams, top_team = self.db.one("""
                 WITH tippees AS (
                          SELECT t.slug, amount
-                           FROM ( SELECT DISTINCT ON (team) team, amount
+                           FROM ( SELECT DISTINCT ON (team_id) team_id, amount
                                     FROM payment_instructions
                                    WHERE mtime < %(ts_start)s
-                                     AND participant = %(username)s
-                                ORDER BY team, mtime DESC
+                                     AND participant_id = %(participant_id)s
+                                ORDER BY team_id, mtime DESC
                                 ) s
-                           JOIN teams t ON s.team = t.slug
+                           JOIN teams t ON s.team_id = t.id
                            JOIN participants p ON t.owner = p.username
                           WHERE s.amount > 0
                             AND t.is_approved IS true
