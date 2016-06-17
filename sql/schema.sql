@@ -792,6 +792,7 @@ ALTER TABLE payment_instructions ADD COLUMN team_id bigint DEFAULT NULL
    REFERENCES teams(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 -- https://github.com/gratipay/gratipay.com/pull/4061
+-- https://github.com/gratipay/gratipay.com/pull/4062
 
 DROP VIEW current_payment_instructions;
 
@@ -801,6 +802,9 @@ UPDATE payment_instructions AS pi
 
 ALTER TABLE payment_instructions ALTER COLUMN participant_id SET NOT NULL;
 ALTER TABLE payment_instructions ALTER COLUMN team_id SET NOT NULL;
+
+ALTER TABLE payment_instructions DROP COLUMN participant;
+ALTER TABLE payment_instructions DROP COLUMN team;
 
 CREATE VIEW current_payment_instructions AS
     SELECT DISTINCT ON (participant_id, team_id) *
