@@ -783,3 +783,9 @@ ALTER TABLE participant_identities ADD COLUMN is_verified boolean NOT NULL DEFAU
 -- https://github.com/gratipay/gratipay.com/pull/4033
 
 ALTER TABLE participants ADD COLUMN has_verified_identity bool NOT NULL DEFAULT false;
+
+-- https://github.com/gratipay/gratipay.com/pull/4058
+ALTER TABLE payment_instructions ADD COLUMN participant_id bigint DEFAULT NULL
+   REFERENCES participants(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE payment_instructions ADD COLUMN team_id bigint DEFAULT NULL
+   REFERENCES teams(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
