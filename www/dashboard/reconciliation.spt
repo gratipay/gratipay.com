@@ -18,6 +18,11 @@ _by_month = website.db.all("""
 def by_month():
     balance = D(0)
     for month, payins, payouts, income in _by_month:
+        if payins is None:
+            payins = D(0)
+        if payouts is None:
+            payouts = D(0)
+
         balance = balance + payins - payouts
         yield month, payins, payouts, balance, income
 by_month = by_month()

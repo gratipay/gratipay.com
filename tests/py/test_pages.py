@@ -1,11 +1,14 @@
 from __future__ import print_function, unicode_literals
 
 import re
+import json
 
 from aspen import Response
 
+import braintree
 import mock
 import pytest
+from braintree.test.nonces import Nonces
 from gratipay.security.user import SESSION
 from gratipay.testing import Harness
 from gratipay.wireup import find_files
@@ -18,7 +21,19 @@ class TestPages(Harness):
 
     def browse(self, setup=None, **kw):
         alice = self.make_participant('alice', claimed_time='now')
-        exchange_id = self.make_exchange('braintree-cc', 19, 0, alice)
+
+        # for pricing page
+        self.make_team('Gratipay')
+
+        # for the receipt page
+        result = braintree.PaymentMethod.create({
+            "customer_id": alice.get_braintree_account().id,
+            "payment_method_nonce": Nonces.Transactable
+        })
+        assert result.is_success
+        address = result.payment_method.token
+        exchange_id = self.make_exchange('braintree-cc', 19, 0, alice, address=address)
+
         if setup:
             setup(alice)
         i = len(self.client.www_root)
@@ -39,7 +54,7 @@ class TestPages(Harness):
             assert '/%' not in url
             if 'index' in url.split('/')[-1]:
                 url = url.rsplit('/', 1)[0] + '/'
-                urls.append(url)
+            urls.append(url)
         urls.extend("""
            /about/me
            /about/me/
@@ -103,6 +118,11 @@ class TestPages(Harness):
 
     def test_about_charts(self):
         assert self.client.GxT('/about/charts.html').code == 302
+
+    def test_about_payment_distribution_json(self):
+        distribution = json.loads(self.client.GET('/about/payment-distribution.json').body)
+        assert len(distribution) == 13
+        assert distribution[0]['xText'] == '1000.00'
 
     def test_about_teams_redirect(self):
         assert self.client.GxT('/about/teams/').code == 302
@@ -203,3 +223,15 @@ class TestPages(Harness):
         self.make_participant('alice', claimed_time='now')
         body = self.client.GET("/~alice/routes/credit-card.html", auth_as="alice").body
         assert  "Braintree" in body
+
+    def test_dashboard_is_403_for_anon(self):
+        self.make_participant('admin', is_admin=True)
+        assert self.client.GxT('/dashboard/').code == 403
+
+    def test_dashboard_is_403_for_non_admin(self):
+        self.make_participant('alice')
+        assert self.client.GxT('/dashboard/', auth_as='alice').code == 403
+
+    def test_dashboard_barely_works(self):
+        self.make_participant('admin', is_admin=True)
+        assert 'Unreviewed Accounts' in self.client.GET('/dashboard/', auth_as='admin').body
