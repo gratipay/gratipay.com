@@ -79,8 +79,8 @@ elif nteams == 1:
                 href="https://github.com/gratipay/gratipay.com/issues/397">data
                 retention policy</a>).</p>
 
-        <p>Things we clear immediately include your profile statement, 
-        the payroll you're taking, and the payments you're giving.</p>
+        <p>Things we clear immediately include your profile statement, and the
+        payments you're giving and taking.</p>
 
         <p>We specifically <i>don't</i> delete your past giving and 
         taking history on the site, because that information also belongs 

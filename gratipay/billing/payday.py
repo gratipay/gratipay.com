@@ -288,7 +288,7 @@ class Payday(object):
 
     @staticmethod
     def process_draws(cursor):
-        """Send whatever remains after payroll to the team owner.
+        """Send whatever remains after takes to the team owner.
         """
         log("Processing draws.")
         cursor.run("UPDATE payday_teams SET is_drained=true;")
