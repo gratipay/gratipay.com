@@ -24,7 +24,6 @@ from gratipay.exceptions import (
     UsernameContainsInvalidCharacters,
     UsernameIsRestricted,
     UsernameAlreadyTaken,
-    NoTeam,
     BadAmount,
     EmailAlreadyTaken,
     CannotRemovePrimaryEmail,
@@ -818,7 +817,7 @@ class Participant(Model, mixins.Identity):
 
     def set_payment_instruction(self, team, amount, update_self=True, update_team=True,
                                                                                       cursor=None):
-        """Given a Team or slug, and amount as str, returns a dict.
+        """Given a Team instance, and amount as str, return a dict.
 
         We INSERT instead of UPDATE, so that we have history to explore. The
         COALESCE function returns the first of its arguments that is not NULL.
@@ -831,11 +830,6 @@ class Participant(Model, mixins.Identity):
 
         """
         assert self.is_claimed  # sanity check
-
-        if not isinstance(team, Team):
-            team, slug = Team.from_slug(team), team
-            if not team:
-                raise NoTeam(slug)
 
         amount = Decimal(amount)  # May raise InvalidOperation
         if (amount < gratipay.MIN_PAYMENT) or (amount > gratipay.MAX_PAYMENT):
@@ -880,14 +874,8 @@ class Participant(Model, mixins.Identity):
 
 
     def get_payment_instruction(self, team):
-        """Given a slug, returns a dict.
+        """Given a Team instance, return a dict.
         """
-
-        if not isinstance(team, Team):
-            team, slug = Team.from_slug(team), team
-            if not team:
-                raise NoTeam(slug)
-
         default = dict(amount=Decimal('0.00'), is_funded=False)
         return self.db.one("""\
 
@@ -902,13 +890,8 @@ class Participant(Model, mixins.Identity):
 
 
     def get_due(self, team):
-        """Given a slug, return a Decimal.
+        """Given a Team instance, return a Decimal.
         """
-        if not isinstance(team, Team):
-            team, slug = Team.from_slug(team), team
-            if not team:
-                raise NoTeam(slug)
-
         return self.db.one("""\
 
             SELECT due
