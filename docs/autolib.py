@@ -28,6 +28,7 @@ def rst_for_module(toc_path):
     w(f, heading)
     w(f, "=" * len(heading))
     w(f, ".. automodule:: {}", dotted)
+    w(f, "    :member-order: bysource")
 
     return f
 
