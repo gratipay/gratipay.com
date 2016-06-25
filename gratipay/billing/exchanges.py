@@ -203,7 +203,7 @@ def get_ready_payout_routes_by_network(db, network):
                 p.status_of_1_0_payout='pending-payout'
 
 
-                ----- TODO: Include members on payroll once process_payroll is implemented
+                ----- TODO: Include team members once process_takes is implemented
 
                )
     """, (network,))

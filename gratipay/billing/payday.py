@@ -154,7 +154,7 @@ class Payday(object):
             self.process_payment_instructions(cursor)
             self.transfer_takes(cursor, self.ts_start)
             self.process_draws(cursor)
-            payments = cursor.all("""
+            _payments_for_debugging = cursor.all("""
                 SELECT * FROM payments WHERE "timestamp" > %s
             """, (self.ts_start,))
             try:
@@ -166,7 +166,7 @@ class Payday(object):
                 import csv
                 from time import time
                 with open('%s_payments.csv' % time(), 'wb') as f:
-                    csv.writer(f).writerows(payments)
+                    csv.writer(f).writerows(_payments_for_debugging)
                 raise
         self.take_over_balances()
 
@@ -288,7 +288,7 @@ class Payday(object):
 
     @staticmethod
     def process_draws(cursor):
-        """Send whatever remains after payroll to the team owner.
+        """Send whatever remains after payouts to the team owner.
         """
         log("Processing draws.")
         cursor.run("UPDATE payday_teams SET is_drained=true;")
