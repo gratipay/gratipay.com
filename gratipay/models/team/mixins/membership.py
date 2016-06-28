@@ -3,24 +3,28 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from .takes import ZERO, PENNY
 
 
-class StubParticipantAdded(Exception): pass
-
 class MembershipMixin(object):
-    """Teams can distribute money to their members.
+    """Teams may have zero or more members, who are participants that take money from the team.
     """
 
-    def add_member(self, member):
-        """Add a member to this team.
+    def add_member(self, participant, recorder):
+        """Add a participant to this team.
+
+        :param Participant participant: the participant to add
+        :param Participant recorder: the participant making the change
+
         """
-        if not member.is_claimed:
-            raise StubParticipantAdded
-        self.set_take_for(member, PENNY, self)
+        self.set_take_for(participant, PENNY, recorder)
 
 
-    def remove_member(self, member):
-        """Remove a member from this team.
+    def remove_member(self, participant, recorder):
+        """Remove a participant from this team.
+
+        :param Participant participant: the participant to remove
+        :param Participant recorder: the participant making the change
+
         """
-        self.set_take_for(member, ZERO, self)
+        self.set_take_for(participant, ZERO, recorder)
 
 
     def remove_all_members(self, cursor=None):
@@ -36,21 +40,21 @@ class MembershipMixin(object):
 
     @property
     def nmembers(self):
-        return self.db.one("""
-            SELECT COUNT(*)
-              FROM current_takes
-             WHERE team=%s
-        """, (self.username, ))
+        """The number of members. Read-only and computed (not in the db); equal to
+        :py:attr:`~gratipay.models.team.mixins.takes.ndistributing_to`.
+        """
+        return self.ndistributing_to
 
 
-    def get_members(self, current_participant=None):
+    def get_memberships(self, current_participant=None):
         """Return a list of member dicts.
         """
         takes = self.compute_actual_takes()
         members = []
         for take in takes.values():
             member = {}
-            member['username'] = take['member']
+            member['participant_id'] = take['participant'].id
+            member['username'] = take['participant'].username
             member['take'] = take['nominal_amount']
             member['balance'] = take['balance']
             member['percentage'] = take['percentage']
@@ -65,6 +69,6 @@ class MembershipMixin(object):
                         # current user, but not the team itself
                         member['editing_allowed']= True
 
-            member['last_week'] = self.get_take_last_week_for(member)
+            member['last_week'] = self.get_take_last_week_for(member['participant_id'])
             members.append(member)
         return members

@@ -32,16 +32,14 @@ class TakesMixin(object):
     ndistributing_to = 0
 
 
-    def get_take_last_week_for(self, member):
-        """Get the user's nominal take last week.
+    def get_take_last_week_for(self, participant_id):
+        """Get the participant's nominal take last week.
         """
-        membername = member.username if hasattr(member, 'username') \
-                                                        else member['username']
         return self.db.one("""
 
             SELECT amount
               FROM takes
-             WHERE team=%s AND member=%s
+             WHERE team_id=%s AND participant_id=%s
                AND mtime < (
                        SELECT ts_start
                          FROM paydays
@@ -50,7 +48,7 @@ class TakesMixin(object):
                    )
           ORDER BY mtime DESC LIMIT 1
 
-        """, (self.username, membername), default=ZERO)
+        """, (self.id, participant_id), default=ZERO)
 
 
     def set_take_for(self, participant, take, recorder, cursor=None):
@@ -182,8 +180,11 @@ class TakesMixin(object):
         """Return a list of member takes for a team.
         """
         TAKES = """
-            SELECT participant_id, amount, ctime, mtime
-              FROM current_takes
+            SELECT p.*::participants AS participant
+                 , ct.amount, ct.ctime, ct.mtime
+              FROM current_takes ct
+              JOIN participants p
+                ON ct.participant_id = p.id
              WHERE team_id=%(team_id)s
           ORDER BY amount ASC, ctime ASC
         """
@@ -202,7 +203,7 @@ class TakesMixin(object):
             actual_amount = take['actual_amount'] = min(nominal_amount, balance)
             take['balance'] = balance
             take['percentage'] = actual_amount / available
-            actual_takes[take['participant_id']] = take
+            actual_takes[take['participant'].id] = take
         return actual_takes
 
 
