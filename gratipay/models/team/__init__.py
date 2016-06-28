@@ -9,10 +9,10 @@ import requests
 from aspen import json, log
 from gratipay.exceptions import InvalidTeamName
 from gratipay.models import add_event
+from gratipay.models.team import mixins
 from postgres.orm import Model
 
 from gratipay.billing.exchanges import MINIMUM_CHARGE
-from gratipay.models.team.mixins import TipMigration
 
 # Should have at least one letter.
 TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,-_ ]+)$')
@@ -33,7 +33,7 @@ def slugize(name):
     return slug
 
 
-class Team(Model, TipMigration):
+class Team(Model, mixins.Takes, mixins.TipMigration):
     """Represent a Gratipay team.
     """
 
@@ -48,6 +48,23 @@ class Team(Model, TipMigration):
         if not isinstance(other, Team):
             return True
         return self.id != other.id
+
+
+    # Computed Values
+    # ===============
+
+    #: The total amount of money this team receives during payday. Read-only;
+    #: modified by
+    #: :py:meth:`~gratipay.models.participant.Participant.set_payment_instruction`.
+
+    receiving = 0
+
+
+    #: The number of participants that are giving to this team. Read-only;
+    #: modified by
+    #: :py:meth:`~gratipay.models.participant.Participant.set_payment_instruction`.
+
+    nreceiving_from = 0
 
 
     # Constructors
