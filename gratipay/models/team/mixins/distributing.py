@@ -13,12 +13,12 @@ class DistributingMixin(object):
         """
         if not member.is_claimed:
             raise StubParticipantAdded
-        self.__set_take_for(member, Decimal('0.01'), self)
+        self.set_take_for(member, Decimal('0.01'), self)
 
     def remove_member(self, member):
         """Remove a member from this team.
         """
-        self.__set_take_for(member, Decimal('0.00'), self)
+        self.set_take_for(member, Decimal('0.00'), self)
 
     def remove_all_members(self, cursor=None):
         (cursor or self.db).run("""
@@ -59,14 +59,9 @@ class DistributingMixin(object):
                           , default=Decimal('0.00')
                            )
 
-    def set_take_for(self, member, take, recorder, cursor=None):
+    def set_take_for(self, member, amount, recorder, cursor=None):
         """Sets member's take from the team pool.
         """
-        self.__set_take_for(member, take, recorder, cursor)
-        return take
-
-    def __set_take_for(self, member, amount, recorder, cursor=None):
-        # XXX Factored out for testing purposes only! :O Use .set_take_for.
         with self.db.get_cursor(cursor) as cursor:
             # Lock to avoid race conditions
             cursor.run("LOCK TABLE takes IN EXCLUSIVE MODE")
