@@ -1,16 +1,11 @@
-"""Teams on Gratipay are plural participants with members.
-"""
 from collections import OrderedDict
 from decimal import Decimal
 
 
 class StubParticipantAdded(Exception): pass
 
-class MixinTeam(object):
-    """This class provides methods for working with a Participant as a Team.
-
-    :param Participant participant: the underlying :py:class:`~gratipay.participant.Participant` object for this team
-
+class DistributingMixin(object):
+    """Teams can distribute money to their members.
     """
 
     def add_member(self, member):
