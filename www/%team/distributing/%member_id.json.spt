@@ -89,14 +89,9 @@ if request.method == 'POST':
         out['success'] = msg
 
 else:
-    if member == team:
-        out = team.get_team_take()
-        out['username'] = out.pop('member')
-        out['take'] = unicode(out.pop('amount'))
-    else:
-        SQL = "SELECT ctime, mtime, member AS username, amount::text as take " \
-              "FROM current_takes WHERE team=%s AND member=%s"
-        out = website.db.one(SQL, (team.username, member.username))
+    SQL = "SELECT ctime, mtime, member AS username, amount::text as take " \
+          "FROM current_takes WHERE team=%s AND member=%s"
+    out = website.db.one(SQL, (team.username, member.username))
 
 [---] application/json via json_dump
 out
