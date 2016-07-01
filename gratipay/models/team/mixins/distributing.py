@@ -31,7 +31,7 @@ class DistributingMixin(object):
         """, dict(username=self.username))
 
     def get_take_last_week_for(self, member):
-        """Get the user's nominal take last week. Used in throttling.
+        """Get the user's nominal take last week.
         """
         membername = member.username if hasattr(member, 'username') \
                                                         else member['username']
@@ -59,20 +59,9 @@ class DistributingMixin(object):
                           , default=Decimal('0.00')
                            )
 
-    def compute_max_this_week(self, last_week):
-        """2x last week's take, but at least a dollar.
-        """
-        return max(last_week * Decimal('2'), Decimal('1.00'))
-
     def set_take_for(self, member, take, recorder, cursor=None):
         """Sets member's take from the team pool.
         """
-
-        last_week = self.get_take_last_week_for(member)
-        max_this_week = self.compute_max_this_week(last_week)
-        if take > max_this_week:
-            take = max_this_week
-
         self.__set_take_for(member, take, recorder, cursor)
         return take
 
@@ -188,7 +177,6 @@ class DistributingMixin(object):
                         # current user, but not the team itself
                         member['editing_allowed']= True
 
-            member['last_week'] = last_week = self.get_take_last_week_for(member)
-            member['max_this_week'] = self.compute_max_this_week(last_week)
+            member['last_week'] = self.get_take_last_week_for(member)
             members.append(member)
         return members
