@@ -30,14 +30,6 @@ class DistributingMixin(object):
             );
         """, dict(username=self.username))
 
-    def member_of(self, team):
-        """Given a Participant object, return a boolean.
-        """
-        for take in team.get_current_takes():
-            if take['member'] == self.username:
-                return True
-        return False
-
     def get_take_last_week_for(self, member):
         """Get the user's nominal take last week. Used in throttling.
         """

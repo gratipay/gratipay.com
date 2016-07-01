@@ -1080,6 +1080,15 @@ class Participant(Model, mixins.Identity):
         return teams
 
 
+    def member_of(self, team):
+        """Given a Team object, return a boolean.
+        """
+        for take in team.get_current_takes():
+            if take['member'] == self.username:
+                return True
+        return False
+
+
     def get_old_teams(self):
         """Return a list of old-style teams this user was a member of.
         """
