@@ -12,4 +12,4 @@ class Tests(Harness):
     def test_distributing_doesnt_redirect_when_money_is_available(self):
         self.make_team()
         self.db.run("UPDATE teams SET available=537")
-        assert self.client.GET('/TheEnterprise/distributing/', raise_immediately=False).code == 500
+        assert self.client.GET('/TheEnterprise/distributing/').code == 200

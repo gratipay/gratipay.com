@@ -8,7 +8,7 @@ if team.available == 0:
 title = _("Team Members")
 
 [-----------------------------------------------------------------------------]
-{% extends "templates/profile.html" %}
+{% extends "templates/team-base.html" %}
 
 {% block scripts %}
 <script>$(document).ready(Gratipay.team.init);</script>
@@ -32,7 +32,7 @@ title = _("Team Members")
       <td class="figure last_week"></td>
       <td class="figure this_week"></td>
       <td class="figure balance">
-        {{ team.balance + team.receiving - team.giving }}
+        {{ team.available }}
       </td>
       <td class="figure percentage"></td>
     </tr>
