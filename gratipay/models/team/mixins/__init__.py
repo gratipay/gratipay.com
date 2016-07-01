@@ -1,6 +1,6 @@
 from .available import AvailableMixin as Available
-from .distributing import DistributingMixin as Distributing
 from .membership import MembershipMixin as Membership
+from .takes import TakesMixin as Takes
 from .tip_migration import TipMigrationMixin as TipMigration
 
-__all__ = ['Available', 'Distributing', 'Membership', 'TipMigration']
+__all__ = ['Available', 'Takes', 'Membership', 'TipMigration']

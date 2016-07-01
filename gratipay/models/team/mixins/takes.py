@@ -4,8 +4,8 @@ from collections import OrderedDict
 from decimal import Decimal
 
 
-class DistributingMixin(object):
-    """Teams can distribute money to their members.
+class TakesMixin(object):
+    """Members can take money from a Team.
     """
 
     def get_take_last_week_for(self, member):
