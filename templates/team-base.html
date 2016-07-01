@@ -61,9 +61,9 @@
 {% if team.is_approved and (user.participant == team.owner or user.ADMIN) %}
     {% set current_page = request.path.raw.split('/')[2] %}
     {% set nav_base = '/' + team.slug %}
-    {% set pages = [ ('/',            _('Profile'))
-                   , ('/receiving/',  _('Receiving'))
-                    ] %}
+    {% set pages = [ ('/',              _('Profile'))
+                   , ('/receiving/',    _('Receiving'))
+                    ] + ([('/distributing/', _('Distributing'))] if team.available else [])%}
     {% if pages %}
     {% include "templates/nav.html" %}
     <br>
