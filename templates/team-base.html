@@ -18,11 +18,6 @@
             <td class="total-receiving" data-team="{{ team.id }}">{{ format_currency(team.receiving, 'USD') }}</td>
             <td class="nreceiving-from" data-team="{{ team.id }}">{{ team.nreceiving_from }}</td>
         </tr>
-        <tr>
-            <td class="label">{{ _("Sharing") }}</td>
-            <td>{{ format_currency(0, 'USD') }}</td>
-            <td>0</td>
-        </tr>
     </table>
     {% endif %}
 
