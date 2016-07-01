@@ -1,14 +1,12 @@
 """Endpoint to record team memberships.
 """
-from decimal import Decimal, InvalidOperation
+from decimal import InvalidOperation
 
 from aspen import Response
 from babel.numbers import NumberFormatError
 from gratipay.utils import get_team
 from gratipay.models.participant import Participant
-
-ZERO = Decimal('0.00')
-A_PENNY = Decimal('0.01')
+from gratipay.models.team.mixins.takes import ZERO, PENNY
 
 [--------------------]
 request.allow('GET', 'POST')
@@ -44,7 +42,7 @@ if request.method == 'POST':
         # Only members themselves can set their take to something greater than
         # a penny.
 
-        if take not in (ZERO, A_PENNY):
+        if take not in (ZERO, PENNY):
             raise Response(400, _("You're only allowed to add or remove members, "
                                   "you can't set their takes to specific amounts."))
         if take == ZERO:
@@ -61,7 +59,7 @@ if request.method == 'POST':
             # Attempted to add a stub participant
             raise Response(403)
 
-        if take == A_PENNY:
+        if take == PENNY:
             if is_member:
                 msg = _("{0} is already a member of this team.", member.username)
             else:

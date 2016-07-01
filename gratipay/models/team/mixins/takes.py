@@ -1,7 +1,11 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from collections import OrderedDict
-from decimal import Decimal
+from decimal import Decimal as D
+
+
+ZERO = D('0.00')
+PENNY = D('0.01')
 
 
 class TakesMixin(object):
@@ -26,7 +30,7 @@ class TakesMixin(object):
                    )
           ORDER BY mtime DESC LIMIT 1
 
-        """, (self.username, membername), default=Decimal('0.00'))
+        """, (self.username, membername), default=ZERO)
 
 
     def get_take_for(self, member):
@@ -35,7 +39,7 @@ class TakesMixin(object):
         return self.db.one( "SELECT amount FROM current_takes "
                             "WHERE member=%s AND team=%s"
                           , (member.username, self.username)
-                          , default=Decimal('0.00')
+                          , default=ZERO
                            )
 
 
@@ -80,8 +84,8 @@ class TakesMixin(object):
         for username in set(old_takes.keys()).union(new_takes.keys()):
             if username == self.username:
                 continue
-            old = old_takes.get(username, {}).get('actual_amount', Decimal(0))
-            new = new_takes.get(username, {}).get('actual_amount', Decimal(0))
+            old = old_takes.get(username, {}).get('actual_amount', ZERO)
+            new = new_takes.get(username, {}).get('actual_amount', ZERO)
             diff = new - old
             if diff != 0:
                 r = (cursor or self.db).one("""

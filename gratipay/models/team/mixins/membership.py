@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from decimal import Decimal
+from .takes import ZERO, PENNY
 
 
 class StubParticipantAdded(Exception): pass
@@ -14,13 +14,13 @@ class MembershipMixin(object):
         """
         if not member.is_claimed:
             raise StubParticipantAdded
-        self.set_take_for(member, Decimal('0.01'), self)
+        self.set_take_for(member, PENNY, self)
 
 
     def remove_member(self, member):
         """Remove a member from this team.
         """
-        self.set_take_for(member, Decimal('0.00'), self)
+        self.set_take_for(member, ZERO, self)
 
 
     def remove_all_members(self, cursor=None):
