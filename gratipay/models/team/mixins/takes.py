@@ -28,6 +28,7 @@ class TakesMixin(object):
 
         """, (self.username, membername), default=Decimal('0.00'))
 
+
     def get_take_for(self, member):
         """Return a Decimal representation of the take for this member, or 0.
         """
@@ -36,6 +37,7 @@ class TakesMixin(object):
                           , (member.username, self.username)
                           , default=Decimal('0.00')
                            )
+
 
     def set_take_for(self, member, amount, recorder, cursor=None):
         """Sets member's take from the team pool.
@@ -70,6 +72,7 @@ class TakesMixin(object):
             # Update is_funded on member's tips
             member.update_giving(cursor)
 
+
     def update_taking(self, old_takes, new_takes, cursor=None, member=None):
         """Update `taking` amounts based on the difference between `old_takes`
         and `new_takes`.
@@ -90,6 +93,7 @@ class TakesMixin(object):
                 """, dict(username=username, diff=diff))
                 if member and username == member.username:
                     member.set_attributes(**r._asdict())
+
 
     def get_current_takes(self, cursor=None):
         """Return a list of member takes for a team.

@@ -16,10 +16,12 @@ class MembershipMixin(object):
             raise StubParticipantAdded
         self.set_take_for(member, Decimal('0.01'), self)
 
+
     def remove_member(self, member):
         """Remove a member from this team.
         """
         self.set_take_for(member, Decimal('0.00'), self)
+
 
     def remove_all_members(self, cursor=None):
         (cursor or self.db).run("""
@@ -31,6 +33,7 @@ class MembershipMixin(object):
             );
         """, dict(username=self.username))
 
+
     @property
     def nmembers(self):
         return self.db.one("""
@@ -38,6 +41,7 @@ class MembershipMixin(object):
               FROM current_takes
              WHERE team=%s
         """, (self.username, ))
+
 
     def get_members(self, current_participant=None):
         """Return a list of member dicts.
