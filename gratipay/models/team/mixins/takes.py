@@ -123,7 +123,7 @@ class TakesMixin(object):
 
             # Update computed values
             self.update_taking(old_takes, new_takes, cursor, participant)
-            self.update_distributing(old_takes, new_takes, cursor, participant)
+            self.update_distributing(new_takes, cursor)
 
 
     def get_take_for(self, participant, cursor=None):
@@ -145,35 +145,49 @@ class TakesMixin(object):
         """Update `taking` amounts based on the difference between `old_takes`
         and `new_takes`.
         """
+
         # XXX Deal with owner as well as members
-        for username in set(old_takes.keys()).union(new_takes.keys()):
-            if username == self.username:
-                continue
-            old = old_takes.get(username, {}).get('actual_amount', ZERO)
-            new = new_takes.get(username, {}).get('actual_amount', ZERO)
-            diff = new - old
-            if diff != 0:
-                r = (cursor or self.db).one("""
+
+        for participant_id in set(old_takes.keys()).union(new_takes.keys()):
+            old = old_takes.get(participant_id, {}).get('actual_amount', ZERO)
+            new = new_takes.get(participant_id, {}).get('actual_amount', ZERO)
+            delta = new - old
+            if delta != 0:
+                taking = (cursor or self.db).one("""
                     UPDATE participants
-                       SET taking = (taking + %(diff)s)
-                         , receiving = (receiving + %(diff)s)
-                     WHERE username=%(username)s
-                 RETURNING taking, receiving
-                """, dict(username=username, diff=diff))
-                if member and username == member.username:
-                    member.set_attributes(**r._asdict())
+                       SET taking = (taking + %(delta)s)
+                     WHERE id=%(participant_id)s
+                 RETURNING taking
+                """, dict(participant_id=participant_id, delta=delta))
+                if member and participant_id == member.id:
+                    member.set_attributes(taking=taking)
+
+
+    def update_distributing(self, new_takes, cursor=None):
+        """Update the computed values on the team.
+        """
+        distributing = sum(t['actual_amount'] for t in new_takes.values())
+        ndistributing_to = len(tuple(t for t in new_takes.values() if t['actual_amount'] > 0))
+
+        r = (cursor or self.db).one("""
+               UPDATE teams
+                  SET distributing=%s, ndistributing_to=%s WHERE id=%s
+            RETURNING distributing, ndistributing_to
+        """, (distributing, ndistributing_to, self.id))
+
+        self.set_attributes(**r._asdict())
 
 
     def get_current_takes(self, cursor=None):
         """Return a list of member takes for a team.
         """
         TAKES = """
-            SELECT member, amount, ctime, mtime
+            SELECT participant_id, amount, ctime, mtime
               FROM current_takes
-             WHERE team=%(team)s
-          ORDER BY ctime DESC
+             WHERE team_id=%(team_id)s
+          ORDER BY amount ASC, ctime ASC
         """
-        records = (cursor or self.db).all(TAKES, dict(team=self.username))
+        records = (cursor or self.db).all(TAKES, dict(team_id=self.id))
         return [r._asdict() for r in records]
 
 
@@ -182,15 +196,13 @@ class TakesMixin(object):
         """
         actual_takes = OrderedDict()
         nominal_takes = self.get_current_takes(cursor=cursor)
-        budget = balance = self.balance + self.receiving - self.giving
+        available = balance = self.available
         for take in nominal_takes:
             nominal_amount = take['nominal_amount'] = take.pop('amount')
             actual_amount = take['actual_amount'] = min(nominal_amount, balance)
-            if take['member'] != self.username:
-                balance -= actual_amount
             take['balance'] = balance
-            take['percentage'] = (actual_amount / budget) if budget > 0 else 0
-            actual_takes[take['member']] = take
+            take['percentage'] = actual_amount / available
+            actual_takes[take['participant_id']] = take
         return actual_takes
 
 

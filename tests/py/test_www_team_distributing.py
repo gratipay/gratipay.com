@@ -22,7 +22,7 @@ class Tests(Harness):
     def test_json_doesnt_redirect_when_money_is_available(self):
         self.make_team()
         self.db.run("UPDATE teams SET available=537")
-        assert self.client.GET('/TheEnterprise/distributing/index.json', raise_immediately=False).code == 500
+        assert self.client.GET('/TheEnterprise/distributing/index.json').code == 200
 
 
     def test_member_json_redirects_when_no_money_is_available(self):

@@ -1,5 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from decimal import Decimal as D
+
 from pytest import raises
 from gratipay.models.participant import Participant
 from gratipay.models.team import Team
@@ -15,7 +17,7 @@ class TeamTakesHarness(Harness):
     # Factored out to share with membership tests ...
 
     def setUp(self):
-        self.enterprise = self.make_team('The Enterprise')
+        self.enterprise = self.make_team('The Enterprise', available=1, receiving=2)
         self.picard = P('picard')
 
         self.TT = self.db.one("SELECT id FROM countries WHERE code='TT'")
@@ -56,7 +58,7 @@ class Tests(TeamTakesHarness):
     def test_gtf_returns_correct_amount_for_multiple_teams(self):
         self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
 
-        trident = self.make_team('The Trident', owner='shelby')
+        trident = self.make_team('The Trident', owner='shelby', available=5)
         trident.set_take_for(self.crusher, PENNY, P('shelby'))
         trident.set_take_for(self.crusher, PENNY * 2, self.crusher)
 
@@ -75,44 +77,17 @@ class Tests(TeamTakesHarness):
         self.enterprise.set_take_for(self.crusher, 537, self.crusher)
         assert self.enterprise.get_take_for(self.crusher) == 537
 
-
-    def test_stf_can_increase_ndistributing_to(self):
-        self.enterprise.set_take_for(self.bruiser, PENNY, self.picard)
-        assert self.enterprise.ndistributing_to == 1
-        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
-        assert self.enterprise.ndistributing_to == 2
-
-    def test_stf_doesnt_increase_ndistributing_to_for_an_existing_member(self):
-        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
-        self.enterprise.set_take_for(self.crusher, PENNY, self.crusher)
-        self.enterprise.set_take_for(self.crusher, 64, self.crusher)
-        assert self.enterprise.ndistributing_to == 1
-
-    def test_stf_can_decrease_ndistributing_to(self):
-        self.enterprise.set_take_for(self.bruiser, PENNY, self.picard)
-        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
-        self.enterprise.set_take_for(self.crusher, 0, self.crusher)
-        assert self.enterprise.ndistributing_to == 1
-        self.enterprise.set_take_for(self.bruiser, 0, self.bruiser)
-        assert self.enterprise.ndistributing_to == 0
-
-    def test_stf_doesnt_decrease_ndistributing_to_below_zero(self):
-        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
-        self.enterprise.set_take_for(self.crusher, 0, self.picard)
-        self.enterprise.set_take_for(self.crusher, 0, self.picard)
-        self.enterprise.set_take_for(self.crusher, 0, self.picard)
-        self.enterprise.set_take_for(self.crusher, 0, self.picard)
-        assert self.enterprise.ndistributing_to == 0
-
-    def test_stf_updates_ndistributing_to_in_the_db(self):
-        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
-        assert T('TheEnterprise').ndistributing_to == 1
-
-
-    def test_stf_updates_taking_for_member(self):
+    def test_stf_calls_update_taking(self):
         assert self.crusher.taking == ZERO
         self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
         assert self.crusher.taking == PENNY
+
+    def test_stf_calls_update_distributing(self):
+        assert self.enterprise.ndistributing_to == 0
+        assert self.enterprise.distributing == ZERO
+        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
+        assert self.enterprise.ndistributing_to == 1
+        assert self.enterprise.distributing == PENNY
 
 
     # stf permissions
@@ -157,3 +132,81 @@ class Tests(TeamTakesHarness):
     def test_stf_doesnt_let_anyone_set_a_take_who_is_not_already_on_the_team_even_to_zero(self):
         actual = self.err(self.crusher, 0, self.crusher)
         assert actual == 'can only set take if already a member of the team'
+
+
+    # ut - update_taking
+
+    def test_ut_updates_taking(self):
+        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
+        assert self.crusher.taking == PENNY
+        self.enterprise.update_taking( {self.crusher.id: {'actual_amount': PENNY}}
+                                     , {self.crusher.id: {'actual_amount': PENNY * 537}}
+                                     , member=self.crusher
+                                      )
+        assert self.crusher.taking == PENNY * 537
+
+
+    # ud - update_distributing
+
+    def test_ud_can_increase_distributing(self):
+        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
+        assert self.enterprise.distributing == PENNY
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': PENNY * 80}})
+        assert self.enterprise.distributing == PENNY * 80
+
+
+    def test_ud_can_increase_ndistributing_to(self):
+        assert self.enterprise.ndistributing_to == 0
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': PENNY}})
+        assert self.enterprise.ndistributing_to == 1
+
+    def test_ud_doesnt_increase_ndistributing_to_for_an_existing_member(self):
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': PENNY}})
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': PENNY * 2}})
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': PENNY * 40}})
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': PENNY * 3}})
+        assert self.enterprise.ndistributing_to == 1
+
+    def test_ud_can_decrease_ndistributing_to(self):
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': PENNY}})
+        assert self.enterprise.ndistributing_to == 1
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': ZERO}})
+        assert self.enterprise.ndistributing_to == 0
+
+    def test_ud_doesnt_decrease_ndistributing_to_below_zero(self):
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': PENNY}})
+        assert self.enterprise.ndistributing_to == 1
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': ZERO}})
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': ZERO}})
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': ZERO}})
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': ZERO}})
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': ZERO}})
+        assert self.enterprise.ndistributing_to == 0
+
+    def test_ud_updates_ndistributing_to_in_the_db(self):
+        self.enterprise.update_distributing({self.crusher.id: {'actual_amount': PENNY}})
+        fresh = T('TheEnterprise')
+        assert fresh.distributing == PENNY
+        assert fresh.ndistributing_to == 1
+
+
+    # cat - compute_actual_takes
+
+    def test_cat_computes_actual_takes(self):
+        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
+        self.enterprise.set_take_for(self.crusher, PENNY * 80, self.crusher)
+        self.enterprise.set_take_for(self.bruiser, PENNY, self.picard)
+        self.enterprise.set_take_for(self.bruiser, PENNY * 30, self.bruiser)
+        takes = self.enterprise.compute_actual_takes()
+
+        assert tuple(takes) == (self.bruiser.id, self.crusher.id)
+
+        takes[self.bruiser.id]['actual_amount'] = PENNY * 30
+        takes[self.bruiser.id]['nominal_amount'] = PENNY * 30
+        takes[self.bruiser.id]['balance'] = PENNY * 70
+        takes[self.bruiser.id]['percentage'] = D('0.3')
+
+        takes[self.crusher.id]['actual_amount'] = PENNY * 70
+        takes[self.crusher.id]['nominal_amount'] = PENNY * 80
+        takes[self.crusher.id]['balance'] = ZERO
+        takes[self.crusher.id]['percentage'] = D('0.7')

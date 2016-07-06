@@ -7,13 +7,12 @@ from decimal import Decimal
 
 import requests
 from aspen import json, log
+from gratipay.billing.exchanges import MINIMUM_CHARGE
 from gratipay.exceptions import InvalidTeamName
 from gratipay.models import add_event
 from gratipay.models.team import mixins
 from postgres.orm import Model
 
-from gratipay.billing.exchanges import MINIMUM_CHARGE
-from gratipay.models.team import mixins
 
 # Should have at least one letter.
 TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,-_ ]+)$')
