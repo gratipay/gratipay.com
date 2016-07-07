@@ -21,6 +21,7 @@ from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
 from gratipay.security.user import User
 from gratipay.testing.vcr import use_cassette
+from gratipay.testing.browser import Browser
 from psycopg2 import IntegrityError, InternalError
 
 
@@ -67,12 +68,14 @@ class Harness(unittest.TestCase):
     tablenames = db.all("SELECT tablename FROM pg_tables "
                         "WHERE schemaname='public' AND tablename != 'countries'")
     seq = itertools.count(0)
+    use_VCR = True
 
 
     @classmethod
     def setUpClass(cls):
         cls.db.run("ALTER SEQUENCE exchanges_id_seq RESTART WITH 1")
-        cls.setUpVCR()
+        if cls.use_VCR:
+            cls.setUpVCR()
 
 
     @classmethod
@@ -93,7 +96,8 @@ class Harness(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.vcr_cassette.__exit__(None, None, None)
+        if cls.use_VCR:
+            cls.vcr_cassette.__exit__(None, None, None)
 
 
     def setUp(self):
@@ -142,6 +146,7 @@ class Harness(unittest.TestCase):
             for v, w in zip(row, widths):
                 print("{0:{width}}".format(unicode(v), width=w), end=' | ')
             print()
+
 
     def make_team(self, *a, **kw):
 
@@ -308,6 +313,19 @@ class Harness(unittest.TestCase):
              LIMIT 1
 
         """, (tipper, tippee), back_as=dict, default=default)['amount']
+
+
+class BrowserHarness(Harness):
+    browser = Browser('phantomjs')
+    use_VCR = False  # without this we get fixture spam from communication with PhantomJS
+
+    def setUp(self):
+        Harness.setUp(self)
+        self.browser.cookies.delete()
+
+    def tearDown(self):
+        Harness.tearDown(self)
+        self.browser.cookies.delete()
 
 
 class Foobar(Exception): pass
