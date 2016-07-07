@@ -115,17 +115,17 @@ def fake_participant_identity(participant, verification=None):
     return country_id
 
 
-def fake_team(db, teamowner):
+def fake_team(db, teamowner, teamname=None):
     """Create a fake team
     """
     isapproved = [True, False]
     productorservice = ['Product','Service']
 
-    teamname = faker.first_name() + fake_text_id(3)
-    teamslugname = faker.city()
-
+    if teamname is None:
+        teamname = faker.first_name() + fake_text_id(3)
+    
     try:
-        teamslug = slugize(teamslugname)
+        teamslug = slugize(teamname)
         homepage = 'http://www.example.org/' + fake_text_id(3)
         insert_fake_data( db
                         , "teams"
@@ -309,9 +309,14 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
 
     print("Making Teams")
     teams = []
+    num_teams -= 1      # Make room for the fake Grtipay Team 
     teamowners = random.sample(participants, num_teams)
     for teamowner in teamowners:
         teams.append(fake_team(db, teamowner))
+    
+    # Creating a fake Gratipay Team 
+    teamowner = random.sample(participants, 1)[0]
+    teams.append(fake_team(db, teamowner, "Gratipay"))
 
     print("Making Payment Instructions")
     npayment_instructions = 0
