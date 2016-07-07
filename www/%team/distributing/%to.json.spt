@@ -9,87 +9,77 @@ from gratipay.models.participant import Participant
 from gratipay.models.team.mixins.takes import ZERO, PENNY
 
 [--------------------]
-request.allow('GET', 'POST')
+request.allow('POST')
+
 team = get_team(state)
 if team.available == 0:
     website.redirect('..', base_url='')
 
-member = Participant.from_id(request.path['member_id'])
-if member is None or member.is_suspicious:
+if user.ANON:
+    raise Response(401)
+recorder = user.participant
+
+participant = Participant.from_id(request.path['to'])
+if participant is None:
     raise Response(404, _("User not found."))
-is_member = member.member_of(team)
+
+participant_is_member = participant.member_of(team)
+recorder_is_owner = team.owner == recorder.username
 
 if request.method == 'POST':
-
-    if user.participant not in (member, team):
-        raise Response(403)
 
     try:
         take = parse_decimal(request.body['take'])
     except (InvalidOperation, NumberFormatError):
-        raise Response(400, _("That's not a valid number"))
-
-    if member == team:
-        raise Response(400, _("A team can't take from itself"))
+        raise Response(400, _("That's not a valid number."))
 
     msg = None
     out = {}
 
-    if user.participant == team:
-
-        # The team itself can only add new members, which means setting their
-        # take to a penny, and remove members, which means setting it to zero.
-        # Only members themselves can set their take to something greater than
-        # a penny.
-
-        if take not in (ZERO, PENNY):
-            raise Response(400, _("You're only allowed to add or remove members, "
-                                  "you can't set their takes to specific amounts."))
+    if recorder_is_owner:
         if take == ZERO:
-            if is_member:
+            if participant_is_member:
                 if request.body.get('confirmed'):
-                    team.remove_member(member)
+                    team.remove_member(participant, recorder)
                 else:
                     out['confirm'] = _(
                         "Are you sure you want to remove {0} from this team?",
-                        member.username
+                        participant.username
                     )
-            msg = _("{0} has been removed from the team.", member.username)
-        elif not member.is_claimed:
-            # Attempted to add a stub participant
-            raise Response(403)
+            msg = _("{0} has been removed from the team.", participant.username)
 
-        if take == PENNY:
-            if is_member:
-                msg = _("{0} is already a member of this team.", member.username)
+        elif take == PENNY:
+            if participant_is_member:
+                msg = _("{0} is already a participant of this team.", participant.username)
             else:
-                team.add_member(member)
-                msg = _("{0} has been added to the team.", member.username)
+                team.add_member(participant, recorder)
+                msg = _("{0} has been added to the team.", participant.username)
 
-    elif is_member:
+        else:
+            # Team owner can only add or remove members, not otherwise set takes.
+            raise Response(400)
+
+    elif participant_is_member:
         if take == ZERO and not request.body.get('confirmed'):
             out['confirm'] = _("Are you sure you want to leave this team?")
         else:
-            new_take = team.set_take_for(member, take, user.participant)
+
+            try:
+                new_take = team.set_take_for(participant, take, recorder)
+            except NotAllowed as exc:
+                raise Response(403, exc.args[0])
+            except:
+                raise Response(400)
+
             new_take_str = format_currency(new_take, 'USD')
-            if new_take < take:
-                msg = _("Your take is now {0} (you can't go higher this week).",
-                        new_take_str)
-            else:
-                msg = _("Your take is now {0}.", new_take_str)
+            msg = _("Your take is now {0}.", new_take_str)
 
     else:
-        # Only the team itself can add new members.
         raise Response(403)
 
     if 'confirm' not in out:
-        out['members'] = team.get_members(user.participant)
+        out['memberships'] = team.get_memberships()
         out['success'] = msg
-
-else:
-    SQL = "SELECT ctime, mtime, member AS username, amount::text as take " \
-          "FROM current_takes WHERE team=%s AND member=%s"
-    out = website.db.one(SQL, (team.username, member.username))
 
 [---] application/json via json_dump
 out

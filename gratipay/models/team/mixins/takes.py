@@ -55,7 +55,7 @@ class TakesMixin(object):
         """Set the amount a participant wants to take from this team during payday.
 
         :param Participant participant: the participant to set the take for
-        :param int take: the amount the participant wants to take
+        :param Decimal take: the amount the participant wants to take
         :param Participant recorder: the participant making the change
 
         :return: the new take as a py:class:`~decimal.Decimal`
