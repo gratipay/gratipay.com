@@ -91,9 +91,8 @@ class TakesMixin(object):
             # Compute the current takes
             old_takes = self.compute_actual_takes(cursor)
 
-            old_take = self.get_take_for(participant, cursor=cursor)
             if recorder.username != self.owner:
-                if recorder == participant and not old_take:
+                if recorder == participant and participant.id not in old_takes:
                     raise NotAllowed('can only set take if already a member of the team')
 
             cursor.one( """
