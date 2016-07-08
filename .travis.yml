@@ -5,7 +5,6 @@ branches:
   only:
     - master
 before_install:
- - node --version
  - git branch -vv | grep '^*'
 cache:
   directories:
@@ -15,7 +14,6 @@ install:
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rf env; fi
  - touch requirements.txt package.json
  - make env
- - make node_modules
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
