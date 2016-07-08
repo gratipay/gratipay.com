@@ -47,6 +47,9 @@ fake:
 run: env
 	PATH=$(env_bin):$(PATH) $(honcho_run) web
 
+bgrun: env
+	PATH=$(env_bin):$(PATH) $(honcho_run) web &
+
 stop:
 	pkill gunicorn
 
@@ -59,9 +62,9 @@ test-schema: env
 pyflakes: env
 	$(env_bin)/pyflakes *.py bin gratipay tests
 
-test: pytest jstest
+test: test-schema pytest ttwtest
 
-pytest: test-schema env
+pytest: env
 	$(py_test) --cov gratipay $(pytest)
 	@$(MAKE) --no-print-directory pyflakes
 
@@ -74,12 +77,8 @@ test-cov: env
 
 tests: test
 
-node_modules: package.json
-	npm install --no-bin-links
-	@if [ -d node_modules ]; then touch node_modules; fi
-
-jstest: test-schema node_modules
-	node_modules/grunt-cli/bin/grunt test
+ttwtest: bgrun
+	$(py_test) ./tests/ttw/
 
 transifexrc:
 	@echo '[https://www.transifex.com]' >.transifexrc
