@@ -814,3 +814,11 @@ CREATE VIEW current_payment_instructions AS
 CREATE TRIGGER update_current_payment_instruction
     INSTEAD OF UPDATE ON current_payment_instructions
     FOR EACH ROW EXECUTE PROCEDURE update_payment_instruction();
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4037
+
+BEGIN;
+    DROP VIEW current_payroll;
+    DROP TABLE payroll;
+END;
