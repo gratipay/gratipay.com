@@ -265,6 +265,9 @@ msgid ""
 "{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
 msgstr "{nowrap}Controlla lo stato della tua{_nowrap} {a}richiesta di pagamento 1.0{_a}."
 
+msgid "About"
+msgstr "Chi siamo"
+
 msgid "Blog"
 msgstr "Blog"
 
@@ -808,9 +811,6 @@ msgstr "Pagamenti Ricevuti, in Ordine di Quantità di Pagamenti"
 
 msgid "Payments Received, by Dollar Amount"
 msgstr "Pagamenti Ricevuti, in Ordine di Valore in Dollari"
-
-msgid "About"
-msgstr "Chi siamo"
 
 msgid "Welcome!"
 msgstr "Benvenuto!"

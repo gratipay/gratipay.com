@@ -274,6 +274,9 @@ msgid ""
 "{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
 msgstr ""
 
+msgid "About"
+msgstr "Über"
+
 msgid "Blog"
 msgstr "Blog"
 
@@ -817,9 +820,6 @@ msgstr ""
 
 msgid "Payments Received, by Dollar Amount"
 msgstr ""
-
-msgid "About"
-msgstr "Über"
 
 msgid "Welcome!"
 msgstr ""
