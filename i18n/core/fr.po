@@ -455,7 +455,7 @@ msgstr "Arrêter de donner"
 
 msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
-msgstr "Financez votre paiement avec votre {0}carte de crédit{1} !"
+msgstr "Financez cette équipe avec votre {0}carte de crédit{1}  !"
 
 msgid "1.0"
 msgstr "1.0"
@@ -553,13 +553,13 @@ msgid "Continue"
 msgstr "Continuer"
 
 msgid "Apply for a New Team"
-msgstr "Demander la création d'une nouvelle équipe"
+msgstr "Création d'une nouvelle équipe"
 
 msgid "created {ago}"
 msgstr "créée {ago}"
 
 msgid "owned by {a}{owner}{_a}"
-msgstr "appartenant à {a}{owner}{_a}"
+msgstr "géré par {a}{owner}{_a}"
 
 msgid "You must sign in to apply for a new Team."
 msgstr "Vous devez être connecté pour candidater à la création d'une nouvelle équipe."
@@ -616,7 +616,7 @@ msgid "What is the customer-facing web page for your product or service?"
 msgstr "Quelle est la page web destinée aux clients qui présente votre produit ou service ?"
 
 msgid "Self-onboarding Documentation URL"
-msgstr "Document sur comment contribuer"
+msgstr "Comment contribuer ?"
 
 msgid ""
 "Where can people find instructions on how to do your work for you "
@@ -624,7 +624,7 @@ msgid ""
 msgstr "Où peut-on trouver les instructions pour travailler avec vous ({0}exemple{1}) ?"
 
 msgid "To-do URL"
-msgstr "Adresse de la liste de tâches"
+msgstr "Liste de tâches"
 
 msgid "Where can people find a list of available work to do for your Team?"
 msgstr "Où peut-on trouver la liste de tâches de votre équipe ?"
@@ -636,7 +636,7 @@ msgid "I agree to have my application {0}publicly reviewed{1}."
 msgstr "J'accepte que ma candidature soit soumise à un {0}examen public{1}."
 
 msgid "I agree to be responsible for {0}payroll{1}."
-msgstr "J'accepte être responsable pour le {0}partage{1}."
+msgstr "Je reconnais être responsable de la {0}redistribution{1}."
 
 msgid "I agree to the {0}terms of service{1}."
 msgstr "Je suis en accord avec les {0}termes de service{1}."
