@@ -8,6 +8,7 @@
 # goofy_babelzilla <goofyfr@gmail.com>, 2014
 # hugues martin, 2014-2015
 # Loris Reiff <loris.reiff@hotmail.com>, 2014
+# Thomas Chauchefoin <thomas@chauchefoin.fr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
