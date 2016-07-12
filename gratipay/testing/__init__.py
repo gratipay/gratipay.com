@@ -3,6 +3,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import itertools
+import os
 import unittest
 from collections import defaultdict
 from os.path import dirname, join, realpath
@@ -19,8 +20,9 @@ from gratipay.main import website
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
-from gratipay.security.user import User
+from gratipay.security import user
 from gratipay.testing.vcr import use_cassette
+from gratipay.testing.browser import Browser
 from psycopg2 import IntegrityError, InternalError
 
 
@@ -50,8 +52,7 @@ class ClientWithAuth(Client):
         # user authentication
         auth_as = kw.pop('auth_as', None)
         if auth_as:
-            user = User.from_username(auth_as)
-            user.sign_in(self.cookie)
+            user.User.from_username(auth_as).sign_in(self.cookie)
 
         for k, v in kw.pop('cookies', {}).items():
             self.cookie[k] = v
@@ -67,12 +68,14 @@ class Harness(unittest.TestCase):
     tablenames = db.all("SELECT tablename FROM pg_tables "
                         "WHERE schemaname='public' AND tablename != 'countries'")
     seq = itertools.count(0)
+    use_VCR = True
 
 
     @classmethod
     def setUpClass(cls):
         cls.db.run("ALTER SEQUENCE exchanges_id_seq RESTART WITH 1")
-        cls.setUpVCR()
+        if cls.use_VCR:
+            cls.setUpVCR()
 
 
     @classmethod
@@ -93,7 +96,8 @@ class Harness(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.vcr_cassette.__exit__(None, None, None)
+        if cls.use_VCR:
+            cls.vcr_cassette.__exit__(None, None, None)
 
 
     def setUp(self):
@@ -142,6 +146,7 @@ class Harness(unittest.TestCase):
             for v, w in zip(row, widths):
                 print("{0:{width}}".format(unicode(v), width=w), end=' | ')
             print()
+
 
     def make_team(self, *a, **kw):
 
@@ -308,6 +313,69 @@ class Harness(unittest.TestCase):
              LIMIT 1
 
         """, (tipper, tippee), back_as=dict, default=default)['amount']
+
+
+class BrowserHarness(Harness):
+    """This harness passes everything through to an underlying Splinter Browser.
+    """
+
+    _browser = Browser('phantomjs')
+    use_VCR = False  # without this we get fixture spam from communication with PhantomJS
+    base_url = os.environ['WEBDRIVER_BASE_URL']
+
+    def setUp(self):
+        Harness.setUp(self)
+        self.cookies.delete()
+        self.visit('/')
+
+    def tearDown(self):
+        Harness.tearDown(self)
+        self.cookies.delete()
+
+    def visit(self, url):
+        """Extend to prefix our base URL.
+        """
+        return self._browser.visit(self.base_url + url)
+
+    def sign_in(self, username):
+        """Given a username, sign in the user.
+        """
+        if self.url == 'about:blank':
+            # We need a page loaded in order to set an authentication cookie.
+            self.visit('/')
+        # This is duplicated from User.sign_in to work with Splinter's cookie API.
+        token = user.uuid.uuid4().hex
+        expires = user.utcnow() + user.SESSION_TIMEOUT
+        Participant.from_username(username).update_session(token, expires)
+        self.cookies.add({user.SESSION: token})
+
+    def css(self, selector):
+        """Shortcut for find_by_css.
+        """
+        return self.find_by_css(selector)
+
+    def js(self, code):
+        """Shortcut for evaluate_script.
+        """
+        return self.evaluate_script(code)
+
+    def has_text(self, text, timeout=None):
+        """Shortcut for is_text_present.
+        """
+        return self.is_text_present(text, timeout)
+
+    def has_element(self, selector, timeout=None):
+        """Shortcut for is_element_present_by_css.
+        """
+        return self.is_element_present_by_css(selector, timeout)
+
+    def __getattr__(self, name):
+        try:
+            out = self.__getattribute__(name)
+        except AttributeError:
+            out = getattr(self._browser, name)
+        return out
+
 
 
 class Foobar(Exception): pass

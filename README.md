@@ -391,11 +391,10 @@ deployment.
 Testing [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
 =======
 
-Our test suite is divided into JavaScript tests and Python tests. The Python
-part of the test suite is much more extensive than the JavaScript part. You need
-to install [PhantomJS](http://phantomjs.org/) separately in order to run the
-JavaScript tests. For Python we use the [pytest](http://pytest.org/) test runner;
-it's installed automatically as part of `make env`.
+Our test suite is divided into through-the-web (TTW) tests and Python tests.
+You need to install [PhantomJS](http://phantomjs.org/) separately in order to
+run the TTW tests. For both suites we use the [pytest](http://pytest.org/) test
+runner; it's installed automatically as part of `make env`.
 
 The easiest way to run the whole test suite is:
 
@@ -406,7 +405,7 @@ make test
 You can also do:
 
 ```shell
-make jstest
+make ttwtest
 ```
 
 and/or:
