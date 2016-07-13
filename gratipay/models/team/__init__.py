@@ -12,7 +12,7 @@ from gratipay.models import add_event
 from postgres.orm import Model
 
 from gratipay.billing.exchanges import MINIMUM_CHARGE
-from gratipay.models.team.mixins import TipMigration
+from gratipay.models.team import mixins
 
 # Should have at least one letter.
 TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,-_ ]+)$')
@@ -33,7 +33,7 @@ def slugize(name):
     return slug
 
 
-class Team(Model, TipMigration):
+class Team(Model, mixins.Available, mixins.TipMigration):
     """Represent a Gratipay team.
     """
 

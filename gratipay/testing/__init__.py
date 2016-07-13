@@ -169,6 +169,8 @@ class Harness(unittest.TestCase):
             _kw['slug_lower'] = _kw['slug'].lower()
         if 'is_approved' not in _kw:
             _kw['is_approved'] = False
+        if 'available' not in _kw:
+            _kw['available'] = 0
 
         if Participant.from_username(_kw['owner']) is None:
             self.make_participant(_kw['owner'], claimed_time='now', last_paypal_result='')
@@ -176,9 +178,10 @@ class Harness(unittest.TestCase):
         team = self.db.one("""
             INSERT INTO teams
                         (slug, slug_lower, name, homepage, product_or_service, todo_url,
-                         onboarding_url, owner, is_approved)
+                         onboarding_url, owner, is_approved, available)
                  VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s, %(product_or_service)s,
-                         %(todo_url)s, %(onboarding_url)s, %(owner)s, %(is_approved)s)
+                         %(todo_url)s, %(onboarding_url)s, %(owner)s, %(is_approved)s,
+                         %(available)s)
               RETURNING teams.*::teams
         """, _kw)
 
