@@ -427,13 +427,13 @@ msgstr "Leer meer"
 msgid "Receiving"
 msgstr "Ontvangt"
 
-msgid "Sharing"
-msgstr ""
-
 msgid "Joined {ago}"
 msgstr ""
 
 msgid "Applied {ago}"
+msgstr ""
+
+msgid "Distributing"
 msgstr ""
 
 msgid "Teams"
@@ -710,33 +710,6 @@ msgstr "Hartelijk dank voor het steunen van {0}!"
 msgid "You have canceled your payment to {0}."
 msgstr ""
 
-msgid "You can't edit a closed team."
-msgstr ""
-
-msgid "You can't edit a rejected team."
-msgstr ""
-
-msgid "Please upload a PNG or JPG image."
-msgstr ""
-
-msgid "Please fill out the '{}' field."
-msgstr ""
-
-msgid "Please enter an http[s]:// URL for the '{}' field."
-msgstr ""
-
-msgid "Please upload an image smaller than 100 kB."
-msgstr ""
-
-msgid "Sorry, there was a problem saving your image. Please try again."
-msgstr ""
-
-msgid "Edit your team"
-msgstr ""
-
-msgid "Modify"
-msgstr ""
-
 msgid "User not found."
 msgstr "Gebruiker is niet gevonden."
 
@@ -795,6 +768,33 @@ msgstr "Geef een Gratipay gebruikersnaam op"
 
 msgid "Add"
 msgstr "Toevoegen"
+
+msgid "You can't edit a closed team."
+msgstr ""
+
+msgid "You can't edit a rejected team."
+msgstr ""
+
+msgid "Please upload a PNG or JPG image."
+msgstr ""
+
+msgid "Please fill out the '{}' field."
+msgstr ""
+
+msgid "Please enter an http[s]:// URL for the '{}' field."
+msgstr ""
+
+msgid "Please upload an image smaller than 100 kB."
+msgstr ""
+
+msgid "Sorry, there was a problem saving your image. Please try again."
+msgstr ""
+
+msgid "Edit your team"
+msgstr ""
+
+msgid "Modify"
+msgstr ""
 
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr ""

@@ -429,14 +429,14 @@ msgstr "En savoir plus"
 msgid "Receiving"
 msgstr "Reçoit"
 
-msgid "Sharing"
-msgstr "Partage"
-
 msgid "Joined {ago}"
 msgstr "Inscrit {ago}"
 
 msgid "Applied {ago}"
 msgstr "A candidaté {ago}"
+
+msgid "Distributing"
+msgstr ""
 
 msgid "Teams"
 msgstr "Équipes"
@@ -712,33 +712,6 @@ msgstr "Merci beaucoup de soutenir {0} !"
 msgid "You have canceled your payment to {0}."
 msgstr "Vous avez annulé votre paiement pour {0}."
 
-msgid "You can't edit a closed team."
-msgstr "Vous ne pouvez pas modifier une équipe fermée."
-
-msgid "You can't edit a rejected team."
-msgstr "Vous ne pouvez pas modifier une équipe rejetée."
-
-msgid "Please upload a PNG or JPG image."
-msgstr "Merci d'uploader une image au format PNG ou JPG."
-
-msgid "Please fill out the '{}' field."
-msgstr "Merci de remplir le champ « {} »."
-
-msgid "Please enter an http[s]:// URL for the '{}' field."
-msgstr "Merci d'utiliser une adresse en http[s]:// pour le champ « {} »."
-
-msgid "Please upload an image smaller than 100 kB."
-msgstr "Merci d'utiliser une image plus petite que 100 Ko."
-
-msgid "Sorry, there was a problem saving your image. Please try again."
-msgstr "Désolé, il y a eu un problème au moment de l'enregistrement de votre image. Merci d'essayer à nouveau."
-
-msgid "Edit your team"
-msgstr "Modifier votre équipe"
-
-msgid "Modify"
-msgstr "Modifier"
-
 msgid "User not found."
 msgstr "Utilisateur introuvable."
 
@@ -797,6 +770,33 @@ msgstr "Entrez un nom d'utilisateur Gratipay"
 
 msgid "Add"
 msgstr "Ajouter"
+
+msgid "You can't edit a closed team."
+msgstr "Vous ne pouvez pas modifier une équipe fermée."
+
+msgid "You can't edit a rejected team."
+msgstr "Vous ne pouvez pas modifier une équipe rejetée."
+
+msgid "Please upload a PNG or JPG image."
+msgstr "Merci d'uploader une image au format PNG ou JPG."
+
+msgid "Please fill out the '{}' field."
+msgstr "Merci de remplir le champ « {} »."
+
+msgid "Please enter an http[s]:// URL for the '{}' field."
+msgstr "Merci d'utiliser une adresse en http[s]:// pour le champ « {} »."
+
+msgid "Please upload an image smaller than 100 kB."
+msgstr "Merci d'utiliser une image plus petite que 100 Ko."
+
+msgid "Sorry, there was a problem saving your image. Please try again."
+msgstr "Désolé, il y a eu un problème au moment de l'enregistrement de votre image. Merci d'essayer à nouveau."
+
+msgid "Edit your team"
+msgstr "Modifier votre équipe"
+
+msgid "Modify"
+msgstr "Modifier"
 
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr "{0} reçoit {1} par semaine de la part de {2} ~utilisateurs."
