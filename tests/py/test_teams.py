@@ -421,7 +421,7 @@ class TestTeams(Harness):
     def test_save_image_records_the_event(self):
         team = self.make_team()
         oids = team.save_image(IMAGE, IMAGE, IMAGE, 'image/png')
-        event = self.db.one('SELECT * FROM events')
+        event = self.db.all('SELECT * FROM events ORDER BY ts DESC')[0]
         assert event.payload == { 'action': 'upsert_image'
                                 , 'original': oids['original']
                                 , 'large': oids['large']
@@ -474,7 +474,7 @@ class TestTeams(Harness):
     def test_update_records_the_old_values_as_events(self):
         team = self.make_team(slug='enterprise', product_or_service='Product')
         team.update(name='Enterprise', product_or_service='We save galaxies.')
-        event = self.db.one('SELECT * FROM events')
+        event = self.db.all('SELECT * FROM events ORDER BY ts DESC')[0]
         assert event.payload == { 'action': 'update'
                                 , 'id': team.id
                                 , 'name': 'The Enterprise'

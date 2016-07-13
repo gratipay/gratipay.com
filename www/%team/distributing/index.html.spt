@@ -1,18 +1,14 @@
 # encoding: utf8
-"""Show information about a single participant. It might be you!
-"""
-from gratipay.utils import get_participant
+from gratipay.utils import get_team
 
 [-----------------------------------------------------------------------------]
-website.redirect('..', base_url='')  # XXX Migrating to Teams! Fix this up!
-participant = team = get_participant(state, restrict=False)
-if not team.show_as_team(user):
-  website.redirect('../', base_url='')
-banner = team.username
+team = get_team(state)
+if team.available == 0:
+    website.redirect('..', base_url='')
 title = _("Team Members")
 
 [-----------------------------------------------------------------------------]
-{% extends "templates/profile.html" %}
+{% extends "templates/team-base.html" %}
 
 {% block scripts %}
 <script>$(document).ready(Gratipay.team.init);</script>
@@ -36,7 +32,7 @@ title = _("Team Members")
       <td class="figure last_week"></td>
       <td class="figure this_week"></td>
       <td class="figure balance">
-        {{ team.balance + team.receiving - team.giving }}
+        {{ team.available }}
       </td>
       <td class="figure percentage"></td>
     </tr>

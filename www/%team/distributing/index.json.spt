@@ -1,0 +1,12 @@
+"""Endpoint to list team members.
+"""
+from gratipay.utils import get_team
+
+[--------------------]
+request.allow('GET')
+team = get_team(state)
+if team.available == 0:
+    website.redirect('..', base_url='')
+
+[--------------------] application/json via json_dump
+team.get_memberships(user.participant)

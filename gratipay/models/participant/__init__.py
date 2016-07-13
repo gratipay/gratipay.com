@@ -37,6 +37,7 @@ from gratipay.models import add_event
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.team import Team
+from gratipay.models.team.mixins.takes import ZERO
 from gratipay.models.participant import mixins
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import (
@@ -336,9 +337,8 @@ class Participant(Model, mixins.Identity):
     def clear_takes(self, cursor):
         """Leave all teams by zeroing all takes.
         """
-        for team, nmembers in self.get_old_teams():
-            t = Participant.from_username(team)
-            t.set_take_for(self, Decimal(0), self, cursor)
+        for team in self.get_teams():
+            team.set_take_for(self, ZERO, cursor=cursor)
 
 
     def clear_personal_information(self, cursor):
@@ -1070,30 +1070,30 @@ class Participant(Model, mixins.Identity):
 
 
     def get_teams(self, only_approved=False, cursor=None):
-        """Return a list of teams this user is the owner of.
+        """Return a list of teams this user is an owner or member of.
         """
-        teams = (cursor or self.db).all( "SELECT teams.*::teams FROM teams WHERE owner=%s"
-                                       , (self.username,)
+        teams = (cursor or self.db).all("""
+            SELECT teams.*::teams FROM teams WHERE owner=%s
+
+            UNION
+
+            SELECT teams.*::teams FROM teams WHERE id IN (
+                SELECT team_id FROM current_takes WHERE participant_id=%s
+            )
+        """, (self.username, self.id)
                                         )
         if only_approved:
             teams = [t for t in teams if t.is_approved]
         return teams
 
 
-    def get_old_teams(self):
-        """Return a list of old-style teams this user was a member of.
+    def member_of(self, team):
+        """Given a Team object, return a boolean.
         """
-        return self.db.all("""
-
-            SELECT team AS name
-                 , ( SELECT count(*)
-                       FROM current_takes
-                      WHERE team=x.team
-                    ) AS nmembers
-              FROM current_takes x
-             WHERE member=%s;
-
-        """, (self.username,))
+        for take in team.get_current_takes():
+            if take['member'] == self.username:
+                return True
+        return False
 
 
     def insert_into_communities(self, is_member, name, slug):
@@ -1179,14 +1179,14 @@ class Participant(Model, mixins.Identity):
         return out
 
 
-    class StillATeamOwner(Exception): pass
+    class StillOnATeam(Exception): pass
     class BalanceIsNotZero(Exception): pass
 
     def final_check(self, cursor):
         """Sanity-check that teams and balance have been dealt with.
         """
         if self.get_teams(cursor=cursor):
-            raise self.StillATeamOwner
+            raise self.StillOnATeam
         if self.balance != 0:
             raise self.BalanceIsNotZero
 

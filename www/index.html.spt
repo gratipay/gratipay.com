@@ -135,11 +135,6 @@ suppress_welcome = 'suppress-welcome' in request.cookie
                                 if team.receiving else '- &nbsp;'|safe }}</td>
                         <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
                     </tr>
-                    <tr>
-                        <td class="label">{{ _("Sharing") }}</td>
-                        <td>- &nbsp;</td>
-                        <td>-</td>
-                    </tr>
                 </table>
                 {% endif %}
             </td>
