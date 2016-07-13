@@ -691,7 +691,7 @@ class Tests(Harness):
         alice = self.make_participant('alice')
         self.make_team(owner=alice)
         with self.db.get_cursor() as cursor:
-            pytest.raises(alice.StillATeamOwner, alice.archive, cursor)
+            pytest.raises(alice.StillOnATeam, alice.archive, cursor)
 
     def test_archive_fails_if_balance_is_positive(self):
         alice = self.make_participant('alice', balance=2)

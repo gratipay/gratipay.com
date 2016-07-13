@@ -29,7 +29,7 @@ class TestClosing(Harness):
     def test_close_fails_if_still_owns_a_team(self):
         alice = self.make_participant('alice', claimed_time='now')
         self.make_team(owner=alice)
-        with pytest.raises(alice.StillATeamOwner):
+        with pytest.raises(alice.StillOnATeam):
             alice.close()
 
     def test_close_page_is_usually_available(self):

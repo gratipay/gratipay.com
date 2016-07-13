@@ -173,7 +173,14 @@ class Harness(unittest.TestCase):
             _kw['available'] = 0
 
         if Participant.from_username(_kw['owner']) is None:
-            self.make_participant(_kw['owner'], claimed_time='now', last_paypal_result='')
+            owner = self.make_participant( _kw['owner']
+                                         , claimed_time='now'
+                                         , last_paypal_result=''
+                                         , email_address=_kw['owner']+'@example.com'
+                                          )
+            TT = self.db.one("SELECT id FROM countries WHERE code='TT'")
+            owner.store_identity_info(TT, 'nothing-enforced', {'name': 'Owner'})
+            owner.set_identity_verification(TT, True)
 
         team = self.db.one("""
             INSERT INTO teams
