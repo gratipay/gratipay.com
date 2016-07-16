@@ -78,7 +78,7 @@ if request.method == 'POST':
         raise Response(403)
 
     if 'confirm' not in out:
-        out['memberships'] = team.get_memberships()
+        out['members'] = team.get_memberships()
         out['success'] = msg
 
 [---] application/json via json_dump

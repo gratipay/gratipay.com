@@ -39,8 +39,8 @@ Gratipay.team = (function() {
     }
 
     function drawRows(members) {
-        nmembers = members.length - 1; // includes the Team itself, which we don't
-                                       // want to enumerate
+        nmembers = members.length;
+
         var rows = [];
 
         if (nmembers === 0) {
@@ -64,7 +64,7 @@ Gratipay.team = (function() {
                 rows.push(Gratipay.jsonml(
                     [ 'tr'
                     , ['td', {'class': 'n'}, (i === nmembers ? '' : nmembers - i)]
-                    , ['td', ['a', {'href': '/'+member.username+'/'}, member.username]]
+                    , ['td', ['a', {'href': '/~'+member.username+'/'}, member.username]]
                     , ['td', {'class': 'figure last_week'}, num(member.last_week)]
                     , ['td', {'class': 'figure take ' + increase}, drawMemberTake(member)]
                     , ['td', {'class': 'figure balance'}, num(member.balance)]
@@ -110,18 +110,21 @@ Gratipay.team = (function() {
             ));
         }
         $('#lookup-results').html(items);
+        if (items.length === 1)
+            selectLookupResult.call($('#lookup-results li'));
     }
 
     function selectLookupResult() {
-        $('#query').val($(this).html());
+        $li = $(this);
+        $('#query').val($li.html()).data('id', $li.data('id'));
         $('#lookup-results').empty();
     }
 
     function add(e) {
         e.preventDefault();
         e.stopPropagation();
-        var query = $('#query').val();
-        setTake(query, '0.01');
+        var participantId = $('#query').data('id');
+        setTake(participantId, '0.01');
         $('#lookup-results').empty();
         $('#query').val('').focus();
         return false;
@@ -161,7 +164,7 @@ Gratipay.team = (function() {
         return false;
     }
 
-    function setTake(username, take, confirmed) {
+    function setTake(participantId, take, confirmed) {
         if ($('#take').parent().find('.updating').length === 0) {
             var $updating = $('<span class="updating"></span>');
             $updating.text($('#team').data('updating'));
@@ -173,12 +176,12 @@ Gratipay.team = (function() {
 
         jQuery.ajax(
                 { type: 'POST'
-                , url: username + ".json"
+                , url: participantId + ".json"
                 , data: data
                 , success: function(d) {
                     if (d.confirm) {
                         if (confirm(d.confirm)) {
-                            return setTake(username, take, true)
+                            return setTake(participantId, take, true)
                         } else {
                             return resetTake()
                         }
