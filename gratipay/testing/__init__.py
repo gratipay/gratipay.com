@@ -335,7 +335,7 @@ class BrowserHarness(Harness):
     """This harness passes everything through to an underlying Splinter Browser.
     """
 
-    _browser = Browser('phantomjs')
+    _browser = Browser(os.environ['WEBDRIVER_BROWSER'])
     use_VCR = False  # without this we get fixture spam from communication with PhantomJS
     base_url = os.environ['WEBDRIVER_BASE_URL']
 
