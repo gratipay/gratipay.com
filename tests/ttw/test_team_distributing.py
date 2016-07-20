@@ -6,15 +6,17 @@ from gratipay.testing import BrowserHarness, D,P
 
 class Tests(BrowserHarness):
 
+    def setUp(self):
+        BrowserHarness.setUp(self)
+        self.enterprise = self.make_team(available=500)
+        self.alice = self.make_participant( 'alice'
+                                          , claimed_time='now'
+                                          , email_address='alice@example.com'
+                                          , verified_in='TT'
+                                           )
+
+
     def test_owner_can_add_a_member(self):
-        self.make_team(available=500)
-
-        self.make_participant( 'alice'
-                             , claimed_time='now'
-                             , email_address='alice@example.com'
-                             , verified_in='TT'
-                              )
-
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
         self.css('.lookup-container .query').first.fill('alice')
@@ -24,40 +26,27 @@ class Tests(BrowserHarness):
 
 
     def test_owner_can_remove_a_member(self):
-        enterprise = self.make_team(available=500)
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , email_address='alice@example.com'
-                                     , verified_in='TT'
-                                      )
-        enterprise.add_member(alice, P('picard'))
-
+        self.enterprise.add_member(self.alice, P('picard'))
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
         self.css('table.team span.remove').first.click()
         time.sleep(0.1)
         self.get_alert().accept()
         time.sleep(0.2)
-        assert enterprise.get_memberships() == []
+        assert self.enterprise.get_memberships() == []
 
 
     def test_totals_are_as_expected(self):
-        enterprise = self.make_team(available=500)
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , email_address='alice@example.com'
-                                     , verified_in='TT'
-                                      )
         bob = self.make_participant( 'bob'
                                    , claimed_time='now'
                                    , email_address='bob@example.com'
                                    , verified_in='TT'
                                     )
-        enterprise.add_member(alice, P('picard'))
-        enterprise.add_member(bob, P('picard'))
+        self.enterprise.add_member(self.alice, P('picard'))
+        self.enterprise.add_member(bob, P('picard'))
 
-        enterprise.set_take_for(alice, D('5.00'), alice)
-        enterprise.set_take_for(bob, D('37.00'), bob)
+        self.enterprise.set_take_for(self.alice, D('5.00'), self.alice)
+        self.enterprise.set_take_for(bob, D('37.00'), bob)
 
         self.visit('/TheEnterprise/distributing/')
 
