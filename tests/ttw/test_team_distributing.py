@@ -52,6 +52,27 @@ class Tests(BrowserHarness):
         assert self.enterprise.get_memberships() == []
 
 
+    def test_members_are_sorted_by_amount_ascending(self):
+        bob = self.make_participant( 'bob'
+                                   , claimed_time='now'
+                                   , email_address='bob@example.com'
+                                   , verified_in='TT'
+                                    )
+        self.enterprise.add_member(self.alice, P('picard'))
+        self.enterprise.add_member(bob, P('picard'))
+
+        self.enterprise.set_take_for(self.alice, D('5.00'), self.alice)
+        self.enterprise.set_take_for(bob, D('37.00'), bob)
+
+        self.visit('/TheEnterprise/distributing/')
+        assert [a.text for a in self.css('table.team a')] == ['alice', 'bob']
+
+        self.enterprise.set_take_for(bob, D('4.00'), bob)
+
+        self.visit('/TheEnterprise/distributing/')
+        assert [a.text for a in self.css('table.team a')] == ['bob', 'alice']
+
+
     def test_totals_are_as_expected(self):
         bob = self.make_participant( 'bob'
                                    , claimed_time='now'
