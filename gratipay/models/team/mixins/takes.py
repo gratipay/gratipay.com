@@ -202,7 +202,7 @@ class TakesMixin(object):
         for take in nominal_takes:
             nominal_amount = take['nominal_amount'] = take.pop('amount')
             actual_amount = take['actual_amount'] = min(nominal_amount, balance)
-            take['balance'] = balance
+            take['balance'] = balance = balance - actual_amount
             take['percentage'] = actual_amount / available
             actual_takes[take['participant'].id] = take
         return actual_takes
