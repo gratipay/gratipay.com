@@ -185,16 +185,17 @@ class Tests(TeamTakesHarness):
         self.enterprise.set_take_for(self.crusher, PENNY * 80, self.crusher)
         self.enterprise.set_take_for(self.bruiser, PENNY, self.picard)
         self.enterprise.set_take_for(self.bruiser, PENNY * 30, self.bruiser)
+
         takes = self.enterprise.compute_actual_takes()
 
         assert tuple(takes) == (self.bruiser.id, self.crusher.id)
 
-        takes[self.bruiser.id]['actual_amount'] = PENNY * 30
-        takes[self.bruiser.id]['nominal_amount'] = PENNY * 30
-        takes[self.bruiser.id]['balance'] = PENNY * 70
-        takes[self.bruiser.id]['percentage'] = D('0.3')
+        assert takes[self.bruiser.id]['actual_amount'] == PENNY * 30
+        assert takes[self.bruiser.id]['nominal_amount'] == PENNY * 30
+        assert takes[self.bruiser.id]['balance'] == PENNY * 70
+        assert takes[self.bruiser.id]['percentage'] == D('0.3')
 
-        takes[self.crusher.id]['actual_amount'] = PENNY * 70
-        takes[self.crusher.id]['nominal_amount'] = PENNY * 80
-        takes[self.crusher.id]['balance'] = ZERO
-        takes[self.crusher.id]['percentage'] = D('0.7')
+        assert takes[self.crusher.id]['actual_amount'] == PENNY * 70
+        assert takes[self.crusher.id]['nominal_amount'] == PENNY * 80
+        assert takes[self.crusher.id]['balance'] == ZERO
+        assert takes[self.crusher.id]['percentage'] == D('0.7')
