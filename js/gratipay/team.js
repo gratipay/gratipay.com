@@ -25,10 +25,10 @@ Gratipay.team = (function() {
 
         if (member.editing_allowed)
             return [ 'form'
-                   , {'id': 'take'}
+                   , {'class': 'edit'}
                    , [ 'input'
                      , { 'value': take
-                       , 'data-username': member.username
+                       , 'data-id': member.participant_id
                        , 'data-take': take // useful to reset form
                        , 'tabindex': '1'
                         }
@@ -87,8 +87,8 @@ Gratipay.team = (function() {
         }
 
         $t('.team-members').html(rows);
-        $t('.take').submit(doTake);
-        $t('.take input').focus().keyup(maybeCancelTake);
+        $t('.team-members .edit').submit(doTake);
+        $t('.team-members .edit input').focus().keyup(maybeCancelTake);
         $t('.team-members .remove').click(remove);
     }
 
@@ -160,10 +160,9 @@ Gratipay.team = (function() {
     function doTake(e) {
         e.preventDefault();
         e.stopPropagation();
-        var frm = $t('.take'), _ = $('input', frm);
-        var username = _.attr('data-username'),
-                take = _.val();
-        setTake(username, take);
+        var input = $t('.take input');
+        var participantId = input.data('id'), take = input.val();
+        setTake(participantId, take);
         return false;
     }
 

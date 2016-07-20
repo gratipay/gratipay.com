@@ -25,6 +25,22 @@ class Tests(BrowserHarness):
         assert [a.text for a in self.css('table.team a')] == ['alice']
 
 
+    def test_member_can_set_their_take(self):
+        self.enterprise.add_member(self.alice, P('picard'))
+        self.sign_in('alice')
+        self.visit('/TheEnterprise/distributing/')
+        self.css('table.team form.edit input').first.fill('5.37\n')
+        time.sleep(0.1)
+        assert self.enterprise.get_take_for(self.alice) == D('5.37')
+
+
+    def test_member_can_set_their_take_again(self):
+        self.test_member_can_set_their_take()
+        self.css('table.team form.edit input').first.fill('100.00\n')
+        time.sleep(0.1)
+        assert self.enterprise.get_take_for(self.alice) == D('100.00')
+
+
     def test_owner_can_remove_a_member(self):
         self.enterprise.add_member(self.alice, P('picard'))
         self.sign_in('picard')
