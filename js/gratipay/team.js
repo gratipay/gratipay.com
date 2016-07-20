@@ -33,7 +33,7 @@ Gratipay.team = (function() {
                     ];
 
         if (member.removal_allowed)
-            return ['span', {'class': 'remove', 'data-username': member.username}, take];
+            return ['span', {'class': 'remove', 'data-id': member.participant_id}, take];
 
         return take;
     }
@@ -133,8 +133,8 @@ Gratipay.team = (function() {
     function remove(e) {
         e.preventDefault();
         e.stopPropagation();
-        var membername = $(e.target).attr('data-username');
-        setTake(membername, '0.00');
+        var participantId = $(e.target).data('id');
+        setTake(participantId, '0.00');
         return false;
     }
 

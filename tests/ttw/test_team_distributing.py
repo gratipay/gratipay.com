@@ -22,6 +22,25 @@ class Tests(BrowserHarness):
         self.css('#lookup-container button').first.click()
         assert [a.text for a in self.css('table#team a')] == ['alice']
 
+
+    def test_owner_can_remove_a_member(self):
+        enterprise = self.make_team(available=500)
+        alice = self.make_participant( 'alice'
+                                     , claimed_time='now'
+                                     , email_address='alice@example.com'
+                                     , verified_in='TT'
+                                      )
+        enterprise.add_member(alice, P('picard'))
+
+        self.sign_in('picard')
+        self.visit('/TheEnterprise/distributing/')
+        self.css('table#team span.remove').first.click()
+        time.sleep(0.1)
+        self.get_alert().accept()
+        time.sleep(0.2)
+        assert enterprise.get_memberships() == []
+
+
     def test_totals_are_as_expected(self):
         enterprise = self.make_team(available=500)
         alice = self.make_participant( 'alice'

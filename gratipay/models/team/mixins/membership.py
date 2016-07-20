@@ -59,7 +59,8 @@ class MembershipMixin(object):
             member['balance'] = take['balance']
             member['percentage'] = take['percentage']
 
-            member['removal_allowed'] = current_participant == self
+            if current_participant:
+                member['removal_allowed'] = current_participant.username == self.owner
             member['editing_allowed'] = False
             member['is_current_user'] = False
             if current_participant is not None:
