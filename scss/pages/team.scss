@@ -1,4 +1,4 @@
-#team {
+#content table.team {
 
     .fine {
         font: normal 10px $Ideal;
@@ -11,7 +11,7 @@
         text-decoration: line-through;
         cursor: pointer;
     }
-    #take input {
+    .take input {
         text-align: right;
         width: 48pt;
         position: relative;
@@ -28,7 +28,7 @@
         font: normal 16px/16px $Ideal;
         height:40px;
     }
-    #lookup-container {
+    .lookup-container {
         position: relative;
         z-index: 3;
         text-align: left;
@@ -38,7 +38,7 @@
         :-ms-input-placeholder { color: $light-brown; } /* ie */
         input:-moz-placeholder { color: $light-brown; }
 
-        #query {
+        .query {
             width: 220px;
             padding: 2px 5px;
             z-index: 1;
@@ -48,7 +48,7 @@
             border: none;
         }
 
-        #lookup-results {
+        .lookup-results {
             width: 225px;
             min-height: 26px;
             position: absolute;

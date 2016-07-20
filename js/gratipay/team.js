@@ -1,8 +1,11 @@
 Gratipay.team = (function() {
+
+    var $t = function(selector) { return $(selector, 'table.team'); };
+
     function init() {
-        $('#lookup-container form').submit(add);
-        $('#lookup-results').on('click', 'li', selectLookupResult);
-        $('#query').focus().keyup(lookup);
+        $t('.lookup-container form').submit(add);
+        $t('.lookup-results').on('click', 'li', selectLookupResult);
+        $t('.query').focus().keyup(lookup);
 
         jQuery.get("index.json").success(function(d) {
             $('.loading-indicator').remove();
@@ -83,10 +86,10 @@ Gratipay.team = (function() {
             ));
         }
 
-        $('#team-members').html(rows);
-        $('#take').submit(doTake);
-        $('#take input').focus().keyup(maybeCancelTake);
-        $('#team-members .remove').click(remove);
+        $t('.team-members').html(rows);
+        $t('.take').submit(doTake);
+        $t('.take input').focus().keyup(maybeCancelTake);
+        $t('.team-members .remove').click(remove);
     }
 
 
@@ -94,9 +97,9 @@ Gratipay.team = (function() {
     // ===
 
     function lookup() {
-        var query = $('#query').val();
+        var query = $t('.query').val();
         if (query === '')
-            $('#lookup-results').empty();
+            $t('.lookup-results').empty();
         else
             jQuery.get("/lookup.json", {query: query}).success(drawLookupResults);
     }
@@ -109,24 +112,24 @@ Gratipay.team = (function() {
                 ['li', {"data-id": result.id}, result.username]
             ));
         }
-        $('#lookup-results').html(items);
+        $t('.lookup-results').html(items);
         if (items.length === 1)
-            selectLookupResult.call($('#lookup-results li'));
+            selectLookupResult.call($t('.lookup-results li'));
     }
 
     function selectLookupResult() {
         $li = $(this);
-        $('#query').val($li.html()).data('id', $li.data('id'));
-        $('#lookup-results').empty();
+        $t('.query').val($li.html()).data('id', $li.data('id'));
+        $t('.lookup-results').empty();
     }
 
     function add(e) {
         e.preventDefault();
         e.stopPropagation();
-        var participantId = $('#query').data('id');
+        var participantId = $t('.query').data('id');
         setTake(participantId, '0.01');
-        $('#lookup-results').empty();
-        $('#query').val('').focus();
+        $t('.lookup-results').empty();
+        $t('.query').val('').focus();
         return false;
     }
 
@@ -149,15 +152,15 @@ Gratipay.team = (function() {
     }
 
     function resetTake() {
-        $('#take').show().parent().find('.updating').remove();
-        var _ = $('#take input');
+        $t('.take').show().parent().find('.updating').remove();
+        var _ = $t('.take input');
         _.val(_.attr('data-take')).blur();
     }
 
     function doTake(e) {
         e.preventDefault();
         e.stopPropagation();
-        var frm = $('#take'), _ = $('input', frm);
+        var frm = $t('.take'), _ = $('input', frm);
         var username = _.attr('data-username'),
                 take = _.val();
         setTake(username, take);
@@ -165,10 +168,10 @@ Gratipay.team = (function() {
     }
 
     function setTake(participantId, take, confirmed) {
-        if ($('#take').parent().find('.updating').length === 0) {
+        if ($t('.take').parent().find('.updating').length === 0) {
             var $updating = $('<span class="updating"></span>');
-            $updating.text($('#team').data('updating'));
-            $('#take').hide().parent().append($updating);
+            $updating.text($t('.team').data('updating'));
+            $t('.take').hide().parent().append($updating);
         }
 
         var data = {take: take};

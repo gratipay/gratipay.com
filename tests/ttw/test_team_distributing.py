@@ -17,10 +17,10 @@ class Tests(BrowserHarness):
 
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
-        self.css('#lookup-container #query').first.fill('alice')
+        self.css('.lookup-container .query').first.fill('alice')
         time.sleep(0.1)
-        self.css('#lookup-container button').first.click()
-        assert [a.text for a in self.css('table#team a')] == ['alice']
+        self.css('.lookup-container button').first.click()
+        assert [a.text for a in self.css('table.team a')] == ['alice']
 
 
     def test_owner_can_remove_a_member(self):
@@ -34,7 +34,7 @@ class Tests(BrowserHarness):
 
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
-        self.css('table#team span.remove').first.click()
+        self.css('table.team span.remove').first.click()
         time.sleep(0.1)
         self.get_alert().accept()
         time.sleep(0.2)

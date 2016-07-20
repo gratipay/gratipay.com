@@ -16,7 +16,7 @@ title = _("Team Members")
 {% endblock %}
 
 {% block content %}
-<table id="team" class="table" data-updating="{{ _('Updating…') }}">
+<table class="team table" data-updating="{{ _('Updating…') }}">
     <thead>
     <tr>
       <th></th>
@@ -39,15 +39,15 @@ title = _("Team Members")
     {% if user.participant.username == team.owner %}
     <tr>
       <td colspan="6" class="lookup">
-        <div id="lookup-container">
+        <div class="lookup-container">
           <form>
             <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
-            <input tabindex="1" id="query"
+            <input tabindex="1" class="query"
                    autocomplete="off"
                    placeholder="{{ _("Enter a Gratipay username") }}"
                />&nbsp;<button type="submit"
                                tabindex="2">{{ _("Add") }}</button>
-            <ul id="lookup-results"></ul>
+            <ul class="lookup-results"></ul>
           </form>
         </div>
       </td>
@@ -55,6 +55,6 @@ title = _("Team Members")
     {% endif %}
     </thead>
     <tfoot><tr><td colspan=6><div class="loading-indicator"/></td></tr></foot>
-    <tbody id="team-members"></tbody>
+    <tbody class="team-members"></tbody>
 </table>
 {% endblock %}
