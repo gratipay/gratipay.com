@@ -75,6 +75,9 @@ retest: env
 test-cov: env
 	$(py_test) --cov-report html --cov gratipay ./tests/py/
 
+envtest: env
+	$(py_test) --cov gratipay $(pytest) $(tests)
+
 tests: test
 
 ttwtest: bgrun
