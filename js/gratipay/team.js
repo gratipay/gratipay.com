@@ -4,9 +4,9 @@ Gratipay.team = (function() {
         $('#lookup-results').on('click', 'li', selectLookupResult);
         $('#query').focus().keyup(lookup);
 
-        jQuery.get("index.json").success(function(members) {
+        jQuery.get("index.json").success(function(d) {
             $('.loading-indicator').remove();
-            drawRows(members);
+            drawRows(d.available, d.members);
         });
     }
 
@@ -38,16 +38,9 @@ Gratipay.team = (function() {
         return take;
     }
 
-    function drawRows(members) {
-        nmembers = members.length;
-
+    function drawRows(available, members) {
+        var nmembers = members.length;
         var rows = [];
-
-        if (nmembers === 0) {
-            rows.push(Gratipay.jsonml(
-                ['tr', ['td', {'colspan': '6', 'class': 'no-members'}, "No members"]]
-            ));
-        }
 
         for (var i=0, len=members.length; i<len; i++) {
             var member = members[i];
@@ -60,29 +53,36 @@ Gratipay.team = (function() {
             if (member.take === member.max_this_week)
                 increase = 'max';
 
-            if (i < nmembers)
-                rows.push(Gratipay.jsonml(
-                    [ 'tr'
-                    , ['td', {'class': 'n'}, (i === nmembers ? '' : nmembers - i)]
-                    , ['td', ['a', {'href': '/~'+member.username+'/'}, member.username]]
-                    , ['td', {'class': 'figure last_week'}, num(member.last_week)]
-                    , ['td', {'class': 'figure take ' + increase}, drawMemberTake(member)]
-                    , ['td', {'class': 'figure balance'}, num(member.balance)]
-                    , ['td', {'class': 'figure percentage'}, perc(member.percentage)]
-                     ]
-                ));
-            else if (nmembers > 0)
-                rows.push(Gratipay.jsonml(
-                    [ 'tr'
-                    , ['td']
-                    , ['td']
-                    , ['td']
-                    , ['td', {'class': 'figure take'}, num(member.take)]
-                    , ['td', {'class': 'figure balance'}, num(member.balance)]
-                    , ['td', {'class': 'figure percentage'}, perc(member.percentage)]
-                     ]
-                ));
+            rows.push(Gratipay.jsonml(
+                [ 'tr'
+                , ['td', {'class': 'n'}, (i === nmembers ? '' : nmembers - i)]
+                , ['td', ['a', {'href': '/~'+member.username+'/'}, member.username]]
+                , ['td', {'class': 'figure last_week'}, num(member.last_week)]
+                , ['td', {'class': 'figure take ' + increase}, drawMemberTake(member)]
+                , ['td', {'class': 'figure balance'}, num(member.balance)]
+                , ['td', {'class': 'figure percentage'}, perc(member.percentage)]
+                 ]
+            ));
         }
+
+        if (nmembers === 0) {
+            rows.push(Gratipay.jsonml(
+                ['tr', ['td', {'colspan': '6', 'class': 'no-members'}, "No members"]]
+            ));
+        } else {
+            rows.push(Gratipay.jsonml(
+                [ 'tr'
+                , {'class': 'totals'}
+                , ['td']
+                , ['td']
+                , ['td']
+                , ['td', {'class': 'figure take'}, num(available - member.balance)]
+                , ['td', {'class': 'figure balance'}, num(member.balance)]
+                , ['td', {'class': 'figure percentage'}, perc(member.balance / available)]
+                 ]
+            ));
+        }
+
         $('#team-members').html(rows);
         $('#take').submit(doTake);
         $('#take input').focus().keyup(maybeCancelTake);
@@ -189,7 +189,7 @@ Gratipay.team = (function() {
                     if(d.success) {
                         Gratipay.notification(d.success, 'success');
                     }
-                    drawRows(d.members);
+                    drawRows(d.available, d.members);
                 }
                 , error: [resetTake, Gratipay.error]
                  });

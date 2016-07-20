@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import time
-from gratipay.testing import BrowserHarness
+from gratipay.testing import BrowserHarness, D,P
 
 
 class Tests(BrowserHarness):
@@ -21,3 +21,27 @@ class Tests(BrowserHarness):
         time.sleep(0.1)
         self.css('#lookup-container button').first.click()
         assert [a.text for a in self.css('table#team a')] == ['alice']
+
+    def test_totals_are_as_expected(self):
+        enterprise = self.make_team(available=500)
+        alice = self.make_participant( 'alice'
+                                     , claimed_time='now'
+                                     , email_address='alice@example.com'
+                                     , verified_in='TT'
+                                      )
+        bob = self.make_participant( 'bob'
+                                   , claimed_time='now'
+                                   , email_address='bob@example.com'
+                                   , verified_in='TT'
+                                    )
+        enterprise.add_member(alice, P('picard'))
+        enterprise.add_member(bob, P('picard'))
+
+        enterprise.set_take_for(alice, D('5.00'), alice)
+        enterprise.set_take_for(bob, D('37.00'), bob)
+
+        self.visit('/TheEnterprise/distributing/')
+
+        assert self.css('tr.totals .take').first.text == '42.00'
+        assert self.css('tr.totals .balance').first.text == '458.00'
+        assert self.css('tr.totals .percentage').first.text == '91.6'

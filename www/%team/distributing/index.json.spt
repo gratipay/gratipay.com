@@ -9,4 +9,4 @@ if team.available == 0:
     website.redirect('..', base_url='')
 
 [--------------------] application/json via json_dump
-team.get_memberships(user.participant)
+{'available': team.available, 'members': team.get_memberships(user.participant)}
