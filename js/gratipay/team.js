@@ -21,18 +21,19 @@ Gratipay.team = (function() {
         var take = num(member.take);
 
         if (member.editing_allowed)
-            return [ 'form', {'id': 'take'}
-                         , ['input', { 'value': take
-                                                 , 'data-username': member.username
-                                                 , 'data-take': take // useful to reset form
-                                                 , 'tabindex': '1'
-                                                    }]
-                            ];
+            return [ 'form'
+                   , {'id': 'take'}
+                   , [ 'input'
+                     , { 'value': take
+                       , 'data-username': member.username
+                       , 'data-take': take // useful to reset form
+                       , 'tabindex': '1'
+                        }
+                      ]
+                    ];
 
         if (member.removal_allowed)
-            return [ 'span', { 'class': 'remove'
-                                             , 'data-username': member.username
-                                                }, take];
+            return ['span', {'class': 'remove', 'data-username': member.username}, take];
 
         return take;
     }
@@ -44,9 +45,7 @@ Gratipay.team = (function() {
 
         if (nmembers === 0) {
             rows.push(Gratipay.jsonml(
-                [ 'tr'
-                , ['td', {'colspan': '6', 'class': 'no-members'}, "No members"]
-                 ]
+                ['tr', ['td', {'colspan': '6', 'class': 'no-members'}, "No members"]]
             ));
         }
 
