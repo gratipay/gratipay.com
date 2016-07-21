@@ -1,7 +1,6 @@
 from __future__ import print_function, unicode_literals
 
-from gratipay.testing import Harness
-from gratipay.models.participant import Participant
+from gratipay.testing import Harness, P
 
 workflow = ['too-little', 'pending-application', 'pending-review', 'rejected', 'pending-payout',
             'completed']
@@ -21,7 +20,7 @@ class Tests(Harness):
         for status in workflow:
             response = self.hit(status, expecting_error=False)
             assert response.code == 200
-            assert Participant.from_username('alice').status_of_1_0_payout == status
+            assert P('alice').status_of_1_0_payout == status
 
     def test_user_cant_change_status_except_for_applying(self):
         self.db.run("UPDATE participants SET status_of_1_0_payout='pending-application' "
@@ -29,16 +28,16 @@ class Tests(Harness):
 
         response = self.hit('pending-payout', auth_as='alice')
         assert response.code == 403
-        assert Participant.from_username('alice').status_of_1_0_payout == 'pending-application'
+        assert P('alice').status_of_1_0_payout == 'pending-application'
 
         response = self.hit('pending-review', auth_as='alice', expecting_error=False)
-        assert Participant.from_username('alice').status_of_1_0_payout == 'pending-review'
+        assert P('alice').status_of_1_0_payout == 'pending-review'
 
     def test_user_must_have_a_payout_route(self):
         self.db.run("DELETE FROM exchange_routes;")
         response = self.hit('pending-payout', auth_as='admin')
         assert response.code == 400
-        assert Participant.from_username('alice').status_of_1_0_payout == 'completed'
+        assert P('alice').status_of_1_0_payout == 'completed'
 
     def test_invalid_is_400(self):
         response = self.hit('invalid_status')
@@ -48,11 +47,11 @@ class Tests(Harness):
         self.db.run("UPDATE participants "
                     "SET balance=10, status_of_1_0_payout='pending-application' "
                     "WHERE username='alice'")
-        alice = Participant.from_username('alice')
+        alice = P('alice')
         assert alice.balance == 10
         assert alice.status_of_1_0_payout == 'pending-application';
 
         self.db.run("UPDATE participants SET balance=0 WHERE username='alice'")
-        alice = Participant.from_username('alice')
+        alice = P('alice')
         assert alice.balance == 0
         assert alice.status_of_1_0_payout == 'completed';

@@ -1,7 +1,6 @@
 from __future__ import print_function, unicode_literals
 
 import datetime
-from decimal import Decimal
 import random
 
 import mock
@@ -25,7 +24,7 @@ from gratipay.models.participant import (
     WontTakeOverWithIdentities
 )
 from gratipay.models.team import Team
-from gratipay.testing import Harness
+from gratipay.testing import Harness, D,P
 
 
 # TODO: Test that accounts elsewhere are not considered claimed by default
@@ -67,11 +66,11 @@ class TestAbsorptions(Harness):
             p = self.make_participant( username
                                      , claimed_time=hour_ago
                                      , last_bill_result=''
-                                     , balance=Decimal(i)
+                                     , balance=D(i)
                                       )
             setattr(self, username, p)
 
-        deadbeef = self.make_participant('deadbeef', balance=Decimal('18.03'), elsewhere='twitter')
+        deadbeef = self.make_participant('deadbeef', balance=D('18.03'), elsewhere='twitter')
         self.expected_new_balance = self.bob.balance + deadbeef.balance
         deadbeef_twitter = AccountElsewhere.from_user_name('twitter', 'deadbeef')
 
@@ -82,17 +81,17 @@ class TestAbsorptions(Harness):
 
     def test_participant_can_be_instantiated(self):
         expected = Participant
-        actual = Participant.from_username('alice').__class__
+        actual = P('alice').__class__
         assert actual is expected
 
     @pytest.mark.xfail(reason="#3399")
     def test_bob_has_two_dollars_in_tips(self):
-        expected = Decimal('2.00')
+        expected = D('2.00')
         actual = self.bob.receiving
         assert actual == expected
 
     def test_alice_gives_to_bob_now(self):
-        assert self.get_tip('alice', 'bob') == Decimal('1.00')
+        assert self.get_tip('alice', 'bob') == D('1.00')
 
     def test_deadbeef_is_archived(self):
         actual = self.db.one( "SELECT count(*) FROM absorptions "
@@ -102,17 +101,17 @@ class TestAbsorptions(Harness):
         assert actual == expected
 
     def test_alice_doesnt_gives_to_deadbeef_anymore(self):
-        assert self.get_tip('alice', 'deadbeef') == Decimal('0.00')
+        assert self.get_tip('alice', 'deadbeef') == D('0.00')
 
     def test_alice_doesnt_give_to_whatever_deadbeef_was_archived_as_either(self):
-        assert self.get_tip('alice', self.deadbeef_archived.username) == Decimal('0.00')
+        assert self.get_tip('alice', self.deadbeef_archived.username) == D('0.00')
 
     def test_there_is_no_more_deadbeef(self):
-        actual = Participant.from_username('deadbeef')
+        actual = P('deadbeef')
         assert actual is None
 
     def test_balance_was_transferred(self):
-        fresh_bob = Participant.from_username('bob')
+        fresh_bob = P('bob')
         assert fresh_bob.balance == self.bob.balance == self.expected_new_balance
         assert self.deadbeef_archived.balance == 0
 
@@ -272,7 +271,7 @@ class TestTakeOver(Harness):
         self.hackedSetUp()
         self.make_tip(self.alice, self.bob, '1.00')
         self.alice.take_over(('twitter', str(self.bob.id)), have_confirmation=True)
-        expected = Decimal('0.00')
+        expected = D('0.00')
         actual = self.alice.giving
         assert actual == expected
 
@@ -281,14 +280,14 @@ class TestTakeOver(Harness):
         self.make_tip(self.alice, self.bob, '1.00')
         self.make_tip(self.alice, self.carl, '1.00')
         self.bob.take_over(('twitter', str(self.carl.id)), have_confirmation=True)
-        assert self.get_tip('alice', 'bob') == Decimal('2.00')
+        assert self.get_tip('alice', 'bob') == D('2.00')
 
     def test_bob_ends_up_tipping_alice_two_dollars(self):
         self.hackedSetUp()
         self.make_tip(self.bob, self.alice, '1.00')
         self.make_tip(self.carl, self.alice, '1.00')
         self.bob.take_over(('twitter', str(self.carl.id)), have_confirmation=True)
-        assert self.get_tip('bob', 'alice') == Decimal('2.00')
+        assert self.get_tip('bob', 'alice') == D('2.00')
 
     def test_ctime_comes_from_the_older_tip(self):
         self.hackedSetUp()
@@ -383,7 +382,7 @@ class Tests(Harness):
 
     def test_changing_username_successfully(self):
         self.participant.change_username('user2')
-        actual = Participant.from_username('user2')
+        actual = P('user2')
         assert self.participant == actual
 
     def test_changing_username_to_nothing(self):
@@ -396,7 +395,7 @@ class Tests(Harness):
 
     def test_changing_username_strips_spaces(self):
         self.participant.change_username('  aaa  ')
-        actual = Participant.from_username('aaa')
+        actual = P('aaa')
         assert self.participant == actual
 
     def test_changing_username_returns_the_new_username(self):
@@ -441,14 +440,14 @@ class Tests(Harness):
         alice.set_payment_instruction(team, '1.00')
 
         actual = alice.get_payment_instruction(team)['amount']
-        assert actual == Decimal('1.00')
+        assert actual == D('1.00')
 
     def test_spi_returns_a_dict(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         team = self.make_team()
         actual = alice.set_payment_instruction(team, '1.00')
         assert isinstance(actual, dict)
-        assert isinstance(actual['amount'], Decimal)
+        assert isinstance(actual['amount'], D)
         assert actual['amount'] == 1
 
     def test_spi_allows_up_to_a_thousand(self):
@@ -480,14 +479,14 @@ class Tests(Harness):
         gratipay = self.make_team('Gratipay', owner=self.make_participant('Gratipay').username)
         alice.set_payment_instruction(gratipay, '0.01')
         assert alice.is_free_rider is False
-        assert Participant.from_username('alice').is_free_rider is False
+        assert P('alice').is_free_rider is False
 
     def test_spi_resets_is_free_rider_to_null(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         gratipay = self.make_team('Gratipay', owner=self.make_participant('Gratipay').username)
         alice.set_payment_instruction(gratipay, '0.00')
         assert alice.is_free_rider is None
-        assert Participant.from_username('alice').is_free_rider is None
+        assert P('alice').is_free_rider is None
 
     def test_spi_sets_id_fields(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
@@ -501,18 +500,18 @@ class Tests(Harness):
 
     def test_get_teams_gets_teams(self):
         self.make_team(is_approved=True)
-        picard = Participant.from_username('picard')
+        picard = P('picard')
         assert [t.slug for t in picard.get_teams()] == ['TheEnterprise']
 
     def test_get_teams_can_get_only_approved_teams(self):
         self.make_team(is_approved=True)
-        picard = Participant.from_username('picard')
+        picard = P('picard')
         self.make_team('The Stargazer', owner=picard, is_approved=False)
         assert [t.slug for t in picard.get_teams(only_approved=True)] == ['TheEnterprise']
 
     def test_get_teams_can_get_all_teams(self):
         self.make_team(is_approved=True)
-        picard = Participant.from_username('picard')
+        picard = P('picard')
         self.make_team('The Stargazer', owner=picard, is_approved=False)
         assert [t.slug for t in picard.get_teams()] == ['TheEnterprise', 'TheStargazer']
 
@@ -529,9 +528,9 @@ class Tests(Harness):
         bob.set_payment_instruction(team, '5.00')
         carl.set_payment_instruction(team, '7.00')
 
-        assert alice.giving == Decimal('3.00')
-        assert bob.giving == Decimal('0.00')
-        assert carl.giving == Decimal('0.00')
+        assert alice.giving == D('3.00')
+        assert bob.giving == D('0.00')
+        assert carl.giving == D('0.00')
 
         funded_tip = self.db.one("SELECT * FROM payment_instructions WHERE is_funded ORDER BY id")
         assert funded_tip.participant_id == alice.id
@@ -543,7 +542,7 @@ class Tests(Harness):
         alice.set_payment_instruction(team, '12.00')
         alice.set_payment_instruction(team, '4.00')
 
-        assert alice.giving == Decimal('4.00')
+        assert alice.giving == D('4.00')
 
     @mock.patch('braintree.PaymentMethod.delete')
     def test_giving_is_updated_when_credit_card_is_updated(self, btd):
@@ -552,15 +551,15 @@ class Tests(Harness):
 
         alice.set_payment_instruction(team, '5.00') # Not funded, failing card
 
-        assert alice.giving == Decimal('0.00')
-        assert Team.from_slug(team.slug).receiving == Decimal('0.00')
+        assert alice.giving == D('0.00')
+        assert Team.from_slug(team.slug).receiving == D('0.00')
 
         # Alice updates her card..
         ExchangeRoute.from_network(alice, 'braintree-cc').invalidate()
         ExchangeRoute.insert(alice, 'braintree-cc', '/cards/bar', '')
 
-        assert alice.giving == Decimal('5.00')
-        assert Team.from_slug(team.slug).receiving == Decimal('5.00')
+        assert alice.giving == D('5.00')
+        assert Team.from_slug(team.slug).receiving == D('5.00')
 
     @mock.patch('braintree.PaymentMethod.delete')
     def test_giving_is_updated_when_credit_card_fails(self, btd):
@@ -569,15 +568,15 @@ class Tests(Harness):
 
         alice.set_payment_instruction(team, '5.00') # funded
 
-        assert alice.giving == Decimal('5.00')
-        assert Team.from_slug(team.slug).receiving == Decimal('5.00')
-        assert Participant.from_username(team.owner).taking == Decimal('5.00')
+        assert alice.giving == D('5.00')
+        assert Team.from_slug(team.slug).receiving == D('5.00')
+        assert P(team.owner).taking == D('5.00')
 
         ExchangeRoute.from_network(alice, 'braintree-cc').update_error("Card expired")
 
-        assert Participant.from_username('alice').giving == Decimal('0.00')
-        assert Team.from_slug(team.slug).receiving == Decimal('0.00')
-        assert Participant.from_username(team.owner).taking == Decimal('0.00')
+        assert P('alice').giving == D('0.00')
+        assert Team.from_slug(team.slug).receiving == D('0.00')
+        assert P(team.owner).taking == D('0.00')
 
 
     # credit_card_expiring
@@ -625,19 +624,19 @@ class Tests(Harness):
 
         """, (alice.id, team.id, ))
 
-        assert alice.get_due(team) == Decimal('5.00')
+        assert alice.get_due(team) == D('5.00')
 
         # Increase subscription amount
         alice.set_payment_instruction(team, '10.00')
-        assert alice.get_due(team) == Decimal('5.00')
+        assert alice.get_due(team) == D('5.00')
 
         # Cancel the subscription
         alice.set_payment_instruction(team, '0.00')
-        assert alice.get_due(team) == Decimal('0.00')
+        assert alice.get_due(team) == D('0.00')
 
         # Revive the subscription
         alice.set_payment_instruction(team, '5.00')
-        assert alice.get_due(team) == Decimal('0.00')
+        assert alice.get_due(team) == D('0.00')
 
 
     # get_age_in_seconds - gais
@@ -662,25 +661,25 @@ class Tests(Harness):
 
     def test_ru_returns_bitbucket_url_for_stub_from_bitbucket(self):
         unclaimed = self.make_elsewhere('bitbucket', '1234', 'alice')
-        stub = Participant.from_username(unclaimed.participant.username)
+        stub = P(unclaimed.participant.username)
         actual = stub.resolve_unclaimed()
         assert actual == "/on/bitbucket/alice/"
 
     def test_ru_returns_github_url_for_stub_from_github(self):
         unclaimed = self.make_elsewhere('github', '1234', 'alice')
-        stub = Participant.from_username(unclaimed.participant.username)
+        stub = P(unclaimed.participant.username)
         actual = stub.resolve_unclaimed()
         assert actual == "/on/github/alice/"
 
     def test_ru_returns_twitter_url_for_stub_from_twitter(self):
         unclaimed = self.make_elsewhere('twitter', '1234', 'alice')
-        stub = Participant.from_username(unclaimed.participant.username)
+        stub = P(unclaimed.participant.username)
         actual = stub.resolve_unclaimed()
         assert actual == "/on/twitter/alice/"
 
     def test_ru_returns_openstreetmap_url_for_stub_from_openstreetmap(self):
         unclaimed = self.make_elsewhere('openstreetmap', '1', 'alice')
-        stub = Participant.from_username(unclaimed.participant.username)
+        stub = P(unclaimed.participant.username)
         actual = stub.resolve_unclaimed()
         assert actual == "/on/openstreetmap/alice/"
 
@@ -707,7 +706,7 @@ class Tests(Harness):
         alice = self.make_participant('alice')
         with self.db.get_cursor() as cursor:
             archived_as = alice.archive(cursor)
-        assert Participant.from_username(archived_as).claimed_time is None
+        assert P(archived_as).claimed_time is None
 
     def test_archive_records_an_event(self):
         alice = self.make_participant('alice')

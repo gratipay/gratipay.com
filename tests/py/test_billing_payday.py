@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from decimal import Decimal as D
 import os
 
 import balanced
@@ -12,7 +11,7 @@ from gratipay.billing.exchanges import create_card_hold, MINIMUM_CHARGE
 from gratipay.billing.payday import NoPayday, Payday
 from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
-from gratipay.testing import Foobar
+from gratipay.testing import Foobar, D,P
 from gratipay.testing.billing import BillingHarness
 from gratipay.testing.emails import EmailHarness
 
@@ -26,8 +25,8 @@ class TestPayday(BillingHarness):
         fch.return_value = {}
         Payday.start().run()
 
-        obama = Participant.from_username('obama')
-        picard = Participant.from_username('picard')
+        obama = P('obama')
+        picard = P('picard')
 
         assert picard.balance == D(MINIMUM_CHARGE)
         assert obama.balance == D('0.00')
@@ -52,8 +51,8 @@ class TestPayday(BillingHarness):
         fch.return_value = {}
         Payday.start().run()
 
-        obama = Participant.from_username('obama')
-        picard = Participant.from_username('picard')
+        obama = P('obama')
+        picard = P('picard')
 
         assert picard.balance == D('10.00')
         assert obama.balance == D('0.00')
@@ -94,8 +93,8 @@ class TestPayday(BillingHarness):
         fch.return_value = {}
         Payday.start().run()    # payday 4
 
-        obama = Participant.from_username('obama')
-        picard = Participant.from_username('picard')
+        obama = P('obama')
+        picard = P('picard')
 
         assert picard.balance == D('12.00')
         assert obama.balance == D('0.00')
@@ -130,8 +129,8 @@ class TestPayday(BillingHarness):
         fch.return_value = {}
         Payday.start().run()
 
-        obama = Participant.from_username('obama')
-        picard = Participant.from_username('picard')
+        obama = P('obama')
+        picard = P('picard')
 
         assert picard.balance == D('0.00')
         assert obama.balance == D('0.00')
@@ -150,8 +149,8 @@ class TestPayday(BillingHarness):
         fch.return_value = {}
         Payday.start().run()
 
-        obama = Participant.from_username('obama')
-        homer = Participant.from_username('homer')
+        obama = P('obama')
+        homer = P('homer')
 
         assert obama.balance == D('0.00')
         assert homer.balance == D('0.00')
@@ -168,8 +167,8 @@ class TestPayday(BillingHarness):
         fch.return_value = {}
         Payday.start().run()
 
-        obama = Participant.from_username('obama')
-        homer = Participant.from_username('homer')
+        obama = P('obama')
+        homer = P('homer')
 
         assert obama.balance == D('0.00')
         assert homer.balance == D('0.00')
@@ -452,8 +451,8 @@ class TestPayin(BillingHarness):
             payday.update_balances(cursor)
 
         assert Participant.from_id(alice.id).balance == D('0.49')
-        assert Participant.from_username('picard').balance == 0
-        assert Participant.from_username('shelby').balance == 0
+        assert P('picard').balance == 0
+        assert P('shelby').balance == 0
 
         payment = self.db.one("SELECT * FROM payments")
         assert payment.amount == D('0.51')
@@ -510,7 +509,7 @@ class TestPayin(BillingHarness):
             payday.update_balances(cursor)
 
         assert Participant.from_id(alice.id).balance == D('0.49')
-        assert Participant.from_username('picard').balance == D('0.51')
+        assert P('picard').balance == D('0.51')
 
         payment = self.db.one("SELECT * FROM payments WHERE direction='to-participant'")
         assert payment.amount == D('0.51')

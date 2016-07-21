@@ -7,8 +7,7 @@ import json
 from mock import patch
 
 from gratipay.billing.payday import Payday
-from gratipay.models.participant import Participant
-from gratipay.testing import Harness
+from gratipay.testing import Harness, P
 from gratipay.testing.billing import BillingHarness
 from gratipay.utils.history import get_end_of_year_balance, iter_payday_events
 
@@ -59,8 +58,8 @@ class TestHistory(BillingHarness):
             """)
 
 
-        obama = Participant.from_username('obama')
-        picard = Participant.from_username('picard')
+        obama = P('obama')
+        picard = P('picard')
 
         assert obama.balance == D('0.00')
         assert picard.balance == D('20.00')

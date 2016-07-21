@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from braintree.test.nonces import Nonces
 import mock
 
+from gratipay.testing import P
 from gratipay.testing.billing import BillingHarness
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
@@ -30,7 +31,7 @@ class TestRoutes(BillingHarness):
         customer = self.roman.get_braintree_account()
         assert len(customer.credit_cards) == 0
 
-        roman = Participant.from_username('roman')
+        roman = P('roman')
         assert roman.get_credit_card_error() == 'invalidated'
         assert roman.braintree_customer_id
 

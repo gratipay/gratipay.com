@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
-from gratipay.models.participant import Participant
-from gratipay.testing import Harness
+from gratipay.testing import Harness, P
 
 
 class Tests(Harness):
@@ -10,4 +9,4 @@ class Tests(Harness):
         self.make_participant('alice', claimed_time='now', last_bill_result='')
         response = self.client.PxST("/ride-free.json", auth_as='alice')
         assert response.code == 204
-        assert Participant.from_username('alice').is_free_rider
+        assert P('alice').is_free_rider
