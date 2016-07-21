@@ -718,3 +718,25 @@ class Tests(Harness):
     def test_suggested_payment_is_zero_for_new_user(self):
         alice = self.make_participant('alice')
         assert alice.suggested_payment == 0
+
+
+    # mo - member_of
+
+    def test_mo_indicates_membership(self):
+        enterprise = self.make_team(available=50)
+        alice = self.make_participant( 'alice'
+                                     , email_address='alice@example.com'
+                                     , verified_in='TT'
+                                     , claimed_time='now'
+                                      )
+        picard = Participant.from_username('picard')
+        enterprise.add_member(alice, picard)
+        assert alice.member_of(enterprise)
+
+    def test_mo_indicates_non_membership(self):
+        enterprise = self.make_team()
+        assert not self.make_participant('alice').member_of(enterprise)
+
+    def test_mo_is_false_for_owners(self):
+        enterprise = self.make_team()
+        assert not Participant.from_username('picard').member_of(enterprise)
