@@ -1,11 +1,10 @@
 from __future__ import print_function, unicode_literals
 
 import datetime
-from decimal import Decimal
 
 import pytest
 
-from gratipay.testing import Harness
+from gratipay.testing import Harness, D
 from gratipay.utils import fake_data
 
 
@@ -23,14 +22,14 @@ class TestChartOfReceiving(Harness):
     @pytest.mark.xfail(reason="#3399")
     def test_get_tip_distribution_handles_a_tip(self):
         self.alice.set_tip_to(self.bob, '3.00')
-        expected = ([[Decimal('3.00'), 1, Decimal('3.00'), 1.0, Decimal('1')]],
-                    1.0, Decimal('3.00'))
+        expected = ([[D('3.00'), 1, D('3.00'), 1.0, D('1')]],
+                    1.0, D('3.00'))
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 
     @pytest.mark.xfail(reason="#3399")
     def test_get_tip_distribution_handles_no_tips(self):
-        expected = ([], 0.0, Decimal('0.00'))
+        expected = ([], 0.0, D('0.00'))
         actual = self.alice.get_tip_distribution()
         assert actual == expected
 
@@ -40,9 +39,9 @@ class TestChartOfReceiving(Harness):
         self.alice.set_tip_to(self.bob, '1.00')
         carl.set_tip_to(self.bob, '3.00')
         expected = ([
-            [Decimal('1.00'), 1L, Decimal('1.00'), 0.5, Decimal('0.25')],
-            [Decimal('3.00'), 1L, Decimal('3.00'), 0.5, Decimal('0.75')]
-        ], 2.0, Decimal('4.00'))
+            [D('1.00'), 1L, D('1.00'), 0.5, D('0.25')],
+            [D('3.00'), 1L, D('3.00'), 0.5, D('0.75')]
+        ], 2.0, D('4.00'))
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 
@@ -53,9 +52,9 @@ class TestChartOfReceiving(Harness):
         self.alice.set_tip_to(self.bob, '200.00')
         carl.set_tip_to(self.bob, '300.00')
         expected = ([
-            [Decimal('200.00'), 1L, Decimal('200.00'), 0.5, Decimal('0.4')],
-            [Decimal('300.00'), 1L, Decimal('300.00'), 0.5, Decimal('0.6')]
-        ], 2.0, Decimal('500.00'))
+            [D('200.00'), 1L, D('200.00'), 0.5, D('0.4')],
+            [D('300.00'), 1L, D('300.00'), 0.5, D('0.6')]
+        ], 2.0, D('500.00'))
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 
@@ -64,8 +63,8 @@ class TestChartOfReceiving(Harness):
         bad_cc = self.make_participant('bad_cc', claimed_time='now', last_bill_result='Failure!')
         self.alice.set_tip_to(self.bob, '1.00')
         bad_cc.set_tip_to(self.bob, '3.00')
-        expected = ([[Decimal('1.00'), 1L, Decimal('1.00'), 1, Decimal('1')]],
-                    1.0, Decimal('1.00'))
+        expected = ([[D('1.00'), 1L, D('1.00'), 1, D('1')]],
+                    1.0, D('1.00'))
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 
@@ -74,8 +73,8 @@ class TestChartOfReceiving(Harness):
         missing_cc = self.make_participant('missing_cc', claimed_time='now')
         self.alice.set_tip_to(self.bob, '1.00')
         missing_cc.set_tip_to(self.bob, '3.00')
-        expected = ([[Decimal('1.00'), 1L, Decimal('1.00'), 1, Decimal('1')]],
-                    1.0, Decimal('1.00'))
+        expected = ([[D('1.00'), 1L, D('1.00'), 1, D('1')]],
+                    1.0, D('1.00'))
         actual = self.bob.get_tip_distribution()
         assert actual == expected
 

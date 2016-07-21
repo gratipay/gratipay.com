@@ -1,9 +1,8 @@
 from __future__ import unicode_literals
-from decimal import Decimal
 
 from psycopg2 import IntegrityError
 from aspen.utils import utcnow
-from gratipay.testing import Harness
+from gratipay.testing import Harness, D
 from gratipay.models.exchange_route import ExchangeRoute
 
 
@@ -99,12 +98,12 @@ class TestRecordAnExchange(Harness):
     def test_dropping_balance_below_zero_is_allowed_in_this_context(self):
         self.record_an_exchange({'amount': '-10', 'fee': '0'})
         actual = self.db.one("SELECT balance FROM participants WHERE username='bob'")
-        assert actual == Decimal('-10.00')
+        assert actual == D('-10.00')
 
     def test_success_records_exchange(self):
         self.record_an_exchange({'amount': '10', 'fee': '0.50'})
-        expected = { "amount": Decimal('10.00')
-                   , "fee": Decimal('0.50')
+        expected = { "amount": D('10.00')
+                   , "fee": D('0.50')
                    , "participant": "bob"
                    , "recorder": "alice"
                    , "note": "noted"
@@ -117,7 +116,7 @@ class TestRecordAnExchange(Harness):
 
     def test_success_updates_balance(self):
         self.record_an_exchange({'amount': '10', 'fee': '0'})
-        expected = Decimal('10.00')
+        expected = D('10.00')
         SQL = "SELECT balance FROM participants WHERE username='bob'"
         actual = self.db.one(SQL)
         assert actual == expected
@@ -128,7 +127,7 @@ class TestRecordAnExchange(Harness):
 
         self.record_an_exchange({'amount': '-7', 'fee': '0'}, make_participants=False)
 
-        expected = Decimal('13.00')
+        expected = D('13.00')
         SQL = "SELECT balance FROM participants WHERE username='bob'"
         actual = self.db.one(SQL)
         assert actual == expected
@@ -138,7 +137,7 @@ class TestRecordAnExchange(Harness):
         self.bob = self.make_participant('bob', claimed_time=utcnow(), balance=20)
         self.bob = self.record_an_exchange({'amount': '-7', 'fee': '1.13'}, False)
         SQL = "SELECT balance FROM participants WHERE username='bob'"
-        assert self.db.one(SQL) == Decimal('11.87')
+        assert self.db.one(SQL) == D('11.87')
 
     def test_can_set_status(self):
         self.make_participants()

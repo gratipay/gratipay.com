@@ -1,7 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import date
-from decimal import Decimal as D
 
 import mock
 import pytest
@@ -9,7 +8,7 @@ import pytest
 from gratipay.billing.payday import Payday
 from gratipay.models.community import Community
 from gratipay.models.participant import Participant
-from gratipay.testing import Harness, P
+from gratipay.testing import Harness, D,P
 
 
 class TestClosing(Harness):

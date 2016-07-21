@@ -4,10 +4,9 @@ import json
 import mock
 import pytest
 import base64
-from decimal import Decimal
 
 from aspen.testing.client import FileUpload
-from gratipay.testing import Harness, T
+from gratipay.testing import Harness, D,T
 from gratipay.models.team import Team, slugize, InvalidTeamName
 
 
@@ -391,7 +390,7 @@ class TestTeams(Harness):
         alice.set_payment_instruction(team, '3.00') # The only funded payment instruction
         bob.set_payment_instruction(team, '5.00')
 
-        assert team.receiving == Decimal('3.00')
+        assert team.receiving == D('3.00')
         assert team.nreceiving_from == 1
 
         funded_payment_instruction = self.db.one("SELECT * FROM payment_instructions "
@@ -405,7 +404,7 @@ class TestTeams(Harness):
         alice.set_payment_instruction(team, '5.00')
         alice.set_payment_instruction(team, '3.00')
 
-        assert team.receiving == Decimal('3.00')
+        assert team.receiving == D('3.00')
         assert team.nreceiving_from == 1
 
 

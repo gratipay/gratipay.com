@@ -1,13 +1,12 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import datetime
-from decimal import Decimal as D
 import json
 
 from mock import patch
 
 from gratipay.billing.payday import Payday
-from gratipay.testing import Harness, P
+from gratipay.testing import Harness, D,P
 from gratipay.testing.billing import BillingHarness
 from gratipay.utils.history import get_end_of_year_balance, iter_payday_events
 

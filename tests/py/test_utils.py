@@ -1,12 +1,11 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import datetime, timedelta
-from decimal import Decimal as D
 
 import pytest
 from aspen.http.response import Response
 from gratipay import utils
-from gratipay.testing import Harness
+from gratipay.testing import Harness, D
 from gratipay.utils import i18n, markdown, pricing, encode_for_querystring, decode_from_querystring
 from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUsername, \
                                                                            RanOutOfUsernameAttempts
