@@ -1,10 +1,22 @@
 from aspen import Response
 
-SQL = "SELECT username, username_lower, id FROM participants " \
-      "WHERE (is_searchable AND username_lower LIKE %s)" \
-      "OR (NOT is_searchable AND username_lower = %s)" \
-      "AND claimed_time IS NOT NULL " \
-      "ORDER BY username_lower LIMIT 5"
+SQL = """
+
+    SELECT username, username_lower, id
+      FROM participants
+     WHERE claimed_time IS NOT NULL
+           AND
+           is_suspicious IS NOT TRUE
+           AND
+           (
+            (is_searchable AND username_lower LIKE %s)
+             OR
+            (NOT is_searchable AND username_lower = %s)
+           )
+  ORDER BY username_lower
+     LIMIT 5
+
+"""
 
 [----------------------]
 
