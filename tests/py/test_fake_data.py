@@ -2,7 +2,7 @@ from __future__ import print_function, unicode_literals
 
 from gratipay.utils import fake_data
 from gratipay.testing import Harness
-
+from gratipay.models import community
 
 class TestFakeData(Harness):
     """
@@ -34,3 +34,9 @@ class TestFakeData(Harness):
         crusher = self.make_participant('crusher', email_address='crusher@example.com')
         country_id = fake_data.fake_participant_identity(crusher)
         assert [x.country.id for x in crusher.list_identity_metadata()] == [country_id]
+
+    def test_slugize(self):
+        """
+            Just a test to ensure that slugize can handle single quotes
+        """
+        assert community.slugize("D'Amorebury") == "d-amorebury" 
