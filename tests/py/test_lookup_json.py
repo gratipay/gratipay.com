@@ -2,35 +2,34 @@ from __future__ import unicode_literals
 
 import json
 
-from aspen.utils import utcnow
 from gratipay.testing import Harness
 
 class TestLookupJson(Harness):
 
-    def test_get_without_query_querystring_returns_400(self):
+    def lookup(self, q):
+        response = self.client.GET('/lookup.json?query={}'.format(q))
+        data = json.loads(response.body)
+        return [d['id'] for d in data]
+
+    def test_get_without_query_returns_400(self):
         response = self.client.GxT('/lookup.json')
         assert response.code == 400
 
-    def test_get_non_existent_user(self):
-        response = self.client.GET('/lookup.json?query={}'.format('alice'))
-        data = json.loads(response.body)
+    def test_looking_up_non_existent_user_finds_nothing(self):
+        assert self.lookup('alice') == [-1]
 
-        assert len(data) == 1
-        assert data[0]['id'] == -1
+    def test_looking_up_non_searchable_user_with_an_exact_match_finds_them(self):
+        alice = self.make_participant("alice", claimed_time='now', is_searchable=False)
+        assert self.lookup('alice') == [alice.id]
 
-    def test_get_existing_user(self):
-        self.make_participant("alice", claimed_time=utcnow())
+    def test_looking_up_non_searchable_user_without_exact_match_finds_nothing(self):
+        self.make_participant("alice", claimed_time='now', is_searchable=False)
+        assert self.lookup('alic') == [-1]
 
-        response = self.client.GET('/lookup.json?query={}'.format('alice'))
-        data = json.loads(response.body)
+    def test_looking_up_searchable_user_with_an_exact_match_finds_them(self):
+        alice = self.make_participant("alice", claimed_time='now')
+        assert self.lookup('alice') == [alice.id]
 
-        assert len(data) == 1
-        assert data[0]['id'] != -1
-
-    def test_get_stub_user(self):
-        self.make_participant("alice")
-        response = self.client.GET('/lookup.json?query={}'.format('a'))
-        data = json.loads(response.body)
-
-        assert len(data) == 1
-        assert data[0]['id'] == -1
+    def test_looking_up_searchable_user_without_an_exact_match_finds_them(self):
+        alice = self.make_participant("alice", claimed_time='now')
+        assert self.lookup('alic') == [alice.id, -1]
