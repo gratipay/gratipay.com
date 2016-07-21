@@ -11,22 +11,16 @@ class TeamTakesHarness(Harness):
     def setUp(self):
         self.enterprise = self.make_team('The Enterprise', available=1, receiving=2)
         self.picard = P('picard')
-
-        self.TT = self.db.one("SELECT id FROM countries WHERE code='TT'")
-
         self.crusher = self.make_participant( 'crusher'
                                             , email_address='crusher@example.com'
                                             , claimed_time='now'
+                                            , verified_in='TT'
                                              )
-        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
-        self.crusher.set_identity_verification(self.TT, True)
-
         self.bruiser = self.make_participant( 'bruiser'
                                             , email_address='bruiser@example.com'
                                             , claimed_time='now'
+                                            , verified_in='US'
                                              )
-        self.bruiser.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Bruiser'})
-        self.bruiser.set_identity_verification(self.TT, True)
 
 
 class Tests(TeamTakesHarness):
