@@ -2,8 +2,7 @@ import base64
 import json
 
 from aspen.testing.client import FileUpload
-from gratipay.testing import Harness
-from gratipay.models.team import Team
+from gratipay.testing import Harness, T
 
 
 IMAGE = base64.b64decode(b"""\
@@ -250,7 +249,7 @@ class TestTeamEdit(Harness):
                                           , data=edit_data
                                           , auth_as='picard').body)
 
-        team = Team.from_slug('enterprise')
+        team = T('enterprise')
         assert data == team.to_dict()
 
         assert team.name == 'Enterprise'
@@ -271,7 +270,7 @@ class TestTeamEdit(Harness):
                          , data=edit_data
                          , auth_as='picard')
 
-        team = Team.from_slug('enterprise')
+        team = T('enterprise')
         assert team.name == 'The Enterprise'
         assert team.product_or_service == 'We save galaxies.'
         assert team.homepage == 'http://starwars-enterprise.com/'
@@ -284,8 +283,7 @@ class TestTeamEdit(Harness):
         response = self.client.PxST( '/enterprise/edit/edit.json'
                                     , data={ 'name': 'Enterprise' })
         assert response.code == 401
-        team = Team.from_slug('enterprise')
-        assert team.name == 'The Enterprise'
+        assert T('enterprise').name == 'The Enterprise'
 
     def test_only_admin_and_owner_can_edit(self):
         self.make_participant('alice', claimed_time='now')
@@ -296,15 +294,13 @@ class TestTeamEdit(Harness):
                                     , data={ 'name': 'Enterprise' }
                                     , auth_as='alice')
         assert response.code == 403
-        team = Team.from_slug('enterprise')
-        assert team.name == 'The Enterprise'
+        assert T('enterprise').name == 'The Enterprise'
 
         response = self.client.POST( '/enterprise/edit/edit.json'
                                     , data={ 'name': 'Enterprise' }
                                     , auth_as='admin')
         assert response.code == 200
-        team = Team.from_slug('enterprise')
-        assert team.name == 'Enterprise'
+        assert T('enterprise').name == 'Enterprise'
 
         # test_edit() passes => owner can edit
 
@@ -316,8 +312,7 @@ class TestTeamEdit(Harness):
                                     , data={ 'name': 'Enterprise' }
                                     , auth_as='picard')
         assert response.code in (403, 410)
-        team = Team.from_slug('enterprise')
-        assert team.name == 'The Enterprise'
+        assert T('enterprise').name == 'The Enterprise'
 
     def test_cant_edit_rejected_teams(self):
         self.make_team(slug='enterprise', is_approved=False)
@@ -325,8 +320,7 @@ class TestTeamEdit(Harness):
                                     , data={ 'name': 'Enterprise' }
                                     , auth_as='picard')
         assert response.code == 403
-        team = Team.from_slug('enterprise')
-        assert team.name == 'The Enterprise'
+        assert T('enterprise').name == 'The Enterprise'
 
     def test_can_edit_teams_under_review(self):
         self.make_team(slug='enterprise', is_approved=None)
@@ -334,8 +328,7 @@ class TestTeamEdit(Harness):
                                     , data={ 'name': 'Enterprise' }
                                     , auth_as='picard')
         assert response.code == 200
-        team = Team.from_slug('enterprise')
-        assert team.name == 'Enterprise'
+        assert T('enterprise').name == 'Enterprise'
 
     def test_can_only_edit_allowed_fields(self):
         allowed_fields = set(['name', 'image', 'product_or_service',
@@ -349,7 +342,7 @@ class TestTeamEdit(Harness):
                 response = self.client.POST( '/enterprise/edit/edit.json'
                                             , data={ field: 'foo' }
                                             , auth_as='picard')
-                new_team = Team.from_slug('enterprise')
+                new_team = T('enterprise')
                 assert response.code == 200
                 assert getattr(new_team, field) == getattr(team, field)
 
@@ -383,8 +376,7 @@ class TestTeamEdit(Harness):
                                     , data={ 'name': '   ' }
                                     , auth_as='picard')
         assert response.code == 400
-        team = Team.from_slug('enterprise')
-        assert team.name == 'The Enterprise'
+        assert T('enterprise').name == 'The Enterprise'
 
     def test_edit_with_bad_url_raises_error(self):
         self.make_team( slug='enterprise'
@@ -396,8 +388,7 @@ class TestTeamEdit(Harness):
                             , auth_as='picard')
         assert r.code == 400
         assert "Please enter an http[s]:// URL for the 'Homepage' field." in r.body
-        team = Team.from_slug('enterprise')
-        assert team.homepage == 'http://starwars-enterprise.com/'
+        assert T('enterprise').homepage == 'http://starwars-enterprise.com/'
 
     def test_edit_with_empty_data_does_nothing(self):
         team_data = {
@@ -415,6 +406,6 @@ class TestTeamEdit(Harness):
                             , auth_as='picard')
         assert r.code == 200
 
-        team = Team.from_slug('enterprise')
+        team = T('enterprise')
         for field in team_data:
             assert getattr(team, field) == team_data[field]

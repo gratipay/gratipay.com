@@ -23,8 +23,7 @@ from gratipay.models.participant import (
     LastElsewhere, NeedConfirmation, NonexistingElsewhere, Participant, TeamCantBeOnlyAuth,
     WontTakeOverWithIdentities
 )
-from gratipay.models.team import Team
-from gratipay.testing import Harness, D,P
+from gratipay.testing import Harness, D,P,T
 
 
 # TODO: Test that accounts elsewhere are not considered claimed by default
@@ -552,14 +551,14 @@ class Tests(Harness):
         alice.set_payment_instruction(team, '5.00') # Not funded, failing card
 
         assert alice.giving == D('0.00')
-        assert Team.from_slug(team.slug).receiving == D('0.00')
+        assert T(team.slug).receiving == D('0.00')
 
         # Alice updates her card..
         ExchangeRoute.from_network(alice, 'braintree-cc').invalidate()
         ExchangeRoute.insert(alice, 'braintree-cc', '/cards/bar', '')
 
         assert alice.giving == D('5.00')
-        assert Team.from_slug(team.slug).receiving == D('5.00')
+        assert T(team.slug).receiving == D('5.00')
 
     @mock.patch('braintree.PaymentMethod.delete')
     def test_giving_is_updated_when_credit_card_fails(self, btd):
@@ -569,13 +568,13 @@ class Tests(Harness):
         alice.set_payment_instruction(team, '5.00') # funded
 
         assert alice.giving == D('5.00')
-        assert Team.from_slug(team.slug).receiving == D('5.00')
+        assert T(team.slug).receiving == D('5.00')
         assert P(team.owner).taking == D('5.00')
 
         ExchangeRoute.from_network(alice, 'braintree-cc').update_error("Card expired")
 
         assert P('alice').giving == D('0.00')
-        assert Team.from_slug(team.slug).receiving == D('0.00')
+        assert T(team.slug).receiving == D('0.00')
         assert P(team.owner).taking == D('0.00')
 
 

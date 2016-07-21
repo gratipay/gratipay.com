@@ -7,7 +7,7 @@ import base64
 from decimal import Decimal
 
 from aspen.testing.client import FileUpload
-from gratipay.testing import Harness
+from gratipay.testing import Harness, T
 from gratipay.models.team import Team, slugize, InvalidTeamName
 
 
@@ -194,7 +194,7 @@ class TestTeams(Harness):
 
     def test_can_construct_from_slug(self):
         self.make_team()
-        team = Team.from_slug('TheEnterprise')
+        team = T('TheEnterprise')
         assert team.name == 'The Enterprise'
         assert team.owner == 'picard'
 
@@ -216,7 +216,7 @@ class TestTeams(Harness):
     def test_all_fields_persist(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
         self.post_new(dict(self.valid_data))
-        team = Team.from_slug('gratiteam')
+        team = T('gratiteam')
         assert team.name == 'Gratiteam'
         assert team.homepage == 'http://gratipay.com/'
         assert team.product_or_service == 'We make widgets.'
@@ -230,7 +230,7 @@ class TestTeams(Harness):
                           , onboarding_url='http://INSIDE.GRATipay.com/'
                           , todo_url='hTTPS://github.com/GRATIPAY'
                            ))
-        team = Team.from_slug('gratiteam')
+        team = T('gratiteam')
         assert team.homepage == 'Http://gratipay.com/'
         assert team.onboarding_url == 'http://INSIDE.GRATipay.com/'
         assert team.todo_url == 'hTTPS://github.com/GRATIPAY'
@@ -240,7 +240,7 @@ class TestTeams(Harness):
         data = dict(self.valid_data)
         data['name'] = 'GratiTeam'
         self.post_new(dict(data))
-        team = Team.from_slug('GratiTeam')
+        team = T('GratiTeam')
         assert team is not None
         assert team.slug_lower == 'gratiteam'
 
@@ -455,7 +455,7 @@ class TestTeams(Harness):
             'todo_url': 'http://starwars-enterprise.com/todos',
         }
         team.update(**update_data)
-        team = Team.from_slug('enterprise')
+        team = T('enterprise')
         for field in update_data:
             assert getattr(team, field) == update_data[field]
 

@@ -1,14 +1,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from decimal import Decimal as D
-
 from pytest import raises
-from gratipay.models.team import Team
 from gratipay.models.team.mixins.takes import NotAllowed, PENNY, ZERO
-from gratipay.testing import Harness, P
-
-
-T = Team.from_slug
+from gratipay.testing import Harness, D,P,T
 
 
 class TeamTakesHarness(Harness):
