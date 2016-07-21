@@ -1137,7 +1137,7 @@ class Participant(Model, mixins.Identity):
 
         # Don't allow any username which is the name of a
         # file existing on the web_root folder.
-        for ext in ['', '.spt', '.html', '.ico', '.txt', '.html.spt', '.json.spt', '.osdd']:
+        for ext in ['', '.json', '.html', '.ico', '.txt', '.osdd']:
             if (lowercased + ext) in gratipay.RESTRICTED_USERNAMES:
                 raise UsernameIsRestricted(suggested)
 
