@@ -45,10 +45,11 @@ class Tests(BrowserHarness):
         self.enterprise.add_member(self.alice, P('picard'))
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
-        self.css('table.team span.remove').first.click()
-        time.sleep(0.1)
-        self.get_alert().accept()
-        time.sleep(0.2)
+
+        with self.confirming(True):
+            self.css('table.team span.remove').first.click()
+            time.sleep(0.1)
+
         assert self.enterprise.get_memberships() == []
 
 

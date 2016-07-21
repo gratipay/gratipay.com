@@ -2,8 +2,9 @@
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import os
 import atexit
+import os
+import time
 
 from splinter.browser import _DRIVERS
 
@@ -79,6 +80,32 @@ class BrowserHarness(Harness):
         """Shortcut for is_element_present_by_css.
         """
         return self.is_element_present_by_css(selector, timeout)
+
+    def confirming(self, answer):
+        """Return a context manager for working with confirm alerts cross-driver.
+        """
+
+        class Context(object):
+
+            def __enter__(*a, **kw):
+                if self._browser.driver_name == 'PhantomJS':
+                    js_answer = 'true' if answer else 'false'
+                    self.execute_script("window.__confirm__ = window.confirm");
+                    self.execute_script("window.confirm = function(){ return %s; }" % js_answer);
+
+            def __exit__(*a, **kw):
+                if self._browser.driver_name == 'PhantomJS':
+                    # Reset window.confirm, but gracefully adapt if we've reloaded the page.
+                    self.execute_script("window.confirm = window.__confirm__ || window.confirm");
+                else:
+                    alert = self.get_alert()
+                    if answer:
+                        alert.accept()
+                    else:
+                        alert.dismiss()
+                    time.sleep(0.2)
+
+        return Context()
 
     def __getattr__(self, name):
         try:
