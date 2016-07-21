@@ -16,7 +16,6 @@ from gratipay.billing.exchanges import (
 )
 from gratipay.exceptions import NegativeBalance, NotWhitelisted
 from gratipay.models.exchange_route import ExchangeRoute
-from gratipay.models.participant import Participant
 from gratipay.testing import Foobar, Harness, D,P
 from gratipay.testing.billing import BillingHarness
 
@@ -27,12 +26,11 @@ class TestCardHolds(BillingHarness):
 
     def test_create_card_hold_success(self):
         hold, error = create_card_hold(self.db, self.obama, D('1.00'))
-        obama = Participant.from_id(self.obama.id)
         assert isinstance(hold, braintree.Transaction)
         assert hold.status == 'authorized'
         assert hold.amount == D('10.00')
         assert error == ''
-        assert self.obama.balance == obama.balance == 0
+        assert self.obama.balance == P('obama').balance == 0
 
     def test_create_card_hold_for_suspicious_raises_NotWhitelisted(self):
         bob = self.make_participant('bob', is_suspicious=True,
@@ -51,9 +49,8 @@ class TestCardHolds(BillingHarness):
         assert exchange.amount == D('9.41')
         assert exchange.fee == D('0.59')
         assert exchange.status == 'failed'
-        obama = Participant.from_id(self.obama.id)
         assert self.obama.get_credit_card_error() == 'Foobar()'
-        assert self.obama.balance == obama.balance == 0
+        assert self.obama.balance == P('obama').balance == 0
 
     def test_create_card_hold_bad_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
@@ -109,8 +106,7 @@ class TestCardHolds(BillingHarness):
 
         capture_card_hold(self.db, self.obama, D('20.00'), hold)
         hold = braintree.Transaction.find(hold.id)
-        obama = Participant.from_id(self.obama.id)
-        assert self.obama.balance == obama.balance == D('20.00')
+        assert self.obama.balance == P('obama').balance == D('20.00')
         assert self.obama.get_credit_card_error() == ''
         assert hold.status == 'submitted_for_settlement'
 
@@ -122,8 +118,7 @@ class TestCardHolds(BillingHarness):
         assert error == ''  # sanity check
 
         capture_card_hold(self.db, self.obama, D('15.00'), hold)
-        obama = Participant.from_id(self.obama.id)
-        assert self.obama.balance == obama.balance == D('15.00')
+        assert self.obama.balance == P('obama').balance == D('15.00')
         assert self.obama.get_credit_card_error() == ''
 
         # Clean up
@@ -137,8 +132,7 @@ class TestCardHolds(BillingHarness):
             # How do I check the exception's msg here?
             capture_card_hold(self.db, self.obama, D('20.01'), hold)
 
-        obama = Participant.from_id(self.obama.id)
-        assert self.obama.balance == obama.balance == 0
+        assert self.obama.balance == P('obama').balance == 0
 
         # Clean up
         cancel_card_hold(hold)
@@ -148,8 +142,7 @@ class TestCardHolds(BillingHarness):
         assert error == ''  # sanity check
 
         capture_card_hold(self.db, self.obama, D('0.01'), hold)
-        obama = Participant.from_id(self.obama.id)
-        assert self.obama.balance == obama.balance == D('9.41')
+        assert self.obama.balance == P('obama').balance == D('9.41')
         assert self.obama.get_credit_card_error() == ''
 
 

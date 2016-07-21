@@ -193,7 +193,7 @@ class TestTeams(Harness):
 
     def test_can_construct_from_slug(self):
         self.make_team()
-        team = T('TheEnterprise')
+        team = Team.from_slug('TheEnterprise')
         assert team.name == 'The Enterprise'
         assert team.owner == 'picard'
 

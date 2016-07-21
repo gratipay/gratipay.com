@@ -405,9 +405,9 @@ class TestPayin(BillingHarness):
         Payday.start().payin()
         assert log.call_args_list[-3][0] == ("Captured 0 card holds.",)
         assert log.call_args_list[-2][0] == ("Canceled 1 card holds.",)
-        assert Participant.from_id(alice.id).balance == 0
-        assert Participant.from_id(self.janet.id).balance == 8
-        assert Participant.from_id(self.homer.id).balance == 42
+        assert P('alice').balance == 0
+        assert P('janet').balance == 8
+        assert P('homer').balance == 42
 
     def test_payin_cant_make_balances_more_negative(self):
         self.db.run("""
@@ -450,7 +450,7 @@ class TestPayin(BillingHarness):
             assert cursor.one("select balance from payday_teams where slug='TheTrident'") == 0
             payday.update_balances(cursor)
 
-        assert Participant.from_id(alice.id).balance == D('0.49')
+        assert P('alice').balance == D('0.49')
         assert P('picard').balance == 0
         assert P('shelby').balance == 0
 
@@ -508,7 +508,7 @@ class TestPayin(BillingHarness):
             assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == 0
             payday.update_balances(cursor)
 
-        assert Participant.from_id(alice.id).balance == D('0.49')
+        assert P('alice').balance == D('0.49')
         assert P('picard').balance == D('0.51')
 
         payment = self.db.one("SELECT * FROM payments WHERE direction='to-participant'")
@@ -526,9 +526,9 @@ class TestPayin(BillingHarness):
         self.janet.set_tip_to(self.homer, 10)
         self.janet.add_member(self.david)
         Payday.start().payin()
-        assert Participant.from_id(self.david.id).balance == 0
-        assert Participant.from_id(self.homer.id).balance == 10
-        assert Participant.from_id(self.janet.id).balance == 0
+        assert P('david').balance == 0
+        assert P('homer').balance == 10
+        assert P('janet').balance == 0
 
     @pytest.mark.xfail(reason="haven't migrated take_over_balances yet")
     def test_take_over_during_payin(self):
@@ -546,9 +546,9 @@ class TestPayin(BillingHarness):
             billy.take_over(('github', str(bruce.id)), have_confirmation=True)
             payday.update_balances(cursor)
         payday.take_over_balances()
-        assert Participant.from_id(bob.id).balance == 0
-        assert Participant.from_id(bruce.id).balance == 0
-        assert Participant.from_id(billy.id).balance == 18
+        assert P('bob').balance == 0
+        assert P('bruce').balance == 0
+        assert P('billy').balance == 18
 
     @mock.patch.object(Payday, 'fetch_card_holds')
     @mock.patch('gratipay.billing.payday.capture_card_hold')
