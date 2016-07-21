@@ -10,7 +10,7 @@ class TestFakeData(Harness):
     """
 
     def test_fake_data(self):
-        num_participants = 5
+        num_participants = 6
         num_tips = 5
         num_teams = 1
         num_transfers = 5
@@ -23,7 +23,7 @@ class TestFakeData(Harness):
         assert len(tips) == num_tips
         assert len(participants) == num_participants
         assert len(transfers) == num_transfers
-        assert len(teams) == num_teams
+        assert len(teams) == num_teams + 1      # +1 for the fake Gratipay team.
         if num_tips <= num_participants - num_teams:
             assert len(payment_instructions) == num_tips
         else:

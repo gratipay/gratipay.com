@@ -311,12 +311,11 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
     teams = []
     teamowners = random.sample(participants, num_teams)
     for teamowner in teamowners:
-        if num_teams > 1:
-            teams.append(fake_team(db, teamowner))
-        else:
-            # Creating a fake Gratipay Team 
-            teams.append(fake_team(db, teamowner, "Gratipay"))
-        num_teams -= 1            
+        teams.append(fake_team(db, teamowner))
+        
+    # Creating a fake Gratipay Team 
+    teamowner = random.choice(participants) 
+    teams.append(fake_team(db, teamowner, "Gratipay"))
 
     print("Making Payment Instructions")
     npayment_instructions = 0
