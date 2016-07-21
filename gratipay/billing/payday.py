@@ -65,7 +65,7 @@ class Payday(object):
     want to use their balance at the start of Payday. Balance changes should be
     atomic globally per-Payday.
 
-    Here's the call structure of the Payday.run method:
+    Here's the call structure of the Payday.run method::
 
         run
             payin

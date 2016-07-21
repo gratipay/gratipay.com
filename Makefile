@@ -5,6 +5,7 @@ python := "$(shell { command -v python2.7 || command -v python; } 2>/dev/null)"
 bin_dir := $(shell $(python) -c 'import sys; bin = "Scripts" if sys.platform == "win32" else "bin"; print(bin)')
 env_bin := env/$(bin_dir)
 venv := "./vendor/virtualenv-12.0.7.py"
+doc_env_files := defaults.env,docs/doc.env,docs/local.env
 test_env_files := defaults.env,tests/test.env,tests/local.env
 pip := $(env_bin)/pip
 honcho := $(env_bin)/honcho
@@ -17,14 +18,14 @@ else
 	pytest = ./tests/py/
 endif
 
-env: requirements.txt requirements_tests.txt setup.py
+env: requirements.txt requirements.dev.txt setup.py
 	$(python) $(venv) \
 				--prompt="[gratipay] " \
 				--extra-search-dir=./vendor/ \
 				--always-copy \
 				./env/
 	$(pip) install --no-index -r requirements.txt
-	$(pip) install --no-index -r requirements_tests.txt
+	$(pip) install --no-index -r requirements.dev.txt
 	$(pip) install -e ./
 	touch env
 
@@ -108,3 +109,9 @@ i18n_download: env tx
 	           -e '/^#: /d' "$$f" >"$$f.new"; \
 	    mv "$$f.new" "$$f"; \
 	done
+
+doc: env
+	$(honcho) run -e $(doc_env_files) make -C docs rst html
+
+docserve:
+	cd docs/_build/html && ../../../$(env_bin)/python -m SimpleHTTPServer
