@@ -204,13 +204,13 @@ msgid "Overview"
 msgstr "Résumé"
 
 msgid "Stats"
-msgstr "Stats"
+msgstr "Statistiques"
 
 msgid "Pricing"
 msgstr "Prix"
 
 msgid "Contact Us"
-msgstr "Nous Contacter"
+msgstr "Nous contacter"
 
 msgid "Payments"
 msgstr "Paiements"
@@ -436,7 +436,7 @@ msgid "Applied {ago}"
 msgstr "A candidaté {ago}"
 
 msgid "Distributing"
-msgstr ""
+msgstr "Distribue"
 
 msgid "Teams"
 msgstr "Équipes"
@@ -547,7 +547,7 @@ msgid "Welcome to Gratipay!"
 msgstr "Bienvenue sur Gratipay !"
 
 msgid "We have {nteams} Teams receiving and sharing about {volume} each week."
-msgstr "Nous avons {neams} équipes qui reçoivent et partagent environ {volume} chaque semaine."
+msgstr "Nous avons {nteams} équipes qui reçoivent et partagent environ {volume} chaque semaine."
 
 msgid "Continue to explore our Teams, or {a}read more about us{_a}."
 msgstr "Continuez à explorer nos équipes, ou {a}apprenez-en plus sur nous{_a}."

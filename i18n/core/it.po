@@ -432,7 +432,7 @@ msgid "Applied {ago}"
 msgstr "Si è proposto {ago}"
 
 msgid "Distributing"
-msgstr ""
+msgstr "Distribuendo"
 
 msgid "Teams"
 msgstr "Team"
