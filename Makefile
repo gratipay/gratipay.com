@@ -63,7 +63,9 @@ test-schema: env
 pyflakes: env
 	$(env_bin)/pyflakes *.py bin gratipay tests
 
-test: test-schema pytest ttwtest
+test: test-schema
+	$(py_test) --cov gratipay ./tests/
+	@$(MAKE) --no-print-directory pyflakes
 
 pytest: env
 	$(py_test) --cov gratipay $(pytest)
