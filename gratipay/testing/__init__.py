@@ -20,6 +20,7 @@ from gratipay.main import website
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
+from gratipay.models.team import Team
 from gratipay.security import user
 from gratipay.testing.vcr import use_cassette
 from gratipay.testing.browser import Browser
@@ -29,6 +30,11 @@ from psycopg2 import IntegrityError, InternalError
 TOP = realpath(join(dirname(dirname(__file__)), '..'))
 WWW_ROOT = str(realpath(join(TOP, 'www')))
 PROJECT_ROOT = str(TOP)
+
+
+D = Decimal
+P = Participant.from_username
+T = Team.from_slug
 
 
 class ClientWithAuth(Client):
@@ -173,14 +179,12 @@ class Harness(unittest.TestCase):
             _kw['available'] = 0
 
         if Participant.from_username(_kw['owner']) is None:
-            owner = self.make_participant( _kw['owner']
-                                         , claimed_time='now'
-                                         , last_paypal_result=''
-                                         , email_address=_kw['owner']+'@example.com'
-                                          )
-            TT = self.db.one("SELECT id FROM countries WHERE code='TT'")
-            owner.store_identity_info(TT, 'nothing-enforced', {'name': 'Owner'})
-            owner.set_identity_verification(TT, True)
+            self.make_participant( _kw['owner']
+                                 , claimed_time='now'
+                                 , last_paypal_result=''
+                                 , email_address=_kw['owner']+'@example.com'
+                                 , verified_in='TT'
+                                  )
 
         team = self.db.one("""
             INSERT INTO teams
@@ -218,6 +222,7 @@ class Harness(unittest.TestCase):
             ExchangeRoute.insert(participant, 'paypal', 'abcd@gmail.com', kw.pop('last_paypal_result'))
 
         # Update participant
+        verified_in = kw.pop('verified_in', [])
         if kw:
             if kw.get('claimed_time') == 'now':
                 kw['claimed_time'] = utcnow()
@@ -230,6 +235,13 @@ class Harness(unittest.TestCase):
                  WHERE username=%s
              RETURNING participants.*::participants
             """.format(cols, placeholders), vals+(username,))
+
+        # Verify identity
+        countries = [verified_in] if type(verified_in) in (str, unicode) else verified_in
+        for code in countries:
+            country = self.db.one("SELECT id FROM countries WHERE code=%s", (code,))
+            participant.store_identity_info(country, 'nothing-enforced', {'name': username})
+            participant.set_identity_verification(country, True)
 
         return participant
 
@@ -329,7 +341,7 @@ class BrowserHarness(Harness):
     """This harness passes everything through to an underlying Splinter Browser.
     """
 
-    _browser = Browser('phantomjs')
+    _browser = Browser(os.environ['WEBDRIVER_BROWSER'])
     use_VCR = False  # without this we get fixture spam from communication with PhantomJS
     base_url = os.environ['WEBDRIVER_BASE_URL']
 
