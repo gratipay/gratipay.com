@@ -20,6 +20,7 @@ from gratipay.main import website
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
+from gratipay.models.team import Team
 from gratipay.security import user
 from gratipay.testing.vcr import use_cassette
 from gratipay.testing.browser import Browser
@@ -29,6 +30,11 @@ from psycopg2 import IntegrityError, InternalError
 TOP = realpath(join(dirname(dirname(__file__)), '..'))
 WWW_ROOT = str(realpath(join(TOP, 'www')))
 PROJECT_ROOT = str(TOP)
+
+
+D = Decimal
+P = Participant.from_username
+T = Team.from_slug
 
 
 class ClientWithAuth(Client):
