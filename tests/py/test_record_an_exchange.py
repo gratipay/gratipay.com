@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 from psycopg2 import IntegrityError
-from aspen.utils import utcnow
 from gratipay.testing import Harness, D
 from gratipay.models.exchange_route import ExchangeRoute
 
@@ -12,9 +11,8 @@ class TestRecordAnExchange(Harness):
     # =======
 
     def make_participants(self):
-        now = utcnow()
-        self.make_participant('alice', claimed_time=now, is_admin=True)
-        self.bob = self.make_participant('bob', claimed_time=now)
+        self.make_participant('alice', claimed_time='now', is_admin=True)
+        self.bob = self.make_participant('bob', claimed_time='now')
 
     def record_an_exchange(self, data, make_participants=True):
         if make_participants:
@@ -46,8 +44,8 @@ class TestRecordAnExchange(Harness):
         assert response.headers['location'] == '/bob/history/'
 
     def test_non_admin_is_403(self):
-        self.make_participant('alice', claimed_time=utcnow())
-        self.bob = self.make_participant('bob', claimed_time=utcnow())
+        self.make_participant('alice', claimed_time='now')
+        self.bob = self.make_participant('bob', claimed_time='now')
         actual = self.record_an_exchange({'amount': '10', 'fee': '0'}, False).code
         assert actual == 403
 
@@ -87,8 +85,8 @@ class TestRecordAnExchange(Harness):
         assert response.body == "Route doesn't exist"
 
     def test_route_should_belong_to_user_else_400(self):
-        alice = self.make_participant('alice', claimed_time=utcnow(), is_admin=True)
-        self.make_participant('bob', claimed_time=utcnow())
+        alice = self.make_participant('alice', claimed_time='now', is_admin=True)
+        self.make_participant('bob', claimed_time='now')
         route = ExchangeRoute.insert(alice, 'paypal', 'alice@gmail.com')
 
         response = self.record_an_exchange({'amount': '10', 'fee': '0', 'route_id': route.id}, False)
@@ -122,8 +120,8 @@ class TestRecordAnExchange(Harness):
         assert actual == expected
 
     def test_withdrawals_work(self):
-        self.make_participant('alice', claimed_time=utcnow(), is_admin=True)
-        self.bob = self.make_participant('bob', claimed_time=utcnow(), balance=20)
+        self.make_participant('alice', claimed_time='now', is_admin=True)
+        self.bob = self.make_participant('bob', claimed_time='now', balance=20)
 
         self.record_an_exchange({'amount': '-7', 'fee': '0'}, make_participants=False)
 
@@ -133,8 +131,8 @@ class TestRecordAnExchange(Harness):
         assert actual == expected
 
     def test_withdrawals_take_fee_out_of_balance(self):
-        self.make_participant('alice', claimed_time=utcnow(), is_admin=True)
-        self.bob = self.make_participant('bob', claimed_time=utcnow(), balance=20)
+        self.make_participant('alice', claimed_time='now', is_admin=True)
+        self.bob = self.make_participant('bob', claimed_time='now', balance=20)
         self.bob = self.record_an_exchange({'amount': '-7', 'fee': '1.13'}, False)
         SQL = "SELECT balance FROM participants WHERE username='bob'"
         assert self.db.one(SQL) == D('11.87')

@@ -251,9 +251,8 @@ class TestTakeOver(Harness):
     # The below tests were moved up here from TestParticipant, and may be duplicates.
 
     def hackedSetUp(self):
-        now = utcnow()
         for username in ['alice', 'bob', 'carl']:
-            p = self.make_participant(username, claimed_time=now, elsewhere='twitter')
+            p = self.make_participant(username, claimed_time='now', elsewhere='twitter')
             setattr(self, username, p)
 
     def test_connecting_unknown_account_fails(self):
@@ -307,9 +306,8 @@ class TestTakeOver(Harness):
 class TestParticipant(Harness):
     def setUp(self):
         Harness.setUp(self)
-        now = utcnow()
         for username in ['alice', 'bob', 'carl']:
-            p = self.make_participant(username, claimed_time=now, elsewhere='twitter')
+            p = self.make_participant(username, claimed_time='now', elsewhere='twitter')
             setattr(self, username, p)
 
     def test_comparison(self):
@@ -641,8 +639,7 @@ class Tests(Harness):
     # get_age_in_seconds - gais
 
     def test_gais_gets_age_in_seconds(self):
-        now = utcnow()
-        alice = self.make_participant('alice', claimed_time=now)
+        alice = self.make_participant('alice', claimed_time='now')
         actual = alice.get_age_in_seconds()
         assert 0 < actual < 1
 
