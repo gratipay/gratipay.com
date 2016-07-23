@@ -1,6 +1,7 @@
 from __future__ import print_function, unicode_literals
 
 import datetime
+import os
 import random
 
 import mock
@@ -358,7 +359,7 @@ class TestParticipant(Harness):
 class Tests(Harness):
 
     def random_restricted_username(self):
-        """helper method to chooses a restricted username for testing """
+        """Helper method to chooses a restricted username for testing"""
         from gratipay import RESTRICTED_USERNAMES
         random_item = random.choice(RESTRICTED_USERNAMES)
         while any(map(random_item.startswith, ('%', '~'))):
@@ -418,9 +419,10 @@ class Tests(Harness):
             self.participant.change_username(u"\u2603") # Snowman
 
     def test_changing_username_to_restricted_name(self):
+        username = self.random_restricted_username()
         with self.assertRaises(UsernameIsRestricted):
-            self.participant.change_username(self.random_restricted_username())
-
+            self.participant.change_username(username)
+        assert os.path.exists(self.client.www_root + '/' + username)
 
     # id
 

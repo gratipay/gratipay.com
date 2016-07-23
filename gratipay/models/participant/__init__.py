@@ -1135,8 +1135,11 @@ class Participant(Model, mixins.Identity):
 
         lowercased = suggested.lower()
 
-        if lowercased in gratipay.RESTRICTED_USERNAMES:
-            raise UsernameIsRestricted(suggested)
+        # Don't allow any username which is the name of a
+        # file existing on the web_root folder.
+        for ext in ['', '.spt', '.ico', '.txt', '.osdd']:
+            if (lowercased + ext) in gratipay.RESTRICTED_USERNAMES:
+                raise UsernameIsRestricted(suggested)
 
         if suggested != self.username:
             try:

@@ -35,10 +35,15 @@ class Tests(Harness):
         assert code == 400
         assert body['error_message_long'] == "The username '§' contains invalid characters."
 
-    def test_restricted_username(self):
+    def test_restricted_username_without_extension(self):
         code, body = self.change_username("assets")
         assert code == 400
         assert body['error_message_long'] == "The username 'assets' is restricted."
+
+    def test_restricted_username_with_extension(self):
+        code, body = self.change_username("1.0-payout")
+        assert code == 400
+        assert body['error_message_long'] == "The username '1.0-payout' is restricted."
 
     def test_unavailable(self):
         self.make_participant("bob")
