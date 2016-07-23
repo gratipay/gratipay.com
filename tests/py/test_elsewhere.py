@@ -7,8 +7,7 @@ import mock
 
 from gratipay.elsewhere import UserInfo
 from gratipay.models.account_elsewhere import AccountElsewhere
-from gratipay.models.participant import Participant
-from gratipay.testing import Harness
+from gratipay.testing import Harness, P
 import gratipay.testing.elsewhere as user_info_examples
 
 
@@ -59,7 +58,7 @@ class TestElsewhere(Harness):
         alice.participant.update_is_closed(True)
         user = alice.opt_in('alice')[0]
         assert not user.participant.is_closed
-        assert not Participant.from_username('alice').is_closed
+        assert not P('alice').is_closed
 
     @mock.patch('requests_oauthlib.OAuth2Session.fetch_token')
     @mock.patch('gratipay.elsewhere.Platform.get_user_self_info')

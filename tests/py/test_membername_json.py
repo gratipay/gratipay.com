@@ -2,15 +2,14 @@ from __future__ import unicode_literals
 
 import pytest
 from aspen import json
-from aspen.utils import utcnow
 from gratipay.testing import Harness
 
 class TestMembernameJson(Harness):
 
     def setUp(self):
         Harness.setUp(self)
-        self.make_participant("team", claimed_time=utcnow())
-        self.make_participant("alice", claimed_time=utcnow())
+        self.make_participant("team", claimed_time='now')
+        self.make_participant("alice", claimed_time='now')
 
     def test_post_team_is_not_team_returns_404(self):
         response = self.client.PxST('/~alice/members/team.json', auth_as='alice')
@@ -22,7 +21,7 @@ class TestMembernameJson(Harness):
 
     @pytest.mark.xfail(reason='migrating to Teams; see #3399')
     def test_post_user_is_not_member_or_team_returns_403(self):
-        self.make_participant("bob", claimed_time=utcnow(), number='plural')
+        self.make_participant("bob", claimed_time='now', number='plural')
         response = self.client.POST('/~team/members/alice.json', {'take': '0.01'}, auth_as='team')
         assert response.code == 200
 
@@ -84,7 +83,7 @@ class TestMembernameJson(Harness):
 
     @pytest.mark.xfail(reason='migrating to Teams; see #3399')
     def test_post_non_team_member_adds_member_returns_403(self):
-        self.make_participant("bob", claimed_time=utcnow())
+        self.make_participant("bob", claimed_time='now')
 
         response = self.client.POST('/~team/members/alice.json', {'take': '0.01'}, auth_as='team')
         assert response.code == 200

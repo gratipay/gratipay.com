@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from gratipay.models.country import Country
-from gratipay.models.participant import Participant
+from gratipay.testing import P
 from gratipay.testing.emails import EmailHarness
 
 
@@ -16,14 +16,14 @@ class Tests(EmailHarness):
         self.verify('bob', 'TT')
 
     def identify(self, username, *codes):
-        participant = Participant.from_username(username)
+        participant = P(username)
         for code in codes:
             country_id = Country.from_code(code).id
             participant.store_identity_info(country_id, 'nothing-enforced', {})
         return participant
 
     def verify(self, username, *codes):
-        participant = Participant.from_username(username)
+        participant = P(username)
         for code in codes:
             country_id = Country.from_code(code).id
             participant.store_identity_info(country_id, 'nothing-enforced', {})
@@ -109,7 +109,7 @@ class Tests(EmailHarness):
         assert len(bob.list_identity_metadata()) == 0
 
     def test_ip_stores_identity(self):
-        bob = Participant.from_username('bob')
+        bob = P('bob')
         assert len(bob.list_identity_metadata()) == 1
         data = { 'id_type':     ''
                , 'id_number':   ''
@@ -128,7 +128,7 @@ class Tests(EmailHarness):
         assert info['legal_name'] == 'Bobsworth B. Bobbleton, IV'
 
     def test_ip_validates_action(self):
-        bob = Participant.from_username('bob')
+        bob = P('bob')
         assert len(bob.list_identity_metadata()) == 1
         data = {'action': 'cheese'}
         assert self.client.PxST('/~bob/identities/TT', auth_as='bob', data=data).code == 400

@@ -1,7 +1,6 @@
 from __future__ import print_function, unicode_literals
 
-from gratipay.testing import Harness
-from gratipay.models.team import Team
+from gratipay.testing import Harness, T
 
 
 class TestSetStatus(Harness):
@@ -24,23 +23,19 @@ class TestSetStatus(Harness):
 
         # Change to Approved
         self.hit({'status': 'approved'})
-        team = Team.from_slug('gratiteam')
-        assert team.is_approved is True
+        assert T('gratiteam').is_approved is True
 
         # Change to Rejected
         self.hit({'status': 'rejected'})
-        team = Team.from_slug('gratiteam')
-        assert team.is_approved is False
+        assert T('gratiteam').is_approved is False
 
         # Change back to Approved
         self.hit({'status': 'approved'})
-        team = Team.from_slug('gratiteam')
-        assert team.is_approved is True
+        assert T('gratiteam').is_approved is True
 
         # Change to Under Review
         self.hit({'status': 'unreviewed'})
-        team = Team.from_slug('gratiteam')
-        assert team.is_approved is None
+        assert T('gratiteam').is_approved is None
 
     def test_400_for_bad_input(self):
         self.hit({'status': 'bad_input'}, expected=400)

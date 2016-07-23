@@ -1,7 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import date
-from decimal import Decimal as D
 
 import mock
 import pytest
@@ -9,7 +8,7 @@ import pytest
 from gratipay.billing.payday import Payday
 from gratipay.models.community import Community
 from gratipay.models.participant import Participant
-from gratipay.testing import Harness
+from gratipay.testing import Harness, D,P
 
 
 class TestClosing(Harness):
@@ -19,7 +18,7 @@ class TestClosing(Harness):
     def test_close_closes(self):
         alice = self.make_participant('alice', claimed_time='now')
         alice.close()
-        assert Participant.from_username('alice').is_closed
+        assert P('alice').is_closed
 
     def test_close_fails_if_still_a_balance(self):
         alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
@@ -49,7 +48,7 @@ class TestClosing(Harness):
         response = self.client.PxST('/~alice/settings/close', auth_as='alice')
         assert response.code == 302
         assert response.headers['Location'] == '/~alice/'
-        assert Participant.from_username('alice').is_closed
+        assert P('alice').is_closed
 
     def test_cant_post_to_close_page_during_payday(self):
         Payday.start()
@@ -152,7 +151,7 @@ class TestClosing(Harness):
 
         with self.db.get_cursor() as cursor:
             alice.clear_personal_information(cursor)
-        new_alice = Participant.from_username('alice')
+        new_alice = P('alice')
 
         assert alice.get_statement(['en']) == (None, None)
         assert alice.anonymous_giving == new_alice.anonymous_giving == False
@@ -199,7 +198,7 @@ class TestClosing(Harness):
         alice.update_is_closed(True)
 
         assert alice.is_closed
-        assert Participant.from_username('alice').is_closed
+        assert P('alice').is_closed
 
     def test_uic_updates_is_closed_False(self):
         alice = self.make_participant('alice')
@@ -207,7 +206,7 @@ class TestClosing(Harness):
         alice.update_is_closed(False)
 
         assert not alice.is_closed
-        assert not Participant.from_username('alice').is_closed
+        assert not P('alice').is_closed
 
     def test_uic_uses_supplied_cursor(self):
         alice = self.make_participant('alice')
@@ -215,5 +214,5 @@ class TestClosing(Harness):
         with self.db.get_cursor() as cursor:
             alice.update_is_closed(True, cursor)
             assert alice.is_closed
-            assert not Participant.from_username('alice').is_closed
-        assert Participant.from_username('alice').is_closed
+            assert not P('alice').is_closed
+        assert P('alice').is_closed

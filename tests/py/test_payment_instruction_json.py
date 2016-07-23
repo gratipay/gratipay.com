@@ -2,7 +2,6 @@ from __future__ import print_function, unicode_literals
 
 import json
 
-from aspen.utils import utcnow
 from gratipay.testing import Harness
 
 
@@ -13,10 +12,9 @@ class TestPaymentInstructionJson(Harness):
 
         # First, create some test data
         # We need accounts
-        now = utcnow()
         self.make_team("A", is_approved=True)
         self.make_team("B", is_approved=True)
-        self.make_participant("alice", claimed_time=now, last_bill_result='')
+        self.make_participant("alice", claimed_time='now', last_bill_result='')
 
         # Then, add a $1.50 and $3.00 payment instruction
         response1 = self.client.POST( "/A/payment-instruction.json"

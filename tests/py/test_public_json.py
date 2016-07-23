@@ -2,15 +2,13 @@ from __future__ import print_function, unicode_literals
 
 import json
 
-from aspen.utils import utcnow
-from gratipay.testing import Harness
-from gratipay.models.participant import Participant
+from gratipay.testing import Harness, P
 
 
 class Tests(Harness):
 
     def make_participant(self, *a, **kw):
-        kw['claimed_time'] = utcnow()
+        kw['claimed_time'] = 'now'
         return Harness.make_participant(self, *a, **kw)
 
     def test_on_key_gives_gratipay(self):
@@ -48,7 +46,7 @@ class Tests(Harness):
         alice = self.make_participant('alice', last_bill_result='')
         Enterprise = self.make_team(is_approved=True)
         alice.set_payment_instruction(Enterprise, '3.00')
-        picard = Participant.from_username('picard')
+        picard = P('picard')
         raw = self.client.GxT('/~picard/public.json?callback=foo', auth_as='picard').body
         assert raw == '''\
 foo({

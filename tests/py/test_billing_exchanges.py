@@ -1,7 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from decimal import Decimal as D
-
 import braintree
 from braintree.test.nonces import Nonces
 import mock
@@ -18,8 +16,7 @@ from gratipay.billing.exchanges import (
 )
 from gratipay.exceptions import NegativeBalance, NotWhitelisted
 from gratipay.models.exchange_route import ExchangeRoute
-from gratipay.models.participant import Participant
-from gratipay.testing import Foobar, Harness
+from gratipay.testing import Foobar, Harness, D,P
 from gratipay.testing.billing import BillingHarness
 
 
@@ -29,12 +26,11 @@ class TestCardHolds(BillingHarness):
 
     def test_create_card_hold_success(self):
         hold, error = create_card_hold(self.db, self.obama, D('1.00'))
-        obama = Participant.from_id(self.obama.id)
         assert isinstance(hold, braintree.Transaction)
         assert hold.status == 'authorized'
         assert hold.amount == D('10.00')
         assert error == ''
-        assert self.obama.balance == obama.balance == 0
+        assert self.obama.balance == P('obama').balance == 0
 
     def test_create_card_hold_for_suspicious_raises_NotWhitelisted(self):
         bob = self.make_participant('bob', is_suspicious=True,
@@ -53,9 +49,8 @@ class TestCardHolds(BillingHarness):
         assert exchange.amount == D('9.41')
         assert exchange.fee == D('0.59')
         assert exchange.status == 'failed'
-        obama = Participant.from_id(self.obama.id)
         assert self.obama.get_credit_card_error() == 'Foobar()'
-        assert self.obama.balance == obama.balance == 0
+        assert self.obama.balance == P('obama').balance == 0
 
     def test_create_card_hold_bad_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
@@ -111,8 +106,7 @@ class TestCardHolds(BillingHarness):
 
         capture_card_hold(self.db, self.obama, D('20.00'), hold)
         hold = braintree.Transaction.find(hold.id)
-        obama = Participant.from_id(self.obama.id)
-        assert self.obama.balance == obama.balance == D('20.00')
+        assert self.obama.balance == P('obama').balance == D('20.00')
         assert self.obama.get_credit_card_error() == ''
         assert hold.status == 'submitted_for_settlement'
 
@@ -124,8 +118,7 @@ class TestCardHolds(BillingHarness):
         assert error == ''  # sanity check
 
         capture_card_hold(self.db, self.obama, D('15.00'), hold)
-        obama = Participant.from_id(self.obama.id)
-        assert self.obama.balance == obama.balance == D('15.00')
+        assert self.obama.balance == P('obama').balance == D('15.00')
         assert self.obama.get_credit_card_error() == ''
 
         # Clean up
@@ -139,8 +132,7 @@ class TestCardHolds(BillingHarness):
             # How do I check the exception's msg here?
             capture_card_hold(self.db, self.obama, D('20.01'), hold)
 
-        obama = Participant.from_id(self.obama.id)
-        assert self.obama.balance == obama.balance == 0
+        assert self.obama.balance == P('obama').balance == 0
 
         # Clean up
         cancel_card_hold(hold)
@@ -150,8 +142,7 @@ class TestCardHolds(BillingHarness):
         assert error == ''  # sanity check
 
         capture_card_hold(self.db, self.obama, D('0.01'), hold)
-        obama = Participant.from_id(self.obama.id)
-        assert self.obama.balance == obama.balance == D('9.41')
+        assert self.obama.balance == P('obama').balance == D('9.41')
         assert self.obama.get_credit_card_error() == ''
 
 
@@ -286,8 +277,7 @@ class TestRecordExchange(Harness):
                        , participant=alice
                        , status='pre'
                         )
-        alice = Participant.from_username('alice')
-        assert alice.balance == D('0.00')
+        assert P('alice').balance == D('0.00')
 
     def test_record_exchange_updates_balance_for_negative_amounts(self):
         alice = self.make_participant('alice', balance=50, last_paypal_result='')
@@ -298,8 +288,7 @@ class TestRecordExchange(Harness):
                        , participant=alice
                        , status='pre'
                         )
-        alice = Participant.from_username('alice')
-        assert alice.balance == D('13.41')
+        assert P('alice').balance == D('13.41')
 
     def test_record_exchange_fails_if_negative_balance(self):
         alice = self.make_participant('alice', last_paypal_result='')
@@ -313,8 +302,7 @@ class TestRecordExchange(Harness):
         e_id = record_exchange(self.db, ba, D('-27.06'), D('0.81'), alice, 'pre')
         assert alice.balance == D('02.13')
         record_exchange_result(self.db, e_id, 'failed', 'SOME ERROR', alice)
-        alice = Participant.from_username('alice')
-        assert alice.balance == D('30.00')
+        assert P('alice').balance == D('30.00')
 
     def test_record_exchange_result_restores_balance_on_error_with_invalidated_route(self):
         alice = self.make_participant('alice', balance=37, last_paypal_result='')
@@ -323,7 +311,7 @@ class TestRecordExchange(Harness):
         assert alice.balance == D('3.69')
         pp.update_error('invalidated')
         record_exchange_result(self.db, e_id, 'failed', 'oops', alice)
-        alice = Participant.from_username('alice')
+        alice = P('alice')
         assert alice.balance == D('37.00')
         assert pp.error == alice.get_paypal_error() == 'invalidated'
 
@@ -333,8 +321,7 @@ class TestRecordExchange(Harness):
         e_id = record_exchange(self.db, ba, D('-43.98'), D('1.60'), alice, 'pre')
         assert alice.balance == D('4.42')
         record_exchange_result(self.db, e_id, 'succeeded', None, alice)
-        alice = Participant.from_username('alice')
-        assert alice.balance == D('4.42')
+        assert P('alice').balance == D('4.42')
 
     def test_record_exchange_result_updates_balance_for_positive_amounts(self):
         alice = self.make_participant('alice', balance=4, last_bill_result='')
@@ -342,5 +329,4 @@ class TestRecordExchange(Harness):
         e_id = record_exchange(self.db, cc, D('31.59'), D('0.01'), alice, 'pre')
         assert alice.balance == D('4.00')
         record_exchange_result(self.db, e_id, 'succeeded', None, alice)
-        alice = Participant.from_username('alice')
-        assert alice.balance == D('35.59')
+        assert P('alice').balance == D('35.59')

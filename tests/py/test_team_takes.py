@@ -1,16 +1,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from decimal import Decimal as D
-
 from pytest import raises
-from gratipay.models.participant import Participant
-from gratipay.models.team import Team
 from gratipay.models.team.mixins.takes import NotAllowed, PENNY, ZERO
-from gratipay.testing import Harness
-
-
-T = Team.from_slug
-P = Participant.from_username
+from gratipay.testing import Harness, D,P,T
 
 
 class TeamTakesHarness(Harness):
@@ -19,22 +11,16 @@ class TeamTakesHarness(Harness):
     def setUp(self):
         self.enterprise = self.make_team('The Enterprise', available=1, receiving=2)
         self.picard = P('picard')
-
-        self.TT = self.db.one("SELECT id FROM countries WHERE code='TT'")
-
         self.crusher = self.make_participant( 'crusher'
                                             , email_address='crusher@example.com'
                                             , claimed_time='now'
+                                            , verified_in='TT'
                                              )
-        self.crusher.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Crusher'})
-        self.crusher.set_identity_verification(self.TT, True)
-
         self.bruiser = self.make_participant( 'bruiser'
                                             , email_address='bruiser@example.com'
                                             , claimed_time='now'
+                                            , verified_in='US'
                                              )
-        self.bruiser.store_identity_info(self.TT, 'nothing-enforced', {'name': 'Bruiser'})
-        self.bruiser.set_identity_verification(self.TT, True)
 
 
 class Tests(TeamTakesHarness):

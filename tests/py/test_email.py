@@ -5,8 +5,9 @@ import time
 
 from gratipay.exceptions import CannotRemovePrimaryEmail, EmailAlreadyTaken, EmailNotVerified
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
-from gratipay.models.participant import Participant
+from gratipay.testing import P
 from gratipay.testing.emails import EmailHarness
+from gratipay.models.participant import Participant
 from gratipay.utils import emails, encode_for_querystring
 
 
@@ -22,21 +23,21 @@ class TestEmail(EmailHarness):
         self.client.website.env.resend_verification_threshold = self._old_threshold
 
     def hit_email_spt(self, action, address, user='alice', should_fail=False):
-        P = self.client.PxST if should_fail else self.client.POST
+        f = self.client.PxST if should_fail else self.client.POST
         data = {'action': action, 'address': address}
         headers = {b'HTTP_ACCEPT_LANGUAGE': b'en'}
-        return P('/~alice/emails/modify.json', data, auth_as=user, **headers)
+        return f('/~alice/emails/modify.json', data, auth_as=user, **headers)
 
     def verify_email(self, email, nonce, username='alice', should_fail=False):
         # Email address is encoded in url.
         url = '/~%s/emails/verify.html?email2=%s&nonce=%s'
         url %= (username, encode_for_querystring(email), nonce)
-        G = self.client.GxT if should_fail else self.client.GET
-        return G(url, auth_as=username)
+        f = self.client.GxT if should_fail else self.client.GET
+        return f(url, auth_as=username)
 
     def verify_and_change_email(self, old_email, new_email, username='alice'):
         self.hit_email_spt('add-email', old_email)
-        nonce = Participant.from_username(username).get_email(old_email).nonce
+        nonce = P(username).get_email(old_email).nonce
         self.verify_email(old_email, nonce)
         self.hit_email_spt('add-email', new_email)
 
@@ -96,7 +97,7 @@ class TestEmail(EmailHarness):
         assert r == emails.VERIFICATION_FAILED
         self.verify_email('alice@example.com', nonce)
         expected = None
-        actual = Participant.from_username('alice').email_address
+        actual = P('alice').email_address
         assert expected == actual
 
     def test_verify_email_a_second_time_returns_redundant(self):
@@ -118,7 +119,7 @@ class TestEmail(EmailHarness):
         nonce = self.alice.get_email(address).nonce
         r = self.alice.verify_email(address, nonce)
         assert r == emails.VERIFICATION_EXPIRED
-        actual = Participant.from_username('alice').email_address
+        actual = P('alice').email_address
         assert actual == None
 
     def test_verify_email(self):
@@ -126,7 +127,7 @@ class TestEmail(EmailHarness):
         nonce = self.alice.get_email('alice@example.com').nonce
         self.verify_email('alice@example.com', nonce)
         expected = 'alice@example.com'
-        actual = Participant.from_username('alice').email_address
+        actual = P('alice').email_address
         assert expected == actual
 
     def test_email_verification_is_backwards_compatible(self):
@@ -137,13 +138,13 @@ class TestEmail(EmailHarness):
         url = '/~alice/emails/verify.html?email=alice@example.com&nonce='+nonce
         self.client.GET(url, auth_as='alice')
         expected = 'alice@example.com'
-        actual = Participant.from_username('alice').email_address
+        actual = P('alice').email_address
         assert expected == actual
 
     def test_verified_email_is_not_changed_after_update(self):
         self.verify_and_change_email('alice@example.com', 'alice@example.net')
         expected = 'alice@example.com'
-        actual = Participant.from_username('alice').email_address
+        actual = P('alice').email_address
         assert expected == actual
 
     def test_get_emails(self):
@@ -156,7 +157,7 @@ class TestEmail(EmailHarness):
         nonce = self.alice.get_email('alice@example.net').nonce
         self.verify_email('alice@example.net', nonce)
         expected = 'alice@example.com'
-        actual = Participant.from_username('alice').email_address
+        actual = P('alice').email_address
         assert expected == actual
 
     def test_nonce_is_reused_when_resending_email(self):
@@ -178,7 +179,7 @@ class TestEmail(EmailHarness):
             nonce = bob.get_email('alice@gratipay.com').nonce
             bob.verify_email('alice@gratipay.com', nonce)
 
-        email_alice = Participant.from_username('alice').email_address
+        email_alice = P('alice').email_address
         assert email_alice == 'alice@gratipay.com'
 
     def test_cannot_add_too_many_emails(self):
