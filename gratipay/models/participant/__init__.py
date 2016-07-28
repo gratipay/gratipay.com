@@ -1091,7 +1091,7 @@ class Participant(Model, mixins.Identity):
         """Given a Team object, return a boolean.
         """
         for take in team.get_current_takes():
-            if take['member'] == self.username:
+            if take['participant'] == self:
                 return True
         return False
 

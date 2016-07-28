@@ -58,7 +58,7 @@ class TakesMixin(object):
         :param int take: the amount the participant wants to take
         :param Participant recorder: the participant making the change
 
-        :return: ``None``
+        :return: the new take as a py:class:`~decimal.Decimal`
         :raises: :py:exc:`NotAllowed`
 
         It is a bug to pass in a ``participant`` or ``recorder`` that is
@@ -91,12 +91,11 @@ class TakesMixin(object):
             # Compute the current takes
             old_takes = self.compute_actual_takes(cursor)
 
-            old_take = self.get_take_for(participant, cursor=cursor)
             if recorder.username != self.owner:
-                if recorder == participant and not old_take:
+                if recorder == participant and participant.id not in old_takes:
                     raise NotAllowed('can only set take if already a member of the team')
 
-            cursor.one( """
+            new_take = cursor.one( """
 
                 INSERT INTO takes
                             (ctime, participant_id, team_id, amount, recorder_id)
@@ -108,7 +107,7 @@ class TakesMixin(object):
                                          ), CURRENT_TIMESTAMP)
                             , %(participant_id)s, %(team_id)s, %(amount)s, %(recorder_id)s
                              )
-                  RETURNING *
+                  RETURNING amount
 
             """, { 'participant_id': participant.id
                  , 'team_id': self.id
@@ -117,11 +116,13 @@ class TakesMixin(object):
                   })
 
             # Compute the new takes
-            new_takes = self.compute_actual_takes(cursor)
+            all_new_takes = self.compute_actual_takes(cursor)
 
             # Update computed values
-            self.update_taking(old_takes, new_takes, cursor, participant)
-            self.update_distributing(new_takes, cursor)
+            self.update_taking(old_takes, all_new_takes, cursor, participant)
+            self.update_distributing(all_new_takes, cursor)
+
+            return new_take
 
 
     def get_take_for(self, participant, cursor=None):
@@ -201,7 +202,7 @@ class TakesMixin(object):
         for take in nominal_takes:
             nominal_amount = take['nominal_amount'] = take.pop('amount')
             actual_amount = take['actual_amount'] = min(nominal_amount, balance)
-            take['balance'] = balance
+            take['balance'] = balance = balance - actual_amount
             take['percentage'] = actual_amount / available
             actual_takes[take['participant'].id] = take
         return actual_takes
