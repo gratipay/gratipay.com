@@ -183,13 +183,13 @@ msgid "Your last PayPal payout failed!"
 msgstr "Votre denier paiement Paypal a échoué !"
 
 msgid "Your credit card has failed!"
-msgstr "Votre carte de crédit ne fonctionne pas!"
+msgstr "Votre carte de crédit ne fonctionne pas !"
 
 msgid "Fix your card"
 msgstr "Corriger le problème"
 
 msgid "Your credit card is about to expire!"
-msgstr "Votre carte de crédit expire bientôt!"
+msgstr "Votre carte de crédit expire bientôt !"
 
 msgid "Update card"
 msgstr "Mettre à jour ma carte"
@@ -371,13 +371,13 @@ msgid "Weekly"
 msgstr "Chaque semaine"
 
 msgid "Giving"
-msgstr "Donne"
+msgstr "Dons"
 
 msgid "hidden"
 msgstr "caché"
 
 msgid "Taking"
-msgstr "Reçoit"
+msgstr "Pris"
 
 msgid "Joined"
 msgstr "Inscrit"
@@ -427,7 +427,7 @@ msgid "Learn more"
 msgstr "En savoir plus"
 
 msgid "Receiving"
-msgstr "Reçoit"
+msgstr "Reçu"
 
 msgid "Joined {ago}"
 msgstr "Inscrit {ago}"
