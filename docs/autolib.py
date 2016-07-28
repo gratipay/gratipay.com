@@ -22,7 +22,7 @@ def rst_for_module(toc_path):
 
     f = open(toc_path + '.rst', 'w+')
 
-    heading = ":mod:`{}`".format(os.path.basename(toc_path))
+    heading = ":py:mod:`~{}`".format(toc_path.replace('/', '.'))
     dotted = toc_path.replace('/', '.')
 
     w(f, heading)

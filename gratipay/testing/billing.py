@@ -1,3 +1,5 @@
+"""
+"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import braintree
@@ -5,13 +7,21 @@ from braintree.test.nonces import Nonces
 
 from gratipay.billing.exchanges import cancel_card_hold
 from gratipay.models.exchange_route import ExchangeRoute
-from gratipay.testing import Harness
-from gratipay.testing.vcr import use_cassette
+
+from .harness import Harness
+from .vcr import use_cassette
 
 
 class BillingHarness(Harness):
+    """This is a harness for billing-related tests.
+    """
+
+    _fixture_installed = False
 
     def setUp(self):
+        if not BillingHarness._fixture_installed:
+            install_fixture()
+
         # Braintree Customer without funding instruments
         self.roman = self.make_participant('roman', is_suspicious=False,
                                          claimed_time='now',
@@ -38,16 +48,14 @@ class BillingHarness(Harness):
         super(BillingHarness, cls).tearDownClass()
 
 
-with use_cassette('BillingHarness'):
-    cls = BillingHarness
-
-    cls.roman_bt_id = braintree.Customer.create().customer.id
-
-    cls.obama_bt_id = braintree.Customer.create().customer.id
-
-    cls.bt_card = braintree.PaymentMethod.create({
-        "customer_id": cls.obama_bt_id,
-        "payment_method_nonce": Nonces.Transactable
-    }).payment_method
-
-    cls.obama_cc_token = cls.bt_card.token
+def install_fixture():
+    with use_cassette('BillingHarness'):
+        cls = BillingHarness
+        cls.roman_bt_id = braintree.Customer.create().customer.id
+        cls.obama_bt_id = braintree.Customer.create().customer.id
+        cls.bt_card = braintree.PaymentMethod.create({
+            "customer_id": cls.obama_bt_id,
+            "payment_method_nonce": Nonces.Transactable
+        }).payment_method
+        cls.obama_cc_token = cls.bt_card.token
+        cls._fixture_installed = True

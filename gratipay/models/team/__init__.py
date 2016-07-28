@@ -111,21 +111,24 @@ class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipM
         """, fields)
 
     def get_payment_distribution(self):
-        """
-            Returns a data structure in the form of::
-                [
-                    [PAYMENT1, PAYMENT2...PAYMENTN],
-                    nreceiving_from,
-                    total_amount_received
-                ]
-            where each PAYMENTN is in the form::
-                [
-                    amount,
-                    number_of_tippers_for_this_amount,
-                    total_amount_given_at_this_amount,
-                    proportion_of_payments_at_this_amount,
-                    proportion_of_total_amount_at_this_amount
-                ]
+        """Returns a data structure in the form of::
+
+            [
+                [PAYMENT1, PAYMENT2...PAYMENTN],
+                nreceiving_from,
+                total_amount_received
+            ]
+
+        where each ``PAYMENTN`` is in the form::
+
+            [
+                amount,
+                number_of_tippers_for_this_amount,
+                total_amount_given_at_this_amount,
+                proportion_of_payments_at_this_amount,
+                proportion_of_total_amount_at_this_amount
+            ]
+
         """
         SQL = """
             SELECT amount

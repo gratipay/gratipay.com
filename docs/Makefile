@@ -3,7 +3,7 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = ../env/bin/honcho -e ../tests/env run ../env/bin/sphinx-build
+SPHINXBUILD   = ../env/bin/sphinx-build -W
 BUILDDIR      = _build
 
 # User-friendly check for sphinx-build
@@ -16,7 +16,7 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(SPHINXOPTS) .
 
-.PHONY: help clean html linkcheck doctest
+.PHONY: help clean html linkcheck doctest rst
 
 default: html
 
@@ -30,6 +30,7 @@ clean:
 	rm -rf gratipay* $(BUILDDIR)/*
 
 rst:
+	rm -rf gratipay*
 	AUTOLIB_LIBRARY_ROOT=../gratipay ./autolib.py
 
 html:

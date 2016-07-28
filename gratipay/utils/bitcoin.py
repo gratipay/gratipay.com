@@ -6,11 +6,10 @@ https://bitcointalk.org/index.php?topic=1026.0;all
 
 Gratipay changes:
 
- [x] Removed Django field
- [x] Replaced pycrypto with hashlib
- [x] Added self-test with remote Bitcoin dataset
- [x] Added cmdline interface for checking address
-       utils.bitcoin.py -i [hash]
+- Removed Django field
+- Replaced pycrypto with hashlib
+- Added self-test with remote Bitcoin dataset
+- Added cmdline interface for checking address: ``utils.bitcoin.py -i [hash]``
 
 https://github.com/gratipay/gratipay.com/pull/2886
 

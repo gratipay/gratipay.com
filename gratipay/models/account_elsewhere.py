@@ -1,3 +1,5 @@
+"""
+"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import timedelta
@@ -25,6 +27,9 @@ class UnknownAccountElsewhere(Exception): pass
 
 
 class AccountElsewhere(Model):
+    """Participants can attach accounts on other platforms (Facebook, Twitter,
+    etc.) to their Gratipay account.
+    """
 
     typname = "elsewhere_with_participant"
 

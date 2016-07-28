@@ -11,6 +11,7 @@ immediately affect the participant's balance.
 """
 from __future__ import unicode_literals
 
+import os
 import itertools
 from multiprocessing.dummy import Pool as ThreadPool
 
@@ -26,7 +27,7 @@ from gratipay.models import check_db
 from psycopg2 import IntegrityError
 
 
-with open('sql/payday.sql') as f:
+with open(os.path.join(os.path.dirname(__file__), '../../sql/payday.sql')) as f:
     PAYDAY = f.read()
 
 
@@ -64,7 +65,7 @@ class Payday(object):
     want to use their balance at the start of Payday. Balance changes should be
     atomic globally per-Payday.
 
-    Here's the call structure of the Payday.run method:
+    Here's the call structure of the Payday.run method::
 
         run
             payin

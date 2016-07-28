@@ -24,7 +24,7 @@ def insert_fake_data(db, tablename, **kw):
 
     :param Postgres db: a ``Postgres`` or ``Cursor`` object
     :param unicode tablename: the name of the table to insert into
-    :param dict **kw: a mapping of column names to values
+    :param dict kw: a mapping of column names to values
 
     """
     column_names = []
