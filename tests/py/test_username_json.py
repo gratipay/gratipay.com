@@ -35,10 +35,39 @@ class Tests(Harness):
         assert code == 400
         assert body['error_message_long'] == "The username '§' contains invalid characters."
 
-    def test_restricted_username(self):
+    def test_restricted_username_without_extension(self):
         code, body = self.change_username("assets")
         assert code == 400
         assert body['error_message_long'] == "The username 'assets' is restricted."
+
+    def test_restricted_username_with_extension(self):
+        code, body = self.change_username("1.0-payout")
+        assert code == 400
+        assert body['error_message_long'] == "The username '1.0-payout' is restricted."
+
+    def test_robots_txt_is_not_an_available_username(self):
+        code, body = self.change_username("robots.txt")
+        assert code == 400
+        assert body['error_message_long'] == "The username 'robots.txt' is restricted."
+
+    def test_but_robots_txt_is_still_available_when_theres_a_robots_username(self):
+        self.make_participant('robots', claimed_time='now')
+
+        # manually follow redirects from /robots -> /~robots/
+        response = self.client.GxT("/robots")
+        assert response.code == 302
+        assert response.headers['Location'] == '/robots/'
+        response = self.client.GxT("/robots/")
+        assert response.code == 302
+        assert response.headers['Location'] == '/~robots/'
+        response = self.client.GET("/~robots/")
+        assert response.code == 200
+        assert '<h1>~robots</h1>' in response.body
+
+        # /robots.txt
+        response = self.client.GET("/robots.txt")
+        assert response.code == 200
+        assert response.body == 'User-agent: *\nDisallow: /*.json\nDisallow: /on/*\n'
 
     def test_unavailable(self):
         self.make_participant("bob")
