@@ -30,6 +30,7 @@ clean:
 	rm -rf gratipay* $(BUILDDIR)/*
 
 rst:
+	rm -rf gratipay*
 	AUTOLIB_LIBRARY_ROOT=../gratipay ./autolib.py
 
 html:
