@@ -10,7 +10,7 @@ banner = _("Search")
 results = {}
 
 if query:
-    title = query
+    title = "Results for: " + query 
     q = strip_accents(query)
 
     if action in (None, 'search_usernames'):
