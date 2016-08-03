@@ -36,7 +36,7 @@
 {% block sidebar %}
 
 {% if user.ADMIN %}
-<form id="status-knob" action="set-status.json">
+<form id="status-knob" action="/{{ team.slug }}/set-status.json">
     <select name="status">
         <option {{ 'selected' if team.is_approved == None else '' }}
             value="unreviewed">Under Review</option>
@@ -69,4 +69,30 @@
     {% include "templates/your-payment.html" %}
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+{% if user.ADMIN %}
+<script>
+    $(document).ready(function() {
+        $('#sidebar #status-knob').submit(function(e) {
+            var status = $('select[name=status]', this).val();
+            jQuery.ajax({ url: $(this).attr('action')
+                        , type: "POST"
+                        , dataType: "json"
+                        , data: {status: status}
+                        , success: function (d) {
+                            Gratipay.notification('Team status changed to "' + d.status + '".', 'success');
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+                        }
+                        , error: function() { alert('Failed!'); }
+            });
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    });
+</script>
+{% endif %}
 {% endblock %}

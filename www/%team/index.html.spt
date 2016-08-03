@@ -73,41 +73,5 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
 
 {% block scripts %}
 <script>$(document).ready(Gratipay.payments.init);</script>
-{% if user.ADMIN %}
-<script>
-    $(document).ready(function()
-    {
-        console.log('hey!');
-
-        function error(a,b,c)
-        {
-            console.log(a,b,c);
-            alert("Failed!");
-        }
-
-        $('#sidebar #status-knob').submit(function(e)
-        {
-            console.log('bee!');
-            var status = $('select[name=status]', this).val();
-
-            function success(d)
-            {
-                Gratipay.notification('Team status changed to "' + d.status + '".', 'success');
-            }
-
-            jQuery.ajax({ url: $(this).attr('action')
-                        , type: "POST"
-                        , dataType: "json"
-                        , data: {status: status}
-                        , success: success
-                        , error: error
-                         })
-
-            e.preventDefault();
-            e.stopPropagation();
-        });
-    });
-</script>
-{% endif %}
 {{ super() }}
 {% endblock %}
