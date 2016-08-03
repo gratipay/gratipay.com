@@ -3,8 +3,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from collections import OrderedDict
 from decimal import Decimal as D
 
-from gettext import gettext as _
-
 ZERO = D('0.00')
 PENNY = D('0.01')
 
@@ -73,22 +71,22 @@ class TakesMixin(object):
         """
         def vet(p):
             if p.is_suspicious:
-                raise NotAllowed(_("user must not be flagged as suspicious"))
+                raise NotAllowed("user must not be flagged as suspicious")
             elif not p.has_verified_identity:
-                raise NotAllowed(_("user must have verified his identity"))
+                raise NotAllowed("user must have verified his identity")
             elif not p.email_address:
-                raise NotAllowed(_("user must have added at least one email address"))
+                raise NotAllowed("user must have added at least one email address")
             elif not p.is_claimed:
-                raise NotAllowed(_("user must have claimed the account"))
+                raise NotAllowed("user must have claimed the account")
 
         vet(participant)
         vet(recorder)
 
         if recorder.username == self.owner:
             if take not in (ZERO, PENNY):
-                raise NotAllowed(_("owner can only add and remove members, not otherwise set takes"))
+                raise NotAllowed("owner can only add and remove members, not otherwise set takes")
         elif recorder != participant:
-            raise NotAllowed(_("can only set own take"))
+            raise NotAllowed("can only set own take")
 
         with self.db.get_cursor(cursor) as cursor:
             cursor.run("LOCK TABLE takes IN EXCLUSIVE MODE")  # avoid race conditions
@@ -98,7 +96,7 @@ class TakesMixin(object):
 
             if recorder.username != self.owner:
                 if recorder == participant and participant.id not in old_takes:
-                    raise NotAllowed(_("can only set take if already a member of the team"))
+                    raise NotAllowed("can only set take if already a member of the team")
 
             new_take = cursor.one( """
 
