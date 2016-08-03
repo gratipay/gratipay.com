@@ -33,3 +33,25 @@ class TestLookupJson(Harness):
     def test_looking_up_searchable_user_without_an_exact_match_finds_them(self):
         alice = self.make_participant("alice", claimed_time='now')
         assert self.lookup('alic') == [alice.id, -1]
+
+
+    def test_looking_up_suspicious_user_finds_nothing(self):
+        self.make_participant( "alice"
+                             , claimed_time='now'
+                             , verified_in='TT'
+                             , email_address='alice@example.com'
+                             , is_suspicious=True
+                              )
+        assert self.lookup('alice') == []
+
+    def test_looking_up_unverified_user_finds_nothing(self):
+        self.make_participant("alice", claimed_time='now', email_address='alice@example.com')
+        assert self.lookup('alice') == []
+
+    def test_looking_up_user_with_no_email_finds_nothing(self):
+        self.make_participant("alice", claimed_time='now')  # can't verify w/o email!
+        assert self.lookup('alice') == []
+
+    def test_looking_up_unclaimed_user_finds_nothing(self):
+        self.make_participant("alice", verified_in='TT', email_address='alice@example.com')
+        assert self.lookup('alice') == []
