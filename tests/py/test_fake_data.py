@@ -41,5 +41,5 @@ class TestFakeData(Harness):
             teams with apostrophes
         """
         crusher = self.make_participant('crusher', email_address='crusher@example.com')
-        team = fake_data.fake_team( self.db, crusher, "D'Amorebury") 
+        team = fake_data.fake_team(self.db, crusher, "D'Amorebury") 
         assert team.name != "d-amorebury"
