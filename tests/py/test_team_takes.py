@@ -22,8 +22,15 @@ class TeamTakesHarness(Harness):
                                             , verified_in='US'
                                              )
 
-
 class Tests(TeamTakesHarness):
+
+    def test_distributing_page_access_is_restricted(self):
+        admin = self.make_participant('admin', is_admin=True)
+
+        assert self.client.GxT(self.enterprise.slug+'/distributing/')
+        assert self.client.GxT(self.enterprise.slug+'/distributing/', auth_as='bruiser')
+        assert self.client.GET(self.enterprise.slug+'/distributing/', auth_as='picard')
+        assert self.client.GET(self.enterprise.slug+'/distributing/', auth_as='admin')
 
     # gtf - get_take_for
 
