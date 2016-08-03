@@ -3,6 +3,7 @@ from __future__ import print_function, unicode_literals
 from gratipay.utils import fake_data
 from gratipay.testing import Harness
 
+
 class TestFakeData(Harness):
     """
     Ensure the fake_data script doesn't throw any exceptions
@@ -34,7 +35,7 @@ class TestFakeData(Harness):
         country_id = fake_data.fake_participant_identity(crusher)
         assert [x.country.id for x in crusher.list_identity_metadata()] == [country_id]
 
-    def test_fake_team(self):
+    def test_fake_team_doesnt_fail_for_name_with_apostrophe(self):
         """
             Just a test to ensure that fake_team does not fail for 
             teams with apostrophes
