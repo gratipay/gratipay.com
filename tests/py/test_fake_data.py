@@ -2,7 +2,6 @@ from __future__ import print_function, unicode_literals
 
 from gratipay.utils import fake_data
 from gratipay.testing import Harness
-from gratipay.models import community
 
 class TestFakeData(Harness):
     """
