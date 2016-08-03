@@ -35,8 +35,11 @@ class TestFakeData(Harness):
         country_id = fake_data.fake_participant_identity(crusher)
         assert [x.country.id for x in crusher.list_identity_metadata()] == [country_id]
 
-    def test_slugize(self):
+    def test_fake_team(self):
         """
-            Just a test to ensure that slugize can handle single quotes
+            Just a test to ensure that fake_team does not fail for 
+            teams with apostrophes
         """
-        assert community.slugize("D'Amorebury") == "d-amorebury" 
+        crusher = self.make_participant('crusher', email_address='crusher@example.com')
+        team = fake_data.fake_team( self.db, crusher, "D'Amorebury") 
+        assert team.name != "d-amorebury"

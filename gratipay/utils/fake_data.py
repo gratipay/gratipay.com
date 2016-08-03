@@ -15,6 +15,7 @@ from gratipay.models.participant import Participant
 from gratipay.models.team import slugize, Team
 from gratipay.models import community
 from gratipay.models import check_db
+from gratipay.exceptions import InvalidTeamName
 
 faker = Factory.create()
 
@@ -141,7 +142,7 @@ def fake_team(db, teamowner, teamname=None):
                         , receiving=0.1
                         , nreceiving_from=3
                          )
-    except IntegrityError:
+    except (IntegrityError, InvalidTeamName):
         return fake_team(db, teamowner)
 
     return Team.from_slug(teamslug)

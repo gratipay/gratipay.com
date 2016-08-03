@@ -3,14 +3,14 @@ import re
 from postgres.orm import Model
 
 
-name_pattern = re.compile(r"^[A-Za-z0-9,._ '-]+$")
+name_pattern = re.compile(r'^[A-Za-z0-9,._ -]+$')
 
 def slugize(slug):
     """Convert a string to a string for an URL.
     """
     assert name_pattern.match(slug) is not None
     slug = slug.lower()
-    for c in (' ', ',', '.', '_','\''):
+    for c in (' ', ',', '.', '_'):
         slug = slug.replace(c, '-')
     while '--' in slug:
         slug = slug.replace('--', '-')
