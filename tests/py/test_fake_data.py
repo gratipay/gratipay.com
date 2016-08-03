@@ -34,3 +34,8 @@ class TestFakeData(Harness):
         crusher = self.make_participant('crusher', email_address='crusher@example.com')
         country_id = fake_data.fake_participant_identity(crusher)
         assert [x.country.id for x in crusher.list_identity_metadata()] == [country_id]
+
+    def test_fake_team_doesnt_fail_for_name_with_apostrophe(self):
+        crusher = self.make_participant('crusher', email_address='crusher@example.com')
+        team = fake_data.fake_team(self.db, crusher, "D'Amorebury") 
+        assert team.name != "d-amorebury"
