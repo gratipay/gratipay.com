@@ -20,7 +20,7 @@ title = _("Team Members")
     <thead>
     <tr>
       <th></th>
-      <th>Member</th>
+      <th>{{ _("Member") }}</th>
       <th class="figure">{{ _("Last{0} Week ($)", "<br/>"|safe) }}</th>
       <th class="figure">{{ _("This{0} Week ($)", "<br/>"|safe) }}</th>
       <th class="figure">{{ _("Team{0} Balance ($)", "<br/>"|safe) }}</th>
