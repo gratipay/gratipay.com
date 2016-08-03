@@ -36,10 +36,6 @@ class TestFakeData(Harness):
         assert [x.country.id for x in crusher.list_identity_metadata()] == [country_id]
 
     def test_fake_team_doesnt_fail_for_name_with_apostrophe(self):
-        """
-            Just a test to ensure that fake_team does not fail for 
-            teams with apostrophes
-        """
         crusher = self.make_participant('crusher', email_address='crusher@example.com')
         team = fake_data.fake_team(self.db, crusher, "D'Amorebury") 
         assert team.name != "d-amorebury"
