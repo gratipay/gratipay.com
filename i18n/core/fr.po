@@ -654,6 +654,9 @@ msgid ""
 "pending approval of your application."
 msgstr "Les {ntips} dons hebdomadaires totalisant {receiving} qui étaient précédemment à destination de votre compte ~{username} sous Gratipay 1.0 vont être convertis en paiements hebdomadaires pour votre nouvelle équipe sous {a}Gratipay 2.0{_a}, en attendant l'acceptation de votre candidature."
 
+msgid "Results for: "
+msgstr ""
+
 msgid "Search Gratipay"
 msgstr "Chercher dans Gratipay"
 

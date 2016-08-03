@@ -650,6 +650,9 @@ msgid ""
 "pending approval of your application."
 msgstr ""
 
+msgid "Results for: "
+msgstr ""
+
 msgid "Search Gratipay"
 msgstr "Serĉi Gratipay"
 

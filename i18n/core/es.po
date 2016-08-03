@@ -8,7 +8,7 @@
 # JoseLuis Torres <jl@joseluistorres.me>, 2014
 # Juan Luis Cano <juanlu001@gmail.com>, 2014
 # Marco Mora-Huizar <marcomorahuizar@gmail.com>, 2014
-# Pablo Lezaeta Reyes [pˈaβ̞lo lˌe̞θaˈeta rˈejɛ] <prflr88@gmail.com>, 2015
+# Pablo Roberto “Jristz” Lezaeta Reyes <prflr88@gmail.com>, 2015
 # Sergi Alonso <sseerrggii@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -653,6 +653,9 @@ msgid ""
 "to your ~{username} user account under Gratipay 1.0 will be converted into "
 "weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, "
 "pending approval of your application."
+msgstr ""
+
+msgid "Results for: "
 msgstr ""
 
 msgid "Search Gratipay"
