@@ -48,7 +48,7 @@ if recorder_is_owner:
 
     elif take == PENNY:
         if participant_is_member:
-            msg = _("{0} is already a participant of this team.", participant.username)
+            msg = _("{0} is already a member of this team.", participant.username)
         else:
             team.add_member(participant, recorder)
             msg = _("{0} has been added to the team.", participant.username)
