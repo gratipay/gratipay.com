@@ -15,3 +15,6 @@ class Tests(BrowserHarness):
         self.reload()
         assert self.css('#content h1').html == 'Teams'
         assert self.css('.you-are a').html.strip()[:6] == '~alice'
+
+    def test_homepage_pops_the_welcome_modal(self):
+        assert self.has_text('Welcome to Gratipay!')
