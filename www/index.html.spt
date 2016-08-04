@@ -149,8 +149,8 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 {% block scripts %}
 <script>
     $(document).ready(function () {
+        $('.welcome').show();
         $('.welcome button').click(function() {
-            console.log('suppressing welcome ...');
             document.cookie = 'suppress-welcome=';
             $(this).parent().parent().fadeOut(100);
         });
