@@ -1,6 +1,6 @@
 Gratipay.team = (function() {
 
-    var $t = function(selector) { return $(selector, 'table.team'); };
+    var $t = function(selector) { return selector ? $(selector, 'table.team') : $('table.team'); };
 
     function init() {
         $t('.lookup-container form').submit(add);
@@ -25,7 +25,7 @@ Gratipay.team = (function() {
 
         if (member.editing_allowed)
             return [ 'form'
-                   , {'class': 'edit'}
+                   , {'class': 'edit knob'}
                    , [ 'input'
                      , { 'value': take
                        , 'data-id': member.participant_id
@@ -36,7 +36,7 @@ Gratipay.team = (function() {
                     ];
 
         if (member.removal_allowed)
-            return ['span', {'class': 'remove', 'data-id': member.participant_id}, take];
+            return ['span', {'class': 'remove knob', 'data-id': member.participant_id}, take];
 
         return take;
     }
@@ -152,7 +152,7 @@ Gratipay.team = (function() {
     }
 
     function resetTake() {
-        $t('.take').show().parent().find('.updating').remove();
+        $t('.take .knob').show().parent().find('.updating').remove();
         var _ = $t('.take input');
         _.val(_.attr('data-take')).blur();
     }
@@ -167,10 +167,10 @@ Gratipay.team = (function() {
     }
 
     function setTake(participantId, take, confirmed) {
-        if ($t('.take').parent().find('.updating').length === 0) {
+        if ($t('.take').find('.updating').length === 0) {
             var $updating = $('<span class="updating"></span>');
-            $updating.text($t('.team').data('updating'));
-            $t('.take').hide().parent().append($updating);
+            $updating.text($t().data('updating'));
+            $t('.take .knob').hide().parent().append($updating);
         }
 
         var data = {take: take};
@@ -182,16 +182,14 @@ Gratipay.team = (function() {
                 , data: data
                 , success: function(d) {
                     if (d.confirm) {
-                        if (confirm(d.confirm)) {
-                            return setTake(participantId, take, true)
-                        } else {
-                            return resetTake()
+                        function proceed() { setTake(participantId, take, true); }
+                        Gratipay.confirm(d.confirm, proceed, resetTake);
+                    } else {
+                        if(d.success) {
+                            Gratipay.notification(d.success, 'success');
                         }
+                        drawRows(d.available, d.members);
                     }
-                    if(d.success) {
-                        Gratipay.notification(d.success, 'success');
-                    }
-                    drawRows(d.available, d.members);
                 }
                 , error: [resetTake, Gratipay.error]
                  });

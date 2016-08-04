@@ -68,7 +68,7 @@ suppress_welcome = 'suppress-welcome' in request.cookie
 
 {% block content %}
 {% if not suppress_welcome %}
-<div class="welcome">
+<div class="welcome modal">
     <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
     <p>{{ _( "We have {nteams} Teams receiving and sharing about {volume} each week."
            , nteams=tabs['approved']['n']

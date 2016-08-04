@@ -57,4 +57,13 @@ title = _("Team Members")
     <tfoot><tr><td colspan=6><div class="loading-indicator"/></td></tr></foot>
     <tbody class="team-members"></tbody>
 </table>
+
+<div class="modal">
+    <p><b>{{ _("Are you sure?") }}</b></p>
+    <p class="confirmation-message"></p>
+    <div class="continue">
+        <button class="yes selected">{{ _("Yes") }}</button>
+        <button class="no">{{ _("No") }}</button>
+    </div>
+</div>
 {% endblock %}

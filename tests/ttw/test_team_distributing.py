@@ -46,9 +46,10 @@ class Tests(BrowserHarness):
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
 
-        with self.confirming(True):
-            self.css('table.team span.remove').first.click()
-            time.sleep(0.1)
+        self.css('table.team span.remove').first.click()
+        time.sleep(0.1)
+        self.css('.modal .yes').first.click()
+        time.sleep(0.1)
 
         assert self.enterprise.get_memberships() == []
 
