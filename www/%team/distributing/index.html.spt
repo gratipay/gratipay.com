@@ -6,6 +6,7 @@ team = get_team(state)
 if team.available == 0:
     website.redirect('..', base_url='')
 title = _("Team Members")
+banner = team.name
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/team-base.html" %}
