@@ -13,6 +13,7 @@ banner = team.name
 
 {% block scripts %}
 <script>$(document).ready(Gratipay.team.init);</script>
+<script>$(document).ready(Gratipay.payments.init);</script>
 {{ super() }}
 {% endblock %}
 
