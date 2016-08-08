@@ -120,6 +120,12 @@ class TestElsewhere(Harness):
             expected = error % (user_name, platform.display_name)
             assert expected in r.body
 
+    def test_user_pages_with_invalid_characters(self):
+        platforms = [p for p in self.platforms]
+        assert self.client.GxT('/on/'+platforms[0].name+'/AA%0DBB')
+        assert self.client.GxT('/on/'+platforms[0].name+'/AA%0ABB')
+        assert self.client.GxT('/on/'+platforms[0].name+'/AA   BB')
+
     def test_failure_page_accepts_valid_username(self):
         self.client.GET('/on/twitter/Gratipay/')  # normal case will have the db primed
         response = self.client.GET('/on/twitter/Gratipay/failure.html')

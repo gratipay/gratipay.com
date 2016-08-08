@@ -250,11 +250,16 @@ class AccountElsewhere(Model):
 
 
 def get_account_elsewhere(website, state, api_lookup=True):
+    _ = state['_']
     path = state['request'].line.uri.path
+
     platform = getattr(website.platforms, path['platform'], None)
     if platform is None:
         raise Response(404)
+
     uid = path['user_name']
+    if "\t" in uid or "\r" in uid or "\n" in uid:
+        raise Response(400, _("Invalid character in elsewhere account username."))
     if uid[:1] == '~':
         key = 'user_id'
         uid = uid[1:]
@@ -271,7 +276,8 @@ def get_account_elsewhere(website, state, api_lookup=True):
             user_info = platform.get_user_info(key, uid)
         except Response as r:
             if r.code == 404:
-                _ = state['_']
+                # Prevent Content Spoofing by truncating long usernames
+                uid = (uid[:15] + '...') if len(uid) > 15 else uid
                 err = _("There doesn't seem to be a user named {0} on {1}.",
                         uid, platform.display_name)
                 raise Response(404, err)
