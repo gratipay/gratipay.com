@@ -45,7 +45,7 @@ class TestPages(Harness):
                            .replace('/for/%slug/', '/for/wonderland/') \
                            .replace('/%platform/', '/github/') \
                            .replace('/%user_name/', '/gratipay/') \
-                           .replace('/%member_id', '/1') \
+                           .replace('/%to', '/1') \
                            .replace('/%country', '/TT') \
                            .replace('/%exchange_id.int', '/%s' % exchange_id) \
                            .replace('/%redirect_to', '/giving') \

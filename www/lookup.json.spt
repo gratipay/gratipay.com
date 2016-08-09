@@ -8,6 +8,10 @@ SQL = """
            AND
            is_suspicious IS NOT TRUE
            AND
+           email_address IS NOT NULL
+           AND
+           has_verified_identity
+           AND
            (
             (is_searchable AND username_lower LIKE %s)
              OR

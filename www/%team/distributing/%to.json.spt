@@ -1,0 +1,84 @@
+"""Endpoint to record team memberships.
+"""
+from decimal import InvalidOperation
+
+from aspen import Response
+from babel.numbers import NumberFormatError
+from gratipay.utils import get_team
+from gratipay.models.participant import Participant
+from gratipay.models.team.mixins.takes import ZERO, PENNY
+
+[--------------------]
+request.allow('POST')
+
+team = get_team(state)
+if team.available == 0:
+    website.redirect('..', base_url='')
+
+if user.ANON:
+    raise Response(401)
+recorder = user.participant
+
+participant = Participant.from_id(request.path['to'])
+if participant is None:
+    raise Response(404, _("User not found."))
+
+participant_is_member = participant.member_of(team)
+recorder_is_owner = team.owner == recorder.username
+
+try:
+    take = parse_decimal(request.body['take'])
+except (InvalidOperation, NumberFormatError):
+    raise Response(400, _("That's not a valid number."))
+
+msg = None
+out = {}
+
+if recorder_is_owner:
+    if take == ZERO:
+        if participant_is_member:
+            if request.body.get('confirmed'):
+                team.remove_member(participant, recorder)
+            else:
+                out['confirm'] = _(
+                    "Are you sure you want to remove {0} from this team?",
+                    participant.username
+                )
+        msg = _("{0} has been removed from the team.", participant.username)
+
+    elif take == PENNY:
+        if participant_is_member:
+            msg = _("{0} is already a member of this team.", participant.username)
+        else:
+            team.add_member(participant, recorder)
+            msg = _("{0} has been added to the team.", participant.username)
+
+    else:
+        # Team owner can only add or remove members, not otherwise set takes.
+        raise Response(400)
+
+elif participant_is_member:
+    if take == ZERO and not request.body.get('confirmed'):
+        out['confirm'] = _("Are you sure you want to leave this team?")
+    else:
+
+        try:
+            new_take = team.set_take_for(participant, take, recorder)
+        except NotAllowed as exc:
+            raise Response(403, exc.args[0])
+        except:
+            raise Response(400)
+
+        new_take_str = format_currency(new_take, 'USD')
+        msg = _("Your take is now {0}.", new_take_str)
+
+else:
+    raise Response(403)
+
+if 'confirm' not in out:
+    out['available'] = team.available
+    out['members'] = team.get_memberships(user.participant)
+    out['success'] = msg
+
+[---] application/json via json_dump
+out

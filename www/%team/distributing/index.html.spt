@@ -6,21 +6,23 @@ team = get_team(state)
 if team.available == 0:
     website.redirect('..', base_url='')
 title = _("Team Members")
+banner = team.name
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/team-base.html" %}
 
 {% block scripts %}
 <script>$(document).ready(Gratipay.team.init);</script>
+<script>$(document).ready(Gratipay.payments.init);</script>
 {{ super() }}
 {% endblock %}
 
 {% block content %}
-<table id="team" class="table" data-updating="{{ _('Updating…') }}">
+<table class="team table" data-updating="{{ _('Updating…') }}">
     <thead>
     <tr>
       <th></th>
-      <th>Member</th>
+      <th>{{ _("Member") }}</th>
       <th class="figure">{{ _("Last{0} Week ($)", "<br/>"|safe) }}</th>
       <th class="figure">{{ _("This{0} Week ($)", "<br/>"|safe) }}</th>
       <th class="figure">{{ _("Team{0} Balance ($)", "<br/>"|safe) }}</th>
@@ -36,18 +38,18 @@ title = _("Team Members")
       </td>
       <td class="figure percentage"></td>
     </tr>
-    {% if user.participant == team %}
+    {% if user.participant.username == team.owner %}
     <tr>
       <td colspan="6" class="lookup">
-        <div id="lookup-container">
+        <div class="lookup-container">
           <form>
             <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
-            <input tabindex="1" id="query"
+            <input tabindex="1" class="query"
                    autocomplete="off"
                    placeholder="{{ _("Enter a Gratipay username") }}"
                />&nbsp;<button type="submit"
                                tabindex="2">{{ _("Add") }}</button>
-            <ul id="lookup-results"></ul>
+            <ul class="lookup-results"></ul>
           </form>
         </div>
       </td>
@@ -55,6 +57,15 @@ title = _("Team Members")
     {% endif %}
     </thead>
     <tfoot><tr><td colspan=6><div class="loading-indicator"/></td></tr></foot>
-    <tbody id="team-members"></tbody>
+    <tbody class="team-members"></tbody>
 </table>
+
+<div class="modal">
+    <p><b>{{ _("Are you sure?") }}</b></p>
+    <p class="confirmation-message"></p>
+    <div class="continue">
+        <button class="yes selected">{{ _("Yes") }}</button>
+        <button class="no">{{ _("No") }}</button>
+    </div>
+</div>
 {% endblock %}

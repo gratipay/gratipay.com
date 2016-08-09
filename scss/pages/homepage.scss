@@ -1,24 +1,4 @@
 #homepage {
-    .welcome {
-        position: fixed;
-        left: 50%;
-        top: 30%;
-        margin-top: 24px;
-        margin-left: -144px;
-        width: 288px;
-        font: normal 14px/18px $Ideal;
-        padding: 24px;
-        background: $white;
-        border: 2px solid $black;
-        @include border-radius(5px);
-        box-shadow: 0px 0px 32px 16px rgba($black, 0.5);
-        z-index: 3;
-
-        .continue {
-            text-align: right;
-        }
-    }
-
     #main {
         position: relative;
         .nav {

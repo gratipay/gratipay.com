@@ -1,12 +1,15 @@
 Gratipay.team = (function() {
-    function init() {
-        $('#lookup-container form').submit(add);
-        $('#lookup-results').on('click', 'li', selectLookupResult);
-        $('#query').focus().keyup(lookup);
 
-        jQuery.get("index.json").success(function(members) {
+    var $t = function(selector) { return selector ? $(selector, 'table.team') : $('table.team'); };
+
+    function init() {
+        $t('.lookup-container form').submit(add);
+        $t('.lookup-results').on('click', 'li', selectLookupResult);
+        $t('.query').focus().keyup(lookup);
+
+        jQuery.get("index.json").success(function(d) {
             $('.loading-indicator').remove();
-            drawRows(members);
+            drawRows(d.available, d.members);
         });
     }
 
@@ -21,34 +24,26 @@ Gratipay.team = (function() {
         var take = num(member.take);
 
         if (member.editing_allowed)
-            return [ 'form', {'id': 'take'}
-                         , ['input', { 'value': take
-                                                 , 'data-username': member.username
-                                                 , 'data-take': take // useful to reset form
-                                                 , 'tabindex': '1'
-                                                    }]
-                            ];
+            return [ 'form'
+                   , {'class': 'edit knob'}
+                   , [ 'input'
+                     , { 'value': take
+                       , 'data-id': member.participant_id
+                       , 'data-take': take // useful to reset form
+                       , 'tabindex': '1'
+                        }
+                      ]
+                    ];
 
         if (member.removal_allowed)
-            return [ 'span', { 'class': 'remove'
-                                             , 'data-username': member.username
-                                                }, take];
+            return ['span', {'class': 'remove knob', 'data-id': member.participant_id}, take];
 
         return take;
     }
 
-    function drawRows(members) {
-        nmembers = members.length - 1; // includes the Team itself, which we don't
-                                       // want to enumerate
+    function drawRows(available, members) {
+        var nmembers = members.length;
         var rows = [];
-
-        if (nmembers === 0) {
-            rows.push(Gratipay.jsonml(
-                [ 'tr'
-                , ['td', {'colspan': '6', 'class': 'no-members'}, "No members"]
-                 ]
-            ));
-        }
 
         for (var i=0, len=members.length; i<len; i++) {
             var member = members[i];
@@ -61,33 +56,40 @@ Gratipay.team = (function() {
             if (member.take === member.max_this_week)
                 increase = 'max';
 
-            if (i < nmembers)
-                rows.push(Gratipay.jsonml(
-                    [ 'tr'
-                    , ['td', {'class': 'n'}, (i === nmembers ? '' : nmembers - i)]
-                    , ['td', ['a', {'href': '/'+member.username+'/'}, member.username]]
-                    , ['td', {'class': 'figure last_week'}, num(member.last_week)]
-                    , ['td', {'class': 'figure take ' + increase}, drawMemberTake(member)]
-                    , ['td', {'class': 'figure balance'}, num(member.balance)]
-                    , ['td', {'class': 'figure percentage'}, perc(member.percentage)]
-                     ]
-                ));
-            else if (nmembers > 0)
-                rows.push(Gratipay.jsonml(
-                    [ 'tr'
-                    , ['td']
-                    , ['td']
-                    , ['td']
-                    , ['td', {'class': 'figure take'}, num(member.take)]
-                    , ['td', {'class': 'figure balance'}, num(member.balance)]
-                    , ['td', {'class': 'figure percentage'}, perc(member.percentage)]
-                     ]
-                ));
+            rows.push(Gratipay.jsonml(
+                [ 'tr'
+                , ['td', {'class': 'n'}, (i === nmembers ? '' : nmembers - i)]
+                , ['td', ['a', {'href': '/~'+member.username+'/'}, member.username]]
+                , ['td', {'class': 'figure last_week'}, num(member.last_week)]
+                , ['td', {'class': 'figure take ' + increase}, drawMemberTake(member)]
+                , ['td', {'class': 'figure balance'}, num(member.balance)]
+                , ['td', {'class': 'figure percentage'}, perc(member.percentage)]
+                 ]
+            ));
         }
-        $('#team-members').html(rows);
-        $('#take').submit(doTake);
-        $('#take input').focus().keyup(maybeCancelTake);
-        $('#team-members .remove').click(remove);
+
+        if (nmembers === 0) {
+            rows.push(Gratipay.jsonml(
+                ['tr', ['td', {'colspan': '6', 'class': 'no-members'}, "No members"]]
+            ));
+        } else {
+            rows.push(Gratipay.jsonml(
+                [ 'tr'
+                , {'class': 'totals'}
+                , ['td']
+                , ['td']
+                , ['td']
+                , ['td', {'class': 'figure take'}, num(available - member.balance)]
+                , ['td', {'class': 'figure balance'}, num(member.balance)]
+                , ['td', {'class': 'figure percentage'}, perc(member.balance / available)]
+                 ]
+            ));
+        }
+
+        $t('.team-members').html(rows);
+        $t('.team-members .edit').submit(doTake);
+        $t('.team-members .edit input').focus().keyup(maybeCancelTake);
+        $t('.team-members .remove').click(remove);
     }
 
 
@@ -95,9 +97,9 @@ Gratipay.team = (function() {
     // ===
 
     function lookup() {
-        var query = $('#query').val();
+        var query = $t('.query').val();
         if (query === '')
-            $('#lookup-results').empty();
+            $t('.lookup-results').empty();
         else
             jQuery.get("/lookup.json", {query: query}).success(drawLookupResults);
     }
@@ -110,29 +112,32 @@ Gratipay.team = (function() {
                 ['li', {"data-id": result.id}, result.username]
             ));
         }
-        $('#lookup-results').html(items);
+        $t('.lookup-results').html(items);
+        if (items.length === 1)
+            selectLookupResult.call($t('.lookup-results li'));
     }
 
     function selectLookupResult() {
-        $('#query').val($(this).html());
-        $('#lookup-results').empty();
+        $li = $(this);
+        $t('.query').val($li.html()).data('id', $li.data('id'));
+        $t('.lookup-results').empty();
     }
 
     function add(e) {
         e.preventDefault();
         e.stopPropagation();
-        var query = $('#query').val();
-        setTake(query, '0.01');
-        $('#lookup-results').empty();
-        $('#query').val('').focus();
+        var participantId = $t('.query').data('id');
+        setTake(participantId, '0.01');
+        $t('.lookup-results').empty();
+        $t('.query').val('').focus();
         return false;
     }
 
     function remove(e) {
         e.preventDefault();
         e.stopPropagation();
-        var membername = $(e.target).attr('data-username');
-        setTake(membername, '0.00');
+        var participantId = $(e.target).data('id');
+        setTake(participantId, '0.00');
         return false;
     }
 
@@ -147,26 +152,25 @@ Gratipay.team = (function() {
     }
 
     function resetTake() {
-        $('#take').show().parent().find('.updating').remove();
-        var _ = $('#take input');
+        $t('.take .knob').show().parent().find('.updating').remove();
+        var _ = $t('.take input');
         _.val(_.attr('data-take')).blur();
     }
 
     function doTake(e) {
         e.preventDefault();
         e.stopPropagation();
-        var frm = $('#take'), _ = $('input', frm);
-        var username = _.attr('data-username'),
-                take = _.val();
-        setTake(username, take);
+        var input = $t('.take input');
+        var participantId = input.data('id'), take = input.val();
+        setTake(participantId, take);
         return false;
     }
 
-    function setTake(username, take, confirmed) {
-        if ($('#take').parent().find('.updating').length === 0) {
+    function setTake(participantId, take, confirmed) {
+        if ($t('.take').find('.updating').length === 0) {
             var $updating = $('<span class="updating"></span>');
-            $updating.text($('#team').data('updating'));
-            $('#take').hide().parent().append($updating);
+            $updating.text($t().data('updating'));
+            $t('.take .knob').hide().parent().append($updating);
         }
 
         var data = {take: take};
@@ -174,20 +178,18 @@ Gratipay.team = (function() {
 
         jQuery.ajax(
                 { type: 'POST'
-                , url: username + ".json"
+                , url: participantId + ".json"
                 , data: data
                 , success: function(d) {
                     if (d.confirm) {
-                        if (confirm(d.confirm)) {
-                            return setTake(username, take, true)
-                        } else {
-                            return resetTake()
+                        function proceed() { setTake(participantId, take, true); }
+                        Gratipay.confirm(d.confirm, proceed, resetTake);
+                    } else {
+                        if(d.success) {
+                            Gratipay.notification(d.success, 'success');
                         }
+                        drawRows(d.available, d.members);
                     }
-                    if(d.success) {
-                        Gratipay.notification(d.success, 'success');
-                    }
-                    drawRows(d.members);
                 }
                 , error: [resetTake, Gratipay.error]
                  });
