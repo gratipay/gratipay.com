@@ -716,16 +716,8 @@ msgstr ""
 msgid "User not found."
 msgstr "Gebruiker is niet gevonden."
 
-msgid "That's not a valid number"
-msgstr "Dat is geen geldig nummer"
-
-msgid "A team can't take from itself"
-msgstr "Een team kan geen opbrengsten van zichzelf ontvangen"
-
-msgid ""
-"You're only allowed to add or remove members, you can't set their takes to "
-"specific amounts."
-msgstr "U bent alleen gemachtigd om leden toe te voegen of te verwijderen. Het is niet mogelijk om een specifiek bedrag aan opbrengsten aan een lid toe te wijzen. "
+msgid "That's not a valid number."
+msgstr ""
 
 msgid "Are you sure you want to remove {0} from this team?"
 msgstr "Weet je zeker dat je {0} uit het team wilt verwijderen?"
@@ -742,9 +734,6 @@ msgstr "{0} is aan het team toegevoegd."
 msgid "Are you sure you want to leave this team?"
 msgstr "Weet je zeker dat je dit team wilt verlaten?"
 
-msgid "Your take is now {0} (you can't go higher this week)."
-msgstr "Uw deel van de opbrengst is {0} (het is niet mogelijk om deze week meer te ontvangen)."
-
 msgid "Your take is now {0}."
 msgstr "Uw deel van de opbrengst is {0}."
 
@@ -753,6 +742,9 @@ msgstr "Teamleden"
 
 msgid "Updating…"
 msgstr "Bijwerken..."
+
+msgid "Member"
+msgstr ""
 
 msgid "Last{0} Week ($)"
 msgstr "Afgelopen{0} week ($)"
@@ -771,6 +763,15 @@ msgstr "Geef een Gratipay gebruikersnaam op"
 
 msgid "Add"
 msgstr "Toevoegen"
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nee"
 
 msgid "You can't edit a closed team."
 msgstr ""
@@ -882,12 +883,6 @@ msgstr "Verlaten:"
 msgid "Transfer it?"
 msgstr "Overmaken?"
 
-msgid "Yes"
-msgstr "Ja"
-
-msgid "No"
-msgstr "Nee"
-
 msgid "Friend Finder"
 msgstr "Vriendenzoeker"
 
@@ -984,9 +979,6 @@ msgstr "Wat is Gratipay?"
 
 msgid "Gratipay provides payments and payroll for open work."
 msgstr "Gratipay voorziet in betalingen en lonen voor open werk."
-
-msgid "Member"
-msgstr ""
 
 msgid "Status"
 msgstr "Status"

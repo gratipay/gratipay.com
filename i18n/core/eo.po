@@ -714,15 +714,7 @@ msgstr ""
 msgid "User not found."
 msgstr "Uzanto ne trovita."
 
-msgid "That's not a valid number"
-msgstr "Tio estas malvalida numero."
-
-msgid "A team can't take from itself"
-msgstr ""
-
-msgid ""
-"You're only allowed to add or remove members, you can't set their takes to "
-"specific amounts."
+msgid "That's not a valid number."
 msgstr ""
 
 msgid "Are you sure you want to remove {0} from this team?"
@@ -740,9 +732,6 @@ msgstr ""
 msgid "Are you sure you want to leave this team?"
 msgstr ""
 
-msgid "Your take is now {0} (you can't go higher this week)."
-msgstr ""
-
 msgid "Your take is now {0}."
 msgstr ""
 
@@ -750,6 +739,9 @@ msgid "Team Members"
 msgstr "Teamaj Membroj"
 
 msgid "Updating…"
+msgstr ""
+
+msgid "Member"
 msgstr ""
 
 msgid "Last{0} Week ($)"
@@ -769,6 +761,15 @@ msgstr "Tajpu Gratipay-an uzantnomon"
 
 msgid "Add"
 msgstr "Aldoni"
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Yes"
+msgstr "Jes"
+
+msgid "No"
+msgstr "Ne"
 
 msgid "You can't edit a closed team."
 msgstr ""
@@ -880,12 +881,6 @@ msgstr ""
 msgid "Transfer it?"
 msgstr "Transpagi?"
 
-msgid "Yes"
-msgstr "Jes"
-
-msgid "No"
-msgstr "Ne"
-
 msgid "Friend Finder"
 msgstr ""
 
@@ -981,9 +976,6 @@ msgid "What is Gratipay?"
 msgstr "Kio estas Gratipay?"
 
 msgid "Gratipay provides payments and payroll for open work."
-msgstr ""
-
-msgid "Member"
 msgstr ""
 
 msgid "Status"

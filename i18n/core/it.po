@@ -714,16 +714,8 @@ msgstr "Hai annullato il tuo pagamento verso {0}."
 msgid "User not found."
 msgstr "Utente non trovato."
 
-msgid "That's not a valid number"
-msgstr "Non è un numero valido"
-
-msgid "A team can't take from itself"
-msgstr "Un team non può ricevere donazioni dai suoi componenti."
-
-msgid ""
-"You're only allowed to add or remove members, you can't set their takes to "
-"specific amounts."
-msgstr "Puoi solo aggiungere o rimuovere membri. Non puoi impostare quanto ricevono ad ammontare specifici."
+msgid "That's not a valid number."
+msgstr ""
 
 msgid "Are you sure you want to remove {0} from this team?"
 msgstr "Sei sicuro di voler rimuovere {0} da questo team?"
@@ -740,9 +732,6 @@ msgstr "{0} è stato aggiunto al team."
 msgid "Are you sure you want to leave this team?"
 msgstr "Sei sicuro di voler lasciare questo team?"
 
-msgid "Your take is now {0} (you can't go higher this week)."
-msgstr "La tua parte è ora di {0} (non può aumentare questa settimana)."
-
 msgid "Your take is now {0}."
 msgstr "La tua parte è ora di {0}."
 
@@ -751,6 +740,9 @@ msgstr "Membri del Team"
 
 msgid "Updating…"
 msgstr "Aggiornamento..."
+
+msgid "Member"
+msgstr "Membro"
 
 msgid "Last{0} Week ($)"
 msgstr "Ultima{0} Settimana ($)"
@@ -769,6 +761,15 @@ msgstr "Inserisci un nome utente Gratipay."
 
 msgid "Add"
 msgstr "Aggiungi"
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Yes"
+msgstr "Sì"
+
+msgid "No"
+msgstr "No"
 
 msgid "You can't edit a closed team."
 msgstr "Non puoi modificare un team chiuso."
@@ -880,12 +881,6 @@ msgstr "Abbandona:"
 msgid "Transfer it?"
 msgstr "Trasferire?"
 
-msgid "Yes"
-msgstr "Sì"
-
-msgid "No"
-msgstr "No"
-
 msgid "Friend Finder"
 msgstr "Trova Amici"
 
@@ -982,9 +977,6 @@ msgstr "Cos'è Gratipay?"
 
 msgid "Gratipay provides payments and payroll for open work."
 msgstr "Gratipay permette pagamenti di lavori gratuiti."
-
-msgid "Member"
-msgstr "Membro"
 
 msgid "Status"
 msgstr "Stato"

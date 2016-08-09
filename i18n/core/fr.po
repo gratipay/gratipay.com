@@ -655,7 +655,7 @@ msgid ""
 msgstr "Les {ntips} dons hebdomadaires totalisant {receiving} qui étaient précédemment à destination de votre compte ~{username} sous Gratipay 1.0 vont être convertis en paiements hebdomadaires pour votre nouvelle équipe sous {a}Gratipay 2.0{_a}, en attendant l'acceptation de votre candidature."
 
 msgid "Results for: "
-msgstr ""
+msgstr "Résultats pour :"
 
 msgid "Search Gratipay"
 msgstr "Chercher dans Gratipay"
@@ -718,16 +718,8 @@ msgstr "Vous avez annulé votre paiement pour {0}."
 msgid "User not found."
 msgstr "Utilisateur introuvable."
 
-msgid "That's not a valid number"
-msgstr "Ceci n'est pas un nombre valide"
-
-msgid "A team can't take from itself"
-msgstr "Une équipe ne peut pas recevoir des dons d'elle-même"
-
-msgid ""
-"You're only allowed to add or remove members, you can't set their takes to "
-"specific amounts."
-msgstr "Vous n'êtes autorisé qu'à ajouter ou retirer des membres, vous ne pouvez pas définir les montants de leurs parts."
+msgid "That's not a valid number."
+msgstr ""
 
 msgid "Are you sure you want to remove {0} from this team?"
 msgstr "Êtes-vous sûr de vouloir retirer {0} de l'équipe ?"
@@ -744,9 +736,6 @@ msgstr "{0} a été ajouté à l'équipe."
 msgid "Are you sure you want to leave this team?"
 msgstr "Êtes-vous sûr de vouloir quitter cette équipe ?"
 
-msgid "Your take is now {0} (you can't go higher this week)."
-msgstr "Votre part est désormais {0} (vous ne pouvez pas prendre plus cette semaine)."
-
 msgid "Your take is now {0}."
 msgstr "Votre part est désormais {0}."
 
@@ -755,6 +744,9 @@ msgstr "Membres de l'équipe"
 
 msgid "Updating…"
 msgstr "Modification…"
+
+msgid "Member"
+msgstr "Membre"
 
 msgid "Last{0} Week ($)"
 msgstr "Semaine{0} passée ($)"
@@ -773,6 +765,15 @@ msgstr "Entrez un nom d'utilisateur Gratipay"
 
 msgid "Add"
 msgstr "Ajouter"
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "No"
+msgstr "Non"
 
 msgid "You can't edit a closed team."
 msgstr "Vous ne pouvez pas modifier une équipe fermée."
@@ -884,12 +885,6 @@ msgstr "Abandonné :"
 msgid "Transfer it?"
 msgstr "Le transférer ?"
 
-msgid "Yes"
-msgstr "Oui"
-
-msgid "No"
-msgstr "Non"
-
 msgid "Friend Finder"
 msgstr "Recherche d'amis"
 
@@ -986,9 +981,6 @@ msgstr "Qu'est-ce que Gratipay ?"
 
 msgid "Gratipay provides payments and payroll for open work."
 msgstr "Gratipay propose les paiements et la redistribution pour le travail ouvert."
-
-msgid "Member"
-msgstr "Membre"
 
 msgid "Status"
 msgstr "État"

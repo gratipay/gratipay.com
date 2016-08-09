@@ -717,16 +717,8 @@ msgstr ""
 msgid "User not found."
 msgstr "Usuário não encontrado."
 
-msgid "That's not a valid number"
-msgstr "Este não é um número válido"
-
-msgid "A team can't take from itself"
-msgstr "Um time não pode tirar de si mesmo"
-
-msgid ""
-"You're only allowed to add or remove members, you can't set their takes to "
-"specific amounts."
-msgstr "Você apenas está permitido a adicionar ou remover membros, você não pode setar suas retiradas para valores específicos."
+msgid "That's not a valid number."
+msgstr ""
 
 msgid "Are you sure you want to remove {0} from this team?"
 msgstr "Você tem certeza que deseja remover {0} deste time"
@@ -743,9 +735,6 @@ msgstr "{0} foi adicionado ao time."
 msgid "Are you sure you want to leave this team?"
 msgstr "Você tem certeza que deseja sair desse time?"
 
-msgid "Your take is now {0} (you can't go higher this week)."
-msgstr "Sua parte é agora {0}. (você não pode ir além essa semana)."
-
 msgid "Your take is now {0}."
 msgstr "Sua parte é agora {0}."
 
@@ -754,6 +743,9 @@ msgstr "Membros do Time"
 
 msgid "Updating…"
 msgstr "Atualizando..."
+
+msgid "Member"
+msgstr ""
 
 msgid "Last{0} Week ($)"
 msgstr "Semana{0} passada ($)"
@@ -772,6 +764,15 @@ msgstr "Entre um usuário Gratipay"
 
 msgid "Add"
 msgstr "Adicionar"
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Yes"
+msgstr "Sim"
+
+msgid "No"
+msgstr "Não"
 
 msgid "You can't edit a closed team."
 msgstr ""
@@ -883,12 +884,6 @@ msgstr "Abandonado:"
 msgid "Transfer it?"
 msgstr "Transfere isso?"
 
-msgid "Yes"
-msgstr "Sim"
-
-msgid "No"
-msgstr "Não"
-
 msgid "Friend Finder"
 msgstr ""
 
@@ -984,9 +979,6 @@ msgid "What is Gratipay?"
 msgstr "O que é o Gratipay?"
 
 msgid "Gratipay provides payments and payroll for open work."
-msgstr ""
-
-msgid "Member"
 msgstr ""
 
 msgid "Status"
