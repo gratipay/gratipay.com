@@ -110,17 +110,22 @@ class TestElsewhere(Harness):
             assert response.code == 200
             assert 'has not joined' in response.body.decode('utf8')
 
-    def test_user_pages_not_found(self):
-        user_name = 'adhsjakdjsdkjsajdhksda'
+    def search_username_on_all_platforms(self, username, expected_name):
         error = "There doesn't seem to be a user named %s on %s."
         for platform in self.platforms:
             if not hasattr(platform, 'api_user_name_info_path'):
                 continue
-            r = self.client.GxT("/on/%s/%s/" % (platform.name, user_name))
-            expected = error % (user_name, platform.display_name)
+            r = self.client.GxT("/on/%s/%s/" % (platform.name, username))
+            expected = error % (expected_name, platform.display_name)
             assert expected in r.body
 
-    def test_user_pages_with_invalid_characters(self):
+    def test_user_pages_not_found(self):
+        self.search_username_on_all_platforms('ijroioifeef', 'ijroioifeef')
+
+    def test_user_pages_not_found_truncates_long_usernames(self):
+        self.search_username_on_all_platforms('adhsjakdjsdkjsajdhksda', 'adhsjakdjsdkjsa...')
+
+    def test_user_pages_not_found_with_invalid_characters(self):
         platforms = [p for p in self.platforms]
         assert self.client.GxT('/on/'+platforms[0].name+'/AA%0DBB')
         assert self.client.GxT('/on/'+platforms[0].name+'/AA%0ABB')
