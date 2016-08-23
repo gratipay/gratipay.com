@@ -651,7 +651,7 @@ msgid ""
 msgstr "I {ntips} pagamenti settimanali per un totale di {receiving} che precedentemente venivano indirizzati al tuo account utente ~{username}, con Gratipay 1.0, saranno convertiti in pagamenti volontari al tuo nuovo Team, con {a}Gratipay 2.0{_a}, in attesa di approvazione della tua domanda."
 
 msgid "Results for: "
-msgstr ""
+msgstr "Risultati per:"
 
 msgid "Search Gratipay"
 msgstr "Cerca su Gratipay"
@@ -715,7 +715,7 @@ msgid "User not found."
 msgstr "Utente non trovato."
 
 msgid "That's not a valid number."
-msgstr ""
+msgstr "Non è un numero valido."
 
 msgid "Are you sure you want to remove {0} from this team?"
 msgstr "Sei sicuro di voler rimuovere {0} da questo team?"
@@ -763,7 +763,7 @@ msgid "Add"
 msgstr "Aggiungi"
 
 msgid "Are you sure?"
-msgstr ""
+msgstr "Sei sicuro?"
 
 msgid "Yes"
 msgstr "Sì"
@@ -1030,6 +1030,9 @@ msgstr "Slug del team non valido."
 
 msgid "Your privacy setting has been changed."
 msgstr "Le impostazioni della tua privacy sono state cambiate."
+
+msgid "Statement too big!"
+msgstr ""
 
 msgid "Primary"
 msgstr "Primario"

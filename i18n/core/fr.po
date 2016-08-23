@@ -719,7 +719,7 @@ msgid "User not found."
 msgstr "Utilisateur introuvable."
 
 msgid "That's not a valid number."
-msgstr ""
+msgstr "Ce n'est pas un nombre valide."
 
 msgid "Are you sure you want to remove {0} from this team?"
 msgstr "Êtes-vous sûr de vouloir retirer {0} de l'équipe ?"
@@ -767,7 +767,7 @@ msgid "Add"
 msgstr "Ajouter"
 
 msgid "Are you sure?"
-msgstr ""
+msgstr "Êtes-vous sûr ?"
 
 msgid "Yes"
 msgstr "Oui"
@@ -1034,6 +1034,9 @@ msgstr "Identifiant d'équipe invalide."
 
 msgid "Your privacy setting has been changed."
 msgstr "Votre préférence de vie privée a été modifiée."
+
+msgid "Statement too big!"
+msgstr ""
 
 msgid "Primary"
 msgstr "Principale"

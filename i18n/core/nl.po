@@ -1033,6 +1033,9 @@ msgstr ""
 msgid "Your privacy setting has been changed."
 msgstr "Uw privacy instellingen zijn gewijzigd."
 
+msgid "Statement too big!"
+msgstr ""
+
 msgid "Primary"
 msgstr "Primair"
 
