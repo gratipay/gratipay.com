@@ -30,3 +30,9 @@ class Tests(Harness):
                                         , expecting_error=True
                                          )
         assert response.code == 403, response.code
+
+    def test_participant_cannot_change_their_statement_if_too_big(self):
+        too_big_statement = 'A' * ((256 * 1024) + 1)
+        response = self.change_statement('en', too_big_statement, expecting_error=True)
+        assert response.code == 400
+        assert response.body == 'Statement too big!'
