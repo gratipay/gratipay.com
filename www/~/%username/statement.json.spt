@@ -17,7 +17,7 @@ if request.method == 'POST':
 
     # Statements are limited to 256kB to avoid DoS'ing the markdown parser.
     if len(content) > (256 * 1024):
-        raise Response(400, "Statement too big!")
+        raise Response(400, _("Statement too big!"))
 
     participant.upsert_statement(lang, content)
     r = {"html": markdown.render(content)}
