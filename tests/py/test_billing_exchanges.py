@@ -12,8 +12,10 @@ from gratipay.billing.exchanges import (
     capture_card_hold,
     create_card_hold,
     record_exchange,
-    record_exchange_result
+    record_exchange_result,
+    get_ready_payout_routes_by_network
 )
+from gratipay.billing.payday import Payday
 from gratipay.exceptions import NegativeBalance, NotWhitelisted
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.testing import Foobar, Harness, D,P
@@ -143,6 +145,30 @@ class TestsWithBillingHarness(BillingHarness):
         capture_card_hold(self.db, self.obama, D('0.01'), self.hold)
         assert self.obama.balance == P('obama').balance == D('9.41')
         assert self.obama.get_credit_card_error() == ''
+
+
+    # grprbn - get_ready_payout_routes_by_network
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def run_payday(self, fch):
+        fch.return_value = {}
+        Payday.start().run()
+
+    def test_grprbn_that_its_empty_to_start_with(self):
+        assert get_ready_payout_routes_by_network(self.db, 'paypal') == []
+
+    def test_grprbn_includes_team_owners(self):
+        enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(enterprise, 100)
+        self.run_payday()
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert [r.participant.username for r in routes] == ['picard']
+
+    def test_grprbn_includes_1_0_payouts(self):
+        alice = self.make_participant('alice', balance=24, status_of_1_0_payout='pending-payout')
+        ExchangeRoute.insert(alice, 'paypal', 'alice@example.com')
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert [r.participant.username for r in routes] == ['alice']
 
 
 class TestsWithoutBillingHarness(Harness):
