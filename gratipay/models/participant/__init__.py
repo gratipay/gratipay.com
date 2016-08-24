@@ -338,7 +338,7 @@ class Participant(Model, mixins.Identity):
         """Leave all teams by zeroing all takes.
         """
         for team in self.get_teams():
-            team.set_take_for(self, ZERO, cursor=cursor)
+            team.set_take_for(self, ZERO, recorder=self, cursor=cursor)
 
 
     def clear_personal_information(self, cursor):
