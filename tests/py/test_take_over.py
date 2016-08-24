@@ -4,7 +4,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import datetime
 
 import pytest
-import mock
 from aspen.utils import utcnow
 
 from gratipay import NotSane
@@ -183,8 +182,7 @@ class TestTakeOver(Harness):
         alice.take_over(bob_github, have_confirmation=True)
         self.db.self_check()
 
-    @mock.patch.object(Participant, '_mailer')
-    def test_email_addresses_merging(self, mailer):
+    def test_email_addresses_merging(self):
         alice = self.make_participant('alice')
         alice.add_email('alice@example.com')
         alice.add_email('alice@example.net')
