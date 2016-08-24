@@ -199,3 +199,18 @@ class Tests(TeamTakesHarness):
         assert takes[self.crusher.id]['nominal_amount'] == PENNY * 80
         assert takes[self.crusher.id]['balance'] == ZERO
         assert takes[self.crusher.id]['percentage'] == D('0.7')
+
+
+    # ct - clear_takes -- this is actually on Participant, but we want this harness
+
+    def test_ct_clears_takes(self):
+        self.enterprise.set_take_for(self.crusher, PENNY, self.picard)
+        self.enterprise.set_take_for(self.crusher, PENNY * 80, self.crusher)
+
+        trident = self.make_team('The Trident', owner='shelby', available=5)
+        trident.set_take_for(self.crusher, PENNY, P('shelby'))
+        trident.set_take_for(self.crusher, PENNY * 2, self.crusher)
+
+        assert self.db.one("select count(*) from current_takes") == 2
+        self.crusher.clear_takes(self.db)
+        assert self.db.one("select count(*) from current_takes") == 0
