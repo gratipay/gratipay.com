@@ -164,6 +164,14 @@ class TestsWithBillingHarness(BillingHarness):
         routes = get_ready_payout_routes_by_network(self.db, 'paypal')
         assert [r.participant.username for r in routes] == ['picard']
 
+    def test_grprbn_includes_team_members(self):
+        enterprise = self.make_team(is_approved=True, available=50)
+        enterprise.add_member(self.homer, P('picard'))      # add a member
+        self.obama.set_payment_instruction(enterprise, 100)
+        self.run_payday()
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert [r.participant.username for r in routes] == ['homer', 'picard']
+
     def test_grprbn_includes_1_0_payouts(self):
         alice = self.make_participant('alice', balance=24, status_of_1_0_payout='pending-payout')
         ExchangeRoute.insert(alice, 'paypal', 'alice@example.com')
