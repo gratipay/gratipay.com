@@ -22,13 +22,23 @@ from gratipay.testing.billing import BillingHarness
 
 class TestsWithBillingHarness(BillingHarness):
 
+    def setUp(self):
+        super(TestsWithBillingHarness, self).setUp()
+        self.hold = None
+
+    def tearDown(self):
+        if self.hold:
+            cancel_card_hold(self.hold)
+        super(TestsWithBillingHarness, self).tearDown()
+
+
     # cch - create_card_hold
 
     def test_cch_success(self):
-        hold, error = create_card_hold(self.db, self.obama, D('1.00'))
-        assert isinstance(hold, braintree.Transaction)
-        assert hold.status == 'authorized'
-        assert hold.amount == D('10.00')
+        self.hold, error = create_card_hold(self.db, self.obama, D('1.00'))
+        assert isinstance(self.hold, braintree.Transaction)
+        assert self.hold.status == 'authorized'
+        assert self.hold.amount == D('10.00')
         assert error == ''
         assert self.obama.balance == P('obama').balance == 0
 
@@ -41,8 +51,8 @@ class TestsWithBillingHarness(BillingHarness):
     @mock.patch('braintree.Transaction.sale')
     def test_cch_failure(self, btsale):
         btsale.side_effect = Foobar
-        hold, error = create_card_hold(self.db, self.obama, D('1.00'))
-        assert hold is None
+        self.hold, error = create_card_hold(self.db, self.obama, D('1.00'))
+        assert self.hold is None
         assert error == "Foobar()"
         exchange = self.db.one("SELECT * FROM exchanges")
         assert exchange
@@ -64,8 +74,8 @@ class TestsWithBillingHarness(BillingHarness):
 
         # https://developers.braintreepayments.com/ios+python/reference/general/testing#test-amounts
         # $2002 is upcharged to $2062, which corresponds to 'Invalid Tax Amount'
-        hold, error = create_card_hold(self.db, bob, D('2002.00'))
-        assert hold is None
+        self.hold, error = create_card_hold(self.db, bob, D('2002.00'))
+        assert self.hold is None
         assert error.startswith('Invalid Tax Amount')
 
     def test_cch_multiple_cards(self):
@@ -80,74 +90,59 @@ class TestsWithBillingHarness(BillingHarness):
             assert result.is_success
             ExchangeRoute.insert(bob, 'braintree-cc', result.payment_method.token)
 
-        hold, error = create_card_hold(self.db, bob, D('100.00'))
+        self.hold, error = create_card_hold(self.db, bob, D('100.00'))
         assert error == ''
-
-        # Clean up
-        cancel_card_hold(hold)
 
     def test_cch_no_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
-        hold, error = create_card_hold(self.db, bob, D('10.00'))
+        self.hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
     def test_cch_invalidated_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
         ExchangeRoute.insert(bob, 'braintree-cc', 'foo', error='invalidated')
-        hold, error = create_card_hold(self.db, bob, D('10.00'))
+        self.hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
 
     # capch - capture_card_hold
 
     def test_capch_full_amount(self):
-        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
+        self.hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
-        assert hold.status == 'authorized'
+        assert self.hold.status == 'authorized'
 
-        capture_card_hold(self.db, self.obama, D('20.00'), hold)
-        hold = braintree.Transaction.find(hold.id)
+        capture_card_hold(self.db, self.obama, D('20.00'), self.hold)
+        hold = braintree.Transaction.find(self.hold.id)
         assert self.obama.balance == P('obama').balance == D('20.00')
         assert self.obama.get_credit_card_error() == ''
         assert hold.status == 'submitted_for_settlement'
 
-        # Clean up
-        cancel_card_hold(hold)
-
     def test_capch_partial_amount(self):
-        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
+        self.hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
-        capture_card_hold(self.db, self.obama, D('15.00'), hold)
+        capture_card_hold(self.db, self.obama, D('15.00'), self.hold)
         assert self.obama.balance == P('obama').balance == D('15.00')
         assert self.obama.get_credit_card_error() == ''
 
-        # Clean up
-        cancel_card_hold(hold)
-
     def test_capch_too_high_amount(self):
-        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
+        self.hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
         with self.assertRaises(Exception):
             # How do I check the exception's msg here?
-            capture_card_hold(self.db, self.obama, D('20.01'), hold)
+            capture_card_hold(self.db, self.obama, D('20.01'), self.hold)
 
         assert self.obama.balance == P('obama').balance == 0
 
-        # Clean up
-        cancel_card_hold(hold)
-
     def test_capch_amount_under_minimum(self):
-        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
+        self.hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
-        capture_card_hold(self.db, self.obama, D('0.01'), hold)
+        capture_card_hold(self.db, self.obama, D('0.01'), self.hold)
         assert self.obama.balance == P('obama').balance == D('9.41')
         assert self.obama.get_credit_card_error() == ''
-
-        # Clean up
-        cancel_card_hold(hold)
 
 
 class TestsWithoutBillingHarness(Harness):
