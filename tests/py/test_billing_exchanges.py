@@ -20,11 +20,11 @@ from gratipay.testing import Foobar, Harness, D,P
 from gratipay.testing.billing import BillingHarness
 
 
-class TestCardHolds(BillingHarness):
+class TestsWithBillingHarness(BillingHarness):
 
-    # create_card_hold
+    # cch - create_card_hold
 
-    def test_create_card_hold_success(self):
+    def test_cch_success(self):
         hold, error = create_card_hold(self.db, self.obama, D('1.00'))
         assert isinstance(hold, braintree.Transaction)
         assert hold.status == 'authorized'
@@ -32,14 +32,14 @@ class TestCardHolds(BillingHarness):
         assert error == ''
         assert self.obama.balance == P('obama').balance == 0
 
-    def test_create_card_hold_for_suspicious_raises_NotWhitelisted(self):
+    def test_cch_for_suspicious_raises_NotWhitelisted(self):
         bob = self.make_participant('bob', is_suspicious=True,
                                     balanced_customer_href='fake_href')
         with self.assertRaises(NotWhitelisted):
             create_card_hold(self.db, bob, D('1.00'))
 
     @mock.patch('braintree.Transaction.sale')
-    def test_create_card_hold_failure(self, btsale):
+    def test_cch_failure(self, btsale):
         btsale.side_effect = Foobar
         hold, error = create_card_hold(self.db, self.obama, D('1.00'))
         assert hold is None
@@ -52,7 +52,7 @@ class TestCardHolds(BillingHarness):
         assert self.obama.get_credit_card_error() == 'Foobar()'
         assert self.obama.balance == P('obama').balance == 0
 
-    def test_create_card_hold_bad_card(self):
+    def test_cch_bad_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
         customer_id = bob.get_braintree_account().id
         result = braintree.PaymentMethod.create({
@@ -68,7 +68,7 @@ class TestCardHolds(BillingHarness):
         assert hold is None
         assert error.startswith('Invalid Tax Amount')
 
-    def test_create_card_hold_multiple_cards(self):
+    def test_cch_multiple_cards(self):
         bob = self.make_participant('bob', is_suspicious=False)
         customer_id = bob.get_braintree_account().id
 
@@ -86,20 +86,21 @@ class TestCardHolds(BillingHarness):
         # Clean up
         cancel_card_hold(hold)
 
-    def test_create_card_hold_no_card(self):
+    def test_cch_no_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
         hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
-    def test_create_card_hold_invalidated_card(self):
+    def test_cch_invalidated_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
         ExchangeRoute.insert(bob, 'braintree-cc', 'foo', error='invalidated')
         hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
-    # capture_card_hold
 
-    def test_capture_card_hold_full_amount(self):
+    # capch - capture_card_hold
+
+    def test_capch_full_amount(self):
         hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
         assert hold.status == 'authorized'
@@ -113,7 +114,7 @@ class TestCardHolds(BillingHarness):
         # Clean up
         cancel_card_hold(hold)
 
-    def test_capture_card_hold_partial_amount(self):
+    def test_capch_partial_amount(self):
         hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
@@ -124,7 +125,7 @@ class TestCardHolds(BillingHarness):
         # Clean up
         cancel_card_hold(hold)
 
-    def test_capture_card_hold_too_high_amount(self):
+    def test_capch_too_high_amount(self):
         hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
@@ -137,7 +138,7 @@ class TestCardHolds(BillingHarness):
         # Clean up
         cancel_card_hold(hold)
 
-    def test_capture_card_hold_amount_under_minimum(self):
+    def test_capch_amount_under_minimum(self):
         hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
@@ -145,8 +146,11 @@ class TestCardHolds(BillingHarness):
         assert self.obama.balance == P('obama').balance == D('9.41')
         assert self.obama.get_credit_card_error() == ''
 
+        # Clean up
+        cancel_card_hold(hold)
 
-class TestFees(Harness):
+
+class TestsWithoutBillingHarness(Harness):
 
     def prep(self, amount):
         """Given a dollar amount as a string, return a 3-tuple.
@@ -220,9 +224,9 @@ class TestFees(Harness):
         assert actual == expected
 
 
-class TestRecordExchange(Harness):
+    # re - record_exchange
 
-    def test_record_exchange_records_exchange(self):
+    def test_re_records_exchange(self):
         alice = self.make_participant('alice', last_bill_result='')
         record_exchange( self.db
                        , ExchangeRoute.from_network(alice, 'braintree-cc')
@@ -243,7 +247,7 @@ class TestRecordExchange(Harness):
                     }
         assert actual == expected
 
-    def test_record_exchange_requires_valid_route(self):
+    def test_re_requires_valid_route(self):
         alice = self.make_participant('alice', last_bill_result='')
         bob = self.make_participant('bob', last_bill_result='')
         with self.assertRaises(AssertionError):
@@ -255,7 +259,7 @@ class TestRecordExchange(Harness):
                            , status='pre'
                             )
 
-    def test_record_exchange_stores_error_in_note(self):
+    def test_re_stores_error_in_note(self):
         alice = self.make_participant('alice', last_bill_result='')
         record_exchange( self.db
                        , ExchangeRoute.from_network(alice, 'braintree-cc')
@@ -268,7 +272,7 @@ class TestRecordExchange(Harness):
         exchange = self.db.one("SELECT * FROM exchanges")
         assert exchange.note == 'Card payment failed'
 
-    def test_record_exchange_doesnt_update_balance_for_positive_amounts(self):
+    def test_re_doesnt_update_balance_for_positive_amounts(self):
         alice = self.make_participant('alice', last_bill_result='')
         record_exchange( self.db
                        , ExchangeRoute.from_network(alice, 'braintree-cc')
@@ -279,7 +283,7 @@ class TestRecordExchange(Harness):
                         )
         assert P('alice').balance == D('0.00')
 
-    def test_record_exchange_updates_balance_for_negative_amounts(self):
+    def test_re_updates_balance_for_negative_amounts(self):
         alice = self.make_participant('alice', balance=50, last_paypal_result='')
         record_exchange( self.db
                        , ExchangeRoute.from_network(alice, 'paypal')
@@ -290,13 +294,13 @@ class TestRecordExchange(Harness):
                         )
         assert P('alice').balance == D('13.41')
 
-    def test_record_exchange_fails_if_negative_balance(self):
+    def test_re_fails_if_negative_balance(self):
         alice = self.make_participant('alice', last_paypal_result='')
         ba = ExchangeRoute.from_network(alice, 'paypal')
         with pytest.raises(NegativeBalance):
             record_exchange(self.db, ba, D("-10.00"), D("0.41"), alice, 'pre')
 
-    def test_record_exchange_result_restores_balance_on_error(self):
+    def test_re_result_restores_balance_on_error(self):
         alice = self.make_participant('alice', balance=30, last_paypal_result='')
         ba = ExchangeRoute.from_network(alice, 'paypal')
         e_id = record_exchange(self.db, ba, D('-27.06'), D('0.81'), alice, 'pre')
@@ -304,7 +308,7 @@ class TestRecordExchange(Harness):
         record_exchange_result(self.db, e_id, 'failed', 'SOME ERROR', alice)
         assert P('alice').balance == D('30.00')
 
-    def test_record_exchange_result_restores_balance_on_error_with_invalidated_route(self):
+    def test_re_result_restores_balance_on_error_with_invalidated_route(self):
         alice = self.make_participant('alice', balance=37, last_paypal_result='')
         pp = ExchangeRoute.from_network(alice, 'paypal')
         e_id = record_exchange(self.db, pp, D('-32.45'), D('0.86'), alice, 'pre')
@@ -315,7 +319,7 @@ class TestRecordExchange(Harness):
         assert alice.balance == D('37.00')
         assert pp.error == alice.get_paypal_error() == 'invalidated'
 
-    def test_record_exchange_result_doesnt_restore_balance_on_success(self):
+    def test_re_result_doesnt_restore_balance_on_success(self):
         alice = self.make_participant('alice', balance=50, last_paypal_result='')
         ba = ExchangeRoute.from_network(alice, 'paypal')
         e_id = record_exchange(self.db, ba, D('-43.98'), D('1.60'), alice, 'pre')
@@ -323,7 +327,7 @@ class TestRecordExchange(Harness):
         record_exchange_result(self.db, e_id, 'succeeded', None, alice)
         assert P('alice').balance == D('4.42')
 
-    def test_record_exchange_result_updates_balance_for_positive_amounts(self):
+    def test_re_result_updates_balance_for_positive_amounts(self):
         alice = self.make_participant('alice', balance=4, last_bill_result='')
         cc = ExchangeRoute.from_network(alice, 'braintree-cc')
         e_id = record_exchange(self.db, cc, D('31.59'), D('0.01'), alice, 'pre')
