@@ -73,7 +73,7 @@ class TakesMixin(object):
             if p.is_suspicious:
                 raise NotAllowed("user must not be flagged as suspicious")
             elif not p.has_verified_identity:
-                raise NotAllowed("user must have verified his identity")
+                raise NotAllowed("user must have a verified identity")
             elif not p.email_address:
                 raise NotAllowed("user must have added at least one email address")
             elif not p.is_claimed:
