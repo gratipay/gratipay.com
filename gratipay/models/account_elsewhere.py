@@ -276,8 +276,7 @@ def get_account_elsewhere(website, state, api_lookup=True):
             user_info = platform.get_user_info(key, uid)
         except Response as r:
             if r.code == 404:
-                err = _("Impossible to find one account with this name on {0}.",
-                        platform.display_name)
+                err = _("Account not found on {0}.", platform.display_name)
                 raise Response(404, err)
             raise
         account = AccountElsewhere.upsert(user_info)
