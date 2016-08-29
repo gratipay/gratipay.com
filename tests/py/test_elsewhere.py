@@ -110,15 +110,20 @@ class TestElsewhere(Harness):
             assert response.code == 200
             assert 'has not joined' in response.body.decode('utf8')
 
-    def test_user_pages_not_found(self):
-        user_name = 'adhsjakdjsdkjsajdhksda'
-        error = "There doesn't seem to be a user named %s on %s."
+    def test_user_pages_are_404_for_unknown_elsewhere_user(self):
         for platform in self.platforms:
             if not hasattr(platform, 'api_user_name_info_path'):
                 continue
-            r = self.client.GxT("/on/%s/%s/" % (platform.name, user_name))
-            expected = error % (user_name, platform.display_name)
-            assert expected in r.body
+            r = self.client.GxT("/on/%s/%s/" % (platform.name, 'ijroioifeef'))
+            assert "Account not found on %s." % (platform.display_name) in r.body
+            assert r.code == 404
+
+    def test_user_pages_are_400_for_invalid_characters(self):
+        platform = self.platforms.twitter
+        for username in ('AA%09BB', 'AA%0DBB', 'AA%0ABB'):
+            r = self.client.GxT('/on/{}/{}/'.format(platform.name, username))
+            assert "Invalid character in elsewhere account username." in r.body
+            assert r.code == 400
 
     def test_failure_page_accepts_valid_username(self):
         self.client.GET('/on/twitter/Gratipay/')  # normal case will have the db primed
