@@ -6,7 +6,7 @@ These Terms of Service ("Terms") are an agreement between you, a user
 Gratipay. When you register as a Gratipay Participant, you agree to be bound by
 these Terms.
 
-If you have any questions about these terms, please contact us:
+If you have any questions about these Terms, please contact us:
 
 Gratipay, LLC
 716 Park Road
@@ -35,94 +35,95 @@ or damage arising from your failure to keep your account secure.
 your legal guardian must consent to your use and must agree to be bound by
 these Terms.
 
-1. The Gratipay Model and General Rules
+1. General Terms
 
-  1. The Service is a platform to enable Teams of Gratipay Participants to
-     receive payments to fund Open Work. Open Work means that the Team provides
-a clear path for any individual to voluntarily begin contributing to the Team's
-work and to share in any revenue the Team generates. Some examples of Teams
-performing Open Work include an open source software project that pays
-contributors, or a hackerspace that pays individuals to teach classes or manage
-its operations.
+  1. The Service is a platform to facilitate payments for goods or services.
+     The nature and scope of such goods or services (the "Work") is defined by
+Projects established on the Service.
 
-  1. The Participant who establishes a Team is its Owner. Teams may optionally
-     have other Members.
+  1. A Participant who establishes a Project is also a Project Owner.
 
-  1. When you establish a Team on the Service to fund your Open Work, you agree
-     that payments will be used exclusively to support the Open Work described
-in your Team's profile.
+  1. Projects may optionally have other Participants as Collaborators. The
+     Project Owner is also a Collaborator.
 
-  1. When you make a payment to a Team, it is a payment to fund the Open Work
-     the Team provides. You understand and acknowledge that your payment does
-not entitle you personally to receive any goods or services from the Team,
-unless the Team explicitly offers those things to Participants.
+  1. A Participant may make payments to a Project Owner via a Project. A
+     Participant who makes payments via a Project is a Giver.
 
-  1. By accepting a payment from a Participant, a Team forms an agreement with
-     that Participant to perform the Open Work described in its profile. The
-Service is a platform to facilitate this agreement. Gratipay is not a party to
-the agreement, and is not responsible to either the Team or the Participant if
-either party breaches the terms of the agreement (e.g. if the Team fails to
-provide the promised services).
+1. Terms for Project Owners
 
-  1. Gratipay is not obligated to provide refunds under any circumstance. Teams
-     are responsible for producing the Open Work they offer. Gratipay does not
-hold funds on behalf of Teams, and does not warrant or guarantee that Teams
-will provide the Open Work they promise.
+  1. A Project Owner can use the Service to receive payments from Givers for
+     Work provided by the Project's Collaborators. When you establish a Project
+on the Service, you agree that payments via the Project will be used
+exclusively to support the Work described in the Project's profile.
 
-1. Payroll Rules
+  1. Project Owners may only make payments to Collaborators for their
+     collaboration in the Project's Work.
 
-  1. Teams can use the Service's Payroll feature to automatically divide
-     incoming payments among Team Members, according to the allocation set by
-the Owner and/or Members.
+  1. Gratipay is not a party to any agreement between Project Owners and
+     Givers, and is not responsible to either the Project Owner or the Giver if
+either party breaches the terms of any such agreement (e.g. if the Project
+Owner fails to provide the promised goods or services).
 
-  1. Gratipay does not determine how a Team's Payroll is allocated and is not
-     responsible for how Teams internally distribute payments. The agreement
-between Team Members and Owners regarding the allocation of payments is solely
-between those parties.
+  1. Establishing a Project on Gratipay involves an application and approval
+     process. As part of this process, the Gratipay community will have the
+opportunity to publicly evaluate and provide commentary about the Project.
+However, all decisions regarding whether to accept, reject, suspend, remove, or
+take any other action regarding a Project belong solely to Gratipay.
 
-1. Rules for Gratipay Teams
-
-  1. Teams may accept payments on the Service only for Open Work, meaning that
-     they provide a clear path for any individual to voluntarily begin
-contributing to the Team's work, and to share in any revenue the Team
-generates.
-
-  1. A Team can only begin receiving payments from Participants once it has
-     provided a working withdrawal mechanism for receiving payments (e.g. bank
-account information).
-
-  1. Teams and their Open Work must be consistent with Gratipay's [Brand
-     Guidelines](http://inside.gratipay.com/big-picture/brand/) and Acceptable
-Use Policy.
-
-  1. Gratipay reserves the right to reject, suspend, or remove a Team at any
+  1. Gratipay reserves the right to reject, suspend, or remove a Project at any
      time, and for any reason.
 
-  1. Establishing a Team on Gratipay involves an application and approval
-     process. As part of this process, the Gratipay community will have the
-opportunity to publicly evaluate and provide commentary about the Team.
-However, all decisions regarding whether to accept, reject, suspend, remove, or
-take any other action regarding a Team belong solely to Gratipay.
+1. Terms for Collaborators
+
+  1. Project Owners can use the Service to distribute payments to
+     Collaborators.
+
+  1. Collaborators may only receive payments from Project Owners for their
+     collaboration in the Project's Work.
+
+  1. Gratipay is not a party to any agreement between Project Owners and
+     Collaborators, and is not responsible to either the Project Owner or the
+Collaborator if either party breaches the terms of any such agreement (e.g. if
+the Collaborator fails to provide the promised goods or services).
+
+  1. Gratipay does not determine how payments are allocated and is not
+     responsible for how Project Owners distribute payments. Any agreement
+between the Project's Owner and other Collaborators regarding the allocation of
+payments is solely between those parties.
+
+1. Terms for Givers
+
+  1. Givers may only make payments to Project Owners for the Project's Work.
+
+  1. You understand and acknowledge that your payment does not entitle you
+     personally to receive any goods or services from the Project Owner, unless
+the Project Owner explicitly offers those things to Givers.
+
+  1. Project Owners are the only party responsible to Givers for producing the
+     Work their Project describes. Gratipay does not warrant or guarantee that
+Project Owners will provide the Work they promise, and Gratipay is not
+obligated to provide refunds to Givers or produce work under any circumstance.
 
 1. Fees and Taxes
 
-  1. Gratipay does not take any fee from payments made by Participants to
-     Teams. Gratipay and the Service are funded through the Service itself, by
-voluntary contributions from Gratipay Participants and Teams who wish to fund
-our own Open Work. To contribute to Gratipay, please [visit Gratipay's Team
-page](/Gratipay/).
+  1. Gratipay does not take any fee from payments made by Givers to Project
+     Owners, or by Project Owners to Collaborators. Gratipay and the Service
+are funded through the Service itself, by voluntary payments from Givers who
+wish to fund our own Work. To contribute to Gratipay, please visit Gratipay's
+[Project page for the Service](/Gratipay/).
 
   1. You are responsible for paying any third-party fees associated with your
      use of the Service, such as credit card and bank fees.
 
   1. You are responsible for paying any taxes and withholdings associated with
-     your use of the Service. Team Owners, and not Gratipay, are responsible
-for compliance with all laws, as well as any taxes and withholding
-requirements, applicable to payments made to Team Members (whether through the
-Payroll feature or otherwise), including without limitation payroll tax,
-unemployment insurance, and worker compensation insurance payments. Team Owners
-are also responsible for providing any required tax and other documentation to
-employees, independent contractors, tax authorities, or any other person.
+     your use of the Service. In particular, Project Owners, and not Gratipay,
+are responsible for compliance with all laws, as well as any taxes and
+withholding requirements, applicable to payments made to Collaborators (whether
+through the Service or otherwise), including without limitation payroll tax,
+unemployment insurance, and worker compensation insurance payments. Project
+Owners are also responsible for providing any required tax and other
+documentation to employees, independent contractors, tax authorities, or any
+other person.
 
 1. Content Accessible on the Service
 
@@ -148,8 +149,8 @@ content. However, Gratipay has no obligation to monitor, filter, or disable
 access to any content, and shall not be responsible if you encounter
 objectionable content by using the Service.
 
-  1. The Service, including Participant and Team profiles, may contain links to
-     other websites. When you access third-party websites linked to from the
+  1. The Service, including Participant and Project profiles, may contain links
+     to other websites. When you access third-party websites linked to from the
 Service, you do so at your own risk. Gratipay does not review, control, or
 endorse those sites.
 
@@ -177,45 +178,47 @@ permissible, for example as fair use.
 
   1. The following conduct is prohibited on the Service:
 
-    * Illegal activities, including the promotion or solicitation of illegal
-      acts.
+    1. Illegal activities, including the promotion or solicitation of illegal
+       acts.
 
-    * Malicious activity or content, such as the transmission of viruses,
-      malware, or any other malicious or destructive code, or content or
+    1. Malicious activity or content, such as the transmission of viruses,
+       malware, or any other malicious or destructive code, or content or
 activity intended to harm or disrupt the hardware, networks, or infrastructure
 of Gratipay or any third parties.
 
-    * Unauthorized access, including: accessing or attempting to access any
-      non-public interface, system, or functionality of the Service, or testing
-the Service for vulnerabilities, except as described in our [security
+    1. Unauthorized access, including: accessing or attempting to access any
+       non-public interface, system, or functionality of the Service, or
+testing the Service for vulnerabilities, except as described in our [security
 disclosure policy](/about/security/).
 
-    * Abuse, including threats of violence or harassment of a Participant
-      through repeated unwanted contact.
+    1. Abuse, including threats of violence or harassment of a Participant
+       through repeated unwanted contact.
 
-    * Posting anyone's personal or confidential information, such as social
-      security numbers, credit card numbers, street addresses, phone numbers,
+    1. Posting anyone's personal or confidential information, such as social
+       security numbers, credit card numbers, street addresses, phone numbers,
 confidential ID numbers, or account passwords, without their permission.
 
-    * Account hijacking, including any access to or use of another
-      Participant's account without their permission.
+    1. Aggressive trolling or activism.
 
-    * Child exploitation, including any content or activity that exploits or
-      abuses children.
+    1. Account hijacking, including any access to or use of another
+       Participant's account without their permission.
 
-    * Spam, including posting unsolicited promotional or commercial content in
-      comments, sending invitations for the purpose of advertising to the
+    1. Child exploitation, including any content or activity that exploits or
+       abuses children.
+
+    1. Spam, including posting unsolicited promotional or commercial content in
+       comments, sending invitations for the purpose of advertising to the
 recipients, or posting content or links for the purpose of manipulating search
 or other algorithms.
 
-    * Intellectual property infringement, including the infringing use of third
-      party trademarks or the unauthorized and unlawful posting of copyrighted
-content. We respond to reports of copyright infringement as described in the
-Copyright Policy.
+    1. Intellectual property infringement, including the infringing use of
+       third party trademarks or the unauthorized and unlawful posting of
+copyrighted content. We respond to reports of copyright infringement as
+described in the Copyright Policy.
 
-    * Fraud or impersonation, including any use of the Service to impersonate
-      or deceive others. Contests or promotions that violate any applicable law
-or regulation, or that suggest in any way that Gratipay is involved in or
+    1. Fraud or impersonation, including any use of the Service to impersonate
+       or deceive others. Contests or promotions that violate any applicable
+law or regulation, or that suggest in any way that Gratipay is involved in or
 responsible for the activity.
 
 1. Gratipay's Service Providers
@@ -229,15 +232,15 @@ agreement](https://www.braintreepayments.com/legal/bank-agreement-us).
 
 1. Nonprofits and Charities using Gratipay
 
-  1. If your Team is associated with a nonprofit organization, soliciting
-     payments on Gratipay may subject you to certain state laws regarding
-charitable solicitations, including various registration, reporting, and audit
-requirements. You are solely responsible for compliance with these and any
-other applicable law or regulation.
+  1. If you are a nonprofit organization, soliciting payments on Gratipay may
+     subject you to local laws regarding charitable solicitations, including
+various registration, reporting, and audit requirements. You are solely
+responsible for compliance with these and any other applicable law or
+regulation.
 
   1. Gratipay makes no representation or warranty regarding the tax-exempt
-     status of any Team, or the tax-deductible status of any payment made via
-the Service.
+     status of any Project Owner, or the tax-deductible status of any payment
+made via the Service.
 
 1. Copyright Policy
 
@@ -348,7 +351,7 @@ SERVICE; (ii) ANY CONDUCT OR CONTENT OF ANY THIRD PARTY ON THE SERVICE,
 INCLUDING WITHOUT LIMITATION, ANY DEFAMATORY, OFFENSIVE OR ILLEGAL CONDUCT OF
 OTHER PARTICIPANTS OR THIRD PARTIES; (iii) ANY CONTENT OBTAINED FROM THE
 SERVICE; OR (iv) UNAUTHORIZED ACCESS, USE OR ALTERATION OF YOUR TRANSMISSIONS
-OR CONTENT.  IN NO EVENT SHALL THE AGGREGATE LIABILITY OF GRATIPAY OR ITS
+OR CONTENT. IN NO EVENT SHALL THE AGGREGATE LIABILITY OF GRATIPAY OR ITS
 AFFILIATES EXCEED THE GREATER OF ONE HUNDRED U.S. DOLLARS (U.S. $100.00) OR THE
 AMOUNT YOU PAID GRATIPAY, IF ANY, IN THE PAST SIX MONTHS FOR THE SERVICE GIVING
 RISE TO THE CLAIM.
