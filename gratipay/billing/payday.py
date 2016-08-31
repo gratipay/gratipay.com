@@ -265,6 +265,8 @@ class Payday(object):
         log("Processing takes.")
         cursor.run("""
 
+        UPDATE payday_teams SET available_today = LEAST(available, balance);
+
         INSERT INTO payday_takes
              SELECT team_id, participant_id, amount
                FROM ( SELECT DISTINCT ON (team_id, participant_id)

@@ -29,8 +29,9 @@ CREATE TABLE payday_teams AS
     SELECT t.id
          , slug
          , owner
-         , available
+         , available -- The maximum amount that can be distributed to members (ever)
          , 0::numeric(35, 2) AS balance
+         , 0::numeric(35, 2) AS available_today -- The maximum amount that can be distributed to members in this payday
          , false AS is_drained
       FROM teams t
       JOIN participants p
@@ -208,34 +209,28 @@ CREATE TRIGGER process_payment_instruction BEFORE UPDATE OF is_funded ON payday_
 
 -- Create a trigger to process distributions based on takes
 
-CREATE OR REPLACE FUNCTION process_distribution() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION process_take() RETURNS trigger AS $$
     DECLARE
         amount      numeric(35,2);
-        balance_    numeric(35,2);
-        available_  numeric(35,2);
+        available_today_  numeric(35,2);
     BEGIN
         amount := NEW.amount;
 
-        balance_ := (SELECT balance FROM payday_teams WHERE id = NEW.team_id);
-        IF balance_ < amount THEN
-            amount := balance_;
-        END IF;
-
-        available_ := (SELECT available FROM payday_teams WHERE id = NEW.team_id);
-        IF available_ < amount THEN
-            amount := available_;
+        available_today_ := (SELECT available_today FROM payday_teams WHERE id = NEW.team_id);
+        IF amount > available_today_ THEN
+            amount := available_today_;
         END IF;
 
         IF amount > 0 THEN
-            UPDATE payday_teams SET available = (available - amount) WHERE id = NEW.team_id;
+            UPDATE payday_teams SET available_today = (available_today - amount) WHERE id = NEW.team_id;
             EXECUTE pay(NEW.participant_id, NEW.team_id, amount, 'to-participant');
         END IF;
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER process_takes AFTER INSERT ON payday_takes
-    FOR EACH ROW EXECUTE PROCEDURE process_distribution();
+CREATE TRIGGER process_take AFTER INSERT ON payday_takes
+    FOR EACH ROW EXECUTE PROCEDURE process_take();
 
 
 -- Create a trigger to process draws
