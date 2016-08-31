@@ -423,27 +423,38 @@ class TestPayin(BillingHarness):
         assert payment.direction == 'to-team'
 
     def test_process_remainder(self):
-        alice = self.make_participant('alice', claimed_time='now', balance=1)
-        picard = self.make_participant('picard', claimed_time='now', last_paypal_result='')
-        Enterprise = self.make_team('The Enterprise', picard, is_approved=True)
-        alice.set_payment_instruction(Enterprise, D('0.51'))
+        alice = self.make_participant('alice', claimed_time='now', balance=100)
+        picard = self.make_participant('picard', claimed_time='now', last_paypal_result='', verified_in='TT', email_address='picard@x.y')
+        crusher = self.make_participant('crusher', claimed_time='now', verified_in='TT', email_address='crusher@x.y')
+
+        Enterprise = self.make_team('The Enterprise', picard, is_approved=True, available=100)
+        Enterprise.add_member(crusher, picard)
+        Enterprise.set_take_for(crusher, 10, crusher)
+        alice.set_payment_instruction(Enterprise, D('80'))
 
         payday = Payday.start()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
             payday.process_payment_instructions(cursor)
-            payday.process_remainder(cursor)
             payday.process_takes(cursor, payday.ts_start)
+            payday.process_remainder(cursor)
             assert cursor.one("select new_balance from payday_participants "
-                              "where username='picard'") == D('0.51')
+                              "where username='picard'") == D('70')
             assert cursor.one("select balance from payday_teams where slug='TheEnterprise'") == 0
             payday.update_balances(cursor)
 
-        assert P('alice').balance == D('0.49')
-        assert P('picard').balance == D('0.51')
+        assert P('alice').balance == D('20') # Alice had $100 and gave away $80
+        assert P('crusher').balance == D('10') # Crusher had set their take to $10
+        assert P('picard').balance == D('70') # Picard is the owner of the team, recieves what is leftover
 
-        payment = self.db.one("SELECT * FROM payments WHERE direction='to-participant'")
-        assert payment.amount == D('0.51')
+        payment_to_team = self.db.one("SELECT amount FROM payments WHERE direction='to-team'")
+        assert payment_to_team == D('80')
+
+        payments_to_participant = self.db.all("SELECT participant, amount FROM payments WHERE direction='to-participant' ORDER BY amount DESC")
+        assert payments_to_participant[0].participant == 'picard'
+        assert payments_to_participant[0].amount == D('70')
+        assert payments_to_participant[1].participant == 'crusher'
+        assert payments_to_participant[1].amount == D('10')
 
     @pytest.mark.xfail(reason="team owners can't be taken over because of #3602")
     def test_take_over_during_payin(self):
