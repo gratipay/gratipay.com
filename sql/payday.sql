@@ -31,7 +31,7 @@ CREATE TABLE payday_teams AS
          , owner
          , available -- The maximum amount that can be distributed to members (ever)
          , 0::numeric(35, 2) AS balance
-         , 0::numeric(35, 2) AS available_today -- The maximum amount that can be distributed to members in this payday
+         , 0::numeric(35, 2) AS available_today -- The max that can be distributed this payday
          , false AS is_drained
       FROM teams t
       JOIN participants p
@@ -207,22 +207,24 @@ CREATE TRIGGER process_payment_instruction BEFORE UPDATE OF is_funded ON payday_
     EXECUTE PROCEDURE process_payment_instruction();
 
 
--- Create a trigger to process distributions based on takes
+-- Create a trigger to process takes
 
 CREATE OR REPLACE FUNCTION process_take() RETURNS trigger AS $$
     DECLARE
-        amount      numeric(35,2);
-        available_today_  numeric(35,2);
+        amount              numeric(35,2);
+        available_today_    numeric(35,2);
     BEGIN
         amount := NEW.amount;
-
         available_today_ := (SELECT available_today FROM payday_teams WHERE id = NEW.team_id);
+
         IF amount > available_today_ THEN
             amount := available_today_;
         END IF;
 
         IF amount > 0 THEN
-            UPDATE payday_teams SET available_today = (available_today - amount) WHERE id = NEW.team_id;
+            UPDATE payday_teams
+               SET available_today = (available_today - amount)
+             WHERE id = NEW.team_id;
             EXECUTE pay(NEW.participant_id, NEW.team_id, amount, 'to-participant');
         END IF;
         RETURN NULL;
