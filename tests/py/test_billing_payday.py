@@ -10,7 +10,6 @@ from gratipay.billing.exchanges import create_card_hold, MINIMUM_CHARGE
 from gratipay.billing.payday import NoPayday, Payday
 from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
-from gratipay.models.team.mixins.takes import NotAllowed
 from gratipay.testing import Foobar, D,P
 from gratipay.testing.billing import BillingHarness
 from gratipay.testing.emails import EmailHarness
@@ -609,17 +608,15 @@ class TestTakes(BillingHarness):
         assert P('zorro').balance   == D('  0.00')
         assert P('picard').balance  == D('  0.00')
 
-    def test_pt_is_NOT_happy_to_deal_the_owner_in(self):
+    def test_pt_is_happy_to_deal_the_owner_in(self):
         self.make_member('crusher', 150)
         self.make_member('bruiser', 250)
         self.enterprise.set_take_for(self.picard, D('0.01'), self.picard)
-        with pytest.raises(NotAllowed):
-            self.enterprise.set_take_for(self.picard, 50, self.picard)
-        return  # XXX allow owners to join teams!
+        self.enterprise.set_take_for(self.picard, 200, self.picard)
         self.run_through_takes()
         assert P('crusher').balance == D('150.00')
-        assert P('bruiser').balance == D('250.00')
-        assert P('picard').balance  == D(' 50.00')
+        assert P('bruiser').balance == D('150.00')  # Sorry, bruiser.
+        assert P('picard').balance  == D('200.00')
 
 
 class TestNotifyParticipants(EmailHarness):

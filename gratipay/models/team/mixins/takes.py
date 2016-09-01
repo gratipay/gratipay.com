@@ -82,10 +82,15 @@ class TakesMixin(object):
         vet(participant)
         vet(recorder)
 
-        if recorder.username == self.owner:
-            if take not in (ZERO, PENNY):
+        owner_recording = recorder.username == self.owner
+        owner_taking = participant.username == self.owner
+        taker_recording = recorder == participant
+        adding_or_removing = take in (ZERO, PENNY)
+
+        if owner_recording:
+            if not adding_or_removing and not owner_taking:
                 raise NotAllowed("owner can only add and remove members, not otherwise set takes")
-        elif recorder != participant:
+        elif not taker_recording:
             raise NotAllowed("can only set own take")
 
         with self.db.get_cursor(cursor) as cursor:
