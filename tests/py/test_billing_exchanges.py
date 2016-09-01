@@ -143,6 +143,40 @@ class TestGetReadyPayoutRoutesByNetwork(BillingHarness):
         fch.return_value = {}
         Payday.start().run()
 
+    def test_includes_team_owners(self):
+        enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(enterprise, 100)
+        self.run_payday()
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert [r.participant.username for r in routes] == ['picard']
+
+
+    def run_payday_with_member(self):
+        enterprise = self.make_team(is_approved=True, available=50)
+        enterprise.add_member(self.homer, P('picard'))
+        self.obama.set_payment_instruction(enterprise, 100)
+        self.run_payday()
+        return enterprise
+
+    def test_includes_team_members(self):
+        self.run_payday_with_member()
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert list(sorted([r.participant.username for r in routes])) == ['homer', 'picard']
+
+    def test_includes_former_team_members(self):
+        enterprise = self.run_payday_with_member()
+        enterprise.remove_member(self.homer, P('picard'))
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert list(sorted([r.participant.username for r in routes])) == ['homer', 'picard']
+
+
+class estGetReadyPayoutRoutesByNetwork(BillingHarness):
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def run_payday(self, fch):
+        fch.return_value = {}
+        Payday.start().run()
+
     def test_that_its_empty_to_start_with(self):
         assert get_ready_payout_routes_by_network(self.db, 'paypal') == []
 
@@ -153,13 +187,31 @@ class TestGetReadyPayoutRoutesByNetwork(BillingHarness):
         routes = get_ready_payout_routes_by_network(self.db, 'paypal')
         assert [r.participant.username for r in routes] == ['picard']
 
-    def test_includes_team_members(self):
+
+    def run_payday_with_member(self):
         enterprise = self.make_team(is_approved=True, available=50)
-        enterprise.add_member(self.homer, P('picard'))      # add a member
+        enterprise.add_member(self.homer, P('picard'))
         self.obama.set_payment_instruction(enterprise, 100)
         self.run_payday()
+        return enterprise
+
+    def test_includes_team_members(self):
+        self.run_payday_with_member()
         routes = get_ready_payout_routes_by_network(self.db, 'paypal')
-        assert [r.participant.username for r in routes] == ['homer', 'picard']
+        assert list(sorted([r.participant.username for r in routes])) == ['homer', 'picard']
+
+    def test_includes_former_team_members(self):
+        enterprise = self.run_payday_with_member()
+        enterprise.remove_member(self.homer, P('picard'))
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert list(sorted([r.participant.username for r in routes])) == ['homer', 'picard']
+
+    def test_excludes_member_with_no_verified_identity(self):
+        self.run_payday_with_member()
+        self.homer.clear_identity(self.homer.list_identity_metadata()[0].country.id)
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert [r.participant.username for r in routes] == ['picard']
+
 
     def test_includes_1_0_payouts(self):
         alice = self.make_participant('alice', balance=24, status_of_1_0_payout='pending-payout')
