@@ -198,12 +198,20 @@ def get_ready_payout_routes_by_network(db, network):
                  ) > 0
 
 
+                OR -- Include team members
+
+                (SELECT count(*)
+                   FROM current_takes ct
+                   JOIN teams t ON ct.team_id = t.id
+                  WHERE ct.participant_id = p.id
+                    AND t.is_approved IS TRUE
+                    AND t.is_closed IS NOT TRUE
+                 ) > 0
+
+
                 OR -- Include green-lit Gratipay 1.0 balances
 
                 p.status_of_1_0_payout='pending-payout'
-
-
-                ----- TODO: Include team members once process_takes is implemented
 
                )
     """, (network,))

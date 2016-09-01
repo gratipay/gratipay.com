@@ -1,21 +1,9 @@
 #!/usr/bin/env python
 """This is a script for managing MassPay each week.
 
-Most of our payouts are handled by Balanced, but they're limited to people in
-the U.S. We need to payout to people outside the U.S. (#126), and while we work
-on a long-term solution, we are using PayPal. However, we've grown past the
-point that PayPal's Instant Transfer feature is workable. This script is for
-interfacing with PayPal's MassPay feature.
+See documentation here:
 
-This script provides for:
-
-  1. Computing an input CSV by hitting the Gratipay database directly.
-  2. Computing two output CSVs (one to upload to PayPal, the second to use for POSTing
-      the exchanges back to Gratipay)
-  3. POSTing the exchanges back to Gratipay via the HTTP API.
-
-The idea is that you run steps 1 and 2, then run through the MassPay UI on the
-PayPal website using the appropriate CSV from step 2, then run step 3.
+    http://inside.gratipay.com/howto/run-masspay
 
 """
 from __future__ import absolute_import, division, print_function, unicode_literals

@@ -19,6 +19,8 @@ class BillingHarness(Harness):
     _fixture_installed = False
 
     def setUp(self):
+        super(BillingHarness, self).setUp()
+
         if not BillingHarness._fixture_installed:
             install_fixture()
 
@@ -32,8 +34,8 @@ class BillingHarness(Harness):
                                           braintree_customer_id=self.obama_bt_id)
         self.obama_route = ExchangeRoute.insert(self.obama, 'braintree-cc', self.obama_cc_token)
         # A customer with Paypal attached.
-        self.homer = self.make_participant('homer', is_suspicious=False,
-                                           claimed_time='now')
+        self.homer = self.make_participant('homer', is_suspicious=False, verified_in='US',
+                                           claimed_time='now', email_address='abcd@gmail.com')
         self.homer_route = ExchangeRoute.insert(self.homer, 'paypal', 'abcd@gmail.com')
 
 

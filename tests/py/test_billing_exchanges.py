@@ -8,51 +8,42 @@ import pytest
 from aspen.utils import typecheck
 from gratipay.billing.exchanges import (
     _prep_hit,
-    cancel_card_hold,
     capture_card_hold,
     create_card_hold,
     record_exchange,
-    record_exchange_result
+    record_exchange_result,
+    get_ready_payout_routes_by_network
 )
+from gratipay.billing.payday import Payday
 from gratipay.exceptions import NegativeBalance, NotWhitelisted
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.testing import Foobar, Harness, D,P
 from gratipay.testing.billing import BillingHarness
 
 
-class TestsWithBillingHarness(BillingHarness):
+class TestsCardHolds(BillingHarness):
 
-    def setUp(self):
-        super(TestsWithBillingHarness, self).setUp()
-        self.hold = None
+    # create - create_card_hold
 
-    def tearDown(self):
-        if self.hold:
-            cancel_card_hold(self.hold)
-        super(TestsWithBillingHarness, self).tearDown()
-
-
-    # cch - create_card_hold
-
-    def test_cch_success(self):
-        self.hold, error = create_card_hold(self.db, self.obama, D('1.00'))
-        assert isinstance(self.hold, braintree.Transaction)
-        assert self.hold.status == 'authorized'
-        assert self.hold.amount == D('10.00')
+    def test_create_success(self):
+        hold, error = create_card_hold(self.db, self.obama, D('1.00'))
+        assert isinstance(hold, braintree.Transaction)
+        assert hold.status == 'authorized'
+        assert hold.amount == D('10.00')
         assert error == ''
         assert self.obama.balance == P('obama').balance == 0
 
-    def test_cch_for_suspicious_raises_NotWhitelisted(self):
+    def test_create_for_suspicious_raises_NotWhitelisted(self):
         bob = self.make_participant('bob', is_suspicious=True,
                                     balanced_customer_href='fake_href')
         with self.assertRaises(NotWhitelisted):
             create_card_hold(self.db, bob, D('1.00'))
 
     @mock.patch('braintree.Transaction.sale')
-    def test_cch_failure(self, btsale):
+    def test_create_failure(self, btsale):
         btsale.side_effect = Foobar
-        self.hold, error = create_card_hold(self.db, self.obama, D('1.00'))
-        assert self.hold is None
+        hold, error = create_card_hold(self.db, self.obama, D('1.00'))
+        assert hold is None
         assert error == "Foobar()"
         exchange = self.db.one("SELECT * FROM exchanges")
         assert exchange
@@ -62,7 +53,7 @@ class TestsWithBillingHarness(BillingHarness):
         assert self.obama.get_credit_card_error() == 'Foobar()'
         assert self.obama.balance == P('obama').balance == 0
 
-    def test_cch_bad_card(self):
+    def test_create_bad_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
         customer_id = bob.get_braintree_account().id
         result = braintree.PaymentMethod.create({
@@ -74,11 +65,11 @@ class TestsWithBillingHarness(BillingHarness):
 
         # https://developers.braintreepayments.com/ios+python/reference/general/testing#test-amounts
         # $2002 is upcharged to $2062, which corresponds to 'Invalid Tax Amount'
-        self.hold, error = create_card_hold(self.db, bob, D('2002.00'))
-        assert self.hold is None
+        hold, error = create_card_hold(self.db, bob, D('2002.00'))
+        assert hold is None
         assert error.startswith('Invalid Tax Amount')
 
-    def test_cch_multiple_cards(self):
+    def test_create_multiple_cards(self):
         bob = self.make_participant('bob', is_suspicious=False)
         customer_id = bob.get_braintree_account().id
 
@@ -90,59 +81,143 @@ class TestsWithBillingHarness(BillingHarness):
             assert result.is_success
             ExchangeRoute.insert(bob, 'braintree-cc', result.payment_method.token)
 
-        self.hold, error = create_card_hold(self.db, bob, D('100.00'))
+        hold, error = create_card_hold(self.db, bob, D('100.00'))
         assert error == ''
 
-    def test_cch_no_card(self):
+    def test_create_no_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
-        self.hold, error = create_card_hold(self.db, bob, D('10.00'))
+        hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
-    def test_cch_invalidated_card(self):
+    def test_create_invalidated_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
         ExchangeRoute.insert(bob, 'braintree-cc', 'foo', error='invalidated')
-        self.hold, error = create_card_hold(self.db, bob, D('10.00'))
+        hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
 
-    # capch - capture_card_hold
+    # capture - capture_card_hold
 
-    def test_capch_full_amount(self):
-        self.hold, error = create_card_hold(self.db, self.obama, D('20.00'))
+    def test_capture_full_amount(self):
+        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
-        assert self.hold.status == 'authorized'
+        assert hold.status == 'authorized'
 
-        capture_card_hold(self.db, self.obama, D('20.00'), self.hold)
-        hold = braintree.Transaction.find(self.hold.id)
+        capture_card_hold(self.db, self.obama, D('20.00'), hold)
+        hold = braintree.Transaction.find(hold.id)
         assert self.obama.balance == P('obama').balance == D('20.00')
         assert self.obama.get_credit_card_error() == ''
         assert hold.status == 'submitted_for_settlement'
 
-    def test_capch_partial_amount(self):
-        self.hold, error = create_card_hold(self.db, self.obama, D('20.00'))
+    def test_capture_partial_amount(self):
+        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
-        capture_card_hold(self.db, self.obama, D('15.00'), self.hold)
+        capture_card_hold(self.db, self.obama, D('15.00'), hold)
         assert self.obama.balance == P('obama').balance == D('15.00')
         assert self.obama.get_credit_card_error() == ''
 
-    def test_capch_too_high_amount(self):
-        self.hold, error = create_card_hold(self.db, self.obama, D('20.00'))
+    def test_capture_too_high_amount(self):
+        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
         with self.assertRaises(Exception):
             # How do I check the exception's msg here?
-            capture_card_hold(self.db, self.obama, D('20.01'), self.hold)
+            capture_card_hold(self.db, self.obama, D('20.01'), hold)
 
         assert self.obama.balance == P('obama').balance == 0
 
-    def test_capch_amount_under_minimum(self):
-        self.hold, error = create_card_hold(self.db, self.obama, D('20.00'))
+    def test_capture_amount_under_minimum(self):
+        hold, error = create_card_hold(self.db, self.obama, D('20.00'))
         assert error == ''  # sanity check
 
-        capture_card_hold(self.db, self.obama, D('0.01'), self.hold)
+        capture_card_hold(self.db, self.obama, D('0.01'), hold)
         assert self.obama.balance == P('obama').balance == D('9.41')
         assert self.obama.get_credit_card_error() == ''
+
+
+class TestGetReadyPayoutRoutesByNetwork(BillingHarness):
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def run_payday(self, fch):
+        fch.return_value = {}
+        Payday.start().run()
+
+    def test_includes_team_owners(self):
+        enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(enterprise, 100)
+        self.run_payday()
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert [r.participant.username for r in routes] == ['picard']
+
+
+    def run_payday_with_member(self):
+        enterprise = self.make_team(is_approved=True, available=50)
+        enterprise.add_member(self.homer, P('picard'))
+        self.obama.set_payment_instruction(enterprise, 100)
+        self.run_payday()
+        return enterprise
+
+    def test_includes_team_members(self):
+        self.run_payday_with_member()
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert list(sorted([r.participant.username for r in routes])) == ['homer', 'picard']
+
+    def test_includes_former_team_members(self):
+        enterprise = self.run_payday_with_member()
+        enterprise.remove_member(self.homer, P('picard'))
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert list(sorted([r.participant.username for r in routes])) == ['homer', 'picard']
+
+
+class estGetReadyPayoutRoutesByNetwork(BillingHarness):
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def run_payday(self, fch):
+        fch.return_value = {}
+        Payday.start().run()
+
+    def test_that_its_empty_to_start_with(self):
+        assert get_ready_payout_routes_by_network(self.db, 'paypal') == []
+
+    def test_includes_team_owners(self):
+        enterprise = self.make_team(is_approved=True)
+        self.obama.set_payment_instruction(enterprise, 100)
+        self.run_payday()
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert [r.participant.username for r in routes] == ['picard']
+
+
+    def run_payday_with_member(self):
+        enterprise = self.make_team(is_approved=True, available=50)
+        enterprise.add_member(self.homer, P('picard'))
+        self.obama.set_payment_instruction(enterprise, 100)
+        self.run_payday()
+        return enterprise
+
+    def test_includes_team_members(self):
+        self.run_payday_with_member()
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert list(sorted([r.participant.username for r in routes])) == ['homer', 'picard']
+
+    def test_includes_former_team_members(self):
+        enterprise = self.run_payday_with_member()
+        enterprise.remove_member(self.homer, P('picard'))
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert list(sorted([r.participant.username for r in routes])) == ['homer', 'picard']
+
+    def test_excludes_member_with_no_verified_identity(self):
+        self.run_payday_with_member()
+        self.homer.clear_identity(self.homer.list_identity_metadata()[0].country.id)
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert [r.participant.username for r in routes] == ['picard']
+
+
+    def test_includes_1_0_payouts(self):
+        alice = self.make_participant('alice', balance=24, status_of_1_0_payout='pending-payout')
+        ExchangeRoute.insert(alice, 'paypal', 'alice@example.com')
+        routes = get_ready_payout_routes_by_network(self.db, 'paypal')
+        assert [r.participant.username for r in routes] == ['alice']
 
 
 class TestsWithoutBillingHarness(Harness):
