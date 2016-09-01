@@ -19,6 +19,8 @@ class BillingHarness(Harness):
     _fixture_installed = False
 
     def setUp(self):
+        super(BillingHarness, self).setUp()
+
         if not BillingHarness._fixture_installed:
             install_fixture()
 
