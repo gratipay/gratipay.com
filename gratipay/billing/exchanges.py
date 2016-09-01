@@ -185,6 +185,8 @@ def get_ready_payout_routes_by_network(db, network):
           FROM participants p
           JOIN current_exchange_routes r ON p.id = r.participant
          WHERE p.balance > 0
+           AND p.claimed_time is not null
+           AND p.is_suspicious is not true
            AND r.network = %s
            AND (
 
@@ -201,9 +203,10 @@ def get_ready_payout_routes_by_network(db, network):
                 OR -- Include team members
 
                 (SELECT count(*)
-                   FROM current_takes ct
-                   JOIN teams t ON ct.team_id = t.id
-                  WHERE ct.participant_id = p.id
+                   FROM takes
+                   JOIN teams t ON takes.team_id = t.id
+                  WHERE takes.participant_id = p.id
+                    AND p.has_verified_identity -- XXX apply this to *everyone* we pay out to
                     AND t.is_approved IS TRUE
                     AND t.is_closed IS NOT TRUE
                  ) > 0

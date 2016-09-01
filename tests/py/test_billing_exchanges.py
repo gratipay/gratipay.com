@@ -191,7 +191,11 @@ class TestsWithBillingHarness(BillingHarness):
 
 
     def test_grprbn_includes_1_0_payouts(self):
-        alice = self.make_participant('alice', balance=24, status_of_1_0_payout='pending-payout')
+        alice = self.make_participant( 'alice'
+                                     , balance=24
+                                     , status_of_1_0_payout='pending-payout'
+                                     , claimed_time='now'
+                                      )
         ExchangeRoute.insert(alice, 'paypal', 'alice@example.com')
         routes = get_ready_payout_routes_by_network(self.db, 'paypal')
         assert [r.participant.username for r in routes] == ['alice']
