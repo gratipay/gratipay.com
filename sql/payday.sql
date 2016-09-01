@@ -29,7 +29,9 @@ CREATE TABLE payday_teams AS
     SELECT t.id
          , slug
          , owner
+         , available -- The maximum amount that can be distributed to members (ever)
          , 0::numeric(35, 2) AS balance
+         , 0::numeric(35, 2) AS available_today -- The max that can be distributed this payday
          , false AS is_drained
       FROM teams t
       JOIN participants p
@@ -86,9 +88,9 @@ UPDATE payday_participants pp
 
 DROP TABLE IF EXISTS payday_takes;
 CREATE TABLE payday_takes
-( team text
-, member text
-, amount numeric(35,2)
+( team_id           bigint
+, participant_id    bigint
+, amount            numeric(35,2)
  );
 
 DROP TABLE IF EXISTS payday_payments;
@@ -204,24 +206,27 @@ CREATE TRIGGER process_payment_instruction BEFORE UPDATE OF is_funded ON payday_
     WHEN (NEW.is_funded IS true AND OLD.is_funded IS NOT true)
     EXECUTE PROCEDURE process_payment_instruction();
 
+
 -- Create a trigger to process takes
 
 CREATE OR REPLACE FUNCTION process_take() RETURNS trigger AS $$
     DECLARE
-        actual_amount numeric(35,2);
-        team_balance numeric(35,2);
+        amount              numeric(35,2);
+        available_today_    numeric(35,2);
     BEGIN
-        team_balance := (
-            SELECT new_balance
-              FROM payday_participants
-             WHERE username = NEW.team
-        );
-        IF (team_balance <= 0) THEN RETURN NULL; END IF;
-        actual_amount := NEW.amount;
-        IF (team_balance < NEW.amount) THEN
-            actual_amount := team_balance;
+        amount := NEW.amount;
+        available_today_ := (SELECT available_today FROM payday_teams WHERE id = NEW.team_id);
+
+        IF amount > available_today_ THEN
+            amount := available_today_;
         END IF;
-        EXECUTE transfer(NEW.team, NEW.member, actual_amount, 'take');
+
+        IF amount > 0 THEN
+            UPDATE payday_teams
+               SET available_today = (available_today - amount)
+             WHERE id = NEW.team_id;
+            EXECUTE pay(NEW.participant_id, NEW.team_id, amount, 'to-participant');
+        END IF;
         RETURN NULL;
     END;
 $$ LANGUAGE plpgsql;
