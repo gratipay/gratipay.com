@@ -1,0 +1,63 @@
+from datetime import datetime 
+
+from aspen import Response
+
+from gratipay.utils import get_team
+
+[-----------------------------------------------------------------------------]
+
+team = get_team(state)
+if team.is_approved in (None, False):
+    raise Response(404)
+
+if not (user.ADMIN or user.participant.username == team.owner):
+    raise Response(401)
+
+banner = team.name
+title = _("History")
+
+current_year = datetime.utcnow().year
+try:
+    year = int(request.qs.get('year', current_year)) 
+except ValueError:
+    raise Response(400, "Bad Year")
+years = list(range(current_year, team.ctime.year-1, -1))
+
+
+[-----------------------------------------------------------------------------]
+{% extends "templates/team-base.html" %}
+{% block content %}
+
+
+<h2>Team Account Statements</h2>
+
+{% if len(years) > 1 %}
+<ul class="nav">
+    {% for y in years %}
+        <li><a href="?year={{ y }}" class="{{ 'selected' if y == year }}">{{ y }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<table id="history">
+{% set funded_dues, unfunded_dues = team.get_dues() %}
+    <tr><td colspan="4" class="totals">
+    {{ _("Total Received : {0}", format_currency(funded_dues, "USD"))}}
+    </td></tr>
+    <tr><td colspan="4" class="totals">
+    {{ _("Total Distributed : {0}", format_currency(unfunded_dues, "USD")) }}
+    </td></tr>
+</table>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    jQuery.get('../charts.json', Gratipay.charts.make);
+});
+</script>
+{{ super() }}
+{% endblock %}
