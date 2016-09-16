@@ -14,7 +14,6 @@ from gratipay import wireup, MAX_TIP, MIN_TIP
 from gratipay.elsewhere import PLATFORMS
 from gratipay.models.participant import Participant
 from gratipay.models.team import slugize, Team
-from gratipay.models import community
 from gratipay.models import check_db
 from gratipay.exceptions import InvalidTeamName
 
@@ -178,20 +177,6 @@ def fake_payment_instruction(db, participant, team):
                             )
 
 
-def fake_community(db, creator):
-    """Create a fake community
-    """
-    name = faker.city()
-    if not community.name_pattern.match(name):
-        return fake_community(db, creator)
-
-    slug = community.slugize(name)
-
-    creator.insert_into_communities(True, name, slug)
-
-    return community.Community.from_slug(slug)
-
-
 def fake_tip_amount():
     amount = ((D(random.random()) * (MAX_TIP - MIN_TIP))
             + MIN_TIP)
@@ -338,7 +323,7 @@ def clean_db(db):
         DROP FUNCTION IF EXISTS process_payment() CASCADE;
         """)
 
-def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=5000, num_communities=20):
+def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=5000):
     """Populate DB with fake data.
     """
     print("Making Participants")
@@ -392,14 +377,6 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         for platform_name in random.sample(PLATFORMS, num_elsewheres):
             fake_elsewhere(db, p, platform_name)
 
-    print("Making Communities")
-    for i in xrange(num_communities):
-        creator = random.sample(participants, 1)
-        community = fake_community(db, creator[0])
-
-        members = random.sample(participants, random.randint(1, 3))
-        for p in members:
-            p.insert_into_communities(True, community.name, community.slug)
 
     print("Making Tips")
     tips = []
