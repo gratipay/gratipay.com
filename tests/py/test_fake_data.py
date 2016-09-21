@@ -8,11 +8,10 @@ class TestFakeData(Harness):
     """
     Ensure the fake_data script doesn't throw any exceptions
     """
-
     def test_fake_data(self):
         num_participants = 6
-        num_tips = 5
-        num_teams = 1
+        num_tips = 25
+        num_teams = 5
         num_transfers = 5
         fake_data.main(self.db, num_participants, num_tips, num_teams, num_transfers)
         tips = self.db.all("SELECT * FROM tips")
@@ -24,10 +23,7 @@ class TestFakeData(Harness):
         assert len(participants) == num_participants
         assert len(transfers) == num_transfers
         assert len(teams) == num_teams + 1      # +1 for the fake Gratipay team.
-        if num_tips <= num_participants - num_teams:
-            assert len(payment_instructions) == num_tips
-        else:
-            assert len(payment_instructions) == (num_participants - num_teams)
+        assert len(payment_instructions) == num_tips
 
 
     def test_fake_participant_identity(self):

@@ -5,6 +5,7 @@ from decimal import Decimal as D
 import random
 import string
 import sys
+from collections import defaultdict
 
 from faker import Factory
 from psycopg2 import IntegrityError
@@ -13,7 +14,6 @@ from gratipay import wireup, MAX_TIP, MIN_TIP
 from gratipay.elsewhere import PLATFORMS
 from gratipay.models.participant import Participant
 from gratipay.models.team import slugize, Team
-from gratipay.models import community
 from gratipay.models import check_db
 from gratipay.exceptions import InvalidTeamName
 
@@ -84,6 +84,7 @@ def fake_participant(db, is_admin=False, random_identities=True):
                          )
         participant = Participant.from_username(username)
 
+        fake_exchange_route(db, participant)
         if random_identities:
             if random.randrange(100) < 66:
                 fake_participant_identity(participant)
@@ -97,6 +98,21 @@ def fake_participant(db, is_admin=False, random_identities=True):
 
     return participant
 
+
+def fake_exchange_route(db, participant, network=None):
+    
+    if not network:
+        networks = ["balanced-ba", "balanced-cc", "paypal", "bitcoin"]
+        network = random.sample(networks, 1)[0]
+
+    insert_fake_data( db
+                    , "exchange_routes"
+                    , participant = participant.id
+                    , network = network 
+                    , address = participant.email_address
+                    , error = "None" 
+                    )
+        
 
 def fake_participant_identity(participant, verification=None):
     """Pick a country and make an identity for the participant there.
@@ -161,20 +177,6 @@ def fake_payment_instruction(db, participant, team):
                             )
 
 
-def fake_community(db, creator):
-    """Create a fake community
-    """
-    name = faker.city()
-    if not community.name_pattern.match(name):
-        return fake_community(db, creator)
-
-    slug = community.slugize(name)
-
-    creator.insert_into_communities(True, name, slug)
-
-    return community.Community.from_slug(slug)
-
-
 def fake_tip_amount():
     amount = ((D(random.random()) * (MAX_TIP - MIN_TIP))
             + MIN_TIP)
@@ -211,6 +213,17 @@ def fake_elsewhere(db, participant, platform):
                     , extra_info=None
                      )
 
+def fake_payment(db, participant, team, amount, direction):
+    """Create fake payment
+    """
+    return insert_fake_data( db
+                            , "payments"
+                            , timestamp=faker.date_time_this_year()
+                            , participant=participant
+                            , team=team
+                            , amount=amount
+                            , direction=direction
+                            )
 
 def fake_transfer(db, tipper, tippee):
     return insert_fake_data( db
@@ -231,11 +244,17 @@ def fake_exchange(db, participant, amount, fee, timestamp):
                            , amount=amount
                            , fee=fee
                            , status='succeeded'
+                           , route=get_exchange_route(db, participant.id)
                             )
 
 
+def get_exchange_route(db, participant):
+    return db.one("SELECT id FROM exchange_routes WHERE participant={}"
+                    .format(participant), participant)
+
 def random_country_id(db):
     return db.one("SELECT id FROM countries ORDER BY random() LIMIT 1")
+
 
 
 def prep_db(db):
@@ -256,6 +275,25 @@ def prep_db(db):
 
         CREATE TRIGGER process_transfer AFTER INSERT ON transfers
             FOR EACH ROW EXECUTE PROCEDURE process_transfer();
+
+        CREATE OR REPLACE FUNCTION process_payment() RETURNS trigger AS $$
+            BEGIN
+                UPDATE participants
+                   SET balance = balance + NEW.amount
+                 WHERE username = NEW.participant
+                   AND NEW.direction = 'to-participant';
+
+                UPDATE participants
+                   SET balance = balance - NEW.amount
+                 WHERE username = NEW.participant
+                   AND NEW.direction = 'to-team';
+
+                RETURN NULL;
+            END;
+        $$ language plpgsql;
+
+        CREATE TRIGGER process_payment AFTER INSERT ON payments
+            FOR EACH ROW EXECUTE PROCEDURE process_payment();
 
         CREATE OR REPLACE FUNCTION process_exchange() RETURNS trigger AS $$
             BEGIN
@@ -282,10 +320,10 @@ def clean_db(db):
     db.run("""
         DROP FUNCTION IF EXISTS process_transfer() CASCADE;
         DROP FUNCTION IF EXISTS process_exchange() CASCADE;
-    """)
+        DROP FUNCTION IF EXISTS process_payment() CASCADE;
+        """)
 
-
-def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=5000, num_communities=20):
+def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=5000):
     """Populate DB with fake data.
     """
     print("Making Participants")
@@ -320,6 +358,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
 
     print("Making Payment Instructions")
     npayment_instructions = 0
+    payment_instructions = []
     for participant in participants:
         for team in teams:
             #eliminate self-payment
@@ -327,10 +366,9 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
                 npayment_instructions += 1
                 if npayment_instructions > ntips:
                     break
-                fake_payment_instruction(db, participant, team)
+                payment_instructions.append(fake_payment_instruction(db, participant, team))
         if npayment_instructions > ntips:
             break
-
 
     print("Making Elsewheres")
     for p in participants:
@@ -339,20 +377,33 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         for platform_name in random.sample(PLATFORMS, num_elsewheres):
             fake_elsewhere(db, p, platform_name)
 
-    print("Making Communities")
-    for i in xrange(num_communities):
-        creator = random.sample(participants, 1)
-        community = fake_community(db, creator[0])
-
-        members = random.sample(participants, random.randint(1, 3))
-        for p in members:
-            p.insert_into_communities(True, community.name, community.slug)
 
     print("Making Tips")
     tips = []
     for i in xrange(ntips):
         tipper, tippee = random.sample(participants, 2)
         tips.append(fake_tip(db, tipper, tippee))
+
+    # Payments
+    payments = []
+    paymentcount = 0
+    team_amounts = defaultdict(int)
+    for payment_instruction in payment_instructions:
+        participant = Participant.from_id(payment_instruction['participant_id'])
+        team = Team.from_id(payment_instruction['team_id'])
+        amount = payment_instruction['amount']
+        assert participant.username != team.owner
+        paymentcount += 1
+        sys.stdout.write("\rMaking Payments (%i)" % (paymentcount))
+        sys.stdout.flush()
+        payments.append(fake_payment(db, participant.username, team.slug, amount, 'to-team'))
+        team_amounts[team.slug] += amount
+    for team in teams:
+        paymentcount += 1
+        sys.stdout.write("\rMaking Payments (%i)" % (paymentcount))
+        sys.stdout.flush()
+        payments.append(fake_payment(db, team.owner, team.slug, team_amounts[team.slug], 'to-participant'))
+    print("")
 
     # Transfers
     transfers = []
@@ -365,10 +416,10 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
 
     # Paydays
     # First determine the boundaries - min and max date
-    min_date = min(min(x['ctime'] for x in tips), \
-                   min(x['timestamp'] for x in transfers))
-    max_date = max(max(x['ctime'] for x in tips), \
-                   max(x['timestamp'] for x in transfers))
+    min_date = min(min(x['ctime'] for x in payment_instructions + tips),
+                   min(x['timestamp'] for x in payments + transfers))
+    max_date = max(max(x['ctime'] for x in payment_instructions + tips),
+                   max(x['timestamp'] for x in payments + transfers))
     # iterate through min_date, max_date one week at a time
     payday_counter = 1
     date = min_date
@@ -378,15 +429,22 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         sys.stdout.flush()
         payday_counter += 1
         end_date = date + datetime.timedelta(days=7)
-        week_tips = filter(lambda x: date < x['ctime'] < end_date, tips)
-        week_transfers = filter(lambda x: date < x['timestamp'] < end_date, transfers)
-        week_participants = filter(lambda x: x.ctime.replace(tzinfo=None) < end_date, participants)
-        for p in week_participants:
+        week_tips = filter(lambda x: date <= x['ctime'] < end_date, tips)
+        week_transfers = filter(lambda x: date <= x['timestamp'] < end_date, transfers)
+        week_payment_instructions = filter(lambda x: date <= x['ctime'] < end_date, payment_instructions)
+        week_payments = filter(lambda x: date <= x['timestamp'] < end_date, payments)
+        week_payments_to_teams = filter(lambda x: x['direction'] == 'to-team', week_payments)
+        week_payments_to_owners = filter(lambda x: x['direction'] == 'to-participant', week_payments)
+        for p in participants:
             transfers_in = filter(lambda x: x['tippee'] == p.username, week_transfers)
+            payments_in = filter(lambda x: x['participant'] == p.username, week_payments_to_owners)
             transfers_out = filter(lambda x: x['tipper'] == p.username, week_transfers)
-            amount_in = sum([t['amount'] for t in transfers_in])
-            amount_out = sum([t['amount'] for t in transfers_out])
+            payments_out = filter(lambda x: x['participant'] == p.username, week_payments_to_teams)
+            amount_in = sum([t['amount'] for t in transfers_in + payments_in])
+            amount_out = sum([t['amount'] for t in transfers_out + payments_out])
             amount = amount_out - amount_in
+            fee = amount * D('0.02')
+            fee = abs(fee.quantize(D('.01')))
             if amount != 0:
                 fee = amount * D('0.02')
                 fee = abs(fee.quantize(D('.01')))
@@ -399,10 +457,20 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
                 )
         actives=set()
         tippers=set()
+        #week_tips, week_transfers
         for xfers in week_tips, week_transfers:
             actives.update(x['tipper'] for x in xfers)
             actives.update(x['tippee'] for x in xfers)
             tippers.update(x['tipper'] for x in xfers)
+
+        # week_payment_instructions
+        actives.update(x['participant_id'] for x in week_payment_instructions)
+        tippers.update(x['participant_id'] for x in week_payment_instructions)
+
+        # week_payments
+        actives.update(x['participant'] for x in week_payments)
+        tippers.update(x['participant'] for x in week_payments_to_owners)
+
         payday = {
             'ts_start': date,
             'ts_end': end_date,
