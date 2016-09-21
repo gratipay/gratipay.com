@@ -3,6 +3,7 @@ from datetime import datetime
 from aspen import Response
 
 from gratipay.utils import get_team
+from gratipay.utils.team_history import get_end_of_year_totals
 
 [-----------------------------------------------------------------------------]
 
@@ -39,11 +40,10 @@ years = list(range(current_year, team.ctime.year-1, -1))
 </ul>
 {% endif %}
 
-
 <table id="history">
-{% set funded_dues, unfunded_dues = team.get_dues() %}
+{% set received, distributed = get_end_of_year_totals(website.db, team.slug, year)  %}
     <tr><td colspan="4" class="totals">
-    {{ _("Total Received : {0}", format_currency(funded_dues, "USD"))}}
+    {{ _("Total Received : {0}", format_currency(, "USD"))}}
     </td></tr>
     <tr><td colspan="4" class="totals">
     {{ _("Total Distributed : {0}", format_currency(unfunded_dues, "USD")) }}

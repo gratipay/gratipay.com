@@ -5,61 +5,33 @@ from aspen import Response
 from psycopg2 import IntegrityError
 
 
-def get_end_of_year_totals(db, team, year, current_year):
-    if year == current_year:
-        return participant.balance
-    start = participant.claimed_time or participant.ctime
-    if year < start.year:
-        return Decimal('0.00')
+def get_end_of_year_totals(db, team, year):
 
-    balance = db.one("""
-        SELECT balance
-          FROM balances_at
-         WHERE participant = %s
-           AND "at" = %s
-    """, (participant.id, datetime(year+1, 1, 1)))
-    if balance is not None:
-        return balance
+    received = db.one("""
+        SELECT COALESCE(sum(amount), 0) AS Received
+          FROM payments
+         WHERE team = %(team)s
+           AND extract(year from timestamp) = %(year)s
+           AND amount > 0
+           AND direction='to-team';
+    """, {'team' : team, 'year': datetime(year+1, 1, 1) } )
+    
+    if received is None:
+       received = D(0.00)
 
-    username = participant.username
-    start_balance = get_end_of_year_balance(db, participant, year-1, current_year)
-    delta = db.one("""
-        SELECT (
-                  SELECT COALESCE(sum(amount), 0) AS a
-                    FROM exchanges
-                   WHERE participant = %(username)s
-                     AND extract(year from timestamp) = %(year)s
-                     AND amount > 0
-                     AND (status is null OR status = 'succeeded')
-               ) + (
-                  SELECT COALESCE(sum(amount-fee), 0) AS a
-                    FROM exchanges
-                   WHERE participant = %(username)s
-                     AND extract(year from timestamp) = %(year)s
-                     AND amount < 0
-                     AND (status is null OR status <> 'failed')
-               ) + (
-                  SELECT COALESCE(sum(-amount), 0) AS a
-                    FROM transfers
-                   WHERE tipper = %(username)s
-                     AND extract(year from timestamp) = %(year)s
-               ) + (
-                  SELECT COALESCE(sum(amount), 0) AS a
-                    FROM transfers
-                   WHERE tippee = %(username)s
-                     AND extract(year from timestamp) = %(year)s
-               ) AS delta
-    """, locals())
-    balance = start_balance + delta
-    try:
-        db.run("""
-            INSERT INTO balances_at
-                        (participant, at, balance)
-                 VALUES (%s, %s, %s)
-        """, (participant.id, datetime(year+1, 1, 1), balance))
-    except IntegrityError:
-        pass
-    return balance
+    distrubuted = db.one("""
+        SELECT COALESCE(sum(amount), 0) AS Distributed
+          FROM payments
+         WHERE team = %(team)s
+           AND extract(year from timestamp) = %(year)s
+           AND amount > 0
+           AND direction='to-participant';
+    """, (team, datetime(year+1, 1, 1)))
+    
+    if distributed is None:
+        distributed = D(0.00)
+
+    return received, distributed
 
 
 def iter_payday_events(db, participant, year=None):
