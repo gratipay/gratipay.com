@@ -55,6 +55,6 @@ class MembershipMixin(object):
                 if member['username'] == current_participant.username:
                     member['editing_allowed']= True
 
-            member['last_week'] = self.get_take_last_week_for(member['participant_id'])
+            member['last_week'] = self.get_take_last_week_for(take['participant'])
             members.append(member)
         return members
