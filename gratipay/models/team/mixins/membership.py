@@ -27,17 +27,6 @@ class MembershipMixin(object):
         self.set_take_for(participant, ZERO, recorder)
 
 
-    def remove_all_members(self, cursor=None):
-        (cursor or self.db).run("""
-            INSERT INTO takes (ctime, member, team, amount, recorder) (
-                SELECT ctime, member, %(username)s, 0.00, %(username)s
-                  FROM current_takes
-                 WHERE team=%(username)s
-                   AND amount > 0
-            );
-        """, dict(username=self.username))
-
-
     @property
     def nmembers(self):
         """The number of members. Read-only and computed (not in the db); equal to
