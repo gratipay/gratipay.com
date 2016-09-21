@@ -53,10 +53,7 @@ class MembershipMixin(object):
             if current_participant:
                 member['removal_allowed'] = current_participant.username == self.owner
                 if member['username'] == current_participant.username:
-                    member['is_current_user'] = True
-                    if take['ctime'] is not None:
-                        # current user, but not the team itself
-                        member['editing_allowed']= True
+                    member['editing_allowed']= True
 
             member['last_week'] = self.get_take_last_week_for(member['participant_id'])
             members.append(member)
