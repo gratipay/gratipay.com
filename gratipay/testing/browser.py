@@ -13,14 +13,6 @@ from . import P
 from .harness import Harness
 
 
-def get_browser(driver_name):
-    # Override to clean up after ourselves properly.
-    DriverClass = _DRIVERS[driver_name]
-    driver = DriverClass()
-    atexit.register(driver.quit)
-    return driver
-
-
 class BrowserHarness(Harness):
     """This is a harness for through-the-web (TTW) testing. It passes
     everything through to an underlying `Splinter`_ browser, with the following
@@ -30,9 +22,19 @@ class BrowserHarness(Harness):
 
     """
 
-    _browser = get_browser(os.environ['WEBDRIVER_BROWSER'])
+    _browser = None
     use_VCR = False  # without this we get fixture spam from communication with PhantomJS
     base_url = os.environ['WEBDRIVER_BASE_URL']
+
+    @classmethod
+    def setUpClass(cls):
+        super(BrowserHarness, cls).setUpClass()
+
+        # starting a browser is expensive, so we do so lazily, and once
+        if cls._browser is None:
+            DriverClass = _DRIVERS[os.environ['WEBDRIVER_BROWSER']]
+            cls._browser = DriverClass()
+            atexit.register(cls._browser.quit)
 
     def setUp(self):
         Harness.setUp(self)
