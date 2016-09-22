@@ -123,6 +123,48 @@ class Tests(TeamTakesHarness):
         assert actual == 'can only set take if already a member of the team'
 
 
+    def test_stf_vets_participant_for_suspiciousness(self):
+        mallory = self.make_participant('mallory', is_suspicious=True)
+        actual = self.err(mallory, 0, self.picard)
+        assert actual == 'user must not be flagged as suspicious'
+
+    def test_stf_vets_participant_for_email(self):
+        mallory = self.make_participant('mallory')
+        actual = self.err(mallory, 0, self.picard)
+        assert actual == 'user must have added at least one email address'
+
+    def test_stf_vets_participant_for_verified_identity(self):
+        mallory = self.make_participant('mallory', email_address='m@example.com')
+        actual = self.err(mallory, 0, self.picard)
+        assert actual == 'user must have a verified identity'
+
+    def test_stf_vets_participant_for_claimed(self):
+        mallory = self.make_participant('mallory', email_address='m@example.com', verified_in='TT')
+        actual = self.err(mallory, 0, self.picard)
+        assert actual == 'user must have claimed the account'
+
+
+    def test_stf_vets_recorder_for_suspiciousness(self):
+        mallory = self.make_participant('mallory', is_suspicious=True)
+        actual = self.err(self.crusher, 0, mallory)
+        assert actual == 'user must not be flagged as suspicious'
+
+    def test_stf_vets_recorder_for_email(self):
+        mallory = self.make_participant('mallory')
+        actual = self.err(self.crusher, 0, mallory)
+        assert actual == 'user must have added at least one email address'
+
+    def test_stf_vets_recorder_for_verified_identity(self):
+        mallory = self.make_participant('mallory', email_address='m@example.com')
+        actual = self.err(self.crusher, 0, mallory)
+        assert actual == 'user must have a verified identity'
+
+    def test_stf_vets_recorder_for_claimed(self):
+        mallory = self.make_participant('mallory', email_address='m@example.com', verified_in='TT')
+        actual = self.err(self.crusher, 0, mallory)
+        assert actual == 'user must have claimed the account'
+
+
     # gtlwf - get_take_last_week_for
 
     def test_gtlwf_gets_take_last_week_for_someone(self):
