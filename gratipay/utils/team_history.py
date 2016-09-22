@@ -14,19 +14,19 @@ def get_end_of_year_totals(db, team, year):
            AND extract(year from timestamp) = %(year)s
            AND amount > 0
            AND direction='to-team';
-    """, {'team' : team, 'year': datetime(year+1, 1, 1) } )
+    """, locals() )
     
     if received is None:
        received = D(0.00)
 
-    distrubuted = db.one("""
+    distributed = db.one("""
         SELECT COALESCE(sum(amount), 0) AS Distributed
           FROM payments
          WHERE team = %(team)s
            AND extract(year from timestamp) = %(year)s
            AND amount > 0
            AND direction='to-participant';
-    """, (team, datetime(year+1, 1, 1)))
+    """, locals())
     
     if distributed is None:
         distributed = D(0.00)
