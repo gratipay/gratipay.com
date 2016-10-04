@@ -314,7 +314,7 @@ msgid "Delete"
 msgstr ""
 
 msgid "Edit"
-msgstr "Editieren"
+msgstr "Edieren"
 
 msgid "Team"
 msgstr "Team"
