@@ -7,7 +7,7 @@
 # Ben Holden-Crowther <benhc@live.co.uk>, 2014
 # Changaco <changaco@changaco.oy.lc>, 2015
 # Eddy Shure <mono@tucana.uberspace.de>, 2015
-# Gratipay <vendors@gratipay.com>, 2015
+# Gratipay <vendors@gratipay.com>, 2015-2016
 # Loris Reiff <loris.reiff@hotmail.com>, 2014
 # Loris Reiff <loris.reiff@hotmail.com>, 2014-2015
 # Lukas Haselauer <l.haselauer@gmail.com>, 2015
@@ -314,7 +314,7 @@ msgid "Delete"
 msgstr ""
 
 msgid "Edit"
-msgstr "Edieren"
+msgstr "Editieren"
 
 msgid "Team"
 msgstr "Team"
