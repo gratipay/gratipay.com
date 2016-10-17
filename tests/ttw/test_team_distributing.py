@@ -22,7 +22,7 @@ class Tests(BrowserHarness):
         self.css('.lookup-container .query').first.fill('alice')
         time.sleep(0.1)
         self.css('.lookup-container button').first.click()
-        time.sleep(0.1)
+        time.sleep(0.2)
         assert [a.text for a in self.css('table.team a')] == ['alice']
 
 
