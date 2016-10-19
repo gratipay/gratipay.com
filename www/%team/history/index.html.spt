@@ -3,7 +3,7 @@ from datetime import datetime
 from aspen import Response
 
 from gratipay.utils import get_team
-from gratipay.utils.team_history import get_end_of_year_totals
+from gratipay.utils.team_history import get_end_of_year_totals, iter_payday_events
 
 [-----------------------------------------------------------------------------]
 
@@ -48,9 +48,42 @@ years = list(range(current_year, team.ctime.year-1, -1))
     <tr><td colspan="4" class="totals">
     {{ _("Total Distributed : {0}", format_currency(distributed, "USD")) }}
     </td></tr>
+
+{% set events = iter_payday_events(website.db, team, year) %}
+
+{% for payday in events %}
+    
+    <tr>
+        <th colspan="5"><h2>
+    {{ payday['date'].strftime("%B %d, %Y").replace(' 0', ' ') }}
+    {% if payday['id'] %}
+     &mdash; Weekly Payday #{{ payday['id'] }}
+    {% endif %}
+        </h2></th>
+    </tr>
+    <tr class="head">
+        <td class="credits">{{ _("Received From") }}</td>
+        <td class="debits">{{ _("Taken By") }}</td>
+        <td class="balance">{{ _("Amount") }}</td>
+        <td class="status">{{ _("Status") }}</td>
+        <td class="notes">{{ _("Notes") }}</td>
+    </tr>
+    {% for event in payday['events'] %}
+        <tr>
+        {% if event['direction'] == 'to-team' %}
+            <td class="credits">{{ event['participant'] }}</td>
+            <td class="debits"></td>
+        {% else %}
+            <td class="credits"></td>
+            <td class="debits">{{ event['participant'] }}</td>
+        {% endif %}
+            <td class="balance">{{ event['amount'] }}</td>
+            <td class="status">{{ event['status'] }}</td>
+            <td class="notes">{{ event['notes'] }}</td>
+        </tr>
+     {% endfor %}
+{% endfor %}
 </table>
-
-
 {% endblock %}
 
 {% block scripts %}

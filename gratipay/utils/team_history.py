@@ -40,100 +40,91 @@ def iter_payday_events(db, team, year=None):
     current_year = datetime.utcnow().year
     year = year or current_year
 
-    name = team.name
     paydays = db.all("""
         SELECT id, ts_start::date
           FROM paydays
          WHERE ts_start > %(ctime)s 
       ORDER BY ts_start ASC
-    """, dict(ctime=team.ctime))
+    """, dict(ctime=team.ctime), back_as=dict)
+     
+    events = []
+    events_query = """
+        SELECT * 
+          FROM ( SELECT COALESCE( actual.amount,expected.amount) as amount
+                      , COALESCE( expected.participant_id, actual.participant_id ) as participant_id
+                      , ( CASE WHEN is_funded IS false then 'No/Invalid Credit Card' end) as Notes
+                      , COALESCE( actual.participant, expected.participant) as participant
+                      , actual.team
+                      , COALESCE(actual.direction, 'to-participant') AS direction
+                      , ( CASE when actual.amount is NULL then 'failed' else 'Succeeded' end) as Status
+                   FROM ( SELECT DISTINCT ON (participant_id) payment_instructions.*
+                             , participants.username as participant
+                             , teams.name as team
+                         FROM payment_instructions, participants, teams
+                        WHERE is_funded = true
+                          AND mtime < %(payday_date)s
+                          AND team_id = ( SELECT id
+                                            FROM teams
+                                            WHERE name = %(team)s  )
+                          AND participants.id = participant_id
+                          AND teams.id = team_id
+                        ORDER BY participant_id, team_id, mtime DESC
+                       ) expected
+                   FULL OUTER JOIN ( SELECT payments.*
+                                          , participants.id as participant_id
+                                       FROM payments, participants
+                                      WHERE payday = %(payday_id)s
+                                        AND direction = 'to-team'
+                                        AND team = %(team)s
+                                        AND participants.username = participant
+                                   ) actual
+                     ON expected.participant_id = actual.participant_id
+                ) received 
+         UNION ( SELECT COALESCE( actual.amount,expected.amount) as amount
+                      , COALESCE( expected.participant_id, actual.participant_id ) as participant_id
+                      , ( CASE WHEN expected.amount IS NULL
+                          THEN 'Owner Payout'
+                          WHEN expected.amount > actual.amount
+                          THEN 'Not Enough Funds'
+                          ELSE '' END
+                        ) as Notes
+                      , COALESCE( actual.participant, expected.participant) as participant
+                      , actual.team
+                      , COALESCE(actual.direction, 'to-team') AS direction
+                      , (CASE when actual.amount is NULL then 'failed' else 'Succeeded' end) as Status
+                   FROM ( SELECT DISTINCT ON (participant_id) takes.*
+                               , participants.username as participant
+                               , teams.name as team
+                            FROM takes, participants, teams
+                           WHERE mtime < %(payday_date)s
+                             AND team_id = ( SELECT id
+                                               FROM teams
+                                              WHERE name = %(team)s )
+                             AND participants.id = participant_id
+                             AND teams.id = team_id
+                           ORDER BY participant_id, team_id, mtime DESC
+                        ) expected
+                   FULL OUTER JOIN ( SELECT payments.*
+                                          , participants.id as participant_id
+                                       FROM payments, participants
+                                      WHERE payday = %(payday_id)s
+                                        AND direction = 'to-participant'
+                                        AND team = %(team)s
+                                        AND participants.username = participant
+                                    ) actual
+                   ON expected.participant_id = actual.participant_id )
+         ORDER BY direction""" 
     
     for payday in paydays:
-    """Run qurery to get data and return in a structure"""
-    exchanges = db.all("""
-        SELECT *
-          FROM exchanges
-         WHERE participant=%(username)s
-           AND extract(year from timestamp) = %(year)s
-    """, locals(), back_as=dict)
-    payments = db.all("""
-        SELECT *
-          FROM payments
-         WHERE participant=%(username)s
-           AND extract(year from timestamp) = %(year)s
-    """, locals(), back_as=dict)
-    transfers = db.all("""
-        SELECT *
-          FROM transfers
-         WHERE (tipper=%(username)s OR tippee=%(username)s)
-           AND extract(year from timestamp) = %(year)s
-    """, locals(), back_as=dict)
-
-    if not (exchanges or payments or transfers):
-        return
-
-    if payments or transfers:
-        payments_given = sum([p['amount'] for p in payments if p['direction'] == 'to-team'])
-        payments_received = sum([p['amount'] for p in payments \
-                                                            if p['direction'] == 'to-participant'])
-        transfers_given = sum(t['amount'] for t in transfers \
-                                             if t['tipper'] == username and t['context'] != 'take')
-        transfers_received = sum(t['amount'] for t in transfers if t['tippee'] == username)
-        yield dict( kind='totals'
-                  , given=payments_given + transfers_given
-                  , received=payments_received + transfers_received
-                   )
-
-
-    balance = get_end_of_year_balance(db, participant, year, current_year)
-    prev_date = None
-    get_timestamp = lambda e: e['timestamp']
-    events = sorted(exchanges+payments+transfers, key=get_timestamp, reverse=True)
-    for event in events:
-
-        event['balance'] = balance
-
-        event_date = event['timestamp'].date()
-        if event_date != prev_date:
-            if prev_date:
-                yield dict(kind='day-close', balance=balance)
-            day_open = dict(kind='day-open', date=event_date, balance=balance)
-            if payday_dates:
-                while payday_dates and payday_dates[-1] > event_date:
-                    payday_dates.pop()
-                payday_date = payday_dates[-1] if payday_dates else None
-                if event_date == payday_date:
-                    day_open['payday_number'] = len(payday_dates) - 1
-            yield day_open
-            prev_date = event_date
-
-        if 'fee' in event:
-            if event['amount'] > 0:
-                kind = 'charge'
-                if event['status'] in (None, 'succeeded'):
-                    balance -= event['amount']
-            else:
-                kind = 'credit'
-                if event['status'] != 'failed':
-                    balance -= event['amount'] - event['fee']
-        elif 'direction' in event:
-            kind = 'payment'
-            if event['direction'] == 'to-participant':
-                balance -= event['amount']
-            else:
-                assert event['direction'] == 'to-team'
-                balance += event['amount']
-        else:
-            kind = 'transfer'
-            if event['tippee'] == username:
-                balance -= event['amount']
-            else:
-                balance += event['amount']
-        event['kind'] = kind
-
-        yield event
-
-    yield dict(kind='day-close', balance=balance)
+        payday_events = db.all(events_query
+                              , dict(team=team.name
+                                    , payday_id=payday['id']
+                                    , payday_date=payday['ts_start'])
+                              , back_as=dict)
+                                    
+        events.append (dict(id=payday['id'], date=payday['ts_start'], events=payday_events))
+    
+    return events
 
 
 def export_history(participant, year, mode, key, back_as='namedtuple', require_key=False):
