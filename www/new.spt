@@ -6,13 +6,13 @@ from gratipay.models.team import Team
 request.allow('GET')
 
 if user.ANON:
-    raise Response(401, _("You must sign in to apply for a new Project."))
+    raise Response(401, _("You must sign in to apply for a new Team."))
 
 if user.participant.email_address is None:
-    raise Response(400, _("You must have a verified email address to apply for a new Project."))
+    raise Response(400, _("You must have a verified email address to apply for a new Team."))
 
 if not user.participant.has_payout_route:
-    raise Response(400, _("You must attach a PayPal account to apply for a new Project."))
+    raise Response(400, _("You must attach a PayPal account to apply for a new Team."))
 
 
 # We'll actually migrate *all* non-zero tips from non-closed, non-suspicious
@@ -20,7 +20,7 @@ if not user.participant.has_payout_route:
 # point. But let's only tell them about the funded tips.
 
 receiving, ntips = user.participant.get_old_stats()
-title = _("Apply for a New Project")
+title = _("Apply for a New Team")
 banner = _("Apply")
 suppress_sidebar = True
 
@@ -44,7 +44,7 @@ still_migrating = delta > 0
     }
 </style>
 <div class="application-complete" style="display: none;">
-    <p>{{ _("Thanks! Your public project page is:") }}</p>
+    <p>{{ _("Thanks! Your public team page is:") }}</p>
     <p><a href="" class="team_url"></a></p>
     <p>{{ _("And your public review ticket is:") }}</p>
     <p><a href="" class="review_url"></a></p>
@@ -56,7 +56,7 @@ still_migrating = delta > 0
 <form action="/teams/create.json" method="POST" id="new-team">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-    <label><h2>{{ _("Project Name") }}</h2></label>
+    <label><h2>{{ _("Team Name") }}</h2></label>
     <p><i>{{ _("At least one letter A through Z, plus numbers, dashes (-), underscores (_), periods (.), comma (,) and whitespace.") }}</i></p>
     <input type="text" name="name" required autofocus>
 
@@ -65,18 +65,38 @@ still_migrating = delta > 0
     <input type="file" name="image" required>
 
     <label><h2>{{ _("Product or Service") }}</h2></label>
-    <p><i>{{ _("What product or service does your Project represent?") }}</i></p>
+    <p><i>{{ _("What product or service does your Team provide?") }}</i></p>
     <textarea name="product_or_service" required></textarea>
 
     <label><h2>{{ _("Homepage") }}</h2></label>
     <p><i>{{ _("What is the customer-facing web page for your product or service?") }}</i></p>
     <input type="text" name="homepage" required>
 
+    <label><h2>{{ _("Self-onboarding Documentation URL") }}</h2></label>
+    <p><i>{{ _("Where can people find instructions on how to do your work for you ({0}example{1})? "
+              , '<a href="https://github.com/gratipay/gratipay.com/blob/master/CONTRIBUTING.md">'|safe
+              , '</a>'|safe
+               ) }}</i></p>
+    <input type="text" name="onboarding_url" required>
+
+    <label><h2>{{ _("To-do URL") }}</h2></label>
+    <p><i>{{ _("Where can people find a list of available work to do for your Team?") }}</i></p>
+    <input type="text" name="todo_url" required>
+
     <h2>{{ _("Agreements") }}</h2>
     <input type="checkbox" value="true" name="agree_public" id="agree_public">
     <label for="agree_public">
         {{ _( "I agree to have my application {0}publicly reviewed{1}."
             , '<a href="http://inside.gratipay.com/howto/review-teams">'|safe
+            , '</a>'|safe
+             ) }}
+    </label>
+
+    <br>
+    <input type="checkbox" value="true" name="agree_payroll" id="agree_payroll">
+    <label for="agree_payroll">
+        {{ _( "I agree to be responsible for {0}payroll{1}."
+            , '<a href="/about/features/payroll">'|safe
             , '</a>'|safe
              ) }}
     </label>
@@ -93,7 +113,7 @@ still_migrating = delta > 0
     {% if ntips and still_migrating %}
     <h2>{{ _("Migration of Payments") }}</h2>
 
-    <p>{{ _("The {ntips} weekly tips totalling {receiving} that previously were directed to your ~{username} user account under Gratipay 1.0 will be converted into weekly voluntary payments to your new Project under {a}Gratipay 2.0{_a}, pending approval of your application."
+    <p>{{ _("The {ntips} weekly tips totalling {receiving} that previously were directed to your ~{username} user account under Gratipay 1.0 will be converted into weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, pending approval of your application."
            , ntips=ntips
            , receiving=format_currency(receiving, 'USD')
            , username=user.participant.username
