@@ -121,8 +121,8 @@ if query:
     {% endif %}
 
     {% if emails %}
-        <h2>{{ ngettext("Found a matching email",
-                        "Found matching emails",
+        <h2>{{ ngettext("Found a matching email address",
+                        "Found matching email addresses",
                         len(usernames)) }}</h2>
         <div class="search-results clearfix">
         {% for result in emails %}
