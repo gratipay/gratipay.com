@@ -10,7 +10,7 @@ banner = _("Search")
 results = {}
 
 if query:
-    title = _("Results for: ") + query 
+    title = _("Results for: ") + query
     q = strip_accents(query)
 
     if action in (None, 'search_usernames'):
@@ -24,6 +24,17 @@ if query:
           ORDER BY rank DESC, username
              LIMIT 10
         """, locals())
+
+    if user.ADMIN:
+        if action in (None, 'search_emails'):
+            results['emails'] = website.db.all("""
+                SELECT username, avatar_url, similarity(email_address, %(q)s) AS rank
+                  FROM participants
+                 WHERE email_address %% %(q)s
+                   AND claimed_time IS NOT NULL
+              ORDER BY rank DESC, username
+                 LIMIT 10
+            """, locals())
 
     if action in (None, 'search_statements'):
         langs = tuple(l for l in request.accept_langs if l in LANGUAGES_2)
@@ -91,6 +102,7 @@ if query:
 
     {% set usernames = results.get('usernames') %}
     {% set statements = results.get('statements') %}
+    {% set emails = results.get('emails') %}
 
     {% if usernames %}
         <h2>{{ ngettext("Found a matching username",
@@ -98,6 +110,22 @@ if query:
                         len(usernames)) }}</h2>
         <div class="search-results clearfix">
         {% for result in usernames %}
+            <a class="mini-user" href="/{{ result.username }}/">
+                <span class="inner">
+                    <span class="avatar" style="background-image: url('{{ avatar_url(result) }}')"></span>
+                    <span class="name">{{ result.username }}</span>
+                </span>
+            </a>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if emails %}
+        <h2>{{ ngettext("Found a matching email address",
+                        "Found matching email addresses",
+                        len(usernames)) }}</h2>
+        <div class="search-results clearfix">
+        {% for result in emails %}
             <a class="mini-user" href="/{{ result.username }}/">
                 <span class="inner">
                     <span class="avatar" style="background-image: url('{{ avatar_url(result) }}')"></span>
@@ -129,7 +157,7 @@ if query:
     </div>
     {% endif %}
 
-    {% if query and not (usernames or statements) %}
+    {% if query and not (usernames or statements or emails) %}
         <p>{{ _("Sorry, we didn't find anything matching your query.") }}</p>
     {% endif %}
 
