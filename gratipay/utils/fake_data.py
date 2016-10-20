@@ -170,7 +170,7 @@ def fake_team(db, teamowner, teamname=None):
 def fake_payment_instruction(db, participant, team):
     """Create a fake payment_instruction
     """
-    start_date = max( participant.claimed_time, team.ctime) 
+    start_date = max(participant.claimed_time, team.ctime) 
     ctime=faker.date_time_between(start_date)
     return insert_fake_data( db
                            , "payment_instructions"
@@ -192,20 +192,6 @@ def fake_tip_amount():
         decimal_amount = fake_tip_amount()
     return decimal_amount
 
-
-def fake_tip(db, tipper, tippee):
-    """Create a fake tip.
-    """
-    start_date = max( tipper.claimed_time, tippee.claimed_time) 
-    ctime=faker.date_time_between(start_date)
-    return insert_fake_data( db
-                           , "tips"
-                           , ctime=ctime
-                           , mtime=faker.date_time_between(ctime)
-                           , tipper=tipper.username
-                           , tippee=tippee.username
-                           , amount=fake_tip_amount()
-                            )
 
 
 def fake_elsewhere(db, participant, platform):
@@ -230,16 +216,6 @@ def fake_payment(db, participant, team, timestamp, amount, direction):
                             , team=team
                             , amount=amount
                             , direction=direction
-                            )
-
-def fake_transfer(db, tipper, tippee):
-    return insert_fake_data( db
-                           , "transfers"
-                           , timestamp=faker.date_time_this_year()
-                           , tipper=tipper.username
-                           , tippee=tippee.username
-                           , amount=fake_tip_amount()
-                           , context='tip'
                             )
 
 
@@ -330,7 +306,7 @@ def clean_db(db):
         DROP FUNCTION IF EXISTS process_payment() CASCADE;
         """)
 
-def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=5000):
+def populate_db(db, num_participants=100, ntips=200, num_teams=5):
     """Populate DB with fake data.
     """
     print("Making Participants")
@@ -385,50 +361,11 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
             fake_elsewhere(db, p, platform_name)
 
 
-    print("Making Tips")
-    tips = []
-    for i in xrange(ntips):
-        tipper, tippee = random.sample(participants, 2)
-        tips.append(fake_tip(db, tipper, tippee))
-
-    """
-    # Payments
-    payments = []
-    paymentcount = 0
-    team_amounts = defaultdict(int)
-    for payment_instruction in payment_instructions:
-        participant = Participant.from_id(payment_instruction['participant_id'])
-        team = Team.from_id(payment_instruction['team_id'])
-        amount = payment_instruction['amount']
-        assert participant.username != team.owner
-        paymentcount += 1
-        sys.stdout.write("\rMaking Payments (%i)" % (paymentcount))
-        sys.stdout.flush()
-        payments.append(fake_payment(db, participant.username, team.slug, amount, 'to-team'))
-        team_amounts[team.slug] += amount
-    for team in teams:
-        paymentcount += 1
-        sys.stdout.write("\rMaking Payments (%i)" % (paymentcount))
-        sys.stdout.flush()
-        payments.append(fake_payment(db, team.owner, team.slug, team_amounts[team.slug], 'to-participant'))
-    print("")
-
-    # Transfers
-    transfers = []
-    for i in xrange(num_transfers):
-        sys.stdout.write("\rMaking Transfers (%i/%i)" % (i+1, num_transfers))
-        sys.stdout.flush()
-        tipper, tippee = random.sample(participants, 2)
-        transfers.append(fake_transfer(db, tipper, tippee))
-    print("")
-    """
 
     # Paydays
     # First determine the boundaries - min and max date
-    min_date = min(min(x['ctime'] for x in payment_instructions + tips),
-                   min(x['timestamp'] for x in payments + transfers))
-    max_date = max(max(x['ctime'] for x in payment_instructions + tips),
-                   max(x['timestamp'] for x in payments + transfers))
+    min_date = min(x['ctime'] for x in payment_instructions)
+    max_date = max(x['ctime'] for x in payment_instructions)
     # iterate through min_date, max_date one week at a time
     payday_counter = 1
     date = min_date
@@ -438,58 +375,46 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         sys.stdout.flush()
         payday_counter += 1
         end_date = date + datetime.timedelta(days=7)
-        week_tips = filter(lambda x: x['mtime'] < date, tips)
         week_payment_instructions = filter(lambda x:  x['mtime'] < date, payment_instructions)
-        
+       
+        week_payments = [] 
         for payment_instruction in week_payment_instructions:
             participant = Participant.from_id(payment_instruction['participant_id'])
             team = Team.from_id(payment_instruction['team_id'])
             amount = payment_instruction['amount']
             assert participant.username != team.owner
-            fake_payment(db, participant.username, team.slug, date, amount, 'to-team')
+            week_payments.append(fake_payment(db, participant.username, team.slug, date, amount, 'to-team'))
             
-            
-        for p in participants:
-            transfers_in = filter(lambda x: x['tippee'] == p.username, week_transfers)
-            payments_in = filter(lambda x: x['participant'] == p.username, week_payments_to_owners)
-            transfers_out = filter(lambda x: x['tipper'] == p.username, week_transfers)
-            payments_out = filter(lambda x: x['participant'] == p.username, week_payments_to_teams)
-            amount_in = sum([t['amount'] for t in transfers_in + payments_in])
-            amount_out = sum([t['amount'] for t in transfers_out + payments_out])
-            amount = amount_out - amount_in
-            fee = amount * D('0.02')
-            fee = abs(fee.quantize(D('.01')))
             if amount != 0:
                 fee = amount * D('0.02')
                 fee = abs(fee.quantize(D('.01')))
                 fake_exchange(
-                    db=db,
-                    participant=p,
+                    db=db, 
+                    participant=participant, 
                     amount=amount,
-                    fee=fee,
-                    timestamp=(end_date - datetime.timedelta(seconds=1))
-                )
+                    fee=fee, 
+                    timestamp=date + datetime.timedelta(seconds=1) 
+                 )
+            
+        for team in teams:
+            week_payments_to_team = filter(lambda x: x['team_id'] == team.id, week_payment_instructions)
+            pay_out = sum(t['amount'] for t in week_payments_to_team)
+            if pay_out: 
+                week_payments.append(fake_payment(db, team.owner, team.slug, date, pay_out, 'to-participant'))
+            
         actives=set()
-        tippers=set()
-        #week_tips, week_transfers
-        for xfers in week_tips, week_transfers:
-            actives.update(x['tipper'] for x in xfers)
-            actives.update(x['tippee'] for x in xfers)
-            tippers.update(x['tipper'] for x in xfers)
 
         # week_payment_instructions
         actives.update(x['participant_id'] for x in week_payment_instructions)
-        tippers.update(x['participant_id'] for x in week_payment_instructions)
 
         # week_payments
         actives.update(x['participant'] for x in week_payments)
-        tippers.update(x['participant'] for x in week_payments_to_owners)
 
         payday = {
             'ts_start': date,
             'ts_end': end_date,
             'nusers': len(actives),
-            'volume': sum(x['amount'] for x in week_transfers)
+            'volume': sum(x['amount'] for x in week_payment_instructions)
         }
         insert_fake_data(db, "paydays", **payday)
         date = end_date
