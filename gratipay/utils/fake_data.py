@@ -205,7 +205,7 @@ def fake_elsewhere(db, participant, platform):
                     , extra_info=None
                      )
 
-def fake_payment(db, participant, team, timestamp, amount, direction):
+def fake_payment(db, participant, team, timestamp, amount, payday, direction):
     """Create fake payment
     """
     return insert_fake_data( db
@@ -382,7 +382,16 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
             team = Team.from_id(payment_instruction['team_id'])
             amount = payment_instruction['amount']
             assert participant.username != team.owner
-            week_payments.append(fake_payment(db, participant.username, team.slug, date, amount, 'to-team'))
+            week_payments.append(fake_payment(
+                                        db=db, 
+                                        participant=participant.username, 
+                                        team=team.slug, 
+                                        timestamp=date, 
+                                        amount=amount, 
+                                        payday=payday_counter,
+                                        direction='to-team'
+                                  )
+                          )
             
             if amount != 0:
                 fee = amount * D('0.02')
@@ -399,7 +408,16 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
             week_payments_to_team = filter(lambda x: x['team_id'] == team.id, week_payment_instructions)
             pay_out = sum(t['amount'] for t in week_payments_to_team)
             if pay_out: 
-                week_payments.append(fake_payment(db, team.owner, team.slug, date, pay_out, 'to-participant'))
+                week_payments.append(fake_payment(
+                                        db=db,
+                                        participant=participant.username, 
+                                        team=team.slug, 
+                                        timestamp=date, 
+                                        amount=amount, 
+                                        payday=payday_counter,
+                                        direction= 'to-participant'
+                                     )
+                              )
             
         actives=set()
 
