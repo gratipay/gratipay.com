@@ -40,6 +40,7 @@ for key, tab in tabs.items():
 title = _("Teams")
 suppress_sidebar = True
 suppress_welcome = 'suppress-welcome' in request.cookie
+page_id = 'homepage'
 [---]
 {% extends "templates/base.html" %}
 {% block head_early %}

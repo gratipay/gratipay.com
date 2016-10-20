@@ -1,0 +1,33 @@
+from aspen import Response
+from gratipay import librariesio
+[---]
+if request.method != 'POST':
+    website.redirect('/fund-open-source/')
+
+package_json = request.body['package_json']
+names = librariesio.resolve(package_json)
+suppress_sidebar = True
+title = _("Your Open Source Inventory")
+page_id = 'fund-open-source'
+[---] text/html
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+<p><a href="https://libraries.io/">Powered by <img src="{{ website.asset('librariesio.svg') }}" height="24"></a></p>
+
+<h2>{{ _("Step 2: Review Inventory and Set Amount") }}</h2>
+
+<form class="call-to-action">
+    $<input type="amount" value="1,000">
+    <span class="per-week">per week</span>
+    <button class="selected larger">Go</button>
+</form>
+
+<ul class="libraries">
+    {% for name in names %}
+    <li><a href="/on/npm/{{ name }}/">{{ name }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

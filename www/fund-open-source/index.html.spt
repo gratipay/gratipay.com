@@ -1,0 +1,55 @@
+from collections import OrderedDict
+[---]
+title = _("Fund Open Source")
+suppress_sidebar = True
+page_id = 'fund-open-source'
+[---]
+{% extends "templates/base.html" %}
+{% block head %}
+    <link rel="publisher" href="https://plus.google.com/104524895706770139568">
+    <link type="application/opensearchdescription+xml" rel="search" href="/opensearch.osdd" />
+    <meta name="description" content="Fund Open Source on Gratipay" />
+    <meta name="fb:app_id" content="229465400522758" />
+    <meta name="og:type" content="website" />
+    <meta name="og:url" content="https://gratipay.com/fund-open-source/" />
+    <meta name="og:title" content="Fund Open Source on Gratipay" />
+    <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
+{% endblock %}
+
+{% block content %}
+
+<p>{{ _("Gratipay is a great way to fund the open source software projects that your company or organization depends on! Keep the open source ecosystem sustainable for years to come by locating the open source projects in your technology stack, and funding them all with one simple weekly payment on Gratipay.") }}</p>
+
+<h2>{{ _("Step 1: Analyze Your Code") }}</h2>
+
+<p><a href="https://libraries.io/">Powered by <img src="{{ website.asset('librariesio.svg') }}" height="24"></a></p>
+
+<p>{{ _("Paste your <code>package.json</code> for a report of your open source dependencies and their licenses." | safe) }}</p>
+
+<p>{{ _( "Want a sample? Try the {a}<code>package.json</code> from npm itself{_a}"|safe
+       , a="<a class='sample' href='https://raw.githubusercontent.com/npm/npm/master/package.json'>"|safe
+       , _a="</a>"|safe
+        ) }}.</p>
+
+<form action="/fund-open-source/report" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <textarea name="package_json" autofocus></textarea>
+    <button class="selected larger">{{ _("Analyze") }}</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Load the example into the textarea.
+    $(document).ready(function() {
+        $('a.sample').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $.get(this.href, function(data) {
+                $('textarea').val(data);
+            });
+            return false;
+        });
+    });
+</script>
+{% endblock %}

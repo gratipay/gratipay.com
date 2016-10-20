@@ -27,8 +27,7 @@
     </script>
     {% endif %}
 </head>
-{% set homepage = request.path.raw == '/' %}
-<body id="{{ 'homepage' if homepage }}">
+<body{% if page_id %} id="{{ page_id }}"{% endif %}>
 
     <div id="wrapper">
         <div id="header" class="clearfix">
@@ -67,8 +66,23 @@
             {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
         </div>
 
-        {% if request.path.raw != '/1.0-payout' %}
-        {% if not user.participant or user.participant.status_of_1_0_payout == 'pending-application' %}
+        {% if not request.path.raw.startswith('/fund-open-source/') %}
+        <table id="notice">
+            <tr>
+                <td>&#x2605;</td>
+                <td>{{ _( "{nowrap}Gratipay is a great way to{_nowrap} {nowrap}{a}fund open source!{_a}{_nowrap}"
+                        , nowrap='<span class="nowrap">'|safe
+                        , _nowrap='</span>'|safe
+                        , a='<a href="/fund-open-source/">'|safe
+                        , _a='</a>'|safe
+                         ) }}</td>
+                <td>&#x2605;</td>
+            </tr>
+        </table>
+        {% endif %}
+
+        {% if user.participant and request.path.raw.startswith('/~/%s/' % user.participant.username) %}
+        {% if user.participant.status_of_1_0_payout == 'pending-application' %}
         <table id="notice">
             <tr>
                 <td>&#x2605;</td>
@@ -82,7 +96,7 @@
                 <td>&#x2605;</td>
             </tr>
         </table>
-        {% elif user.participant and user.participant.status_of_1_0_payout in ('pending-review', 'pending-payout') %}
+        {% elif user.participant.status_of_1_0_payout in ('pending-review', 'pending-payout') %}
         <table id="notice">
             <tr>
                 <td>&#x2605;</td>

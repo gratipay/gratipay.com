@@ -62,6 +62,7 @@
 @import "scss/pages/homepage";
 @import "scss/pages/history";
 @import "scss/pages/identities";
+@import "scss/pages/fund-open-source";
 @import "scss/pages/team";
 @import "scss/pages/profile-edit";
 @import "scss/pages/giving";
