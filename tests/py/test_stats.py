@@ -81,6 +81,6 @@ class TestChartOfReceiving(Harness):
 
 class TestHtml(Harness):
     def test_200(self):
-        fake_data.populate_db(self.db, 5, 5, 1, 5)
+        fake_data.populate_db(self.db, 5, 5, 1)
         response = self.client.GET('/about/stats')
         assert response.code == 200
