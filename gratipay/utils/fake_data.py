@@ -68,18 +68,19 @@ def fake_participant(db, is_admin=False, random_identities=True):
 
     """
     username = faker.first_name() + fake_text_id(3)
+    ctime = faker.date_time_between("-3y")      # Atmost three years ago.
     try:
         insert_fake_data( db
                         , "participants"
                         , username=username
                         , username_lower=username.lower()
-                        , ctime=faker.date_time_this_year()
+                        , ctime=ctime
                         , is_admin=is_admin
                         , balance=0
                         , anonymous_giving=(random.randrange(5) == 0)
                         , balanced_customer_href=faker.uri()
                         , is_suspicious=False
-                        , claimed_time=faker.date_time_this_year()
+                        , claimed_time= ctime + datetime.timedelta(days=7)
                         , email_address='{}@example.com'.format(username)
                          )
         participant = Participant.from_username(username)
@@ -140,7 +141,8 @@ def fake_team(db, teamowner, teamname=None):
 
     if teamname is None:
         teamname = faker.first_name() + fake_text_id(3)
-    
+
+    ctime = teamowner.ctime + datetime.timedelta(days=7)
     try:
         teamslug = slugize(teamname)
         homepage = 'http://www.example.org/' + fake_text_id(3)
@@ -150,6 +152,7 @@ def fake_team(db, teamowner, teamname=None):
                         , slug_lower=teamslug.lower()
                         , name=teamname
                         , homepage=homepage
+                        , ctime=ctime
                         , product_or_service=random.sample(productorservice,1)[0]
                         , todo_url=homepage + '/tickets'
                         , onboarding_url=homepage + '/contributing'
@@ -167,10 +170,12 @@ def fake_team(db, teamowner, teamname=None):
 def fake_payment_instruction(db, participant, team):
     """Create a fake payment_instruction
     """
+    start_date = max( participant.claimed_time, team.ctime) 
+    ctime=faker.date_time_between(start_date)
     return insert_fake_data( db
                            , "payment_instructions"
-                           , ctime=faker.date_time_this_year()
-                           , mtime=faker.date_time_this_month()
+                           , ctime=ctime
+                           , mtime=faker.date_time_between(ctime)
                            , participant_id=participant.id
                            , team_id=team.id
                            , amount=fake_tip_amount()
@@ -191,10 +196,12 @@ def fake_tip_amount():
 def fake_tip(db, tipper, tippee):
     """Create a fake tip.
     """
+    start_date = max( tipper.claimed_time, tippee.claimed_time) 
+    ctime=faker.date_time_between(start_date)
     return insert_fake_data( db
                            , "tips"
-                           , ctime=faker.date_time_this_year()
-                           , mtime=faker.date_time_this_month()
+                           , ctime=ctime
+                           , mtime=faker.date_time_between(ctime)
                            , tipper=tipper.username
                            , tippee=tippee.username
                            , amount=fake_tip_amount()
@@ -213,12 +220,12 @@ def fake_elsewhere(db, participant, platform):
                     , extra_info=None
                      )
 
-def fake_payment(db, participant, team, amount, direction):
+def fake_payment(db, participant, team, timestamp, amount, direction):
     """Create fake payment
     """
     return insert_fake_data( db
                             , "payments"
-                            , timestamp=faker.date_time_this_year()
+                            , timestamp=timestamp
                             , participant=participant
                             , team=team
                             , amount=amount
@@ -384,6 +391,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         tipper, tippee = random.sample(participants, 2)
         tips.append(fake_tip(db, tipper, tippee))
 
+    """
     # Payments
     payments = []
     paymentcount = 0
@@ -413,6 +421,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         tipper, tippee = random.sample(participants, 2)
         transfers.append(fake_transfer(db, tipper, tippee))
     print("")
+    """
 
     # Paydays
     # First determine the boundaries - min and max date
@@ -429,12 +438,17 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_transfers=
         sys.stdout.flush()
         payday_counter += 1
         end_date = date + datetime.timedelta(days=7)
-        week_tips = filter(lambda x: date <= x['ctime'] < end_date, tips)
-        week_transfers = filter(lambda x: date <= x['timestamp'] < end_date, transfers)
-        week_payment_instructions = filter(lambda x: date <= x['ctime'] < end_date, payment_instructions)
-        week_payments = filter(lambda x: date <= x['timestamp'] < end_date, payments)
-        week_payments_to_teams = filter(lambda x: x['direction'] == 'to-team', week_payments)
-        week_payments_to_owners = filter(lambda x: x['direction'] == 'to-participant', week_payments)
+        week_tips = filter(lambda x: x['mtime'] < date, tips)
+        week_payment_instructions = filter(lambda x:  x['mtime'] < date, payment_instructions)
+        
+        for payment_instruction in week_payment_instructions:
+            participant = Participant.from_id(payment_instruction['participant_id'])
+            team = Team.from_id(payment_instruction['team_id'])
+            amount = payment_instruction['amount']
+            assert participant.username != team.owner
+            fake_payment(db, participant.username, team.slug, date, amount, 'to-team')
+            
+            
         for p in participants:
             transfers_in = filter(lambda x: x['tippee'] == p.username, week_transfers)
             payments_in = filter(lambda x: x['participant'] == p.username, week_payments_to_owners)
