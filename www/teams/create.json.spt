@@ -22,6 +22,8 @@ field_names = {
     'image': 'Image',
     'product_or_service': 'Product or Service',
     'homepage': 'Homepage',
+    'onboarding_url': 'Self-onboarding Documentation URL',
+    'todo_url': 'To-do URL',
 }
 
 if user.ANON:
@@ -38,6 +40,8 @@ or user.participant.is_closed:  # sanity checks
 
 if not request.body.get('agree_public', False):
     raise Response(400, _("Sorry, you must agree to have your application publicly reviewed."))
+if not request.body.get('agree_payroll', False):
+    raise Response(400, _("Sorry, you must agree to be responsible for payroll."))
 if not request.body.get('agree_terms', False):
     raise Response(400, _("Sorry, you must agree to the terms of service."))
 
@@ -60,12 +64,11 @@ if request.method == 'POST':
             raise Response(400, _("Please fill out the '{}' field.", field_names[field]))
         fields[field] = value
 
-#    for field in ('homepage'):
-#        if not any(map(fields['homepage'].lower().startswith, ('http://', 'https://'))):
-#            raise Response(400, _( "Please enter an http[s]:// URL for the '{}' field."
-#                                 , field_names[field]
-#                                  ))
-
+    for field in ('homepage', 'onboarding_url', 'todo_url'):
+        if not any(map(fields[field].lower().startswith, ('http://', 'https://'))):
+            raise Response(400, _( "Please enter an http[s]:// URL for the '{}' field."
+                                 , field_names[field]
+                                  ))
 
     try:
         fields['slug'] = slugize(fields['name'])
