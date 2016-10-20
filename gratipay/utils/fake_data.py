@@ -5,7 +5,6 @@ from decimal import Decimal as D
 import random
 import string
 import sys
-from collections import defaultdict
 
 from faker import Factory
 from psycopg2 import IntegrityError
