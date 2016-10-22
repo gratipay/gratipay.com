@@ -1,4 +1,4 @@
-import subprocess
+from subprocess import Popen, PIPE
 
 from markupsafe import Markup
 import misaka as m  # http://misaka.61924.nl/
@@ -15,4 +15,6 @@ def render(markdown):
 def marky(markdown):
     """Process markdown the same way npm does.
     """
-    return subprocess.call()
+    echo = Popen(("echo", markdown), stdout=PIPE)
+    marky = Popen(("marky-markdown", "/dev/stdin"), stdin=echo.stdout, stdout=PIPE)
+    return marky.communicate()[0]
