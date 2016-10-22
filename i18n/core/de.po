@@ -682,6 +682,11 @@ msgid_plural "Found matching usernames"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Found a matching email address"
+msgid_plural "Found matching email addresses"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
 msgstr[0] ""
