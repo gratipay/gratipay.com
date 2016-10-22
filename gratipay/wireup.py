@@ -29,6 +29,7 @@ from gratipay.elsewhere.google import Google
 from gratipay.elsewhere.openstreetmap import OpenStreetMap
 from gratipay.elsewhere.twitter import Twitter
 from gratipay.elsewhere.venmo import Venmo
+from gratipay.models.npm_package import Package
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.community import Community
 from gratipay.models.country import Country
@@ -56,7 +57,8 @@ def db(env):
     maxconn = env.database_maxconn
     db = GratipayDB(dburl, maxconn=maxconn)
 
-    for model in (AccountElsewhere, Community, Country, ExchangeRoute, Participant, Team):
+    models = (AccountElsewhere, Community, Country, ExchangeRoute, Participant, Team, Package)
+    for model in models:
         db.register_model(model)
     gratipay.billing.payday.Payday.db = db
 
