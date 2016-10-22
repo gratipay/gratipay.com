@@ -152,10 +152,10 @@ msgid "{0} returned an error, please try again later."
 msgstr "{0} è risultato in un errore, per favore prova ancora più tardi."
 
 msgid "Invalid character in elsewhere account username."
-msgstr "Carattere non valido altrove nel nome account"
+msgstr ""
 
 msgid "Account not found on {0}."
-msgstr "Account non trovato su {0}."
+msgstr ""
 
 msgid "You need to log in to access this page."
 msgstr "Devi effettuare il login per poter accedere a questa pagina."
