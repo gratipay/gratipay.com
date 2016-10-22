@@ -39,9 +39,11 @@ def process_catalog(catalog):
 
 
 def fetch_catalog():
-    r = requests.get('https://registry.npmjs.com/-/all')
-    r.raise_for_status()
-    return r.json()
+    # r = requests.get('https://registry.npmjs.com/-/all', verify=False)
+    # r.raise_for_status()
+    # return r.json()
+    import json
+    return json.loads('{"a11y-announcer":{"name":"a11y-announcer","description":"An accessible ember route change announcer","dist-tags":{"latest":"1.0.2"},"maintainers":[{"name":"robdel12","email":"Robertdeluca19@gmail.com"}],"homepage":"https://github.com/ember-a11y/a11y-announcer#readme","keywords":["ember-addon","ember accessibility","ember router","a11y-announcer"],"repository":{"type":"git","url":"git+https://github.com/ember-a11y/a11y-announcer.git"},"author":{"name":"Robert DeLuca"},"bugs":{"url":"https://github.com/ember-a11y/a11y-announcer/issues"},"license":"MIT","readmeFilename":"README.md","users":{"jalcine":true,"unwiredbrain":true},"time":{"modified":"2016-08-13T23:03:37.135Z"},"versions":{"1.0.2":"latest"}}}')
 
 
 def update_database(SQL):
