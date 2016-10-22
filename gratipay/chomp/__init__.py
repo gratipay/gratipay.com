@@ -18,9 +18,6 @@ def from_npm(package):
     out= {}
     out['name'] = package['name']
     out['description'] = package['description']
-    out['long_description'] = markdown.marky(package['readme'])
-    out['long_description_raw'] = package['readme']
-    out['long_description_type'] = 'x-text/marky-markdown'
 
     emails = []
     for key in ('authors', 'maintainers'):
