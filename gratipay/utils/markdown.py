@@ -15,6 +15,5 @@ def render(markdown):
 def marky(markdown):
     """Process markdown the same way npm does.
     """
-    echo = Popen(("echo", markdown), stdout=PIPE)
-    marky = Popen(("marky-markdown", "/dev/stdin"), stdin=echo.stdout, stdout=PIPE)
-    return Markup(marky.communicate()[0])
+    marky = Popen(("marky-markdown", "/dev/stdin"), stdin=PIPE, stdout=PIPE)
+    return Markup(marky.communicate(markdown)[0])
