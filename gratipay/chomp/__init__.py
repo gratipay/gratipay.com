@@ -8,16 +8,24 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import argparse
 import sys
 
+import psycopg2
+
 import requests
+
 from gratipay.utils import markdown
+from io import StringIO
 
-
-def from_npm(package):
+def from_npm(package, package_id):
     """Given an npm package dict, return a dict of info and a list of emails.
     """
-    out= {}
+    out = {}
+    out['id'] = str(package_id)
     out['name'] = package['name']
     out['description'] = package['description']
+    out['package_manager_id'] = "1" # Todo - generalize
+    out['long_description'] = 'null'
+    out['long_description_raw'] = 'null'
+    out['long_description_type'] = 'null'
 
     emails = []
     for key in ('authors', 'maintainers'):
@@ -25,14 +33,23 @@ def from_npm(package):
             if type(person) is dict:
                 email = person.get('email')
                 if email:
-                    emails.append(email)
+                    emails.append({ 'package_id': str(package_id), 'email': email })
 
     return out, emails
 
+def stringify(obj):
+    return '\t'.join([v for k, v in obj.iteritems()])
 
-def process_catalog(catalog):
-    SQL = ''
-    return SQL
+def insert_catalog(catalog):
+    package_id = 0
+    package_data = StringIO()
+    email_data = StringIO()
+    for k, v in catalog.iteritems():
+        package_id += 1
+        package, emails = from_npm(v, package_id)
+        package_data.write(stringify(package) + '\n')
+        for email in emails:
+            email_data.write(stringify(email) + '\n')
 
 
 def fetch_catalog():
@@ -57,4 +74,4 @@ def parse_args(argv):
 
 def main(argv=sys.argv):
     ims = parse_args(argv[1:]).if_modified_since
-    process_catalog(fetch_catalog(), ims)
+    insert_catalog(fetch_catalog())
