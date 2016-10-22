@@ -17,4 +17,4 @@ def marky(markdown):
     """
     echo = Popen(("echo", markdown), stdout=PIPE)
     marky = Popen(("marky-markdown", "/dev/stdin"), stdin=echo.stdout, stdout=PIPE)
-    return marky.communicate()[0]
+    return Markup(marky.communicate()[0])
