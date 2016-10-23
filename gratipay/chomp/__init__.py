@@ -30,6 +30,11 @@ class NPM(object):
         out['package_manager_id'] = str(package_manager_id)
         out['name'] = package['name']
         out['description'] = package['description'] if 'description' in package else ''
+        if 'time' in package:
+            if type(package['time']) is dict and 'modified' in package['time']:
+                out['mtime'] = package['time']['modified']
+        else:
+            out['mtime'] = 'now()'
 
         emails = []
         for key in ('authors', 'maintainers'):
