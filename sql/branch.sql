@@ -7,7 +7,7 @@ BEGIN;
 
     CREATE TABLE packages
     ( id                    bigserial                   PRIMARY KEY
-    , package_manager_id    bigint                      NOT NULL
+    , package_manager_id    bigint                      NOT NULL REFERENCES package_managers ON UPDATE CASCADE ON DELETE RESTRICT
     , name                  text                        NOT NULL
     , description           text                        NOT NULL DEFAULT ''
     , long_description      text                        NOT NULL DEFAULT ''
