@@ -18,8 +18,9 @@ BEGIN;
      );
 
     CREATE TABLE package_emails
-    ( package_id    bigint  NOT NULL
-    , email         text    NOT NULL
+    ( id            bigserial   PRIMARY KEY
+    , package_id    bigint      NOT NULL REFERENCES packages ON UPDATE CASCADE ON DELETE RESTRICT
+    , email         text        NOT NULL
     , UNIQUE (package_id, email)
      )
 
