@@ -83,11 +83,12 @@ def insert_catalog_for(pm, cursor):
         package_id = 0 # Mass assign ids so they are usable during email insertion
         package_stream, email_stream = StringIO(), StringIO()
         for k, v in catalog.iteritems():
-            package_id += 1
-            package, emails = pm.parse(v, package_id)
-            package_stream.write(stringify(package))
-            for email in emails:
-                email_stream.write(stringify(email))
+            if type(v) is dict:
+                package_id += 1
+                package, emails = pm.parse(v, package_id)
+                package_stream.write(stringify(package))
+                for email in emails:
+                    email_stream.write(stringify(email))
         package_stream.seek(0)
         email_stream.seek(0)
 
