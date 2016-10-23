@@ -22,6 +22,6 @@ BEGIN;
     , package_id    bigint      NOT NULL REFERENCES packages ON UPDATE CASCADE ON DELETE RESTRICT
     , email         text        NOT NULL
     , UNIQUE (package_id, email)
-     )
+     );
 
 END;
