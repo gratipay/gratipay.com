@@ -53,6 +53,7 @@ class NPM(object):
 
 
 def stringify(obj):
+    # XXX What if there is a `\t` in `v`?
     return '\t'.join([v for k, v in obj.iteritems()]) + '\n'
 
 def insert_package_manager(pm, cursor):
@@ -72,7 +73,7 @@ def package_manager_exists(pm, cursor):
         """, (pm.name,))
     return cursor.fetchone()
 
-def insert_catalog_for(pm, cursor):
+def read_catalog_for(pm, cursor):
     """Insert all packages for a given package manager.
     """
     catalog = pm.fetch_catalog()
@@ -88,9 +89,12 @@ def insert_catalog_for(pm, cursor):
                     email_stream.write(stringify(email))
         package_stream.seek(0)
         email_stream.seek(0)
+    return package_stream, email_stream
 
-        cursor.copy_from(package_stream, 'packages', columns=["id", "package_manager_id", "name", "description", "mtime"])
-        cursor.copy_from(email_stream, 'package_emails', columns=["package_id", "email"])
+def copy_into_db(cursor, package_stream, email_stream):
+    cursor.copy_from(package_stream, 'packages',
+                     columns=["id", "package_manager_id", "name", "description", "mtime"])
+    cursor.copy_from(email_stream, 'package_emails', columns=["package_id", "email"])
 
 def parse_args(argv):
     p = argparse.ArgumentParser()
@@ -115,6 +119,7 @@ def main(argv=sys.argv):
     else:
         package_manager_id = insert_package_manager(pm, cursor)
         setattr(pm, 'id', package_manager_id)
-        insert_catalog_for(pm, cursor)
+        packages, emails = read_catalog_for(pm)
+        copy_into_db(cursor, packages, emails)
 
     conn.commit()
