@@ -95,9 +95,6 @@ def insert_catalog_for(pm, cursor):
         cursor.copy_from(package_stream, 'packages', columns=["id", "package_manager_id", "name", "description", "mtime"])
         cursor.copy_from(email_stream, 'package_emails', columns=["package_id", "email"])
 
-def update_database(SQL):
-    pass
-
 def parse_args(argv):
     p = argparse.ArgumentParser()
     p.add_argument( 'if_modified_since'
