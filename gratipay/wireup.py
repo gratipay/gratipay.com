@@ -29,7 +29,7 @@ from gratipay.elsewhere.google import Google
 from gratipay.elsewhere.openstreetmap import OpenStreetMap
 from gratipay.elsewhere.twitter import Twitter
 from gratipay.elsewhere.venmo import Venmo
-from gratipay.models.npm_package import Package
+from gratipay.models.package import Package
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.community import Community
 from gratipay.models.country import Country

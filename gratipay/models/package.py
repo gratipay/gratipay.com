@@ -4,7 +4,7 @@ from postgres import orm
 
 
 class Package(orm.Model):
-    typ_name = 'packages';
+    typname = 'packages';
 
     @classmethod
     def from_platform_and_name(cls, platform, name):
