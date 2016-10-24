@@ -62,7 +62,7 @@ def serialize(args):
             if processed and not(nprocessed % 1000):
                 log_stats()
 
-            if nprocessed == 4444:
+            if nprocessed == 5555:
                 break  # XXX
 
             # Start a new package.
@@ -88,10 +88,30 @@ def upsert(args):
     db = wireup.db(wireup.env())
     fp = open(args.path)
     with db.get_cursor() as cursor:
+        cursor.run("CREATE TEMP TABLE updates (LIKE packages INCLUDING ALL) ON COMMIT DROP")
         cursor.copy_from( fp
-                        , 'packages'
+                        , 'updates'
                         , columns=['package_manager', 'name', 'description', 'emails']
                          )
+        cursor.run("""
+
+            WITH updated AS (
+                UPDATE packages p
+                   SET package_manager = u.package_manager
+                     , description = u.description
+                     , emails = u.emails
+                  FROM updates u
+                 WHERE p.name = u.name
+             RETURNING p.name
+            )
+            INSERT INTO packages(package_manager, name, description, emails)
+                 SELECT package_manager, name, description, emails
+                   FROM updates u LEFT JOIN updated USING(name)
+                  WHERE updated.name IS NULL
+               GROUP BY u.package_manager, u.name, u.description, u.emails
+
+        """)
+
 
 
 def parse_args(argv):
