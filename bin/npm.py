@@ -88,6 +88,7 @@ def upsert(args):
     db = wireup.db(wireup.env())
     fp = open(args.path)
     with db.get_cursor() as cursor:
+        # http://tapoueh.org/blog/2013/03/15-batch-update.html
         cursor.run("CREATE TEMP TABLE updates (LIKE packages INCLUDING ALL) ON COMMIT DROP")
         cursor.copy_from( fp
                         , 'updates'
