@@ -7,6 +7,12 @@ class Package(orm.Model):
     typname = 'packages';
 
     @classmethod
-    def from_platform_and_name(cls, platform, name):
-        return cls.db.one("SELECT packages.*::packages from packages where "
-                          "platform=%s and name=%s;", (platform, name,))
+    def from_names(cls, package_manager_name, package_name):
+        return cls.db.one("""
+
+        SELECT p.*::packages
+          FROM packages p
+          JOIN package_managers pm ON p.package_manager_id = pm.id
+         WHERE pm.name=%s AND p.name=%s
+
+        """, (package_manager_name, package_name))

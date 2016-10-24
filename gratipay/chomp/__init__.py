@@ -6,7 +6,6 @@ The main function is exposed as a console script named `chomp` via setup.py.
 from __future__ import absolute_import, division, print_function, unicode_literals
 from collections import OrderedDict
 from io import StringIO
-from gratipay.utils import markdown
 
 import argparse
 import sys
@@ -48,8 +47,6 @@ class NPM(object):
         return out, emails
 
     def fetch_catalog(self):
-        # import json
-        # return json.loads('{"a11y-announcer":{"name":"a11y-announcer","description":"An accessible ember route change announcer","dist-tags":{"latest":"1.0.2"},"maintainers":[{"name":"robdel12","email":"Robertdeluca19@gmail.com"}],"homepage":"https://github.com/ember-a11y/a11y-announcer#readme","keywords":["ember-addon","ember accessibility","ember router","a11y-announcer"],"repository":{"type":"git","url":"git+https://github.com/ember-a11y/a11y-announcer.git"},"author":{"name":"Robert DeLuca"},"bugs":{"url":"https://github.com/ember-a11y/a11y-announcer/issues"},"license":"MIT","readmeFilename":"README.md","users":{"jalcine":true,"unwiredbrain":true},"time":{"modified":"2016-08-13T23:03:37.135Z"},"versions":{"1.0.2":"latest"}}}')
         r = requests.get('https://registry.npmjs.com/-/all', verify=False)
         r.raise_for_status()
         return r.json()
