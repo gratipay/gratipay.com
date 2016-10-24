@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
-from cStringIO import StringIO
+from io import StringIO
 
 from gratipay import chomp
 from gratipay.testing import Harness
@@ -16,13 +16,10 @@ class Tests(Harness):
     # eifc - extract_info_from_catalog
 
     def test_eifc_extracts_info_from_catalog(self):
-        with self.db.get_cursor() as cursor:
-            pm = chomp.NPM()
-            package_manager_id = chomp.insert_package_manager(pm, cursor)
-            setattr(pm, 'id', package_manager_id)
-            packages, emails = chomp.extract_info_from_catalog(pm, CATALOG)
+        pm = chomp.NPM()
+        packages, emails = chomp.extract_info_from_catalog(pm, CATALOG)
         assert packages.read() == '\t'.join([ '1'
-                                            , str(package_manager_id)
+                                            , 'npm'
                                             , 'a11y-announcer'
                                             , 'An accessible ember route change announcer'
                                             , '2016-08-13T23:03:37.135Z'
@@ -34,10 +31,8 @@ class Tests(Harness):
 
     def test_cid_copies_into_database(self):
         with self.db.get_cursor() as cursor:
-            pm = chomp.NPM()
-            package_manager_id = chomp.insert_package_manager(pm, cursor)
             packages = StringIO('\t'.join([ '0'
-                                          , str(package_manager_id)
+                                          , 'npm'
                                           , 'foobar'
                                           , 'Foos barringly'
                                           , '2016-08-13T23:03:37.135Z'

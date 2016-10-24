@@ -24,7 +24,7 @@ class NPM(object):
         """
         out = OrderedDict()
         out['id'] = str(package_id)
-        out['package_manager_id'] = str(self.id)
+        out['package_manager'] = self.name
         out['name'] = package['name']
         out['description'] = package['description'] if 'description' in package else ''
         if 'time' in package:
@@ -56,15 +56,6 @@ def stringify(obj):
     # XXX What if there is a `\t` in `v`?
     return '\t'.join([v for k, v in obj.iteritems()]) + '\n'
 
-def insert_package_manager(pm, cursor):
-    """Insert a new package manager returning it's id.
-    """
-    cursor.execute("""
-        INSERT INTO package_managers (name)
-            VALUES (%s) RETURNING id
-        """, (pm.name,))
-    return cursor.fetchone()[0]
-
 def package_manager_exists(pm, cursor):
     cursor.execute("""
         SELECT package_managers.id
@@ -74,7 +65,7 @@ def package_manager_exists(pm, cursor):
     return cursor.fetchone()
 
 def extract_info_from_catalog(pm, catalog):
-    """Insert all packages for a given package manager.
+    """Extract info from the catalog for the given package manager.
     """
     package_id = 0 # Mass assign ids so they are usable during email insertion
     package_stream, email_stream = StringIO(), StringIO()
@@ -91,7 +82,7 @@ def extract_info_from_catalog(pm, catalog):
 
 def copy_into_db(cursor, package_stream, email_stream):
     cursor.copy_from(package_stream, 'packages',
-                     columns=["id", "package_manager_id", "name", "description", "mtime"])
+                     columns=["id", "package_manager", "name", "description", "mtime"])
     cursor.copy_from(email_stream, 'package_emails', columns=["package_id", "email"])
 
 def parse_args(argv):
@@ -115,8 +106,6 @@ def main(argv=sys.argv):
     if package_manager_exists(pm, cursor):
         print("This package manager already exists!")
     else:
-        package_manager_id = insert_package_manager(pm, cursor)
-        setattr(pm, 'id', package_manager_id)
         catalog = pm.fetch_catalog()
         packages, emails = extract_info_from_catalog(catalog)
         copy_into_db(cursor, packages, emails)
