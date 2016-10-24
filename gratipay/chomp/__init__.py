@@ -73,22 +73,20 @@ def package_manager_exists(pm, cursor):
         """, (pm.name,))
     return cursor.fetchone()
 
-def read_catalog_for(pm, cursor):
+def extract_info_from_catalog(pm, catalog):
     """Insert all packages for a given package manager.
     """
-    catalog = pm.fetch_catalog()
-    if catalog:
-        package_id = 0 # Mass assign ids so they are usable during email insertion
-        package_stream, email_stream = StringIO(), StringIO()
-        for k, v in catalog.iteritems():
-            if type(v) is dict:
-                package_id += 1
-                package, emails = pm.parse(v, package_id)
-                package_stream.write(stringify(package))
-                for email in emails:
-                    email_stream.write(stringify(email))
-        package_stream.seek(0)
-        email_stream.seek(0)
+    package_id = 0 # Mass assign ids so they are usable during email insertion
+    package_stream, email_stream = StringIO(), StringIO()
+    for k, v in catalog.iteritems():
+        if type(v) is dict:
+            package_id += 1
+            package, emails = pm.parse(v, package_id)
+            package_stream.write(stringify(package))
+            for email in emails:
+                email_stream.write(stringify(email))
+    package_stream.seek(0)
+    email_stream.seek(0)
     return package_stream, email_stream
 
 def copy_into_db(cursor, package_stream, email_stream):
@@ -119,7 +117,8 @@ def main(argv=sys.argv):
     else:
         package_manager_id = insert_package_manager(pm, cursor)
         setattr(pm, 'id', package_manager_id)
-        packages, emails = read_catalog_for(pm)
+        catalog = pm.fetch_catalog()
+        packages, emails = extract_info_from_catalog(catalog)
         copy_into_db(cursor, packages, emails)
 
     conn.commit()
