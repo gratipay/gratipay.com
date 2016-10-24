@@ -69,6 +69,8 @@ def main():
             elif prefix in (key('author.item.email'), key('maintainers.item.email')):
                 emails.append(value)
 
+    log_stats()
+
 
 if __name__ == '__main__':
     main()
