@@ -1,15 +1,13 @@
 language: python
 addons:
   postgresql: 9.3
-  apt:
-    packages:
-      - yajl
 branches:
   only:
     - master
 before_install:
  - git branch -vv | grep '^*'
  - npm install -g marky-markdown
+ - apt-get install yajl cffi
  - pip install ijson
 cache:
   directories:
@@ -27,4 +25,4 @@ script: make bgrun test doc
 notifications:
   email: false
   irc: false
-sudo: false
+#sudo: false -- TODO bring back if/when we can work around yajl
