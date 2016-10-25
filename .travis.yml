@@ -1,13 +1,15 @@
 language: python
 addons:
   postgresql: 9.3
+  apt:
+    packages:
+      - yajl
 branches:
   only:
     - master
 before_install:
  - git branch -vv | grep '^*'
  - npm install -g marky-markdown
- - apt-get install yajl
  - pip install ijson
 cache:
   directories:
