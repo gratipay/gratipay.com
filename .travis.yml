@@ -7,7 +7,7 @@ branches:
 before_install:
  - git branch -vv | grep '^*'
  - npm install -g marky-markdown
- - sudo apt-get install yajl cffi
+ - sudo apt-get install libyajl-dev
  - pip install ijson
 cache:
   directories:
