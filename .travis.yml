@@ -1,13 +1,15 @@
 language: python
 addons:
   postgresql: 9.3
+  apt:
+    packages:
+      - libyajl2
 branches:
   only:
     - master
 before_install:
  - git branch -vv | grep '^*'
  - npm install -g marky-markdown
- - sudo apt-get install libyajl2
  - pip install ijson
 cache:
   directories:
