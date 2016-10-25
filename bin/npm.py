@@ -80,6 +80,7 @@ def serialize(args):
             elif prefix in (key('author.item.email'), key('maintainers.item.email')):
                 package['emails'].append(value)
 
+    nprocessed += serialize_one(package)
     log_stats()
 
 
@@ -112,7 +113,8 @@ def upsert(args):
                GROUP BY u.package_manager, u.name, u.description, u.emails
 
         """)
-
+        log(cursor.all('select * from packages'))
+    log(db.all('select * from packages'))
 
 
 def parse_args(argv):
