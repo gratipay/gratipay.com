@@ -2,10 +2,9 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import argparse
+import csv
 import sys
 import time
-from collections import OrderedDict
-from psycopg2.extensions import adapt
 
 import ijson.backends.yajl2_cffi as ijson
 
@@ -13,25 +12,33 @@ import ijson.backends.yajl2_cffi as ijson
 log = lambda *a: print(*a, file=sys.stderr)
 
 
-def serialize_one(package):
-    """Takes a package and returns a serialization suitable for COPY.
+def arrayize(seq):
+    """Given a sequence of str, return a Postgres array literal str.
+    """
+    array = []
+    for item in seq:
+        assert type(item) is str
+        escaped = item.replace(b'\\', b'\\\\').replace(b'"', b'\\"')
+        quoted = b'"' + escaped + b'"'
+        array.append(quoted)
+    joined = b', '.join(array)
+    return b'{' + joined + b'}'
+
+
+def serialize_one(out, package):
+    """Takes a package and emits a serialization suitable for COPY.
     """
     if not package or package['name'].startswith('_'):
         log('skipping', package)
         return 0
 
-    out = []
-    for k,v in package.iteritems():
-        if type(v) is unicode:
-            v = v.replace('\n', r'\n')
-            v = v.replace('\r', r'\r')
-            v = v.encode('utf8')
-        out.append(adapt(v).getquoted())
-        if type(v) is list:
-            # Gah. I am a dog. I have no idea what I'm doing. O.O
-            stripped = out[-1][len('ARRAY['):-1]
-            out[-1] = b'{' + stripped  + b'}'
-    print(b'\t'.join(out))
+    row = ( package['package_manager']
+          , package['name']
+          , package['description']
+          , arrayize(package['emails'])
+           )
+
+    out.writerow(row)
     return 1
 
 
@@ -43,44 +50,40 @@ def serialize(args):
     start = time.time()
     package = None
     nprocessed = 0
+    out = csv.writer(sys.stdout)
 
     def log_stats():
         log("processed {} packages in {:3.0f} seconds"
             .format(nprocessed, time.time() - start))
 
     for prefix, event, value in parser:
-
-        prefix = prefix.decode('utf8')
-        if type(value) is str:
-            value = value.decode('utf8')
-
-        if not prefix and event == 'map_key':
+        log(prefix, event, value)
+        if not prefix and event == b'map_key':
 
             # Flush the current package. We count on the first package being garbage.
-            processed = serialize_one(package)
+            processed = serialize_one(out, package)
             nprocessed += processed
             if processed and not(nprocessed % 1000):
                 log_stats()
 
-            if nprocessed == 5555:
-                break  # XXX
-
             # Start a new package.
-            package = OrderedDict([ ('package_manager', 'npm')
-                                  , ('name', value)
-                                  , ('description', '')
-                                  , ('emails', [])
-                                   ])
+            package = { 'package_manager': b'npm'
+                      , 'name': value
+                      , 'description': b''
+                      , 'emails': []
+                       }
 
-        key = lambda k: package['name'] + '.' + k
+        key = lambda k: package['name'] + b'.' + k
 
-        if event == 'string':
-            if prefix == key('description'):
+        if event == b'string':
+            assert type(value) is unicode  # Who knew? Seems to decode only for `string`.
+            value = value.encode('utf8')
+            if prefix == key(b'description'):
                 package['description'] = value
-            elif prefix in (key('author.item.email'), key('maintainers.item.email')):
+            elif prefix in (key(b'author.email'), key(b'maintainers.item.email')):
                 package['emails'].append(value)
 
-    nprocessed += serialize_one(package)
+    nprocessed += serialize_one(out, package)  # Don't forget the last one!
     log_stats()
 
 
@@ -89,12 +92,12 @@ def upsert(args):
     db = wireup.db(wireup.env())
     fp = open(args.path)
     with db.get_cursor() as cursor:
+        assert cursor.connection.encoding == 'UTF8'
+
         # http://tapoueh.org/blog/2013/03/15-batch-update.html
         cursor.run("CREATE TEMP TABLE updates (LIKE packages INCLUDING ALL) ON COMMIT DROP")
-        cursor.copy_from( fp
-                        , 'updates'
-                        , columns=['package_manager', 'name', 'description', 'emails']
-                         )
+        cursor.copy_expert('COPY updates (package_manager, name, description, emails) '
+                           'FROM STDIN WITH (FORMAT csv)', fp)
         cursor.run("""
 
             WITH updated AS (
@@ -113,8 +116,6 @@ def upsert(args):
                GROUP BY u.package_manager, u.name, u.description, u.emails
 
         """)
-        log(cursor.all('select * from packages'))
-    log(db.all('select * from packages'))
 
 
 def parse_args(argv):
