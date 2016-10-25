@@ -6,6 +6,9 @@ branches:
     - master
 before_install:
  - git branch -vv | grep '^*'
+ - npm install -g marky-markdown
+ - apt-get install yajl
+ - pip install ijson
 cache:
   directories:
     - env/bin
@@ -14,7 +17,6 @@ install:
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rf env; fi
  - touch requirements.txt package.json
  - make env
- - npm install -g marky-markdown
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'

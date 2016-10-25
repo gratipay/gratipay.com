@@ -6,10 +6,10 @@ from gratipay.testing import Harness
 
 
 def load(raw):
-    serialized = Popen( ('env/bin/python', 'bin/npm.py', 'serialize', '/dev/stdin')
+    serialized = Popen( ('env/bin/sync-npm', 'serialize', '/dev/stdin')
                       , stdin=PIPE, stdout=PIPE
                        ).communicate(raw)[0]
-    Popen( ('env/bin/python', 'bin/npm.py', 'upsert', '/dev/stdin')
+    Popen( ('env/bin/sync-npm', 'upsert', '/dev/stdin')
          , stdin=PIPE, stdout=PIPE
           ).communicate(serialized)[0]
 
@@ -19,7 +19,9 @@ class Tests(Harness):
     def test_packages_starts_empty(self):
         assert self.db.all('select * from packages') == []
 
-    def test_npm_inserts_packages(self):
+    # sn - sync-npm
+
+    def test_sn_inserts_packages(self):
         load(br'''
         { "_updated": 1234567890
         , "testing-package":
@@ -39,7 +41,7 @@ class Tests(Harness):
         assert package.name == 'testing-package'
 
 
-    def test_npm_handles_quoting(self):
+    def test_sn_handles_quoting(self):
         load(br'''
         { "_updated": 1234567890
         , "testi\\\"ng-pa\\\"ckage":

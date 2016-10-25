@@ -9,7 +9,7 @@ setup( name='gratipay'
      , entry_points = { 'console_scripts'
                       : [ 'payday=gratipay.cli:payday'
                         , 'fake_data=gratipay.utils.fake_data:main'
-                        , 'chomp=gratipay.chomp:main'
+                        , 'sync-npm=gratipay.package_managers.sync:main'
                          ]
                        }
       )

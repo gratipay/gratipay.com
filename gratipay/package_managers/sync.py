@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+"""Sync our database with package managers. Just npm for now.
+"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import argparse
@@ -134,7 +135,3 @@ def parse_args(argv):
 def main(argv=sys.argv):
     args = parse_args(argv[1:])
     globals()[args.command](args)
-
-
-if __name__ == '__main__':
-    main()
