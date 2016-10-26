@@ -17,7 +17,7 @@ before_install:
  - sudo make install
  - cd ..
 
- - pip install ijson
+ - env/bin/pip install ijson==2.1.0
 cache:
   directories:
     - env/bin
