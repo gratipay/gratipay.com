@@ -9,7 +9,8 @@ before_install:
  - npm install -g marky-markdown
 
  # Sometimes ya just halfta ...
- - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure --prefix=/usr/local && make && sudo make install && cd ..
+ - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure --prefix=/usr/local && make && cd ..
+ - sudo make --directory=yajl install
 cache:
   directories:
     - env/bin
@@ -19,7 +20,7 @@ install:
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rf env; fi
  - touch requirements.txt package.json
  - make env
- - env/bin/pip install --global-option=build_ext --global-option="-I/usr/local/include/" --global-option="-L/usr/local/lib" ijson==2.1.0
+ - env/bin/pip install --upgrade --global-option=build_ext --global-option="-I/usr/local/include" --global-option="-L/usr/local/lib" ijson==2.1.0
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
