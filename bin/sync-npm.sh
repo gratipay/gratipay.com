@@ -32,5 +32,4 @@ pip install -e .
 # ==============
 
 URL=https://registry.npmjs.com/-/all
-URL=https://gist.githubusercontent.com/whit537/fec53fb1f0618b3d5757f0ab687b7476/raw/25de82f6197df49b47d180db0d62b4e8c6f7f9f8/one
 curl $URL | sync-npm serialize /dev/stdin | sync-npm upsert /dev/stdin
