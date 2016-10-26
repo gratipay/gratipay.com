@@ -6,11 +6,13 @@ import argparse
 import csv
 import sys
 import time
+import uuid
 
 import ijson.backends.yajl2_cffi as ijson
 
 
 log = lambda *a: print(*a, file=sys.stderr)
+NULL = uuid.uuid4().hex
 
 
 def arrayize(seq):
@@ -98,7 +100,7 @@ def upsert(args):
         # http://tapoueh.org/blog/2013/03/15-batch-update.html
         cursor.run("CREATE TEMP TABLE updates (LIKE packages INCLUDING ALL) ON COMMIT DROP")
         cursor.copy_expert('COPY updates (package_manager, name, description, emails) '
-                           'FROM STDIN WITH (FORMAT csv)', fp)
+                           "FROM STDIN WITH (FORMAT csv, NULL '%s')" % NULL, fp)
         cursor.run("""
 
             WITH updated AS (

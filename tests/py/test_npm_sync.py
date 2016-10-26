@@ -61,3 +61,20 @@ class Tests(Harness):
         assert package.name == r'testi\"ng-pa\"ckage'
         assert package.description == 'A package for "testing"'
         assert package.emails == ['alice@"example".com', r'\\"bob\\"@example.com']
+
+    def test_sn_handles_empty_description_and_emails(self):
+        load(br'''
+        { "_updated": 1234567890
+        , "empty-description":
+            { "name":"empty-description"
+            , "description":""
+            , "time":{"modified":"2015-09-12T03:03:03.135Z"}
+             }
+         }
+        ''')
+
+        package = self.db.one('select * from packages')
+        assert package.package_manager == 'npm'
+        assert package.name == 'empty-description'
+        assert package.description == ''
+        assert package.emails == []
