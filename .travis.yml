@@ -6,13 +6,15 @@ branches:
     - master
 before_install:
  - git branch -vv | grep '^*'
- - npm install -g marky-markdown
 
  # Sometimes ya just halfta ...
+ - echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
+ - exit 1
  - rm -rf yajl
  - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure && cd ..
  - sudo make --directory=yajl install
- - echo LD_LIBRARY_PATH: $LD_LIBRARY_PATH
+
+ - npm install -g marky-markdown
 cache:
   directories:
     - env/bin
