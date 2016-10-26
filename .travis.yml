@@ -10,8 +10,8 @@ before_install:
 
  # Sometimes ya just halfta ...
  - rm -rf yajl
- - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure --prefix=/home/travis/yajl && cd ..
- - make --directory=yajl install
+ - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure && cd ..
+ - sudo make --directory=yajl install
  - echo LD_LIBRARY_PATH: $LD_LIBRARY_PATH
 cache:
   directories:
