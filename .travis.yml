@@ -9,13 +9,7 @@ before_install:
  - npm install -g marky-markdown
 
  # Sometimes ya just halfta ...
- - git clone https://github.com/lloyd/yajl.git
- - cd yajl
- - git checkout 2.1.0
- - ./configure --prefix=/usr/local
- - make
- - sudo make install
- - cd ..
+ - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure --prefix=/usr/local && make && sudo make install && cd ..
 cache:
   directories:
     - env/bin
