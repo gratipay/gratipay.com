@@ -10,6 +10,12 @@ branches:
 before_install:
  - git branch -vv | grep '^*'
  - npm install -g marky-markdown
+
+ # Groan.
+ - sudo add-apt-repository ppa:nilarimogard/webupd8
+ - sudo apt-get update
+ - sudo apt-get libyajl-dev
+
  - pip install ijson
 cache:
   directories:
