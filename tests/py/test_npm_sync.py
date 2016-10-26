@@ -1,4 +1,4 @@
-"""Tests for syncing npm. Requires a `pip install ijson`, which requires yajl.
+"""Tests for syncing npm. Requires a `pip install ijson`, which requires yajl. Good luck! :^)
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -20,6 +20,7 @@ class Tests(Harness):
 
     def test_packages_starts_empty(self):
         assert self.db.all('select * from packages') == []
+
 
     # sn - sync-npm
 
@@ -61,6 +62,7 @@ class Tests(Harness):
         assert package.name == r'testi\"ng-pa\"ckage'
         assert package.description == 'A package for "testing"'
         assert package.emails == ['alice@"example".com', r'\\"bob\\"@example.com']
+
 
     def test_sn_handles_empty_description_and_emails(self):
         load(br'''
