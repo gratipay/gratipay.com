@@ -9,7 +9,7 @@ before_install:
  - pwd
 
  # Sometimes ya just halfta ...
- - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure --prefix `pwd` && make install && cd ..
+ - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure -p `pwd` && make install && cd ..
 
  - npm install -g marky-markdown
 cache:
