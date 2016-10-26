@@ -8,7 +8,8 @@ pip install -e .
 pip install ijson==2.3.0
 
 curl https://cmake.org/files/v3.6/cmake-3.6.2-Linux-x86_64.tar.gz > cmake.tgz
-test sha256sum cmake.tgz = 5df4b69d9e85093ae78b1070d5cb9f824ce0bdd02528948c3f6a740e240083e5
+test echo '5df4b69d9e85093ae78b1070d5cb9f824ce0bdd02528948c3f6a740e240083e5  cmake.tgz' \
+     | sha256sum cmake.tgz -c /dev/stdin
 tar zxf cmake.tgz
 PATH=/app/cmake-3.6.2-Linux-x86_64/bin:$PATH
 
