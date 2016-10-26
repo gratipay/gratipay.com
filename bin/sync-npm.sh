@@ -5,7 +5,9 @@ cd "`dirname $0`/.."
 
 # Install dependencies.
 pip install -e .
-pip install -i ijson==2.3.0
+pip install ijson==2.3.0
+
+sudo ln -s `which make` /usr/local/bin/cmake
 git clone https://github.com/lloyd/yajl.git
 cd yajl
 git checkout 2.1.0
