@@ -4,6 +4,8 @@ set -e
 cd "`dirname $0`/.."
 
 # Install dependencies.
+pip install -e .
+pip install -i ijson==2.3.0
 git clone https://github.com/lloyd/yajl.git
 cd yajl
 git checkout 2.1.0
@@ -11,9 +13,7 @@ git checkout 2.1.0
 sudo make install
 cd ..
 
-./env/bin/pip install -i ijson==2.3.0
+URL=https://registry.npmjs.com/-/all
+URL=https://gist.githubusercontent.com/whit537/fec53fb1f0618b3d5757f0ab687b7476/raw/25de82f6197df49b47d180db0d62b4e8c6f7f9f8/one
 
-
-wget https://registry.npmjs.com/-/all
-./env/bin/sync-npm serialize all > serialized
-./env/bin/sync-npm upsert serialized
+curl $URL | sync-npm serialize /dev/stdin | sync-npm upsert /dev/stdin
