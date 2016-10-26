@@ -10,6 +10,7 @@ before_install:
 
  # Sometimes ya just halfta ...
  - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0
+ - rm Makefile
  - test -f Makefile || ./configure && sudo make install && cd ..
 
  - npm install -g marky-markdown
