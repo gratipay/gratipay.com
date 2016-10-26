@@ -58,7 +58,7 @@ def serialize(args):
             .format(nprocessed, time.time() - start))
 
     for prefix, event, value in parser:
-        log(prefix, event, value)
+
         if not prefix and event == b'map_key':
 
             # Flush the current package. We count on the first package being garbage.
