@@ -1,9 +1,6 @@
 language: python
 addons:
   postgresql: 9.3
-  apt:
-    packages:
-      - libyajl2
 branches:
   only:
     - master
