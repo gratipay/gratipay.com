@@ -7,7 +7,8 @@ cd "`dirname $0`/.."
 pip install -e .
 pip install ijson==2.3.0
 
-sudo ln -s `which make` /usr/local/bin/cmake
+ln -s `which make` bin/cmake
+PATH=/app/bin:$PATH
 git clone https://github.com/lloyd/yajl.git
 cd yajl
 git checkout 2.1.0
