@@ -15,6 +15,7 @@ before_install:
  - ./configure --prefix=/usr/local
  - make
  - sudo make install
+ - cd ..
 
  - pip install ijson
 cache:
