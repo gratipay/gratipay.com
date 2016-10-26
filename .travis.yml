@@ -11,10 +11,13 @@ before_install:
  - git branch -vv | grep '^*'
  - npm install -g marky-markdown
 
- # Groan.
- - sudo add-apt-repository ppa:nilarimogard/webupd8
- - sudo apt-get update
- - sudo apt-get libyajl2
+ # Sometimes ya just halfta ...
+ - git clone git@github.com:lloyd/yajl.git
+ - cd yajl
+ - git checkout 2.1.0
+ - ./configure --prefix=/usr/local
+ - make
+ - sudo make install
 
  - pip install ijson
 cache:
