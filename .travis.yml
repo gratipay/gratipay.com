@@ -10,7 +10,7 @@ before_install:
 
  # Sometimes ya just halfta ...
  - rm -rf yajl
- - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure --prefix=. && make && cd ..
+ - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure --prefix=/home/travis/yajl && cd ..
  - make --directory=yajl install
  - echo LD_LIBRARY_PATH: $LD_LIBRARY_PATH
 cache:
@@ -27,7 +27,7 @@ before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
-script: LD_LIBRARY_PATH=:$LD_LIBRARY_PATH make bgrun test doc
+script: LD_LIBRARY_PATH=yajl:$LD_LIBRARY_PATH make bgrun test doc
 notifications:
   email: false
   irc: false
