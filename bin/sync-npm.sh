@@ -7,8 +7,12 @@ cd "`dirname $0`/.."
 pip install -e .
 pip install ijson==2.3.0
 
-ln -s `which make` bin/cmake
-PATH=/app/bin:$PATH
+curl https://cmake.org/files/v3.6/cmake-3.6.2-Linux-x86_64.tar.gz
+test sha256sum cmake-3.6.2-Linux-x86_64.tar.gz = \
+     5df4b69d9e85093ae78b1070d5cb9f824ce0bdd02528948c3f6a740e240083e5
+tar zxf cmake-3.6.2-Linux-x86_64.tar.gz
+PATH=/app/cmake-3.6.2-Linux-x86_64/bin:$PATH
+
 git clone https://github.com/lloyd/yajl.git
 cd yajl
 git checkout 2.1.0
