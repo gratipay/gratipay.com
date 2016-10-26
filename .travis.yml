@@ -14,7 +14,7 @@ before_install:
  # Groan.
  - sudo add-apt-repository ppa:nilarimogard/webupd8
  - sudo apt-get update
- - sudo apt-get libyajl-dev
+ - sudo apt-get libyajl2
 
  - pip install ijson
 cache:
