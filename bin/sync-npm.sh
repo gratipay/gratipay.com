@@ -16,8 +16,8 @@ PATH=/app/cmake-3.6.2-Linux-x86_64/bin:$PATH
 git clone https://github.com/lloyd/yajl.git
 cd yajl
 git checkout 2.1.0
-./configure
-sudo make install
+./configure -p /app/.heroku/python
+make install
 cd ..
 
 URL=https://registry.npmjs.com/-/all
