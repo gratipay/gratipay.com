@@ -26,7 +26,6 @@ env: requirements.txt requirements.dev.txt setup.py
 				./env/
 	$(pip) install --no-index -r requirements.txt
 	$(pip) install --no-index -r requirements.dev.txt
-	$(pip) install -e ./
 	touch env
 
 clean:
