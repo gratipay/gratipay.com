@@ -1,0 +1,4 @@
+{
+    "name": "Gratipay",
+    "dependencies": {"marky-markdown":"latest"}
+}
