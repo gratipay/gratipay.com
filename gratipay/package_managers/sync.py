@@ -8,7 +8,6 @@ import sys
 import time
 import uuid
 
-import ijson.backends.yajl2_cffi as ijson
 from gratipay.package_managers import readmes as _readmes
 
 
@@ -47,8 +46,10 @@ def serialize_one(out, package):
 
 
 def serialize(args):
+    """Consume raw JSON from the npm registry and spit out CSV for Postgres.
     """
-    """
+    import ijson.backends.yajl2_cffi as ijson
+
     path = args.path
     parser = ijson.parse(open(path))
     start = time.time()
