@@ -56,4 +56,4 @@ def Syncer(db):
 def sync_all(db):
     dirty = db.all('SELECT package_manager, name FROM packages WHERE readme_raw IS NULL '
                    'ORDER BY package_manager DESC, name DESC')
-    threaded_map(Syncer(db), dirty, 10)
+    threaded_map(Syncer(db), dirty, 4)
