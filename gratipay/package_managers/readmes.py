@@ -30,9 +30,15 @@ def Syncer(db):
         """
         log(dirty.name)
         full = fetch(dirty.name)
+
         if not full:
-            return  # try again later
-        assert full['name'] == dirty.name
+            return
+        elif full['name'] != dirty.name:
+            log('expected', dirty.name, 'got', full['name'])
+            return
+        elif 'readme' not in full:
+            log('no readme in', full['name'])
+            return
 
         db.run('''
 
@@ -56,4 +62,4 @@ def Syncer(db):
 def sync_all(db):
     dirty = db.all('SELECT package_manager, name FROM packages WHERE readme_raw IS NULL '
                    'ORDER BY package_manager DESC, name DESC')
-    threaded_map(Syncer(db), dirty, 10)
+    threaded_map(Syncer(db), dirty, 4)
