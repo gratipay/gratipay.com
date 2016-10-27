@@ -15,5 +15,7 @@ def render(markdown):
 def marky(markdown):
     """Process markdown the same way npm does.
     """
+    if type(markdown) is unicode:
+        markdown = markdown.encode('utf8')
     marky = Popen(("marky-markdown", "/dev/stdin"), stdin=PIPE, stdout=PIPE)
     return Markup(marky.communicate(markdown)[0])

@@ -5,6 +5,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from subprocess import Popen, PIPE
 
 from gratipay.testing import Harness
+from gratipay.package_managers import readmes
 
 
 def load(raw):
@@ -79,4 +80,29 @@ class Tests(Harness):
         assert package.package_manager == 'npm'
         assert package.name == 'empty-description'
         assert package.description == ''
+        assert package.emails == []
+
+
+    # rs - readmes.Syncer
+
+    def test_rs_syncs_a_readme(self):
+        self.db.run("INSERT INTO packages (package_manager, name, description, emails) "
+                    "VALUES ('npm', 'foo-package', 'A package', ARRAY[]::text[])")
+
+        class DirtyPackage:
+            package_manager = 'npm'
+            name = 'foo-package'
+
+        def fetch(name):
+            return {'name': 'foo-package', 'readme': '# Greetings, program!'}
+
+        readmes.Syncer(self.db)(DirtyPackage(), fetch=fetch)
+
+        package = self.db.one('SELECT * FROM packages')
+        assert package.name == 'foo-package'
+        assert package.description == 'A package'
+        assert package.readme == '<h1 id="user-content-greetings-program" class="deep-link">' \
+                                 '<a href="#greetings-program">Greetings, program!</a></h1>\n'
+        assert package.readme_raw == '# Greetings, program!'
+        assert package.readme_type == 'x-markdown/npm'
         assert package.emails == []

@@ -31,5 +31,4 @@ pip install -e .
 # Sync with npm.
 # ==============
 
-URL=https://registry.npmjs.com/-/all
-curl $URL | sync-npm serialize /dev/stdin | sync-npm upsert /dev/stdin
+curl https://registry.npmjs.com/-/all | sync-npm serialize | sync-npm upsert
