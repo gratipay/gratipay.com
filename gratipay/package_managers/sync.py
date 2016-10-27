@@ -9,6 +9,7 @@ import time
 import uuid
 
 import ijson.backends.yajl2_cffi as ijson
+from gratipay.package_managers import readmes as _readmes
 
 
 log = lambda *a: print(*a, file=sys.stderr)
@@ -121,16 +122,16 @@ def upsert(args):
         """)
 
 
+def readmes(args):
+    from gratipay import wireup
+    db = wireup.db(wireup.env())
+    _readmes.sync_all(db)
+
+
 def parse_args(argv):
     p = argparse.ArgumentParser()
-    p.add_argument('command', choices=['serialize', 'upsert'])
-    p.add_argument('path', help="the path to the input file")
-    p.add_argument( '-i', '--if_modified_since'
-                  , help='a number of minutes in the past, past which we would like to see new '
-                         'updates (only meaningful for `serialize`; -1 means all!)'
-                  , type=int
-                  , default=-1
-                   )
+    p.add_argument('command', choices=['serialize', 'upsert', 'readmes'])
+    p.add_argument('path', help='the path to the input file', nargs='?', default='/dev/stdin')
     return p.parse_args(argv)
 
 

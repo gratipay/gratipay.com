@@ -13,7 +13,6 @@ from __future__ import unicode_literals
 
 import os
 import itertools
-from multiprocessing.dummy import Pool as ThreadPool
 
 import braintree
 
@@ -24,33 +23,12 @@ from gratipay.billing.exchanges import (
 )
 from gratipay.exceptions import NegativeBalance
 from gratipay.models import check_db
+from gratipay.utils.threaded_map import threaded_map
 from psycopg2 import IntegrityError
 
 
 with open(os.path.join(os.path.dirname(__file__), '../../sql/payday.sql')) as f:
     PAYDAY = f.read()
-
-
-class ExceptionWrapped(Exception): pass
-
-
-def threaded_map(func, iterable, threads=5):
-    pool = ThreadPool(threads)
-    def g(*a, **kw):
-        # Without this wrapper we get a traceback from inside multiprocessing.
-        try:
-            return func(*a, **kw)
-        except Exception as e:
-            import traceback
-            raise ExceptionWrapped(e, traceback.format_exc())
-    try:
-        r = pool.map(g, iterable)
-    except ExceptionWrapped as e:
-        print(e.args[1])
-        raise e.args[0]
-    pool.close()
-    pool.join()
-    return r
 
 
 class NoPayday(Exception):
