@@ -9,15 +9,13 @@ before_install:
  - pwd
 
  # Sometimes ya just halfta ...
- - test -d yajl || git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0
- - test -f Makefile || ./configure && sudo make install && cd ..
+ - git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure && sudo make install && cd ..
 
  - npm install -g marky-markdown
 cache:
   directories:
     - env/bin
     - env/lib/python2.7/site-packages
-    - yajl
 install:
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rf env; fi
  - touch requirements.txt package.json
