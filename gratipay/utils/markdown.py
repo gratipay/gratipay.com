@@ -1,7 +1,8 @@
 from subprocess import Popen, PIPE
 
-from markupsafe import Markup
+import json
 import misaka as m  # http://misaka.61924.nl/
+from markupsafe import Markup
 
 
 def render(markdown):
@@ -12,10 +13,22 @@ def render(markdown):
     ))
 
 
-def marky(markdown):
+def marky(markdown, package=None):
     """Process markdown the same way npm does.
+
+    Package should be a dict representing the package. If it includes `name`
+    and `description` then the first h1 and paragraph will have a
+    'package-{name,description}-redundant' class added to them if they're
+    similar enough. If it includes `repository.url` then links will be changed
+    somehow. For details consult the docs and code:
+
+    https://github.com/npm/marky-markdown
+
     """
     if type(markdown) is unicode:
         markdown = markdown.encode('utf8')
-    marky = Popen(("marky-markdown", "/dev/stdin"), stdin=PIPE, stdout=PIPE)
+    cmd = ("bin/our-marky-markdown.js", "/dev/stdin")
+    if package:
+        cmd += (json.dumps(package),)
+    marky = Popen(cmd, stdin=PIPE, stdout=PIPE)
     return Markup(marky.communicate(markdown)[0])

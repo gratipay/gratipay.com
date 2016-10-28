@@ -10,3 +10,12 @@ class TestMarkdown(Harness):
         actual = HTMLParser().unescape(markdown.marky(md)).strip()
         expected = '<p><strong>Hello World!</strong></p>'
         assert actual == expected
+
+    def test_marky_handles_npm_package(self):
+        md = "# Greetings, program!\nGreetings. Program."
+        pkg = {'name': 'greetings-program', 'description': 'Greetings, program.'}
+        actual = HTMLParser().unescape(markdown.marky(md, pkg)).strip()
+        expected = '''\
+<h1 id="user-content-greetings-program" class="deep-link package-name-redundant package-description-redundant"><a href="#greetings-program">Greetings, program!</a></h1>
+<p class="package-description-redundant">Greetings. Program.</p>'''
+        assert actual == expected
