@@ -390,9 +390,6 @@ msgstr "Histórico"
 msgid "Emails"
 msgstr ""
 
-msgid "Routes"
-msgstr ""
-
 msgid "Settings"
 msgstr "Definições"
 

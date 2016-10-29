@@ -387,9 +387,6 @@ msgstr "Historio"
 msgid "Emails"
 msgstr ""
 
-msgid "Routes"
-msgstr ""
-
 msgid "Settings"
 msgstr ""
 

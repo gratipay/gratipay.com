@@ -396,9 +396,6 @@ msgstr "Verlauf"
 msgid "Emails"
 msgstr ""
 
-msgid "Routes"
-msgstr ""
-
 msgid "Settings"
 msgstr "Einstellungen"
 

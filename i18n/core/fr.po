@@ -391,9 +391,6 @@ msgstr "Historique"
 msgid "Emails"
 msgstr "Courriels"
 
-msgid "Routes"
-msgstr "Paiements"
-
 msgid "Settings"
 msgstr "Paramètres"
 
