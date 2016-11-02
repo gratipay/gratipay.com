@@ -405,15 +405,16 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
                  )
             
         for team in teams:
-            week_payments_to_team = filter(lambda x: x['team_id'] == team.id, week_payment_instructions)
+            week_payments_to_team = filter(lambda x: x['team'] == team.slug, week_payments)
             pay_out = sum(t['amount'] for t in week_payments_to_team)
+            
             if pay_out: 
                 week_payments.append(fake_payment(
                                         db=db,
-                                        participant=participant.username, 
+                                        participant=team.owner, 
                                         team=team.slug, 
                                         timestamp=date, 
-                                        amount=amount, 
+                                        amount=pay_out, 
                                         payday=payday_counter,
                                         direction= 'to-participant'
                                      )
