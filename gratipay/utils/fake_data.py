@@ -214,6 +214,7 @@ def fake_payment(db, participant, team, timestamp, amount, payday, direction):
                             , participant=participant
                             , team=team
                             , amount=amount
+                            , payday=payday
                             , direction=direction
                             )
 
@@ -363,18 +364,29 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
 
     # Paydays
     # First determine the boundaries - min and max date
-    min_date = min(x['ctime'] for x in payment_instructions)
-    max_date = max(x['ctime'] for x in payment_instructions)
+    min_date = min(x['mtime'] for x in payment_instructions)
+    max_date = max(x['mtime'] for x in payment_instructions)
     # iterate through min_date, max_date one week at a time
-    payday_counter = 1
+    payday_counter = 0
     date = min_date
     paydays_total = (max_date - min_date).days/7 + 1
     while date < max_date:
-        sys.stdout.write("\rMaking Paydays (%i/%i)" % (payday_counter, paydays_total))
-        sys.stdout.flush()
         payday_counter += 1
         end_date = date + datetime.timedelta(days=7)
         week_payment_instructions = filter(lambda x:  x['mtime'] < date, payment_instructions)
+        
+        # Need to create the payday record before inserting payment records
+        params = dict(ts_start=date, ts_end=end_date)
+        with db.get_cursor() as cursor:
+            payday_id = cursor.one("""
+                    INSERT INTO paydays 
+                                (ts_start, ts_end) 
+                         VALUES (%(ts_start)s, %(ts_end)s)
+                      RETURNING id
+                    """, params) 
+        sys.stdout.write("\rMaking Paydays (%i/%i)" % (payday_id, paydays_total))
+        sys.stdout.flush()
+
        
         week_payments = [] 
         for payment_instruction in week_payment_instructions:
@@ -388,7 +400,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
                                         team=team.slug, 
                                         timestamp=date, 
                                         amount=amount, 
-                                        payday=payday_counter,
+                                        payday=payday_id,
                                         direction='to-team'
                                   )
                           )
@@ -415,26 +427,27 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
                                         team=team.slug, 
                                         timestamp=date, 
                                         amount=pay_out, 
-                                        payday=payday_counter,
+                                        payday=payday_id,
                                         direction= 'to-participant'
                                      )
                               )
             
         actives=set()
 
-        # week_payment_instructions
-        actives.update(x['participant_id'] for x in week_payment_instructions)
 
         # week_payments
         actives.update(x['participant'] for x in week_payments)
 
-        payday = {
-            'ts_start': date,
-            'ts_end': end_date,
-            'nusers': len(actives),
-            'volume': sum(x['amount'] for x in week_payment_instructions)
-        }
-        insert_fake_data(db, "paydays", **payday)
+        params = dict( nusers=len(actives)
+                     , volume=sum(x['amount'] for x in week_payment_instructions)
+                     , payday_id=payday_id
+                     )
+        db.run("""
+                UPDATE paydays
+                   SET nusers=%(nusers)s, volume=%(volume)s
+                 WHERE id=%(payday_id)s
+                """, params) 
+                  
         date = end_date
     print("")
 
