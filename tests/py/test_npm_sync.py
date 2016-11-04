@@ -4,8 +4,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from subprocess import Popen, PIPE
 
+import pytest
+from gratipay.utils import markdown
 from gratipay.testing import Harness
-from gratipay.package_managers import readmes
+from gratipay.package_managers import readmes, sync
 
 
 def load(raw):
@@ -17,6 +19,22 @@ def load(raw):
           ).communicate(serialized)[0]
 
 
+try:
+    sync.import_ijson()
+except ImportError:
+    missing_ijson = True
+else:
+    missing_ijson = False
+
+try:
+    markdown.marky('test')
+except OSError:
+    missing_marky_markdown = True
+else:
+    missing_marky_markdown = False
+
+@pytest.mark.skipif(missing_ijson, reason="missing ijson")
+@pytest.mark.skipif(missing_marky_markdown, reason="missing marky-markdown")
 class Tests(Harness):
 
     def test_packages_starts_empty(self):
