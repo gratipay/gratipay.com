@@ -15,6 +15,11 @@ log = lambda *a: print(*a, file=sys.stderr)
 NULL = uuid.uuid4().hex
 
 
+def import_ijson():
+    import ijson.backends.yajl2_cffi as ijson
+    return ijson
+
+
 def arrayize(seq):
     """Given a sequence of str, return a Postgres array literal str.
     """
@@ -48,7 +53,7 @@ def serialize_one(out, package):
 def serialize(args):
     """Consume raw JSON from the npm registry and spit out CSV for Postgres.
     """
-    import ijson.backends.yajl2_cffi as ijson
+    ijson = import_ijson()
 
     path = args.path
     parser = ijson.parse(open(path))
