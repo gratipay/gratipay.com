@@ -43,9 +43,10 @@ def iter_payday_events(db, team, year=None):
     paydays = db.all("""
         SELECT id, ts_start::date
           FROM paydays
-         WHERE ts_start > %(ctime)s 
+         WHERE ts_start > %(ctime)s
+           AND extract(year from ts_start) = %(year)s
       ORDER BY ts_start ASC
-    """, dict(ctime=team.ctime), back_as=dict)
+    """, dict(ctime=team.ctime,year=year), back_as=dict)
      
     events = []
     events_query = """

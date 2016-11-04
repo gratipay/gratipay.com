@@ -52,36 +52,42 @@ years = list(range(current_year, team.ctime.year-1, -1))
 {% set events = iter_payday_events(website.db, team, year) %}
 
 {% for payday in events %}
-    
-    <tr>
-        <th colspan="5"><h2>
-    {{ payday['date'].strftime("%B %d, %Y").replace(' 0', ' ') }}
-    {% if payday['id'] %}
-     &mdash; Weekly Payday #{{ payday['id'] }}
-    {% endif %}
-        </h2></th>
-    </tr>
-    <tr class="head">
-        <td class="credits">{{ _("Received From") }}</td>
-        <td class="debits">{{ _("Taken By") }}</td>
-        <td class="balance">{{ _("Amount") }}</td>
-        <td class="status">{{ _("Status") }}</td>
-        <td class="notes">{{ _("Notes") }}</td>
-    </tr>
-    {% for event in payday['events'] %}
+   
+    {% if payday['events'] %} 
         <tr>
-        {% if event['direction'] == 'to-team' %}
-            <td class="credits">{{ event['participant'] }}</td>
-            <td class="debits"></td>
-        {% else %}
-            <td class="credits"></td>
-            <td class="debits">{{ event['participant'] }}</td>
+            <th colspan="5"><h2>
+        {{ payday['date'].strftime("%B %d, %Y").replace(' 0', ' ') }}
+        {% if payday['id'] %}
+         &mdash; Weekly Payday #{{ payday['id'] }}
         {% endif %}
-            <td class="balance">{{ event['amount'] }}</td>
-            <td class="status">{{ event['status'] }}</td>
-            <td class="notes">{{ event['notes'] }}</td>
+            </h2></th>
         </tr>
-     {% endfor %}
+        <tr class="head">
+            <td class="credits">{{ _("Received From") }}</td>
+            <td class="debits">{{ _("Taken By") }}</td>
+            <td class="balance">{{ _("Amount") }}</td>
+            <td class="status">{{ _("Status") }}</td>
+            <td class="notes">{{ _("Notes") }}</td>
+        </tr>
+        {% for event in payday['events'] %}
+            <tr>
+            {% if event['direction'] == 'to-team' %}
+                <td class="credits">{{ event['participant'] }}</td>
+                <td class="debits"></td>
+            {% else %}
+                <td class="credits"></td>
+                <td class="debits">{{ event['participant'] }}</td>
+            {% endif %}
+                <td class="balance">{{ event['amount'] }}</td>
+                <td class="status">{{ event['status'] }}</td>
+                <td class="notes">
+                    {% if event['notes'] %}
+                        {{ event['notes'] }}
+                    {% endif %}
+                </td>
+            </tr>
+         {% endfor %}
+    {% endif %}
 {% endfor %}
 </table>
 {% endblock %}
