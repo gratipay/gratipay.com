@@ -1436,43 +1436,14 @@ msgstr "Sluit"
 msgid "Widgets"
 msgstr "Widgets"
 
-msgid "Button"
-msgstr "Knop"
-
-msgid "Use this code to embed a Gratipay button on your website:"
-msgstr "Gebruik deze code om een Gratipay op je website toe te voegen:"
-
-msgid ""
-"The button opens your profile on Gratipay in a new tab or window. Here's "
-"what the text reads:"
-msgstr "De knop opent je profiel op Gratipay in een nieuwe tab of venster. Dit is wat erop staat:"
-
-msgid "person is not logged into Gratipay or doesn't tip you"
-msgstr "persoon is niet in Gratipay ingelogd en geeft je geen fooien"
-
-msgid "person tips you; shows current gift amount"
-msgstr "persoon geeft je fooien; laat huidig gift bedrag zien"
-
-msgid "your own button"
-msgstr "je eigen knop"
-
-msgid "Here's an example using {0}:"
-msgstr "Hier is een voorbeeld met gebruik van {0}:"
-
-msgid "Badge"
-msgstr "Badge"
-
-msgid "Use this code to embed a Gratipay badge on your website:"
-msgstr "Gebruik deze code om een Gratipay badge op je website te zetten:"
-
-msgid "Here's what it looks like:"
-msgstr "Zo ziet het eruit:"
-
-msgid "Giving & Receiving Widgets"
-msgstr "Geven & Ontvangen Widgets"
+msgid "Giving & Taking Widgets"
+msgstr ""
 
 msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
 msgstr "Gebruik deze code om een Gratipay \"ontvangst' widget op je website te zetten:"
+
+msgid "Here's what it looks like:"
+msgstr "Zo ziet het eruit:"
 
 msgid ""
 "Or, if you'd like to include a \"giving\" widget, you can add the {0} "

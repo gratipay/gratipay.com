@@ -1438,43 +1438,14 @@ msgstr "Fermer"
 msgid "Widgets"
 msgstr "Widgets"
 
-msgid "Button"
-msgstr "Bouton"
-
-msgid "Use this code to embed a Gratipay button on your website:"
-msgstr "Utilisez ce code pour intégrer un bouton Gratipay à votre site web :"
-
-msgid ""
-"The button opens your profile on Gratipay in a new tab or window. Here's "
-"what the text reads:"
-msgstr "Le bouton ouvre votre profil Gratipay dans un nouvel onglet. Voilà ce qui est écrit :"
-
-msgid "person is not logged into Gratipay or doesn't tip you"
-msgstr "la personne n'est pas connectée ou ne vous fait pas de don"
-
-msgid "person tips you; shows current gift amount"
-msgstr "la personne vous fait un don; le montant est affiché"
-
-msgid "your own button"
-msgstr "votre propre bouton"
-
-msgid "Here's an example using {0}:"
-msgstr "Voilà un exemple utilisant {0} :"
-
-msgid "Badge"
-msgstr "Badge"
-
-msgid "Use this code to embed a Gratipay badge on your website:"
-msgstr "Utilisez ce code pour ajouter un badge Gratipay à votre site web :"
-
-msgid "Here's what it looks like:"
-msgstr "Voilà à quoi il ressemble :"
-
-msgid "Giving & Receiving Widgets"
-msgstr "Widgets de dons et de revenus"
+msgid "Giving & Taking Widgets"
+msgstr ""
 
 msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
 msgstr "Utilisez ce code pour ajouter un widget de \"revenu\" Gratipay sur votre site web :"
+
+msgid "Here's what it looks like:"
+msgstr "Voilà à quoi il ressemble :"
 
 msgid ""
 "Or, if you'd like to include a \"giving\" widget, you can add the {0} "

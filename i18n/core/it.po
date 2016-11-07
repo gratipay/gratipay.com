@@ -672,8 +672,8 @@ msgstr[1] "Trovati utenti corrispondenti"
 
 msgid "Found a matching email address"
 msgid_plural "Found matching email addresses"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Indirizzo email corrispondente trovato"
+msgstr[1] "Indirizzi email corrispondenti trovati"
 
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
@@ -1434,43 +1434,14 @@ msgstr "Chiudi"
 msgid "Widgets"
 msgstr "Widget"
 
-msgid "Button"
-msgstr "Pulsante"
-
-msgid "Use this code to embed a Gratipay button on your website:"
-msgstr "Usa questo codice per inserire un pulsante Gratipay sul tuo sito:"
-
-msgid ""
-"The button opens your profile on Gratipay in a new tab or window. Here's "
-"what the text reads:"
-msgstr "Il pulsante apre il tuo profilo Gratipay in una nuova scheda o finestra. Questo è ciò che appare:"
-
-msgid "person is not logged into Gratipay or doesn't tip you"
-msgstr "se chi legge non è registrato su Gratipay o non fa donazioni nei tuoi confronti"
-
-msgid "person tips you; shows current gift amount"
-msgstr "se chi legge fa donazioni nei tuoi confronti; è mostrata la quantità attuale della donazione"
-
-msgid "your own button"
-msgstr "se sei tu a leggere"
-
-msgid "Here's an example using {0}:"
-msgstr "Ecco un esempio usando {0}:"
-
-msgid "Badge"
-msgstr "Badge"
-
-msgid "Use this code to embed a Gratipay badge on your website:"
-msgstr "Usa questo codice per inserire una badge sul tuo sito:"
-
-msgid "Here's what it looks like:"
-msgstr "Ecco come appare:"
-
-msgid "Giving & Receiving Widgets"
-msgstr "Widget Dona & Ricevi"
+msgid "Giving & Taking Widgets"
+msgstr ""
 
 msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
 msgstr "Usa questo codice per aggiungere un widget Gratipay \"Ricevi\" sul tuo sito:"
+
+msgid "Here's what it looks like:"
+msgstr "Ecco come appare:"
 
 msgid ""
 "Or, if you'd like to include a \"giving\" widget, you can add the {0} "
