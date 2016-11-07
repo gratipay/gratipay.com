@@ -99,46 +99,7 @@ title = _("Widgets")
 </style>
    
 <div> 
-    <h2>{{ _("Button") }}</h2>
-
-    <p>{{ _("Use this code to embed a Gratipay button on your website:") }}</p>
-
-    <pre>&lt;script data-gratipay-username="{{ participant.username }}"
-        data-gratipay-widget="button"
-        src="//grtp.co/v1.js"&gt;&lt;/script&gt;</pre>
-
-    <p>{{ _("The button opens your profile on Gratipay in a new tab or window. Here's what the text reads:") }}</p>
-
-    <ul class="button-examples no-bullets">
-
-        <li><button class="old-widget-style">Gratipay</button>&mdash;
-        {{ _("person is not logged into Gratipay or doesn't tip you") }}</li>
-
-        <li><button class="old-widget-style">3.00</button>&mdash;
-        {{ _("person tips you; shows current gift amount") }}</li>
-
-        <li><button class="old-widget-style">You!</button>&mdash;
-        {{ _("your own button") }}</li>
-
-    </ul>
-
-    <p>
-        {{ _("Here's an example using {0}:", "<a href='/whit537/'>whit537</a>"|safe) }}
-        <script data-gratipay-username="whit537" data-gratipay-widget="button" src="//grtp.co/v1.js"></script>
-    </p>
-
-    <h2>{{ _("Badge") }}</h2>
-
-    <p>{{ _("Use this code to embed a Gratipay badge on your website:") }}</p>
-
-    <pre>&lt;img src="//img.shields.io/gratipay/{{ participant.username }}.svg"&gt;</pre>
-
-    <p>{{ _("Here's what it looks like:") }}</p>
-
-    <img src="//img.shields.io/gratipay/{{ participant.username }}.svg">
-
-
-    <h2>{{ _("Giving & Receiving Widgets") }}</h2>
+    <h2>{{ _("Giving & Taking Widgets") }}</h2>
 
     <p>{{ _("Use this code to add a Gratipay \"receiving\" widget on your website:") }}</p>
 
