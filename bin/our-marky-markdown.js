@@ -14,8 +14,8 @@ if (process.argv.length < 3) {
 var filePath = path.resolve(process.cwd(), process.argv[2])
 
 fs.readFile(filePath, function (err, data) {
-  if (err) throw err;
+  if (err) throw err
   var package =  process.argv[3] ? JSON.parse(process.argv[3]) : null;
-  var $ = marky(data.toString(), {package: package})
-  process.stdout.write($.html())
+  var html = marky(data.toString(), {package: package})
+  process.stdout.write(html)
 })
