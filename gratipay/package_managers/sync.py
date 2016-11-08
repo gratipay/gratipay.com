@@ -98,6 +98,8 @@ def serialize(args):
 
 
 def upsert(args):
+    """Take a CSV file from stdin and load it into Postgres.
+    """
     from gratipay import wireup
     db = wireup.db(wireup.env())
     fp = open(args.path)
@@ -128,19 +130,25 @@ def upsert(args):
         """)
 
 
-def readmes(args):
+def fetch_readmes(args):
     from gratipay import wireup
     db = wireup.db(wireup.env())
-    _readmes.sync_all(db)
+    _readmes.fetch(db)
+
+
+def process_readmes(args):
+    from gratipay import wireup
+    db = wireup.db(wireup.env())
+    _readmes.process(db)
 
 
 def parse_args(argv):
     p = argparse.ArgumentParser()
-    p.add_argument('command', choices=['serialize', 'upsert', 'readmes'])
+    p.add_argument('command', choices=['serialize', 'upsert', 'fetch-readmes', 'process-readmes'])
     p.add_argument('path', help='the path to the input file', nargs='?', default='/dev/stdin')
     return p.parse_args(argv)
 
 
 def main(argv=sys.argv):
     args = parse_args(argv[1:])
-    globals()[args.command](args)
+    globals()[args.command.replace('-', '_')](args)
