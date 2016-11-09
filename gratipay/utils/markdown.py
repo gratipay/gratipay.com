@@ -1,3 +1,5 @@
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from subprocess import Popen, PIPE
 
 import json
@@ -6,6 +8,12 @@ from markupsafe import Markup
 
 
 def render(markdown):
+    """Process markdown approximately the same way that GitHub used to.
+
+    (Note that as of November, 2016 they are migrating to CommonMark, so we are
+    starting to drift.)
+
+    """
     return Markup(m.html(
         markdown,
         extensions=m.EXT_AUTOLINK | m.EXT_STRIKETHROUGH | m.EXT_NO_INTRA_EMPHASIS,
@@ -13,7 +21,7 @@ def render(markdown):
     ))
 
 
-def marky(markdown, package=None):
+def render_like_npm(markdown, package=None):
     """Process markdown the same way npm does.
 
     Package should be a dict representing the package. If it includes `name`

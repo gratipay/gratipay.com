@@ -69,7 +69,7 @@ def Processor(db):
                      )
         if raw is None:
             return
-        processed = markdown.marky(raw)
+        processed = markdown.render_like_npm(raw)
         db.run('''
 
             UPDATE packages

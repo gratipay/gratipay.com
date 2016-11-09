@@ -27,7 +27,7 @@ else:
     missing_ijson = False
 
 try:
-    markdown.marky('test')
+    markdown.render_like_npm('test')
 except OSError:
     missing_marky_markdown = True
 else:
