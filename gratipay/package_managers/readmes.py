@@ -94,8 +94,7 @@ def fetch(db, _fetch=http_fetch):
 
 
 def process(db):
-    dirty = db.all('SELECT id, package_manager, name, description, readme_raw '
+    dirty = db.all('SELECT package_manager, name '
                    'FROM packages WHERE readme_needs_to_be_processed '
                    'ORDER BY package_manager DESC, name DESC')
     threaded_map(Processor(db), dirty, 4)
-
