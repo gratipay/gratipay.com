@@ -24,8 +24,8 @@ def http_fetch(package_name):
     return r.json()
 
 
-def Syncer(db):
-    def sync(dirty, fetch=http_fetch):
+def Fetcher(db):
+    def fetch(dirty, fetch=http_fetch):
         """Update all info for one package.
         """
         log(dirty.name)
@@ -43,23 +43,58 @@ def Syncer(db):
         db.run('''
 
             UPDATE packages
-               SET readme=%s
+               SET readme_needs_to_be_processed=true
                  , readme_raw=%s
                  , readme_type=%s
              WHERE package_manager=%s
                AND name=%s
 
-        ''', ( markdown.marky(full['readme'])
-             , full['readme']
-             , 'x-markdown/npm'
+        ''', ( full['readme']
+             , 'x-markdown/marky'
              , dirty.package_manager
              , dirty.name
               ))
 
-    return sync
+    return fetch
 
 
-def sync_all(db):
-    dirty = db.all('SELECT package_manager, name FROM packages WHERE readme_raw IS NULL '
+def Processor(db):
+    def process(dirty):
+        """Processes the readme for a single page.
+        """
+        log(dirty.name)
+        raw = db.one( 'SELECT readme_raw FROM packages '
+                      'WHERE package_manager=%s and name=%s and readme_needs_to_be_processed'
+                    , (dirty.package_manager, dirty.name)
+                     )
+        if raw is None:
+            return
+        processed = markdown.render_like_npm(raw)
+        db.run('''
+
+            UPDATE packages
+               SET readme=%s
+                 , readme_needs_to_be_processed=false
+             WHERE package_manager=%s
+               AND name=%s
+
+        ''', ( processed
+             , dirty.package_manager
+             , dirty.name
+              ))
+
+    return process
+
+
+def fetch(db):
+    dirty = db.all('SELECT package_manager, name '
+                   'FROM packages WHERE readme_raw IS NULL '
                    'ORDER BY package_manager DESC, name DESC')
-    threaded_map(Syncer(db), dirty, 4)
+    threaded_map(Fetcher(db), dirty, 4)
+
+
+def process(db):
+    dirty = db.all('SELECT id, package_manager, name, description, readme_raw '
+                   'FROM packages WHERE readme_needs_to_be_processed'
+                   'ORDER BY package_manager DESC, name DESC')
+    threaded_map(Processor(db), dirty, 4)

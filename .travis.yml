@@ -11,7 +11,7 @@ before_install:
  # Sometimes ya just halfta ...
  - git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure && sudo make install && cd ..
 
- - npm install -g marky-markdown
+ - npm install marky-markdown
 cache:
   directories:
     - env/bin
@@ -23,6 +23,7 @@ install:
  - env/bin/pip install --upgrade ijson==2.3.0
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
+ - echo "REQUIRE_YAJL=true" | tee -a tests/local.env local.env
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
 script: LD_LIBRARY_PATH=/usr/local/lib make bgrun test doc

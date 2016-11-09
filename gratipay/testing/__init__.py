@@ -3,8 +3,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from decimal import Decimal
-from gratipay.models.participant import Participant
-from gratipay.models.team import Team
+
+import pytest
+from aspen import log_dammit
+
+from ..models.participant import Participant
+from ..models.team import Team
+from ..utils import markdown
 
 D = Decimal                     #:
 P = Participant.from_username   #:
@@ -45,3 +50,17 @@ def debug_http():
     requests_log = logging.getLogger("requests.packages.urllib3")
     requests_log.setLevel(logging.DEBUG)
     requests_log.propagate = True
+
+
+# Provide a decorator to skip tests when marky-markdown is missing.
+
+try:
+    markdown.render_like_npm('test')
+except OSError as exc:
+    MISSING_MARKY_MARKDOWN = True
+    log_dammit('Will skip marky-markdown-related tests because:', exc.args[0])
+else:
+    MISSING_MARKY_MARKDOWN = False
+
+def skipif_missing_marky_markdown(func):
+    return pytest.mark.skipif(MISSING_MARKY_MARKDOWN, reason="missing marky-markdown")(func)
