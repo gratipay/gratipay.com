@@ -1,12 +1,10 @@
-"""Tests for syncing npm. Requires a `pip install ijson`, which requires yajl. Good luck! :^)
+"""Tests for syncing npm.
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from subprocess import Popen, PIPE
 
-import pytest
-from gratipay.utils import markdown
-from gratipay.testing import Harness
+from gratipay.testing import Harness, skipif_missing_marky_markdown
 from gratipay.package_managers import readmes
 
 
@@ -17,14 +15,6 @@ def load(raw):
     Popen( ('env/bin/sync-npm', 'upsert', '/dev/stdin')
          , stdin=PIPE, stdout=PIPE
           ).communicate(serialized)[0]
-
-
-try:
-    markdown.render_like_npm('test')
-except OSError:
-    missing_marky_markdown = True
-else:
-    missing_marky_markdown = False
 
 
 class Tests(Harness):
@@ -120,7 +110,7 @@ class Tests(Harness):
 
     # rp - readmes.Processor
 
-    @pytest.mark.skipif(missing_marky_markdown, reason="missing marky-markdown")
+    @skipif_missing_marky_markdown
     def test_rp_processes_a_readme(self):
         self.db.run('''
 

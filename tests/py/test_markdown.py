@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from gratipay.testing import Harness
+from gratipay.testing import Harness, skipif_missing_marky_markdown
 from gratipay.utils import markdown
 
 from HTMLParser import HTMLParser
@@ -59,12 +59,14 @@ class TestMarkdown(Harness):
 
     # rln - render_like_npm
 
+    @skipif_missing_marky_markdown
     def test_rln_works(self):
         md = "**Hello World!**"
         actual = HTMLParser().unescape(markdown.render_like_npm(md)).strip()
         expected = '<p><strong>Hello World!</strong></p>'
         assert actual == expected
 
+    @skipif_missing_marky_markdown
     def test_rln_handles_npm_package(self):
         md = "# Greetings, program!\nGreetings. Program."
         pkg = {'name': 'greetings-program', 'description': 'Greetings, program.'}

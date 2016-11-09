@@ -38,5 +38,9 @@ def render_like_npm(markdown, package=None):
     cmd = ("bin/our-marky-markdown.js", "/dev/stdin")
     if package:
         cmd += (json.dumps(package),)
-    marky = Popen(cmd, stdin=PIPE, stdout=PIPE)
-    return Markup(marky.communicate(markdown)[0])
+    marky = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    out, err = marky.communicate(markdown)
+    if marky.wait() > 0:
+        raise OSError(err)
+    return out
+
