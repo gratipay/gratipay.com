@@ -101,7 +101,7 @@ class Tests(Harness):
         package = self.db.one('SELECT * FROM packages')
         assert package.name == 'foo-package'
         assert package.description == 'A package'
-        assert package.readme == None
+        assert package.readme == ''
         assert package.readme_needs_to_be_processed
         assert package.readme_raw == '# Greetings, program!'
         assert package.readme_type == 'x-markdown/marky'
