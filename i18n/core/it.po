@@ -1435,7 +1435,7 @@ msgid "Widgets"
 msgstr "Widget"
 
 msgid "Giving & Taking Widgets"
-msgstr ""
+msgstr "Widget Dona & Ricevi"
 
 msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
 msgstr "Usa questo codice per aggiungere un widget Gratipay \"Ricevi\" sul tuo sito:"
