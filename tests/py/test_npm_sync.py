@@ -117,10 +117,6 @@ class Tests(Harness):
 
         ''')
 
-        class DirtyPackage:
-            package_manager = 'npm'
-            name = 'foo-package'
-
         readmes.process(self.db)
 
         package = self.db.one('SELECT * FROM packages')

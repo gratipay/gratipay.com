@@ -24,8 +24,8 @@ def http_fetch(package_name):
     return r.json()
 
 
-def Fetcher(db):
-    def fetch(dirty, _fetch=http_fetch):
+def Fetcher(db, _fetch=http_fetch):
+    def fetch(dirty):
         """Update all info for one package.
         """
         log(dirty.name)
@@ -95,7 +95,7 @@ def fetch(db, _fetch=http_fetch):
 
 def process(db):
     dirty = db.all('SELECT id, package_manager, name, description, readme_raw '
-                   'FROM packages WHERE readme_needs_to_be_processed'
+                   'FROM packages WHERE readme_needs_to_be_processed '
                    'ORDER BY package_manager DESC, name DESC')
     threaded_map(Processor(db), dirty, 4)
 
