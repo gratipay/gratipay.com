@@ -888,3 +888,7 @@ BEGIN;
     ALTER TABLE packages ALTER COLUMN readme_raw SET DEFAULT NULL;
     UPDATE packages SET readme_raw=NULL;
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4164
+ALTER TABLE packages ADD COLUMN readme_needs_to_be_processed bool NOT NULL DEFAULT true;
