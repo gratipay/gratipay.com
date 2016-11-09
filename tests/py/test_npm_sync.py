@@ -7,7 +7,7 @@ from subprocess import Popen, PIPE
 import pytest
 from gratipay.utils import markdown
 from gratipay.testing import Harness
-from gratipay.package_managers import readmes, sync
+from gratipay.package_managers import readmes
 
 
 def load(raw):
@@ -20,21 +20,13 @@ def load(raw):
 
 
 try:
-    sync.import_ijson()
-except ImportError:
-    missing_ijson = True
-else:
-    missing_ijson = False
-
-try:
     markdown.render_like_npm('test')
 except OSError:
     missing_marky_markdown = True
 else:
     missing_marky_markdown = False
 
-@pytest.mark.skipif(missing_ijson, reason="missing ijson")
-@pytest.mark.skipif(missing_marky_markdown, reason="missing marky-markdown")
+
 class Tests(Harness):
 
     def test_packages_starts_empty(self):
@@ -128,6 +120,7 @@ class Tests(Harness):
 
     # rp - readmes.Processor
 
+    @pytest.mark.skipif(missing_marky_markdown, reason="missing marky-markdown")
     def test_rp_processes_a_readme(self):
         self.db.run('''
 

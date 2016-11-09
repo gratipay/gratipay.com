@@ -8,6 +8,7 @@ import sys
 import time
 import uuid
 
+from gratipay import wireup
 from gratipay.package_managers import readmes as _readmes
 
 
@@ -15,8 +16,13 @@ log = lambda *a: print(*a, file=sys.stderr)
 NULL = uuid.uuid4().hex
 
 
-def import_ijson():
-    import ijson.backends.yajl2_cffi as ijson
+# helpers
+
+def import_ijson(env):
+    if env.require_yajl:
+        import ijson.backends.yajl2_cffi as ijson
+    else:
+        import ijson
     return ijson
 
 
@@ -50,10 +56,12 @@ def serialize_one(out, package):
     return 1
 
 
-def serialize(args):
+# cli subcommands
+
+def serialize(env, args, _):
     """Consume raw JSON from the npm registry and spit out CSV for Postgres.
     """
-    ijson = import_ijson()
+    ijson = import_ijson(env)
 
     path = args.path
     parser = ijson.parse(open(path))
@@ -97,11 +105,9 @@ def serialize(args):
     log_stats()
 
 
-def upsert(args):
+def upsert(env, args, db):
     """Take a CSV file from stdin and load it into Postgres.
     """
-    from gratipay import wireup
-    db = wireup.db(wireup.env())
     fp = open(args.path)
     with db.get_cursor() as cursor:
         assert cursor.connection.encoding == 'UTF8'
@@ -130,17 +136,15 @@ def upsert(args):
         """)
 
 
-def fetch_readmes(args):
-    from gratipay import wireup
-    db = wireup.db(wireup.env())
+def fetch_readmes(env, args, db):
     _readmes.fetch(db)
 
 
-def process_readmes(args):
-    from gratipay import wireup
-    db = wireup.db(wireup.env())
+def process_readmes(env, args, db):
     _readmes.process(db)
 
+
+# cli plumbing
 
 def parse_args(argv):
     p = argparse.ArgumentParser()
@@ -150,5 +154,7 @@ def parse_args(argv):
 
 
 def main(argv=sys.argv):
+    env = wireup.env()
     args = parse_args(argv[1:])
-    globals()[args.command.replace('-', '_')](args)
+    db = wireup.db(env)
+    globals()[args.command.replace('-', '_')](env, args, db)

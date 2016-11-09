@@ -63,4 +63,6 @@
   ./vendor/ipaddress-1.0.16.tar.gz
 ./vendor/cryptography-1.3.2.tar.gz
 
+./vendor/ijson-2.3.tar.gz
+
 -e .

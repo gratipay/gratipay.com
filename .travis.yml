@@ -23,6 +23,7 @@ install:
  - env/bin/pip install --upgrade ijson==2.3.0
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
+ - echo "REQUIRE_YAJL=true" | tee -a tests/local.env local.env
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
 script: LD_LIBRARY_PATH=/usr/local/lib make bgrun test doc
