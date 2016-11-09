@@ -60,7 +60,7 @@ def Fetcher(db, _fetch=http_fetch):
 
 def Processor(db):
     def process(dirty):
-        """Processes the readme for a single page.
+        """Processes the readme for a single package.
         """
         log(dirty.name)
         raw = db.one( 'SELECT readme_raw FROM packages '
