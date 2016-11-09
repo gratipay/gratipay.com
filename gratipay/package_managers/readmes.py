@@ -25,11 +25,11 @@ def http_fetch(package_name):
 
 
 def Fetcher(db):
-    def fetch(dirty, fetch=http_fetch):
+    def fetch(dirty, _fetch=http_fetch):
         """Update all info for one package.
         """
         log(dirty.name)
-        full = fetch(dirty.name)
+        full = _fetch(dirty.name)
 
         if not full:
             return
@@ -86,11 +86,11 @@ def Processor(db):
     return process
 
 
-def fetch(db):
+def fetch(db, _fetch=http_fetch):
     dirty = db.all('SELECT package_manager, name '
                    'FROM packages WHERE readme_raw IS NULL '
                    'ORDER BY package_manager DESC, name DESC')
-    threaded_map(Fetcher(db), dirty, 4)
+    threaded_map(Fetcher(db, _fetch), dirty, 4)
 
 
 def process(db):
@@ -98,3 +98,4 @@ def process(db):
                    'FROM packages WHERE readme_needs_to_be_processed'
                    'ORDER BY package_manager DESC, name DESC')
     threaded_map(Processor(db), dirty, 4)
+

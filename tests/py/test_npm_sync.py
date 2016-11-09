@@ -89,14 +89,10 @@ class Tests(Harness):
         self.db.run("INSERT INTO packages (package_manager, name, description, emails) "
                     "VALUES ('npm', 'foo-package', 'A package', ARRAY[]::text[])")
 
-        class DirtyPackage:
-            package_manager = 'npm'
-            name = 'foo-package'
-
         def fetch(name):
             return {'name': 'foo-package', 'readme': '# Greetings, program!'}
 
-        readmes.Fetcher(self.db)(DirtyPackage(), fetch=fetch)
+        readmes.fetch(self.db, fetch)
 
         package = self.db.one('SELECT * FROM packages')
         assert package.name == 'foo-package'
@@ -125,7 +121,7 @@ class Tests(Harness):
             package_manager = 'npm'
             name = 'foo-package'
 
-        readmes.Processor(self.db)(DirtyPackage())
+        readmes.process(self.db)
 
         package = self.db.one('SELECT * FROM packages')
         assert package.name == 'foo-package'
