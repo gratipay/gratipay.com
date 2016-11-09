@@ -152,4 +152,3 @@ class Tests(Harness):
         assert package.readme_raw == '# Greetings, program!'
         assert package.readme_type == 'x-markdown/marky'
         assert package.emails == []
-
