@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""Define the top-level function for the ``sync-npm`` cli.
+"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
@@ -23,6 +26,16 @@ subcommands = { 'serialize': serialize
 
 
 def main(argv=sys.argv):
+    """This function is installed via an entrypoint in ``setup.py`` as ``sync-npm``.
+
+    Usage::
+
+      sync-npm {serialize,upsert,fetch-readmes,process-readmes} {<filepath>}
+
+    ``<filepath>`` defaults to stdin. It's necessary for ``serialize`` and
+    ``upsert``, and silently ignored for ``{fetch,process}-readmes``.
+
+    """
     env = wireup.env()
     args = parse_args(argv[1:])
     db = wireup.db(env)
