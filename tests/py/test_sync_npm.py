@@ -121,7 +121,7 @@ class Tests(Harness):
         self.make_package_without_readme_raw()
 
         def fetch(name):
-            return {'name': 'foo-package', 'readme': '# Greetings, program!'}
+            return 200, {'name': 'foo-package', 'readme': '# Greetings, program!'}
 
         fetch_readmes.main({}, [], self.db, lambda a: a, fetch)
 
@@ -133,6 +133,11 @@ class Tests(Harness):
         assert package.readme_raw == '# Greetings, program!'
         assert package.readme_type == 'x-markdown/marky'
         assert package.emails == []
+
+    def test_rf_deletes_a_readme(self):
+        self.make_package_without_readme_raw()
+        fetch_readmes.main({}, [], self.db, lambda a: a, lambda n: (404, {}))
+        assert self.db.one('SELECT * FROM packages') is None
 
     def test_rf_tells_sentry_about_problems(self):
         self.make_package_without_readme_raw()

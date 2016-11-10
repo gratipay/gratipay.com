@@ -13,10 +13,33 @@ def fetch_from_public_registry(package_name):
     """Fetch a package from the public npm registry.
     """
     r = requests.get('https://registry.npmjs.com/' + package_name)
-    if r.status_code != 200:
+    if r.status_code not in (200, 404):
         log(r.status_code, 'for', package_name)
         return None
-    return r.json()
+    return r.status_code, r.json()
+
+
+def delete_package(db, dirty, clean):
+    db.run( 'DELETE FROM packages WHERE package_manager=%s AND name=%s'
+          , (dirty.package_manager, dirty.name)
+           )
+
+
+def update_package(db, dirty, clean):
+    db.run('''
+
+        UPDATE packages
+           SET readme_needs_to_be_processed=true
+             , readme_raw=%s
+             , readme_type=%s
+         WHERE package_manager=%s
+           AND name=%s
+
+    ''', ( clean['readme']
+         , 'x-markdown/marky'
+         , dirty.package_manager
+         , dirty.name
+          ))
 
 
 def Fetcher(db, _fetch):
@@ -24,31 +47,18 @@ def Fetcher(db, _fetch):
         """Update all info for one package.
         """
         log('fetching', dirty.name)
-        full = _fetch(dirty.name)
+        code, clean = _fetch(dirty.name)
 
-        if not full:
-            return
-        elif full['name'] != dirty.name:
-            log('expected', dirty.name, 'got', full['name'])
-            return
-        elif 'readme' not in full:
-            log('no readme in', full['name'])
-            return
-
-        db.run('''
-
-            UPDATE packages
-               SET readme_needs_to_be_processed=true
-                 , readme_raw=%s
-                 , readme_type=%s
-             WHERE package_manager=%s
-               AND name=%s
-
-        ''', ( full['readme']
-             , 'x-markdown/marky'
-             , dirty.package_manager
-             , dirty.name
-              ))
+        assert code in (200, 404)
+        if code == 404:
+            log(dirty.name, 'is 404; deleting')
+            delete_package(db, dirty, clean)
+        elif clean['name'] != dirty.name:
+            log('expected', dirty.name, 'got', clean['name'])
+        elif 'readme' not in clean:
+            log('no readme in', clean['name'])
+        elif clean:
+            update_package(db, dirty, clean)
 
     return fetch
 
