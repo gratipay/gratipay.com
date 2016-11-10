@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
+"""Subcommand for processing readmes.
+"""
 
 from . import log
 from ..utils import markdown
@@ -33,7 +36,7 @@ def Processor(db):
     return process
 
 
-def main(db):
+def main(env, args, db):
     dirty = db.all('SELECT package_manager, name '
                    'FROM packages WHERE readme_needs_to_be_processed '
                    'ORDER BY package_manager DESC, name DESC')

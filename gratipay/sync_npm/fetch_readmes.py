@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+"""Subcommand for fetching readmes.
+"""
 from __future__ import absolute_import, division, print_function, unicode_literals
-
 
 import requests
 
@@ -50,7 +51,7 @@ def Fetcher(db, _fetch=http_fetch):
     return fetch
 
 
-def main(db, _fetch=http_fetch):
+def main(env, args, db, _fetch=http_fetch):
     dirty = db.all('SELECT package_manager, name '
                    'FROM packages WHERE readme_raw IS NULL '
                    'ORDER BY package_manager DESC, name DESC')

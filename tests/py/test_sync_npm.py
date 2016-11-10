@@ -91,7 +91,7 @@ class Tests(Harness):
         def fetch(name):
             return {'name': 'foo-package', 'readme': '# Greetings, program!'}
 
-        fetch_readmes.main(self.db, fetch)
+        fetch_readmes.main({}, [], self.db, fetch)
 
         package = self.db.one('SELECT * FROM packages')
         assert package.name == 'foo-package'
@@ -116,7 +116,7 @@ class Tests(Harness):
 
         ''')
 
-        process_readmes.main(self.db)
+        process_readmes.main({}, [], self.db)
 
         package = self.db.one('SELECT * FROM packages')
         assert package.name == 'foo-package'

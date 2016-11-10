@@ -19,8 +19,8 @@ def parse_args(argv):
 
 subcommands = { 'serialize': serialize.main
               , 'upsert': upsert.main
-              , 'fetch-readmes': lambda env, args, db: fetch_readmes.main(db)
-              , 'process-readmes': lambda env, args, db: process_readmes.main(db)
+              , 'fetch-readmes': fetch_readmes.main
+              , 'process-readmes': process_readmes.main
                }
 
 

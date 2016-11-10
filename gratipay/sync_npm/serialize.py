@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+"""Subcommand for serializing JSON from npm into CSV.
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -48,7 +48,7 @@ def serialize_one(out, package):
     return 1
 
 
-def main(env, args, _):
+def main(env, args, db):
     """Consume raw JSON from the npm registry and spit out CSV for Postgres.
     """
     ijson = import_ijson(env)
