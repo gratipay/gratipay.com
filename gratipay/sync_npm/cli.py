@@ -57,4 +57,4 @@ def main(argv=sys.argv):
                 tell_sentry(e, {})
         return _
 
-    subcommands[args.command.replace('-', '_')](env, args, db, sentrified)
+    subcommands[args.command](env, args, db, sentrified)
