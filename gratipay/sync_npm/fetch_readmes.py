@@ -53,7 +53,7 @@ def Fetcher(db, _fetch):
     return fetch
 
 
-def main(env, args, db, _fetch=fetch_from_public_registry):
+def main(env, args, db, sentrified, _fetch=fetch_from_public_registry):
     """Populate ``readme_raw`` for all packages where ``readme_raw`` is null.
     The ``readme_type`` is set to ``x-markdown/marky``, and
     ``readme_needs_to_be_processed`` is set to ``true``. If the fetched package
@@ -64,4 +64,4 @@ def main(env, args, db, _fetch=fetch_from_public_registry):
     dirty = db.all('SELECT package_manager, name '
                    'FROM packages WHERE readme_raw IS NULL '
                    'ORDER BY package_manager DESC, name DESC')
-    threaded_map(Fetcher(db, _fetch), dirty, 4)
+    threaded_map(sentrified(Fetcher(db, _fetch)), dirty, 4)

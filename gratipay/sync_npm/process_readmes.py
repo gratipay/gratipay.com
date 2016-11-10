@@ -8,7 +8,7 @@ from ..utils import markdown
 from ..utils.threaded_map import threaded_map
 
 
-def Processor(db):
+def Processor(db, _render):
     def process(dirty):
         """Processes the readme for a single package.
         """
@@ -19,7 +19,7 @@ def Processor(db):
                      )
         if raw is None:
             return
-        processed = markdown.render_like_npm(raw)
+        processed = _render(raw)
         db.run('''
 
             UPDATE packages
@@ -36,7 +36,7 @@ def Processor(db):
     return process
 
 
-def main(env, args, db):
+def main(env, args, db, sentrified, _render=markdown.render_like_npm):
     """For all packages where ``readme_needs_to_be_processed`` is ``true``, run
     ``readme_raw`` through ``marky-markdown`` and store the result in
     ``readme``. Reset ``readme_needs_to_be_processed`` to ``false``. This runs
@@ -46,4 +46,4 @@ def main(env, args, db):
     dirty = db.all('SELECT package_manager, name '
                    'FROM packages WHERE readme_needs_to_be_processed '
                    'ORDER BY package_manager DESC, name DESC')
-    threaded_map(Processor(db), dirty, 4)
+    threaded_map(sentrified(Processor(db, _render)), dirty, 4)

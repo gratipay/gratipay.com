@@ -52,12 +52,7 @@ def serialize_one(out, package):
     return 1
 
 
-def main(env, args, db):
-    """Consume raw JSON from the npm registry via ``args.path``, and spit out
-    CSV for Postgres to stdout. Uses ``ijson``, requiring the ``yajl_cffi``
-    backend if ``env.require_yajl`` is ``True``.
-
-    """
+def serialize(env, args, db):
     ijson = import_ijson(env)
 
     path = args.path
@@ -100,3 +95,12 @@ def main(env, args, db):
 
     nprocessed += serialize_one(out, package)  # Don't forget the last one!
     log_stats()
+
+
+def main(env, args, db, sentrified):
+    """Consume raw JSON from the npm registry via ``args.path``, and spit out
+    CSV for Postgres to stdout. Uses ``ijson``, requiring the ``yajl_cffi``
+    backend if ``env.require_yajl`` is ``True``.
+
+    """
+    sentrified(serialize)(env, args, db)

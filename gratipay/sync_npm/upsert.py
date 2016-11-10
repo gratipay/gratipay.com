@@ -17,12 +17,7 @@ import uuid
 NULL = uuid.uuid4().hex
 
 
-def main(env, args, db):
-    """Take a CSV file from stdin and load it into Postgres using an `ingenious algorithm`_.
-
-    .. _ingenious algorithm:  http://tapoueh.org/blog/2013/03/15-batch-update.html
-
-    """
+def upsert(env, args, db):
     fp = open(args.path)
     with db.get_cursor() as cursor:
         assert cursor.connection.encoding == 'UTF8'
@@ -48,3 +43,12 @@ def main(env, args, db):
                GROUP BY u.package_manager, u.name, u.description, u.emails
 
         """)
+
+
+def main(env, args, db, sentrified):
+    """Take a CSV file from stdin and load it into Postgres using an `ingenious algorithm`_.
+
+    .. _ingenious algorithm:  http://tapoueh.org/blog/2013/03/15-batch-update.html
+
+    """
+    sentrified(upsert)(env, args, db)
