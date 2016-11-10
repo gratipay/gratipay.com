@@ -5,7 +5,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from subprocess import Popen, PIPE
 
 from gratipay.testing import Harness, skipif_missing_marky_markdown
-from gratipay.package_managers import readmes
+from gratipay.sync_npm import readmes
 
 
 def load(raw):
