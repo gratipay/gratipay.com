@@ -12,7 +12,7 @@ def Processor(db):
     def process(dirty):
         """Processes the readme for a single package.
         """
-        log(dirty.name)
+        log('processing', dirty.name)
         raw = db.one( 'SELECT readme_raw FROM packages '
                       'WHERE package_manager=%s and name=%s and readme_needs_to_be_processed'
                     , (dirty.package_manager, dirty.name)

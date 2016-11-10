@@ -25,7 +25,6 @@ subcommands = { 'serialize': serialize.main
 
 
 def main(argv=sys.argv):
-
     """This function is installed via an entrypoint in ``setup.py`` as
     ``sync-npm``.
 

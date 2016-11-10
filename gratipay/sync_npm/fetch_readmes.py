@@ -23,7 +23,7 @@ def Fetcher(db, _fetch):
     def fetch(dirty):
         """Update all info for one package.
         """
-        log(dirty.name)
+        log('fetching', dirty.name)
         full = _fetch(dirty.name)
 
         if not full:
