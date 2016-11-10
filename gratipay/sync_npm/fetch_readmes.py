@@ -9,7 +9,9 @@ from . import log
 from ..utils.threaded_map import threaded_map
 
 
-def http_fetch(package_name):
+def fetch_from_public_registry(package_name):
+    """Fetch a package from the public npm registry.
+    """
     r = requests.get('https://registry.npmjs.com/' + package_name)
     if r.status_code != 200:
         log(r.status_code, 'for', package_name)
@@ -17,7 +19,7 @@ def http_fetch(package_name):
     return r.json()
 
 
-def Fetcher(db, _fetch=http_fetch):
+def Fetcher(db, _fetch):
     def fetch(dirty):
         """Update all info for one package.
         """
@@ -51,7 +53,14 @@ def Fetcher(db, _fetch=http_fetch):
     return fetch
 
 
-def main(env, args, db, _fetch=http_fetch):
+def main(env, args, db, _fetch=fetch_from_public_registry):
+    """Populate ``readme_raw`` for all packages where ``readme_raw`` is null.
+    The ``readme_type`` is set to ``x-markdown/marky``, and
+    ``readme_needs_to_be_processed`` is set to ``true``. If the fetched package
+    is missing or malformed, we log the condition and continue. This runs in
+    four threads.
+
+    """
     dirty = db.all('SELECT package_manager, name '
                    'FROM packages WHERE readme_raw IS NULL '
                    'ORDER BY package_manager DESC, name DESC')

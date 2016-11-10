@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
 """Subcommand for processing readmes.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from . import log
 from ..utils import markdown
@@ -37,6 +37,12 @@ def Processor(db):
 
 
 def main(env, args, db):
+    """For all packages where ``readme_needs_to_be_processed`` is ``true``, run
+    ``readme_raw`` through ``marky-markdown`` and store the result in
+    ``readme``. Reset ``readme_needs_to_be_processed`` to ``false``. This runs
+    in four threads.
+
+    """
     dirty = db.all('SELECT package_manager, name '
                    'FROM packages WHERE readme_needs_to_be_processed '
                    'ORDER BY package_manager DESC, name DESC')

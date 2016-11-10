@@ -19,7 +19,9 @@ def import_ijson(env):
 
 
 def arrayize(seq):
-    """Given a sequence of str, return a Postgres array literal str.
+    """Given a sequence of ``str``, return a Postgres array literal ``str``.
+    This is scary and I wish ``psycopg2`` had something we could use.
+
     """
     array = []
     for item in seq:
@@ -32,7 +34,9 @@ def arrayize(seq):
 
 
 def serialize_one(out, package):
-    """Takes a package and emits a serialization suitable for COPY.
+    """Take a single package ``dict`` and emit a CSV serialization suitable for
+    Postgres COPY.
+
     """
     if not package or package['name'].startswith('_'):
         log('skipping', package)
@@ -49,7 +53,10 @@ def serialize_one(out, package):
 
 
 def main(env, args, db):
-    """Consume raw JSON from the npm registry and spit out CSV for Postgres.
+    """Consume raw JSON from the npm registry via ``args.path``, and spit out
+    CSV for Postgres to stdout. Uses ``ijson``, requiring the ``yajl_cffi``
+    backend if ``env.require_yajl`` is ``True``.
+
     """
     ijson = import_ijson(env)
 

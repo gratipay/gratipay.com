@@ -25,7 +25,9 @@ subcommands = { 'serialize': serialize.main
 
 
 def main(argv=sys.argv):
-    """This function is installed via an entrypoint in ``setup.py`` as ``sync-npm``.
+
+    """This function is installed via an entrypoint in ``setup.py`` as
+    ``sync-npm``.
 
     Usage::
 
@@ -33,6 +35,8 @@ def main(argv=sys.argv):
 
     ``<filepath>`` defaults to stdin. It's necessary for ``serialize`` and
     ``upsert``, and silently ignored for ``{fetch,process}-readmes``.
+
+    .. note:: Sphinx is expanding ``sys.argv`` in the parameter list. Sorry. :-/
 
     """
     env = wireup.env()
