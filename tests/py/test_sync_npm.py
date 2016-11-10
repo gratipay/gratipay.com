@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from subprocess import Popen, PIPE
 
 from gratipay.testing import Harness, skipif_missing_marky_markdown
-from gratipay.sync_npm import readmes
+from gratipay.sync_npm import fetch_readmes, process_readmes
 
 
 def load(raw):
@@ -91,7 +91,7 @@ class Tests(Harness):
         def fetch(name):
             return {'name': 'foo-package', 'readme': '# Greetings, program!'}
 
-        readmes.fetch(self.db, fetch)
+        fetch_readmes.main(self.db, fetch)
 
         package = self.db.one('SELECT * FROM packages')
         assert package.name == 'foo-package'
@@ -116,7 +116,7 @@ class Tests(Harness):
 
         ''')
 
-        readmes.process(self.db)
+        process_readmes.main(self.db)
 
         package = self.db.one('SELECT * FROM packages')
         assert package.name == 'foo-package'

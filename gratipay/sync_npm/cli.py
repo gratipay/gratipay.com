@@ -7,8 +7,7 @@ import sys
 import argparse
 
 from gratipay import wireup
-from gratipay.sync_npm.sync import serialize, upsert
-from gratipay.sync_npm import readmes as _readmes
+from gratipay.sync_npm import serialize, upsert, fetch_readmes, process_readmes
 
 
 def parse_args(argv):
@@ -18,10 +17,10 @@ def parse_args(argv):
     return p.parse_args(argv)
 
 
-subcommands = { 'serialize': serialize
-              , 'upsert': upsert
-              , 'fetch-readmes': lambda env, args, db: _readmes.fetch(db)
-              , 'process-readmes': lambda env, args, db: _readmes.process(db)
+subcommands = { 'serialize': serialize.main
+              , 'upsert': upsert.main
+              , 'fetch-readmes': lambda env, args, db: fetch_readmes.main(db)
+              , 'process-readmes': lambda env, args, db: process_readmes.main(db)
                }
 
 

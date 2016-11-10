@@ -1,19 +1,11 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import sys
 
 import requests
 
-from gratipay.utils import markdown
-from gratipay.utils.threaded_map import threaded_map
-from threading import Lock
-
-
-log_lock = Lock()
-
-def log(*a, **kw):
-    with log_lock:
-        print(*a, file=sys.stderr, **kw)
+from . import log
+from ..utils.threaded_map import threaded_map
 
 
 def http_fetch(package_name):
@@ -58,43 +50,8 @@ def Fetcher(db, _fetch=http_fetch):
     return fetch
 
 
-def Processor(db):
-    def process(dirty):
-        """Processes the readme for a single package.
-        """
-        log(dirty.name)
-        raw = db.one( 'SELECT readme_raw FROM packages '
-                      'WHERE package_manager=%s and name=%s and readme_needs_to_be_processed'
-                    , (dirty.package_manager, dirty.name)
-                     )
-        if raw is None:
-            return
-        processed = markdown.render_like_npm(raw)
-        db.run('''
-
-            UPDATE packages
-               SET readme=%s
-                 , readme_needs_to_be_processed=false
-             WHERE package_manager=%s
-               AND name=%s
-
-        ''', ( processed
-             , dirty.package_manager
-             , dirty.name
-              ))
-
-    return process
-
-
-def fetch(db, _fetch=http_fetch):
+def main(db, _fetch=http_fetch):
     dirty = db.all('SELECT package_manager, name '
                    'FROM packages WHERE readme_raw IS NULL '
                    'ORDER BY package_manager DESC, name DESC')
     threaded_map(Fetcher(db, _fetch), dirty, 4)
-
-
-def process(db):
-    dirty = db.all('SELECT package_manager, name '
-                   'FROM packages WHERE readme_needs_to_be_processed '
-                   'ORDER BY package_manager DESC, name DESC')
-    threaded_map(Processor(db), dirty, 4)
