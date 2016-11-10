@@ -1,11 +1,12 @@
-"""Tests for syncing npm.
-"""
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from subprocess import Popen, PIPE
 
+import pytest
+
 from gratipay.testing import Harness, skipif_missing_marky_markdown
-from gratipay.package_managers import readmes
+from gratipay.sync_npm import fetch_readmes, process_readmes
 
 
 def load(raw):
@@ -15,6 +16,23 @@ def load(raw):
     Popen( ('env/bin/sync-npm', 'upsert', '/dev/stdin')
          , stdin=PIPE, stdout=PIPE
           ).communicate(serialized)[0]
+
+
+class Sentrifier:
+
+    def __init__(self):
+        self.ncalls = 0
+
+    def __call__(self, func):
+        def _(*a, **kw):
+            try:
+                func(*a, **kw)
+            except:
+                self.ncalls += 1
+        return _
+
+    def fail(self, *a, **kw):
+        raise RuntimeError
 
 
 class Tests(Harness):
@@ -83,16 +101,29 @@ class Tests(Harness):
         assert package.emails == []
 
 
+    # sentrifier
+
+    def test_sentrifier_starts_at_zero(self):
+        sentrified = Sentrifier()
+        assert sentrified.ncalls == 0
+
+    def test_sentrifier_fail_fails(self):
+        pytest.raises(RuntimeError, Sentrifier().fail)
+
+
     # rf - readmes.Fetcher
 
-    def test_rf_fetches_a_readme(self):
+    def make_package_without_readme_raw(self):
         self.db.run("INSERT INTO packages (package_manager, name, description, emails) "
                     "VALUES ('npm', 'foo-package', 'A package', ARRAY[]::text[])")
+
+    def test_rf_fetches_a_readme(self):
+        self.make_package_without_readme_raw()
 
         def fetch(name):
             return {'name': 'foo-package', 'readme': '# Greetings, program!'}
 
-        readmes.fetch(self.db, fetch)
+        fetch_readmes.main({}, [], self.db, lambda a: a, fetch)
 
         package = self.db.one('SELECT * FROM packages')
         assert package.name == 'foo-package'
@@ -103,11 +134,16 @@ class Tests(Harness):
         assert package.readme_type == 'x-markdown/marky'
         assert package.emails == []
 
+    def test_rf_tells_sentry_about_problems(self):
+        self.make_package_without_readme_raw()
+        sentrified = Sentrifier()
+        fetch_readmes.main({}, [], self.db, sentrified, sentrified.fail)
+        assert sentrified.ncalls == 1
+
 
     # rp - readmes.Processor
 
-    @skipif_missing_marky_markdown
-    def test_rp_processes_a_readme(self):
+    def make_package_with_readme_raw(self):
         self.db.run('''
 
             INSERT
@@ -117,7 +153,11 @@ class Tests(Harness):
 
         ''')
 
-        readmes.process(self.db)
+    @skipif_missing_marky_markdown
+    def test_rp_processes_a_readme(self):
+        self.make_package_with_readme_raw()
+
+        process_readmes.main({}, [], self.db, lambda a: a)
 
         package = self.db.one('SELECT * FROM packages')
         assert package.name == 'foo-package'
@@ -127,3 +167,10 @@ class Tests(Harness):
         assert package.readme_raw == '# Greetings, program!'
         assert package.readme_type == 'x-markdown/marky'
         assert package.emails == []
+
+
+    def test_rp_tells_sentry_about_problems(self):
+        self.make_package_with_readme_raw()
+        sentrified = Sentrifier()
+        process_readmes.main({}, [], self.db, sentrified, sentrified.fail)
+        assert sentrified.ncalls == 1

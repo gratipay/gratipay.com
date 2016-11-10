@@ -1,22 +1,14 @@
-"""Sync our database with package managers. Just npm for now.
+# -*- coding: utf-8 -*-
+"""Subcommand for serializing JSON from npm into CSV.
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import argparse
 import csv
 import sys
 import time
-import uuid
 
-from gratipay import wireup
-from gratipay.package_managers import readmes as _readmes
+from . import log
 
-
-log = lambda *a: print(*a, file=sys.stderr)
-NULL = uuid.uuid4().hex
-
-
-# helpers
 
 def import_ijson(env):
     if env.require_yajl:
@@ -27,7 +19,9 @@ def import_ijson(env):
 
 
 def arrayize(seq):
-    """Given a sequence of str, return a Postgres array literal str.
+    """Given a sequence of ``str``, return a Postgres array literal ``str``.
+    This is scary and I wish ``psycopg2`` had something we could use.
+
     """
     array = []
     for item in seq:
@@ -40,7 +34,9 @@ def arrayize(seq):
 
 
 def serialize_one(out, package):
-    """Takes a package and emits a serialization suitable for COPY.
+    """Take a single package ``dict`` and emit a CSV serialization suitable for
+    Postgres COPY.
+
     """
     if not package or package['name'].startswith('_'):
         log('skipping', package)
@@ -56,11 +52,7 @@ def serialize_one(out, package):
     return 1
 
 
-# cli subcommands
-
-def serialize(env, args, _):
-    """Consume raw JSON from the npm registry and spit out CSV for Postgres.
-    """
+def serialize(env, args, db):
     ijson = import_ijson(env)
 
     path = args.path
@@ -105,56 +97,10 @@ def serialize(env, args, _):
     log_stats()
 
 
-def upsert(env, args, db):
-    """Take a CSV file from stdin and load it into Postgres.
+def main(env, args, db, sentrified):
+    """Consume raw JSON from the npm registry via ``args.path``, and spit out
+    CSV for Postgres to stdout. Uses ``ijson``, requiring the ``yajl_cffi``
+    backend if ``env.require_yajl`` is ``True``.
+
     """
-    fp = open(args.path)
-    with db.get_cursor() as cursor:
-        assert cursor.connection.encoding == 'UTF8'
-
-        # http://tapoueh.org/blog/2013/03/15-batch-update.html
-        cursor.run("CREATE TEMP TABLE updates (LIKE packages INCLUDING ALL) ON COMMIT DROP")
-        cursor.copy_expert('COPY updates (package_manager, name, description, emails) '
-                           "FROM STDIN WITH (FORMAT csv, NULL '%s')" % NULL, fp)
-        cursor.run("""
-
-            WITH updated AS (
-                UPDATE packages p
-                   SET package_manager = u.package_manager
-                     , description = u.description
-                     , emails = u.emails
-                  FROM updates u
-                 WHERE p.name = u.name
-             RETURNING p.name
-            )
-            INSERT INTO packages(package_manager, name, description, emails)
-                 SELECT package_manager, name, description, emails
-                   FROM updates u LEFT JOIN updated USING(name)
-                  WHERE updated.name IS NULL
-               GROUP BY u.package_manager, u.name, u.description, u.emails
-
-        """)
-
-
-def fetch_readmes(env, args, db):
-    _readmes.fetch(db)
-
-
-def process_readmes(env, args, db):
-    _readmes.process(db)
-
-
-# cli plumbing
-
-def parse_args(argv):
-    p = argparse.ArgumentParser()
-    p.add_argument('command', choices=['serialize', 'upsert', 'fetch-readmes', 'process-readmes'])
-    p.add_argument('path', help='the path to the input file', nargs='?', default='/dev/stdin')
-    return p.parse_args(argv)
-
-
-def main(argv=sys.argv):
-    env = wireup.env()
-    args = parse_args(argv[1:])
-    db = wireup.db(env)
-    globals()[args.command.replace('-', '_')](env, args, db)
+    sentrified(serialize)(env, args, db)
