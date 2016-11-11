@@ -114,23 +114,3 @@ class Tests2(Harness):
         r = self.client.GET('/about/')
         assert r.headers['Cache-Control'] == 'no-cache'
         assert 'Vary' not in r.headers
-
-    def test_no_csrf_cookie(self):
-        r = self.client.POST('/', csrf_token=False, raise_immediately=False)
-        assert r.code == 403
-        assert "Bad CSRF cookie" in r.body
-        assert b'csrf_token' in r.headers.cookie
-
-    def test_bad_csrf_cookie(self):
-        r = self.client.POST('/', csrf_token=b'bad_token', raise_immediately=False)
-        assert r.code == 403
-        assert "Bad CSRF cookie" in r.body
-        assert r.headers.cookie[b'csrf_token'].value != 'bad_token'
-
-    def test_csrf_cookie_set_for_most_requests(self):
-        r = self.client.GET('/about/')
-        assert b'csrf_token' in r.headers.cookie
-
-    def test_no_csrf_cookie_set_for_assets(self):
-        r = self.client.GET('/assets/gratipay.css')
-        assert b'csrf_token' not in r.headers.cookie
