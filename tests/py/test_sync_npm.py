@@ -111,13 +111,13 @@ class Tests(Harness):
         pytest.raises(RuntimeError, Sentrifier().fail)
 
 
-    # rf - readmes.Fetcher
+    # fr - fetch_readmes
 
     def make_package_without_readme_raw(self):
         self.db.run("INSERT INTO packages (package_manager, name, description, emails) "
                     "VALUES ('npm', 'foo-package', 'A package', ARRAY[]::text[])")
 
-    def test_rf_fetches_a_readme(self):
+    def test_fr_fetches_a_readme(self):
         self.make_package_without_readme_raw()
 
         def fetch(name):
@@ -134,19 +134,35 @@ class Tests(Harness):
         assert package.readme_type == 'x-markdown/marky'
         assert package.emails == []
 
-    def test_rf_deletes_a_readme(self):
+    def test_fr_adds_empty_readme_as_needed(self):
+        self.make_package_without_readme_raw()
+        def fetch(name):
+            return 200, {'name': 'foo-package', 'redmeat': '# Greetings, program!'}
+        fetch_readmes.main({}, [], self.db, lambda a: a, fetch)
+        package = self.db.one('SELECT * FROM packages')
+        assert package.readme_raw == ''
+
+    def test_fr_replaces_non_unicode_with_empty_readme(self):
+        self.make_package_without_readme_raw()
+        def fetch(name):
+            return 200, {'name': 'foo-package', 'readme': {'private': True}}
+        fetch_readmes.main({}, [], self.db, lambda a: a, fetch)
+        package = self.db.one('SELECT * FROM packages')
+        assert package.readme_raw == ''
+
+    def test_fr_deletes_a_readme(self):
         self.make_package_without_readme_raw()
         fetch_readmes.main({}, [], self.db, lambda a: a, lambda n: (404, {}))
         assert self.db.one('SELECT * FROM packages') is None
 
-    def test_rf_tells_sentry_about_problems(self):
+    def test_fr_tells_sentry_about_problems(self):
         self.make_package_without_readme_raw()
         sentrified = Sentrifier()
         fetch_readmes.main({}, [], self.db, sentrified, sentrified.fail)
         assert sentrified.ncalls == 1
 
 
-    # rp - readmes.Processor
+    # pr - process_readmes
 
     def make_package_with_readme_raw(self):
         self.db.run('''
@@ -159,7 +175,7 @@ class Tests(Harness):
         ''')
 
     @skipif_missing_marky_markdown
-    def test_rp_processes_a_readme(self):
+    def test_pr_processes_a_readme(self):
         self.make_package_with_readme_raw()
 
         process_readmes.main({}, [], self.db, lambda a: a)
@@ -174,7 +190,7 @@ class Tests(Harness):
         assert package.emails == []
 
 
-    def test_rp_tells_sentry_about_problems(self):
+    def test_pr_tells_sentry_about_problems(self):
         self.make_package_with_readme_raw()
         sentrified = Sentrifier()
         process_readmes.main({}, [], self.db, sentrified, sentrified.fail)
