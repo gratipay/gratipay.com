@@ -5,7 +5,6 @@ from base64 import b64encode
 from aspen.http.request import Request
 from aspen.http.response import Response
 
-from gratipay.security import csrf
 from gratipay.security.user import SESSION
 from gratipay.testing import Harness
 
@@ -135,19 +134,3 @@ class Tests2(Harness):
     def test_no_csrf_cookie_set_for_assets(self):
         r = self.client.GET('/assets/gratipay.css')
         assert b'csrf_token' not in r.headers.cookie
-
-    def test_sanitize_token_passes_through_good_token(self):
-        token = 'ddddeeeeaaaaddddbbbbeeeeeeeeffff'
-        assert csrf._sanitize_token(token) == token
-
-    def test_sanitize_token_rejects_overlong_token(self):
-        token = 'ddddeeeeaaaaddddbbbbeeeeeeeefffff'
-        assert csrf._sanitize_token(token) is None
-
-    def test_sanitize_token_rejects_underlong_token(self):
-        token = 'ddddeeeeaaaaddddbbbbeeeeeeeefff'
-        assert csrf._sanitize_token(token) is None
-
-    def test_sanitize_token_rejects_goofy_token(self):
-        token = 'ddddeeeeaaaadddd bbbbeeeeeeeefff'
-        assert csrf._sanitize_token(token) is None
