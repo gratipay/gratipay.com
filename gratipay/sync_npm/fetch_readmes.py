@@ -12,7 +12,10 @@ from ..utils.threaded_map import threaded_map
 def fetch_from_public_registry(package_name):
     """Fetch a package from the public npm registry.
     """
-    r = requests.get('https://registry.npmjs.com/' + package_name)
+    try:
+        r = requests.get('https://registry.npmjs.com/' + package_name)
+    except requests.ConnectionError:
+        return (500, None)  # will be skipped and retried later
     if r.status_code in (200, 404):
         out = r.json()
     else:
