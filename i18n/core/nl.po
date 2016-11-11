@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Changaco <changaco@changaco.oy.lc>, 2014-2015
-# Peter Tillemans <pti@snamellit.com>, 2014-2015
+# Peter Tillemans <pti@snamellit.com>, 2014-2016
 # Sidney Gijzen, 2014
 # Sidney Gijzen, 2014-2016
 msgid ""
@@ -20,15 +20,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "1.0 Payout: Approved!"
-msgstr ""
+msgstr "1.0 Betaling: goedgekeurd!"
 
 msgid ""
 "We've approved your application for a payout of your Gratipay 1.0 balance. "
 "Watch for that during our next weekly payment cycle."
-msgstr ""
+msgstr "We hebben uw aanvraag voor de uitbetaling van uw GratiPay 1.0 balans goedgekeurd. Deze wordt uitgekeerd tijdens de volgende wekelijkse betalingsronde."
 
 msgid "Thanks for using Gratipay! :-)"
-msgstr ""
+msgstr "Hartelijk dank dat u Gratipay gebruikt! :-)"
 
 msgid "Something not right? Reply to this email for help."
 msgstr "Is er iets mis? Beantwoord deze mail voor hulp."
@@ -90,40 +90,40 @@ msgid "Connect to {0} on Gratipay?"
 msgstr "Verbind met {0} op Gratipay?"
 
 msgid "1.0 Payout: Rejected"
-msgstr ""
+msgstr "1.0 Betaling: geweigerd"
 
 msgid ""
 "We've rejected your application for a payout of your Gratipay 1.0 balance, "
 "because we couldn't determine what product or service you were offering for "
 "which people were paying you on Gratipay. Please reply if you would like to "
 "discuss this further."
-msgstr ""
+msgstr "We hebben uw verzoek voor de uitbetaling van een Gratipay 1.0 balans geweigerd, aangezien we niet konden vaststellen welk betaald product of dienst u aanbood op Gratipay. Als u dit verder met ons wilt bespreken, beantwoord dan dit bericht."
 
 msgid "Team Application Approved!"
-msgstr ""
+msgstr "Team aanvraag goedgekeurd!"
 
 msgid ""
 "We've approved your application for the '{team}' Team on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr ""
+msgstr "We hebben uw aanvraag voor uw '{team}' Team op Gratipay goedgekeurd. Voor meer details, zie {a}ons review ticket{_a}."
 
 msgid ""
 "We've approved your application for the '{team}' Team on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr ""
+msgstr "We hebben uw aanvraag voor uw '{team}' Team op Gratipay goedgekeurd. Voor meer details, zie ons review ticket:"
 
 msgid "Team Application Rejected"
-msgstr ""
+msgstr "Team aanvraag geweigerd"
 
 msgid ""
 "We've rejected your application for the '{team}' Team on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr ""
+msgstr "We hebben uw aanvraag voor uw '{team}' Team op Gratipay geweigerd. Voor meer details, zie {a}ons review ticket{_a}."
 
 msgid ""
 "We've rejected your application for the '{team}' Team on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr ""
+msgstr "We hebben uw aanvraag voor uw '{team}' Team op Gratipay geweigerd. Voor meer details, zie ons review ticket:"
 
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
@@ -157,7 +157,7 @@ msgid "Invalid character in elsewhere account username."
 msgstr ""
 
 msgid "Account not found on {0}."
-msgstr ""
+msgstr "Account niet gevonden in {0}"
 
 msgid "You need to log in to access this page."
 msgstr "Je moet inloggen om deze pagina te bekijken."
@@ -181,7 +181,7 @@ msgid "Upstream Error"
 msgstr "Upstream fout"
 
 msgid "Your last PayPal payout failed!"
-msgstr ""
+msgstr "Uw laatste PayPal uitbetaling is mislukt!"
 
 msgid "Your credit card has failed!"
 msgstr "Uw kredietkaart heeft gefaald!"
@@ -214,10 +214,10 @@ msgid "Contact Us"
 msgstr "Contact"
 
 msgid "Payments"
-msgstr ""
+msgstr "Betalingen"
 
 msgid "Payroll"
-msgstr ""
+msgstr "Loonlijst"
 
 msgid "Do Not Track"
 msgstr "Do Not Track"
@@ -232,7 +232,7 @@ msgid "Disclosure"
 msgstr "Bekendmaking"
 
 msgid "Hall of Fame (Legacy)"
-msgstr ""
+msgstr "Hall of Fame (Oud)"
 
 msgid "Basic Info"
 msgstr "Basisinformatie"
@@ -259,7 +259,7 @@ msgid "wk"
 msgstr "wk"
 
 msgid "Sign out"
-msgstr ""
+msgstr "Uitloggen"
 
 msgid ""
 "{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available "
@@ -277,10 +277,10 @@ msgid "Blog"
 msgstr "Blog"
 
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 msgid "Communities"
 msgstr "Gemeenschappen"
@@ -363,13 +363,13 @@ msgid "Credit Card"
 msgstr "Kredietkaart"
 
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 msgid "verified in: {country}"
 msgstr ""
 
 msgid "Weekly"
-msgstr ""
+msgstr "Wekelijks"
 
 msgid "Giving"
 msgstr "Geven"
@@ -378,7 +378,7 @@ msgid "hidden"
 msgstr "verborgen"
 
 msgid "Taking"
-msgstr ""
+msgstr "Nemen"
 
 msgid "Joined"
 msgstr "Lid geworden"
@@ -387,7 +387,7 @@ msgid "History"
 msgstr "Geschiedenis"
 
 msgid "Emails"
-msgstr ""
+msgstr "Emails"
 
 msgid "Settings"
 msgstr "Instellingen"
@@ -440,16 +440,16 @@ msgid "Teams"
 msgstr "Teams"
 
 msgid "{sign_in}{br}to give to{br}{team}"
-msgstr ""
+msgstr "{sign_in}{br}om te geven aan{br}{team}"
 
 msgid "You Give"
-msgstr ""
+msgstr "U geeft"
 
 msgid "per week"
 msgstr "per week"
 
 msgid "Give to {0}"
-msgstr ""
+msgstr "Geef aan {0}"
 
 msgid "Stop Giving"
 msgstr "Stop met geven"
@@ -527,49 +527,49 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Approved"
-msgstr ""
+msgstr "Goedgekeurd"
 
 msgid "Under Review"
-msgstr ""
+msgstr "In behandeling"
 
 msgid "Rejected"
-msgstr ""
+msgstr "Geweigerd"
 
 msgid "Payments{br}and Payroll{br}for Open Work"
-msgstr ""
+msgstr "Betalingen{br}en lonen{br}voor open werk."
 
 msgid "Read more"
-msgstr ""
+msgstr "Lees meer"
 
 msgid "Welcome to Gratipay!"
-msgstr ""
+msgstr "Welkom bij Gratipay!"
 
 msgid "We have {nteams} Teams receiving and sharing about {volume} each week."
-msgstr ""
+msgstr "We hebben {nteams} teams welke ongeveer {volume} iedere week ontvangen en delen."
 
 msgid "Continue to explore our Teams, or {a}read more about us{_a}."
-msgstr ""
+msgstr "Verken onze teams nog wat meer, of {a}lees meer over ons{_a}."
 
 msgid "Continue"
-msgstr ""
+msgstr "Doorgaan"
 
 msgid "Apply for a New Team"
 msgstr "Aanmelden voor een nieuw team"
 
 msgid "created {ago}"
-msgstr ""
+msgstr "gemaakt {ago}"
 
 msgid "owned by {a}{owner}{_a}"
-msgstr ""
+msgstr "eigendom van {a}{owner}{_a}"
 
 msgid "You must sign in to apply for a new Team."
-msgstr ""
+msgstr "U moet inloggen om u aan te melden bij een nieuw team."
 
 msgid "You must have a verified email address to apply for a new Team."
-msgstr ""
+msgstr "U moet in het bezit zijn van een geverifieerd emailadres om u te kunnen aanmelden voor een nieuw team. "
 
 msgid "You must attach a PayPal account to apply for a new Team."
-msgstr ""
+msgstr "U moet een PayPal account aan uw account koppelen om u te kunnen aanmelden voor een nieuw team."
 
 msgid "Apply"
 msgstr "Aanmelden"
@@ -608,16 +608,16 @@ msgid "Product or Service"
 msgstr "Product of service"
 
 msgid "What product or service does your Team provide?"
-msgstr ""
+msgstr "Welk product of service levert uw team?"
 
 msgid "Homepage"
 msgstr "Home pagina"
 
 msgid "What is the customer-facing web page for your product or service?"
-msgstr ""
+msgstr "Wat is de publiek toegankelijke website voor uw product of service?"
 
 msgid "Self-onboarding Documentation URL"
-msgstr ""
+msgstr "URL met instructies over aanmelden voor nieuwe leden"
 
 msgid ""
 "Where can people find instructions on how to do your work for you "
@@ -625,25 +625,25 @@ msgid ""
 msgstr ""
 
 msgid "To-do URL"
-msgstr ""
+msgstr "To-do URL"
 
 msgid "Where can people find a list of available work to do for your Team?"
-msgstr ""
+msgstr "Waar kan men een lijst vinden met voor uw team beschikbaar werk?"
 
 msgid "Agreements"
-msgstr ""
+msgstr "Overeenkomsten"
 
 msgid "I agree to have my application {0}publicly reviewed{1}."
-msgstr ""
+msgstr "I ga akkoord dat mijn aanmelding {0}publiekelijk wordt besproken{1}."
 
 msgid "I agree to be responsible for {0}payroll{1}."
-msgstr ""
+msgstr "I ga akkoord dat ik aansprakelijk ben voor {0}de loonlijst{1}."
 
 msgid "I agree to the {0}terms of service{1}."
-msgstr ""
+msgstr "Ik ga akkoord met de {0}algemene voorwaarden{1}."
 
 msgid "Migration of Payments"
-msgstr ""
+msgstr "Migratie van betalingen"
 
 msgid ""
 "The {ntips} weekly tips totalling {receiving} that previously were directed "
