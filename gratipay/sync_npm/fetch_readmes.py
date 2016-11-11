@@ -13,10 +13,11 @@ def fetch_from_public_registry(package_name):
     """Fetch a package from the public npm registry.
     """
     r = requests.get('https://registry.npmjs.com/' + package_name)
-    if r.status_code not in (200, 404):
-        log(r.status_code, 'for', package_name)
-        return None
-    return r.status_code, r.json()
+    if r.status_code in (200, 404):
+        out = r.json()
+    else:
+        out = None
+    return r.status_code, out
 
 
 def delete_package(db, dirty, clean):
@@ -49,16 +50,28 @@ def Fetcher(db, _fetch):
         log('fetching', dirty.name)
         code, clean = _fetch(dirty.name)
 
-        assert code in (200, 404)
         if code == 404:
-            log(dirty.name, 'is 404; deleting')
+            log(dirty.name, 'is {}; deleting'.format(code))
             delete_package(db, dirty, clean)
-        elif clean['name'] != dirty.name:
-            log('expected', dirty.name, 'got', clean['name'])
-        elif 'readme' not in clean:
-            log('no readme in', clean['name'])
-        elif clean:
-            update_package(db, dirty, clean)
+            return
+
+        if code != 200:
+            assert clean is None
+            log(dirty.name, 'is {}; skipping'.format(code))
+            return
+
+        assert dirty.name == clean['name']
+
+        if 'readme' not in clean:
+            log(clean['name'], 'has no readme; adding an empty one')
+            clean['readme'] = ''
+        elif type(clean['readme']) is not unicode:
+            log(clean['name'], 'has a readme of type {} instead of unicode; '
+                               'replacing with an empty one'
+                               .format(type(clean['readme'])))
+            clean['readme'] = ''
+
+        update_package(db, dirty, clean)
 
     return fetch
 
