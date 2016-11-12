@@ -47,3 +47,6 @@ class Tests(Harness):
     def test_no_csrf_cookie_set_for_assets(self):
         r = self.client.GET('/assets/gratipay.css')
         assert b'csrf_token' not in r.headers.cookie
+
+    def test_that_missing_csrf_doesnt_confuse_whatever(self):
+        pass

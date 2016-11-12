@@ -36,9 +36,8 @@ def extract_token_from_cookie(request):
         token = _sanitize_token(token)
 
     # Don't set a CSRF cookie on assets, to avoid busting the cache.
-    # Don't set it on callbacks, because we don't need it there.
 
-    if request.path.raw.startswith('/assets/') or request.path.raw.startswith('/callbacks/'):
+    if request.path.raw.startswith('/assets/'):
         token = None
     else:
         token = token or _get_new_token()
@@ -49,10 +48,6 @@ def extract_token_from_cookie(request):
 def reject_forgeries(request, csrf_token):
     # Assume that anything not defined as 'safe' by RC2616 needs protection.
     if request.line.method not in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
-
-        # But for webhooks we depend on IP filtering for security.
-        if request.line.uri.startswith('/callbacks/'):
-            return
 
         # Check non-cookie token for match.
         second_token = ""
