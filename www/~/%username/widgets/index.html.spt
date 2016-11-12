@@ -97,8 +97,8 @@ title = _("Widgets")
             -1px -1px 0 rgba(255,255,255,.25) inset;
     }
 </style>
-   
-<div> 
+
+<div>
     <h2>{{ _("Giving & Taking Widgets") }}</h2>
 
     <p>{{ _("Use this code to add a Gratipay \"receiving\" widget on your website:") }}</p>
@@ -120,6 +120,10 @@ title = _("Widgets")
     <p>{{ _("Here's what it looks like:") }}</p>
 
     <p><script data-gratipay-username="{{ participant.username }}" data-gratipay-widget="giving" src="//grtp.co/v1.js"></script></p>
+
+    <h2>{{ _("More Info") }}</h2>
+
+    <p>Documentation for widgets is available at <a href="https://github.com/gratipay/grtp.co">https://github.com/gratipay/grtp.co</a>.</p>
 
 </div>
 {% endblock %}
