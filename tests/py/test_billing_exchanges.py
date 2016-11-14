@@ -101,7 +101,7 @@ class TestsWithBillingHarness(BillingHarness):
 
     def test_cch_invalidated_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
-        ExchangeRoute.insert(bob, 'braintree-cc', 'foo', error='invalidated')
+        ExchangeRoute.insert(bob, 'braintree-cc', 'foo', error=ExchangeRoutes.ERROR_INVALIDATED)
         self.hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
@@ -358,7 +358,7 @@ class TestsWithoutBillingHarness(Harness):
         pp = ExchangeRoute.from_network(alice, 'paypal')
         e_id = record_exchange(self.db, pp, D('-32.45'), D('0.86'), alice, 'pre')
         assert alice.balance == D('3.69')
-        pp.update_error('invalidated')
+        pp.invalidate()
         record_exchange_result(self.db, e_id, 'failed', 'oops', alice)
         alice = P('alice')
         assert alice.balance == D('37.00')

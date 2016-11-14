@@ -8,8 +8,10 @@ class ExchangeRoute(Model):
 
     typname = "exchange_routes"
 
+    ERROR_INVALIDATED = 'invalidated'
+
     def __bool__(self):
-        return self.error != 'invalidated'
+        return self.error != self.ERROR_INVALIDATED
 
     __nonzero__ = __bool__
 
@@ -76,12 +78,12 @@ class ExchangeRoute(Model):
             # XXX This doesn't sound right. Doesn't this corrupt history pages?
             self.db.run("DELETE FROM exchange_routes WHERE id=%s", (self.id,))
         else:
-            self.update_error('invalidated')
+            self.update_error(self.ERROR_INVALIDATED)
 
     def update_error(self, new_error):
         id = self.id
         old_error = self.error
-        if old_error == 'invalidated':
+        if old_error == self.ERROR_INVALIDATED:
             return
         self.db.run("""
             UPDATE exchange_routes
