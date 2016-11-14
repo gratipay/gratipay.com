@@ -49,4 +49,4 @@ class Tests(Harness):
         assert b'csrf_token' not in r.headers.cookie
 
     def test_that_missing_csrf_doesnt_confuse_whatever(self):
-        pass
+        self.client.POST('/assets/gratipay.css')
