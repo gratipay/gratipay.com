@@ -17,13 +17,13 @@ class Tests(Harness):
 
     def test_receiving_is_not_visible_to_random(self):
         self.make_team(is_approved=True)
-        alice = self.make_participant('alice')
+        self.make_participant('alice')
 
         assert self.client.GxT('/TheEnterprise/receiving/', auth_as='alice').code == 401
 
     def test_receiving_is_visible_to_admin(self):
         self.make_team(is_approved=True)
-        admin = self.make_participant('admin', is_admin=True)
+        self.make_participant('admin', is_admin=True)
 
         assert self.client.GET('/TheEnterprise/receiving/', auth_as='admin').code == 200
 
