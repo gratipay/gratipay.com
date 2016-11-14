@@ -2,9 +2,10 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from gratipay.security import csrf
+from gratipay.testing import Harness
 
 
-class Tests(object):
+class Tests(Harness):
 
     # st - _sanitize_token
 
