@@ -7,7 +7,7 @@ team = get_team(state)
 if team.is_approved in (None, False):
     raise Response(404)
 
-if not (user.ADMIN or user.participant.username == team.owner):
+if user.ANON or not (user.ADMIN or user.participant.username == team.owner):
     raise Response(401)
 
 banner = team.name
