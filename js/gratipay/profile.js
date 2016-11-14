@@ -59,25 +59,6 @@ Gratipay.profile.init = function() {
         $('.statement button.edit').click();
     }
 
-
-    // Wire up cryptocoin inputs.
-    // ==========================
-
-    $('tr.cryptocoin.js-edit').each(function() {
-        var $root = $(this);
-        Gratipay.forms.jsEdit({
-            root: $root,
-            success: function(){
-                var addr = $root.find('[name="address"]').val();
-                $root.find('.view').text(addr);
-                $root.find('button.delete').data('address', addr);
-                $root.addClass('not-empty');
-            },
-        });
-        $root.find('button.delete').click(Gratipay.routes.deleteRoute);
-    });
-
-
     // Wire up account deletion.
     // =========================
 
