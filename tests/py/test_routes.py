@@ -40,13 +40,26 @@ class TestRoutes(BillingHarness):
         assert self.roman.get_credit_card_error() is None
 
     @mock.patch.object(Participant, 'send_email')
-    def test_associate_paypal(self, mailer):
+    def test_associate_and_delete_valid_paypal(self, mailer):
         mailer.return_value = 1 # Email successfully sent
         self.roman.add_email('roman@gmail.com')
         self.db.run("UPDATE emails SET verified=true WHERE address='roman@gmail.com'")
         self.hit('roman', 'associate', 'paypal', 'roman@gmail.com')
         assert ExchangeRoute.from_network(self.roman, 'paypal')
         assert self.roman.has_payout_route
+
+        self.hit('roman', 'delete' ,'paypal', 'roman@gmail.com')
+        assert not self.roman.has_payout_route
+
+    def test_delete_paypal_with_exchanges(self):
+        self.roman.add_email('roman@gmail.com')
+        self.db.run("UPDATE emails SET verified=true WHERE address='roman@gmail.com'")
+        self.hit('roman', 'associate', 'paypal', 'roman@gmail.com')
+
+        self.make_exchange('paypal', 10, 0, self.roman)
+        self.hit('roman', 'delete' ,'paypal', 'roman@gmail.com')
+
+        assert not self.roman.has_payout_route
 
     def test_associate_paypal_invalid(self):
         r = self.hit('roman', 'associate', 'paypal', 'alice@gmail.com', expected=400)
