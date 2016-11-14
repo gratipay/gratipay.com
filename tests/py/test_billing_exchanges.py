@@ -101,7 +101,7 @@ class TestsWithBillingHarness(BillingHarness):
 
     def test_cch_invalidated_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
-        ExchangeRoute.insert(bob, 'braintree-cc', 'foo', error=ExchangeRoutes.ERROR_INVALIDATED)
+        ExchangeRoute.insert(bob, 'braintree-cc', 'foo').invalidate()
         self.hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 

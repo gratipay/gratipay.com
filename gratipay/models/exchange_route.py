@@ -8,13 +8,6 @@ class ExchangeRoute(Model):
 
     typname = "exchange_routes"
 
-    ERROR_INVALIDATED = 'invalidated'
-
-    def __bool__(self):
-        return self.error != self.ERROR_INVALIDATED
-
-    __nonzero__ = __bool__
-
     @classmethod
     def from_id(cls, id):
         r = cls.db.one("""
@@ -78,13 +71,16 @@ class ExchangeRoute(Model):
             # XXX This doesn't sound right. Doesn't this corrupt history pages?
             self.db.run("DELETE FROM exchange_routes WHERE id=%s", (self.id,))
         else:
-            self.update_error(self.ERROR_INVALIDATED)
+            self.db.run("UPDATE exchange_routes SET is_deleted = true WHERE id = %s", (self.id, ))
+            self.set_attributes(is_deleted=True)
 
     def update_error(self, new_error):
         id = self.id
         old_error = self.error
-        if old_error == self.ERROR_INVALIDATED:
+
+        if self.is_deleted:
             return
+
         self.db.run("""
             UPDATE exchange_routes
                SET error = %(new_error)s
