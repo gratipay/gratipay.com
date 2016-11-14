@@ -14,6 +14,7 @@ import re
 
 from aspen import Response
 
+from . import _requesting_asset
 from .crypto import constant_time_compare, get_random_string
 
 
@@ -37,7 +38,7 @@ def extract_token_from_cookie(request):
 
     # Don't set a CSRF cookie on assets, to avoid busting the cache.
 
-    if request.path.raw.startswith('/assets/'):
+    if _requesting_asset(request):
         token = None
     else:
         token = token or _get_new_token()
