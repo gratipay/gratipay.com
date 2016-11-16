@@ -1,8 +1,7 @@
 from datetime import datetime
-from decimal import Decimal
+from decimal import Decimal as D
 
 from aspen import Response
-from psycopg2 import IntegrityError
 
 
 def get_end_of_year_totals(db, team, year):
