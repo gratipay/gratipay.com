@@ -63,8 +63,8 @@ years = list(range(current_year, team.ctime.year-1, -1))
             </h2></th>
         </tr>
         <tr class="head">
-            <td class="credits">{{ _("Received From") }}</td>
-            <td class="debits">{{ _("Taken By") }}</td>
+            <td class="status">{{ _("Giver") }}</td>
+            <td class="debits">{{ _("Taker") }}</td>
             <td class="balance">{{ _("Amount") }}</td>
             <td class="status">{{ _("Status") }}</td>
             <td class="notes">{{ _("Notes") }}</td>
@@ -72,7 +72,7 @@ years = list(range(current_year, team.ctime.year-1, -1))
         {% for event in payday['events'] %}
             <tr>
             {% if event['direction'] == 'to-team' %}
-                <td class="credits">{{ event['participant'] }}</td>
+                <td class="notes">{{ event['participant'] }}</td>
                 <td class="debits"></td>
             {% else %}
                 <td class="credits"></td>
