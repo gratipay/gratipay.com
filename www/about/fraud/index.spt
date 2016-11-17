@@ -1,0 +1,12 @@
+[---]
+banner = _("About")
+title = _("Fraud Prevention")
+[---] text/html
+{% extends "templates/about-fraud.html" %}
+{% block content %}
+
+<p>Fraud is bad for everyone, so we do our best to prevent it. You can help us out by <a href="/about/contact">reporting</a> unexpectedly large donations or other suspicious behavior. <a href="inside.gratipay.com/howto/review-accounts">Here is our workflow</a> for checking identities.</p> 
+
+<p>If you can't log in, it may be because you have been marked "<a href="/about/fraud/suspicious">suspicious</a>" by one of our staff. Please email us at <a href="mailto:support@gratipay.com">support@gratipay.com</a> so we can confirm your identity.</p>
+
+{% endblock %}

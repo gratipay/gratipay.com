@@ -16,7 +16,7 @@ suspicious = website.db.all("""
 
 title = _("Suspicious Accounts")
 [---] text/html
-{% extends "templates/about.html" %}
+{% extends "templates/about-fraud.html" %}
 {% block content %}
 
 <p>If your account is listed and you don't think you're suspicious, please contact <a href="mailto:support@gratipay.com">support@gratipay.com</a></p>
