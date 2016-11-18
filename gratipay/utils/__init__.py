@@ -69,7 +69,7 @@ def get_participant(state, restrict=True, resolve_unclaimed=True):
 
     if restrict:
         if user.ANON:
-            raise Response(403, _("You need to log in to access this page."))
+            raise Response(401, _("You need to log in to access this page."))
 
     from gratipay.models.participant import Participant  # avoid circular import
     participant = Participant.from_username(slug)
