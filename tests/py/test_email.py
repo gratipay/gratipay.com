@@ -74,9 +74,9 @@ class TestEmail(EmailHarness):
         expected = "We are connecting alice2@example.com to the alice account on Gratipay"
         assert expected in last_email['body_text']
 
-    def test_post_anon_returns_403(self):
+    def test_post_anon_returns_401(self):
         response = self.hit_email_spt('add-email', 'anon@gratipay.com', user=None, should_fail=True)
-        assert response.code == 403
+        assert response.code == 401
 
     def test_post_with_no_at_symbol_is_400(self):
         response = self.hit_email_spt('add-email', 'gratipay.com', should_fail=True)

@@ -33,11 +33,11 @@ class Tests(EmailHarness):
 
     # il - identities listing
 
-    def test_il_is_403_for_anon(self):
-        assert self.client.GxT('/~bob/identities/').code == 403
+    def test_il_is_401_for_anon(self):
+        assert self.client.GxT('/~bob/identities/').code == 401
 
-    def test_il_is_403_for_non_admin(self):
-        assert self.client.GxT('/~bob/identities/').code == 403
+    def test_il_is_401_for_non_admin(self):
+        assert self.client.GxT('/~bob/identities/').code == 401
 
     def test_il_is_200_for_self(self):
         assert self.client.GET('/~bob/identities/', auth_as='bob').code == 200
@@ -51,11 +51,11 @@ class Tests(EmailHarness):
     def test_ip_disallows_methods(self):
         assert self.client.hxt('HEAD', '/~bob/identities/TT').code == 405
 
-    def test_ip_is_403_for_anon(self):
-        assert self.client.GxT('/~bob/identities/TT').code == 403
+    def test_ip_is_401_for_anon(self):
+        assert self.client.GxT('/~bob/identities/TT').code == 401
 
-    def test_ip_is_403_for_non_admin(self):
-        assert self.client.GxT('/~bob/identities/TT').code == 403
+    def test_ip_is_401_for_non_admin(self):
+        assert self.client.GxT('/~bob/identities/TT').code == 401
 
     def test_ip_is_200_for_self(self):
         assert self.client.GET('/~bob/identities/TT', auth_as='bob').code == 200
