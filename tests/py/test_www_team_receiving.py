@@ -19,7 +19,7 @@ class Tests(Harness):
         self.make_team(is_approved=True)
         self.make_participant('alice')
 
-        assert self.client.GxT('/TheEnterprise/receiving/', auth_as='alice').code == 401
+        assert self.client.GxT('/TheEnterprise/receiving/', auth_as='alice').code == 403
 
     def test_receiving_is_visible_to_admin(self):
         self.make_team(is_approved=True)
