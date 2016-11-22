@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""verify-identity.py <participant_id>, <country_code>
+"""verify-identity.py <participant_id> <country_code>
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
