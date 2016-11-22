@@ -27,17 +27,6 @@ class MembershipMixin(object):
         self.set_take_for(participant, ZERO, recorder)
 
 
-    def remove_all_members(self, cursor=None):
-        (cursor or self.db).run("""
-            INSERT INTO takes (ctime, member, team, amount, recorder) (
-                SELECT ctime, member, %(username)s, 0.00, %(username)s
-                  FROM current_takes
-                 WHERE team=%(username)s
-                   AND amount > 0
-            );
-        """, dict(username=self.username))
-
-
     @property
     def nmembers(self):
         """The number of members. Read-only and computed (not in the db); equal to
@@ -64,11 +53,8 @@ class MembershipMixin(object):
             if current_participant:
                 member['removal_allowed'] = current_participant.username == self.owner
                 if member['username'] == current_participant.username:
-                    member['is_current_user'] = True
-                    if take['ctime'] is not None:
-                        # current user, but not the team itself
-                        member['editing_allowed']= True
+                    member['editing_allowed']= True
 
-            member['last_week'] = self.get_take_last_week_for(member['participant_id'])
+            member['last_week'] = self.get_take_last_week_for(take['participant'])
             members.append(member)
         return members

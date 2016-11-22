@@ -3,9 +3,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from pytest import raises
 from gratipay.models.team.mixins.takes import NotAllowed, PENNY, ZERO
 from gratipay.testing import Harness, D,P,T
+from gratipay.testing.billing import PaydayMixin
 
 
-class TeamTakesHarness(Harness):
+class TeamTakesHarness(Harness, PaydayMixin):
     # Factored out to share with membership tests ...
 
     def setUp(self):
@@ -120,6 +121,75 @@ class Tests(TeamTakesHarness):
     def test_stf_doesnt_let_anyone_set_a_take_who_is_not_already_on_the_team_even_to_zero(self):
         actual = self.err(self.crusher, 0, self.crusher)
         assert actual == 'can only set take if already a member of the team'
+
+
+    def test_stf_vets_participant_for_suspiciousness(self):
+        mallory = self.make_participant('mallory', is_suspicious=True)
+        actual = self.err(mallory, 0, self.picard)
+        assert actual == 'user must not be flagged as suspicious'
+
+    def test_stf_vets_participant_for_email(self):
+        mallory = self.make_participant('mallory')
+        actual = self.err(mallory, 0, self.picard)
+        assert actual == 'user must have added at least one email address'
+
+    def test_stf_vets_participant_for_verified_identity(self):
+        mallory = self.make_participant('mallory', email_address='m@example.com')
+        actual = self.err(mallory, 0, self.picard)
+        assert actual == 'user must have a verified identity'
+
+    def test_stf_vets_participant_for_claimed(self):
+        mallory = self.make_participant('mallory', email_address='m@example.com', verified_in='TT')
+        actual = self.err(mallory, 0, self.picard)
+        assert actual == 'user must have claimed the account'
+
+
+    def test_stf_vets_recorder_for_suspiciousness(self):
+        mallory = self.make_participant('mallory', is_suspicious=True)
+        actual = self.err(self.crusher, 0, mallory)
+        assert actual == 'user must not be flagged as suspicious'
+
+    def test_stf_vets_recorder_for_email(self):
+        mallory = self.make_participant('mallory')
+        actual = self.err(self.crusher, 0, mallory)
+        assert actual == 'user must have added at least one email address'
+
+    def test_stf_vets_recorder_for_verified_identity(self):
+        mallory = self.make_participant('mallory', email_address='m@example.com')
+        actual = self.err(self.crusher, 0, mallory)
+        assert actual == 'user must have a verified identity'
+
+    def test_stf_vets_recorder_for_claimed(self):
+        mallory = self.make_participant('mallory', email_address='m@example.com', verified_in='TT')
+        actual = self.err(self.crusher, 0, mallory)
+        assert actual == 'user must have claimed the account'
+
+
+    # gtlwf - get_take_last_week_for
+
+    def test_gtlwf_gets_take_last_week_for_someone(self):
+        self.enterprise.set_take_for(self.crusher, PENNY*1, self.picard)
+        self.enterprise.set_take_for(self.crusher, PENNY*24, self.crusher)
+        self.run_payday()
+        self.enterprise.set_take_for(self.crusher, PENNY*48, self.crusher)
+        assert self.enterprise.get_take_for(self.crusher) == PENNY*48  # sanity check
+        assert self.enterprise.get_take_last_week_for(self.crusher) == PENNY*24
+
+    def test_gtlwf_returns_zero_when_they_werent_taking(self):
+        self.run_payday()
+        self.enterprise.set_take_for(self.crusher, PENNY*1, self.picard)
+        assert self.enterprise.get_take_for(self.crusher) == PENNY*1  # sanity check
+        assert self.enterprise.get_take_last_week_for(self.crusher) == ZERO
+
+    def test_gtlwf_ignores_a_currently_running_payday(self):
+        self.enterprise.set_take_for(self.crusher, PENNY*1, self.picard)
+        self.enterprise.set_take_for(self.crusher, PENNY*24, self.crusher)
+        self.run_payday()
+        self.enterprise.set_take_for(self.crusher, PENNY*48, self.crusher)
+        self.start_payday()
+        self.enterprise.set_take_for(self.crusher, PENNY*96, self.crusher)
+        assert self.enterprise.get_take_for(self.crusher) == PENNY*96  # sanity check
+        assert self.enterprise.get_take_last_week_for(self.crusher) == PENNY*24
 
 
     # ut - update_taking

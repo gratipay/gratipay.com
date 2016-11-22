@@ -3,8 +3,10 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import braintree
+import mock
 from braintree.test.nonces import Nonces
 
+from gratipay.billing.payday import Payday
 from gratipay.billing.exchanges import cancel_card_hold
 from gratipay.models.exchange_route import ExchangeRoute
 
@@ -12,7 +14,18 @@ from .harness import Harness
 from .vcr import use_cassette
 
 
-class BillingHarness(Harness):
+class PaydayMixin(object):
+
+    @mock.patch.object(Payday, 'fetch_card_holds')
+    def run_payday(self, fch):
+        fch.return_value = {}
+        Payday.start().run()
+
+    def start_payday(self):
+        Payday.start()
+
+
+class BillingHarness(Harness, PaydayMixin):
     """This is a harness for billing-related tests.
     """
 
