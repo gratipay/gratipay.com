@@ -77,7 +77,7 @@ def _check_balances(cursor):
                       select participant as username, sum(amount) as a
                         from exchanges
                        where amount > 0
-                         and (status is null or status = 'succeeded')
+                         and (status = 'unknown' or status = 'succeeded')
                     group by participant
 
                        union all
@@ -85,7 +85,7 @@ def _check_balances(cursor):
                       select participant as username, sum(amount-fee) as a
                         from exchanges
                        where amount < 0
-                         and (status is null or status <> 'failed')
+                         and (status = 'unknown' or status <> 'failed')
                     group by participant
 
                        union all
