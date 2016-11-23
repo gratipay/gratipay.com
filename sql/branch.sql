@@ -8,11 +8,11 @@ UPDATE exchanges SET status = 'unknown' WHERE status IS NULL;
 -- Alter the exchanges table to ensure that no more NULL values are entered
 ALTER TABLE exchanges ALTER COLUMN status SET NOT NULL;
 
--- Insert records for ‘unknown’ (previously NULL in exchanges table
+-- Insert records for 'unknown' (previously NULL) in exchanges table
 -- network in exchange_route table
-INSERT INTO  exchange_routes (participant, network, address, error)
+INSERT INTO exchange_routes (participant, network, address, error)
      (
-       SELECT DISTINCT participants.id, 'unknown'::payment_net, 'None', 'None'
+       SELECT DISTINCT participants.id, 'unknown'::payment_net, 'n/a', ''
        FROM exchanges, participants
        WHERE exchanges.participant = participants.username
        AND route IS NULL
