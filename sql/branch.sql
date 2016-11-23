@@ -18,7 +18,8 @@ INSERT INTO exchange_routes (participant, network, address, error)
        AND route IS NULL
      );
 
--- Update exchanges records with exchange_route ids pointing to ‘unknown’ network records for that participants
+-- Update exchanges records with exchange_route ids pointing to 'unknown'
+-- network records for that participants
 UPDATE exchanges
 SET route = exchange_routes.id
 FROM exchange_routes, participants
