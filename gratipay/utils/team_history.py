@@ -34,13 +34,22 @@ def get_end_of_year_totals(db, team, year):
     return received, distributed
 
 
-def iter_payday_events(db, participant, year=None):
-    """Yields payday events for the given participant.
+def iter_payday_events(db, team, year=None):
+    """Yields payday events for the given Team.
     """
     current_year = datetime.utcnow().year
     year = year or current_year
 
-    username = participant.username
+    name = team.name
+    paydays = db.all("""
+        SELECT id, ts_start::date
+          FROM paydays
+         WHERE ts_start > %(ctime)s 
+      ORDER BY ts_start ASC
+    """, dict(ctime=team.ctime))
+    
+    for payday in paydays:
+    """Run qurery to get data and return in a structure"""
     exchanges = db.all("""
         SELECT *
           FROM exchanges
@@ -75,11 +84,6 @@ def iter_payday_events(db, participant, year=None):
                   , received=payments_received + transfers_received
                    )
 
-    payday_dates = db.all("""
-        SELECT ts_start::date
-          FROM paydays
-      ORDER BY ts_start ASC
-    """)
 
     balance = get_end_of_year_balance(db, participant, year, current_year)
     prev_date = None

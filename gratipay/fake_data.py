@@ -240,7 +240,11 @@ def get_exchange_route(db, participant):
 def random_country_id(db):
     return db.one("SELECT id FROM countries ORDER BY random() LIMIT 1")
 
-
+def add_payday_to_payments(db, payday):
+    db.run("""UPDATE payments
+                 SET payday = %(payday)s
+               WHERE %(ts_start)s <= timestamp < %(ts_end)s
+           """)
 
 def prep_db(db):
     db.run("""
