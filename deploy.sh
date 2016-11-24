@@ -53,7 +53,7 @@ heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin \
 
 
 # Sync the translations
-echo "Syncing translations..."
+echo "Syncing translations ..."
 if [ ! -e .transifexrc -a ! -e ~/.transifexrc ]; then
     heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin make transifexrc
 fi
@@ -101,10 +101,6 @@ git push --force heroku master
 rm -f sql/branch.sql
 
 
-# Provide visual confirmation of deployment.
-curl https://gratipay.com/version.txt
-
-
 # Push to GitHub
 git push
 git push --tags
@@ -117,3 +113,8 @@ if [[ $run_sql ]]; then
         exit 1
     fi
 fi
+
+
+# Provide visual confirmation of deployment.
+echo "Checking version.txt ..."
+curl https://gratipay.com/version.txt
