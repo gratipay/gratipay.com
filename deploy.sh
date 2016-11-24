@@ -31,6 +31,7 @@ require () {
 # Check that we have the required tools
 require heroku
 require git
+require curl
 
 
 # Make sure we have the latest master
@@ -98,6 +99,10 @@ git push --force heroku master
 [ "$maintenance" = "yes" ] && heroku maintenance:off -a gratipay
 [ "$run_sql" = "after" ] && heroku pg:psql -a gratipay <sql/branch.sql
 rm -f sql/branch.sql
+
+
+# Provide visual confirmation of deployment.
+curl https://gratipay.com/version.txt
 
 
 # Push to GitHub
