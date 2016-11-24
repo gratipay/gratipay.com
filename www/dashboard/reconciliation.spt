@@ -5,46 +5,95 @@ from decimal import Decimal as D
 [---]
 _by_month = website.db.all("""
 
-    SELECT date_trunc('month', "timestamp") as month
-         , sum(case when amount > 0 then amount end) as payins
-         , -(sum(case when amount < 0 then amount end)) as payouts
-         , sum(fee) as income
-
-      FROM exchanges
-  GROUP BY month
-  ORDER BY month ASC
+    SELECT date_trunc('month', "timestamp") AS month
+         , COALESCE(sum(case when amount > 0 then amount end), 0) as payins
+         , COALESCE(-(sum(case when amount < 0 then amount end)), 0) as payouts
+         , COALESCE(sum(case when amount > 0 then fee end), 0) as payins_income
+         , COALESCE(sum(case when amount < 0 then fee end), 0) as payouts_income
+         , status
+         , network
+      FROM exchanges, exchange_routes
+     WHERE exchanges.route = exchange_routes.id
+  GROUP BY month, network, status
+  ORDER BY month ASC;
 
 """)
+
 def by_month():
     balance = D(0)
-    for month, payins, payouts, income in _by_month:
-        if payins is None:
-            payins = D(0)
-        if payouts is None:
-            payouts = D(0)
+    by_month = {}
+    for month, payins, payouts, payins_income, payouts_income, status, network in _by_month:
+        month = str(month)[:7]
+        if month not in by_month.keys():
+            by_month[month] = { network: { 's_payin': 0, 'p_payin': 0, 'f_payin': 0, \
+                                           'u_payin': 0, 'total_payin': 0, 'payin_income': 0, \
+                                           's_payout': 0, 'p_payout': 0, 'f_payout': 0,\
+                                           'u_payout': 0, 'total_payout': 0, 'payout_income': 0 } }
+        if network not in by_month[month].keys():
+            by_month[month][network] =  { 's_payin': 0, 'p_payin': 0, 'f_payin': 0, \
+                                          'u_payin': 0, 'total_payin': 0, 'payin_income': 0, \
+                                          's_payout': 0, 'p_payout': 0, 'f_payout': 0,\
+                                          'u_payout': 0,'total_payout': 0, 'payout_income': 0 }
+        if status == 'succeeded':
+            by_month[month][network]['s_payin'] = payins
+            by_month[month][network]['s_payout'] = payouts
+            by_month[month][network]['payin_income'] = payins_income
+            by_month[month][network]['payout_income'] = payouts_income
+        if status == 'pending':
+            by_month[month][network]['p_payin'] = payins
+            by_month[month][network]['p_payout'] = payouts
+        if status == 'failed':
+            by_month[month][network]['f_payin'] = payins
+            by_month[month][network]['f_payout'] = payouts
+        if status == 'unknown':
+            by_month[month][network]['u_payin'] = payins
+            by_month[month][network]['u_payout'] = payouts
+        by_month[month][network]['total_payin'] += payins
+        by_month[month][network]['total_payout'] += payouts
 
-        balance = balance + payins - payouts
-        yield month, payins, payouts, balance, income
+
+    return by_month
+
+
+def by_month_csv(by_month):
+    output = [ ["Month", "Network", "Succeeded Payins", "Pending Payins",
+                "Failed Payins", "Unknown Payin", "Total Payins", "Payin Fee Income",
+                "Succeeded Payouts", "Pending Payouts", "Failed Payouts",
+                "Unknown Payout", "Total Payouts", "Payout Fee Income"] ]
+    for month, recs in sorted(by_month.items()):
+        for network,transfers in recs.items():
+            row = []
+            row.append( str(month)[:7] )
+            row.append( network )
+            row.append( transfers['s_payin'] )
+            row.append( transfers['p_payin'] )
+            row.append( transfers['f_payin'] )
+            row.append( transfers['u_payin'] )
+            row.append( transfers['total_payin'] )
+            row.append( transfers['payin_income'] )
+            row.append( transfers['s_payout'] )
+            row.append( transfers['p_payout'] )
+            row.append( transfers['f_payout'] )
+            row.append( transfers['u_payout'] )
+            row.append( transfers['total_payout'] )
+            row.append( transfers['payout_income'] )
+            output.append(row)
+    return output
+
 by_month = by_month()
-
-if user.ADMIN:
-    by_day = website.db.all("""
-        SELECT date_trunc('day', timestamp)::date as day
-             , sum(case when amount > 0 then amount + fee else 0 end) as charge_amount
-             , sum(case when amount < 0 then -(amount - fee) else 0 end) as payout_amount
-             , sum(amount) as liability_delta
-             , sum(fee) as income
-
-          FROM exchanges
-      GROUP BY day
-      ORDER BY day ASC;
-    """)
-
+by_month_csv = by_month_csv(by_month)
 fmt = lambda x: "{:,.2f}".format(x)
+
+[---] text/csv via csv_dump
+by_month_csv
+
+[---] application/json via json_dump
+by_month
+
 [---] text/html
 <html>
     <head>
-        <title>Escrow Reconciliation Report</title>
+        <title>Escrow Reconciliation Report by Month and Network</title>
         <style>
             body {
                 font-family: monospace;
@@ -58,6 +107,7 @@ fmt = lambda x: "{:,.2f}".format(x)
             th {
                 text-align: left;
                 font-family: monospace;
+                padding-right: 30px;
             }
             td {
                 text-align: right;
@@ -73,45 +123,51 @@ fmt = lambda x: "{:,.2f}".format(x)
             process.</p>
 
         <h2>Escrow and Income by Month</h2>
-        <table>
-            <tr>
-                <th>Month</th>
-                <th>Payins ($)</th>
-                <th>Payouts ($)</th>
-                <th>Balance ($)</th>
-                <th>Fee Income ($)</th>
-            </tr>
-            {% for month, payins, payouts, balance, fees in by_month %}
-            <tr>
-                <td>{{ str(month)[:7] }}</td>
-                <td>{{ fmt(payins) }}</td>
-                <td>{{ fmt(payouts) }}</td>
-                <td>{{ fmt(balance) }}</td>
-                <td>{{ fmt(fees) }}</td>
-            </tr>
+            {% for month, recs in by_month|dictsort %}
+                <h3>{{ str(month)[:7] }}</h3>
+                <table>
+                    <tr>
+                        <th rowspan="2">Network</th>
+                        <th colspan="5">Payins ($)</th>
+                        <th>&nbsp;</th>
+                        <th colspan="5">Payouts ($)</th>
+                    </tr>
+                    <tr>
+                        <th>Succeeded</th>
+                        <th>Pending</th>
+                        <th>Failed</th>
+                        <th>Unknown</th>
+                        <th>Total</th>
+                        <th>Fee Income</th>
+                        <th>&nbsp;</th>
+                        <th>Succeeded</th>
+                        <th>Pending</th>
+                        <th>Failed</th>
+                        <th>Unknown</th>
+                        <th>Total</th>
+                        <th>Fee Income</th>
+                    </tr>
+                {% for network, transfers in recs.items() %}
+                    <tr>
+                        <td>{{ network }}</td>
+                        <td>{{ fmt( transfers['s_payin'] ) }}</td>
+                        <td>{{ fmt( transfers['p_payin'] ) }}</td>
+                        <td>{{ fmt( transfers['f_payin'] ) }}</td>
+                        <td>{{ fmt( transfers['u_payin'] ) }}</td>
+                        <td>{{ fmt( transfers['total_payin'] ) }}</td>
+                        <td>{{ fmt( transfers['payin_income'] ) }}</td>
+                        <td>&nbsp;</td>
+                        <td>{{ fmt( transfers['s_payout'] ) }}</td>
+                        <td>{{ fmt( transfers['p_payout'] ) }}</td>
+                        <td>{{ fmt( transfers['f_payout'] ) }}</td>
+                        <td>{{ fmt( transfers['u_payout'] ) }}</td>
+                        <td>{{ fmt( transfers['total_payout'] ) }}</td>
+                        <td>{{ fmt( transfers['payout_income'] ) }}</td>
+                    </tr>
+                {% endfor %}
+                    <tr><td colspan="14"><hr></td></tr>
+                </table>
             {% endfor %}
-        </table>
 
-        {% if user.ADMIN %}
-        <h2>By Day</h2>
-        <table>
-            <tr>
-                <th>Date</th>
-                <th>Charge Amount ($)</th>
-                <th>Payout Amount ($)</th>
-                <th>Fee Income ($)</th>
-                <th>Liability &Delta; ($)</th>
-            </tr>
-            {% for day, charge_amount, payout_amount, liability_delta, fee in by_day %}
-            <tr>
-                <td>{{ day }}</td>
-                <td>{{ fmt(charge_amount) }}</td>
-                <td>{{ fmt(payout_amount) }}</td>
-                <td>{{ fmt(fee) }}</td>
-                <td>{{ fmt(liability_delta) }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% endif %}
     </body>
 </html>
