@@ -1,0 +1,225 @@
+#on-npm-foo {
+    h1 a, h2 a {
+        color: $black;
+    }
+
+    h1.package-name-redundant,
+    p.package-description-redundant {
+        display: none;
+    }
+
+    .deep-link-icon {
+        display: none; // hrefs are to #blah, but id="user-content-blah" (?!)
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+
+    // I'm seeing some code in `.highlight`, and some in `pre code`
+    // /on/npm/iframe-resizer/ has both, e.g.
+    #content > pre {
+        margin: 0 0 1em;
+        padding: 3px 10px;
+        font: normal 14px/18px $Mono;
+        background-color: #f0f0f0;
+        color: #000;
+        code {
+            font: normal 14px/18px $Mono;
+            margin: 4px 0;
+        }
+    }
+    .highlight {
+        margin: 0 0 1em;
+        padding: 3px 10px;
+
+        pre {
+            font: normal 14px/18px $Mono;
+            margin: 0;
+            padding: 0;
+        }
+        .line {
+            margin: 4px 0;
+        }
+    }
+
+    // the following is from https://www.npmjs.com/static/css/index.css
+    .highlight {
+        background-color: #f0f0f0;
+        color: #000;
+    }
+    .highlight .invisible-character {
+        color: rgba(85,85,85,0.2);
+    }
+    .highlight .indent-guide {
+        color: rgba(85,85,85,0.2);
+    }
+    .highlight .wrap-guide {
+        background-color: rgba(85,85,85,0.2);
+    }
+    .highlight .gutter {
+        color: #000;
+        background: #fff;
+    }
+    .highlight .gutter .line-number.folded,
+    .highlight .gutter .line-number:after,
+    .highlight .fold-marker:after {
+        color: #e87b00;
+    }
+    .highlight .invisible {
+        color: #555;
+    }
+    .highlight .selection .region {
+        background-color: #e1e1e1;
+    }
+    .highlight.is-focused .cursor {
+        border-color: #000;
+    }
+    .highlight.is-focused .selection .region {
+        background-color: #afc4da;
+    }
+    .highlight.is-focused .line-number.cursor-line-no-selection,
+    .highlight.is-focused .line.cursor-line {
+        background-color: rgba(255,255,134,0.34);
+    }
+    .highlight .source.gfm {
+        color: #444;
+    }
+    .highlight .gfm .markup.heading {
+        color: #111;
+    }
+    .highlight .gfm .link {
+        color: #888;
+    }
+    .highlight .gfm .variable.list {
+        color: #888;
+    }
+    .highlight .markdown .paragraph {
+        color: #444;
+    }
+    .highlight .markdown .heading {
+        color: #111;
+    }
+    .highlight .markdown .link {
+        color: #888;
+    }
+    .highlight .markdown .link .string {
+        color: #888;
+    }
+    .comment {
+        color: #998;
+        font-style: italic;
+    }
+    .string {
+        color: #d14;
+    }
+    .string .source,
+    .string .meta.embedded.line {
+        color: #5a5a5a;
+    }
+    .string .punctuation.section.embedded {
+        color: #920b2d;
+    }
+    .string .punctuation.section.embedded .source {
+        color: #920b2d;
+    }
+    .constant.numeric {
+        color: #d14;
+    }
+    .constant.language {
+        color: #606aa1;
+    }
+    .constant.character,
+    .constant.other {
+        color: #606aa1;
+    }
+    .constant.symbol {
+        color: #990073;
+    }
+    .constant.numeric.line-number.find-in-files .match {
+        color: rgba(143,190,0,0.63);
+    }
+    .variable {
+        color: #008080;
+    }
+    .variable.parameter {
+        color: #606aa1;
+    }
+    .keyword {
+        color: #222;
+        font-weight: bold;
+    }
+    .keyword.unit {
+        color: #458;
+    }
+    .keyword.special-method {
+        color: #0086b3;
+    }
+    .storage {
+        color: #222;
+    }
+    .storage.type {
+        color: #222;
+    }
+    .entity.name.class {
+        text-decoration: underline;
+        color: #606aa1;
+    }
+    .entity.other.inherited-class {
+        text-decoration: underline;
+        color: #606aa1;
+    }
+    .entity.name.function {
+        color: #900;
+    }
+    .entity.name.tag {
+        color: #008080;
+    }
+    .entity.other.attribute-name {
+        color: #458;
+        font-weight: bold;
+    }
+    .entity.name.filename.find-in-files {
+        color: #e6db74;
+    }
+    .support.constant,
+    .support.function,
+    .support.type {
+        color: #458;
+    }
+    .support.class {
+        color: #008080;
+    }
+    .invalid {
+        color: #f8f8f0;
+        background-color: #00a8c6;
+    }
+    .invalid.deprecated {
+        color: #f8f8f0;
+        background-color: #8fbe00;
+    }
+    .meta.structure.dictionary.json > .string.quoted.double.json,
+    .meta.structure.dictionary.json > .string.quoted.double.json .punctuation.string {
+        color: #000080;
+    }
+    .meta.structure.dictionary.value.json > .string.quoted.double.json {
+        color: #d14;
+    }
+    .meta.diff,
+    .meta.diff.header {
+        color: #75715e;
+    }
+    .css.support.property-name {
+        font-weight: bold;
+        color: #333;
+    }
+    .css.constant {
+        color: #099;
+    }
+    .bracket-matcher .region {
+        background-color: #c9c9c9;
+        opacity: 0.7;
+        border-bottom: 0 none;
+    }
+}

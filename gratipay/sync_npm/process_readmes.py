@@ -13,13 +13,14 @@ def Processor(db, _render):
         """Processes the readme for a single package.
         """
         log('processing', dirty.name)
-        raw = db.one( 'SELECT readme_raw FROM packages '
-                      'WHERE package_manager=%s and name=%s and readme_needs_to_be_processed'
-                    , (dirty.package_manager, dirty.name)
-                     )
-        if raw is None:
+        package = db.one( 'SELECT readme_raw, name, description FROM packages '
+                          'WHERE package_manager=%s and name=%s and readme_needs_to_be_processed'
+                        , (dirty.package_manager, dirty.name)
+                        , back_as=dict
+                         )
+        if package is None:
             return
-        processed = _render(raw)
+        processed = _render(package.pop('readme_raw'), package=package)
         db.run('''
 
             UPDATE packages
