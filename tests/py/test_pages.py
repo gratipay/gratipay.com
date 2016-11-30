@@ -34,6 +34,10 @@ class TestPages(Harness):
         address = result.payment_method.token
         exchange_id = self.make_exchange('braintree-cc', 19, 0, alice, address=address)
 
+        # for npm page
+        self.db.run("INSERT INTO packages (package_manager, name, description, emails) "
+                    "VALUES ('npm', 'foo-package', 'A package', ARRAY[]::text[])")
+
         if setup:
             setup(alice)
         i = len(self.client.www_root)
@@ -44,6 +48,7 @@ class TestPages(Harness):
                            .replace('/~/%username/', '/~alice/') \
                            .replace('/for/%slug/', '/for/wonderland/') \
                            .replace('/%platform/', '/github/') \
+                           .replace('/%package/', '/foo-package/') \
                            .replace('/%user_name/', '/gratipay/') \
                            .replace('/%to', '/1') \
                            .replace('/%country', '/TT') \

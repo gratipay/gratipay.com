@@ -67,5 +67,6 @@
 @import "scss/pages/giving";
 @import "scss/pages/settings";
 @import "scss/pages/on-confirm";
+@import "scss/pages/on-npm-foo";
 @import "scss/pages/search";
 @import "scss/pages/hall-of-fame";
