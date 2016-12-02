@@ -7,7 +7,7 @@ import csv
 import sys
 import time
 
-from . import log
+from . import log, sentry
 
 
 def import_ijson(env):
@@ -97,10 +97,11 @@ def serialize(env, args, db):
     log_stats()
 
 
-def main(env, args, db, sentrified):
+def main(env, args, db):
     """Consume raw JSON from the npm registry via ``args.path``, and spit out
     CSV for Postgres to stdout. Uses ``ijson``, requiring the ``yajl_cffi``
     backend if ``env.require_yajl`` is ``True``.
 
     """
-    sentrified(serialize)(env, args, db)
+    with sentry(env):
+        serialize(env, args, db)

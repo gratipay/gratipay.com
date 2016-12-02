@@ -111,11 +111,10 @@ def username_restrictions(website):
     gratipay.RESTRICTED_USERNAMES = os.listdir(website.www_root)
 
 
-def make_sentry_teller(env):
+def make_sentry_teller(env, _noop=None):
     if not env.sentry_dsn:
         aspen.log_dammit("Won't log to Sentry (SENTRY_DSN is empty).")
-        def noop(*a, **kw):
-            pass
+        noop = _noop or (lambda *a, **kw: None)
         Participant._tell_sentry = noop
         return noop
 
