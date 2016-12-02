@@ -38,6 +38,18 @@ if query:
                  LIMIT 10
             """, locals())
 
+    if action in (None, 'search_teams'):
+        results['teams'] = website.db.all("""
+            SELECT name, product_or_service, similarity(name, %(q)s) AS rank
+              FROM teams
+             WHERE name %% %(q)s
+               AND ctime IS NOT NULL
+               AND NOT is_closed
+               AND is_approved
+          ORDER BY rank DESC, name
+             LIMIT 10
+        """, locals())
+
     if user.ADMIN:
         if action in (None, 'search_emails'):
             results['emails'] = website.db.all("""
@@ -116,6 +128,7 @@ if query:
     {% set usernames = results.get('usernames') %}
     {% set statements = results.get('statements') %}
     {% set emails = results.get('emails') %}
+    {% set teams = results.get('teams') %}
 
     {% if usernames %}
         <h2>{{ ngettext("Found a matching username",
@@ -149,6 +162,22 @@ if query:
         </div>
     {% endif %}
 
+{% if teams %}
+        <h2>{{ ngettext("Found a matching team name",
+                        "Found matching team names",
+                        len(teams)) }}</h2>
+        <div class="search-results clearfix">
+        {% for result in teams %}
+            <a class="mini-user" href="/{{ result.name }}/">
+                <span class="inner">
+                    <span class="avatar"></span>
+                    <span class="name">{{ result.name }}</span>
+                </span>
+            </a>
+        {% endfor %}
+        </div>
+    {% endif %}
+
     {% if statements %}
     <div>
         <h2>{{ ngettext("Found a matching user statement",
@@ -170,7 +199,7 @@ if query:
     </div>
     {% endif %}
 
-    {% if query and not (usernames or statements or emails) %}
+    {% if query and not (usernames or statements or emails or teams) %}
         <p>{{ _("Sorry, we didn't find anything matching your query.") }}</p>
     {% endif %}
 
