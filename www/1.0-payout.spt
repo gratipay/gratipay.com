@@ -9,7 +9,6 @@ if user.ANON:
 suppress_sidebar = True
 banner = _("1.0")
 title = _("Status of Your 1.0 Payout")
-receiving, ntips = user.participant.get_old_stats()
 balance = user.participant.balance
 status = user.participant.status_of_1_0_payout
 [---] text/html
@@ -69,19 +68,6 @@ status = user.participant.status_of_1_0_payout
     <p>{{ _( "Please {a}connect a PayPal account{_a} and then return here to apply for payout."
            , a='<a href="/about/me/routes/paypal">'|safe
            , _a='</a>'|safe
-            ) }}</p>
-    {% endif %}
-
-    {% if ntips %}
-    <p>{{ ngettext(
-             "P.S. You were receiving {b}{receiving} per week from one person{_b} under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
-           , "P.S. You were receiving {b}{receiving} per week from {n} people{_b} under Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply for a new Team{_a} instead of a one-time payout."
-           , ntips
-           , receiving=format_currency(receiving, 'USD')
-           , a='<a href="/new">'|safe
-           , _a='</a>'|safe
-           , b='<b>'|safe
-           , _b='</b>'|safe
             ) }}</p>
     {% endif %}
     {% endif %}

@@ -14,20 +14,9 @@ if user.participant.email_address is None:
 if not user.participant.has_payout_route:
     raise Response(400, _("You must attach a PayPal account to apply for a new Team."))
 
-
-# We'll actually migrate *all* non-zero tips from non-closed, non-suspicious
-# users, in case someone responds to a "failing card" notification at some
-# point. But let's only tell them about the funded tips.
-
-receiving, ntips = user.participant.get_old_stats()
 title = _("Apply for a New Team")
 banner = _("Apply")
 suppress_sidebar = True
-
-deadline = datetime(2015, 10, 2).date()
-now = datetime.utcnow().date()
-delta = (deadline - now).total_seconds()  # will be zero on Oct 2
-still_migrating = delta > 0
 [---] text/html
 {% extends "templates/base.html" %}
 
@@ -109,21 +98,6 @@ still_migrating = delta > 0
             , '</a>'|safe
              ) }}
     </label>
-
-    {% if ntips and still_migrating %}
-    <h2>{{ _("Migration of Payments") }}</h2>
-
-    <p>{{ _("The {ntips} weekly tips totalling {receiving} that previously were directed to your ~{username} user account under Gratipay 1.0 will be converted into weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, pending approval of your application."
-           , ntips=ntips
-           , receiving=format_currency(receiving, 'USD')
-           , username=user.participant.username
-           , a='<a href="https://medium.com/gratipay-blog/gratipay-2-0-2453d3c53077">'|safe
-           , _a='</a>'|safe
-            ) }}</p>
-    {% else %}
-    <br>
-    <br>
-    {% endif %}
 
     <button type="submit">{{ _("Apply") }}</button>
 </form>
