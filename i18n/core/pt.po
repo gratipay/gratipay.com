@@ -519,17 +519,6 @@ msgid ""
 "payout."
 msgstr ""
 
-msgid ""
-"P.S. You were receiving {b}{receiving} per week from one person{_b} under "
-"Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
-"for a new Team{_a} instead of a one-time payout."
-msgid_plural ""
-"P.S. You were receiving {b}{receiving} per week from {n} people{_b} under "
-"Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
-"for a new Team{_a} instead of a one-time payout."
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "Approved"
 msgstr ""
 
@@ -644,16 +633,6 @@ msgid "I agree to be responsible for {0}payroll{1}."
 msgstr ""
 
 msgid "I agree to the {0}terms of service{1}."
-msgstr ""
-
-msgid "Migration of Payments"
-msgstr ""
-
-msgid ""
-"The {ntips} weekly tips totalling {receiving} that previously were directed "
-"to your ~{username} user account under Gratipay 1.0 will be converted into "
-"weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, "
-"pending approval of your application."
 msgstr ""
 
 msgid "Results for: "

@@ -520,17 +520,6 @@ msgid ""
 "payout."
 msgstr "Merci de {a}lier un compte PayPal{_a} puis de revenir ici pour demander un paiement."
 
-msgid ""
-"P.S. You were receiving {b}{receiving} per week from one person{_b} under "
-"Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
-"for a new Team{_a} instead of a one-time payout."
-msgid_plural ""
-"P.S. You were receiving {b}{receiving} per week from {n} people{_b} under "
-"Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
-"for a new Team{_a} instead of a one-time payout."
-msgstr[0] "P.S. Vous receviez {b}{receiving} par semaine de la part d'une personne{_b} sous Gratipay 1.0. Souhaitez-vous recevoir à nouveau cet argent sous Gratipay 2.0 ? {a}Candidatez pour une nouvelle équipe{_a} plutôt qu'un paiement non-récurrent."
-msgstr[1] "P.S. Vous receviez {b}{receiving} par semaine de la part de {n} personnes{_b} sous Gratipay 1.0. Souhaitez-vous recevoir à nouveau cet argent sous Gratipay 2.0 ? {a}Candidatez pour une nouvelle équipe{_a} plutôt qu'un paiement non-récurrent."
-
 msgid "Approved"
 msgstr "Approuvées"
 
@@ -646,16 +635,6 @@ msgstr "Je reconnais être responsable de la {0}redistribution{1}."
 
 msgid "I agree to the {0}terms of service{1}."
 msgstr "Je suis en accord avec les {0}termes de service{1}."
-
-msgid "Migration of Payments"
-msgstr "MIgration des paiements"
-
-msgid ""
-"The {ntips} weekly tips totalling {receiving} that previously were directed "
-"to your ~{username} user account under Gratipay 1.0 will be converted into "
-"weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, "
-"pending approval of your application."
-msgstr "Les {ntips} dons hebdomadaires totalisant {receiving} qui étaient précédemment à destination de votre compte ~{username} sous Gratipay 1.0 vont être convertis en paiements hebdomadaires pour votre nouvelle équipe sous {a}Gratipay 2.0{_a}, en attendant l'acceptation de votre candidature."
 
 msgid "Results for: "
 msgstr "Résultats pour :"
