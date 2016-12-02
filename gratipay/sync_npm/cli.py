@@ -39,19 +39,4 @@ def main(argv=sys.argv):
     args = parse_args(argv[1:])
     db = wireup.db(env)
 
-    try:
-        sys.stdout = sys.stderr  # work around aspen.log_dammit limitation; sigh
-        tell_sentry = wireup.make_sentry_teller(env)
-    finally:
-        sys.stdout = sys.__stdout__
-
-    def sentrified(func):
-        def _(*a, **kw):
-            try:
-                func(*a, **kw)
-            except:
-                e = sys.exc_info()[0]
-                tell_sentry(e, {})
-        return _
-
-    subcommands[args.command](env, args, db, sentrified)
+    subcommands[args.command](env, args, db)

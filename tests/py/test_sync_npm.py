@@ -5,6 +5,7 @@ from subprocess import Popen, PIPE
 
 import pytest
 
+from gratipay import sync_npm
 from gratipay.testing import Harness
 
 
@@ -17,21 +18,17 @@ def load(raw):
           ).communicate(serialized)[0]
 
 
-class Sentrifier:
+class FailCollector:
 
     def __init__(self):
-        self.ncalls = 0
+        self.fails = []
 
-    def __call__(self, func):
-        def _(*a, **kw):
-            try:
-                func(*a, **kw)
-            except:
-                self.ncalls += 1
-        return _
+    def __call__(self, fail, whatever):
+        self.fails.append(fail)
 
-    def fail(self, *a, **kw):
-        raise RuntimeError
+
+class Heck(Exception):
+    pass
 
 
 class Tests(Harness):
@@ -100,11 +97,12 @@ class Tests(Harness):
         assert package.emails == []
 
 
-    # sentrifier
+    # with sentry(env)
 
-    def test_sentrifier_starts_at_zero(self):
-        sentrified = Sentrifier()
-        assert sentrified.ncalls == 0
-
-    def test_sentrifier_fail_fails(self):
-        pytest.raises(RuntimeError, Sentrifier().fail)
+    def test_with_sentry_logs_to_sentry_and_raises(self):
+        class env: sentry_dsn = ''
+        noop = FailCollector()
+        with pytest.raises(Heck):
+            with sync_npm.sentry(env, noop):
+                raise Heck
+        assert noop.fails == [Heck]
