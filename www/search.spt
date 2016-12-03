@@ -1,5 +1,7 @@
-from gratipay.utils import markdown
+from gratipay.utils import markdown, get_team
 from gratipay.utils.i18n import LANGUAGES_2, SEARCH_CONFS, strip_accents
+from gratipay.models.team import Team
+from aspen import Response
 
 [---]
 
@@ -52,7 +54,7 @@ if query:
 
     if action in (None, 'search_products'):
         results['products'] = website.db.all("""
-            SELECT name, product_or_service, similarity(name, %(q)s) AS rank
+            SELECT name, slug, product_or_service, similarity(name, %(q)s) AS rank
               FROM teams
              WHERE product_or_service %% %(q)s
                AND ctime IS NOT NULL
@@ -219,6 +221,7 @@ if query:
                         len(products)) }}</h2>
         {% for result in products %}
             <div class="search-result" href="/{{ result.name }}/">
+                <img src="{{ Team.from_slug(result.slug).get_image_url('small') }}">
                 <div class="col-right">
                     <a class="name" href="/{{ result.name }}/">{{ result.name }}</a>
                         <blockquote class="excerpt profile-statement">
