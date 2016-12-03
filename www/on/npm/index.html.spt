@@ -1,0 +1,8 @@
+[---]
+title = "Search npm"
+suppress_sidebar = True
+[---]
+{% extends "templates/base.html" %}
+{% block content %}
+<input type="text" name="q"> <button class="selected">Search</button>
+{% endblock %}
