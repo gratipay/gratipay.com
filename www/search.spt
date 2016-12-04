@@ -219,20 +219,22 @@ if query:
         <h2>{{ ngettext("Found a matching team",
                         "Found matching teams",
                         len(products)) }}</h2>
+        <table class="teams tab" data-tab="{{ tab }}">
         {% for result in products %}
-            <div class="search-result" href="/{{ result.name }}/">
+        <tr>
+            <td class="team" href="/{{ result.name }}/">
                 <img src="{{ Team.from_slug(result.slug).get_image_url('small') }}">
-                <div class="col-right">
-                    <a class="name" href="/{{ result.name }}/">{{ result.name }}</a>
+                <a class="name" href="/{{ result.slug }}/">{{ result.name }}</a>
                         <blockquote class="excerpt profile-statement">
                             {{result.product_or_service[0:100]}}
                             {% if len(result.product_or_service) > 100 %}
                                 ...
                             {% endif %}
                         </blockquote>
-                </div>
-            </div>
+            </td>
+            </tr>
         {% endfor %}
+        </table>
     </div>
     {% endif %}
 
