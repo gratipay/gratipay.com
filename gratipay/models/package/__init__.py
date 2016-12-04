@@ -73,6 +73,15 @@ class Package(Model):
             """, locals())
         self.set_attributes(team=team)
 
+    def set_payment_instruction(self, participant, amount):
+        team_id = self.team_id
+        if team_id:
+            team = Team.from_id(team_id)
+            participant.set_payment_instruction(team, amount)
+        else:
+            # TODO Add to pledges when we introduce it.
+            pass
+
 
 class NotAllowed(Exception):
     pass
