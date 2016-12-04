@@ -12,16 +12,11 @@ class TestFakeData(Harness):
         num_participants = 6
         num_tips = 25
         num_teams = 5
-        num_transfers = 5
-        fake_data.main(self.db, num_participants, num_tips, num_teams, num_transfers)
-        tips = self.db.all("SELECT * FROM tips")
+        fake_data.main(self.db, num_participants, num_tips, num_teams)
         participants = self.db.all("SELECT * FROM participants")
-        transfers = self.db.all("SELECT * FROM transfers")
         teams = self.db.all("SELECT * FROM teams")
         payment_instructions = self.db.all("SELECT * FROM payment_instructions")
-        assert len(tips) == num_tips
         assert len(participants) == num_participants
-        assert len(transfers) == num_transfers
         assert len(teams) == num_teams + 1      # +1 for the fake Gratipay team.
         assert len(payment_instructions) == num_tips
 

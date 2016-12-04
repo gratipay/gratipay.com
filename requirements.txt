@@ -30,7 +30,9 @@
 ./vendor/uritemplate-0.6.tar.gz
 ./vendor/balanced-1.1.1.tar.gz
 
-./vendor/raven-3.1.4.tar.gz
+./vendor/contextlib2-0.5.4.tar.gz
+./vendor/raven-5.32.0.tar.gz
+
 ./vendor/fake-factory-0.3.2.tar.gz
 
 ./vendor/six-1.8.0.tar.gz

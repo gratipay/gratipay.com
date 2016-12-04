@@ -392,6 +392,9 @@ msgstr "Emails"
 msgid "Settings"
 msgstr "Instellingen"
 
+msgid "Widgets"
+msgstr "Widgets"
+
 msgid "Events"
 msgstr "Gebeurtenissen"
 
@@ -1433,9 +1436,6 @@ msgstr "Uit"
 msgid "Close"
 msgstr "Sluit"
 
-msgid "Widgets"
-msgstr "Widgets"
-
 msgid "Giving & Taking Widgets"
 msgstr ""
 
@@ -1449,3 +1449,6 @@ msgid ""
 "Or, if you'd like to include a \"giving\" widget, you can add the {0} "
 "attribute:"
 msgstr "Of, als je een 'geef' widgets wilt invoegen, kan je het {0} attribuut toevoegen:"
+
+msgid "More Info"
+msgstr ""

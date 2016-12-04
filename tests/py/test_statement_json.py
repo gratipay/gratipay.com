@@ -23,13 +23,13 @@ class Tests(Harness):
         actual = json.loads(response.body)['html']
         assert actual == '<p>Lorem ipsum</p>\n'
 
-    def test_anonymous_gets_403(self):
+    def test_anonymous_gets_401(self):
         response = self.change_statement( 'en'
                                         , 'Some statement'
                                         , auth_as=None
                                         , expecting_error=True
                                          )
-        assert response.code == 403, response.code
+        assert response.code == 401, response.code
 
     def test_participant_cannot_change_their_statement_if_too_big(self):
         too_big_statement = 'A' * ((256 * 1024) + 1)

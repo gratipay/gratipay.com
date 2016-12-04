@@ -15,7 +15,6 @@ from gratipay.billing.exchanges import (
     record_exchange_result,
     get_ready_payout_routes_by_network
 )
-from gratipay.billing.payday import Payday
 from gratipay.exceptions import NegativeBalance, NotWhitelisted
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.testing import Foobar, Harness, D,P
@@ -148,11 +147,6 @@ class TestsWithBillingHarness(BillingHarness):
 
 
     # grprbn - get_ready_payout_routes_by_network
-
-    @mock.patch.object(Payday, 'fetch_card_holds')
-    def run_payday(self, fch):
-        fch.return_value = {}
-        Payday.start().run()
 
     def test_grprbn_that_its_empty_to_start_with(self):
         assert get_ready_payout_routes_by_network(self.db, 'paypal') == []

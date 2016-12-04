@@ -6,9 +6,10 @@ from gratipay.utils import get_team
 team = get_team(state)
 if team.is_approved in (None, False):
     raise Response(404)
-
-if not (user.ADMIN or user.participant.username == team.owner):
+elif user.ANON:
     raise Response(401)
+elif not (user.ADMIN or user.participant.username == team.owner):
+    raise Response(403)
 
 banner = team.name
 title = _("Receiving")

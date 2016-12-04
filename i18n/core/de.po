@@ -399,6 +399,9 @@ msgstr ""
 msgid "Settings"
 msgstr "Einstellungen"
 
+msgid "Widgets"
+msgstr "Widgets"
+
 msgid "Events"
 msgstr "Events"
 
@@ -1440,9 +1443,6 @@ msgstr "Aus"
 msgid "Close"
 msgstr "Schließen"
 
-msgid "Widgets"
-msgstr "Widgets"
-
 msgid "Giving & Taking Widgets"
 msgstr ""
 
@@ -1455,4 +1455,7 @@ msgstr ""
 msgid ""
 "Or, if you'd like to include a \"giving\" widget, you can add the {0} "
 "attribute:"
+msgstr ""
+
+msgid "More Info"
 msgstr ""

@@ -31,25 +31,6 @@ class TakesMixin(object):
     ndistributing_to = 0
 
 
-    def get_take_last_week_for(self, participant_id):
-        """Get the participant's nominal take last week.
-        """
-        return self.db.one("""
-
-            SELECT amount
-              FROM takes
-             WHERE team_id=%s AND participant_id=%s
-               AND mtime < (
-                       SELECT ts_start
-                         FROM paydays
-                        WHERE ts_end > ts_start
-                     ORDER BY ts_start DESC LIMIT 1
-                   )
-          ORDER BY mtime DESC LIMIT 1
-
-        """, (self.id, participant_id), default=ZERO)
-
-
     def set_take_for(self, participant, take, recorder, cursor=None):
         """Set the amount a participant wants to take from this team during payday.
 
@@ -72,10 +53,10 @@ class TakesMixin(object):
         def vet(p):
             if p.is_suspicious:
                 raise NotAllowed("user must not be flagged as suspicious")
-            elif not p.has_verified_identity:
-                raise NotAllowed("user must have a verified identity")
             elif not p.email_address:
                 raise NotAllowed("user must have added at least one email address")
+            elif not p.has_verified_identity:
+                raise NotAllowed("user must have a verified identity")
             elif not p.is_claimed:
                 raise NotAllowed("user must have claimed the account")
 
@@ -144,6 +125,30 @@ class TakesMixin(object):
             SELECT amount
               FROM current_takes
              WHERE team_id=%s AND participant_id=%s
+
+        """, (self.id, participant.id), default=ZERO)
+
+
+    def get_take_last_week_for(self, participant, cursor=None):
+        """
+        :param Participant participant: the participant to get the take for
+        :param GratipayDB cursor: a database cursor; if ``None``, a new cursor
+            will be used
+        :return: a :py:class:`~decimal.Decimal`: the ``participant``'s take
+            from this team at the beginning of the last completed payday, or 0.
+        """
+        return (cursor or self.db).one("""
+
+            SELECT amount
+              FROM takes
+             WHERE team_id=%s AND participant_id=%s
+               AND mtime < (
+                       SELECT ts_start
+                         FROM paydays
+                        WHERE ts_end > ts_start
+                     ORDER BY ts_start DESC LIMIT 1
+                   )
+          ORDER BY mtime DESC LIMIT 1
 
         """, (self.id, participant.id), default=ZERO)
 

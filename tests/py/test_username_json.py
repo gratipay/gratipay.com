@@ -21,9 +21,9 @@ class Tests(Harness):
         assert code == 200
         assert body['username'] == "bob"
 
-    def test_anonymous_gets_403(self):
+    def test_anonymous_gets_401(self):
         code, body = self.change_username("bob", auth_as=None)
-        assert code == 403
+        assert code == 401
 
     def test_empty(self):
         code, body = self.change_username('      ')

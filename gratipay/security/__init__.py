@@ -1,9 +1,14 @@
 from aspen import Response
 
 
+_requesting_asset = lambda r: r.path.raw.startswith('/assets/')
+
+
 def only_allow_certain_methods(request):
-    whitelisted = ['GET', 'HEAD', 'POST']
-    if request.method.upper() not in whitelisted:
+    method = request.method.upper()
+    whitelist = ('GET', 'HEAD') if _requesting_asset(request) else ('GET', 'HEAD', 'POST')
+    # POSTing to /assets/ interferes with the csrf.* functions if we're not careful
+    if method not in whitelist:
         raise Response(405)
 
 

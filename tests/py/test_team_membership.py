@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from test_team_takes import TeamTakesHarness
+from test_team_takes import TeamTakesHarness, PENNY
 from gratipay.models.team import mixins
 
 
@@ -31,6 +31,32 @@ class Tests(TeamTakesHarness):
         self.enterprise.add_member(self.crusher, self.picard)
         self.enterprise.add_member(self.bruiser, self.picard)
         assert len(self.enterprise.get_memberships()) == 2
+
+    def test_gm_sets_removal_allowed_to_true_when_removal_allowed(self):
+        self.enterprise.add_member(self.bruiser, self.picard)
+        memberships = self.enterprise.get_memberships(self.picard)
+        assert memberships[0]['removal_allowed']
+
+    def test_gm_sets_removal_allowed_to_false_when_removal_not_allowed(self):
+        self.enterprise.add_member(self.bruiser, self.picard)
+        memberships = self.enterprise.get_memberships(self.bruiser)
+        assert not memberships[0]['removal_allowed']
+
+    def test_gm_sets_editing_allowed_to_true_when_editing_allowed(self):
+        self.enterprise.add_member(self.bruiser, self.picard)
+        memberships = self.enterprise.get_memberships(self.bruiser)
+        assert memberships[0]['editing_allowed']
+
+    def test_gm_sets_editing_allowed_to_false_when_editing_not_allowed(self):
+        self.enterprise.add_member(self.bruiser, self.picard)
+        memberships = self.enterprise.get_memberships(self.picard)
+        assert not memberships[0]['editing_allowed']
+
+    def test_gm_sets_last_week(self):
+        self.enterprise.add_member(self.bruiser, self.picard)
+        self.run_payday()
+        memberships = self.enterprise.get_memberships(self.picard)
+        assert memberships[0]['last_week'] == PENNY
 
 
     # am - add_member

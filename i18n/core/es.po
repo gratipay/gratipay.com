@@ -23,110 +23,110 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "1.0 Payout: Approved!"
-msgstr ""
+msgstr "Pago 1.0: ¡Aprobado!"
 
 msgid ""
 "We've approved your application for a payout of your Gratipay 1.0 balance. "
 "Watch for that during our next weekly payment cycle."
-msgstr ""
+msgstr "Hemos aprobado su solicitud para un pago de tu saldo Gratipay 1.0 . Revísalo durante el próximo ciclo de pago semanal."
 
 msgid "Thanks for using Gratipay! :-)"
-msgstr ""
+msgstr "Gracias por usar Gratipay! :-)"
 
 msgid "Something not right? Reply to this email for help."
 msgstr "¿Algo no está bien? Responde a este correo electrónico para obtener ayuda."
 
 msgid "Greetings!"
-msgstr ""
+msgstr "¡Bienvenido!"
 
 msgid "Oh no! A problem supporting {0}!"
-msgstr ""
+msgstr "¡Oh no! ¡Un problema de soporte {0}!"
 
 msgid ""
 "We tried to charge your credit card {0} today, to fund your ongoing support "
 "for {1}, but the charge failed with this message:"
-msgstr ""
+msgstr "Hoy hemos intentado cargar en tu tarjeta de crédito {0}, para financiar tu apoyo continuo a {1}, pero el cargo ha fallado con este mensaje:"
 
 msgid "{0} and {n} other"
 msgid_plural "{0} and {n} others"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} y {1}"
+msgstr[1] "{0} y otros {n}"
 
 msgid "Fix Credit Card"
-msgstr ""
+msgstr "Solucionar el problema con tu tarjeta de crédito"
 
 msgid "Follow this link to fix your credit card:"
-msgstr ""
+msgstr "Sigue este enlace para solucionar el problema con tu tarjeta de crédito:"
 
 msgid "Thanks for supporting {0}!"
-msgstr ""
+msgstr "¡Gracias por apoyar a {0}!"
 
 msgid ""
 "We charged your credit card {0} today, to fund your ongoing support for {1}."
 " Thanks for using Gratipay!"
-msgstr ""
+msgstr "Hoy hemos intentado cargar en tu tarjeta de crédito {0}, para financiar tu apoyo continuo a {1},¡Gracias por usar Gratipay!"
 
 msgid "View Receipt"
-msgstr ""
+msgstr "Ver recibo"
 
 msgid "Follow this link to view your receipt:"
-msgstr ""
+msgstr "Siga el enlace para ver su recibo:"
 
 msgid "Follow this link if you want to view or modify your payments:"
-msgstr ""
+msgstr "Sigue este enlace si quieres ver o modificar tus pagos:"
 
 msgid "Identity Viewed"
-msgstr ""
+msgstr "Datos personales consultados"
 
 msgid ""
 "This is a transactional email to let you know that {a_viewer}{viewer}{_a} "
 "viewed your identity information for {a_country}{country_name}{_a} on "
 "Gratipay."
-msgstr ""
+msgstr "Este es un correo electrónico transaccional para hacerte saber que {a_viewer}{viewer}{_a} ha consultado tus datos personales para {a_country}{country_name}{_a} en Gratipay."
 
 msgid ""
 "This is a transactional email to let you know that {viewer} viewed your "
 "identity information for {country_name} on Gratipay."
-msgstr ""
+msgstr "Este es un correo electrónico transaccional para hacerte saber que {viewer} ha consultado tus datos personales para {country_name} en Gratipay."
 
 msgid "Connect to {0} on Gratipay?"
 msgstr "¿Te quieres conectar a {0} en Gratipay?"
 
 msgid "1.0 Payout: Rejected"
-msgstr ""
+msgstr "Pago 1.0: Rechazado"
 
 msgid ""
 "We've rejected your application for a payout of your Gratipay 1.0 balance, "
 "because we couldn't determine what product or service you were offering for "
 "which people were paying you on Gratipay. Please reply if you would like to "
 "discuss this further."
-msgstr ""
+msgstr "Hemos rechazado tu solicitud para el pago en Gratipay 1.0, porque no hemos podido determinar qué producto o servicio ofreces en Gratipay. Por favor, haznos saber si te gustaría discutir sobre este asunto."
 
 msgid "Team Application Approved!"
-msgstr ""
+msgstr "¡Solicitud de Equipo Aprobada!"
 
 msgid ""
 "We've approved your application for the '{team}' Team on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr ""
+msgstr "Hemos aprobado su solicitud para el Equipo '{team}' en Gratipay. Para más detalles, por favor consulta a través de {a}nuestro ticket de opinión{_a}."
 
 msgid ""
 "We've approved your application for the '{team}' Team on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr ""
+msgstr "Hemos aprobado su solicitud para el Equipo '{team}' en Gratipay. Para más detalles, por favor consulta a través de nuestro ticket de opinión:"
 
 msgid "Team Application Rejected"
-msgstr ""
+msgstr "Solicitud de Equipo Rechazada"
 
 msgid ""
 "We've rejected your application for the '{team}' Team on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr ""
+msgstr "Hemos rechazado tu solicitud para el equipo '{team}' en Gratipay. Para más detalles por favor consulta a través de {a}nuestro ticket de opinión{_a}."
 
 msgid ""
 "We've rejected your application for the '{team}' Team on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr ""
+msgstr "Hemos rechazado tu solicitud para el equipo '{team}' en Gratipay. Para más detalles por favor consulta a través de nuestro ticket de opinión:"
 
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
@@ -137,7 +137,7 @@ msgid "Yes, proceed!"
 msgstr "Sí, ¡adelante!"
 
 msgid "Follow this link to finish connecting your email:"
-msgstr ""
+msgstr "Sigue este enlace para vincular tu email:"
 
 msgid "Connecting {0} to {1} on Gratipay."
 msgstr "Estamos conectando {0} a {1} en Gratipay."
@@ -148,43 +148,43 @@ msgid ""
 msgstr "Estamos conectando {0} a la cuenta de {1} en Gratipay. Esta es una notificación enviada a {2} porque este  es el correo electrónico principal que tenemos registrado."
 
 msgid "You've consumed your quota of requests, you can try again in {0}."
-msgstr ""
+msgstr "Has consumido su cuota de solicitudes, puedes intentarlo de nuevo en {0}."
 
 msgid "You're making requests too fast, please try again later."
-msgstr ""
+msgstr "Estás haciendo peticiones demasiado rápido, por favor inténtalo de nuevo más tarde."
 
 msgid "{0} returned an error, please try again later."
-msgstr ""
+msgstr "{0} ha devuelto un error, por favor inténtalo de nuevo más tarde."
 
 msgid "Invalid character in elsewhere account username."
-msgstr ""
+msgstr "Carácter inválido en el nombre de usuario"
 
 msgid "Account not found on {0}."
-msgstr ""
+msgstr "No se encuentra esta cuenta en {0}."
 
 msgid "You need to log in to access this page."
-msgstr ""
+msgstr "Necesitas hacer log in para acceder a esta página"
 
 msgid "You are not authorized to access this page."
-msgstr ""
+msgstr "No estás autorizado para acceder a esta página"
 
 msgid "Forbidden"
-msgstr ""
+msgstr "Prohibido"
 
 msgid "Not Found"
-msgstr ""
+msgstr "No encontrado"
 
 msgid "Too Many Requests"
-msgstr ""
+msgstr "Muchas peticiones simultáneas"
 
 msgid "Internal Server Error"
-msgstr ""
+msgstr "Error interno del servidor"
 
 msgid "Upstream Error"
-msgstr ""
+msgstr "Error desde las fuentes"
 
 msgid "Your last PayPal payout failed!"
-msgstr ""
+msgstr "Tu último pago de PayPal ha fallado"
 
 msgid "Your credit card has failed!"
 msgstr "Tu tarjeta de crédito ha fallado!"
@@ -205,7 +205,7 @@ msgid "Add an email address"
 msgstr "Añadir un correo electrónico"
 
 msgid "Overview"
-msgstr ""
+msgstr "Descripción general"
 
 msgid "Stats"
 msgstr "Estadísticas"
@@ -217,10 +217,10 @@ msgid "Contact Us"
 msgstr "Contáctenos"
 
 msgid "Payments"
-msgstr ""
+msgstr "Pagos"
 
 msgid "Payroll"
-msgstr ""
+msgstr "Payroll"
 
 msgid "Do Not Track"
 msgstr "Do Not Track"
@@ -229,13 +229,13 @@ msgid "Terms of Service"
 msgstr "Términos de servicios"
 
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Política de privacidad"
 
 msgid "Disclosure"
-msgstr ""
+msgstr "Revelación"
 
 msgid "Hall of Fame (Legacy)"
-msgstr ""
+msgstr "Salón de la Fama (Legacy)"
 
 msgid "Basic Info"
 msgstr "Información básica"
@@ -244,7 +244,7 @@ msgid "Features"
 msgstr "Características"
 
 msgid "Policies"
-msgstr ""
+msgstr "Política"
 
 msgid "Security"
 msgstr "Seguridad"
@@ -262,16 +262,16 @@ msgid "wk"
 msgstr "sm"
 
 msgid "Sign out"
-msgstr ""
+msgstr "Cerrar sesión"
 
 msgid ""
 "{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available "
 "{a2}indefinitely{_a}{_nowrap}."
-msgstr ""
+msgstr "{nowrap}{a}pagos 1.0{_a} están{_nowrap} {nowrap}disponibles {a2}indefinidamente{_a}{_nowrap}."
 
 msgid ""
 "{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
-msgstr ""
+msgstr "{nowrap}Comprueba el estado de tu{_nowrap} {a}solicitud de pago 1.0{_a}."
 
 msgid "About"
 msgstr "Acerca"
@@ -280,10 +280,10 @@ msgid "Blog"
 msgstr "Blog"
 
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 msgid "Communities"
 msgstr "Comunidades"
@@ -307,7 +307,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgid "Delete"
-msgstr ""
+msgstr "Borrar"
 
 msgid "Edit"
 msgstr "Editar"
@@ -316,28 +316,28 @@ msgid "Team"
 msgstr "Equipo"
 
 msgid "Amount ($)"
-msgstr ""
+msgstr "Monto ($)"
 
 msgid "Due ($)"
-msgstr ""
+msgstr "Deuda ($)"
 
 msgid "First Set"
-msgstr ""
+msgstr "Primer set"
 
 msgid "{0} ago"
-msgstr ""
+msgstr "Hace {0}"
 
 msgid "Previous"
-msgstr ""
+msgstr "Previo"
 
 msgid "Next"
-msgstr ""
+msgstr "Siguiente"
 
 msgid "First"
-msgstr ""
+msgstr "Primero"
 
 msgid "Last"
-msgstr ""
+msgstr "Último"
 
 msgid "Profile"
 msgstr "Perfil"
@@ -366,13 +366,13 @@ msgid "Credit Card"
 msgstr "Tarjeta de Crédito"
 
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 msgid "verified in: {country}"
-msgstr ""
+msgstr "verificado en: {country}"
 
 msgid "Weekly"
-msgstr ""
+msgstr "Semanalmente"
 
 msgid "Giving"
 msgstr "Dando"
@@ -381,7 +381,7 @@ msgid "hidden"
 msgstr "oculto"
 
 msgid "Taking"
-msgstr ""
+msgstr "Tomando"
 
 msgid "Joined"
 msgstr "Unido"
@@ -390,10 +390,13 @@ msgid "History"
 msgstr "Historia"
 
 msgid "Emails"
-msgstr ""
+msgstr "Emails"
 
 msgid "Settings"
-msgstr ""
+msgstr "Ajustes"
+
+msgid "Widgets"
+msgstr "Widgets"
 
 msgid "Events"
 msgstr "Eventos"
@@ -431,92 +434,92 @@ msgid "Receiving"
 msgstr "Recibiendo"
 
 msgid "Joined {ago}"
-msgstr ""
+msgstr "Se unió {ago}"
 
 msgid "Applied {ago}"
-msgstr ""
+msgstr "Solicitó {ago}"
 
 msgid "Distributing"
-msgstr ""
+msgstr "Distribuyendo"
 
 msgid "Teams"
 msgstr "Equipos"
 
 msgid "{sign_in}{br}to give to{br}{team}"
-msgstr ""
+msgstr "{sign_in}{br}para dar a{br}{team}"
 
 msgid "You Give"
-msgstr ""
+msgstr "Tu Das"
 
 msgid "per week"
-msgstr ""
+msgstr "por semana"
 
 msgid "Give to {0}"
-msgstr ""
+msgstr "Dar a {0}"
 
 msgid "Stop Giving"
-msgstr ""
+msgstr "Dejar de Dar"
 
 msgid ""
 "Back your payment with a {0}credit card{1} to make sure it goes through!"
-msgstr ""
+msgstr "¡Enlaza tu pago a una {0}tarjeta de crédito{1} para asegurarte de que llegue!"
 
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 msgid "Status of Your 1.0 Payout"
-msgstr ""
+msgstr "Estado de tu Pago 1.0"
 
 msgid "Read about our plan to {a}refund the money from Gratipay 1.0{_a}."
-msgstr ""
+msgstr "Lee sobre nuestro plan para {a}reembolsar el dinero de Gratipay 1.0{_a}."
 
 msgid ""
 "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout "
 "threshold of {minimum}{_b}."
-msgstr ""
+msgstr "Tu {a}saldo{_a} de Gratipay 1.0 es {b}por debajo del mínimo de pago de {minimum}{_b}."
 
 msgid "You do not have a balance left over from Gratipay 1.0."
-msgstr ""
+msgstr "No tienes un saldo sobrante en Gratipay 1.0."
 
 msgid ""
 "You're all set! But ... can you help us spread the word and tell your "
 "friends to check here, too? Thanks! :)"
-msgstr ""
+msgstr "¡Ya está todo listo! Pero ... ¿Puedes ayudarnos a difundir la palabra y decir a tus amigos que se pasen por aquí también? ¡Gracias! :)"
 
 msgid "Your balance is {b}{balance}{_b}."
-msgstr ""
+msgstr "Tu saldo es de {b}{balance}{_b}."
 
 msgid "You are {b}scheduled for a payout{_b} during our next weekly cycle."
-msgstr ""
+msgstr "Tu {b}pago está programado{_b} para el próximo ciclo semanal."
 
 msgid ""
 "You should be all set! But ... can you help us spread the word and tell your"
 " friends to check here, too? Thanks! :)"
-msgstr ""
+msgstr "¡Todo debería estar listo! Pero ... ¿Puedes ayudarnos a difundir la palabra y decir a tus amigos que se pasen por aquí también? ¡Gracias! :)"
 
 msgid ""
 "You have applied for a payout. We will review your account and contact you "
 "at {b}{email}{_b} within the next week."
-msgstr ""
+msgstr "Has solicitado un pago. Vamos a revisar tu cuenta y contactaremos contigo en {b}{email}{_b} durante la próxima semana."
 
 msgid ""
 "Meanwhile ... can you help us spread the word and tell your friends to check"
 " here, too? Thanks! :)"
-msgstr ""
+msgstr " Y mientras tanto... ¿Puedes ayudarnos a difundir la palabra y decir a tus amigos que se pasen por aquí también? ¡Gracias! :)"
 
 msgid ""
 "You have applied for a payout, and we have rejected your application. You "
 "should have received a notification at {b}{email}{_b} from "
 "{a}support@gratipay.com{_a}."
-msgstr ""
+msgstr "Has solicitado un pago, y hemos rechazado tu solicitud. Deberías haber recibido una notificación en {b}{email}{_b} de {a}support@gratipay.com{_a}."
 
 msgid "Apply for a payout"
-msgstr ""
+msgstr "Realizar un pago"
 
 msgid ""
 "Please {a}connect a PayPal account{_a} and then return here to apply for "
 "payout."
-msgstr ""
+msgstr "Por favor {a}conecte su cuenta de PayPal{_a} y vuelva a realizar el pago."
 
 msgid ""
 "P.S. You were receiving {b}{receiving} per week from one person{_b} under "
@@ -526,137 +529,137 @@ msgid_plural ""
 "P.S. You were receiving {b}{receiving} per week from {n} people{_b} under "
 "Gratipay 1.0. Want to receive that money again under Gratipay 2.0? {a}Apply "
 "for a new Team{_a} instead of a one-time payout."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "P.D. Estás recibiendo {b}{receiving} por semana de una persona{_b} en Gratipay 1.0. ¿Quieres recibir este dinero en Gratipay 2.0? {a}Solicítalo par un nuevo Equipo{_a} en lugar de un pago único."
+msgstr[1] "P.D. Estás recibiendo {b}{receiving} por semana de {n} personas{_b} en Gratipay 1.0. ¿Quieres recibir este dinero en Gratipay 2.0? {a}Solicítalo par un nuevo Equipo{_a} en lugar de un pago único."
 
 msgid "Approved"
-msgstr ""
+msgstr "Aprovado"
 
 msgid "Under Review"
-msgstr ""
+msgstr "En revisión"
 
 msgid "Rejected"
-msgstr ""
+msgstr "Rechazado"
 
 msgid "Payments{br}and Payroll{br}for Open Work"
-msgstr ""
+msgstr "Pagos{br}y Payroll{br}por Open Work"
 
 msgid "Read more"
-msgstr ""
+msgstr "Leer más"
 
 msgid "Welcome to Gratipay!"
-msgstr ""
+msgstr "Bienvenido a Gratipay!"
 
 msgid "We have {nteams} Teams receiving and sharing about {volume} each week."
-msgstr ""
+msgstr "Tenemos {nteams} Equipos recibiendo y compartiendo {volume} cada semana."
 
 msgid "Continue to explore our Teams, or {a}read more about us{_a}."
-msgstr ""
+msgstr "Sigue explorando nuestros Equipos, o {a}lee más sobre nosotros{_a}."
 
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
 
 msgid "Apply for a New Team"
-msgstr ""
+msgstr "Solicitar un Nuevo Equipo"
 
 msgid "created {ago}"
-msgstr ""
+msgstr "creado {ago}"
 
 msgid "owned by {a}{owner}{_a}"
-msgstr ""
+msgstr "creado por {a}{owner}{_a}"
 
 msgid "You must sign in to apply for a new Team."
-msgstr ""
+msgstr "Tienes que iniciar sesión para solicitar un nuevo Equipo"
 
 msgid "You must have a verified email address to apply for a new Team."
-msgstr ""
+msgstr "Debes tener un email verificado para poder solicitar un nuevo Equipo"
 
 msgid "You must attach a PayPal account to apply for a new Team."
-msgstr ""
+msgstr "Debes agregar una cuenta de PayPal para poder solicitar un nuevo Equipo"
 
 msgid "Apply"
-msgstr ""
+msgstr "Solicitar"
 
 msgid "Thanks! Your public team page is:"
-msgstr ""
+msgstr "¡Gracias! Tu página de equipo publica es:"
 
 msgid "And your public review ticket is:"
-msgstr ""
+msgstr "Y tu ticket de opinión público es:"
 
 msgid ""
 "You can watch and participate in our review process there. We will send a "
 "notification to {email} when we finish our review."
-msgstr ""
+msgstr "Puedes ver y participar en nuestro proceso de evaluación. Te enviaremos una notificación a {email} terminemos nuestra evaluación."
 
 msgid "Thanks for applying!"
-msgstr ""
+msgstr "¡Gracias por tu solicitud!"
 
 msgid "Team Name"
-msgstr ""
+msgstr "Nombre del Equipo"
 
 msgid ""
 "At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
 "periods (.), comma (,) and whitespace."
-msgstr ""
+msgstr "Como mínimo una letra A-Z, más números, guiones (-), guiones bajos (_), puntos (.), coma (,) y espacios en blanco."
 
 msgid "Image"
-msgstr ""
+msgstr "Imagen"
 
 msgid ""
 "PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and"
 " 48 x 48 (with original saved for later)."
-msgstr ""
+msgstr "PNG o JPG hasta 256 kB. Será recortada en cuadrado y redimensionada a 160 x 160 y 48 x 48 (con el original guardado para más adelante)."
 
 msgid "Product or Service"
-msgstr ""
+msgstr "Producto o Servicio"
 
 msgid "What product or service does your Team provide?"
-msgstr ""
+msgstr "¿Qué producto o servicio ofrece tu Equipo?"
 
 msgid "Homepage"
-msgstr ""
+msgstr "Homepage"
 
 msgid "What is the customer-facing web page for your product or service?"
-msgstr ""
+msgstr "¿Cuál es la página web de vuestro producto o servicios enfocada a vuestros clientes?"
 
 msgid "Self-onboarding Documentation URL"
-msgstr ""
+msgstr "Documentación Self-onboarding URL"
 
 msgid ""
 "Where can people find instructions on how to do your work for you "
 "({0}example{1})? "
-msgstr ""
+msgstr "¿Dónde se puede encontrar información sobre cómo realizar tareas para vosotros ({0}ejemplo{1})?"
 
 msgid "To-do URL"
-msgstr ""
+msgstr "To-do URL"
 
 msgid "Where can people find a list of available work to do for your Team?"
-msgstr ""
+msgstr "¿Donde se puede encontrar una lista pública de las tareas a realizar para vuestro Equipo?"
 
 msgid "Agreements"
-msgstr ""
+msgstr "Agradecimiento"
 
 msgid "I agree to have my application {0}publicly reviewed{1}."
-msgstr ""
+msgstr "Acepto que mi solicitud sea {0}revisada públicamente{1}."
 
 msgid "I agree to be responsible for {0}payroll{1}."
-msgstr ""
+msgstr "Acepto ser responsable de {0}payroll{1}."
 
 msgid "I agree to the {0}terms of service{1}."
-msgstr ""
+msgstr "Acepto los {0}Términos del Servicio{1}."
 
 msgid "Migration of Payments"
-msgstr ""
+msgstr "Migración de los Pagos"
 
 msgid ""
 "The {ntips} weekly tips totalling {receiving} that previously were directed "
 "to your ~{username} user account under Gratipay 1.0 will be converted into "
 "weekly voluntary payments to your new Team under {a}Gratipay 2.0{_a}, "
 "pending approval of your application."
-msgstr ""
+msgstr "Los consejos {ntips} semanales, en total {receiving} que antes se dirigían a la cuienta de usuario ~{username} en Gratipay 1.0 se convertirán en pagos voluntarios semanales en tu nuevo Equipo de {a}Gratipay 2.0{_a}, cuando tu solicitud se haya aprobado."
 
 msgid "Results for: "
-msgstr ""
+msgstr "Resultados para:"
 
 msgid "Search Gratipay"
 msgstr "Búsqueda en Gratipay"
@@ -665,28 +668,28 @@ msgid "Go"
 msgstr "Ir"
 
 msgid "Looking for a specific user of a social network?"
-msgstr ""
+msgstr "¿Buscas una red social específica?"
 
 msgid "{0} on {1}"
-msgstr ""
+msgstr "{0} de {1}"
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Nombre de usuario encontrado"
+msgstr[1] "Nombres de usuario encontrados"
 
 msgid "Found a matching email address"
 msgid_plural "Found matching email addresses"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Dirección de email encontrada"
+msgstr[1] "Direcciones de email encontradas"
 
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Estado de cuenta de usuario encontrado"
+msgstr[1] "Estados de cuenta de usuario encontrados"
 
 msgid "Sorry, we didn't find anything matching your query."
-msgstr ""
+msgstr "Vaya, no hemos encontrado nada que coincida con tu consulta."
 
 msgid "Sign Out"
 msgstr "Cerrar sesión"
@@ -698,61 +701,61 @@ msgid "Yes!"
 msgstr "¡Si!"
 
 msgid "Onboarding"
-msgstr ""
+msgstr "Onboarding"
 
 msgid "To-do"
-msgstr ""
+msgstr "To-do"
 
 msgid "{a} Edit team {_a}"
-msgstr ""
+msgstr "{a} Editar equipo {_a}"
 
 msgid "owned by {a}~{owner}{_a}"
-msgstr ""
+msgstr "creado por {a}~{owner}{_a}"
 
 msgid "Please sign in first"
 msgstr "Primero inicie su sesión"
 
 msgid "Payment changed to {0} per week. "
-msgstr ""
+msgstr "Pago cambiado a {0} por semana."
 
 msgid "Thank you so much for supporting {0}!"
-msgstr ""
+msgstr "¡Muchas gracias por apoyar {0}!"
 
 msgid "You have canceled your payment to {0}."
-msgstr ""
+msgstr "Has cancelado tu pago a {0}."
 
 msgid "User not found."
-msgstr ""
+msgstr "Usuario no encontrado."
 
 msgid "That's not a valid number."
-msgstr ""
+msgstr "No es un número válido"
 
 msgid "Are you sure you want to remove {0} from this team?"
-msgstr ""
+msgstr "¿Estás seguro de que quieres borrar {0} de este equipo?"
 
 msgid "{0} has been removed from the team."
-msgstr ""
+msgstr "{0} ha sido borrado de este equipo."
 
 msgid "{0} is already a member of this team."
-msgstr ""
+msgstr "{0} ya es un miembro de este equipo."
 
 msgid "{0} has been added to the team."
-msgstr ""
+msgstr "{0} ha sido añadido al equipo."
 
 msgid "Are you sure you want to leave this team?"
-msgstr ""
+msgstr "¿Estás seguro de que quieres abandonar este equipo?"
 
 msgid "Your take is now {0}."
-msgstr ""
+msgstr "Ahora tienes {0}."
 
 msgid "Team Members"
 msgstr "Miembros del Equipo"
 
 msgid "Updating…"
-msgstr ""
+msgstr "Actualizando..."
 
 msgid "Member"
-msgstr ""
+msgstr "Miembro"
 
 msgid "Last{0} Week ($)"
 msgstr "Semana{0} pasada ($)"
@@ -773,43 +776,43 @@ msgid "Add"
 msgstr "Añadir"
 
 msgid "Are you sure?"
-msgstr ""
+msgstr "¿Estás seguro?"
 
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 msgid "No"
-msgstr ""
+msgstr "No"
 
 msgid "You can't edit a closed team."
-msgstr ""
+msgstr "No puedes editar a un equipo cerrado."
 
 msgid "You can't edit a rejected team."
-msgstr ""
+msgstr "No puedes editar aun un equipo rechazado."
 
 msgid "Please upload a PNG or JPG image."
-msgstr ""
+msgstr "Por favor, añade solo imagenes PNG o JPG."
 
 msgid "Please fill out the '{}' field."
-msgstr ""
+msgstr "Por favor, rellene el siguiente campo: '{}'."
 
 msgid "Please enter an http[s]:// URL for the '{}' field."
-msgstr ""
+msgstr "Por favor, introduce una http[s]:// URL para el campo '{}'."
 
 msgid "Please upload an image smaller than 100 kB."
-msgstr ""
+msgstr "Por favor, añade una imagen menor de 100 kB."
 
 msgid "Sorry, there was a problem saving your image. Please try again."
-msgstr ""
+msgstr "Vaya, hemos tenido un problema al guardar tu imagen. Por favor inténtalo de nuevo."
 
 msgid "Edit your team"
-msgstr ""
+msgstr "Editar tu equipo"
 
 msgid "Modify"
-msgstr ""
+msgstr "Modificar"
 
 msgid "{0} receives {1} per week from {2} ~users."
-msgstr ""
+msgstr "{0} recibe {1} por semana de {2} ~usuarios."
 
 msgid "Dollars Received Per Week"
 msgstr "Dólares Recibidos Por Semana"
@@ -818,21 +821,21 @@ msgid "weeks"
 msgstr "semanas"
 
 msgid "Number of Payments Per Week"
-msgstr ""
+msgstr "Número de Pagos por Semana"
 
 msgid "Payments Received, by Number of Payments"
-msgstr ""
+msgstr "Pagos Recibidos, por Número de Pagos"
 
 msgid "Payments Received, by Dollar Amount"
-msgstr ""
+msgstr "Pagos recibidos, por Total de Dólares"
 
 msgid "Welcome!"
-msgstr ""
+msgstr "¡Bienvenido!"
 
 msgid ""
 "Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} Teams{_b} "
 "and about {b}{nusers} ~users{_b}."
-msgstr ""
+msgstr "Gratipay procesa cerca de {b}{volume} por semana{_b} para {b}{nteams} Equipos{_b} y cerca de {b}{nusers} ~usuarios{_b}."
 
 msgid ""
 "On average, ~users who give payments on Gratipay give {b}{amount} to one "
@@ -840,189 +843,189 @@ msgid ""
 msgid_plural ""
 "On average, ~users who give payments on Gratipay give {b}{amount} each to "
 "{number} Teams{_b}."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "De media, los ~users que realizan pagos en Gratipay dan {b}{amount} a un Equipo{_b}."
+msgstr[1] "De media, los ~users que realizan pagos en Gratipay dan {b}{amount} cada {number} Equipos{_b}."
 
 msgid "Gratipay has processed about {b}{total}{_b} over {b}{age}+ years{_b}."
-msgstr ""
+msgstr "Gratipay ha procesado cerca de {b}{total}{_b} durante {b}{age}+ años{_b}."
 
 msgid "{b}{escrow}{_b} is escrowed within Gratipay."
-msgstr ""
+msgstr "{b}{escrow}{_b} está depositado dentro de Gratipay."
 
 msgid "The Delpan Incident"
-msgstr ""
+msgstr "El incidente Delpan"
 
 msgid "Sign In"
-msgstr ""
+msgstr "Iniciar sesión"
 
 msgid "1.0 Payout Review"
-msgstr ""
+msgstr "Revisión Pago 1.0"
 
 msgid "Fraud Review Dashboard"
-msgstr ""
+msgstr "Tabloide de revisión de fraude"
 
 msgid "Transfer?"
-msgstr ""
+msgstr "¿Transferir?"
 
 msgid "Please Confirm"
-msgstr ""
+msgstr "Por favor, confirma"
 
 msgid "{0} is connected to {1} on Gratipay."
-msgstr ""
+msgstr "{0} está conectado con {1} en Gratipay."
 
 msgid "Transfer it to your ~{username} account?"
-msgstr ""
+msgstr "¿Transferir a la cuenta: ~{username} ?"
 
 msgid "How the accounts are now"
-msgstr ""
+msgstr "Cómo están las cuentas ahora"
 
 msgid "Gives"
 msgstr "Da"
 
 msgid "Takes"
-msgstr ""
+msgstr "Coge"
 
 msgid "How the accounts will be after the transfer"
-msgstr ""
+msgstr "Cómo serán las cuentas después de la transferencia"
 
 msgid "Abandoned:"
-msgstr ""
+msgstr "Abandonado:"
 
 msgid "Transfer it?"
-msgstr ""
+msgstr "¿Transferir?"
 
 msgid "Friend Finder"
-msgstr ""
+msgstr "Buscador de amigos"
 
 msgid "You have {n} friend on {0}."
 msgid_plural "You have {n} friends on {0}."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tiene {n} amigo en {0}"
+msgstr[1] "Tiene {n} amigos en {0}"
 
 msgid ""
 "Note: privacy settings may prevent Gratipay from seeing some of your {0} "
 "friends."
-msgstr ""
+msgstr "Nota: los ajustes de privacidad puede impedir a Gratipay ver a algunos de tus {0} amigos."
 
 msgid "Please refresh your {0} connection"
-msgstr ""
+msgstr "Por favor, actualiza tu {0} conexión"
 
 msgid "to find your friends from there."
-msgstr ""
+msgstr "para encontrar a tus amigos de allí."
 
 msgid "Sign in with {0}"
 msgstr "Haz login con {0}"
 
 msgid "Connect your {0} account"
-msgstr ""
+msgstr "Conecta tu {0} cuenta"
 
 msgid "No friends found."
-msgstr ""
+msgstr "No se encontraron amigos."
 
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 msgid "On Gratipay?"
-msgstr ""
+msgstr "¿En Gratipay?"
 
 msgid "Failure"
 msgstr "Falla"
 
 msgid "Are you really an administrator of the {0} team?"
-msgstr ""
+msgstr "¿Eres el administrador del equipo {0} ?"
 
 msgid ""
 "Your attempt to claim this account failed because you're logged into {0} as "
 "someone who isn't an administrator of the {1} team. Please sign out and "
 "{2}try again{3}."
-msgstr ""
+msgstr "Tu intento de reclamar esta cuenta falló porqué has accedido como {0} que no es administrador del equipo {1}. Por favor finaliza la sesión y {2}inténtalo de nuevo{3}."
 
 msgid "Are you really {0}?"
-msgstr ""
+msgstr "¿De verdad eres {0}?"
 
 msgid ""
 "Your attempt to claim this account failed because you're logged into {0} as "
 "someone else. Please sign out and {1}try again{2}."
-msgstr ""
+msgstr "Tu intento de reclamar esta cuenta falló porqué has accedido como {0}. Por favor finaliza la sesión y {1}inténtalo de nuevo{2}."
 
 msgid "{0} is a private team"
-msgstr ""
+msgstr "{0} Es un equipo privado"
 
 msgid "{0} is a big team"
-msgstr ""
+msgstr "{0} es un gran equipo"
 
 msgid "{0} is a team with {n} public member"
 msgid_plural "{0} is a team with {n} public members"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} es un equipo con {n} miembro público"
+msgstr[1] "{0} es un equipo con {n} miembros públicos"
 
 msgid "A Lot"
-msgstr ""
+msgstr "Muchísimo"
 
 msgid "{0} has not joined Gratipay."
-msgstr ""
+msgstr "{0} no se ha unido a Gratipay."
 
 msgid ""
 "Are you an administrator of this {0} team account? Connect it to your "
 "Gratipay account."
-msgstr ""
+msgstr "¿Eres administrado de esta {0} cuenta de equipo? Conéctela con tu cuenta de Gratipay."
 
 msgid "Connect team account"
-msgstr ""
+msgstr "Conectar cuenta de equipo"
 
 msgid "Is this you? You can join Gratipay with a couple clicks:"
-msgstr ""
+msgstr "¿Este eres tu? Puedes unirte a Gratipay en unos pocos clics:"
 
 msgid "Join Gratipay"
-msgstr ""
+msgstr "Únase a Gratipay"
 
 msgid "Is this yours? Connect it to your Gratipay account."
-msgstr ""
+msgstr "¿Este eres tu? Conéctalo con tu cuenta Gratipay."
 
 msgid "Connect"
-msgstr ""
+msgstr "Conectar"
 
 msgid "What is Gratipay?"
-msgstr ""
+msgstr "¿Qué es Gratipay?"
 
 msgid "Gratipay provides payments and payroll for open work."
-msgstr ""
+msgstr "Gratipay proporciona pagos y payroll para el open work."
 
 msgid "Status"
 msgstr "Estado"
 
 msgid "accepts gifts"
-msgstr ""
+msgstr "acepta regalos"
 
 msgid "hasn't joined Gratipay yet"
-msgstr ""
+msgstr "Aún no se ha unido a Gratipay"
 
 msgid "You must sign in to apply for a new team."
-msgstr ""
+msgstr "Tienes que iniciar sesión para solicitar un nuevo equipo."
 
 msgid "You must have a verified email address to apply for a new team."
-msgstr ""
+msgstr "Debes tener un email verificado para poder solicitar un nuevo Equipo"
 
 msgid "You must attach a PayPal account to apply for a new team."
-msgstr ""
+msgstr "Debes agregar una cuenta de PayPal para poder solicitar un nuevo Equipo"
 
 msgid "How are you applying for a team!?"
-msgstr ""
+msgstr "¿Cómo solicitar un equipo?"
 
 msgid "Sorry, you must agree to have your application publicly reviewed."
-msgstr ""
+msgstr "Debes estar de acuerdo en que tu solicitud sea revisada públicamente."
 
 msgid "Sorry, you must agree to be responsible for payroll."
-msgstr ""
+msgstr "Debes estar de acuerdo en ser el responsable de payroll."
 
 msgid "Sorry, you must agree to the terms of service."
-msgstr ""
+msgstr "Debes aceptar los términos del servicio."
 
 msgid "Sorry, your team name is invalid."
-msgstr ""
+msgstr "El nombre de tu equipo no es válido."
 
 msgid "Sorry, there is already a team using '{}'."
-msgstr ""
+msgstr "Ya existe un equipo usando '{}'."
 
 msgid "You don't have a profile statement in this language yet."
 msgstr "No tienes una declaración de perfil en este lenguaje todavía."
@@ -1036,13 +1039,13 @@ msgstr[0] "con otro"
 msgstr[1] "con {n} más"
 
 msgid "Invalid team slug."
-msgstr ""
+msgstr "Slug de equipo inválido."
 
 msgid "Your privacy setting has been changed."
-msgstr ""
+msgstr "Tu ajuste de privacidad ha sido modificiado."
 
 msgid "Statement too big!"
-msgstr ""
+msgstr "La cuenta es demasiado grande!"
 
 msgid "Primary"
 msgstr "Principal"
@@ -1054,7 +1057,7 @@ msgid "Remove"
 msgstr "Eliminar"
 
 msgid "Resend"
-msgstr ""
+msgstr "Reenviar"
 
 msgid "Set as primary"
 msgstr "Establecer como principal"
@@ -1063,19 +1066,19 @@ msgid "Add email address"
 msgstr "Añadir correo electrónico"
 
 msgid "Notifications"
-msgstr ""
+msgstr "Notificaciones"
 
 msgid "Send me notifications via email:"
-msgstr ""
+msgstr "Enviarme notificaciones por email:"
 
 msgid "When my credit card is charged:"
-msgstr ""
+msgstr "Cuando se cobre de mi tarjeta de crédito:"
 
 msgid "if the charge fails"
-msgstr ""
+msgstr "si el cobro falla"
 
 msgid "if the charge succeeds"
-msgstr ""
+msgstr "si se realiza el cobro"
 
 msgid "Invalid email address."
 msgstr "Correo electrónico no valido."
@@ -1145,19 +1148,19 @@ msgid "View your email addresses"
 msgstr "Ver tus correos electrónicos"
 
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 msgid "These are payments that you recently cancelled."
-msgstr ""
+msgstr "Estos son los últimos pagos que tu has cancelado."
 
 msgid "No results to show"
-msgstr ""
+msgstr "No hay resultados para mostrar"
 
 msgid "Export History"
-msgstr ""
+msgstr "Exportar Historial"
 
 msgid "pre"
 msgstr "pre"
@@ -1178,13 +1181,13 @@ msgid "Their balance is {0}."
 msgstr "Su balance es {0}."
 
 msgid "Account Statement"
-msgstr ""
+msgstr "Estado de cuenta"
 
 msgid "Total given: {0}"
 msgstr "Total dado: {0}"
 
 msgid "Export as CSV"
-msgstr ""
+msgstr "Exportar a CSV"
 
 msgid "Total received: {0}"
 msgstr "Total recibido:  {0}"
@@ -1226,73 +1229,73 @@ msgid "Receipt"
 msgstr "Recibo"
 
 msgid "No transactions to show."
-msgstr ""
+msgstr "No hay transacciones para mostrar."
 
 msgid "ID Type"
-msgstr ""
+msgstr "ID Type"
 
 msgid "Tax ID"
-msgstr ""
+msgstr "Tax ID"
 
 msgid "Passport"
-msgstr ""
+msgstr "Pasaporte"
 
 msgid "Driver's License"
-msgstr ""
+msgstr "Permiso de conducir"
 
 msgid "ID Number"
-msgstr ""
+msgstr "Número de idetidad"
 
 msgid "Full Legal Name"
-msgstr ""
+msgstr "Nombre completo"
 
 msgid "Date of Birth"
 msgstr "Fecha de Nacimiento"
 
 msgid "Address, Line 1"
-msgstr ""
+msgstr "Dirección, línea 1"
 
 msgid "Address, Line 2"
-msgstr ""
+msgstr "Dirección, linea 2"
 
 msgid "City"
 msgstr "Ciudad"
 
 msgid "Region (State, Province)"
-msgstr ""
+msgstr "Província"
 
 msgid "Postcode (ZIP)"
-msgstr ""
+msgstr "Código postal"
 
 msgid "Danger Zone"
-msgstr ""
+msgstr "Zona Peligrosa"
 
 msgid "Remove This Identity"
-msgstr ""
+msgstr "Borrar estos datos personales"
 
 msgid "Identities"
-msgstr ""
+msgstr "Identidades"
 
 msgid "Verified"
-msgstr ""
+msgstr "Verificado"
 
 msgid "Add Identity"
-msgstr ""
+msgstr "Añadir Identidad"
 
 msgid "Which Country?"
-msgstr ""
+msgstr "¿Qué país?"
 
 msgid "The address cannot be empty."
-msgstr ""
+msgstr "La dirección no puede estar vacía."
 
 msgid "Only verified email addresses allowed."
-msgstr ""
+msgstr "Solo se permiten cuentas de email verificadas."
 
 msgid "This is not a valid Bitcoin address."
 msgstr "Esta no es una dirección válida de Bitcoin."
 
 msgid "and then you'll be able to add or change your credit card."
-msgstr ""
+msgstr "y luego tu podrás añadir o modificar tu tarjeta de crédito"
 
 msgid "Required"
 msgstr "Requerido"
@@ -1301,34 +1304,34 @@ msgid "Credit Card Number"
 msgstr "Número de Tarjeta de Crédito"
 
 msgid "This card number is invalid."
-msgstr ""
+msgstr "Este número de tarjeta no es válido."
 
 msgid "Current: {0}"
-msgstr ""
+msgstr "Actual:  {0}"
 
 msgid "Expiration"
 msgstr "Caducidad"
 
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 msgid "Expiration Month"
-msgstr ""
+msgstr "Mes de caducidad"
 
 msgid "This expiration date is invalid."
-msgstr ""
+msgstr "Esta fecha de caducidad no es válida."
 
 msgid "YY"
-msgstr ""
+msgstr "AA"
 
 msgid "Expiration Year"
-msgstr ""
+msgstr "Año de caducidad"
 
 msgid "CVV"
 msgstr "CVV"
 
 msgid "This verification code is invalid."
-msgstr ""
+msgstr "Este código de verificación (CVV) no es válido."
 
 msgid "ZIP or Postal Code"
 msgstr "Código Postal"
@@ -1336,22 +1339,22 @@ msgstr "Código Postal"
 msgid ""
 "To minimize processing fees, we charge your credit card at least $10 at a "
 "time. {0}Read more ...{1}"
-msgstr ""
+msgstr "Para minimizar las comisiones del proceso, realizamos un cobro de $10 en tu tarjeta. {0}Leer más ...{1}"
 
 msgid "Full Name on Card"
 msgstr "Nombre Completo en Tarjeta"
 
 msgid "Are you sure you want to disconnect your credit card?"
-msgstr ""
+msgstr "¿Estás seguro de que quieres desvincular esta tarjeta de crédito?"
 
 msgid "Disconnect My Credit Card"
 msgstr "Desvincular Mi Tarjeta de Crédito"
 
 msgid "It seems you're trying to delete something that doesn't exist."
-msgstr ""
+msgstr "Parece que estás intentando borrar algo que no existe."
 
 msgid "Payment Routes"
-msgstr ""
+msgstr "Rutas de Pago"
 
 msgid "Adding Money"
 msgstr "Añadiendo dinero"
@@ -1366,19 +1369,19 @@ msgid "Withdrawing Money"
 msgstr "Retirando dinero"
 
 msgid "Choose from one of your verified emails below:"
-msgstr ""
+msgstr "Escoge uno de tus emails verificados:"
 
 msgid "Can't find your PayPal email? {0}Add it here{1}."
-msgstr ""
+msgstr "¿No encuentras tu email de PayPal? {0}Añádelo aquí{1}."
 
 msgid "You must {0}add and verify{1} your PayPal email first."
-msgstr ""
+msgstr "Antes debes {0}añadir y verificar{1} tu email de PayPal."
 
 msgid "Are you sure you want to disconnect your PayPal account?"
-msgstr ""
+msgstr "¿Estás seguro de que quieres desvincular tu cuenta de PayPal?"
 
 msgid "Disconnect {0}"
-msgstr ""
+msgstr "Desconectar {0}"
 
 msgid "Close Account"
 msgstr "Cerrar Cuenta"
@@ -1422,7 +1425,7 @@ msgid "Privacy"
 msgstr "Privacidad"
 
 msgid "Hide total giving to others."
-msgstr ""
+msgstr "Ocultar el total de los pagos a los demás."
 
 msgid "Hide myself from search results."
 msgstr "Ocultarme de los resultados de búsqueda."
@@ -1436,11 +1439,8 @@ msgstr "Apagado"
 msgid "Close"
 msgstr "Cerrar"
 
-msgid "Widgets"
-msgstr "Widgets"
-
 msgid "Giving & Taking Widgets"
-msgstr ""
+msgstr "Dar y Recibir Widgets"
 
 msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
 msgstr "Usa este código para añadir un widget de Gratipay \"Recibiendo\" en tu web:"
@@ -1452,3 +1452,6 @@ msgid ""
 "Or, if you'd like to include a \"giving\" widget, you can add the {0} "
 "attribute:"
 msgstr "O, si quieres incluir un widget \"Recibiendo\", puedes añadir el atributo {0}:"
+
+msgid "More Info"
+msgstr "Más información"
