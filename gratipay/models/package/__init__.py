@@ -47,20 +47,14 @@ class Package(Model):
     @classmethod
     def insert(cls, owner, **fields):
         return cls.db.one("""
-
-            INSERT INTO packages
-                        (package_manager_id, name, description,
-                         long_description, long_description_raw,
-                         long_description_type)
-                 VALUES (%(package_manager_id)s, %(name)s, %(description)s,
-                         %(long_description)s, %(long_description_raw)s,
-                         %(long_description_type)s)
+            INSERT INTO packages (package_manager, name, description, emails)
+                 VALUES (%(package_manager)s, %(name)s, %(description)s, %(emails)s)
               RETURNING packages.*::packages
 
         """, fields)
 
     def set_team(self, team):
-        """ Set team for a package.
+        """Set team for a package.
         """
         if not isinstance(team, Team):
             raise NotAllowed("Not a team!")
@@ -68,7 +62,6 @@ class Package(Model):
             raise NotAllowed("team is closed")
         elif not team.is_approved:
             raise NotAllowed("team not approved")
-
         package_id = self.id
         slug = team.slug
         with self.db.get_cursor() as c:
