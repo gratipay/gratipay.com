@@ -54,7 +54,7 @@ if query:
 
     if action in (None, 'search_products'):
         results['products'] = website.db.all("""
-            SELECT name, slug, product_or_service, similarity(name, %(q)s) AS rank
+             SELECT name, slug, product_or_service, similarity(product_or_service, %(q)s) AS rank
               FROM teams
              WHERE product_or_service %% %(q)s
                AND ctime IS NOT NULL
@@ -226,7 +226,7 @@ if query:
                 <img src="{{ Team.from_slug(result.slug).get_image_url('small') }}">
                 <a class="name" href="/{{ result.slug }}/">{{ result.name }}</a>
                         <blockquote class="excerpt profile-statement">
-                            {{result.product_or_service[0:100]}}
+                            {{markdown.render(result.product_or_service[0:100])}}
                             {% if len(result.product_or_service) > 100 %}
                                 ...
                             {% endif %}
