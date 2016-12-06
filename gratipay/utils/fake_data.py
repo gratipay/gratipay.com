@@ -100,7 +100,7 @@ def fake_participant(db, is_admin=False, random_identities=True):
 
 
 def fake_exchange_route(db, participant, network=None):
-    
+
     if not network:
         networks = ["balanced-ba", "balanced-cc", "paypal", "bitcoin"]
         network = random.sample(networks, 1)[0]
@@ -108,11 +108,11 @@ def fake_exchange_route(db, participant, network=None):
     insert_fake_data( db
                     , "exchange_routes"
                     , participant = participant.id
-                    , network = network 
+                    , network = network
                     , address = participant.email_address
-                    , error = "None" 
+                    , error = "None"
                     )
-        
+
 
 def fake_participant_identity(participant, verification=None):
     """Pick a country and make an identity for the participant there.
@@ -169,7 +169,7 @@ def fake_team(db, teamowner, teamname=None):
 def fake_payment_instruction(db, participant, team):
     """Create a fake payment_instruction
     """
-    start_date = max(participant.claimed_time, team.ctime) 
+    start_date = max(participant.claimed_time, team.ctime)
     ctime=faker.date_time_between(start_date)
     return insert_fake_data( db
                            , "payment_instructions"
@@ -334,9 +334,9 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
     teamowners = random.sample(participants, num_teams)
     for teamowner in teamowners:
         teams.append(fake_team(db, teamowner))
-        
-    # Creating a fake Gratipay Team 
-    teamowner = random.choice(participants) 
+
+    # Creating a fake Gratipay Team
+    teamowner = random.choice(participants)
     teams.append(fake_team(db, teamowner, "Gratipay"))
 
     print("Making Payment Instructions")
@@ -374,64 +374,64 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
         payday_counter += 1
         end_date = date + datetime.timedelta(days=7)
         week_payment_instructions = filter(lambda x:  x['mtime'] < date, payment_instructions)
-        
+
         # Need to create the payday record before inserting payment records
         params = dict(ts_start=date, ts_end=end_date)
         with db.get_cursor() as cursor:
             payday_id = cursor.one("""
-                    INSERT INTO paydays 
-                                (ts_start, ts_end) 
+                    INSERT INTO paydays
+                                (ts_start, ts_end)
                          VALUES (%(ts_start)s, %(ts_end)s)
                       RETURNING id
-                    """, params) 
+                    """, params)
         sys.stdout.write("\rMaking Paydays (%i/%i)" % (payday_id, paydays_total))
         sys.stdout.flush()
 
-       
-        week_payments = [] 
+
+        week_payments = []
         for payment_instruction in week_payment_instructions:
             participant = Participant.from_id(payment_instruction['participant_id'])
             team = Team.from_id(payment_instruction['team_id'])
             amount = payment_instruction['amount']
             assert participant.username != team.owner
             week_payments.append(fake_payment(
-                                        db=db, 
-                                        participant=participant.username, 
-                                        team=team.slug, 
-                                        timestamp=date, 
-                                        amount=amount, 
+                                        db=db,
+                                        participant=participant.username,
+                                        team=team.slug,
+                                        timestamp=date,
+                                        amount=amount,
                                         payday=payday_id,
                                         direction='to-team'
                                   )
                           )
-            
+
             if amount != 0:
                 fee = amount * D('0.02')
                 fee = abs(fee.quantize(D('.01')))
                 fake_exchange(
-                    db=db, 
-                    participant=participant, 
+                    db=db,
+                    participant=participant,
                     amount=amount,
-                    fee=fee, 
-                    timestamp=date + datetime.timedelta(seconds=1) 
+                    fee=fee,
+                    timestamp=date + datetime.timedelta(seconds=1)
                  )
-            
+
         for team in teams:
             week_payments_to_team = filter(lambda x: x['team'] == team.slug, week_payments)
             pay_out = sum(t['amount'] for t in week_payments_to_team)
-            
-            if pay_out: 
+
+            if pay_out:
                 week_payments.append(fake_payment(
                                         db=db,
-                                        participant=team.owner, 
-                                        team=team.slug, 
-                                        timestamp=date, 
-                                        amount=pay_out, 
+                                        participant=team.owner,
+                                        team=team.slug,
+                                        timestamp=date,
+                                        amount=pay_out,
                                         payday=payday_id,
                                         direction= 'to-participant'
                                      )
                               )
-            
+
         actives=set()
 
 
@@ -446,8 +446,8 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
                 UPDATE paydays
                    SET nusers=%(nusers)s, volume=%(volume)s
                  WHERE id=%(payday_id)s
-                """, params) 
-                  
+                """, params)
+
         date = end_date
     print("")
 
