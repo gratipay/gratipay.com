@@ -33,7 +33,10 @@
 ./vendor/contextlib2-0.5.4.tar.gz
 ./vendor/raven-5.32.0.tar.gz
 
-./vendor/fake-factory-0.3.2.tar.gz
+    ./vendor/six-1.8.0.tar.gz
+  ./vendor/python-dateutil-2.5.3.tar.gz
+  ./vendor/ipaddress-1.0.16.tar.gz
+./vendor/Faker-0.7.3.tar.gz
 
 ./vendor/six-1.8.0.tar.gz
 ./vendor/libsass-0.3.0.tar.gz
