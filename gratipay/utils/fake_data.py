@@ -67,7 +67,7 @@ def fake_participant(db, is_admin=False, random_identities=True):
 
     """
     username = faker.first_name() + fake_text_id(3)
-    ctime = faker.date_time_between("-3y")      # Atmost three years ago.
+    ctime = faker.date_time_between("-3y", "-4w") # At most three years ago, at least four weeks.
     try:
         insert_fake_data( db
                         , "participants"
@@ -170,7 +170,7 @@ def fake_payment_instruction(db, participant, team):
     """Create a fake payment_instruction
     """
     start_date = max(participant.claimed_time, team.ctime)
-    ctime=faker.date_time_between(start_date)
+    ctime = faker.date_time_between(start_date)
     return insert_fake_data( db
                            , "payment_instructions"
                            , ctime=ctime
