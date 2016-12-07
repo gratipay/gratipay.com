@@ -168,10 +168,10 @@ class Harness(unittest.TestCase):
 
         team = self.db.one("""
             INSERT INTO teams
-                        (slug, slug_lower, name, homepage, product_or_service, todo_url,
+                        (slug, slug_lower, name, homepage, product_or_service,
                          onboarding_url, owner, is_approved, available)
                  VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s, %(product_or_service)s,
-                         %(todo_url)s, %(onboarding_url)s, %(owner)s, %(is_approved)s,
+                         %(onboarding_url)s, %(owner)s, %(is_approved)s,
                          %(available)s)
               RETURNING teams.*::teams
         """, _kw)
@@ -321,5 +321,3 @@ class Harness(unittest.TestCase):
              LIMIT 1
 
         """, (tipper, tippee), back_as=dict, default=default)['amount']
-
-

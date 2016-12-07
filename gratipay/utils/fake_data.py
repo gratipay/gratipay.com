@@ -142,6 +142,7 @@ def fake_team(db, teamowner, teamname=None):
         teamname = faker.first_name() + fake_text_id(3)
 
     ctime = teamowner.ctime + datetime.timedelta(days=7)
+
     try:
         teamslug = slugize(teamname)
         homepage = 'http://www.example.org/' + fake_text_id(3)
@@ -153,7 +154,6 @@ def fake_team(db, teamowner, teamname=None):
                         , homepage=homepage
                         , ctime=ctime
                         , product_or_service=random.sample(productorservice,1)[0]
-                        , todo_url=homepage + '/tickets'
                         , onboarding_url=homepage + '/contributing'
                         , owner=teamowner.username
                         , is_approved=random.sample(isapproved,1)[0]

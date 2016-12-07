@@ -21,7 +21,6 @@ field_names = {
     'product_or_service': 'Product or Service',
     'homepage': 'Homepage',
     'onboarding_url': 'Self-onboarding Documentation URL',
-    'todo_url': 'To-do URL',
 }
 
 if user.ANON:
@@ -54,7 +53,7 @@ for field in data.keys():
             if not value:
                 raise Response(400, _("Please fill out the '{}' field.", field_names[field]))
 
-            if (field in ('homepage', 'onboarding_url', 'todo_url')
+            if (field in ('homepage', 'onboarding_url')
             and not valid_url(value)):
                 raise Response(400,
                     _( "Please enter an http[s]:// URL for the '{}' field."

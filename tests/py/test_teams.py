@@ -170,7 +170,6 @@ class TestTeams(Harness):
         'product_or_service': 'We make widgets.',
         'homepage': 'http://gratipay.com/',
         'onboarding_url': 'http://inside.gratipay.com/',
-        'todo_url': 'https://github.com/gratipay',
         'agree_public': 'true',
         'agree_payroll': 'true',
         'agree_terms': 'true',
@@ -227,12 +226,10 @@ class TestTeams(Harness):
         self.post_new(dict( self.valid_data
                           , homepage='Http://gratipay.com/'
                           , onboarding_url='http://INSIDE.GRATipay.com/'
-                          , todo_url='hTTPS://github.com/GRATIPAY'
                            ))
         team = T('gratiteam')
         assert team.homepage == 'Http://gratipay.com/'
         assert team.onboarding_url == 'http://INSIDE.GRATipay.com/'
-        assert team.todo_url == 'hTTPS://github.com/GRATIPAY'
 
     def test_casing_of_slug_survives(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
@@ -300,9 +297,6 @@ class TestTeams(Harness):
 
         r = self.post_new(dict(self.valid_data, onboarding_url='foo'), expected=400)
         assert "an http[s]:// URL for the 'Self-onboarding Documentation URL' field." in r.body
-
-        r = self.post_new(dict(self.valid_data, todo_url='foo'), expected=400)
-        assert "Please enter an http[s]:// URL for the 'To-do URL' field." in r.body
 
     def test_error_message_for_invalid_team_name(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
@@ -451,7 +445,6 @@ class TestTeams(Harness):
             'product_or_service': 'We save galaxies.',
             'homepage': 'http://starwars-enterprise.com/',
             'onboarding_url': 'http://starwars-enterprise.com/onboarding',
-            'todo_url': 'http://starwars-enterprise.com/todos',
         }
         team.update(**update_data)
         team = T('enterprise')
@@ -460,7 +453,7 @@ class TestTeams(Harness):
 
     def test_can_only_update_allowed_fields(self):
         allowed_fields = set(['name', 'product_or_service', 'homepage',
-                              'onboarding_url', 'todo_url'])
+                              'onboarding_url',])
 
         team = self.make_team(slug='enterprise')
 

@@ -242,7 +242,6 @@ class TestTeamEdit(Harness):
             'product_or_service': 'We save galaxies.',
             'homepage': 'http://starwars-enterprise.com/',
             'onboarding_url': 'http://starwars-enterprise.com/onboarding',
-            'todo_url': 'http://starwars-enterprise.com/todos',
             'image': FileUpload(IMAGE, 'logo.png'),
         }
         data = json.loads(self.client.POST( '/enterprise/edit/edit.json'
@@ -256,7 +255,6 @@ class TestTeamEdit(Harness):
         assert team.product_or_service == 'We save galaxies.'
         assert team.homepage == 'http://starwars-enterprise.com/'
         assert team.onboarding_url == 'http://starwars-enterprise.com/onboarding'
-        assert team.todo_url == 'http://starwars-enterprise.com/todos'
         assert team.load_image('original') == IMAGE
 
     def test_edit_supports_partial_updates(self):
@@ -275,7 +273,6 @@ class TestTeamEdit(Harness):
         assert team.product_or_service == 'We save galaxies.'
         assert team.homepage == 'http://starwars-enterprise.com/'
         assert team.onboarding_url == ''
-        assert team.todo_url == ''
         assert team.load_image('original') == IMAGE
 
     def test_edit_needs_auth(self):
@@ -332,7 +329,7 @@ class TestTeamEdit(Harness):
 
     def test_can_only_edit_allowed_fields(self):
         allowed_fields = set(['name', 'image', 'product_or_service',
-            'homepage', 'onboarding_url', 'todo_url'])
+            'homepage', 'onboarding_url'])
 
         team = self.make_team(slug='enterprise', is_approved=None)
 
@@ -398,7 +395,6 @@ class TestTeamEdit(Harness):
             'product_or_service': 'We save galaxies.',
             'homepage': 'http://starwars-enterprise.com/',
             'onboarding_url': 'http://starwars-enterprise.com/onboarding',
-            'todo_url': 'http://starwars-enterprise.com/todos',
         }
         self.make_team(**team_data)
         r = self.client.POST( '/enterprise/edit/edit.json'

@@ -60,9 +60,6 @@ suppress_sidebar = True
     <label><h2>{{ _("Self-onboarding Documentation URL") }}</h2></label>
     <input type="text" name="onboarding_url" value="{{team.onboarding_url}}" required>
 
-    <label><h2>{{ _("To-do URL") }}</h2></label>
-    <input type="text" name="todo_url" value="{{team.todo_url}}" required>
-
     <br>
     <br>
     <button type="submit">{{ _("Modify") }}</button>
