@@ -54,10 +54,11 @@ if query:
 
     if action in (None, 'search_products'):
         q = "%%"+(q)+"%%" #search for the string everywhere
+        #http://stackoverflow.com/a/8218451/2152245 for ILIKE reasoning
         results['products'] = website.db.all("""
              SELECT name, slug, product_or_service, similarity(product_or_service, %(q)s) AS rank
               FROM teams
-             WHERE product_or_service ILIKE %(q)s #http://stackoverflow.com/a/8218451/2152245
+             WHERE product_or_service ILIKE %(q)s
                AND NOT is_closed
                AND is_approved
           ORDER BY rank DESC, name
