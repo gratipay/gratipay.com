@@ -53,12 +53,11 @@ if query:
         """, locals())
 
     if action in (None, 'search_products'):
-        #q = "%%"+(q)+"%%"
+        q = "%%"+(q)+"%%" #search for the string everywhere
         results['products'] = website.db.all("""
              SELECT name, slug, product_or_service, similarity(product_or_service, %(q)s) AS rank
               FROM teams
-             WHERE product_or_service %% %(q)s
-               AND ctime IS NOT NULL
+             WHERE product_or_service ILIKE %(q)s #http://stackoverflow.com/a/8218451/2152245
                AND NOT is_closed
                AND is_approved
           ORDER BY rank DESC, name
@@ -145,8 +144,7 @@ if query:
     {% set emails = results.get('emails') %}
     {% set teams = results.get('teams') %}
     {% set products = results.get('products') %}
-    {{ q }} 
-    {{ results }}
+
     {% if usernames %}
         <h2>{{ ngettext("Found a matching username",
                         "Found matching usernames",
