@@ -41,24 +41,13 @@ if query:
             """, locals())
 
     if action in (None, 'search_teams'):
-        results['teams'] = website.db.all("""
-            SELECT name, similarity(name, %(q)s) AS rank
-              FROM teams
-             WHERE name %% %(q)s
-               AND ctime IS NOT NULL
-               AND NOT is_closed
-               AND is_approved
-          ORDER BY rank DESC, name
-             LIMIT 10
-        """, locals())
-
-    if action in (None, 'search_products'):
         q = "%%"+(q)+"%%" #search for the string everywhere
-        #http://stackoverflow.com/a/8218451/2152245 for ILIKE reasoning
-        results['products'] = website.db.all("""
+        # http://stackoverflow.com/a/8218451/2152245 for ILIKE reasoning
+        results['teams'] = website.db.all("""
              SELECT name, slug, product_or_service, similarity(product_or_service, %(q)s) AS rank
               FROM teams
-             WHERE product_or_service ILIKE %(q)s
+             WHERE (product_or_service ILIKE %(q)s
+                 OR  name %% %(q)s)
                AND NOT is_closed
                AND is_approved
           ORDER BY rank DESC, name
@@ -144,7 +133,30 @@ if query:
     {% set statements = results.get('statements') %}
     {% set emails = results.get('emails') %}
     {% set teams = results.get('teams') %}
-    {% set products = results.get('products') %}
+
+    {% if teams %}
+    <div>
+        <h2>{{ ngettext("Found a matching team",
+                        "Found matching teams",
+                        len(teams)) }}</h2>
+        <table class="teams tab" data-tab="{{ tab }}">
+        {% for result in teams %}
+        <tr>
+            <td class="team" href="/{{ result.name }}/">
+                <img src="{{ Team.from_slug(result.slug).get_image_url('small') }}">
+                <a class="name" href="/{{ result.slug }}/">{{ result.name }}</a>
+                        <blockquote class="excerpt profile-statement">
+                            {{markdown.render(result.product_or_service[0:100])}}
+                            {% if len(result.product_or_service) > 100 %}
+                                ...
+                            {% endif %}
+                        </blockquote>
+            </td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+    {% endif %}
 
     {% if usernames %}
         <h2>{{ ngettext("Found a matching username",
@@ -156,38 +168,6 @@ if query:
                 <span class="inner">
                     <span class="avatar" style="background-image: url('{{ avatar_url(result) }}')"></span>
                     <span class="name">{{ result.username }}</span>
-                </span>
-            </a>
-        {% endfor %}
-        </div>
-    {% endif %}
-
-    {% if emails %}
-        <h2>{{ ngettext("Found a matching email address",
-                        "Found matching email addresses",
-                        len(usernames)) }}</h2>
-        <div class="search-results clearfix">
-        {% for result in emails %}
-            <a class="mini-user" href="/{{ result.username }}/">
-                <span class="inner">
-                    <span class="avatar" style="background-image: url('{{ avatar_url(result) }}')"></span>
-                    <span class="name">{{ result.username }}</span>
-                </span>
-            </a>
-        {% endfor %}
-        </div>
-    {% endif %}
-
-{% if teams %}
-        <h2>{{ ngettext("Found a matching team name",
-                        "Found matching team names",
-                        len(teams)) }}</h2>
-        <div class="search-results clearfix">
-        {% for result in teams %}
-            <a class="mini-user" href="/{{ result.name }}/">
-                <span class="inner">
-                    <span class="avatar"></span>
-                    <span class="name">{{ result.name }}</span>
                 </span>
             </a>
         {% endfor %}
@@ -215,31 +195,23 @@ if query:
     </div>
     {% endif %}
 
-    {% if products %}
-    <div>
-        <h2>{{ ngettext("Found a matching team",
-                        "Found matching teams",
-                        len(products)) }}</h2>
-        <table class="teams tab" data-tab="{{ tab }}">
-        {% for result in products %}
-        <tr>
-            <td class="team" href="/{{ result.name }}/">
-                <img src="{{ Team.from_slug(result.slug).get_image_url('small') }}">
-                <a class="name" href="/{{ result.slug }}/">{{ result.name }}</a>
-                        <blockquote class="excerpt profile-statement">
-                            {{markdown.render(result.product_or_service[0:100])}}
-                            {% if len(result.product_or_service) > 100 %}
-                                ...
-                            {% endif %}
-                        </blockquote>
-            </td>
-            </tr>
+    {% if emails %}
+        <h2>{{ ngettext("Found a matching email address",
+                        "Found matching email addresses",
+                        len(usernames)) }}</h2>
+        <div class="search-results clearfix">
+        {% for result in emails %}
+            <a class="mini-user" href="/{{ result.username }}/">
+                <span class="inner">
+                    <span class="avatar" style="background-image: url('{{ avatar_url(result) }}')"></span>
+                    <span class="name">{{ result.username }}</span>
+                </span>
+            </a>
         {% endfor %}
-        </table>
-    </div>
+        </div>
     {% endif %}
 
-    {% if query and not (usernames or statements or emails or teams or products) %}
+    {% if query and not (usernames or statements or emails or teams) %}
         <p>{{ _("Sorry, we didn't find anything matching your query.") }}</p>
     {% endif %}
 
