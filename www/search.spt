@@ -146,9 +146,10 @@ if query:
                 <img src="{{ Team.from_slug(result.slug).get_image_url('small') }}">
                 <a class="name" href="/{{ result.slug }}/">{{ result.name }}</a>
                         <blockquote class="excerpt profile-statement">
-                            {{markdown.render(result.product_or_service[0:100])}}
                             {% if len(result.product_or_service) > 100 %}
-                                ...
+                            {{markdown.render(result.product_or_service[0:100]+"...")}}
+                            {% else %}
+                            {{markdown.render(result.product_or_service[0:100])}}
                             {% endif %}
                         </blockquote>
             </td>
