@@ -40,10 +40,10 @@ if query:
                  LIMIT 10
             """, locals())
 
-    if action in (None, 'search_teams'):
+    if action in (None, 'search_projects'):
         q = "%%"+(q)+"%%" #search for the string everywhere
         # http://stackoverflow.com/a/8218451/2152245 for ILIKE reasoning
-        results['teams'] = website.db.all("""
+        results['projects'] = website.db.all("""
              SELECT name, slug, product_or_service, similarity(product_or_service, %(q)s) AS rank
               FROM teams
              WHERE (product_or_service ILIKE %(q)s
@@ -132,17 +132,17 @@ if query:
     {% set usernames = results.get('usernames') %}
     {% set statements = results.get('statements') %}
     {% set emails = results.get('emails') %}
-    {% set teams = results.get('teams') %}
+    {% set projects = results.get('projects') %}
 
-    {% if teams %}
+    {% if projects %}
     <div>
-        <h2>{{ ngettext("Found a matching team",
-                        "Found matching teams",
-                        len(teams)) }}</h2>
+        <h2>{{ ngettext("Found a matching project",
+                        "Found matching projects",
+                        len(projects)) }}</h2>
         <table class="teams tab" data-tab="{{ tab }}">
-        {% for result in teams %}
+        {% for result in projects %}
         <tr>
-            <td class="team" href="/{{ result.name }}/">
+            <td class="project" href="/{{ result.name }}/">
                 <img src="{{ Team.from_slug(result.slug).get_image_url('small') }}">
                 <a class="name" href="/{{ result.slug }}/">{{ result.name }}</a>
                         <blockquote class="excerpt profile-statement">
@@ -211,7 +211,7 @@ if query:
         </div>
     {% endif %}
 
-    {% if query and not (usernames or statements or emails or teams) %}
+    {% if query and not (usernames or statements or emails or projects) %}
         <p>{{ _("Sorry, we didn't find anything matching your query.") }}</p>
     {% endif %}
 
