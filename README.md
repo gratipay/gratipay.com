@@ -3,7 +3,7 @@
 [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
 [![Open Bounties](https://api.bountysource.com/badge/team?team_id=423&style=bounties_received)](https://www.bountysource.com/teams/gratipay/issues)
 
-[Gratipay](http://gratipay.com) provides payments and payouts for open work,
+[Gratipay](http://gratipay.com) helps companies fund open source,
 in order to cultivate an economy of gratitude, generosity, and love.
 
 

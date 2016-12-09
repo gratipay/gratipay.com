@@ -1,0 +1,86 @@
+from datetime import datetime
+
+from aspen import Response
+from gratipay.models.team import Team
+[---]
+request.allow('GET')
+
+if user.ANON:
+    raise Response(401, _("You must sign in to apply for your project to join Gratipay."))
+
+if user.participant.email_address is None:
+    raise Response(400, _("You must have a verified email address to apply for your project to join Gratipay."))
+
+if not user.participant.has_payout_route:
+    raise Response(400, _("You must attach a PayPal account to apply for your project to join Gratipay."))
+
+title = _("Apply to Join Gratipay")
+banner = _("Apply")
+suppress_sidebar = True
+[---] text/html
+{% extends "templates/base.html" %}
+
+{% block scripts %}
+<script>$(document).ready(Gratipay.new_team.initForm);</script>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<style>
+    textarea {
+        width: 100%;
+        height: 200px;
+    }
+</style>
+<div class="application-complete" style="display: none;">
+    <p>{{ _("Thanks! Your public project page is:") }}</p>
+    <p><a href="" class="team_url"></a></p>
+    <p>{{ _("And your public review ticket is:") }}</p>
+    <p><a href="" class="review_url"></a></p>
+    <p>{{ _( "You can watch and participate in our review process there. We will send a notification to {email} when we finish our review."
+           , email=user.participant.email_address
+            ) }}</p>
+    <p>{{ _("Thanks for applying!") }}</p>
+</div>
+<form action="/teams/create.json" method="POST" id="new-team">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+    <label><h2>{{ _("Project Name") }}</h2></label>
+    <p><i>{{ _("At least one letter A through Z, plus numbers, dashes (-), underscores (_), periods (.), comma (,) and whitespace.") }}</i></p>
+    <input type="text" name="name" required autofocus>
+
+    <label><h2>{{ _("Product or Service") }}</h2></label>
+    <p><i>{{ _("What product or service does your project provide?") }}</i></p>
+    <textarea name="product_or_service" required></textarea>
+
+    <label><h2>{{ _("Homepage") }}</h2></label>
+    <p><i>{{ _("What is the customer-facing web page for your project?") }}</i></p>
+    <input type="text" name="homepage" required>
+
+    <label><h2>{{ _("Image") }}</h2></label>
+    <p><i>{{ _("PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and 48 x 48 (with original saved for later).") }}</i></p>
+    <input type="file" name="image" required>
+
+    <h2>{{ _("Agreements") }}</h2>
+    <input type="checkbox" value="true" name="agree_public" id="agree_public">
+    <label for="agree_public">
+        {{ _( "I agree to have my application {0}publicly reviewed{1}."
+            , '<a href="http://inside.gratipay.com/howto/review-teams">'|safe
+            , '</a>'|safe
+             ) }}
+    </label>
+
+    <br>
+    <input type="checkbox" value="true" name="agree_terms" id="agree_terms">
+    <label for="agree_terms">
+        {{ _( "I agree to the other {0}terms of service{1} as well."
+            , '<a href="/about/policies/terms-of-service">'|safe
+            , '</a>'|safe
+             ) }}
+    </label>
+
+    <br>
+    <br>
+    <button type="submit">{{ _("Apply") }}</button>
+</form>
+{% endblock %}

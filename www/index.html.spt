@@ -37,7 +37,7 @@ for key, tab in tabs.items():
                                                                            , n
                                                                             )
 
-title = _("Teams")
+title = _("Projects")
 suppress_sidebar = True
 suppress_welcome = 'suppress-welcome' in request.cookie
 page_id = "homepage"
@@ -51,7 +51,7 @@ page_id = "homepage"
 {% block head %}
     <link rel="publisher" href="https://plus.google.com/104524895706770139568">
     <link type="application/opensearchdescription+xml" rel="search" href="/opensearch.osdd" />
-    <meta name="description" content="Voluntary payments and payroll for open work" />
+    <meta name="description" content="Pay Open Source Projects on Gratipay" />
     <meta name="fb:app_id" content="229465400522758" />
     <meta name="og:type" content="website" />
     <meta name="og:url" content="https://gratipay.com/" />
@@ -61,7 +61,7 @@ page_id = "homepage"
 
 {% block banner %}
     <a href="/about/" class="homepage">
-        {{ _("Payments{br}and Payroll{br}for Open Work", br='<br>'|safe) }}<br>
+        {{ _("We help{br}companies pay{br}open source projects.", br='<br>'|safe) }}<br>
         <u>{{ _("Read more") }}&hellip;</u>
     </a>
 </a>
@@ -71,11 +71,11 @@ page_id = "homepage"
 {% if not suppress_welcome %}
 <div class="welcome modal">
     <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
-    <p>{{ _( "We have {nteams} Teams receiving and sharing about {volume} each week."
+    <p>{{ _( "We have {nteams} projects receiving and sharing about {volume} each week."
            , nteams=tabs['approved']['n']
            , volume=format_currency(volume, 'USD', trailing_zeroes=False)
             ) }}</p>
-    <p>{{ _( "Continue to explore our Teams, or {a}read more about us{_a}."
+    <p>{{ _( "Continue to explore our projects, or {a}read more about us{_a}."
            , a='<a href="/about/">'|safe
            , _a='</a>'|safe
             ) }}</p>
@@ -86,7 +86,7 @@ page_id = "homepage"
 {% endif %}
 
 <form action="new" class="apply">
-    <button type="submit">{{ _("Apply for a New Team") }}</button>
+    <button type="submit">{{ _("Apply to Join") }}</button>
 </form>
 
 <div class="tabs">

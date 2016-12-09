@@ -5,31 +5,152 @@ title = _("Features")
 {% extends "templates/about-features.html" %}
 {% block content %}
 
-<p>Gratipay provides voluntary <a
-    href="/about/features/payments">payments</a> and (eventually) <a
-href="/about/features/payroll">payroll</a> for open work. Read our <a
-href="/about/">site overview</a> for basic definitions.</p>
-
-
-<h2>How do Payments Work?</h2>
-
-<p>Gratipay implements a <a
+<p>Gratipay offers a <a
     href="https://en.wikipedia.org/wiki/Pay_what_you_want">voluntary</a> <a
 href="https://en.wikipedia.org/wiki/Subscription_business_model">subscription</a>
-<a href="https://en.wikipedia.org/wiki/Revenue_model">revenue model</a>.
-Payments are pay-what-you-want, and recurring.</p>
+<a href="https://en.wikipedia.org/wiki/Revenue_model">revenue model</a>,
+wherein projects receive weekly payments from companies, organizations, and
+individuals.</p>
 
-<p><a href="./payments">Read more about payments</a>.</p>
+
+<h2 id="receiving">How do I use Gratipay to receive money?
+    <a class="permalink" title="permalink" href="#receiving">&#182;</a>
+</h2>
+
+<p><a href="/new">Apply for your project</a> to join Gratipay.</p>
 
 
-<h2>How does Payroll Work?</h2>
+<h2 id="giving">How do I give money?
+    <a class="permalink" title="permalink" href="#giving">&#182;</a>
+</h2>
 
-<p>To be honest ... it doesn't right now. But when we bring it back again,
-it will be based on the idea that everyone sets their own salary. Our
-payments are pay-what-you-want, and our payroll is
-&ldquo;take-what-you-want.&rdquo;</p>
+<p><a href="/explore/teams/">Browse</a> or <a href="/search">search</a> for a
+project you want to give to, and then look for the prompt. Here's <a
+href="/introtopython/">introtopython</a>, for example:</p>
 
-<p><a href="./payroll">Read more about payroll</a>.</p>
+<div><a href="/introtopython/"><img src="giving-prompt-anon.png"></a></div>
+
+<p>Then once you sign in:</p>
+
+<div><a href="/introtopython/"><img src="giving-prompt-auth.png"></a></div>
+
+
+<h2 id="when">When are payments run?
+    <a class="permalink" title="permalink" href="#when">&#182;</a>
+</h2>
+
+<p>We process payments once a week, on Thursdays. You can <a
+href="https://github.com/gratipay/inside.gratipay.com/issues?q=label%3APayday">follow
+along</a> each week.</p>
+
+
+<h2 id="currencies">What currencies do you support?
+    <a class="permalink" title="permalink" href="#currencies">&#182;</a>
+</h2>
+
+<p>We charge and pay out in USD.</p>
+
+
+<h2 id="methods">What payment methods do you support?
+    <a class="permalink" title="permalink" href="#methods">&#182;</a>
+</h2>
+
+<p>We are able to charge these brands of credit and debit card: Visa,
+MasterCard, Discover, JCB, and American Express.</p>
+
+<p>We pay out via PayPal.</p>
+
+
+<h2 id="fees">What are the payment fees?
+    <a class="permalink" title="permalink" href="#fees">&#182;</a>
+</h2>
+
+See <a href="/about/pricing">pricing</a>.
+
+
+<h2 id="limits">What are the payment limits?
+    <a class="permalink" title="permalink" href="#limits">&#182;</a>
+</h2>
+
+<p>The minimum you can give any one project is 1&#162; per week. The maximum is
+$1,000 per week, and is intended to reduce income volatility by reducing how
+dependent a project is on a few sources of income.</p>
+
+<p>Our minimum credit/debit card charge is $10. We <a
+    href="https://medium.com/gratipay-blog/charging-in-arrears-18cacf779bee#.z92kxeqt6">charge
+in arrears</a>. For example, we'll charge $10 (+ fees) at the end of ten weeks
+for a $1/wk subscription. This may cause your project's income to <a
+href="#receiving-less">fluctuate</a>.</p>
+
+
+<h2 id="promoting">What can I do to promote my project?
+    <a class="permalink" title="permalink" href="#promoting">&#182;</a>
+</h2>
+
+<p>Check out <a href="http://tractionbook.com/"><i>Traction</i></a>!</p>
+
+
+<h2 id="who">How do I see who is giving to my project?
+    <a class="permalink" title="permalink" href="#who">&#182;</a>
+</h2>
+
+<p>You can't. Payments are anonymous, to avoid the problem where people feel
+overly entitled to special treatment because they've given your project a
+little money.</p>
+
+<p>You <em>can</em> see overall statistics for your project under
+&ldquo;Receiving&rdquo; on your project page, including:</p>
+
+<ul>
+    <li>Funded Dues: incoming payments from givers who have not reached the <a href="#limits">charge threshold</a>, backed by working credit cards.</li>
+    <li>Unfunded Dues: incoming payments that are not backed by working credit cards.</li>
+    <li>Estimated payment for next week: payments that the project will receive next <a href="#when">payday</a>.</li>
+</ul>
+
+<h2 id="receiving-less">Why is my project receiving less now than it was before?
+    <a class="permalink" title="permalink" href="#receiving-less">&#182;</a>
+</h2>
+
+<p>If your project's income on Gratipay decreased, one of the following
+happened (most likely first):</p>
+
+<ol>
+    <li>Due to the way we handle <a href="#limits">minimum charges</a>, it's
+    possible that (for example) you might see a $10 payment every 10
+    weeks.</li>
+
+    <li>Someone decreased or entirely removed their payment to your project, or
+    their Gratipay account was closed. As Gratipay payments are anonymous, we
+    cannot tell you who.</li>
+
+    <li>Someone's credit card failed when we tried to charge it.</li>
+
+    <li>You have violated our <a href="https://gratipay.com/about/terms/">terms
+        of service</a>. We will have contacted you before terminating your
+    account.</li>
+
+    <li>We received a legal document ordering Gratipay to cease processing
+    payments for you. We will contact you unless prohibited by court
+    order.</li>
+
+</ol>
+
+
+<h2 id="taxes">Is money I give through Gratipay tax-deductible?
+    <a class="permalink" title="permalink" href="#taxes">&#182;</a>
+</h2>
+
+<p>No.</p>
+
+
+<h2 id="right-project">How do I know I am giving to the right project?
+    <a class="permalink" title="permalink" href="#right-project">&#182;</a>
+</h2>
+
+<p>You can follow links to Gratipay from a trusted source like a company or
+organization's website. Also, Twitter verifies accounts in instances where this
+is particularly relevant, so check their Twitter account carefully if it's
+linked.</p>
 
 
 <h2>Other Features</h2>
