@@ -41,10 +41,6 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
 
     <a href="{{ team.homepage }}">{{ _("Homepage") }}</a>
 
-    {% if team.onboarding_url %}
-    | <a href="{{ team.onboarding_url }}">{{ _("Onboarding") }}</a>
-    {% endif %}
-
     {% if user.ADMIN or is_team_owner %}
     |{{ _( "{a} Edit team {_a}"
           , a='<a href="./edit">'|safe

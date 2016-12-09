@@ -101,11 +101,9 @@ class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipM
 
             INSERT INTO teams
                         (slug, slug_lower, name, homepage,
-                         product_or_service, onboarding_url,
-                         owner)
+                         product_or_service, owner)
                  VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s,
-                         %(product_or_service)s, %(onboarding_url)s,
-                         %(owner)s)
+                         %(product_or_service)s, %(owner)s)
               RETURNING teams.*::teams
 
         """, fields)

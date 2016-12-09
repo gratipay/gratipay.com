@@ -19,7 +19,7 @@ if team.is_closed:
 if team.is_approved is False: # for teams under review, is_approved is None.
     raise Response(403, _("You can't edit a rejected team."))
 
-title = _("Edit your team")
+title = _("Edit Your Project")
 banner = _("Edit")
 suppress_sidebar = True
 
@@ -44,12 +44,8 @@ suppress_sidebar = True
 <form action="edit.json" method="POST" id = "edit-team">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-    <label><h2>{{ _("Team Name") }}</h2></label>
+    <label><h2>{{ _("Project Name") }}</h2></label>
     <input type="text" name="name" value="{{team.name}}" required autofocus>
-
-    <label><h2>{{ _("Image") }}</h2></label>
-    <img src="{{ team.get_image_url('small') }}" align="middle">
-    <input type="file" name="image" accept="image/png, image/jpeg">
 
     <label><h2>{{ _("Product or Service") }}</h2></label>
     <textarea name="product_or_service" required>{{team.product_or_service}}</textarea>
@@ -57,8 +53,9 @@ suppress_sidebar = True
     <label><h2>{{ _("Homepage") }}</h2></label>
     <input type="text" name="homepage" value="{{team.homepage}}" required>
 
-    <label><h2>{{ _("Self-onboarding Documentation URL") }}</h2></label>
-    <input type="text" name="onboarding_url" value="{{team.onboarding_url}}" required>
+    <label><h2>{{ _("Image") }}</h2></label>
+    <img src="{{ team.get_image_url('small') }}" align="middle">
+    <input type="file" name="image" accept="image/png, image/jpeg">
 
     <br>
     <br>

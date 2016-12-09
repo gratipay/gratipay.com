@@ -225,11 +225,9 @@ class TestTeams(Harness):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
         self.post_new(dict( self.valid_data
                           , homepage='Http://gratipay.com/'
-                          , onboarding_url='http://INSIDE.GRATipay.com/'
                            ))
         team = T('gratiteam')
         assert team.homepage == 'Http://gratipay.com/'
-        assert team.onboarding_url == 'http://INSIDE.GRATipay.com/'
 
     def test_casing_of_slug_survives(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
@@ -264,14 +262,6 @@ class TestTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Sorry, you must agree to have your application publicly reviewed." in r.body
 
-    def test_error_message_for_payroll(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
-        data = dict(self.valid_data)
-        del data['agree_payroll']
-        r = self.post_new(data, expected=400)
-        assert self.db.one("SELECT COUNT(*) FROM teams") == 0
-        assert "Sorry, you must agree to be responsible for payroll." in r.body
-
     def test_error_message_for_terms(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         data = dict(self.valid_data)
@@ -294,9 +284,6 @@ class TestTeams(Harness):
         r = self.post_new(dict(self.valid_data, homepage='foo'), expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Please enter an http[s]:// URL for the 'Homepage' field." in r.body
-
-        r = self.post_new(dict(self.valid_data, onboarding_url='foo'), expected=400)
-        assert "an http[s]:// URL for the 'Self-onboarding Documentation URL' field." in r.body
 
     def test_error_message_for_invalid_team_name(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
