@@ -19,8 +19,9 @@ if query:
               FROM participants
              WHERE username %% %(q)s
                AND claimed_time IS NOT NULL
-               AND is_searchable
-               AND NOT is_closed
+               """
+               +("" if user.ADMIN else " AND is_searchable")
+               +""" AND NOT is_closed
           ORDER BY rank DESC, username
              LIMIT 10
         """, locals())
