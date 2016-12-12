@@ -9,10 +9,10 @@ title = _("Welcome!")
 
 <p>Does your company use open source software? Probably. Open source software
 is great! But if too few of us pay the projects that so many of us depend on,
-then we have [a free rider
-problem](http://www.fordfoundation.org/library/reports-and-studies/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure/).
-That's bad for all of us, because it's not sustainable. You can help by paying
-open source projects on Gratipay!</p>
+then we have <a href="
+http://www.fordfoundation.org/library/reports-and-studies/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure/
+">a free rider problem</a>. That's bad for all of us, because it's not
+sustainable. You can help by paying open source projects on Gratipay!</p>
 
 <p>Learn more about <a href="/about/features/">how payments work on
 Gratipay</a>.
