@@ -218,9 +218,6 @@ msgstr "Nous contacter"
 msgid "Payments"
 msgstr "Paiements"
 
-msgid "Payroll"
-msgstr "Redistribution"
-
 msgid "Do Not Track"
 msgstr "Ne pas me pister (Do Not Track)"
 
@@ -520,56 +517,26 @@ msgid ""
 "payout."
 msgstr "Merci de {a}lier un compte PayPal{_a} puis de revenir ici pour demander un paiement."
 
-msgid "Approved"
-msgstr "Approuvées"
+msgid "You must sign in to apply for your project to join Gratipay."
+msgstr ""
 
-msgid "Under Review"
-msgstr "En cours d'examen"
+msgid ""
+"You must have a verified email address to apply for your project to join "
+"Gratipay."
+msgstr ""
 
-msgid "Rejected"
-msgstr "Rejetées"
+msgid ""
+"You must attach a PayPal account to apply for your project to join Gratipay."
+msgstr ""
 
-msgid "Payments{br}and Payroll{br}for Open Work"
-msgstr "Paiements{br}et redistribution{br}pour le travail ouvert"
-
-msgid "Read more"
-msgstr "En savoir plus"
-
-msgid "Welcome to Gratipay!"
-msgstr "Bienvenue sur Gratipay !"
-
-msgid "We have {nteams} Teams receiving and sharing about {volume} each week."
-msgstr "Nous avons {nteams} équipes qui reçoivent et partagent environ {volume} chaque semaine."
-
-msgid "Continue to explore our Teams, or {a}read more about us{_a}."
-msgstr "Continuez à explorer nos équipes, ou {a}apprenez-en plus sur nous{_a}."
-
-msgid "Continue"
-msgstr "Continuer"
-
-msgid "Apply for a New Team"
-msgstr "Création d'une nouvelle équipe"
-
-msgid "created {ago}"
-msgstr "créée {ago}"
-
-msgid "owned by {a}{owner}{_a}"
-msgstr "géré par {a}{owner}{_a}"
-
-msgid "You must sign in to apply for a new Team."
-msgstr "Vous devez être connecté pour candidater à la création d'une nouvelle équipe."
-
-msgid "You must have a verified email address to apply for a new Team."
-msgstr "Vous devez avoir une adresse courriel vérifiée pour candidater à la création d'une nouvelle équipe."
-
-msgid "You must attach a PayPal account to apply for a new Team."
-msgstr "Vous devez connecter un compte PayPal pour candidater à la création d'une nouvelle équipe."
+msgid "Apply to Join Gratipay"
+msgstr ""
 
 msgid "Apply"
 msgstr "Candidater"
 
-msgid "Thanks! Your public team page is:"
-msgstr "Merci ! La page publique de votre équipe est :"
+msgid "Thanks! Your public project page is:"
+msgstr ""
 
 msgid "And your public review ticket is:"
 msgstr "Et votre ticket public d'examen est :"
@@ -582,13 +549,25 @@ msgstr "Vous pouvez voir et participer à notre processus d'examen ici. Nous vou
 msgid "Thanks for applying!"
 msgstr "Merci pour votre candidature !"
 
-msgid "Team Name"
-msgstr "Nom de l'équipe"
+msgid "Project Name"
+msgstr ""
 
 msgid ""
 "At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
 "periods (.), comma (,) and whitespace."
 msgstr "Au moins une lettre entre A et Z, et chiffres, traits d'union (-), sous-tirets (_), points (.), virgules (,) et espaces."
+
+msgid "Product or Service"
+msgstr "Produit ou service"
+
+msgid "What product or service does your project provide?"
+msgstr ""
+
+msgid "Homepage"
+msgstr "Page d'accueil"
+
+msgid "What is the customer-facing web page for your project?"
+msgstr ""
 
 msgid "Image"
 msgstr "Image"
@@ -598,43 +577,54 @@ msgid ""
 " 48 x 48 (with original saved for later)."
 msgstr "PNG ou JPG jusqu'à 256 Ko. Elle sera rognée (forme carrée) et redimensionnée en 160 x 160 et 48 x 48 (l'original sera conservé pour plus tard)."
 
-msgid "Product or Service"
-msgstr "Produit ou service"
-
-msgid "What product or service does your Team provide?"
-msgstr "Quels produits ou services sont proposés par votre équipe ?"
-
-msgid "Homepage"
-msgstr "Page d'accueil"
-
-msgid "What is the customer-facing web page for your product or service?"
-msgstr "Quelle est la page web destinée aux clients qui présente votre produit ou service ?"
-
-msgid "Self-onboarding Documentation URL"
-msgstr "Comment contribuer ?"
-
-msgid ""
-"Where can people find instructions on how to do your work for you "
-"({0}example{1})? "
-msgstr "Où peut-on trouver les instructions pour travailler avec vous ({0}exemple{1}) ?"
-
-msgid "To-do URL"
-msgstr "Liste de tâches"
-
-msgid "Where can people find a list of available work to do for your Team?"
-msgstr "Où peut-on trouver la liste de tâches de votre équipe ?"
-
 msgid "Agreements"
 msgstr "Accords"
 
 msgid "I agree to have my application {0}publicly reviewed{1}."
 msgstr "J'accepte que ma candidature soit soumise à un {0}examen public{1}."
 
-msgid "I agree to be responsible for {0}payroll{1}."
-msgstr "Je reconnais être responsable de la {0}redistribution{1}."
+msgid "I agree to the other {0}terms of service{1} as well."
+msgstr ""
 
-msgid "I agree to the {0}terms of service{1}."
-msgstr "Je suis en accord avec les {0}termes de service{1}."
+msgid "Approved"
+msgstr "Approuvées"
+
+msgid "Under Review"
+msgstr "En cours d'examen"
+
+msgid "Rejected"
+msgstr "Rejetées"
+
+msgid "Projects"
+msgstr ""
+
+msgid "We help{br}companies pay{br}open source projects."
+msgstr ""
+
+msgid "Read more"
+msgstr "En savoir plus"
+
+msgid "Welcome to Gratipay!"
+msgstr "Bienvenue sur Gratipay !"
+
+msgid ""
+"We have {nteams} projects receiving and sharing about {volume} each week."
+msgstr ""
+
+msgid "Continue to explore our projects, or {a}read more about us{_a}."
+msgstr ""
+
+msgid "Continue"
+msgstr "Continuer"
+
+msgid "Apply to Join"
+msgstr ""
+
+msgid "created {ago}"
+msgstr "créée {ago}"
+
+msgid "owned by {a}{owner}{_a}"
+msgstr "géré par {a}{owner}{_a}"
 
 msgid "Results for: "
 msgstr "Résultats pour :"
@@ -677,12 +667,6 @@ msgstr "Êtes-vous sûr de vouloir vous déconnecter?"
 
 msgid "Yes!"
 msgstr "Oui !"
-
-msgid "Onboarding"
-msgstr "Contribuer"
-
-msgid "To-do"
-msgstr "Liste de tâches"
 
 msgid "{a} Edit team {_a}"
 msgstr "{a} Modifier l'équipe {_a}"
@@ -783,8 +767,8 @@ msgstr "Merci d'utiliser une image plus petite que 100 Ko."
 msgid "Sorry, there was a problem saving your image. Please try again."
 msgstr "Désolé, il y a eu un problème au moment de l'enregistrement de votre image. Merci d'essayer à nouveau."
 
-msgid "Edit your team"
-msgstr "Modifier votre équipe"
+msgid "Edit Your Project"
+msgstr ""
 
 msgid "Modify"
 msgstr "Modifier"
@@ -811,18 +795,17 @@ msgid "Welcome!"
 msgstr "Bienvenue !"
 
 msgid ""
-"Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} Teams{_b} "
-"and about {b}{nusers} ~users{_b}."
-msgstr "Gratipay traite environ {b}{volume} par semaine{_b} pour {b}{nteams} équipes{_b} et environ {b}{nusers} ~utilisateurs{_b}."
+"Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} "
+"projects{_b} and about {b}{nusers} ~users{_b}."
+msgstr ""
 
 msgid ""
-"On average, ~users who give payments on Gratipay give {b}{amount} to one "
-"Team{_b}."
+"On average, ~users who give on Gratipay give {b}{amount} to one project{_b}."
 msgid_plural ""
-"On average, ~users who give payments on Gratipay give {b}{amount} each to "
-"{number} Teams{_b}."
-msgstr[0] "En moyenne, les ~utilisateurs qui financent via Gratipay donnent {b}{amount} chacun à une équipe{_b}."
-msgstr[1] "En moyenne, les ~utilisateurs qui financent via Gratipay donnent {b}{amount} chacun à {number} équipes{_b}."
+"On average, ~users who give on Gratipay give {b}{amount} each to {number} "
+"projects{_b}."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Gratipay has processed about {b}{total}{_b} over {b}{age}+ years{_b}."
 msgstr "Gratipay a traité environ {b}{total}{_b} sur {b}{age}+ ans{_b}."
@@ -993,11 +976,11 @@ msgstr "Comment candidater pour la création d'une équipe ?"
 msgid "Sorry, you must agree to have your application publicly reviewed."
 msgstr "Désolé, vous devez accepté que votre candidature soit soumise à un examen public."
 
-msgid "Sorry, you must agree to be responsible for payroll."
-msgstr "Désolé, vous devez accepter être responsable de la redistribution."
-
 msgid "Sorry, you must agree to the terms of service."
 msgstr "Désolé, vous devez être en accord avec les termes de service."
+
+msgid "Please enter an http[s]:// URL for the 'Homepage' field."
+msgstr ""
 
 msgid "Sorry, your team name is invalid."
 msgstr "Désolé, votre nom d'équipe n'est pas valide."
