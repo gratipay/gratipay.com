@@ -44,6 +44,22 @@ emails = participant.get_emails()
                 <span>
                     <a class="account-username" href="/~{{ participant.username }}/history/">{{ format_currency(participant.balance, "USD") }}</a>
                 </span>
+                {% if user.participant.status_of_1_0_payout == 'pending-application' %}
+                    <div class="1-0-payout>{{ _( "{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available {a2}indefinitely{_a}{_nowrap}."
+                            , nowrap='<span class="nowrap">'|safe
+                            , _nowrap='</span>'|safe
+                            , a='<a href="/1.0-payout">'|safe
+                            , a2='<a href="https://medium.com/gratipay-blog/39c07bd031b">'|safe
+                            , _a='</a>'|safe
+                             ) }}</div>
+                {% elif user.participant.status_of_1_0_payout in ('pending-review', 'pending-payout') %}
+                    <div class="1-0-payout">{{ _( "{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
+                            , nowrap='<span class="nowrap">'|safe
+                            , _nowrap='</span>'|safe
+                            , a='<a href="/1.0-payout">'|safe
+                            , _a='</a>'|safe
+                             ) }}</div>
+                {% endif %}
             </td>
         </tr>
     </table>
