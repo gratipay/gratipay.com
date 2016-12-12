@@ -25,3 +25,6 @@ class TestNotifications(Harness):
         alice.add_notification('bcde')
         alice.remove_notification('1234')
         assert alice.notifications == ["abcd", "bcde"]
+
+    def test_blog_announcement(self):
+        assert 'blog/39c07bd031b">indefinitely' in self.client.GET('/').body
