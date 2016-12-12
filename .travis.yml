@@ -1,9 +1,6 @@
 language: python
 addons:
   postgresql: 9.3
-branches:
-  only:
-    - master
 before_install:
  - git branch -vv | grep '^*'
  - pwd

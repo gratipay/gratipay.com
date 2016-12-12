@@ -101,11 +101,9 @@ class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipM
 
             INSERT INTO teams
                         (slug, slug_lower, name, homepage,
-                         product_or_service, todo_url, onboarding_url,
-                         owner)
+                         product_or_service, owner)
                  VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s,
-                         %(product_or_service)s, %(todo_url)s, %(onboarding_url)s,
-                         %(owner)s)
+                         %(product_or_service)s, %(owner)s)
               RETURNING teams.*::teams
 
         """, fields)
@@ -170,7 +168,7 @@ class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipM
 
     def update(self, **kw):
       updateable = frozenset(['name', 'product_or_service', 'homepage',
-                              'onboarding_url', 'todo_url'])
+                              'onboarding_url'])
 
       cols, vals = zip(*kw.items())
       assert set(cols).issubset(updateable)
@@ -320,8 +318,7 @@ class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipM
             'owner': '~' + self.owner,
             'receiving': self.receiving,
             'slug': self.slug,
-            'status': self.status,
-            'todo_url': self.todo_url
+            'status': self.status
         }
 
 

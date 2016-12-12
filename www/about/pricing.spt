@@ -60,20 +60,24 @@ href="http://en.wikipedia.org/wiki/Pay_what_you_want">pay-what-you-want</a>.&rdq
     <a class="permalink" title="permalink" href="#fees">&#182;</a>
 </h2>
 
-<p>We don't skim off the top, but we <i>do</i> charge you processing fees
-when you use your credit card or other payment method, but that's at cost.
+<p>Gratipay itself is <a href="/Gratipay/">funded on Gratipay</a>. We don't
+skim off the top, but we <i>do</i> charge you processing fees when you use your
+credit card or other payment method, but that's at cost.
 It all goes to the payment processor. We don't see any of that
 ourselves.</p>
 
-<p>Read about processing fees for <a
-    href="/about/features/payments#fees">payments</a> and <a
-    href="/about/features/payroll#fees">payroll</a>.</p>
+<p>Our credit card processor, Braintree, charges 2.9% + 30&#162; per
+transaction. We upcharge givers to cover this fee at cost, so that projects receive
+the face value of the payment. For example, we'll charge $20.91 to cover a $20
+payment into Gratipay. Non-U.S. banks may assess foreign exchange and/or other fees.</p>
 
+<p>Projects receive <a href="/about/features#receiving">payouts</a> via PayPal, which charges 2%.
+This fee is passed on to the project on payday and is capped at $1 for U.S. PayPal
+accounts.</p>
 
 <h2 id="uses">Where Do Payments Go?
     <a class="permalink" title="permalink" href="#uses">&#182;</a>
 </h2>
-
 
 <p>Your voluntary payments <a href="/Gratipay/">to Gratipay</a> cover
 hosting and other costs of doing business, and the rest goes to the people
