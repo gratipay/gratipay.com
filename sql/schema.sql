@@ -935,3 +935,9 @@ BEGIN;
     ALTER TABLE packages DROP COLUMN readme_type;
     ALTER TABLE packages DROP COLUMN readme_needs_to_be_processed;
 END;
+
+
+--https://github.com/gratipay/gratipay.com/pull/4214
+BEGIN;
+  ALTER TABLE teams DROP COLUMN todo_url;
+END;
