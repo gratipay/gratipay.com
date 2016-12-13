@@ -262,13 +262,9 @@ msgid "Sign out"
 msgstr "Cerrar sesión"
 
 msgid ""
-"{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available "
-"{a2}indefinitely{_a}{_nowrap}."
-msgstr "{nowrap}{a}pagos 1.0{_a} están{_nowrap} {nowrap}disponibles {a2}indefinidamente{_a}{_nowrap}."
-
-msgid ""
-"{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
-msgstr "{nowrap}Comprueba el estado de tu{_nowrap} {a}solicitud de pago 1.0{_a}."
+"{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
+"to join Gratipay{_a}{_nowrap}."
+msgstr ""
 
 msgid "About"
 msgstr "Acerca"
@@ -1361,6 +1357,12 @@ msgstr "Dinero disponible"
 
 msgid "Available Balance"
 msgstr "Balance disponible"
+
+msgid "Request 1.0 Payout"
+msgstr ""
+
+msgid "Check 1.0 Payout"
+msgstr ""
 
 msgid "API Credentials"
 msgstr "Credenciales de API"
