@@ -1,0 +1,18 @@
+{{ _("Application Approved!") }}
+[---] text/html
+{{ _( "We've approved your application for the '{project}' project on Gratipay. For details, please refer to {a}our review ticket{_a}."
+    , project=project.name
+    , a=('<a href="{}">'|safe).format(project.review_url)
+    , _a='</a>'|safe
+     ) }}
+<br>
+<br>
+{{ _("Thanks for using Gratipay! :-)") }}
+[---] text/plain
+{{ _( "We've approved your application for the '{project}' project on Gratipay. For details, please refer to our review ticket:"
+    , project=project.name
+     ) }}
+
+{{ project.review_url }}
+
+{{ _("Thanks for using Gratipay! :-)") }}
