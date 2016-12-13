@@ -45,6 +45,17 @@ emails = participant.get_emails()
                     <a class="account-username" href="/~{{ participant.username }}/history/">{{ format_currency(participant.balance, "USD") }}</a>
                 </span>
             </td>
+            {% if user.participant.status_of_1_0_payout.startswith('pending-') %}
+            <td class="account-action">
+                <a class="button" href="/1.0-payout">
+                    {% if user.participant.status_of_1_0_payout == 'pending-application' %}
+                    {{ _( "Request 1.0 Payout") }}
+                    {% elif user.participant.status_of_1_0_payout in ('pending-review', 'pending-payout') %}
+                    {{ _( "Check 1.0 Payout") }}
+                    {% endif %}
+                </a>
+            </td>
+            {% endif %}
         </tr>
     </table>
 

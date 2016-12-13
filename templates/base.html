@@ -66,36 +66,19 @@
             {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
         </div>
 
-        {% if request.path.raw != '/1.0-payout' %}
-        {% if not user.participant or user.participant.status_of_1_0_payout == 'pending-application' %}
         <table id="notice">
             <tr>
                 <td>&#x2605;</td>
-                <td>{{ _( "{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available {a2}indefinitely{_a}{_nowrap}."
+                <td>{{ _( "{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier to join Gratipay{_a}{_nowrap}."
                         , nowrap='<span class="nowrap">'|safe
                         , _nowrap='</span>'|safe
-                        , a='<a href="/1.0-payout">'|safe
-                        , a2='<a href="https://medium.com/gratipay-blog/39c07bd031b">'|safe
+                        , a='<a href="/about/policies/terms-of-service">'|safe
+                        , a2='<a href="https://gratipay.news/from-teams-to-projects-45c46718507b">'|safe
                         , _a='</a>'|safe
                          ) }}</td>
                 <td>&#x2605;</td>
             </tr>
         </table>
-        {% elif user.participant and user.participant.status_of_1_0_payout in ('pending-review', 'pending-payout') %}
-        <table id="notice">
-            <tr>
-                <td>&#x2605;</td>
-                <td>{{ _( "{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
-                        , nowrap='<span class="nowrap">'|safe
-                        , _nowrap='</span>'|safe
-                        , a='<a href="/1.0-payout">'|safe
-                        , _a='</a>'|safe
-                         ) }}</td>
-                <td>&#x2605;</td>
-            </tr>
-        </table>
-        {% endif %}
-        {% endif %}
 
         <div id="main">
             {% block main %}
