@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
+import sys
 import time
 
 from gratipay.exceptions import CannotRemovePrimaryEmail, EmailAlreadyTaken, EmailNotVerified
@@ -9,6 +10,7 @@ from gratipay.testing import P
 from gratipay.testing.emails import EmailHarness
 from gratipay.models.participant import Participant
 from gratipay.utils import emails, encode_for_querystring
+from gratipay.utils.emails import queue_branch_email as _queue_branch_email
 
 
 class TestEmail(EmailHarness):
@@ -263,3 +265,84 @@ class TestEmail(EmailHarness):
         Participant.dequeue_emails()
         assert self.mailer.call_count == 0
         assert self.db.one("SELECT spt_name FROM email_queue") is None
+
+
+def queue_branch_email(username, _argv=None, _input=None, _print=None):
+    _argv = ['', username] if _argv is None else _argv
+    _input = _input or (lambda prompt: 'y')
+    stdout, stderr = [], []
+    def _print(string, file=None):
+        buf = stderr if file is sys.stderr else stdout
+        buf.append(str(string))
+    _print = _print or (lambda *a, **kw: None)
+    try:
+        _queue_branch_email.main(_argv, _input, _print)
+    except SystemExit as exc:
+        retcode = exc.args[0]
+    else:
+        retcode = 0
+    return retcode, stdout, stderr
+
+
+class TestQueueBranchEmail(EmailHarness):
+
+    def nsent(self):
+        Participant.dequeue_emails()
+        return self.mailer.call_count
+
+
+    # qbe - queue_branch_email
+
+    def test_qbe_is_fine_with_no_participants(self):
+        retcode, output, errors = queue_branch_email('all')
+        assert retcode == 0
+        assert output == ['Okay, you asked for it!', '0']
+        assert errors == []
+        assert self.nsent() == 0
+
+    def test_qbe_queues_for_one_participant(self):
+        alice = self.make_participant( 'alice'
+                                     , claimed_time='now'
+                                     , email_address='alice@example.com'
+                                      )
+        retcode, output, errors = queue_branch_email('all')
+        assert retcode == 0
+        assert output == [ 'Okay, you asked for it!'
+                         , '1'
+                         , 'spotcheck: alice@example.com (alice={})'.format(alice.id)
+                          ]
+        assert errors == ['   1 queuing for alice@example.com (alice={})'.format(alice.id)]
+        assert self.nsent() == 1
+
+    def test_qbe_queues_for_two_participants(self):
+        alice = self.make_participant( 'alice'
+                                     , claimed_time='now'
+                                     , email_address='alice@example.com'
+                                      )
+        bob = self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
+        retcode, output, errors = queue_branch_email('all')
+        assert retcode == 0
+        assert output[:2] == ['Okay, you asked for it!', '2']
+        assert errors == [ '   1 queuing for alice@example.com (alice={})'.format(alice.id)
+                         , '   2 queuing for bob@example.com (bob={})'.format(bob.id)
+                          ]
+        assert self.nsent() == 2
+
+    def test_qbe_constrains_to_one_participant(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
+        bob = self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
+        retcode, output, errors = queue_branch_email('bob')
+        assert retcode == 0
+        assert output == [ 'Okay, just bob.'
+                         , '1'
+                         , 'spotcheck: bob@example.com (bob={})'.format(bob.id)
+                          ]
+        assert errors == ['   1 queuing for bob@example.com (bob={})'.format(bob.id)]
+        assert self.nsent() == 1
+
+    def test_qbe_bails_if_told_to(self):
+        retcode, output, errors = queue_branch_email('all', _input=lambda prompt: 'n')
+        assert retcode == 1
+        assert output == []
+        assert errors == []
+        assert self.nsent() == 0
