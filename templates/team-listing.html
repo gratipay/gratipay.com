@@ -1,17 +1,26 @@
-{% set approved_teams = participant.get_teams(only_approved=True) %}
+{% set only_show_approved = (user.ADMIN or user.participant == participant) %}
+{% set teams = participant.get_teams(only_approved=only_show_approved) %}
 
-{% if (user.ADMIN or user.participant == participant) and approved_teams %}
-    <h2>{{ _("Teams") }}</h2>
-    <ul class="team memberships">
-        {% for team in participant.get_teams() %}
-        <li><a href="/{{ team.slug }}/">{{ team.name }}</a></li>
-        {% endfor %}
-    </ul>
-{% elif approved_teams %}
-    <h2>{{ _("Teams") }}</h2>
-    <ul class="team memberships">
-        {% for team in approved_teams %}
-        <li><a href="/{{ team.slug }}/">{{ team.name }}</a></li>
-        {% endfor %}
-    </ul>
-{% endif %}
+<h2>{{ _("Teams") }}</h2>
+
+<ul class="team-preview-container">
+    {% for team in teams %}
+        <li class="team-preview">
+            <div class="background-banner"></div>
+            <div class="avatar-container">
+                <img class="avatar" src="{{ team.get_image_url('small') }}">
+                
+            </div>
+            <div class="title-container">
+                <a href="/{{ team.slug }}">{{ team.name }}</a>
+            </div>
+            <div class="stats-container">
+                <div class="givers">
+                    {{ team.nreceiving_from }} givers
+                </div><div class="receiving">
+                    {{ format_currency(team.receiving, 'USD') }}/wk
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

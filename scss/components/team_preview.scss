@@ -1,0 +1,92 @@
+.team-preview-container {
+	@include clearfix;
+}
+
+.team-preview {
+	float:left;
+	width: 48%;
+	list-style: none;
+	padding-top: 25px;
+
+	border-radius: 5px;
+	border: 1px solid #630;
+
+	margin: 0 4% 4% 0;
+
+	text-align: center;
+
+	position: relative;
+
+	&:nth-child(even) {
+		margin-right: 0;
+	}
+
+	z-index: 0;
+}
+
+.team-preview .background-banner {
+	height: 65px;
+	width: 100%;
+	@include vertical-gradient($lighter-green, $green);
+	position: absolute;
+	top: 0px;
+
+	z-index: -10; // HACK!
+}
+
+.team-preview .title-container {
+	margin-bottom: 5px;
+	margin-top: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+
+	a {
+		font: bold 20px $Ideal;
+		color: #555;
+		&:hover {
+			color: #396;
+		}
+	}
+}
+
+.team-preview .avatar-container {}
+
+.team-preview .avatar-container .avatar {
+	display:inline-block;
+	width: 70%;
+	max-width: 80px;
+
+	background-color: white;
+
+	box-shadow: 0px 0px 1px 1px rgba(69, 69, 69, 0.5);
+	border-radius: 5px;
+}
+
+.team-preview .stats-container {
+	margin-bottom: 15px;
+	margin-top: 5px;
+
+	font-size: 14px;
+
+	color: #396;
+
+	.givers, .receiving {
+		display:inline-block;
+		width: 50%;
+		.icon {
+			font-family: 'icomoon';	
+		}
+	}
+
+	.givers {
+		border-right: 1px solid rgba(51, 153, 102, 0.5);
+		text-align: right;
+		padding-right: 5%;
+	}
+
+	.receiving {
+		border-left: 1px solid rgba(51, 153, 102, 0.5);
+		text-align: left;
+		padding-left: 5%;
+	}
+}
