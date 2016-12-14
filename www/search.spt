@@ -1,7 +1,5 @@
-from gratipay.utils import markdown, get_team
+from gratipay.utils import markdown
 from gratipay.utils.i18n import LANGUAGES_2, SEARCH_CONFS, strip_accents
-from gratipay.models.team import Team
-from aspen import Response
 
 [---]
 
