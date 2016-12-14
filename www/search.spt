@@ -50,18 +50,16 @@ if query:
             """, locals())
 
     if action in (None, 'search_projects'):
-        q = "%%"+(q)+"%%" #search for the string everywhere
-        # http://stackoverflow.com/a/8218451/2152245 for ILIKE reasoning
         results['projects'] = website.db.all("""
-             SELECT name, slug, product_or_service, similarity(product_or_service, %(q)s) AS rank
-              FROM teams
-             WHERE (product_or_service ILIKE %(q)s
-                 OR  name %% %(q)s)
+        SELECT project FROM (
+            SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
+              FROM teams t
+             WHERE name %% %(q)s
                AND NOT is_closed
                AND is_approved
           ORDER BY rank DESC, name
              LIMIT 10
-        """, locals())
+        ) _""", locals())
 
     if action in (None, 'search_statements'):
         langs = tuple(l for l in request.accept_langs if l in LANGUAGES_2)
@@ -137,23 +135,16 @@ if query:
         <h2>{{ ngettext("Found a matching project",
                         "Found matching projects",
                         len(projects)) }}</h2>
-        <table class="teams tab" data-tab="{{ tab }}">
+        <div class="search-results clearfix">
         {% for result in projects %}
-        <tr>
-            <td class="project" href="/{{ result.name }}/">
-                <img src="{{ Team.from_slug(result.slug).get_image_url('small') }}">
-                <a class="name" href="/{{ result.slug }}/">{{ result.name }}</a>
-                        <blockquote class="excerpt profile-statement">
-                            {% if len(result.product_or_service) > 100 %}
-                            {{markdown.render(result.product_or_service[0:100]+"...")}}
-                            {% else %}
-                            {{markdown.render(result.product_or_service[0:100])}}
-                            {% endif %}
-                        </blockquote>
-            </td>
-            </tr>
+            <a class="mini-user" href="/{{ result.name }}/">
+                <span class="inner">
+                    <span class="avatar" style="background-image: url('{{ result.get_image_url('small') }}')"></span>
+                    <span class="name">{{ result.name }}</span>
+                </span>
+            </a>
         {% endfor %}
-        </table>
+        </div>
     </div>
     {% endif %}
 
