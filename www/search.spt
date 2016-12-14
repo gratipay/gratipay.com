@@ -39,6 +39,15 @@ if query:
               ORDER BY rank DESC, username
                  LIMIT 10
             """, locals())
+        if action in (None, 'search_emails'):
+            results['emails'] = website.db.all("""
+                SELECT username, avatar_url, similarity(email_address, %(q)s) AS rank
+                  FROM participants
+                 WHERE email_address %% %(q)s
+                   AND claimed_time IS NOT NULL
+              ORDER BY rank DESC, username
+                 LIMIT 10
+            """, locals())
 
     if action in (None, 'search_projects'):
         q = "%%"+(q)+"%%" #search for the string everywhere
@@ -53,17 +62,6 @@ if query:
           ORDER BY rank DESC, name
              LIMIT 10
         """, locals())
-
-    if user.ADMIN:
-        if action in (None, 'search_emails'):
-            results['emails'] = website.db.all("""
-                SELECT username, avatar_url, similarity(email_address, %(q)s) AS rank
-                  FROM participants
-                 WHERE email_address %% %(q)s
-                   AND claimed_time IS NOT NULL
-              ORDER BY rank DESC, username
-                 LIMIT 10
-            """, locals())
 
     if action in (None, 'search_statements'):
         langs = tuple(l for l in request.accept_langs if l in LANGUAGES_2)
