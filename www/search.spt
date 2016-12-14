@@ -141,8 +141,8 @@ if query:
 
     {% if projects %}
     <div>
-        <h2>{{ ngettext("Found a matching project",
-                        "Found matching projects",
+        <h2>{{ ngettext("Found a matching project name",
+                        "Found matching project names",
                         len(projects)) }}</h2>
         <div class="search-results clearfix">
         {% for result in projects %}
