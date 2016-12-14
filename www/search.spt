@@ -27,6 +27,17 @@ if query:
                ORDER BY rank DESC, username
                   LIMIT 10
              """, locals())
+        if action in (None, 'search_projects'):
+            results['projects'] = website.db.all("""
+            SELECT project FROM (
+                SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
+                  FROM teams t
+                 WHERE name %% %(q)s
+                   AND NOT is_closed
+                   AND is_approved
+              ORDER BY rank DESC, name
+                 LIMIT 10
+            ) _""", locals())
 
     else:
         if action in (None, 'search_usernames'):
@@ -48,18 +59,16 @@ if query:
               ORDER BY rank DESC, username
                  LIMIT 10
             """, locals())
-
-    if action in (None, 'search_projects'):
-        results['projects'] = website.db.all("""
-        SELECT project FROM (
-            SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
-              FROM teams t
-             WHERE name %% %(q)s
-               AND NOT is_closed
-               AND is_approved
-          ORDER BY rank DESC, name
-             LIMIT 10
-        ) _""", locals())
+        if action in (None, 'search_projects'):
+            results['projects'] = website.db.all("""
+            SELECT project FROM (
+                SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
+                  FROM teams t
+                 WHERE name %% %(q)s
+                   AND NOT is_closed
+              ORDER BY rank DESC, name
+                 LIMIT 10
+            ) _""", locals())
 
     if action in (None, 'search_statements'):
         langs = tuple(l for l in request.accept_langs if l in LANGUAGES_2)
