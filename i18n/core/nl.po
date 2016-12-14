@@ -99,31 +99,31 @@ msgid ""
 "discuss this further."
 msgstr "We hebben uw verzoek voor de uitbetaling van een Gratipay 1.0 balans geweigerd, aangezien we niet konden vaststellen welk betaald product of dienst u aanbood op Gratipay. Als u dit verder met ons wilt bespreken, beantwoord dan dit bericht."
 
-msgid "Team Application Approved!"
-msgstr "Team aanvraag goedgekeurd!"
+msgid "Project Application Approved!"
+msgstr ""
 
 msgid ""
-"We've approved your application for the '{team}' Team on Gratipay. For "
+"We've approved your application for the '{team}' project on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr "We hebben uw aanvraag voor uw '{team}' Team op Gratipay goedgekeurd. Voor meer details, zie {a}ons review ticket{_a}."
+msgstr ""
 
 msgid ""
-"We've approved your application for the '{team}' Team on Gratipay. For "
+"We've approved your application for the '{team}' project on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr "We hebben uw aanvraag voor uw '{team}' Team op Gratipay goedgekeurd. Voor meer details, zie ons review ticket:"
+msgstr ""
 
-msgid "Team Application Rejected"
-msgstr "Team aanvraag geweigerd"
+msgid "Project Application Rejected"
+msgstr ""
 
 msgid ""
-"We've rejected your application for the '{team}' Team on Gratipay. For "
+"We've rejected your application for the '{team}' project on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr "We hebben uw aanvraag voor uw '{team}' Team op Gratipay geweigerd. Voor meer details, zie {a}ons review ticket{_a}."
+msgstr ""
 
 msgid ""
-"We've rejected your application for the '{team}' Team on Gratipay. For "
+"We've rejected your application for the '{team}' project on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr "We hebben uw aanvraag voor uw '{team}' Team op Gratipay geweigerd. Voor meer details, zie ons review ticket:"
+msgstr ""
 
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
@@ -302,8 +302,8 @@ msgstr "Verwijderen"
 msgid "Edit"
 msgstr "Verander"
 
-msgid "Team"
-msgstr "Team"
+msgid "Project"
+msgstr ""
 
 msgid "Amount ($)"
 msgstr "Bedrag ($)"
@@ -432,8 +432,8 @@ msgstr ""
 msgid "Distributing"
 msgstr ""
 
-msgid "Teams"
-msgstr "Teams"
+msgid "Projects"
+msgstr ""
 
 msgid "{sign_in}{br}to give to{br}{team}"
 msgstr "{sign_in}{br}om te geven aan{br}{team}"
@@ -589,9 +589,6 @@ msgstr "In behandeling"
 msgid "Rejected"
 msgstr "Geweigerd"
 
-msgid "Projects"
-msgstr ""
-
 msgid "We help{br}companies pay{br}open source projects."
 msgstr ""
 
@@ -662,7 +659,7 @@ msgstr "Ben je zeker dat je wil uitloggen?"
 msgid "Yes!"
 msgstr "Ja!"
 
-msgid "{a} Edit team {_a}"
+msgid "{a} Edit project {_a}"
 msgstr ""
 
 msgid "owned by {a}~{owner}{_a}"
@@ -740,10 +737,10 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nee"
 
-msgid "You can't edit a closed team."
+msgid "You can't edit a closed project."
 msgstr ""
 
-msgid "You can't edit a rejected team."
+msgid "You can't edit a rejected project."
 msgstr ""
 
 msgid "Please upload a PNG or JPG image."

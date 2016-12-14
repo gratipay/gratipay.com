@@ -97,29 +97,29 @@ msgid ""
 "discuss this further."
 msgstr ""
 
-msgid "Team Application Approved!"
+msgid "Project Application Approved!"
 msgstr ""
 
 msgid ""
-"We've approved your application for the '{team}' Team on Gratipay. For "
+"We've approved your application for the '{team}' project on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
 msgstr ""
 
 msgid ""
-"We've approved your application for the '{team}' Team on Gratipay. For "
+"We've approved your application for the '{team}' project on Gratipay. For "
 "details, please refer to our review ticket:"
 msgstr ""
 
-msgid "Team Application Rejected"
+msgid "Project Application Rejected"
 msgstr ""
 
 msgid ""
-"We've rejected your application for the '{team}' Team on Gratipay. For "
+"We've rejected your application for the '{team}' project on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
 msgstr ""
 
 msgid ""
-"We've rejected your application for the '{team}' Team on Gratipay. For "
+"We've rejected your application for the '{team}' project on Gratipay. For "
 "details, please refer to our review ticket:"
 msgstr ""
 
@@ -300,8 +300,8 @@ msgstr "Forviŝi"
 msgid "Edit"
 msgstr "Redakti"
 
-msgid "Team"
-msgstr "Teama"
+msgid "Project"
+msgstr ""
 
 msgid "Amount ($)"
 msgstr "Sumo ($)"
@@ -430,8 +430,8 @@ msgstr ""
 msgid "Distributing"
 msgstr ""
 
-msgid "Teams"
-msgstr "Teamoj"
+msgid "Projects"
+msgstr ""
 
 msgid "{sign_in}{br}to give to{br}{team}"
 msgstr ""
@@ -587,9 +587,6 @@ msgstr ""
 msgid "Rejected"
 msgstr ""
 
-msgid "Projects"
-msgstr ""
-
 msgid "We help{br}companies pay{br}open source projects."
 msgstr ""
 
@@ -660,7 +657,7 @@ msgstr "Ĉu vi certas ke vi volas elsaluti?"
 msgid "Yes!"
 msgstr "Jes!"
 
-msgid "{a} Edit team {_a}"
+msgid "{a} Edit project {_a}"
 msgstr ""
 
 msgid "owned by {a}~{owner}{_a}"
@@ -738,10 +735,10 @@ msgstr "Jes"
 msgid "No"
 msgstr "Ne"
 
-msgid "You can't edit a closed team."
+msgid "You can't edit a closed project."
 msgstr ""
 
-msgid "You can't edit a rejected team."
+msgid "You can't edit a rejected project."
 msgstr ""
 
 msgid "Please upload a PNG or JPG image."
