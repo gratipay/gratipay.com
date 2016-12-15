@@ -97,10 +97,10 @@ page_id = "homepage"
     </ul>
 
     {% for tab in tabs %}
-    <table class="teams tab" data-tab="{{ tab }}">
+    <table class="listing tab" data-tab="{{ tab }}">
         {% for i, team in enumerate(tabs[tab]['teams'], start=1) %}
         <tr>
-            <td class="team">
+            <td class="item">
                 <img src="{{ team.get_image_url('small') }}">
                 <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
 
