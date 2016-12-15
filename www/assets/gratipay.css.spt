@@ -53,7 +53,6 @@
 
 @import "scss/fragments/accounts";
 @import "scss/fragments/members";
-@import "scss/fragments/mini-user";
 @import "scss/fragments/notifications";
 @import "scss/fragments/pagination";
 

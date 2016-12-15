@@ -9,6 +9,8 @@ table.listing {
         color: $medium-gray;
         border: 1px solid $light-brown;
         border-style: solid none;
+        height: 64px;
+        padding-top: 38px;
 
         a {
             color: $medium-gray;
@@ -39,20 +41,32 @@ table.listing {
             height: 100%;
         }
         .details {
+            display: block;
+
+            /* duplicate width/max-width from layouts#wrapper to get overflow to work */
+            width: 98vw;
+            max-width: 576px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            padding-left: 56px;
+
             font: normal 12px/15px $Ideal;
-            min-height: 64px;
-            padding: 38px 144px 0 56px;
+            &.room-for-numbers {
+                padding-right: 144px;
+            }
             .owner a {
                 color: $medium-gray;
                 position: relative;
                 z-index: 2;
             }
-            span {
-                white-space: nowrap;
-            }
             .status-icon {
                 font-size: 12px;
                 padding: 0;
+            }
+            .description {
+                & * { display: inline; }
             }
         }
         .numbers {
