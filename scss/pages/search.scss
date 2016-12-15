@@ -2,7 +2,7 @@
 
     form {
         text-align: center;
-        margin: 0 0 40px;
+        margin: 20px 0 60px;
         button {
             font: normal 14pt/20pt $Ideal;
             padding: 4pt 10pt;
@@ -12,6 +12,7 @@
             font: normal 16pt/20pt $Ideal;
             width: 50%;
             height: 24pt;
+            margin-right: 8px;
         }
     }
 
@@ -23,6 +24,9 @@
 
     h2 {
         margin-top: 4em;
+        &:first-of-type {
+            margin-top: 0;
+        }
     }
 
     .description strong {
