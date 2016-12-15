@@ -113,21 +113,6 @@ if query:
            value="{{ query or '' }}" autofocus />
     <button type="submit">{{ _("Go") }}</button>
 </form>
-
-<form class="jump-box">
-    <p>{{ _("Looking for a specific user of a social network?") }}</p>
-    <p>{{ _("{0} on {1}",
-         """<input placeholder='username' autocomplete='off' autocorrect='off'
-                   spellcheck='false' size='12' type='text'>"""|safe,
-         """<select>
-            <option value='twitter'>Twitter</option>
-            <option value='facebook'>Facebook</option>
-            <option value='github'>GitHub</option>
-            <option value='bitbucket'>Bitbucket</option>
-         </select>"""|safe) }}
-         <button type="submit">{{ _("Go") }}</button></p>
-</form>
-
 {% endblock %}
 
 {% block content %}
