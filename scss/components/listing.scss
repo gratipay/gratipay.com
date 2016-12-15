@@ -10,7 +10,7 @@ table.listing {
         border: 1px solid $light-brown;
         border-style: solid none;
         height: 64px;
-        padding-top: 38px;
+        padding-top: 35px;
 
         a {
             color: $medium-gray;
@@ -54,7 +54,7 @@ table.listing {
 
             font: normal 12px/15px $Ideal;
             &.room-for-numbers {
-                padding-right: 144px;
+                padding-right: 80px;
             }
             .owner a {
                 color: $medium-gray;
@@ -67,6 +67,11 @@ table.listing {
             }
             .description {
                 & * { display: inline; }
+            }
+        }
+        &:hover {
+            .room-for-numbers {
+                padding-right: 144px;
             }
         }
         .numbers {

@@ -170,7 +170,7 @@ zip = zip
                 <img src="{{ team.get_image_url('small') }}">
                 <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
 
-                <span class="details">
+                <div class="details{% if team.status == 'approved' %} room-for-numbers{% endif %}">
                     <span class="i">{{ i }}</span>
                     <span class="status">&middot;
                         <a href="{{ team.review_url }}"><span
@@ -187,7 +187,7 @@ zip = zip
                             , _a='</a>'|safe
                              ) }}
                     </span>
-                </span>
+                </div>
 
                 {% if team.status == 'approved' %}
                 <table class="numbers mono">
