@@ -34,6 +34,7 @@
 @import "scss/components/emails";
 @import "scss/components/js-edit";
 @import "scss/components/linear_gradient";
+@import "scss/components/listing";
 @import "scss/components/loading-indicators";
 @import "scss/components/long-form";
 @import "scss/components/memberships";
@@ -52,7 +53,6 @@
 
 @import "scss/fragments/accounts";
 @import "scss/fragments/members";
-@import "scss/fragments/mini-user";
 @import "scss/fragments/notifications";
 @import "scss/fragments/pagination";
 

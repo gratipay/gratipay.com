@@ -1,35 +1,35 @@
-.search-box {
-    input {
-        width: 136px;
-    }
-}
+#search #content {
 
-.search-results {
-    .mini-user {
-        margin: 2px;
+    form {
+        text-align: center;
+        margin: 20px 0 60px;
+        button {
+            font: normal 14pt/20pt $Ideal;
+            padding: 4pt 10pt;
+            height: 26pt;
+        }
+        input {
+            font: normal 16pt/20pt $Ideal;
+            width: 50%;
+            height: 24pt;
+            margin-right: 8px;
+        }
     }
-}
 
-.search-result {
-    margin-bottom: 0.8em;
-    padding-left: 0.5em;
-    @include clearfix;
-    .avatar {
-        float: left;
-        margin: 0.5em 0;
-        max-height: 66px;
-        max-width: 66px;
+    .sorry {
+        text-align: center;
+        font: normal 12px/15px $Ideal;
+        color: $medium-gray;
     }
-    .col-right {
-        margin-left: 74px;
-    }
-    .excerpt {
-        font-size: 80%;
-        line-height: 130%;
-        padding: 0.5em 0 0 1em;
-    }
-}
 
-.jump-box {
-    margin-top: 40px;
+    h2 {
+        margin-top: 4em;
+        &:first-of-type {
+            margin-top: 0;
+        }
+    }
+
+    .description strong {
+        font-weight: bold;
+    }
 }

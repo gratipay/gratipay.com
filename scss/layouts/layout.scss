@@ -1,8 +1,5 @@
-body {
-    padding: 0 12px;
-}
-
 #wrapper {
+    width: 98vw;
     max-width: 576px;
     margin: 0 auto;
 }
@@ -85,6 +82,10 @@ body {
 #content {
     width: 384px;
     display: table-cell;
+    &.without-sidebar {
+        width: auto;
+    }
+
     vertical-align: top;
     font: 300 14px/24px $Chronicle;
 

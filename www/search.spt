@@ -1,7 +1,27 @@
-from gratipay.utils import markdown
+from gratipay.utils import markdown, excerpt_intro
 from gratipay.utils.i18n import LANGUAGES_2, SEARCH_CONFS, strip_accents
-
+from markupsafe import Markup
 [---]
+
+def process_excerpt(excerpt):
+    excerpt = excerpt_intro(markdown.render(excerpt), 256, '')
+    if excerpt:
+        excerpt = Markup('&middot; ') + excerpt
+    return excerpt
+
+def get_processed_excerpt(participant):
+    statement = participant.get_statement(request.accept_langs)[0] or ''
+    return process_excerpt(statement)
+
+# Horribly WET; see www/index.html.spt
+i18ned_statuses = { "approved": _("Approved")
+                  , "unreviewed" : _("Under Review")
+                  , "rejected": _("Rejected")
+                   }
+status_icons = { "approved": "&#xe008;"
+               , "unreviewed": "&#xe009;"
+               , "rejected": "&#xe010;"
+                }
 
 action = request.qs.get('action')
 query = request.qs.get('q')
@@ -10,62 +30,86 @@ banner = _("Search")
 results = {}
 
 if query:
-    title = _("Results for: ") + query
     q = strip_accents(query)
 
-    if action in (None, 'search_usernames'):
-         results['usernames'] = website.db.all("""
-             SELECT username, avatar_url, similarity(username, %(q)s) AS rank
-               FROM participants
-              WHERE username %% %(q)s
-                AND claimed_time IS NOT NULL
-                """
-                +("" if user.ADMIN else " AND is_searchable")
-                +""" AND NOT is_closed
-           ORDER BY rank DESC, username
-              LIMIT 10
-         """, locals())
+    if not user.ADMIN:
+        if action in (None, 'search_usernames'):
+             results['usernames'] = website.db.all("""
+             SELECT p FROM (
+                 SELECT p.*::participants p, similarity(username, %(q)s) AS rank
+                   FROM participants p
+                  WHERE username %% %(q)s
+                    AND claimed_time IS NOT NULL
+                    AND is_searchable
+                    AND NOT is_closed
+               ORDER BY rank DESC, username
+                  LIMIT 10
+             ) _""", locals())
+        if action in (None, 'search_projects'):
+            results['projects'] = website.db.all("""
+            SELECT project FROM (
+                SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
+                  FROM teams t
+                 WHERE name %% %(q)s
+                   AND NOT is_closed
+                   AND is_approved
+              ORDER BY rank DESC, name
+                 LIMIT 10
+            ) _""", locals())
 
-    if user.ADMIN:
+    else:
         if action in (None, 'search_usernames'):
             results['usernames'] = website.db.all("""
-                SELECT username, avatar_url, similarity(username, %(q)s) AS rank
-                  FROM participants
+             SELECT p FROM (
+                SELECT p.*::participants p, similarity(username, %(q)s) AS rank
+                  FROM participants p
                  WHERE username %% %(q)s
                    AND claimed_time IS NOT NULL
                    AND NOT is_closed
               ORDER BY rank DESC, username
                  LIMIT 10
-            """, locals())
-
-    if user.ADMIN:
+            ) _""", locals())
         if action in (None, 'search_emails'):
             results['emails'] = website.db.all("""
-                SELECT username, avatar_url, similarity(email_address, %(q)s) AS rank
-                  FROM participants
+            SELECT p FROM (
+                SELECT p.*::participants p, similarity(email_address, %(q)s) AS rank
+                  FROM participants p
                  WHERE email_address %% %(q)s
                    AND claimed_time IS NOT NULL
               ORDER BY rank DESC, username
                  LIMIT 10
-            """, locals())
+            ) _""", locals())
+        if action in (None, 'search_projects'):
+            results['projects'] = website.db.all("""
+            SELECT project FROM (
+                SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
+                  FROM teams t
+                 WHERE name %% %(q)s
+                   AND NOT is_closed
+              ORDER BY rank DESC, name
+                 LIMIT 10
+            ) _""", locals())
 
     if action in (None, 'search_statements'):
         langs = tuple(l for l in request.accept_langs if l in LANGUAGES_2)
         search_confs = list(set(SEARCH_CONFS.get(lang, 'simple') for lang in langs))
         results['statements'] = website.db.all("""
+        SELECT p, excerpts FROM (
             WITH queries AS (
                      SELECT search_conf::regconfig
                           , plainto_tsquery(search_conf::regconfig, %(q)s) AS query
                        FROM unnest(%(search_confs)s) search_conf
                  )
-            SELECT username
-                 , avatar_url
+            SELECT p.*::participants p
                  , max(rank) AS max_rank
                  , json_agg((SELECT a FROM (
                        SELECT rank
                             , lang
-                            , ts_headline(search_conf, content, query,
-                                          'StartSel=**,StopSel=**,MaxFragments=1') AS excerpt
+                            , ts_headline( search_conf
+                                         , content
+                                         , query
+                                         , 'StartSel=**,StopSel=**,MinWords=1,MaxWords=12,MaxFragments=1'
+                                          ) AS excerpt
                    ) a)) AS excerpts
               FROM (
                        SELECT participant, lang, content, search_conf, query
@@ -78,112 +122,119 @@ if query:
                    ) s
               JOIN participants p ON p.id = s.participant
           WHERE p.claimed_time IS NOT NULL
-             AND p.is_searchable
-             AND NOT p.is_closed
+            AND p.is_searchable
+            AND NOT p.is_closed
           GROUP BY username
           ORDER BY max_rank DESC
-        """, locals())
+        ) _""", locals())
 
+
+def empty_excerpts():
+
+    # Part of MacGyvering result descriptions. It's ... wow, actually. When the
+    # list_participants template macro sees None for excerpt, it will fall
+    # through to the full participant statement, the beginning of which will be
+    # excerpted.
+
+    while 1:
+        yield None
+
+
+suppress_sidebar = True
+page_id = "search"
+zip = zip
 [---] text/html
 {% extends "templates/base.html" %}
-{% from 'templates/avatar-url.html' import avatar_url, avatar_img with context %}
-
-{% block sidebar %}
-<form action="/search" method="get" class="search-box">
-    <input type="text" name="q" placeholder="{{ _('Search Gratipay') }}"
-           value="{{ query or '' }}" autofocus />
-    <button type="submit">{{ _("Go") }}</button>
-</form>
-
-<form class="jump-box">
-    <p>{{ _("Looking for a specific user of a social network?") }}</p>
-    <p>{{ _("{0} on {1}",
-         """<input placeholder='username' autocomplete='off' autocorrect='off'
-                   spellcheck='false' size='12' type='text'>"""|safe,
-         """<select>
-            <option value='twitter'>Twitter</option>
-            <option value='facebook'>Facebook</option>
-            <option value='github'>GitHub</option>
-            <option value='bitbucket'>Bitbucket</option>
-         </select>"""|safe) }}
-         <button type="submit">{{ _("Go") }}</button></p>
-</form>
-
-{% endblock %}
-
+{% from 'templates/list-participants.html' import list_participants with context %}
 {% block content %}
 
-    {% set usernames = results.get('usernames') %}
-    {% set statements = results.get('statements') %}
-    {% set emails = results.get('emails') %}
+    <form action="/search" method="get">
+        <input type="text" name="q" placeholder="{{ _('Search Gratipay') }}"
+               value="{{ query or '' }}" autofocus />
+        <button type="submit">{{ _("Search") }}</button>
+    </form>
 
-    {% if usernames %}
-        <h2>{{ ngettext("Found a matching username",
-                        "Found matching usernames",
-                        len(usernames)) }}</h2>
-        <div class="search-results clearfix">
-        {% for result in usernames %}
-            <a class="mini-user" href="/{{ result.username }}/">
-                <span class="inner">
-                    <span class="avatar" style="background-image: url('{{ avatar_url(result) }}')"></span>
-                    <span class="name">{{ result.username }}</span>
-                </span>
-            </a>
+    {% set usernames = zip(results.get('usernames', []), empty_excerpts()) %}
+    {% set statements = results.get('statements') %}
+    {% set emails = zip(results.get('emails', []), empty_excerpts()) %}
+    {% set projects = results.get('projects') %}
+
+    {% if projects %}
+    <h2>{{ ngettext("Found a matching project",
+                    "Found matching projects",
+                    len(projects)) }}</h2>
+    <table class="listing">
+        {% for i, team in enumerate(projects, start=1) %}
+        <tr>
+            <td class="item">
+                <img src="{{ team.get_image_url('small') }}">
+                <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
+
+                <div class="details{% if team.status == 'approved' %} room-for-numbers{% endif %}">
+                    <span class="i">{{ i }}</span>
+                    <span class="status">&middot;
+                        <a href="{{ team.review_url }}"><span
+                            class="status-icon {{ team.status }}"
+                            >{{ status_icons[team.status]|safe }}</span
+                            >{{ i18ned_statuses[team.status] }}</a>
+                    </span>
+                    <span class="ctime">&middot; {{ _("created {ago}",
+                        ago=to_age(team.ctime, add_direction=True)) }}</span>
+                    <span class="owner">&middot;
+                        {{ _( "owned by {a}{owner}{_a}"
+                            , owner='~'+team.owner
+                            , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
+                            , _a='</a>'|safe
+                             ) }}
+                    </span>
+                </div>
+
+                {% if team.status == 'approved' %}
+                <table class="numbers mono">
+                    <tr>
+                        <th class="label">{{ _("Weekly") }}</th>
+                        <th>&#x03A3; &nbsp;</th>
+                        <th>n</th>
+                    </tr>
+                    <tr>
+                        <td class="label">{{ _("Receiving") }}</td>
+                        <td>{{ format_currency(team.receiving, 'USD')
+                                if team.receiving else '- &nbsp;'|safe }}</td>
+                        <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
+                    </tr>
+                </table>
+                {% endif %}
+            </td>
+        </tr>
         {% endfor %}
-        </div>
+    </table>
     {% endif %}
 
-    {% if emails %}
-        <h2>{{ ngettext("Found a matching email address",
-                        "Found matching email addresses",
-                        len(usernames)) }}</h2>
-        <div class="search-results clearfix">
-        {% for result in emails %}
-            <a class="mini-user" href="/{{ result.username }}/">
-                <span class="inner">
-                    <span class="avatar" style="background-image: url('{{ avatar_url(result) }}')"></span>
-                    <span class="name">{{ result.username }}</span>
-                </span>
-            </a>
-        {% endfor %}
-        </div>
+    {% if usernames %}
+    <h2>{{ ngettext("Found a matching username",
+                    "Found matching usernames",
+                    len(usernames)) }}</h2>
+    {{ list_participants(usernames) }}
     {% endif %}
 
     {% if statements %}
-    <div>
-        <h2>{{ ngettext("Found a matching user statement",
-                        "Found matching user statements",
-                        len(statements)) }}</h2>
-        {% for result in statements %}
-            <div class="search-result" href="/{{ result.username }}/">
-                {{ avatar_img(result) }}
-                <div class="col-right">
-                    <a class="username" href="/{{ result.username }}/">{{ result.username }}</a>
-                    {% if len(result.excerpts) == 1 %}
-                        <blockquote class="excerpt profile-statement">{{
-                            markdown.render(result.excerpts[0].excerpt)
-                        }}</blockquote>
-                    {% endif %}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    <h2>{{ ngettext("Found a matching user statement",
+                    "Found matching user statements",
+                    len(statements)) }}</h2>
+    {{ list_participants(statements, extract_statement) }}
     {% endif %}
 
-    {% if query and not (usernames or statements or emails) %}
-        <p>{{ _("Sorry, we didn't find anything matching your query.") }}</p>
+    {% if emails %}
+    <h2>{{ ngettext("Found a matching email address",
+                    "Found matching email addresses",
+                    len(emails)) }}</h2>
+    {{ list_participants(emails, show_emails=True) }}
     {% endif %}
 
-{% endblock %}
+    {% if query and not (usernames or statements or emails or projects) %}
+    <p class="sorry">{{ _("Sorry, we didn't find anything matching your query.") }}</p>
+    {% endif %}
 
-{% block scripts %}
-<script>
-    $(document).ready(function(){
-        $('div.search-result').css('cursor', 'pointer').click(function(){
-            window.location = $(this).attr('href');
-        });
-    });
-</script>
 {% endblock %}
 [---] application/json via json_dump
 results
