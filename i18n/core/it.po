@@ -98,30 +98,30 @@ msgid ""
 msgstr "Abbiamo rifiutato la tua richiesta di pagamento del tuo saldo Gratipay 1.0 perché non abbiamo potuto determinare quale prodotto o servizio offrivi per il quale venivi pagato tramite Gratipay. Per favore rispondici se desideri discuterne di più."
 
 msgid "Project Application Approved!"
-msgstr ""
+msgstr "Proposta di Progetto Approvata!"
 
 msgid ""
 "We've approved your application for the '{team}' project on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr ""
+msgstr "Abbiamo approvato la proposta per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro {a} ticket di revisione{_a}."
 
 msgid ""
 "We've approved your application for the '{team}' project on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr ""
+msgstr "Abbiamo approvato la proposta per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro ticket di revisione:"
 
 msgid "Project Application Rejected"
-msgstr ""
+msgstr "Proposta di Progetto Rifiutata"
 
 msgid ""
 "We've rejected your application for the '{team}' project on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr ""
+msgstr "Abbiamo rifiutato la proposta per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento {a}al nostro ticket di revisione{_a}."
 
 msgid ""
 "We've rejected your application for the '{team}' project on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr ""
+msgstr "Abbiamo rifiutato la proposta per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro ticket di revisione:"
 
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
@@ -301,7 +301,7 @@ msgid "Edit"
 msgstr "Modifica"
 
 msgid "Project"
-msgstr ""
+msgstr "Progetto"
 
 msgid "Amount ($)"
 msgstr "Ammontare ($)"
@@ -314,6 +314,9 @@ msgstr "Creati"
 
 msgid "{0} ago"
 msgstr "{0} fa"
+
+msgid "joined {ago}"
+msgstr ""
 
 msgid "Previous"
 msgstr "Precedente"
@@ -615,35 +618,28 @@ msgstr "creato {ago}"
 msgid "owned by {a}{owner}{_a}"
 msgstr "Proprietà di {a}{owner}{_a}"
 
-msgid "Results for: "
-msgstr "Risultati per:"
-
 msgid "Search Gratipay"
 msgstr "Cerca su Gratipay"
 
-msgid "Go"
-msgstr "Vai"
-
-msgid "Looking for a specific user of a social network?"
-msgstr "Cerchi un utente specifico di un social network?"
-
-msgid "{0} on {1}"
-msgstr "{0} su {1}"
+msgid "Found a matching project"
+msgid_plural "Found matching projects"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
 msgstr[0] "Trovato un utente corrispondente"
 msgstr[1] "Trovati utenti corrispondenti"
 
-msgid "Found a matching email address"
-msgid_plural "Found matching email addresses"
-msgstr[0] "Indirizzo email corrispondente trovato"
-msgstr[1] "Indirizzi email corrispondenti trovati"
-
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
 msgstr[0] "Trovata una presentazione utente corrispondente"
 msgstr[1] "Trovate presentazioni utente corrispondenti"
+
+msgid "Found a matching email address"
+msgid_plural "Found matching email addresses"
+msgstr[0] "Indirizzo email corrispondente trovato"
+msgstr[1] "Indirizzi email corrispondenti trovati"
 
 msgid "Sorry, we didn't find anything matching your query."
 msgstr "Ci dispiace, non abbiamo trovato alcun risultato alla tua ricerca."
@@ -658,7 +654,7 @@ msgid "Yes!"
 msgstr "Sì!"
 
 msgid "{a} Edit project {_a}"
-msgstr ""
+msgstr "{a} Modifica progetto {_a}"
 
 msgid "owned by {a}~{owner}{_a}"
 msgstr "Proprietà di {a}~{owner}{_a}"
@@ -736,10 +732,10 @@ msgid "No"
 msgstr "No"
 
 msgid "You can't edit a closed project."
-msgstr ""
+msgstr "Non puoi modificare un progetto chiuso."
 
 msgid "You can't edit a rejected project."
-msgstr ""
+msgstr "Non puoi modificare un progetto rifiutato."
 
 msgid "Please upload a PNG or JPG image."
 msgstr "Per favore, carica un'immagine PNG o JPG."

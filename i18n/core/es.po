@@ -320,6 +320,9 @@ msgstr "Primer set"
 msgid "{0} ago"
 msgstr "Hace {0}"
 
+msgid "joined {ago}"
+msgstr ""
+
 msgid "Previous"
 msgstr "Previo"
 
@@ -620,35 +623,28 @@ msgstr "creado {ago}"
 msgid "owned by {a}{owner}{_a}"
 msgstr "creado por {a}{owner}{_a}"
 
-msgid "Results for: "
-msgstr "Resultados para:"
-
 msgid "Search Gratipay"
 msgstr "Búsqueda en Gratipay"
 
-msgid "Go"
-msgstr "Ir"
-
-msgid "Looking for a specific user of a social network?"
-msgstr "¿Buscas una red social específica?"
-
-msgid "{0} on {1}"
-msgstr "{0} de {1}"
+msgid "Found a matching project"
+msgid_plural "Found matching projects"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
 msgstr[0] "Nombre de usuario encontrado"
 msgstr[1] "Nombres de usuario encontrados"
 
-msgid "Found a matching email address"
-msgid_plural "Found matching email addresses"
-msgstr[0] "Dirección de email encontrada"
-msgstr[1] "Direcciones de email encontradas"
-
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
 msgstr[0] "Estado de cuenta de usuario encontrado"
 msgstr[1] "Estados de cuenta de usuario encontrados"
+
+msgid "Found a matching email address"
+msgid_plural "Found matching email addresses"
+msgstr[0] "Dirección de email encontrada"
+msgstr[1] "Direcciones de email encontradas"
 
 msgid "Sorry, we didn't find anything matching your query."
 msgstr "Vaya, no hemos encontrado nada que coincida con tu consulta."

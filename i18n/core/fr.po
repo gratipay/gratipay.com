@@ -319,6 +319,9 @@ msgstr "Créé"
 msgid "{0} ago"
 msgstr "{0} plus tôt"
 
+msgid "joined {ago}"
+msgstr ""
+
 msgid "Previous"
 msgstr "Précédent"
 
@@ -619,35 +622,28 @@ msgstr "créée {ago}"
 msgid "owned by {a}{owner}{_a}"
 msgstr "géré par {a}{owner}{_a}"
 
-msgid "Results for: "
-msgstr "Résultats pour :"
-
 msgid "Search Gratipay"
 msgstr "Chercher dans Gratipay"
 
-msgid "Go"
-msgstr "Go"
-
-msgid "Looking for a specific user of a social network?"
-msgstr "Cherchez-vous un utilisateur spécifique d'un réseau social ?"
-
-msgid "{0} on {1}"
-msgstr "{0} sur {1}"
+msgid "Found a matching project"
+msgid_plural "Found matching projects"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
 msgstr[0] "Trouvé un nom d'utilisateur"
 msgstr[1] "Trouvé des noms d'utilisateurs"
 
-msgid "Found a matching email address"
-msgid_plural "Found matching email addresses"
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
 msgstr[0] "Trouvé une présentation d'utilisateur"
 msgstr[1] "Trouvé des présentations d'utilisateurs"
+
+msgid "Found a matching email address"
+msgid_plural "Found matching email addresses"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Sorry, we didn't find anything matching your query."
 msgstr "Désolé, nous n'avons rien trouvé qui corresponde à votre requête."

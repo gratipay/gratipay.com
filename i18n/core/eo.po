@@ -315,6 +315,9 @@ msgstr "Agordigi unue"
 msgid "{0} ago"
 msgstr ""
 
+msgid "joined {ago}"
+msgstr ""
+
 msgid "Previous"
 msgstr "Antaŭa"
 
@@ -615,35 +618,28 @@ msgstr ""
 msgid "owned by {a}{owner}{_a}"
 msgstr ""
 
-msgid "Results for: "
-msgstr ""
-
 msgid "Search Gratipay"
 msgstr "Serĉi Gratipay"
 
-msgid "Go"
-msgstr "Eniri"
-
-msgid "Looking for a specific user of a social network?"
-msgstr "Serĉas por specifa uzanto de specifa sociareto?"
-
-msgid "{0} on {1}"
-msgstr ""
+msgid "Found a matching project"
+msgid_plural "Found matching projects"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
 msgstr[0] "Trovinta kongruan uzantnomon"
 msgstr[1] "Trovinta kongruajn uzantnomojn"
 
-msgid "Found a matching email address"
-msgid_plural "Found matching email addresses"
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
 msgstr[0] "Trovinta kongrua uzanta aserto"
 msgstr[1] "Trovinta kongruajn uzantajn asertojn"
+
+msgid "Found a matching email address"
+msgid_plural "Found matching email addresses"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Sorry, we didn't find anything matching your query."
 msgstr "Bedaŭrinde, ni ne trovis ion ajn kiu kongruas vian informpeton."

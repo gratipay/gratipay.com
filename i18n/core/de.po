@@ -324,6 +324,9 @@ msgstr ""
 msgid "{0} ago"
 msgstr ""
 
+msgid "joined {ago}"
+msgstr ""
+
 msgid "Previous"
 msgstr ""
 
@@ -624,33 +627,26 @@ msgstr ""
 msgid "owned by {a}{owner}{_a}"
 msgstr ""
 
-msgid "Results for: "
-msgstr ""
-
 msgid "Search Gratipay"
 msgstr "Durchsuche Gratipay"
 
-msgid "Go"
-msgstr "Los"
-
-msgid "Looking for a specific user of a social network?"
-msgstr "Suchen Sie nach einem bestimmtem Mitglied eines Sozialen Netzwerks?"
-
-msgid "{0} on {1}"
-msgstr ""
+msgid "Found a matching project"
+msgid_plural "Found matching projects"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Found a matching email address"
-msgid_plural "Found matching email addresses"
+msgid "Found a matching user statement"
+msgid_plural "Found matching user statements"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Found a matching user statement"
-msgid_plural "Found matching user statements"
+msgid "Found a matching email address"
+msgid_plural "Found matching email addresses"
 msgstr[0] ""
 msgstr[1] ""
 

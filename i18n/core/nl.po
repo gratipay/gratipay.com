@@ -317,6 +317,9 @@ msgstr "Eerste serie"
 msgid "{0} ago"
 msgstr ""
 
+msgid "joined {ago}"
+msgstr ""
+
 msgid "Previous"
 msgstr "Vorige"
 
@@ -617,35 +620,28 @@ msgstr "gemaakt {ago}"
 msgid "owned by {a}{owner}{_a}"
 msgstr "eigendom van {a}{owner}{_a}"
 
-msgid "Results for: "
-msgstr ""
-
 msgid "Search Gratipay"
 msgstr "Doorzoek Gratipay"
 
-msgid "Go"
-msgstr "Start"
-
-msgid "Looking for a specific user of a social network?"
-msgstr "Ben je op zoek naar één specifieke gebruiker van een sociaal netwerk?"
-
-msgid "{0} on {1}"
-msgstr ""
+msgid "Found a matching project"
+msgid_plural "Found matching projects"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
 msgstr[0] "De volgende overeenkomende gebruikersnaam is gevonden"
 msgstr[1] "De volgende overeenkomende gebruikersnamen zijn gevonden"
 
-msgid "Found a matching email address"
-msgid_plural "Found matching email addresses"
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "Found a matching user statement"
 msgid_plural "Found matching user statements"
 msgstr[0] "De volgende overeenkomende gebruikersverklaring is gevonden"
 msgstr[1] "De volgende overeenkomende gebruikersverklaringen zijn gevonden"
+
+msgid "Found a matching email address"
+msgid_plural "Found matching email addresses"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Sorry, we didn't find anything matching your query."
 msgstr "Sorry, we hebben niks gevonden wat voldoet aan je zoekopdracht. "
