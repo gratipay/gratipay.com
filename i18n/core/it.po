@@ -316,7 +316,7 @@ msgid "{0} ago"
 msgstr "{0} fa"
 
 msgid "joined {ago}"
-msgstr ""
+msgstr "Si è unito {ago}"
 
 msgid "Previous"
 msgstr "Precedente"
@@ -623,8 +623,8 @@ msgstr "Cerca su Gratipay"
 
 msgid "Found a matching project"
 msgid_plural "Found matching projects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Trovato un progetto corrispondente"
+msgstr[1] "Trovati progetti corrispondenti"
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
