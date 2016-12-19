@@ -96,7 +96,7 @@ class TestHistory(BillingHarness):
         assert events[0]['given'] == 20
         assert len(events) == 9
 
-    def dest_iter_payday_events_with_failed_exchanges(self):
+    def test_iter_payday_events_with_failed_exchanges(self):
         alice = self.make_participant('alice', claimed_time='now')
         self.make_exchange('braintree-cc', 50, 0, alice)
         self.make_exchange('braintree-cc', 12, 0, alice, status='failed')
