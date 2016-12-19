@@ -34,7 +34,6 @@ def make_history(harness):
     harness.make_exchange('paypal', -7, 0, alice, status='failed')
 
 
-
 class TestHistory(BillingHarness):
 
     def shift_all_paydays_by(self, interval):
