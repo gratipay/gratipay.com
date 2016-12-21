@@ -1,5 +1,6 @@
 """Generates SRI hashes of all assets.
 """
+import os
 import base64
 import hashlib
 
