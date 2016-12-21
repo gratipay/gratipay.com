@@ -4,7 +4,7 @@
     {% block head_early %}{% endblock %}
     <title>{% if title %}{{ title }} - {% endif %}{% if banner %}{{ banner }} - {% endif %}Gratipay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ website.asset('gratipay.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ website.asset('gratipay.css') }}" type="text/css" integrity="{{ sri_digest }}" crossorigin="anonymous">
     <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-60x60.png') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-76x76.png') }}" sizes="76x76">
     <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-120x120.png') }}" sizes="120x120">
@@ -127,11 +127,11 @@
         history.pushState('', document.title, window.location.pathname); // nice and clean
     }
 </script>
-<script src="{{ website.asset('jquery.min.js') }}"></script>
-<script src="{{ website.asset('chosen.jquery.min.js') }}"></script>
-<script src="{{ website.asset('tipr.min.js') }}"></script>
-<script src="{{ website.asset('bootstrap-dropdown.js') }}"></script>
-<script src="{{ website.asset('gratipay.js') }}"></script>
+<script src="{{ website.asset('jquery.min.js') }}" integrity="{{ sri_digest }}" crossorigin="anonymous"></script>
+<script src="{{ website.asset('chosen.jquery.min.js') }}" integrity="{{ sri_digest }}" crossorigin="anonymous"></script>
+<script src="{{ website.asset('tipr.min.js') }}" integrity="{{ sri_digest }}" crossorigin="anonymous"></script>
+<script src="{{ website.asset('bootstrap-dropdown.js') }}" integrity="{{ sri_digest }}" crossorigin="anonymous"></script>
+<script src="{{ website.asset('gratipay.js') }}" integrity="{{ sri_digest }}" crossorigin="anonymous"></script>
 
 <script>
     $(document).ready(function() {
