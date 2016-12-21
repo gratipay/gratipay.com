@@ -40,3 +40,9 @@ def add_headers_to_response(response):
     # https://www.owasp.org/index.php/List_of_useful_HTTP_headers
     if 'X-XSS-Protection' not in response.headers:
         response.headers['X-XSS-Protection'] = '1; mode=block'
+
+    # CSP - https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+    # Allow resources from gratipay.com & all gratipay subdomains.
+    # Allow fonts from cloud.typography.com.
+    if 'content-security-policy' not in response.headers:
+        response.headers['content-security-policy'] = 'default-src \'self\' *.gratipay.com; font-src cloud.typography.com;'
