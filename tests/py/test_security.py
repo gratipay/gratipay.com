@@ -60,6 +60,7 @@ class TestSecurity(Harness):
                   'style-src assets.gratipay.com cloud.typography.com;'
                   'img-src *;'
                   'font-src assets.gratipay.com cloud.typography.com;'
+                  "script-src 'unsafe-inline'"
                   'upgrade-insecure-requests;'
                   'block-all-mixed-content;'
                   'reflected-xss block;')
