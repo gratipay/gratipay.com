@@ -57,9 +57,9 @@ class TestSecurity(Harness):
         headers = self.client.GET('/about/').headers
         policy = ("default-src 'self';"
                   'script-src assets.gratipay.com;'
-                  'style-src assets.gratipay.com;'
+                  'style-src assets.gratipay.com cloud.typography.com;'
                   'img-src *;'
-                  'font-src cloud.typography.com;'
+                  'font-src assets.gratipay.com cloud.typography.com;'
                   'upgrade-insecure-requests;'
                   'block-all-mixed-content;'
                   'reflected-xss block;')
