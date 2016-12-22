@@ -45,3 +45,11 @@ def add_headers_to_response(response):
     # Allow resources from gratipay.com & all gratipay subdomains.
     # Allow fonts from cloud.typography.com.
     if 'content-security-policy' not in response.headers:
+        response.headers['content-security-policy'] = ( 'default-src \'self\';' 
+                                                        'script-src assets.gratipay.com;'
+                                                        'style-src assets.gratipay.com;'
+                                                        'img-src *;'
+                                                        'font-src cloud.typography.com;' 
+                                                        'upgrade-insecure-requests;'
+                                                        'block-all-mixed-content;'
+                                                        'reflected-xss block;')
