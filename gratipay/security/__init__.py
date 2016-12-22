@@ -40,3 +40,17 @@ def add_headers_to_response(response):
     # https://www.owasp.org/index.php/List_of_useful_HTTP_headers
     if 'X-XSS-Protection' not in response.headers:
         response.headers['X-XSS-Protection'] = '1; mode=block'
+
+    # CSP - https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+    # Allow resources from gratipay.com & assets.gratipay.com.
+    # Allow images from everywhere for now until we can deploy Camo.
+    # Allow fonts from cloud.typography.com.
+    if 'content-security-policy' not in response.headers:
+        response.headers['content-security-policy'] = ("default-src 'self';"
+                                                       "script-src assets.gratipay.com 'unsafe-inline';"
+                                                       'style-src assets.gratipay.com cloud.typography.com;'
+                                                       'img-src *;'
+                                                       'font-src assets.gratipay.com cloud.typography.com;'
+                                                       'upgrade-insecure-requests;'
+                                                       'block-all-mixed-content;'
+                                                       'reflected-xss block;')
