@@ -55,7 +55,7 @@ class TestSecurity(Harness):
 
     def test_ahtr_sets_content_security_policy(self):
         headers = self.client.GET('/about/').headers
-        policy = ('default-src \'self\';'
+        policy = ("default-src 'self';"
                   'script-src assets.gratipay.com;'
                   'style-src assets.gratipay.com;'
                   'img-src *;'
