@@ -5,6 +5,7 @@
 # Translators:
 # Ben Holden-Crowther <benhc@live.co.uk>, 2014
 # Changaco <changaco@changaco.oy.lc>, 2014-2015
+# Ed Overflow <dioptera@ghostmail.com>, 2016
 # goofy_babelzilla <goofyfr@gmail.com>, 2014
 # hugues martin, 2014-2015
 # Loris Reiff <loris.reiff@hotmail.com>, 2014
