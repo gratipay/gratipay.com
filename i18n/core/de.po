@@ -7,6 +7,7 @@
 # Ben Holden-Crowther <benhc@live.co.uk>, 2014
 # Changaco <changaco@changaco.oy.lc>, 2015
 # Eddy Shure <mono@tucana.uberspace.de>, 2015
+# Ed Overflow <dioptera@ghostmail.com>, 2016
 # Gratipay <vendors@gratipay.com>, 2015-2016
 # Loris Reiff <loris.reiff@hotmail.com>, 2014
 # Loris Reiff <loris.reiff@hotmail.com>, 2014-2015
