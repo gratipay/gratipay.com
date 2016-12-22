@@ -53,16 +53,16 @@ class TestSecurity(Harness):
         headers = self.client.GET('/about/').headers
         assert headers['X-XSS-Protection'] == '1; mode=block'
 
-    def test_ahtr__csp(self):
+    def test_ahtr_sets_content_security_policy(self):
         headers = self.client.GET('/about/').headers
-        policy = ('default-src \'self\';' 
-                    'script-src assets.gratipay.com;'
-                    'style-src assets.gratipay.com;'
-                    'img-src *;'
-                    'font-src cloud.typography.com;' 
-                    'upgrade-insecure-requests;'
-                    'block-all-mixed-content;'
-                    'reflected-xss block;')
+        policy = ('default-src \'self\';'
+                  'script-src assets.gratipay.com;'
+                  'style-src assets.gratipay.com;'
+                  'img-src *;'
+                  'font-src cloud.typography.com;'
+                  'upgrade-insecure-requests;'
+                  'block-all-mixed-content;'
+                  'reflected-xss block;')
         assert headers['content-security-policy'] == policy
 
 

@@ -42,14 +42,15 @@ def add_headers_to_response(response):
         response.headers['X-XSS-Protection'] = '1; mode=block'
 
     # CSP - https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-    # Allow resources from gratipay.com & all gratipay subdomains.
+    # Allow resources from gratipay.com & assets.gratipay.com.
+    # Allow images from everywhere for now until we can deploy Camo.
     # Allow fonts from cloud.typography.com.
     if 'content-security-policy' not in response.headers:
-        response.headers['content-security-policy'] = ( 'default-src \'self\';' 
-                                                        'script-src assets.gratipay.com;'
-                                                        'style-src assets.gratipay.com;'
-                                                        'img-src *;'
-                                                        'font-src cloud.typography.com;' 
-                                                        'upgrade-insecure-requests;'
-                                                        'block-all-mixed-content;'
-                                                        'reflected-xss block;')
+        response.headers['content-security-policy'] = ("default-src 'self';"
+                                                       'script-src assets.gratipay.com;'
+                                                       'style-src assets.gratipay.com;'
+                                                       'img-src *;'
+                                                       'font-src cloud.typography.com;'
+                                                       'upgrade-insecure-requests;'
+                                                       'block-all-mixed-content;'
+                                                       'reflected-xss block;')
