@@ -193,6 +193,11 @@ def post_back_to_gratipay():
     except KeyError:
         gratipay_base_url = 'https://gratipay.com'
 
+    nmasspays = int(requests.get(gratipay_base_url + '/dashboard/nmasspays').text())
+    if nmasspays < 10:
+        print("It looks like we didn't run MassPay last week! Bailing ...")
+        return
+
     statuses = load_statuses()
 
     nposts = 0
