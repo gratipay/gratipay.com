@@ -47,8 +47,8 @@ def add_headers_to_response(response):
     # Allow fonts from cloud.typography.com.
     if 'content-security-policy' not in response.headers:
         response.headers['content-security-policy'] = ("default-src 'self';"
-                                                       "script-src assets.gratipay.com 'unsafe-inline';"
-                                                       'style-src assets.gratipay.com downloads.gratipay.com cloud.typography.com;'
+                                                       "script-src 'self' assets.gratipay.com 'unsafe-inline';"
+                                                       "style-src 'self' assets.gratipay.com cloud.typography.com;"
                                                        'img-src *;'
                                                        'font-src assets.gratipay.com cloud.typography.com;'
                                                        'upgrade-insecure-requests;'
