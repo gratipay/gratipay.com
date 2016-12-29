@@ -64,8 +64,9 @@ class TestSecurity(Harness):
             "upgrade-insecure-requests;"
             "block-all-mixed-content;"
             "reflected-xss block;"
+            "report-uri https://gratipay.report-uri.io/r/default/csp/reportOnly;"
         )
-        assert headers['content-security-policy'] == policy
+        assert headers['content-security-policy-report-only'] == policy
 
 
     # ep - EncryptingPacker
