@@ -116,6 +116,12 @@ class TestPages(Harness):
         actual = self.client.GET('/about/').body
         assert expected in actual
 
+    def test_about_me_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/').code == 401
+
+    def test_about_me_is_401_for_non_admin(self):
+        assert self.client.GxT('/about/me/').code == 401
+
     def test_about_stats(self):
         expected = "Gratipay processes"
         actual = self.client.GET('/about/stats').body
