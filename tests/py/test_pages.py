@@ -119,6 +119,27 @@ class TestPages(Harness):
     def test_about_me_is_401_for_anon(self):
         assert self.client.GxT('/about/me/').code == 401
 
+    def test_about_me_giving_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/giving/').code == 401
+
+    def test_about_me_history_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/history/').code == 401
+
+    def test_about_me_emails_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/emails/').code == 401
+
+    def test_about_me_routes_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/routes/').code == 401
+
+    def test_about_me_settings_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/settings/').code == 401
+
+    def test_about_me_widgets_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/widgets/').code == 401
+
+    def test_about_me_events_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/events/').code == 401
+
     def test_about_stats(self):
         expected = "Gratipay processes"
         actual = self.client.GET('/about/stats').body
