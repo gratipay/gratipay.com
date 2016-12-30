@@ -72,8 +72,8 @@ def main(_argv=sys.argv, _input=raw_input, _print=print):
     if username == 'all':
         prompt("But really actually tho? I mean, ... seriously?")
 
-    for p in participants:
-        _print( "queuing for {} ({}={})".format(p.email_address, p.username, p.id)
+    for i, p in enumerate(participants, start=1):
+        _print( "{:>4} queuing for {} ({}={})".format(i, p.email_address, p.username, p.id)
               , file=sys.stderr
                )
         p.queue_email('branch', include_unsubscribe=False)

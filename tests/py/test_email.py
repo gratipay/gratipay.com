@@ -311,7 +311,7 @@ class TestQueueBranchEmail(EmailHarness):
                          , '1'
                          , 'spotcheck: alice@example.com (alice={})'.format(alice.id)
                           ]
-        assert errors == ['queuing for alice@example.com (alice={})'.format(alice.id)]
+        assert errors == ['   1 queuing for alice@example.com (alice={})'.format(alice.id)]
         assert self.nsent() == 1
 
     def test_qbe_queues_for_two_participants(self):
@@ -323,8 +323,8 @@ class TestQueueBranchEmail(EmailHarness):
         retcode, output, errors = queue_branch_email('all')
         assert retcode == 0
         assert output[:2] == ['Okay, you asked for it!', '2']
-        assert errors == [ 'queuing for alice@example.com (alice={})'.format(alice.id)
-                         , 'queuing for bob@example.com (bob={})'.format(bob.id)
+        assert errors == [ '   1 queuing for alice@example.com (alice={})'.format(alice.id)
+                         , '   2 queuing for bob@example.com (bob={})'.format(bob.id)
                           ]
         assert self.nsent() == 2
 
@@ -337,7 +337,7 @@ class TestQueueBranchEmail(EmailHarness):
                          , '1'
                          , 'spotcheck: bob@example.com (bob={})'.format(bob.id)
                           ]
-        assert errors == ['queuing for bob@example.com (bob={})'.format(bob.id)]
+        assert errors == ['   1 queuing for bob@example.com (bob={})'.format(bob.id)]
         assert self.nsent() == 1
 
     def test_qbe_bails_if_told_to(self):
