@@ -41,16 +41,16 @@ def add_headers_to_response(response):
     if 'X-XSS-Protection' not in response.headers:
         response.headers['X-XSS-Protection'] = '1; mode=block'
 
-    # CSP - https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-    # Allow resources from gratipay.com & assets.gratipay.com.
-    # Allow images from everywhere for now until we can deploy Camo.
-    # Allow fonts from cloud.typography.com.
-    if 'content-security-policy' not in response.headers:
-        response.headers['content-security-policy'] = ("default-src 'self';"
-                                                       "script-src assets.gratipay.com 'unsafe-inline';"
-                                                       'style-src assets.gratipay.com cloud.typography.com;'
-                                                       'img-src *;'
-                                                       'font-src assets.gratipay.com cloud.typography.com;'
-                                                       'upgrade-insecure-requests;'
-                                                       'block-all-mixed-content;'
-                                                       'reflected-xss block;')
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+    if 'content-security-policy-report-only' not in response.headers:
+        response.headers['content-security-policy-report-only'] = (
+            "default-src 'self';"
+            "script-src 'self' assets.gratipay.com 'unsafe-inline';"
+            "style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com;"
+            "img-src *;"
+            "font-src 'self' assets.gratipay.com cloud.typography.com data:;"
+            "upgrade-insecure-requests;"
+            "block-all-mixed-content;"
+            "reflected-xss block;"
+            "report-uri https://gratipay.report-uri.io/r/default/csp/reportOnly;"
+        )

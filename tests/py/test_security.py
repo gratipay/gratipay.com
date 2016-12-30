@@ -55,15 +55,18 @@ class TestSecurity(Harness):
 
     def test_ahtr_sets_content_security_policy(self):
         headers = self.client.GET('/about/').headers
-        policy = ("default-src 'self';"
-                  "script-src assets.gratipay.com 'unsafe-inline';"
-                  'style-src assets.gratipay.com cloud.typography.com;'
-                  'img-src *;'
-                  'font-src assets.gratipay.com cloud.typography.com;'
-                  'upgrade-insecure-requests;'
-                  'block-all-mixed-content;'
-                  'reflected-xss block;')
-        assert headers['content-security-policy'] == policy
+        policy = (
+            "default-src 'self';"
+            "script-src 'self' assets.gratipay.com 'unsafe-inline';"
+            "style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com;"
+            "img-src *;"
+            "font-src 'self' assets.gratipay.com cloud.typography.com data:;"
+            "upgrade-insecure-requests;"
+            "block-all-mixed-content;"
+            "reflected-xss block;"
+            "report-uri https://gratipay.report-uri.io/r/default/csp/reportOnly;"
+        )
+        assert headers['content-security-policy-report-only'] == policy
 
 
     # ep - EncryptingPacker
