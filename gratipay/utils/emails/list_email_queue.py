@@ -18,6 +18,12 @@ QUEUE = """\
 def main(_argv=sys.argv, _print=print):
     """This is a script to list the email queue.
     """
-    db = wireup.db(wireup.env())
+    env = wireup.env()
+
+    db = wireup.db(env)
     for i, email in enumerate(db.all(QUEUE), start=1):
         print("{:>4} {:>6} {:<16} {:<24} {}".format(i, *email))
+
+    # Trigger logging of sentry/mailer configuration for reference.
+    wireup.make_sentry_teller(env)
+    wireup.mail(env)
