@@ -22,7 +22,7 @@ def main(_argv=sys.argv, _print=print):
 
     db = wireup.db(env)
     for i, email in enumerate(db.all(QUEUE), start=1):
-        print("{:>4} {:>6} {:<16} {:<24} {}".format(i, *email))
+        _print("{:>4} {:>6} {:<16} {:<24} {}".format(i, *email))
 
     # Trigger logging of sentry/mailer configuration for reference.
     wireup.make_sentry_teller(env)

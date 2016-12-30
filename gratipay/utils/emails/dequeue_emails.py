@@ -7,7 +7,7 @@ from gratipay import wireup
 from gratipay.models.participant import Participant
 
 
-def main(_argv=sys.argv, _input=raw_input, _print=print):
+def main(_argv=sys.argv, _input=raw_input):
     """This is a script to dequeue and send emails.
     """
     env = wireup.env()
