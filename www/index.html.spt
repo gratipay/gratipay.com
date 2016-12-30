@@ -61,8 +61,9 @@ page_id = "homepage"
 
 {% block banner %}
     <a href="/about/" class="homepage">
-        {{ _("We help{br}companies pay{br}open source projects.", br='<br>'|safe) }}<br>
-        <u>{{ _("Read more") }}&hellip;</u>
+        {{ _( "Gratipay helps{br}companies and others{br}pay for open source."
+            , br='<br>'|safe
+             ) }}<br>
     </a>
 {% endblock %}
 
