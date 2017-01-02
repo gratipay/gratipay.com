@@ -1,5 +1,5 @@
 # Translations template for PROJECT.
-# Copyright (C) 2016 ORGANIZATION
+# Copyright (C) 2017 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # 
 # Translators:
@@ -252,6 +252,9 @@ msgstr "Afsluiten"
 msgid "Search"
 msgstr "Zoeken"
 
+msgid "About"
+msgstr "Omtrent"
+
 msgid "wk"
 msgstr "wk"
 
@@ -262,9 +265,6 @@ msgid ""
 "{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
 "to join Gratipay{_a}{_nowrap}."
 msgstr ""
-
-msgid "About"
-msgstr "Omtrent"
 
 msgid "Blog"
 msgstr "Blog"
@@ -592,11 +592,8 @@ msgstr "In behandeling"
 msgid "Rejected"
 msgstr "Geweigerd"
 
-msgid "We help{br}companies pay{br}open source projects."
+msgid "Pay for open source."
 msgstr ""
-
-msgid "Read more"
-msgstr "Lees meer"
 
 msgid "Welcome to Gratipay!"
 msgstr "Welkom bij Gratipay!"
