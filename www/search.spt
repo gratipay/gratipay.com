@@ -1,10 +1,10 @@
-from gratipay.utils import markdown, excerpt_intro
+from gratipay.utils import markdown, truncate
 from gratipay.utils.i18n import LANGUAGES_2, SEARCH_CONFS, strip_accents
 from markupsafe import Markup
 [---]
 
 def process_excerpt(excerpt):
-    excerpt = excerpt_intro(markdown.render(excerpt), 256, '')
+    excerpt = truncate(markdown.render(excerpt), 256, '')
     if excerpt:
         excerpt = Markup('&middot; ') + excerpt
     return excerpt

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import datetime, timedelta
@@ -6,7 +7,7 @@ import pytest
 from aspen.http.response import Response
 from gratipay import utils
 from gratipay.testing import Harness, D
-from gratipay.utils import i18n, pricing, encode_for_querystring, decode_from_querystring
+from gratipay.utils import i18n, pricing, encode_for_querystring, decode_from_querystring, truncate
 from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUsername, \
                                                                            RanOutOfUsernameAttempts
 from psycopg2 import IntegrityError
@@ -205,3 +206,25 @@ class Tests(Harness):
 
     def test_dfq_returns_default_if_passed_on_error(self):
         assert decode_from_querystring('abcd', default='error') == 'error'
+
+
+    # t - truncate
+
+    def test_t_truncates(self):
+        assert truncate('I am a long sentence.', 13) == 'I am a long …'
+
+    def test_t_doesnt_split_words(self):
+        assert truncate('I am a long sentence.', 16) == 'I am a long …'
+
+    def test_t_finds_word_break_properly(self):
+        assert truncate('I am a long sentence.', 12) == 'I am a …'
+        assert truncate('I am a long sentence.', 14) == 'I am a long …'
+
+    def test_t_splits_words_if_it_has_to(self):
+        assert truncate('I_am_a_long_sentence.', 17) == 'I_am_a_long_sen …'
+
+    def test_t_returns_whole_thing_if_possible(self):
+        assert truncate('I am a long sentence.', 20) == 'I am a long …'
+        assert truncate('I am a long sentence.', 21) == 'I am a long sentence.'
+        assert truncate('I am a long sentence.', 22) == 'I am a long sentence.'
+        assert truncate('I am a long sentence.', 220000) == 'I am a long sentence.'

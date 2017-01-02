@@ -61,6 +61,7 @@ EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 USERNAME_MAX_SIZE = 32
 
+
 class Participant(Model, mixins.Identity):
     """Represent a Gratipay participant.
     """
