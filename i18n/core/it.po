@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Changaco <changaco@changaco.oy.lc>, 2015
-# Davide Andreotti <andreottidavide@yahoo.it>, 2015-2016
+# Davide Andreotti <andreottidavide@yahoo.it>, 2015-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
@@ -591,7 +591,7 @@ msgid "Rejected"
 msgstr "Rifiutati"
 
 msgid "Pay for open source."
-msgstr ""
+msgstr "Paga per open source."
 
 msgid "Welcome to Gratipay!"
 msgstr "Benvenuto su Gratipay!"
