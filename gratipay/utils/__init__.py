@@ -202,14 +202,15 @@ def format_money(money):
 
 
 def truncate(text, target=160, append=' …'):
-    if len(text) <= target:                     # short enough already
+    nchars = len(text)
+    if nchars <= target:                                    # short enough already
         return text
-    if append:                                  # recursive case
-        return truncate(text, target-len(append), '') + append
+    if append:                                              # recursive case
+        return truncate(text, max(target-len(append), 0), '') + append
     truncated = text[:target]
-    if ' ' in (truncated[-1], text[target]):    # no orphan
+    if not target or ' ' in (truncated[-1], text[target]):  # clean break
         return truncated.rstrip()
-    return truncated.rsplit(' ', 1)[0]          # orphan
+    return truncated.rsplit(' ', 1)[0]                      # trailing partial word
 
 
 def is_card_expiring(expiration_year, expiration_month):
