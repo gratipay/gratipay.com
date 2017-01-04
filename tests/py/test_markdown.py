@@ -99,7 +99,7 @@ class TestMarkdown(Harness):
 
     def test_ras_catches_unicode_code_points(self):
         assert markdown.render_and_scrub('\u0022') == '\u201c'  # " → “
-        assert markdown.render_and_scrub('\u0026') == "&amp;"   # &
+        assert markdown.render_and_scrub('\u0026') == '&amp;'   # &
         assert markdown.render_and_scrub('\u0027') == '&#39;'   # '
-        assert markdown.render_and_scrub('\u003c') == "&lt;"    # <
-        assert markdown.render_and_scrub('\u003e') == ""        # > is stripped, I guess?
+        assert markdown.render_and_scrub('\u003c') == '&lt;'    # <
+        assert markdown.render_and_scrub('\u003e') == ''        # > is stripped, I guess?
