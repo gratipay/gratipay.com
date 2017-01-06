@@ -1,4 +1,6 @@
 language: python
+git:
+  depth: 5
 addons:
   postgresql: 9.3
 before_install:
