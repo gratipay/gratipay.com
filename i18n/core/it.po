@@ -1,10 +1,10 @@
 # Translations template for PROJECT.
-# Copyright (C) 2016 ORGANIZATION
+# Copyright (C) 2017 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # 
 # Translators:
 # Changaco <changaco@changaco.oy.lc>, 2015
-# Davide Andreotti <andreottidavide@yahoo.it>, 2015-2016
+# Davide Andreotti <andreottidavide@yahoo.it>, 2015-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
@@ -250,6 +250,9 @@ msgstr "Disconnetti"
 msgid "Search"
 msgstr "Cerca"
 
+msgid "About"
+msgstr "Chi siamo"
+
 msgid "wk"
 msgstr "settimana"
 
@@ -260,9 +263,6 @@ msgid ""
 "{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
 "to join Gratipay{_a}{_nowrap}."
 msgstr "{nowrap}I nostri nuovi {a}Termini di Servizio{_a}{_nowrap} {nowrap}rendono {a2}più facile unirsi a Gratipay{_a}{_nowrap}."
-
-msgid "About"
-msgstr "Chi siamo"
 
 msgid "Blog"
 msgstr "Blog"
@@ -590,11 +590,8 @@ msgstr "In esaminazione"
 msgid "Rejected"
 msgstr "Rifiutati"
 
-msgid "We help{br}companies pay{br}open source projects."
-msgstr "Aiutiamo{br}aziende a pagare{br}progetti open source."
-
-msgid "Read more"
-msgstr "Leggi di più"
+msgid "Pay for open source."
+msgstr "Paga per open source."
 
 msgid "Welcome to Gratipay!"
 msgstr "Benvenuto su Gratipay!"

@@ -5,7 +5,7 @@ title = _("Welcome!")
 {% extends "templates/about-basic-info.html" %}
 {% block content %}
 
-<p>Welcome to Gratipay! We help companies pay open source projects.</p>
+<p>Welcome to Gratipay! We help companies and others pay for open source.</p>
 
 <p>Does your company use open source software? Probably. Open source software
 is great! But if too few of us pay the projects that so many of us depend on,
