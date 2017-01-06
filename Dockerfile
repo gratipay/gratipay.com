@@ -16,7 +16,7 @@ RUN gpg --keyserver keys.gnupg.net --recv-key 7FCC7D46ACCC4CF8 && \
     gpg -a --export 7FCC7D46ACCC4CF8 | apt-key add -
 
 RUN apt-get -y update && \
-    apt-get -y install \
+    apt-get -y --no-install-recommends --no-install-suggests install \
                 git \
                 gcc \
                 make \
