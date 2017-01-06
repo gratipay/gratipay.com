@@ -4,6 +4,7 @@ addons:
 before_install:
  - git branch -vv | grep '^*'
  - pwd
+ - find . -name "*.sh" -exec bash -n {} \;
 
  # Sometimes ya just halfta ...
  - git clone -b "2.1.0" --depth 1 https://github.com/lloyd/yajl.git && cd yajl && ./configure && sudo make install && cd ..
