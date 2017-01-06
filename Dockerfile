@@ -17,16 +17,16 @@ RUN gpg --keyserver keys.gnupg.net --recv-key 7FCC7D46ACCC4CF8 && \
 
 RUN apt-get -y update && \
     apt-get -y install \
-    git \
-    gcc \
-    make \
-    g++ \
-    libpq-dev \
-    python-dev \
-    python-pip \
-    postgresql-9.3 \
-    postgresql-contrib-9.3 \
-    language-pack-en && \
+                git \
+                gcc \
+                make \
+                g++ \
+                libpq-dev \
+                python-dev \
+                python-pip \
+                postgresql-9.3 \
+                postgresql-contrib-9.3 \
+                language-pack-en && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
