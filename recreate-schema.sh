@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Exit if any subcommands or pipeline returns a non-zero status.
 set -e
