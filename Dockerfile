@@ -12,24 +12,25 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 
-RUN apt-get -y install wget
+RUN gpg --keyserver keys.gnupg.net --recv-key 7FCC7D46ACCC4CF8 && \
+    gpg -a --export 7FCC7D46ACCC4CF8 | apt-key add -
 
-RUN wget --quiet --no-check-certificate https://www.postgresql.org/media/keys/ACCC4CF8.asc
-RUN apt-key add ACCC4CF8.asc
-
-RUN apt-get -y update
-
-RUN apt-get -y install \
-    git \
-    gcc \
-    make \
-    g++ \
-    libpq-dev \
-    python-dev \
-    python-pip \
-    postgresql-9.3 \
-    postgresql-contrib-9.3 \
-    language-pack-en
+RUN apt-get -y update && \
+    apt-get -y --no-install-recommends --no-install-suggests install \
+                git \
+                gcc \
+                make \
+                g++ \
+                libpq-dev \
+                libffi-dev \
+                libssl-dev \
+                python-dev \
+                python-pip \
+                postgresql-9.3 \
+                postgresql-contrib-9.3 \
+                language-pack-en && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ################################################## Configure Postgres #################################################
 
