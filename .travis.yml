@@ -6,7 +6,7 @@ before_install:
  - pwd
 
  # Sometimes ya just halfta ...
- - git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 2.1.0 && ./configure && sudo make install && cd ..
+ - git clone -b "2.1.0" --depth 1 https://github.com/lloyd/yajl.git && cd yajl && ./configure && sudo make install && cd ..
 
  - npm install marky-markdown
 cache:
