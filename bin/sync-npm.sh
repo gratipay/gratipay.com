@@ -3,7 +3,7 @@
 # sync our database with the npm registry.
 
 set -e
-cd "`dirname $0`/.."
+cd "$(dirname "$0")/.."
 
 # Install dependencies.
 # =====================
