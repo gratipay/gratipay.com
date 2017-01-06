@@ -63,11 +63,11 @@ else:
             <div class="half">
                 <label for="expiration_month">{{ _("Expiration") }}</label>
                 <input id="expiration_month" placeholder="{{ _('MM') }}" title="{{ _('Expiration Month') }}"
-                       value="{{ card.expiration_month }}" required />
+                       value="{{ card.expiration_month }}" required autocomplete="cc-exp-month"/>
                 <span class="invalid-msg">{{ _("This expiration date is invalid.") }}</span>
                 <span class="date_slash">/</span>
                 <input id="expiration_year" placeholder="{{ _('YY') }}" title="{{ _('Expiration Year') }}"
-                       value="{{ (card.expiration_year|int) - 2000 if card.expiration_year }}" required />
+                       value="{{ (card.expiration_year|int) - 2000 if card.expiration_year }}" required autocomplete="cc-exp-year" />
             </div>
 
             <label class="half right">
