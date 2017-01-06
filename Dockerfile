@@ -22,6 +22,8 @@ RUN apt-get -y update && \
                 make \
                 g++ \
                 libpq-dev \
+                libffi-dev \
+                libssl-dev \
                 python-dev \
                 python-pip \
                 postgresql-9.3 \
