@@ -18,8 +18,8 @@ def main(_argv=sys.argv, _input=raw_input, _print=print):
         - when reviewed and merged:
             - deploy
             - `heroku run bash`
-            - `bin/send-branch-email.py username`           # final test from production
-            - `bin/send-branch-email.py all 2> queued.log`  # !!!
+            - `queue-branch-email your_username`      # final test from production
+            - `queue-branch-email all 2> queued.log`  # !!!
             - make a commit to master to empty branch.spt
               (leave an empty file [but with speclines] or tests will fail)
             - push to GitHub
