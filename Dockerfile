@@ -15,9 +15,8 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/
 RUN gpg --keyserver keys.gnupg.net --recv-key 7FCC7D46ACCC4CF8 && \
     gpg -a --export 7FCC7D46ACCC4CF8 | apt-key add -
 
-RUN apt-get -y update
-
-RUN apt-get -y install \
+RUN apt-get -y update && \
+    apt-get -y install \
     git \
     gcc \
     make \
@@ -27,7 +26,9 @@ RUN apt-get -y install \
     python-pip \
     postgresql-9.3 \
     postgresql-contrib-9.3 \
-    language-pack-en
+    language-pack-en && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ################################################## Configure Postgres #################################################
 
