@@ -79,7 +79,7 @@ Gratipay.routes.cc.init = function() {
 
     $('form#credit-card').submit(Gratipay.routes.cc.submit);
     Gratipay.routes.cc.formatInputs(
-        //$('#card_number'),
+        $('#card_number'),
         $('#expiration_month'),
         $('#expiration_year'),
         $('#cvv')
