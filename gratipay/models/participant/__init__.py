@@ -575,6 +575,7 @@ class Participant(Model, mixins.Identity):
           ORDER BY id ASC
              LIMIT 60
         """)
+        nsent = 0
         while True:
             messages = fetch_messages()
             if not messages:
@@ -585,6 +586,8 @@ class Participant(Model, mixins.Identity):
                 cls.db.run("DELETE FROM email_queue WHERE id = %s", (msg.id,))
                 if r == 1:
                     sleep(1)
+                nsent += r
+        return nsent
 
     def set_email_lang(self, accept_lang):
         if not accept_lang:

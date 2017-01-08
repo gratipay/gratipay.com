@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Fail on error.
 # ==============
@@ -9,13 +9,13 @@ set -e
 # Be somewhere predictable.
 # =========================
 
-cd "`dirname $0`"
+cd "$(dirname "$0")"
 
 
 # --help
 # ======
 
-if [ $# = 0 -o "$1" = "" ]; then
+if [ $# = 0 ] || [ "$1" = "" ]; then
     echo
     echo "Usage: $0 <number> [\"for_real_please\"]"
     echo
@@ -40,7 +40,7 @@ confirm () {
     proceed=""
     while [ "$proceed" != "y" ]; do
         read -p"$1 (y/N) " proceed
-        if [ "$proceed" == "n" -o "$proceed" == "N" -o "$proceed" == "" ]
+        if [ "$proceed" == "n" ] || [ "$proceed" == "N" ] || [ "$proceed" == "" ]
         then
             return 1
         fi
@@ -49,7 +49,7 @@ confirm () {
 }
 
 require () {
-    if [ ! `which $1` ]; then
+    if [ ! "$(which "$1")" ]; then
         echo "The '$1' command was not found."
         exit 1
     fi
@@ -58,8 +58,8 @@ require () {
 
 start () {
     echo "Logging to $LOG."
-    echo >> $LOG
-    date -u >> $LOG
+    echo >> "$LOG"
+    date -u >> "$LOG"
 }
 
 
@@ -72,11 +72,11 @@ else
     LOG="../logs/payday/test-$1.log"
 fi
 
-if [ -f $LOG ]; then
+if [ -f "$LOG" ]; then
     RUN="Rerun"
 else
     # If the path is bad the next line will fail and we'll exit.
-    touch $LOG
+    touch "$LOG"
     RUN="Run"
 fi
 
@@ -89,12 +89,12 @@ confirm "$RUN payday #$1?" || exit 0
 case "$2" in
     "")
         start
-        honcho run -e defaults.env,local.env ./env/bin/payday >>$LOG 2>&1 &
+        honcho run -e defaults.env,local.env ./env/bin/payday >> "$LOG" 2>&1 &
         ;;
     "for_real_please")
         confirm "$RUN payday #$1 FOR REAL?!?!?!??!?!?" || exit 0
         start
-        heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin ./env/bin/payday >>$LOG 2>&1 &
+        heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin ./env/bin/payday >> "$LOG" 2>&1 &
         ;;
     *)
         echo "Your second arg was $2. Wazzat mean?"
@@ -103,4 +103,4 @@ case "$2" in
 esac
 
 disown -a
-tail -f $LOG
+tail -f "$LOG"

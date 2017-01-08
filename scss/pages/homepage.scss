@@ -1,4 +1,16 @@
 #homepage {
+
+    #banner a {
+        display: block;
+        height: 100%;
+        width: 100%;
+        h1 {
+            // override .really-long
+            font-size: 28px;
+            line-height: 33px;
+        }
+    }
+
     #main {
         position: relative;
         .nav {

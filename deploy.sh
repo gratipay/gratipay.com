@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 
 # Fail on error
@@ -6,7 +6,7 @@ set -e
 
 
 # Be somewhere predictable
-cd "`dirname $0`"
+cd "$(dirname "$0")"
 
 
 # Helpers
@@ -21,7 +21,7 @@ yesno () {
 }
 
 require () {
-    if [ ! `which $1` ]; then
+    if [ ! "$(which "$1")" ]; then
         echo "The '$1' command was not found."
         exit 1
     fi
@@ -35,7 +35,7 @@ require curl
 
 
 # Make sure we have the latest master
-if [ "`git rev-parse --abbrev-ref HEAD`" != "master" ]; then
+if [ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]; then
     echo "Not on master, checkout master first."
     exit
 fi
@@ -54,7 +54,7 @@ heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin \
 
 # Sync the translations
 echo "Syncing translations ..."
-if [ ! -e .transifexrc -a ! -e ~/.transifexrc ]; then
+if [ ! -e .transifexrc ] && [ ! -e ~/.transifexrc ]; then
     heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin make transifexrc
 fi
 make i18n_upload

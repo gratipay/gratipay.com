@@ -3,7 +3,7 @@
 # sync our database with the npm registry.
 
 set -e
-cd "`dirname $0`/.."
+cd "$(dirname "$0")/.."
 
 # Install dependencies.
 # =====================
@@ -16,9 +16,8 @@ tar zxf cmake.tgz
 PATH=/app/cmake-3.6.2-Linux-x86_64/bin:$PATH
 
 # yajl
-git clone https://github.com/lloyd/yajl.git
+git clone -b "2.1.0" --depth 1 https://github.com/lloyd/yajl.git
 cd yajl
-git checkout 2.1.0
 ./configure -p /app/.heroku/python
 make install
 cd ..
