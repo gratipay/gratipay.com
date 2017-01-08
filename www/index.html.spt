@@ -82,7 +82,7 @@ page_id = "homepage"
 {% endif %}
 
 <form action="new" class="apply">
-    <button type="submit">{{ _("Fund your  Project") }}</button>
+    <button type="submit">{{ _("Fund your Project") }}</button>
 </form>
 
 <div class="tabs">
