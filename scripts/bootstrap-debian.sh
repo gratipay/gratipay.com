@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e # exit when any command fails
 
@@ -41,17 +41,17 @@ sudo apt-get install -y \
 
 echo "[*] Checking if current user has access to create databases.."
 
-if [ -z ""`sudo -i -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$USER'"` ];
+if [ -z "$(sudo -i -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$USER'")" ];
 then
     echo "'$USER' entry does not exist in PostgreSQL, creating.."
-    sudo -i -u postgres createuser --superuser $USER
+    sudo -i -u postgres createuser --superuser "$USER"
 fi;
 
 
 echo "[*] Creating databases.."
 
 db_exists() {
-    if [ -n ""`psql template1 -tAc "select datname from pg_database where datname='$1'"` ];
+    if [ -n "$(psql template1 -tAc "select datname from pg_database where datname='$1'")" ];
     then
         return 0;
     fi

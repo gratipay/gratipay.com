@@ -9,7 +9,7 @@ set -e
 # Be somewhere predictable.
 # =========================
 
-cd "`dirname $0`"
+cd "$(dirname "$0")"
 
 
 # Helpers
@@ -19,7 +19,7 @@ confirm () {
     proceed=""
     while [ "$proceed" != "y" ]; do
         read -p"$1 (y/N) " proceed
-        if [ "$proceed" == "n" -o "$proceed" == "N" -o "$proceed" == "" ]
+        if [ "$proceed" == "n" ] || [ "$proceed" == "N" ] || [ "$proceed" == "" ]
         then
             return 1
         fi
@@ -28,7 +28,7 @@ confirm () {
 }
 
 require () {
-    if [ ! `which $1` ]; then
+    if [ ! "$(which "$1")" ]; then
         echo "The '$1' command was not found."
         return 1 
     fi
@@ -36,7 +36,7 @@ require () {
 }
 
 get_filepath () {
-    TODAY="`date +%F`"
+    TODAY="$(date +%F)"
     CANDIDATE="$DIRPATH/$TODAY.psql"
     if [ -f "$CANDIDATE" ]
     then
@@ -76,8 +76,7 @@ then
     exit "Too many backups!"
 fi
 
-confirm "Backup the Gratipay database to $FILEPATH?"
-if [ $? -eq 0 ]; then
+if confirm "Backup the Gratipay database to $FILEPATH?"; then
     export PGSSLMODE=require
-    pg_dump `heroku config:get DATABASE_URL -a gratipay` > $FILEPATH
+    pg_dump "$(heroku config:get DATABASE_URL -a gratipay)" > "$FILEPATH"
 fi
