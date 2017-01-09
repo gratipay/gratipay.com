@@ -284,6 +284,43 @@ def queue_branch_email(username, _argv=None, _input=None, _print=None):
     return retcode, stdout, stderr
 
 
+class TestGetRecentlyActiveParticipants(EmailHarness):
+
+    def check(self):
+        return _queue_branch_email.get_recently_active_participants(self.db)
+
+    def test_gets_recently_active_participants(self):
+        alice = self.make_participant('alice', claimed_time='now', email_address='a@example.com')
+        self.make_exchange('braintree-cc', 50, 0, alice)
+        assert self.check() == [alice]
+
+    def test_ignores_participants_with_no_exchanges(self):
+        self.make_participant('alice', claimed_time='now', email_address='a@example.com')
+        assert self.check() == []
+
+    def test_ignores_participants_with_no_recent_exchanges(self):
+        alice = self.make_participant('alice', claimed_time='now', email_address='a@example.com')
+        self.make_exchange('braintree-cc', 50, 0, alice)
+        self.db.run("UPDATE exchanges SET timestamp = timestamp - '181 days'::interval")
+        assert self.check() == []
+
+    def test_keeps_participants_straight(self):
+        alice = self.make_participant('alice', claimed_time='now', email_address='a@example.com')
+        self.make_exchange('braintree-cc', 50, 0, alice)
+
+        bob = self.make_participant('bob', claimed_time='now', email_address='b@example.com')
+        self.make_exchange('braintree-cc', 50, 0, bob)
+
+        carl = self.make_participant('carl', claimed_time='now', email_address='c@example.com')
+        self.make_exchange('braintree-cc', 50, 0, carl)
+        self.db.run("UPDATE exchanges SET timestamp = timestamp - '181 days'::interval "
+                    "WHERE participant='carl'")
+
+        self.make_participant('dana', claimed_time='now', email_address='d@example.com')
+
+        assert self.check() == [alice, bob]
+
+
 class TestQueueBranchEmail(EmailHarness):
 
     def nsent(self):
@@ -302,6 +339,7 @@ class TestQueueBranchEmail(EmailHarness):
                                      , claimed_time='now'
                                      , email_address='alice@example.com'
                                       )
+        self.make_exchange('braintree-cc', 50, 0, alice)
         retcode, output, errors = queue_branch_email('all')
         assert retcode == 0
         assert output == [ 'Okay, you asked for it!'
@@ -316,7 +354,9 @@ class TestQueueBranchEmail(EmailHarness):
                                      , claimed_time='now'
                                      , email_address='alice@example.com'
                                       )
+        self.make_exchange('braintree-cc', 50, 0, alice)
         bob = self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
+        self.make_exchange('braintree-cc', 50, 0, bob)
         retcode, output, errors = queue_branch_email('all')
         assert retcode == 0
         assert output[:2] == ['Okay, you asked for it!', '2']
@@ -326,8 +366,13 @@ class TestQueueBranchEmail(EmailHarness):
         assert self.nsent() == 2
 
     def test_constrains_to_one_participant(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
+        alice = self.make_participant( 'alice'
+                                     , claimed_time='now'
+                                     , email_address='alice@example.com'
+                                      )
+        self.make_exchange('braintree-cc', 50, 0, alice)
         bob = self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
+        self.make_exchange('braintree-cc', 50, 0, bob)
         retcode, output, errors = queue_branch_email('bob')
         assert retcode == 0
         assert output == [ 'Okay, just bob.'

@@ -7,6 +7,23 @@ import random
 from gratipay import wireup
 
 
+def get_recently_active_participants(db):
+    return db.all("""
+        SELECT p.*::participants
+          FROM participants p
+         WHERE email_address is not null
+           AND claimed_time  is not null
+           AND is_closed     is not true
+           AND is_suspicious is not true
+           AND ( SELECT count(*)
+                   FROM exchanges e
+                  WHERE e.participant = p.username
+                    AND timestamp > now() - '180 days'::interval
+                ) > 0
+      ORDER BY p.username ASC
+    """)
+
+
 def main(_argv=sys.argv, _input=raw_input, _print=print):
     """This is a script to enqueue global site notification emails.
 
@@ -47,14 +64,7 @@ def main(_argv=sys.argv, _input=raw_input, _print=print):
         prompt("Are you REALLY ready?")
         prompt("... ?")
         _print("Okay, you asked for it!")
-        participants = db.all("""
-            SELECT p.*::participants
-              FROM participants p
-             WHERE email_address is not null
-               AND claimed_time  is not null
-               AND is_closed     is not true
-               AND is_suspicious is not true
-        """)
+        participants = get_recently_active_participants(db)
     else:
         _print("Okay, just {}.".format(username))
         participants = db.all("SELECT p.*::participants FROM participants p "
