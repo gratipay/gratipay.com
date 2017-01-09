@@ -33,7 +33,7 @@ shall not perish from the earth.</p>
 """
 
 
-class Tests(Harness):
+class TestSearch(Harness):
 
     def search(self, q):
         return self.client.GET("/search?q=" + q).body.decode('utf8')
