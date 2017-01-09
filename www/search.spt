@@ -1,16 +1,20 @@
-from gratipay.utils import markdown, excerpt_intro
+from gratipay.utils import markdown, truncate
 from gratipay.utils.i18n import LANGUAGES_2, SEARCH_CONFS, strip_accents
 from markupsafe import Markup
 [---]
 
 def process_excerpt(excerpt):
-    excerpt = excerpt_intro(markdown.render(excerpt), 256, '')
-    if excerpt:
-        excerpt = Markup('&middot; ') + excerpt
-    return excerpt
+    """Take a statement excerpt from *some*where and process it.
+    """
+    if not excerpt:
+        return Markup('')
+    return Markup('&middot; ' + excerpt)
 
 def get_processed_excerpt(participant):
-    statement = participant.get_statement(request.accept_langs)[0] or ''
+    """For a username match, take the first part of the statement.
+    """
+    statement = participant.get_statement(request.accept_langs, scrubbed=True)[0] or ''
+    statement = truncate(statement, 128, '')
     return process_excerpt(statement)
 
 # Horribly WET; see www/index.html.spt
@@ -106,13 +110,13 @@ if query:
                        SELECT rank
                             , lang
                             , ts_headline( search_conf
-                                         , content
+                                         , content_scrubbed
                                          , query
-                                         , 'StartSel=**,StopSel=**,MinWords=1,MaxWords=12,MaxFragments=1'
+                                         , 'MinWords=1,MaxWords=12,MaxFragments=1'
                                           ) AS excerpt
                    ) a)) AS excerpts
               FROM (
-                       SELECT participant, lang, content, search_conf, query
+                       SELECT participant, lang, content_scrubbed, search_conf, query
                             , ts_rank_cd(search_vector, query) AS rank
                          FROM statements NATURAL JOIN queries
                         WHERE lang IN %(langs)s

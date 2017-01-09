@@ -44,6 +44,7 @@ from gratipay.utils import (
     i18n,
     is_card_expiring,
     emails,
+    markdown,
     notifications,
     pricing,
     encode_for_querystring,
@@ -60,6 +61,7 @@ ASCII_ALLOWED_IN_USERNAME = set("0123456789"
 EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 USERNAME_MAX_SIZE = 32
+
 
 class Participant(Model, mixins.Identity):
     """Represent a Gratipay participant.
@@ -188,18 +190,19 @@ class Participant(Model, mixins.Identity):
     # Statement
     # =========
 
-    def get_statement(self, langs):
+    def get_statement(self, langs, scrubbed=False):
         """Get the participant's statement in the language that best matches
         the list provided.
         """
-        return self.db.one("""
-            SELECT content, lang
+        content, content_scrubbed, lang = self.db.one("""
+            SELECT content, content_scrubbed, lang
               FROM statements
               JOIN enumerate(%(langs)s) langs ON langs.value = statements.lang
              WHERE participant=%(id)s
           ORDER BY langs.rank
              LIMIT 1
-        """, dict(id=self.id, langs=langs), default=(None, None))
+        """, dict(id=self.id, langs=langs), default=(None, None, None))
+        return (content_scrubbed if scrubbed else content, lang)
 
     def get_statement_langs(self):
         return self.db.all("SELECT lang FROM statements WHERE participant=%s",
@@ -210,21 +213,23 @@ class Participant(Model, mixins.Identity):
             self.db.run("DELETE FROM statements WHERE participant=%s AND lang=%s",
                         (self.id, lang))
             return
+        scrubbed = markdown.render_and_scrub(statement)
         r = self.db.one("""
             UPDATE statements
                SET content=%s
+                 , content_scrubbed=%s
              WHERE participant=%s
                AND lang=%s
          RETURNING true
-        """, (statement, self.id, lang))
+        """, (statement, scrubbed, self.id, lang))
         if not r:
             search_conf = i18n.SEARCH_CONFS.get(lang, 'simple')
             try:
                 self.db.run("""
                     INSERT INTO statements
-                                (lang, content, participant, search_conf)
-                         VALUES (%s, %s, %s, %s)
-                """, (lang, statement, self.id, search_conf))
+                                (lang, content, content_scrubbed, participant, search_conf)
+                         VALUES (%s, %s, %s, %s, %s)
+                """, (lang, statement, scrubbed, self.id, search_conf))
             except IntegrityError:
                 return self.upsert_statement(lang, statement)
 

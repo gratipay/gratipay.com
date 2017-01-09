@@ -2,7 +2,7 @@
 """
 from collections import OrderedDict
 
-from gratipay.utils import excerpt_intro, get_participant, markdown
+from gratipay.utils import get_participant, markdown, truncate
 
 LONG_STATEMENT = 256
 
@@ -38,7 +38,7 @@ def with_others(obj):
     <meta name="og:type" content="profile" />
     <meta name="og:title" content="{{ participant.get_og_title() }}" />
     {% if statement %}
-    <meta name="og:description" content="{{ excerpt_intro(statement) }}" />
+    <meta name="og:description" content="{{ truncate(statement) }}" />
     {% else %}
     <meta name="og:description" content="Gratipay is a weekly gift exchange" />
     {% endif %}
