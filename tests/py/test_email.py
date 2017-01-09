@@ -290,17 +290,14 @@ class TestQueueBranchEmail(EmailHarness):
         Participant.dequeue_emails()
         return self.mailer.call_count
 
-
-    # qbe - queue_branch_email
-
-    def test_qbe_is_fine_with_no_participants(self):
+    def test_is_fine_with_no_participants(self):
         retcode, output, errors = queue_branch_email('all')
         assert retcode == 0
         assert output == ['Okay, you asked for it!', '0']
         assert errors == []
         assert self.nsent() == 0
 
-    def test_qbe_queues_for_one_participant(self):
+    def test_queues_for_one_participant(self):
         alice = self.make_participant( 'alice'
                                      , claimed_time='now'
                                      , email_address='alice@example.com'
@@ -314,7 +311,7 @@ class TestQueueBranchEmail(EmailHarness):
         assert errors == ['   1 queuing for alice@example.com (alice={})'.format(alice.id)]
         assert self.nsent() == 1
 
-    def test_qbe_queues_for_two_participants(self):
+    def test_queues_for_two_participants(self):
         alice = self.make_participant( 'alice'
                                      , claimed_time='now'
                                      , email_address='alice@example.com'
@@ -328,7 +325,7 @@ class TestQueueBranchEmail(EmailHarness):
                           ]
         assert self.nsent() == 2
 
-    def test_qbe_constrains_to_one_participant(self):
+    def test_constrains_to_one_participant(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
         bob = self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
         retcode, output, errors = queue_branch_email('bob')
@@ -340,7 +337,7 @@ class TestQueueBranchEmail(EmailHarness):
         assert errors == ['   1 queuing for bob@example.com (bob={})'.format(bob.id)]
         assert self.nsent() == 1
 
-    def test_qbe_bails_if_told_to(self):
+    def test_bails_if_told_to(self):
         retcode, output, errors = queue_branch_email('all', _input=lambda prompt: 'n')
         assert retcode == 1
         assert output == []
