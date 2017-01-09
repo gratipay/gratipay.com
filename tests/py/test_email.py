@@ -327,6 +327,14 @@ class TestQueueBranchEmail(EmailHarness):
         Participant.dequeue_emails()
         return self.mailer.call_count
 
+    def make_participant_with_exchange(self, name):
+        participant = self.make_participant( name
+                                           , claimed_time='now'
+                                           , email_address=name+'@example.com'
+                                            )
+        self.make_exchange('braintree-cc', 50, 0, participant)
+        return participant
+
     def test_is_fine_with_no_participants(self):
         retcode, output, errors = queue_branch_email('all')
         assert retcode == 0
@@ -335,11 +343,7 @@ class TestQueueBranchEmail(EmailHarness):
         assert self.nsent() == 0
 
     def test_queues_for_one_participant(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , email_address='alice@example.com'
-                                      )
-        self.make_exchange('braintree-cc', 50, 0, alice)
+        alice = self.make_participant_with_exchange('alice')
         retcode, output, errors = queue_branch_email('all')
         assert retcode == 0
         assert output == [ 'Okay, you asked for it!'
@@ -350,13 +354,8 @@ class TestQueueBranchEmail(EmailHarness):
         assert self.nsent() == 1
 
     def test_queues_for_two_participants(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , email_address='alice@example.com'
-                                      )
-        self.make_exchange('braintree-cc', 50, 0, alice)
-        bob = self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
-        self.make_exchange('braintree-cc', 50, 0, bob)
+        alice = self.make_participant_with_exchange('alice')
+        bob = self.make_participant_with_exchange('bob')
         retcode, output, errors = queue_branch_email('all')
         assert retcode == 0
         assert output[:2] == ['Okay, you asked for it!', '2']
@@ -366,13 +365,8 @@ class TestQueueBranchEmail(EmailHarness):
         assert self.nsent() == 2
 
     def test_constrains_to_one_participant(self):
-        alice = self.make_participant( 'alice'
-                                     , claimed_time='now'
-                                     , email_address='alice@example.com'
-                                      )
-        self.make_exchange('braintree-cc', 50, 0, alice)
-        bob = self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
-        self.make_exchange('braintree-cc', 50, 0, bob)
+        self.make_participant_with_exchange('alice')
+        bob = self.make_participant_with_exchange('bob')
         retcode, output, errors = queue_branch_email('bob')
         assert retcode == 0
         assert output == [ 'Okay, just bob.'
