@@ -1,4 +1,6 @@
 from collections import OrderedDict
+import random
+
 [---]
 i18ned_statuses = { "approved": _("Approved")
                   , "unreviewed" : _("Under Review")
@@ -17,6 +19,7 @@ teams = website.db.all("""
   ORDER BY ctime DESC
 
 """)
+
 volume = website.db.one("SELECT volume FROM paydays ORDER BY ts_start DESC LIMIT 1", default=0)
 volume = int(round(volume, -2))
 
@@ -25,8 +28,19 @@ tabs['approved'] = {'teams': []}
 tabs['unreviewed'] = {'teams': []}
 tabs['rejected'] = {'teams': []}
 
+popular = []
+unpopular = []
 for team in teams:
     tabs[team.status]['teams'].append(team)
+    if team.status == 'approved':
+      if team.ngivers >= 5:
+        popular.append(team)
+      else:
+        unpopular.append(team)
+
+featured_teams = random.sample(popular, 7) + random.sample(unpopular, 3)
+random.shuffle(featured_teams)
+tabs['featured'] = {'teams': featured_teams}
 
 nteams = 0
 for key, tab in tabs.items():
