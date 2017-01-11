@@ -1,5 +1,5 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
-
 
 import misaka as m  # http://misaka.61924.nl/
 from markupsafe import Markup
@@ -17,3 +17,10 @@ def render(markdown):
         extensions=m.EXT_AUTOLINK | m.EXT_STRIKETHROUGH | m.EXT_NO_INTRA_EMPHASIS,
         render_flags=m.HTML_SKIP_HTML | m.HTML_TOC | m.HTML_SMARTYPANTS | m.HTML_SAFELINK
     ))
+
+
+def render_and_scrub(markdown):
+    """Given markdown, return a Markup with tags stripped and everything else
+    escaped.
+    """
+    return Markup.escape(render(markdown).striptags())
