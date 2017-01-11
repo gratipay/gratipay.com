@@ -40,7 +40,7 @@ RUN /etc/init.d/postgresql start && su postgres -c "createuser --superuser root"
 
 COPY ./ /srv/gratipay.com/
 WORKDIR /srv/gratipay.com
-RUN make env && /etc/init.d/postgresql start && make schema && make schema data
+RUN make -j$(nproc) env && /etc/init.d/postgresql start && make -j$(nproc) schema && make -j$(nproc) schema data
 
 ################################################ Create a Launch Script ###############################################
 

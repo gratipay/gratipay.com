@@ -1,5 +1,4 @@
 # encoding: utf8
-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from base64 import urlsafe_b64encode, urlsafe_b64decode
@@ -202,12 +201,16 @@ def format_money(money):
     return format % money
 
 
-def excerpt_intro(text, length=175, append=u'…'):
-    if not text:
-        return ''
-    if len(text) > length:
-        return text[:length] + append
-    return text
+def truncate(text, target=160, append=' …'):
+    nchars = len(text)
+    if nchars <= target:                                    # short enough already
+        return text
+    if append:                                              # recursive case
+        return truncate(text, max(target-len(append), 0), '') + append
+    truncated = text[:target]
+    if not target or ' ' in (truncated[-1], text[target]):  # clean break
+        return truncated.rstrip()
+    return truncated.rsplit(' ', 1)[0]                      # trailing partial word
 
 
 def is_card_expiring(expiration_year, expiration_month):

@@ -3,7 +3,7 @@
 from collections import OrderedDict
 
 from aspen import Response
-from gratipay.utils import excerpt_intro, get_team, markdown
+from gratipay.utils import get_team, markdown, truncate
 
 [-----------------------------------------------------------------------------]
 
@@ -22,7 +22,7 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
     <meta name="og:url" content="https://gratipay.com/{{ team.slug }}/" />
     <meta name="og:type" content="profile" />
     <meta name="og:title" content="{{ team.name }}" />
-    <meta name="og:description" content="{{ excerpt_intro(team.product_or_service) }}" />
+    <meta name="og:description" content="{{ truncate(team.product_or_service) }}" />
     <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
 {% endblock %}
 
