@@ -48,18 +48,6 @@ button.selected:hover, button.selected.drag,
     background: $darker-green;
 }
 
-button.close-account {
-    font-weight: normal;
-    background: none;
-    color: $red;
-    border: 1px solid $red;
-    &:hover {
-        background: $red;
-        color: white;
-        text-decoration: none;
-    }
-}
-
 .buttons button {
     margin-top: 3px;
 }
