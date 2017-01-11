@@ -1,14 +1,15 @@
 Gratipay.edit_team = {}
 
 Gratipay.edit_team.initForm = function() {
-    $form = $("#edit-team");
-    $buttons = $form.find("button"); // submit and cancel btns
-    $form.submit(Gratipay.edit_team.submitForm);
+    $('#edit-team').submit(Gratipay.edit_team.submitForm);
+    $('#close-team').submit(function() { return confirm('Really close project?') });
 }
 
 Gratipay.edit_team.submitForm = function(e) {
     e.preventDefault();
 
+    var $form = $("#edit-team");
+    var $buttons = $form.find("button");
     var data = new FormData($form[0]);
 
     $buttons.prop("disabled", true);
