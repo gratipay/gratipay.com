@@ -1198,7 +1198,7 @@ class Participant(Model, mixins.Identity):
     def final_check(self, cursor):
         """Sanity-check that teams and balance have been dealt with.
         """
-        if self.get_teams(cursor=cursor):
+        if self.get_teams(cursor=cursor, only_open=True):
             raise self.StillOnATeam
         if self.balance != 0:
             raise self.BalanceIsNotZero
