@@ -729,7 +729,7 @@ msgid "No"
 msgstr "No"
 
 msgid "Already closed."
-msgstr ""
+msgstr "Già chiuso."
 
 msgid "You can't edit a closed project."
 msgstr "Non puoi modificare un progetto chiuso."
@@ -762,7 +762,7 @@ msgid "Danger Zone"
 msgstr "Zona di Pericolo"
 
 msgid "Close Project"
-msgstr ""
+msgstr "Chiudi Progetto"
 
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr "{0} riceve {1} a settimana da {2} ~utenti."
