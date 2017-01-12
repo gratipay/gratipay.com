@@ -31,6 +31,12 @@ class TestClosing(Harness):
         with pytest.raises(alice.StillOnATeam):
             alice.close()
 
+    def test_close_succeeds_if_team_is_closed(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_team(owner=alice, is_closed=True)
+        alice.close()
+        assert P('alice').is_closed
+
     def test_close_page_is_usually_available(self):
         self.make_participant('alice', claimed_time='now')
         body = self.client.GET('/~alice/settings/close', auth_as='alice').body
