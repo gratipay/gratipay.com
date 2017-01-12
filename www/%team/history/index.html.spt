@@ -30,7 +30,7 @@ years = list(range(current_year, team.ctime.year-1, -1))
 {% block content %}
 
 
-<h2>Team Account Statements</h2>
+<h2>Project Account Statements</h2>
 
 {% if len(years) > 1 %}
 <ul class="nav">

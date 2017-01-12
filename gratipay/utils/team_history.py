@@ -44,7 +44,7 @@ def iter_payday_events(db, team, year=None):
           FROM paydays
          WHERE ts_start > %(ctime)s
            AND extract(year from ts_start) = %(year)s
-      ORDER BY ts_start ASC
+      ORDER BY id DESC
     """, dict(ctime=team.ctime,year=year), back_as=dict)
      
     events = []
