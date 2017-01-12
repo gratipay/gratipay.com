@@ -1081,7 +1081,9 @@ class Participant(Model, mixins.Identity):
         """Return a list of teams this user is an owner or member of.
         """
         teams = (cursor or self.db).all("""
-            SELECT teams.*::teams FROM teams WHERE owner=%s
+            SELECT teams.*::teams FROM teams WHERE
+                owner=%s AND
+                NOT is_closed
 
             UNION
 
