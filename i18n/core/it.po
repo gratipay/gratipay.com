@@ -728,6 +728,9 @@ msgstr "Sì"
 msgid "No"
 msgstr "No"
 
+msgid "Already closed."
+msgstr ""
+
 msgid "You can't edit a closed project."
 msgstr "Non puoi modificare un progetto chiuso."
 
@@ -754,6 +757,12 @@ msgstr "Modifica il Tuo Progetto"
 
 msgid "Modify"
 msgstr "Modifica"
+
+msgid "Danger Zone"
+msgstr "Zona di Pericolo"
+
+msgid "Close Project"
+msgstr ""
 
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr "{0} riceve {1} a settimana da {2} ~utenti."
@@ -1210,9 +1219,6 @@ msgstr "Regione (Stato, Provincia)"
 msgid "Postcode (ZIP)"
 msgstr "Codice Postale (ZIP)"
 
-msgid "Danger Zone"
-msgstr "Zona di Pericolo"
-
 msgid "Remove This Identity"
 msgstr "Rimuovi Questa Identità"
 
@@ -1384,9 +1390,6 @@ msgstr "On"
 
 msgid "Off"
 msgstr "Off"
-
-msgid "Close"
-msgstr "Chiudi"
 
 msgid "Giving & Taking Widgets"
 msgstr "Widget Dona & Ricevi"

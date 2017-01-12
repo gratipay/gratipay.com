@@ -730,6 +730,9 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nee"
 
+msgid "Already closed."
+msgstr ""
+
 msgid "You can't edit a closed project."
 msgstr ""
 
@@ -755,6 +758,12 @@ msgid "Edit Your Project"
 msgstr ""
 
 msgid "Modify"
+msgstr ""
+
+msgid "Danger Zone"
+msgstr ""
+
+msgid "Close Project"
 msgstr ""
 
 msgid "{0} receives {1} per week from {2} ~users."
@@ -1212,9 +1221,6 @@ msgstr ""
 msgid "Postcode (ZIP)"
 msgstr ""
 
-msgid "Danger Zone"
-msgstr ""
-
 msgid "Remove This Identity"
 msgstr ""
 
@@ -1386,9 +1392,6 @@ msgstr "Aan"
 
 msgid "Off"
 msgstr "Uit"
-
-msgid "Close"
-msgstr "Sluit"
 
 msgid "Giving & Taking Widgets"
 msgstr ""
