@@ -30,6 +30,7 @@
 @import "scss/components/chosen";
 @import "scss/components/communities";
 @import "scss/components/cta";
+@import "scss/components/danger-zone";
 @import "scss/components/dropdown";
 @import "scss/components/emails";
 @import "scss/components/js-edit";

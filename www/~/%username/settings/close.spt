@@ -16,13 +16,9 @@ if request.method == 'POST':
     else:
         participant.close()
         website.redirect('/~%s/' % participant.username)
-teams = participant.get_teams()
-nteams = len(teams)
-if nteams > 1:
-    teams = ', '.join([t.name for t in teams[:-1]]) + ' and ' + teams[-1].name + ' teams'
-elif nteams == 1:
-    teams = teams[0].name + ' team'
-
+teams = website.db.all( "SELECT teams.*::teams FROM teams WHERE owner=%s AND NOT is_closed"
+                      , (participant.username,)
+                       )
 [---] text/html
 {% extends "templates/base.html" %}
 
@@ -32,9 +28,12 @@ elif nteams == 1:
 
     {% if teams %}
 
-      <p>You are the owner of the {{ teams }}. We don't yet <a
-      href="https://github.com/gratipay/gratipay.com/issues/3602">support
-      team owners closing their accounts</a>.</p>
+      <p>Please close the following projects first:</p>
+      <ul>
+          {% for team in teams %}
+          <li><a href="/{{ team.slug }}/edit/">{{ team.name }}</a></li>
+          {% endfor %}
+      </ul>
 
     {% endif %}
 
@@ -79,12 +78,12 @@ elif nteams == 1:
                 href="https://github.com/gratipay/gratipay.com/issues/397">data
                 retention policy</a>).</p>
 
-        <p>Things we clear immediately include your profile statement, 
-        the payroll you're taking, and the payments you're giving.</p>
+        <p>Things we clear immediately include your profile statement,
+        the payments you're taking, and the payments you're giving.</p>
 
-        <p>We specifically <i>don't</i> delete your past giving and 
-        taking history on the site, because that information also belongs 
-        equally to other users (the owners of the Teams you gave to and 
+        <p>We specifically <i>don't</i> delete your past giving and
+        taking history on the site, because that information also belongs
+        equally to other users (the owners of the Teams you gave to and
         took from).</p>
 
         <p>After you close your account, your profile page will say,

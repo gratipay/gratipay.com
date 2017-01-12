@@ -13,6 +13,7 @@ teams = website.db.all("""
 
     SELECT teams.*::teams
       FROM teams
+     WHERE not is_closed
   ORDER BY ctime DESC
 
 """)

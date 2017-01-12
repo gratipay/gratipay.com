@@ -155,6 +155,8 @@ class Harness(unittest.TestCase):
             _kw['slug_lower'] = _kw['slug'].lower()
         if 'is_approved' not in _kw:
             _kw['is_approved'] = False
+        if 'is_closed' not in _kw:
+            _kw['is_closed'] = False
         if 'available' not in _kw:
             _kw['available'] = 0
 
@@ -169,9 +171,9 @@ class Harness(unittest.TestCase):
         team = self.db.one("""
             INSERT INTO teams
                         (slug, slug_lower, name, homepage, product_or_service,
-                         onboarding_url, owner, is_approved, available)
+                         onboarding_url, owner, is_approved, is_closed, available)
                  VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s, %(product_or_service)s,
-                         %(onboarding_url)s, %(owner)s, %(is_approved)s,
+                         %(onboarding_url)s, %(owner)s, %(is_approved)s, %(is_closed)s,
                          %(available)s)
               RETURNING teams.*::teams
         """, _kw)

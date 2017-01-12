@@ -33,7 +33,8 @@ def slugize(name):
     return slug
 
 
-class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipMigration):
+class Team(Model, mixins.Available, mixins.Closing, mixins.Membership, mixins.Takes,
+                                                                              mixins.TipMigration):
     """Represent a Gratipay team.
     """
 

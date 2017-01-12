@@ -1077,7 +1077,7 @@ class Participant(Model, mixins.Identity):
         return '{base_url}/{username}/'.format(**locals())
 
 
-    def get_teams(self, only_approved=False, cursor=None):
+    def get_teams(self, only_approved=False, only_open=False, cursor=None):
         """Return a list of teams this user is an owner or member of.
         """
         teams = (cursor or self.db).all("""
@@ -1088,10 +1088,12 @@ class Participant(Model, mixins.Identity):
             SELECT teams.*::teams FROM teams WHERE id IN (
                 SELECT team_id FROM current_takes WHERE participant_id=%s
             )
-        """, (self.username, self.id)
-                                        )
+        """, (self.username, self.id))
+
         if only_approved:
             teams = [t for t in teams if t.is_approved]
+        if only_open:
+            teams = [t for t in teams if not t.is_closed]
         return teams
 
 

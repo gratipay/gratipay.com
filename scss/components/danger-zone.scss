@@ -1,0 +1,14 @@
+.danger-zone {
+    margin-top: 64px;
+    border: 1px solid $red;
+    @include border-radius(5px);
+    padding: 20px;
+    h2 {
+        margin: 0 0 10px;
+        padding: 0;
+        color: $red;
+    }
+    button {
+        background: $red;
+    }
+}
