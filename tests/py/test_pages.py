@@ -266,3 +266,42 @@ class TestPages(Harness):
         self.make_team(is_approved=True)
         self.make_participant('alice')
         assert 'your-payment' in self.client.GET('/TheEnterprise/', auth_as='alice').body
+
+
+class TestTeamListingTemplate(Harness):
+
+    def setUp(self):
+        self.make_participant('Q', claimed_time='now', is_admin=True)
+        self.make_participant('Rambo', claimed_time='now')
+
+    def check(self, auth_as=None, expected=True):
+        body = self.client.GET('/~picard/', auth_as=auth_as).body.decode('utf8')
+        assert ('The Enterprise' in body) is expected
+
+    def test_includes_approved_open_team_for_everyone(self):
+        self.make_team(is_approved=True, is_closed=False)
+        self.check('picard')
+        self.check('Q')
+        self.check('Rambo')
+        self.check()
+
+    def test_includes_approved_closed_team_for_owner_and_admin(self):
+        self.make_team(is_approved=True, is_closed=True)
+        self.check('picard')
+        self.check('Q')
+        self.check('Rambo', False)
+        self.check(None, False)
+
+    def test_includes_unapproved_open_team_for_owner_and_admin(self):
+        self.make_team(is_approved=False, is_closed=True)
+        self.check('picard')
+        self.check('Q')
+        self.check('Rambo', False)
+        self.check(None, False)
+
+    def test_includes_unapproved_closed_team_for_owner_and_admin(self):
+        self.make_team(is_approved=False, is_closed=False)
+        self.check('picard')
+        self.check('Q')
+        self.check('Rambo', False)
+        self.check(None, False)
