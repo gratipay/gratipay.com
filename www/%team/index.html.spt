@@ -58,6 +58,16 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
 
     </p>
 
+    {% if team.is_closed %}
+    <div class="danger-zone">
+        <h2>{{ _("Project Closed") }}</h2>
+        {{ _( 'Please {a}email support{_a} to reopen.'
+            , a='<a href="mailto:support@gratipay.com">'|safe
+            , _a='</a>'|safe
+             ) }}
+    </div>
+    {% endif %}
+
     <div class="statement profile-statement">
         {{ markdown.render(team.product_or_service) }}
     </div>
