@@ -299,13 +299,13 @@ class Participant(Model, mixins.Identity):
     # Closing
     # =======
 
-    def close(self):
+    def close(self, require_zero_balance=True):
         """Close the participant's account.
         """
         with self.db.get_cursor() as cursor:
             self.clear_payment_instructions(cursor)
             self.clear_personal_information(cursor)
-            self.final_check(cursor)
+            self.final_check(cursor, require_zero_balance)
             self.update_is_closed(True, cursor)
 
     def update_is_closed(self, is_closed, cursor=None):
@@ -1195,12 +1195,12 @@ class Participant(Model, mixins.Identity):
     class StillOnATeam(Exception): pass
     class BalanceIsNotZero(Exception): pass
 
-    def final_check(self, cursor):
+    def final_check(self, cursor, require_zero_balance=True):
         """Sanity-check that teams and balance have been dealt with.
         """
         if self.get_teams(cursor=cursor, only_open=True):
             raise self.StillOnATeam
-        if self.balance != 0:
+        if require_zero_balance and self.balance != 0:
             raise self.BalanceIsNotZero
 
     def archive(self, cursor):

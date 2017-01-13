@@ -1,8 +1,12 @@
 .danger-zone {
     margin-top: 64px;
+    h1 + & {
+        margin-top: 0;
+    }
     border: 1px solid $red;
     @include border-radius(5px);
     padding: 20px;
+    color: $red;
     h2 {
         margin: 0 0 10px;
         padding: 0;

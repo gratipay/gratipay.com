@@ -1,3 +1,4 @@
+from aspen import Response
 from gratipay.utils import get_participant, to_javascript
 [---]
 participant = get_participant(state, restrict=True)
@@ -14,17 +15,21 @@ if request.method == 'POST':
     if payday_is_running:
         pass    # User will get the "Try Again Later" message.
     else:
-        participant.close()
+        try:
+            participant.close(require_zero_balance=not user.ADMIN)
+        except (participant.StillOnATeam, participant.BalanceIsNotZero):
+            raise Response(400)
         website.redirect('/~%s/' % participant.username)
 teams = website.db.all( "SELECT teams.*::teams FROM teams WHERE owner=%s AND NOT is_closed"
                       , (participant.username,)
                        )
+balance_okay = (participant.balance == 0) or user.ADMIN
 [---] text/html
 {% extends "templates/base.html" %}
 
 {% block content %}
 
-  {% if teams or participant.balance > 0 %}
+  {% if teams or not balance_okay %}
 
     {% if teams %}
 
@@ -37,7 +42,7 @@ teams = website.db.all( "SELECT teams.*::teams FROM teams WHERE owner=%s AND NOT
 
     {% endif %}
 
-    {% if participant.balance > 0 %}
+    {% if not balance_okay %}
       {% if participant.has_payout_route %}
 
         <p>You have a balance of <b>${{ participant.balance }}</b>, and you've
@@ -68,6 +73,12 @@ teams = website.db.all( "SELECT teams.*::teams FROM teams WHERE owner=%s AND NOT
     an hour.</p>
 
   {% else %}
+    {% if participant.balance != 0 %}
+    <div class="danger-zone">
+        <h2>Danger Zone</h2>
+        Participant balance is {{ participant.balance }}.
+    </div>
+    {% endif %}
     <form method="POST">
 
         <h2>Personal Information</h2>
@@ -83,7 +94,7 @@ teams = website.db.all( "SELECT teams.*::teams FROM teams WHERE owner=%s AND NOT
 
         <p>We specifically <i>don't</i> delete your past giving and
         taking history on the site, because that information also belongs
-        equally to other users (the owners of the Teams you gave to and
+        equally to other users (the owners of the projects you gave to and
         took from).</p>
 
         <p>After you close your account, your profile page will say,
@@ -109,11 +120,13 @@ teams = website.db.all( "SELECT teams.*::teams FROM teams WHERE owner=%s AND NOT
         <p>We have no control over content indexed by search engines
         like Google.</p>
 
-        <h2>Ready?</h2>
+        <div class="danger-zone">
+            <h2>Ready?</h2>
 
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <button class="selected larger close-account" id="save"
-            type="submit">Yes, Close My Gratipay Account</button>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="selected larger close-account" id="save"
+                type="submit">Yes, Close My Gratipay Account</button>
+        </div>
     </form>
   {% endif %}
 {% endblock %}
