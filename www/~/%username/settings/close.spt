@@ -75,8 +75,8 @@ balance_okay = (participant.balance == 0) or user.ADMIN
   {% else %}
     {% if participant.balance != 0 %}
     <div class="danger-zone">
-        <h2>Danger Zone</h2>
-        Participant balance is {{ participant.balance }}.
+        <h2>Careful!</h2>
+        ~{{ participant.username }} still has a balance of {{ participant.balance }}.
     </div>
     {% endif %}
     <form method="POST">
@@ -120,7 +120,7 @@ balance_okay = (participant.balance == 0) or user.ADMIN
         <p>We have no control over content indexed by search engines
         like Google.</p>
 
-        <div class="danger-zone">
+        <div class="danger-zone less-bottom-margin">
             <h2>Ready?</h2>
 
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
