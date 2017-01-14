@@ -93,14 +93,14 @@ class TestClosePage(Harness):
         self.make_participant('alice', claimed_time='now', balance=10)
         body = self.client.GET('/~alice/settings/close', auth_as='admin').body
         assert 'Personal Information' in body
-        assert 'Danger Zone' in body
+        assert 'Careful!' in body
 
     def test_and_close_page_is_available_to_admin_even_with_negative_balance(self):
         self.make_participant('admin', claimed_time='now', is_admin=True)
         self.make_participant('alice', claimed_time='now', balance=-10)
         body = self.client.GET('/~alice/settings/close', auth_as='admin').body
         assert 'Personal Information' in body
-        assert 'Danger Zone' in body
+        assert 'Careful!' in body
 
     def test_posting_with_balance_fails_for_owner(self):
         self.make_participant('alice', claimed_time='now', balance=10)
