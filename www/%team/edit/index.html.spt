@@ -63,7 +63,8 @@ suppress_sidebar = True
     <button onclick="window.location='../';return false;">{{ _("Cancel") }}</button>
 
 </form>
-<form action="close" method="POST" class="danger-zone" id="close-team">
+<form action="close" method="POST" class="danger-zone more-top-margin less-bottom-margin"
+      id="close-team">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <h2>{{ _("Danger Zone") }}</h2>
     <button type="submit">{{ _("Close Project") }}</button>

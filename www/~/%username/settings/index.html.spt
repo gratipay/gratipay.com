@@ -94,7 +94,7 @@ emails = participant.get_emails()
         {% endif %}
     </p>
 
-    <div class="danger-zone">
+    <div class="danger-zone more-top-margin less-bottom-margin">
         <h2>{{ _("Danger Zone") }}</h2>
         <div class="buttons">
             <button class="close-account">{{ _("Close Account") }}</button>
