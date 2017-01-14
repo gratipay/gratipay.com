@@ -29,7 +29,7 @@ class TestClose(Harness):
         assert P('alice').is_closed
 
     def test_close_can_be_overriden_for_negative_balance_too(self):
-        alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
+        alice = self.make_participant('alice', claimed_time='now', balance=D('-10.00'))
         alice.close(require_zero_balance=False)
         assert P('alice').is_closed
 
