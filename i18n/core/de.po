@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 
 msgid "Thanks for using Gratipay! :-)"
-msgstr ""
+msgstr "Vielen Dank, dass Sie sich für Gratipay entschieden haben! :-)"
 
 msgid "Something not right? Reply to this email for help."
 msgstr "Stimmt etwas nicht? Sie können uns erreichen, indem Sie auf diese E-Mail antworten."
@@ -72,7 +72,7 @@ msgid ""
 msgstr ""
 
 msgid "View Receipt"
-msgstr ""
+msgstr "Bestätigung Anzeigen"
 
 msgid "Follow this link to view your receipt:"
 msgstr ""
@@ -108,7 +108,7 @@ msgid ""
 msgstr ""
 
 msgid "Project Application Approved!"
-msgstr ""
+msgstr "Projektantrag angenommen!"
 
 msgid ""
 "We've approved your application for the '{team}' project on Gratipay. For "
@@ -121,7 +121,7 @@ msgid ""
 msgstr ""
 
 msgid "Project Application Rejected"
-msgstr ""
+msgstr "Projektantrag abgelehnt"
 
 msgid ""
 "We've rejected your application for the '{team}' project on Gratipay. For "
@@ -136,7 +136,7 @@ msgstr ""
 msgid ""
 "We've received a request to connect {0} to the {1} account on Gratipay. "
 "Sound familiar?"
-msgstr "Wir haben die Anfrage erhalten, {0} mit dem Konto {1} auf Gratipay zu verbinden. Bist du damit einverstanden?"
+msgstr "Wir haben die Anfrage erhalten, {0} mit dem Konto {1} auf Gratipay zu verbinden. Sind Sie damit einverstanden?"
 
 msgid "Yes, proceed!"
 msgstr "Ja, fortsetzen!"
@@ -168,16 +168,16 @@ msgid "Account not found on {0}."
 msgstr ""
 
 msgid "You need to log in to access this page."
-msgstr "Du musst dich einloggen um auf diese Seite zugreifen zu können."
+msgstr "Sie müssen sich einloggen um auf diese Seite zugreifen zu können."
 
 msgid "You are not authorized to access this page."
-msgstr "Du bist nicht berechtigt diese Seite aufzurufen."
+msgstr "Sie sind nicht berechtigt diese Seite aufzurufen."
 
 msgid "Forbidden"
 msgstr ""
 
 msgid "Not Found"
-msgstr ""
+msgstr "Nicht gefunden"
 
 msgid "Too Many Requests"
 msgstr ""
@@ -195,7 +195,7 @@ msgid "Your credit card has failed!"
 msgstr "Ihre Kreditkarte geht nicht"
 
 msgid "Fix your card"
-msgstr "beheben Sie das Problem"
+msgstr "Beheben Sie das Problem"
 
 msgid "Your credit card is about to expire!"
 msgstr "Ihre Kreditkarte ist bald abgelaufen."
@@ -222,7 +222,7 @@ msgid "Contact Us"
 msgstr "Kontakt"
 
 msgid "Payments"
-msgstr ""
+msgstr "Zahlungen"
 
 msgid "Do Not Track"
 msgstr "Nicht verfolgen"
@@ -305,7 +305,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 msgid "Edit"
 msgstr "Editieren"
@@ -314,7 +314,7 @@ msgid "Project"
 msgstr ""
 
 msgid "Amount ($)"
-msgstr ""
+msgstr "Betrag"
 
 msgid "Due ($)"
 msgstr ""
@@ -332,13 +332,13 @@ msgid "Previous"
 msgstr ""
 
 msgid "Next"
-msgstr ""
+msgstr "Weiter"
 
 msgid "First"
-msgstr ""
+msgstr "Erste"
 
 msgid "Last"
-msgstr ""
+msgstr "Letzte"
 
 msgid "Profile"
 msgstr "Profil"
@@ -347,7 +347,7 @@ msgid "Statement"
 msgstr "Statement"
 
 msgid "Tell us how you're making the world better."
-msgstr "Erzähl uns, wie du die Welt besser machst."
+msgstr "Erzählen Sie uns, wie Sie die Welt besser machen."
 
 msgid ""
 "Gratipay allows you to have profile statements in multiple languages. Use "
@@ -373,7 +373,7 @@ msgid "verified in: {country}"
 msgstr ""
 
 msgid "Weekly"
-msgstr ""
+msgstr "Wöchentlich"
 
 msgid "Giving"
 msgstr "Gibt"
@@ -382,7 +382,7 @@ msgid "hidden"
 msgstr "versteckt"
 
 msgid "Taking"
-msgstr ""
+msgstr "Nimmt"
 
 msgid "Joined"
 msgstr "Beigetreten"
