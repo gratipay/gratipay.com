@@ -27,6 +27,7 @@ volume = website.db.one("SELECT volume FROM paydays ORDER BY ts_start DESC LIMIT
 volume = int(round(volume, -2))
 
 tabs = OrderedDict()
+tabs['featured'] = {'teams': []}
 tabs['approved'] = {'teams': []}
 tabs['unreviewed'] = {'teams': []}
 tabs['rejected'] = {'teams': []}
@@ -45,6 +46,8 @@ if len(popular) >= 7 and len(unpopular) >= 3:
     featured_teams = random.sample(popular, 7) + random.sample(unpopular, 3)
     random.shuffle(featured_teams)
     tabs['featured'] = {'teams': featured_teams}
+else:
+    tabs.pop('featured')
 
 nteams = 0
 for key, tab in tabs.items():
