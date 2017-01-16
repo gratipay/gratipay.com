@@ -33,7 +33,7 @@ unpopular = []
 for team in teams:
     tabs[team.status]['teams'].append(team)
     if team.status == 'approved':
-      if team.ngivers >= 5:
+      if team.nreceiving_from >= 5:
         popular.append(team)
       else:
         unpopular.append(team)
