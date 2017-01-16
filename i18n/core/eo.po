@@ -656,6 +656,12 @@ msgstr ""
 msgid "owned by {a}~{owner}{_a}"
 msgstr ""
 
+msgid "Project Closed"
+msgstr ""
+
+msgid "Please {a}email support{_a} to reopen."
+msgstr ""
+
 msgid "Please sign in first"
 msgstr "Bonvolu ensaluti unue"
 
