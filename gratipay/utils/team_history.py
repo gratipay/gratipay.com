@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from datetime import datetime
 from decimal import Decimal as D
-
-from aspen import Response
 
 
 def get_end_of_year_totals(db, team, year):
