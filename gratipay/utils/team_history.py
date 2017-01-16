@@ -14,7 +14,7 @@ def get_end_of_year_totals(db, team, year):
            AND amount > 0
            AND direction='to-team';
     """, locals() )
-    
+
     if received is None:
        received = D(0.00)
 
@@ -26,7 +26,7 @@ def get_end_of_year_totals(db, team, year):
            AND amount > 0
            AND direction='to-participant';
     """, locals())
-    
+
     if distributed is None:
         distributed = D(0.00)
 
@@ -46,10 +46,10 @@ def iter_payday_events(db, team, year=None):
            AND extract(year from ts_start) = %(year)s
       ORDER BY id DESC
     """, dict(ctime=team.ctime,year=year), back_as=dict)
-     
+
     events = []
     events_query = """
-        SELECT * 
+        SELECT *
           FROM ( SELECT COALESCE( actual.amount,expected.amount) as amount
                       , COALESCE( expected.participant_id, actual.participant_id ) as participant_id
                       , ( CASE WHEN is_funded IS false then 'No/Invalid Credit Card' end) as Notes
@@ -79,7 +79,7 @@ def iter_payday_events(db, team, year=None):
                                         AND participants.username = participant
                                    ) actual
                      ON expected.participant_id = actual.participant_id
-                ) received 
+                ) received
          UNION ( SELECT COALESCE( actual.amount,expected.amount) as amount
                       , COALESCE( expected.participant_id, actual.participant_id ) as participant_id
                       , ( CASE WHEN expected.amount IS NULL
@@ -113,17 +113,17 @@ def iter_payday_events(db, team, year=None):
                                         AND participants.username = participant
                                     ) actual
                    ON expected.participant_id = actual.participant_id )
-         ORDER BY direction""" 
-    
+         ORDER BY direction"""
+
     for payday in paydays:
         payday_events = db.all(events_query
                               , dict(team=team.name
                                     , payday_id=payday['id']
                                     , payday_date=payday['ts_start'])
                               , back_as=dict)
-                                    
+
         events.append (dict(id=payday['id'], date=payday['ts_start'], events=payday_events))
-    
+
     return events
 
 
