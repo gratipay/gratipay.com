@@ -5,10 +5,13 @@ import random
 i18ned_statuses = { "approved": _("Approved")
                   , "unreviewed" : _("Under Review")
                   , "rejected": _("Rejected")
+                  , "featured": _("Featured")
                    }
+
 status_icons = { "approved": "&#xe008;"
                , "unreviewed": "&#xe009;"
                , "rejected": "&#xe010;"
+               , "featured": "&#xe011;"
                 }
 
 teams = website.db.all("""
@@ -38,7 +41,7 @@ for team in teams:
       else:
         unpopular.append(team)
 
-if popular >= 7 and unpopular >= 3:
+if len(popular) >= 7 and len(unpopular) >= 3:
     featured_teams = random.sample(popular, 7) + random.sample(unpopular, 3)
     random.shuffle(featured_teams)
     tabs['featured'] = {'teams': featured_teams}
