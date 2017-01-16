@@ -257,11 +257,19 @@ class Tests(Harness):
         self.make_team('The Stargazer', owner=picard, is_approved=False)
         assert [t.slug for t in picard.get_teams(only_approved=True)] == ['TheEnterprise']
 
+    def test_get_teams_can_get_only_open_teams(self):
+        self.make_team()
+        picard = P('picard')
+        self.make_team('The Stargazer', owner=picard, is_closed=True)
+        assert [t.slug for t in picard.get_teams(only_open=True)] == ['TheEnterprise']
+
     def test_get_teams_can_get_all_teams(self):
         self.make_team(is_approved=True)
         picard = P('picard')
         self.make_team('The Stargazer', owner=picard, is_approved=False)
-        assert [t.slug for t in picard.get_teams()] == ['TheEnterprise', 'TheStargazer']
+        self.make_team('The Trident', owner=picard, is_approved=False, is_closed=True)
+        assert [t.slug for t in picard.get_teams()] == \
+                                                    ['TheEnterprise', 'TheStargazer', 'TheTrident']
 
 
     # giving

@@ -666,6 +666,12 @@ msgstr ""
 msgid "owned by {a}~{owner}{_a}"
 msgstr ""
 
+msgid "Project Closed"
+msgstr ""
+
+msgid "Please {a}email support{_a} to reopen."
+msgstr ""
+
 msgid "Please sign in first"
 msgstr "Bitte melden Sie sich erst an"
 
@@ -738,6 +744,9 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "Already closed."
+msgstr ""
+
 msgid "You can't edit a closed project."
 msgstr ""
 
@@ -763,6 +772,12 @@ msgid "Edit Your Project"
 msgstr ""
 
 msgid "Modify"
+msgstr ""
+
+msgid "Danger Zone"
+msgstr ""
+
+msgid "Close Project"
 msgstr ""
 
 msgid "{0} receives {1} per week from {2} ~users."
@@ -1220,9 +1235,6 @@ msgstr ""
 msgid "Postcode (ZIP)"
 msgstr ""
 
-msgid "Danger Zone"
-msgstr ""
-
 msgid "Remove This Identity"
 msgstr ""
 
@@ -1394,9 +1406,6 @@ msgstr "An"
 
 msgid "Off"
 msgstr "Aus"
-
-msgid "Close"
-msgstr "Schließen"
 
 msgid "Giving & Taking Widgets"
 msgstr ""

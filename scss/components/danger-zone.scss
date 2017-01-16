@@ -1,0 +1,21 @@
+.danger-zone {
+    margin: 1em 0 1em;
+    &.more-top-margin {
+        margin-top: 4em;
+    }
+    &.less-bottom-margin {
+        margin-bottom: 0;
+    }
+    border: 1px solid $red;
+    @include border-radius(5px);
+    padding: 20px;
+    color: $red;
+    h2 {
+        margin: 0 0 10px;
+        padding: 0;
+        color: $red;
+    }
+    button {
+        background: $red;
+    }
+}

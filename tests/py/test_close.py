@@ -11,9 +11,7 @@ from gratipay.models.participant import Participant
 from gratipay.testing import Harness, D,P
 
 
-class TestClosing(Harness):
-
-    # close
+class TestClose(Harness):
 
     def test_close_closes(self):
         alice = self.make_participant('alice', claimed_time='now')
@@ -25,23 +23,41 @@ class TestClosing(Harness):
         with pytest.raises(alice.BalanceIsNotZero):
             alice.close()
 
+    def test_close_can_be_overriden_for_balance_though(self):
+        alice = self.make_participant('alice', claimed_time='now', balance=D('10.00'))
+        alice.close(require_zero_balance=False)
+        assert P('alice').is_closed
+
+    def test_close_can_be_overriden_for_negative_balance_too(self):
+        alice = self.make_participant('alice', claimed_time='now', balance=D('-10.00'))
+        alice.close(require_zero_balance=False)
+        assert P('alice').is_closed
+
     def test_close_fails_if_still_owns_a_team(self):
         alice = self.make_participant('alice', claimed_time='now')
         self.make_team(owner=alice)
         with pytest.raises(alice.StillOnATeam):
             alice.close()
 
+    def test_close_succeeds_if_team_is_closed(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_team(owner=alice, is_closed=True)
+        alice.close()
+        assert P('alice').is_closed
+
+
+class TestClosePage(Harness):
+
     def test_close_page_is_usually_available(self):
         self.make_participant('alice', claimed_time='now')
         body = self.client.GET('/~alice/settings/close', auth_as='alice').body
         assert 'Personal Information' in body
 
-    def test_close_page_is_not_available_during_payday(self):
-        Payday.start()
-        self.make_participant('alice', claimed_time='now')
+    def test_close_page_shows_a_message_to_team_owners(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        self.make_team('A', alice)
         body = self.client.GET('/~alice/settings/close', auth_as='alice').body
-        assert 'Personal Information' not in body
-        assert 'Try Again Later' in body
+        assert 'Please close the following projects first:' in body
 
     def test_can_post_to_close_page(self):
         self.make_participant('alice', claimed_time='now')
@@ -50,37 +66,85 @@ class TestClosing(Harness):
         assert response.headers['Location'] == '/~alice/'
         assert P('alice').is_closed
 
+
+    # balance checks
+
+    def test_close_page_is_not_available_to_owner_with_positive_balance(self):
+        self.make_participant('alice', claimed_time='now', last_paypal_result='', balance=10)
+        body = self.client.GET('/~alice/settings/close', auth_as='alice').body
+        assert 'Personal Information' not in body
+        assert 'You have a balance' in body
+
+    def test_close_page_is_not_available_to_owner_with_negative_balance(self):
+        self.make_participant('alice', claimed_time='now', last_paypal_result='', balance=-10)
+        body = self.client.GET('/~alice/settings/close', auth_as='alice').body
+        assert 'Personal Information' not in body
+        assert 'You have a balance' in body
+
+    def test_sends_owner_with_balance_and_no_paypal_on_quest_for_paypal(self):
+        self.make_participant('alice', claimed_time='now', balance=10)
+        body = self.client.GET('/~alice/settings/close', auth_as='alice').body
+        assert 'Personal Information' not in body
+        assert 'You have a balance' not in body
+        assert 'link a PayPal account' in body
+
+    def test_but_close_page_is_available_to_admin_even_with_positive_balance(self):
+        self.make_participant('admin', claimed_time='now', is_admin=True)
+        self.make_participant('alice', claimed_time='now', balance=10)
+        body = self.client.GET('/~alice/settings/close', auth_as='admin').body
+        assert 'Personal Information' in body
+        assert 'Careful!' in body
+
+    def test_and_close_page_is_available_to_admin_even_with_negative_balance(self):
+        self.make_participant('admin', claimed_time='now', is_admin=True)
+        self.make_participant('alice', claimed_time='now', balance=-10)
+        body = self.client.GET('/~alice/settings/close', auth_as='admin').body
+        assert 'Personal Information' in body
+        assert 'Careful!' in body
+
+    def test_posting_with_balance_fails_for_owner(self):
+        self.make_participant('alice', claimed_time='now', balance=10)
+        response = self.client.PxST('/~alice/settings/close', auth_as='alice')
+        assert response.code == 400
+        assert not P('alice').is_closed
+
+    def test_posting_with_balance_succeeds_for_admin(self):
+        self.make_participant('admin', claimed_time='now', is_admin=True)
+        self.make_participant('alice', claimed_time='now', balance=-10)
+        response = self.client.PxST('/~alice/settings/close', auth_as='admin')
+        assert response.code == 302
+        assert response.headers['Location'] == '/~alice/'
+        assert P('alice').is_closed
+
+
+    # payday check
+
+    def check_under_payday(self, username):
+        body = self.client.GET('/~alice/settings/close', auth_as=username).body
+        assert 'Personal Information' not in body
+        assert 'Try Again Later' in body
+
+    def test_close_page_is_not_available_during_payday(self):
+        self.make_participant('alice', claimed_time='now')
+        Payday.start()
+        self.check_under_payday('alice')
+
+    def test_even_for_admin(self):
+        self.make_participant('admin', claimed_time='now', is_admin=True)
+        self.make_participant('alice', claimed_time='now')
+        Payday.start()
+        self.check_under_payday('admin')
+
     def test_cant_post_to_close_page_during_payday(self):
         Payday.start()
         self.make_participant('alice', claimed_time='now')
         body = self.client.POST('/~alice/settings/close', auth_as='alice').body
         assert 'Try Again Later' in body
 
-    def test_close_page_shows_a_message_to_team_owners(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        self.make_team('A', alice)
-        body = self.client.GET('/~alice/settings/close', auth_as='alice').body
-        assert 'You are the owner of the A team.' in body
 
-    def test_close_page_shows_a_message_to_owners_of_two_teams(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        self.make_team('A', alice)
-        self.make_team('B', alice)
-        body = self.client.GET('/~alice/settings/close', auth_as='alice').body
-        assert 'You are the owner of the A and B teams.' in body
+class TestClearPaymentInstructions(Harness):
 
-    def test_close_page_shows_a_message_to_owners_of_three_teams(self):
-        alice = self.make_participant('alice', claimed_time='now')
-        self.make_team('A', alice)
-        self.make_team('B', alice)
-        self.make_team('C', alice)
-        body = self.client.GET('/~alice/settings/close', auth_as='alice').body
-        assert 'You are the owner of the A, B and C teams.' in body
-
-
-    # cpi - clear_payment_instructions
-
-    def test_cpi_clears_payment_instructions(self):
+    def test_clears_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
         alice.set_payment_instruction(self.make_team(), D('1.00'))
         npayment_instructions = lambda: self.db.one( "SELECT count(*) "
@@ -93,7 +157,7 @@ class TestClosing(Harness):
             alice.clear_payment_instructions(cursor)
         assert npayment_instructions() == 0
 
-    def test_cpi_doesnt_duplicate_zero_payment_instructions(self):
+    def test_doesnt_duplicate_zero_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now')
         A = self.make_team()
         alice.set_payment_instruction(A, D('1.00'))
@@ -105,7 +169,7 @@ class TestClosing(Harness):
             alice.clear_payment_instructions(cursor)
         assert npayment_instructions() == 2
 
-    def test_cpi_doesnt_zero_when_theres_no_payment_instruction(self):
+    def test_doesnt_zero_when_theres_no_payment_instruction(self):
         alice = self.make_participant('alice')
         npayment_instructions = lambda: self.db.one("SELECT count(*) FROM payment_instructions "
                                                     "WHERE participant_id=%s", (alice.id,))
@@ -114,7 +178,7 @@ class TestClosing(Harness):
             alice.clear_payment_instructions(cursor)
         assert npayment_instructions() == 0
 
-    def test_cpi_clears_multiple_payment_instructions(self):
+    def test_clears_multiple_payment_instructions(self):
         alice = self.make_participant('alice', claimed_time='now')
         alice.set_payment_instruction(self.make_team('A'), D('1.00'))
         alice.set_payment_instruction(self.make_team('B'), D('1.00'))
@@ -132,10 +196,10 @@ class TestClosing(Harness):
         assert npayment_instructions() == 0
 
 
-    # cpi - clear_personal_information
+class TestClearPersonalInformation(Harness):
 
     @mock.patch.object(Participant, '_mailer')
-    def test_cpi_clears_personal_information(self, mailer):
+    def test_clears_personal_information(self, mailer):
         alice = self.make_participant( 'alice'
                                      , anonymous_giving=True
                                      , avatar_url='img-url'
@@ -164,7 +228,7 @@ class TestClosing(Harness):
         assert alice.session_expires.year == new_alice.session_expires.year == date.today().year
         assert not alice.get_emails()
 
-    def test_cpi_clears_communities(self):
+    def test_clears_communities(self):
         alice = self.make_participant('alice')
         alice.insert_into_communities(True, 'test', 'test')
         bob = self.make_participant('bob')
@@ -177,7 +241,7 @@ class TestClosing(Harness):
 
         assert Community.from_slug('test').nmembers == 1
 
-    def test_cpi_clears_personal_identities(self):
+    def test_clears_personal_identities(self):
         alice = self.make_participant('alice', email_address='alice@example.com')
         US = self.db.one("SELECT id FROM countries WHERE code='US'")
         alice.store_identity_info(US, 'nothing-enforced', {'name': 'Alice'})
@@ -191,16 +255,16 @@ class TestClosing(Harness):
         assert self.db.one('SELECT count(*) FROM participant_identities;') == 0
 
 
-    # uic = update_is_closed
+class TestUpdateIsClosed(Harness):
 
-    def test_uic_updates_is_closed(self):
+    def test_updates_is_closed(self):
         alice = self.make_participant('alice')
         alice.update_is_closed(True)
 
         assert alice.is_closed
         assert P('alice').is_closed
 
-    def test_uic_updates_is_closed_False(self):
+    def test_updates_is_closed_False(self):
         alice = self.make_participant('alice')
         alice.update_is_closed(True)
         alice.update_is_closed(False)
@@ -208,7 +272,7 @@ class TestClosing(Harness):
         assert not alice.is_closed
         assert not P('alice').is_closed
 
-    def test_uic_uses_supplied_cursor(self):
+    def test_uses_supplied_cursor(self):
         alice = self.make_participant('alice')
 
         with self.db.get_cursor() as cursor:
