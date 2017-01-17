@@ -158,7 +158,7 @@ def fake_team(db, teamowner, teamname=None):
                         , owner=teamowner.username
                         , is_approved=random.sample(isapproved,1)[0]
                         , receiving=0.1
-                        , nreceiving_from=3
+                        , nreceiving_from=sample.randrange(1,10)
                          )
     except (IntegrityError, InvalidTeamName):
         return fake_team(db, teamowner)
