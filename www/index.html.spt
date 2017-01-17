@@ -34,18 +34,18 @@ tabs['rejected'] = {'teams': []}
 
 popular = []
 unpopular = []
-for team in teams:
-    tabs[team.status]['teams'].append(team)
-    if team.status == 'approved':
-      if team.nreceiving_from >= 5:
-        popular.append(team)
+for project in teams:
+    tabs[project.status]['teams'].append(project)
+    if project.status == 'approved':
+      if project.nreceiving_from >= 5:
+        popular.append(project)
       else:
-        unpopular.append(team)
+        unpopular.append(project)
 
 if len(popular) >= 7 and len(unpopular) >= 3:
-    featured_teams = random.sample(popular, 7) + random.sample(unpopular, 3)
-    random.shuffle(featured_teams)
-    tabs['featured'] = {'teams': featured_teams}
+    featured_projects = random.sample(popular, 7) + random.sample(unpopular, 3)
+    random.shuffle(featured_projects)
+    tabs['featured'] = {'teams': featured_projects}
 else:
     tabs.pop('featured')
 
