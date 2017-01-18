@@ -266,7 +266,7 @@ msgstr "Déconnexion"
 
 msgid ""
 "{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
-"to join Gratipay{_a}{_nowrap}."
+"to get funded on Gratipay{_a}{_nowrap}."
 msgstr ""
 
 msgid "Blog"
@@ -611,7 +611,7 @@ msgstr ""
 msgid "Continue"
 msgstr "Continuer"
 
-msgid "Apply to Join"
+msgid "Fund Your Project"
 msgstr ""
 
 msgid "created {ago}"
@@ -660,6 +660,12 @@ msgstr ""
 
 msgid "owned by {a}~{owner}{_a}"
 msgstr "géré par {a}~{owner}{_a}"
+
+msgid "Project Closed"
+msgstr ""
+
+msgid "Please {a}email support{_a} to reopen."
+msgstr ""
 
 msgid "Please sign in first"
 msgstr "Identification nécessaire"
@@ -733,6 +739,9 @@ msgstr "Oui"
 msgid "No"
 msgstr "Non"
 
+msgid "Already closed."
+msgstr ""
+
 msgid "You can't edit a closed project."
 msgstr ""
 
@@ -759,6 +768,12 @@ msgstr ""
 
 msgid "Modify"
 msgstr "Modifier"
+
+msgid "Danger Zone"
+msgstr "Zone de danger"
+
+msgid "Close Project"
+msgstr ""
 
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr "{0} reçoit {1} par semaine de la part de {2} ~utilisateurs."
@@ -1215,9 +1230,6 @@ msgstr "Région (état ou province)"
 msgid "Postcode (ZIP)"
 msgstr "Code postal"
 
-msgid "Danger Zone"
-msgstr "Zone de danger"
-
 msgid "Remove This Identity"
 msgstr "Supprimer cette identité"
 
@@ -1389,9 +1401,6 @@ msgstr "Activé"
 
 msgid "Off"
 msgstr "Désactivé"
-
-msgid "Close"
-msgstr "Fermer"
 
 msgid "Giving & Taking Widgets"
 msgstr ""
