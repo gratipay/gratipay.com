@@ -37,17 +37,24 @@ unpopular = []
 for project in teams:
     tabs[project.status]['teams'].append(project)
     if project.status == 'approved':
-      if project.nreceiving_from >= 5:
+      if project.nreceiving_from >= 3:
         popular.append(project)
       else:
         unpopular.append(project)
 
-if len(popular) >= 7 and len(unpopular) >= 3:
-    featured_projects = random.sample(popular, 7) + random.sample(unpopular, 3)
+popular_sample_size = min(len(popular), 7)
+unpopular_sample_size = min(len(unpopular), 10-popular_sample_size)
+if popular_sample_size + unpopular_sample_size < 10:
+    tabs.pop('featured')
+else:
+    if popular_sample_size == 0:
+        featured_projects = random.sample(unpopular, unpopular_sample_size)
+    elif unpopular_sample_size == 0:
+        featured_projects = random.sample(popular, min(10, len(popular)))
+    else:
+        featured_projects = random.sample(popular, popular_sample_size) + random.sample(unpopular, unpopular_sample_size)
     random.shuffle(featured_projects)
     tabs['featured'] = {'teams': featured_projects}
-else:
-    tabs.pop('featured')
 
 nteams = 0
 for key, tab in tabs.items():
