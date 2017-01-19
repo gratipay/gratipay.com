@@ -102,7 +102,7 @@ def fake_participant(db, is_admin=False, random_identities=True):
 def fake_exchange_route(db, participant, network=None):
     
     if not network:
-        networks = ["balanced-ba", "balanced-cc", "paypal"]
+        networks = ["balanced-ba", "balanced-cc", "paypal", "bitcoin"]
         network = random.sample(networks, 1)[0]
 
     insert_fake_data( db
