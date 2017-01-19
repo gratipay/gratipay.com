@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Exit if any subcommands or pipeline returns a non-zero status.
 set -e
@@ -15,15 +15,15 @@ echo "==========================================================================
 # whole.
 
 echo "Recreating public schema ... "
-echo "DROP SCHEMA public CASCADE" | psql $DATABASE_URL
-echo "CREATE SCHEMA public" | psql $DATABASE_URL
+echo "DROP SCHEMA public CASCADE" | psql "$DATABASE_URL"
+echo "CREATE SCHEMA public" | psql "$DATABASE_URL"
 
 
 echo "=============================================================================="
 echo "Applying sql/schema.sql ..."
 echo 
 
-psql $DATABASE_URL < sql/schema.sql
+psql "$DATABASE_URL" < sql/schema.sql
 
 
 echo "=============================================================================="
@@ -31,7 +31,7 @@ echo "Looking for sql/branch.sql ..."
 echo 
 
 if [ -f sql/branch.sql ]
-then psql $DATABASE_URL < sql/branch.sql
+then psql "$DATABASE_URL" < sql/branch.sql
 else 
     echo "None found. That's cool. You only need a sql/branch.sql file if you want to "
     echo "include schema changes with your pull request."

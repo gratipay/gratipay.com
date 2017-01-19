@@ -36,9 +36,25 @@ def make_history(harness):
 
 class TestHistory(BillingHarness):
 
+    def shift_all_paydays_by(self, interval):
+        self.db.run("""
+            UPDATE paydays
+               SET ts_start = ts_start + interval %(interval)s;
+            UPDATE paydays
+               SET ts_end = ts_end + interval %(interval)s
+             WHERE NOT ts_end::text = '1970-01-01 00:00:00+00';
+            UPDATE payments
+               SET timestamp = "timestamp" + interval %(interval)s;
+            UPDATE exchanges
+               SET timestamp = "timestamp" + interval %(interval)s;
+            UPDATE transfers
+               SET timestamp = "timestamp" + interval %(interval)s;
+        """, dict(interval=interval))
+
     def test_iter_payday_events(self):
         now = datetime.now()
         Payday().start().run()
+        self.shift_all_paydays_by('-1 week')
 
         Enterprise = self.make_team(is_approved=True)
         self.obama.set_payment_instruction(Enterprise, '10.00')  # >= MINIMUM_CHARGE!
@@ -46,16 +62,7 @@ class TestHistory(BillingHarness):
             with patch.object(Payday, 'fetch_card_holds') as fch:
                 fch.return_value = {}
                 Payday.start().run()
-            self.db.run("""
-                UPDATE paydays
-                   SET ts_start = ts_start - interval '1 week'
-                     , ts_end = ts_end - interval '1 week';
-                UPDATE payments
-                   SET timestamp = "timestamp" - interval '1 week';
-                UPDATE transfers
-                   SET timestamp = "timestamp" - interval '1 week';
-            """)
-
+            self.shift_all_paydays_by('-1 week')
 
         obama = P('obama')
         picard = P('picard')
@@ -66,16 +73,13 @@ class TestHistory(BillingHarness):
         Payday().start()  # to demonstrate that we ignore any open payday?
 
         # Make all events in the same year.
-        delta = '%s days' % (364 - (now - datetime(now.year, 1, 1)).days)
-        self.db.run("""
-            UPDATE paydays
-                SET ts_start = ts_start + interval %(delta)s
-                  , ts_end = ts_end + interval %(delta)s;
-            UPDATE payments
-                SET timestamp = "timestamp" + interval %(delta)s;
-            UPDATE transfers
-                SET timestamp = "timestamp" + interval %(delta)s;
-        """, dict(delta=delta))
+        if now.month < 2:
+
+            # Above, we created four paydays in sequential weeks, with the
+            # latest being today. We don't want them to go back into the
+            # previous year, so let's shift them forward if it's close.
+
+            self.shift_all_paydays_by('3 months')
 
         events = list(iter_payday_events(self.db, picard, now.year))
         assert len(events) == 7
@@ -90,7 +94,7 @@ class TestHistory(BillingHarness):
 
         events = list(iter_payday_events(self.db, obama))
         assert events[0]['given'] == 20
-        assert len(events) == 11
+        assert len(events) == 9
 
     def test_iter_payday_events_with_failed_exchanges(self):
         alice = self.make_participant('alice', claimed_time='now')

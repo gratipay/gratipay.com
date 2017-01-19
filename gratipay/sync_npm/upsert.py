@@ -5,6 +5,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import uuid
 
+from . import sentry
+
 
 # Coordinate with Postgres on how to say "NULL".
 # ==============================================
@@ -45,10 +47,11 @@ def upsert(env, args, db):
         """)
 
 
-def main(env, args, db, sentrified):
+def main(env, args, db):
     """Take a CSV file from stdin and load it into Postgres using an `ingenious algorithm`_.
 
     .. _ingenious algorithm:  http://tapoueh.org/blog/2013/03/15-batch-update.html
 
     """
-    sentrified(upsert)(env, args, db)
+    with sentry(env):
+        upsert(env, args, db)

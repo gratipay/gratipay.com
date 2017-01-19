@@ -241,13 +241,12 @@ class TestTeamEdit(Harness):
             'name': 'Enterprise',
             'product_or_service': 'We save galaxies.',
             'homepage': 'http://starwars-enterprise.com/',
-            'onboarding_url': 'http://starwars-enterprise.com/onboarding',
-            'todo_url': 'http://starwars-enterprise.com/todos',
             'image': FileUpload(IMAGE, 'logo.png'),
         }
         data = json.loads(self.client.POST( '/enterprise/edit/edit.json'
                                           , data=edit_data
-                                          , auth_as='picard').body)
+                                          , auth_as='picard'
+                                           ).body)
 
         team = T('enterprise')
         assert data == team.to_dict()
@@ -255,8 +254,6 @@ class TestTeamEdit(Harness):
         assert team.name == 'Enterprise'
         assert team.product_or_service == 'We save galaxies.'
         assert team.homepage == 'http://starwars-enterprise.com/'
-        assert team.onboarding_url == 'http://starwars-enterprise.com/onboarding'
-        assert team.todo_url == 'http://starwars-enterprise.com/todos'
         assert team.load_image('original') == IMAGE
 
     def test_edit_supports_partial_updates(self):
@@ -267,21 +264,21 @@ class TestTeamEdit(Harness):
             'image': FileUpload(IMAGE, 'logo.png'),
         }
         self.client.POST( '/enterprise/edit/edit.json'
-                         , data=edit_data
-                         , auth_as='picard')
+                        , data=edit_data
+                        , auth_as='picard'
+                         )
 
         team = T('enterprise')
         assert team.name == 'The Enterprise'
         assert team.product_or_service == 'We save galaxies.'
         assert team.homepage == 'http://starwars-enterprise.com/'
-        assert team.onboarding_url == ''
-        assert team.todo_url == ''
         assert team.load_image('original') == IMAGE
 
     def test_edit_needs_auth(self):
         self.make_team(slug='enterprise', is_approved=True)
         response = self.client.PxST( '/enterprise/edit/edit.json'
-                                    , data={ 'name': 'Enterprise' })
+                                   , data={'name': 'Enterprise'}
+                                    )
         assert response.code == 401
         assert T('enterprise').name == 'The Enterprise'
 
@@ -291,14 +288,16 @@ class TestTeamEdit(Harness):
         self.make_team(slug='enterprise', is_approved=True)
 
         response = self.client.PxST( '/enterprise/edit/edit.json'
-                                    , data={ 'name': 'Enterprise' }
-                                    , auth_as='alice')
+                                   , data={'name': 'Enterprise'}
+                                   , auth_as='alice'
+                                    )
         assert response.code == 403
         assert T('enterprise').name == 'The Enterprise'
 
         response = self.client.POST( '/enterprise/edit/edit.json'
-                                    , data={ 'name': 'Enterprise' }
-                                    , auth_as='admin')
+                                   , data={'name': 'Enterprise'}
+                                   , auth_as='admin'
+                                    )
         assert response.code == 200
         assert T('enterprise').name == 'Enterprise'
 
@@ -309,39 +308,43 @@ class TestTeamEdit(Harness):
         self.db.run("UPDATE teams SET is_closed = true WHERE slug = 'enterprise'")
 
         response = self.client.PxST( '/enterprise/edit/edit.json'
-                                    , data={ 'name': 'Enterprise' }
-                                    , auth_as='picard')
+                                    , data={'name': 'Enterprise'}
+                                    , auth_as='picard'
+                                     )
         assert response.code in (403, 410)
         assert T('enterprise').name == 'The Enterprise'
 
     def test_cant_edit_rejected_teams(self):
         self.make_team(slug='enterprise', is_approved=False)
         response = self.client.PxST( '/enterprise/edit/edit.json'
-                                    , data={ 'name': 'Enterprise' }
-                                    , auth_as='picard')
+                                    , data={'name': 'Enterprise'}
+                                    , auth_as='picard'
+                                     )
         assert response.code == 403
         assert T('enterprise').name == 'The Enterprise'
 
     def test_can_edit_teams_under_review(self):
         self.make_team(slug='enterprise', is_approved=None)
         response = self.client.POST( '/enterprise/edit/edit.json'
-                                    , data={ 'name': 'Enterprise' }
-                                    , auth_as='picard')
+                                    , data={'name': 'Enterprise'}
+                                    , auth_as='picard'
+                                     )
         assert response.code == 200
         assert T('enterprise').name == 'Enterprise'
 
     def test_can_only_edit_allowed_fields(self):
-        allowed_fields = set(['name', 'image', 'product_or_service',
-            'homepage', 'onboarding_url', 'todo_url'])
+        allowed_fields = set(['name', 'image', 'product_or_service', 'homepage'])
 
         team = self.make_team(slug='enterprise', is_approved=None)
 
         fields = vars(team).keys()
+        fields.remove('onboarding_url')  # we are still keeping this in the db for now
         for field in fields:
             if field not in allowed_fields:
                 response = self.client.POST( '/enterprise/edit/edit.json'
-                                            , data={ field: 'foo' }
-                                            , auth_as='picard')
+                                           , data={field: 'foo'}
+                                           , auth_as='picard'
+                                            )
                 new_team = T('enterprise')
                 assert response.code == 200
                 assert getattr(new_team, field) == getattr(team, field)
@@ -351,10 +354,11 @@ class TestTeamEdit(Harness):
         image_types = ['png', 'jpg', 'jpeg']
         for i_type in image_types:
             team.save_image(original='', large='', small='', image_type='image/png')
-            data = { 'image': FileUpload(IMAGE, 'logo.'+i_type) }
+            data = {'image': FileUpload(IMAGE, 'logo.'+i_type)}
             response = self.client.POST( '/enterprise/edit/edit.json'
-                                        , data=data
-                                        , auth_as='picard')
+                                       , data=data
+                                       , auth_as='picard'
+                                        )
             assert response.code == 200
             assert team.load_image('original') == IMAGE
 
@@ -362,10 +366,11 @@ class TestTeamEdit(Harness):
         team = self.make_team(slug='enterprise', is_approved=True)
         invalid_image_types = ['tiff', 'gif', 'bmp', 'svg']
         for i_type in invalid_image_types:
-            data = { 'image': FileUpload(IMAGE, 'logo.'+i_type) }
+            data = {'image': FileUpload(IMAGE, 'logo.'+i_type)}
             response = self.client.PxST( '/enterprise/edit/edit.json'
-                                        , data=data
-                                        , auth_as='picard')
+                                       , data=data
+                                       , auth_as='picard'
+                                        )
             assert response.code == 400
             assert "Please upload a PNG or JPG image." in response.body
             assert team.load_image('original') == None
@@ -373,8 +378,9 @@ class TestTeamEdit(Harness):
     def test_edit_with_empty_values_raises_error(self):
         self.make_team(slug='enterprise', is_approved=True)
         response = self.client.PxST( '/enterprise/edit/edit.json'
-                                    , data={ 'name': '   ' }
-                                    , auth_as='picard')
+                                   , data={'name': '   '}
+                                   , auth_as='picard'
+                                    )
         assert response.code == 400
         assert T('enterprise').name == 'The Enterprise'
 
@@ -384,8 +390,9 @@ class TestTeamEdit(Harness):
                       , homepage='http://starwars-enterprise.com/')
 
         r = self.client.PxST( '/enterprise/edit/edit.json'
-                            , data={ 'homepage': 'foo' }
-                            , auth_as='picard')
+                            , data={'homepage': 'foo'}
+                            , auth_as='picard'
+                             )
         assert r.code == 400
         assert "Please enter an http[s]:// URL for the 'Homepage' field." in r.body
         assert T('enterprise').homepage == 'http://starwars-enterprise.com/'
@@ -397,13 +404,12 @@ class TestTeamEdit(Harness):
             'name': 'Enterprise',
             'product_or_service': 'We save galaxies.',
             'homepage': 'http://starwars-enterprise.com/',
-            'onboarding_url': 'http://starwars-enterprise.com/onboarding',
-            'todo_url': 'http://starwars-enterprise.com/todos',
         }
         self.make_team(**team_data)
         r = self.client.POST( '/enterprise/edit/edit.json'
                             , data={}
-                            , auth_as='picard')
+                            , auth_as='picard'
+                             )
         assert r.code == 200
 
         team = T('enterprise')

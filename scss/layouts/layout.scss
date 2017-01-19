@@ -1,8 +1,5 @@
-body {
-    padding: 0 12px;
-}
-
 #wrapper {
+    width: 98vw;
     max-width: 576px;
     margin: 0 auto;
 }
@@ -52,8 +49,7 @@ body {
     border: 1px solid $brown;
     border-style: solid none;
     height: 194px;
-    background: $black url("banner.jpg") 50% 50% no-repeat;
-    background-size: cover;
+    background: $green url("heartcoin-illustration.png") -72px -32px no-repeat;
     position: relative;
     overflow: hidden;
 }
@@ -85,6 +81,10 @@ body {
 #content {
     width: 384px;
     display: table-cell;
+    &.without-sidebar {
+        width: auto;
+    }
+
     vertical-align: top;
     font: 300 14px/24px $Chronicle;
 

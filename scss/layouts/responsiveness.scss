@@ -1,3 +1,9 @@
+@media (max-width: 840px) {
+    .github-ribbon {
+        display: none;
+    }
+}
+
 @media (max-width: 600px) {
     .luxury {
         display: none;
@@ -88,6 +94,9 @@
         display: block;
         margin: 10px 0 40px;
         min-height: 0;
+    }
+    #search form {
+        margin-top: 50px !important; /* compensate for smaller #main margin */
     }
     #sidebar {
         padding-top: 20px;

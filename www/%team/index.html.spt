@@ -3,7 +3,7 @@
 from collections import OrderedDict
 
 from aspen import Response
-from gratipay.utils import excerpt_intro, get_team, markdown
+from gratipay.utils import get_team, markdown, truncate
 
 [-----------------------------------------------------------------------------]
 
@@ -22,7 +22,7 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
     <meta name="og:url" content="https://gratipay.com/{{ team.slug }}/" />
     <meta name="og:type" content="profile" />
     <meta name="og:title" content="{{ team.name }}" />
-    <meta name="og:description" content="{{ excerpt_intro(team.product_or_service) }}" />
+    <meta name="og:description" content="{{ truncate(team.product_or_service) }}" />
     <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
 {% endblock %}
 
@@ -41,16 +41,8 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
 
     <a href="{{ team.homepage }}">{{ _("Homepage") }}</a>
 
-    {% if team.onboarding_url %}
-    | <a href="{{ team.onboarding_url }}">{{ _("Onboarding") }}</a>
-    {% endif %}
-
-    {% if team.todo_url %}
-    | <a href="{{ team.todo_url }}">{{ _("To-do") }}</a>
-    {% endif %}
-
     {% if user.ADMIN or is_team_owner %}
-    |{{ _( "{a} Edit team {_a}"
+    |{{ _( "{a} Edit project {_a}"
           , a='<a href="./edit">'|safe
           , _a='</a>'|safe
            ) }}
@@ -65,6 +57,16 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
     {% endif %}
 
     </p>
+
+    {% if team.is_closed %}
+    <div class="danger-zone">
+        <h2>{{ _("Project Closed") }}</h2>
+        {{ _( 'Please {a}email support{_a} to reopen.'
+            , a='<a href="mailto:support@gratipay.com">'|safe
+            , _a='</a>'|safe
+             ) }}
+    </div>
+    {% endif %}
 
     <div class="statement profile-statement">
         {{ markdown.render(team.product_or_service) }}

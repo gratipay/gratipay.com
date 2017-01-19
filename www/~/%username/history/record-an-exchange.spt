@@ -78,7 +78,6 @@ if request.method == 'POST':
 {% extends "templates/profile.html" %}
 {% block content %}
 
-<h2>Record an Exchange</h2>
 <p style="text-align: left">
     <b>Amount</b> is a black number. Positive for payins ("Credits"),
     negative for payouts ("Bank").<br>
@@ -87,11 +86,6 @@ if request.method == 'POST':
 </p>
 <form action="" method="POST">
     <input name="csrf_token" type="hidden" value="{{ csrf_token }}" />
-    <h3>Routes</h3>
-    {% for route in routes %}
-        <input type="radio" name="route_id" value="{{ route.id }}">
-        {{ "%s - %s (%s)" % (route.network, route.address, route.error or "working") }}<br>
-    {% endfor %}
     <input name="amount" placeholder="amount" />
     <input name="fee" placeholder="fee" />
     <select name="status">
@@ -102,6 +96,12 @@ if request.method == 'POST':
     </select>
     <br>
     <input name="note" placeholder="note" style="width: 420px" />
+    <h2>Route</h2>
+    {% for route in routes %}
+        <input type="radio" name="route_id" value="{{ route.id }}">
+        {{ "%s - %s (%s)" % (route.network, route.address, route.error or "working") }}<br>
+    {% endfor %}
+    <br>
     <button type="submit">Submit</button>
 </form>
 

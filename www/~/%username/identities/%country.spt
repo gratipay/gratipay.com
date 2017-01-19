@@ -136,7 +136,7 @@ if request.method == 'POST':
             onclick="javascript: window.location='./'" formnovalidate>Cancel</button>
 
         {% if identity != None %}
-        <div class="danger-zone">
+        <div class="danger-zone more-top-margin less-bottom-margin">
             <h2>{{ _("Danger Zone") }}</h2>
             <button type="submit"
                 name="action" value="remove">{{ _("Remove This Identity") }}</button>

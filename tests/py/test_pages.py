@@ -34,6 +34,10 @@ class TestPages(Harness):
         address = result.payment_method.token
         exchange_id = self.make_exchange('braintree-cc', 19, 0, alice, address=address)
 
+        # for npm page
+        self.db.run("INSERT INTO packages (package_manager, name, description, emails) "
+                    "VALUES ('npm', 'foo-package', 'A package', ARRAY[]::text[])")
+
         if setup:
             setup(alice)
         i = len(self.client.www_root)
@@ -44,6 +48,7 @@ class TestPages(Harness):
                            .replace('/~/%username/', '/~alice/') \
                            .replace('/for/%slug/', '/for/wonderland/') \
                            .replace('/%platform/', '/github/') \
+                           .replace('/%package/', '/foo-package/') \
                            .replace('/%user_name/', '/gratipay/') \
                            .replace('/%to', '/1') \
                            .replace('/%country', '/TT') \
@@ -107,9 +112,33 @@ class TestPages(Harness):
         assert self.client.GxT('/on/twitter/associate').code == 400
 
     def test_about(self):
-        expected = "We provide voluntary"
+        expected = "We help companies and others"
         actual = self.client.GET('/about/').body
         assert expected in actual
+
+    def test_about_me_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/').code == 401
+
+    def test_about_me_giving_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/giving/').code == 401
+
+    def test_about_me_history_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/history/').code == 401
+
+    def test_about_me_emails_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/emails/').code == 401
+
+    def test_about_me_routes_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/routes/').code == 401
+
+    def test_about_me_settings_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/settings/').code == 401
+
+    def test_about_me_widgets_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/widgets/').code == 401
+
+    def test_about_me_events_is_401_for_anon(self):
+        assert self.client.GxT('/about/me/events/').code == 401
 
     def test_about_stats(self):
         expected = "Gratipay processes"
@@ -129,10 +158,7 @@ class TestPages(Harness):
         assert self.client.GxT('/about/features/teams/').code == 302
 
     def test_about_payments(self):
-        assert "Payments" in self.client.GET('/about/features/payments').body.decode('utf8')
-
-    def test_about_payroll(self):
-        assert "Payroll" in self.client.GET('/about/features/payroll').body.decode('utf8')
+        assert "Payments" in self.client.GET('/about/features/').body.decode('utf8')
 
     def test_404(self):
         response = self.client.GET('/about/four-oh-four.html', raise_immediately=False)
@@ -240,3 +266,42 @@ class TestPages(Harness):
         self.make_team(is_approved=True)
         self.make_participant('alice')
         assert 'your-payment' in self.client.GET('/TheEnterprise/', auth_as='alice').body
+
+
+class TestTeamListingTemplate(Harness):
+
+    def setUp(self):
+        self.make_participant('Q', claimed_time='now', is_admin=True)
+        self.make_participant('Rambo', claimed_time='now')
+
+    def check(self, auth_as=None, expected=True):
+        body = self.client.GET('/~picard/', auth_as=auth_as).body.decode('utf8')
+        assert ('The Enterprise' in body) is expected
+
+    def test_includes_approved_open_team_for_everyone(self):
+        self.make_team(is_approved=True, is_closed=False)
+        self.check('picard')
+        self.check('Q')
+        self.check('Rambo')
+        self.check()
+
+    def test_includes_approved_closed_team_for_owner_and_admin(self):
+        self.make_team(is_approved=True, is_closed=True)
+        self.check('picard')
+        self.check('Q')
+        self.check('Rambo', False)
+        self.check(None, False)
+
+    def test_includes_unapproved_open_team_for_owner_and_admin(self):
+        self.make_team(is_approved=False, is_closed=True)
+        self.check('picard')
+        self.check('Q')
+        self.check('Rambo', False)
+        self.check(None, False)
+
+    def test_includes_unapproved_closed_team_for_owner_and_admin(self):
+        self.make_team(is_approved=False, is_closed=False)
+        self.check('picard')
+        self.check('Q')
+        self.check('Rambo', False)
+        self.check(None, False)

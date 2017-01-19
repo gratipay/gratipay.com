@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ locale.language }}">
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
     {% block head_early %}{% endblock %}
     <title>{% if title %}{{ title }} - {% endif %}{% if banner %}{{ banner }} - {% endif %}Gratipay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
     <link rel="stylesheet" href="{{ website.asset('gratipay.css') }}" type="text/css">
     <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-60x60.png') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ website.asset('touch/icon-76x76.png') }}" sizes="76x76">
@@ -30,10 +31,15 @@
 <body{% if page_id %} id="{{ page_id }}"{% endif %}>
 
     <div id="wrapper">
+        <a class="github-ribbon" href="https://github.com/gratipay/gratipay.com">
+            <img style="position: absolute; top: 0; right: 0; border: 0;"
+                 src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
+                 alt="Fork me on GitHub">
+        </a>
         <div id="header" class="clearfix">
             <h1><a href="/"><img src="{{ website.asset('gratipay.svg') }}"
                                  alt="Gratipay" /></a></h1>
-            {% set pages = [('/search', _('Search'))] %}
+            {% set pages = [('/search', _('Search')), ('/about/', _('About'))] %}
             {% set current_page = request.path.raw.split('/')[1] %}
             {% include "templates/nav.html" %}
             {% if user.ANON %}
@@ -66,43 +72,26 @@
             {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
         </div>
 
-        {% if request.path.raw != '/1.0-payout' %}
-        {% if not user.participant or user.participant.status_of_1_0_payout == 'pending-application' %}
         <table id="notice">
             <tr>
                 <td>&#x2605;</td>
-                <td>{{ _( "{nowrap}{a}1.0 payouts{_a} are{_nowrap} {nowrap}available {a2}indefinitely{_a}{_nowrap}."
+                <td>{{ _( "{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier to get funded on Gratipay{_a}{_nowrap}."
                         , nowrap='<span class="nowrap">'|safe
                         , _nowrap='</span>'|safe
-                        , a='<a href="/1.0-payout">'|safe
-                        , a2='<a href="https://medium.com/gratipay-blog/39c07bd031b">'|safe
+                        , a='<a href="/about/policies/terms-of-service">'|safe
+                        , a2='<a href="https://gratipay.news/from-teams-to-projects-45c46718507b">'|safe
                         , _a='</a>'|safe
                          ) }}</td>
                 <td>&#x2605;</td>
             </tr>
         </table>
-        {% elif user.participant and user.participant.status_of_1_0_payout in ('pending-review', 'pending-payout') %}
-        <table id="notice">
-            <tr>
-                <td>&#x2605;</td>
-                <td>{{ _( "{nowrap}Check the status of your{_nowrap} {a}1.0 payout application{_a}."
-                        , nowrap='<span class="nowrap">'|safe
-                        , _nowrap='</span>'|safe
-                        , a='<a href="/1.0-payout">'|safe
-                        , _a='</a>'|safe
-                         ) }}</td>
-                <td>&#x2605;</td>
-            </tr>
-        </table>
-        {% endif %}
-        {% endif %}
 
         <div id="main">
             {% block main %}
             {% if not suppress_sidebar %}
             <div id="sidebar">{% block sidebar %}{% endblock %}</div>
             {% endif %}
-            <div id="content">
+            <div id="content"{% if suppress_sidebar %} class="without-sidebar"{% endif %}>
                 {% block subnav %}{% endblock %}
                 {% if title %}<h1>{{ title }}</h1>{% endif %}
                 {% block content %}{% endblock %}

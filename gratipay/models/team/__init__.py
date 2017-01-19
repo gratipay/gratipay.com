@@ -33,7 +33,8 @@ def slugize(name):
     return slug
 
 
-class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipMigration):
+class Team(Model, mixins.Available, mixins.Closing, mixins.Membership, mixins.Takes,
+                                                                              mixins.TipMigration):
     """Represent a Gratipay team.
     """
 
@@ -101,11 +102,9 @@ class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipM
 
             INSERT INTO teams
                         (slug, slug_lower, name, homepage,
-                         product_or_service, todo_url, onboarding_url,
-                         owner)
+                         product_or_service, owner)
                  VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s,
-                         %(product_or_service)s, %(todo_url)s, %(onboarding_url)s,
-                         %(owner)s)
+                         %(product_or_service)s, %(owner)s)
               RETURNING teams.*::teams
 
         """, fields)
@@ -169,31 +168,31 @@ class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipM
 
 
     def update(self, **kw):
-      updateable = frozenset(['name', 'product_or_service', 'homepage',
-                              'onboarding_url', 'todo_url'])
+        updateable = frozenset(['name', 'product_or_service', 'homepage',
+                                'onboarding_url'])
 
-      cols, vals = zip(*kw.items())
-      assert set(cols).issubset(updateable)
+        cols, vals = zip(*kw.items())
+        assert set(cols).issubset(updateable)
 
-      old_value = {}
-      for col in cols:
-        old_value[col] = getattr(self, col)
+        old_value = {}
+        for col in cols:
+            old_value[col] = getattr(self, col)
 
-      cols = ', '.join(cols)
-      placeholders = ', '.join(['%s']*len(vals))
+        cols = ', '.join(cols)
+        placeholders = ', '.join(['%s']*len(vals))
 
-      with self.db.get_cursor() as c:
-        c.run("""
-          UPDATE teams
-             SET ({0}) = ({1})
-           WHERE id = %s
-          """.format(cols, placeholders), vals+(self.id,)
-        )
-        add_event(c, 'team', dict( action='update'
-                                 , id=self.id
-                                 , **old_value
-                                  ))
-        self.set_attributes(**kw)
+        with self.db.get_cursor() as c:
+            c.run("""
+              UPDATE teams
+                 SET ({0}) = ({1})
+               WHERE id = %s
+              """.format(cols, placeholders), vals+(self.id,)
+            )
+            add_event(c, 'team', dict( action='update'
+                                     , id=self.id
+                                     , **old_value
+                                      ))
+            self.set_attributes(**kw)
 
 
     def get_dues(self):
@@ -320,8 +319,7 @@ class Team(Model, mixins.Available, mixins.Membership, mixins.Takes, mixins.TipM
             'owner': '~' + self.owner,
             'receiving': self.receiving,
             'slug': self.slug,
-            'status': self.status,
-            'todo_url': self.todo_url
+            'status': self.status
         }
 
 

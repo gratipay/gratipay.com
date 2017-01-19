@@ -44,6 +44,7 @@ from gratipay.utils import (
     i18n,
     is_card_expiring,
     emails,
+    markdown,
     notifications,
     pricing,
     encode_for_querystring,
@@ -60,6 +61,7 @@ ASCII_ALLOWED_IN_USERNAME = set("0123456789"
 EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 USERNAME_MAX_SIZE = 32
+
 
 class Participant(Model, mixins.Identity):
     """Represent a Gratipay participant.
@@ -188,18 +190,19 @@ class Participant(Model, mixins.Identity):
     # Statement
     # =========
 
-    def get_statement(self, langs):
+    def get_statement(self, langs, scrubbed=False):
         """Get the participant's statement in the language that best matches
         the list provided.
         """
-        return self.db.one("""
-            SELECT content, lang
+        content, content_scrubbed, lang = self.db.one("""
+            SELECT content, content_scrubbed, lang
               FROM statements
               JOIN enumerate(%(langs)s) langs ON langs.value = statements.lang
              WHERE participant=%(id)s
           ORDER BY langs.rank
              LIMIT 1
-        """, dict(id=self.id, langs=langs), default=(None, None))
+        """, dict(id=self.id, langs=langs), default=(None, None, None))
+        return (content_scrubbed if scrubbed else content, lang)
 
     def get_statement_langs(self):
         return self.db.all("SELECT lang FROM statements WHERE participant=%s",
@@ -210,21 +213,23 @@ class Participant(Model, mixins.Identity):
             self.db.run("DELETE FROM statements WHERE participant=%s AND lang=%s",
                         (self.id, lang))
             return
+        scrubbed = markdown.render_and_scrub(statement)
         r = self.db.one("""
             UPDATE statements
                SET content=%s
+                 , content_scrubbed=%s
              WHERE participant=%s
                AND lang=%s
          RETURNING true
-        """, (statement, self.id, lang))
+        """, (statement, scrubbed, self.id, lang))
         if not r:
             search_conf = i18n.SEARCH_CONFS.get(lang, 'simple')
             try:
                 self.db.run("""
                     INSERT INTO statements
-                                (lang, content, participant, search_conf)
-                         VALUES (%s, %s, %s, %s)
-                """, (lang, statement, self.id, search_conf))
+                                (lang, content, content_scrubbed, participant, search_conf)
+                         VALUES (%s, %s, %s, %s, %s)
+                """, (lang, statement, scrubbed, self.id, search_conf))
             except IntegrityError:
                 return self.upsert_statement(lang, statement)
 
@@ -294,13 +299,13 @@ class Participant(Model, mixins.Identity):
     # Closing
     # =======
 
-    def close(self):
+    def close(self, require_zero_balance=True):
         """Close the participant's account.
         """
         with self.db.get_cursor() as cursor:
             self.clear_payment_instructions(cursor)
             self.clear_personal_information(cursor)
-            self.final_check(cursor)
+            self.final_check(cursor, require_zero_balance)
             self.update_is_closed(True, cursor)
 
     def update_is_closed(self, is_closed, cursor=None):
@@ -575,6 +580,7 @@ class Participant(Model, mixins.Identity):
           ORDER BY id ASC
              LIMIT 60
         """)
+        nsent = 0
         while True:
             messages = fetch_messages()
             if not messages:
@@ -585,6 +591,8 @@ class Participant(Model, mixins.Identity):
                 cls.db.run("DELETE FROM email_queue WHERE id = %s", (msg.id,))
                 if r == 1:
                     sleep(1)
+                nsent += r
+        return nsent
 
     def set_email_lang(self, accept_lang):
         if not accept_lang:
@@ -1059,7 +1067,7 @@ class Participant(Model, mixins.Identity):
         return '{base_url}/{username}/'.format(**locals())
 
 
-    def get_teams(self, only_approved=False, cursor=None):
+    def get_teams(self, only_approved=False, only_open=False, cursor=None):
         """Return a list of teams this user is an owner or member of.
         """
         teams = (cursor or self.db).all("""
@@ -1070,10 +1078,12 @@ class Participant(Model, mixins.Identity):
             SELECT teams.*::teams FROM teams WHERE id IN (
                 SELECT team_id FROM current_takes WHERE participant_id=%s
             )
-        """, (self.username, self.id)
-                                        )
+        """, (self.username, self.id))
+
         if only_approved:
             teams = [t for t in teams if t.is_approved]
+        if only_open:
+            teams = [t for t in teams if not t.is_closed]
         return teams
 
 
@@ -1175,12 +1185,12 @@ class Participant(Model, mixins.Identity):
     class StillOnATeam(Exception): pass
     class BalanceIsNotZero(Exception): pass
 
-    def final_check(self, cursor):
+    def final_check(self, cursor, require_zero_balance=True):
         """Sanity-check that teams and balance have been dealt with.
         """
-        if self.get_teams(cursor=cursor):
+        if self.get_teams(cursor=cursor, only_open=True):
             raise self.StillOnATeam
-        if self.balance != 0:
+        if require_zero_balance and self.balance != 0:
             raise self.BalanceIsNotZero
 
     def archive(self, cursor):

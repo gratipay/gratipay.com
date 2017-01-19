@@ -926,3 +926,34 @@ AND participants.username = exchanges.participant;
 
 -- Alter exchanges table and set route to not null
 ALTER TABLE exchanges ALTER COLUMN route SET NOT NULL;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4211
+BEGIN;
+    ALTER TABLE packages DROP COLUMN readme;
+    ALTER TABLE packages DROP COLUMN readme_raw;
+    ALTER TABLE packages DROP COLUMN readme_type;
+    ALTER TABLE packages DROP COLUMN readme_needs_to_be_processed;
+END;
+
+
+--https://github.com/gratipay/gratipay.com/pull/4214
+BEGIN;
+  ALTER TABLE teams DROP COLUMN todo_url;
+END;
+
+
+--https://github.com/gratipay/gratipay.com/pull/4266
+BEGIN;
+
+    /* Add a new column to hold the scrubbed content. */
+    ALTER TABLE statements ADD COLUMN content_scrubbed text NOT NULL DEFAULT '';
+
+    /* Modify the existing search_vector_update trigger to operate on the new column. */
+    DROP TRIGGER search_vector_update ON statements;
+    CREATE TRIGGER search_vector_update
+        BEFORE INSERT OR UPDATE ON statements
+        FOR EACH ROW EXECUTE PROCEDURE
+        tsvector_update_trigger_column(search_vector, search_conf, content_scrubbed);
+
+END;

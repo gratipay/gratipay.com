@@ -40,7 +40,7 @@ average_number_of_payments = average_number_of_payments or 0
 
 {% block content %}
 
-    <p>{{ _( "Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} Teams{_b} and about {b}{nusers} ~users{_b}."
+    <p>{{ _( "Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} projects{_b} and about {b}{nusers} ~users{_b}."
            , volume=format_currency(approximate(volume), 'USD', trailing_zeroes=False)
            , nusers=approximate(nusers)
            , nteams=nteams
@@ -49,8 +49,8 @@ average_number_of_payments = average_number_of_payments or 0
             ) }}</p>
 
     <p>{{ ngettext(
-             "On average, ~users who give payments on Gratipay give {b}{amount} to one Team{_b}."
-           , "On average, ~users who give payments on Gratipay give {b}{amount} each to {number} Teams{_b}."
+             "On average, ~users who give on Gratipay give {b}{amount} to one project{_b}."
+           , "On average, ~users who give on Gratipay give {b}{amount} each to {number} projects{_b}."
 
            , average_number_of_payments
            , amount=format_currency(average_payment_amount, 'USD')
@@ -75,7 +75,7 @@ average_number_of_payments = average_number_of_payments or 0
     <div class="chart-wrapper">
         <a name="volume"></a>
         <h2>Weekly Volume ($)</h2>
-        <p class="note">Total amount received by Teams on Gratipay (per week) *</p>
+        <p class="note">Total amount received by projects on Gratipay (per week) *</p>
         <div class="chart" data-chart="volume"></div>
         <div class="x-axis">weeks</div>
         <p class="note">* Week 153 was the <a
@@ -85,7 +85,7 @@ average_number_of_payments = average_number_of_payments or 0
     <div class="chart-wrapper">
         <a name="users"></a>
         <h2>Active ~users</h2>
-        <p class="note">~users that gave and/or took money on Gratipay (per week) *</p>
+        <p class="note">~users who gave and/or took money on Gratipay (per week) *</p>
         <div class="chart" data-chart="nusers"></div>
         <div class="x-axis">weeks</div>
         <p class="note">* Week 153 was the <a
@@ -94,8 +94,8 @@ average_number_of_payments = average_number_of_payments or 0
 
     <div class="chart-wrapper">
         <a name="teams"></a>
-        <h2>Active Teams</h2>
-        <p class="note">Teams that received and shared money on Gratipay (per week) *</p>
+        <h2>Active Projects</h2>
+        <p class="note">Projects that received money on Gratipay (per week) *</p>
         <div class="chart" data-chart="nteams"></div>
         <div class="x-axis">weeks</div>
         <p class="note">* <a href="https://medium.com/gratipay-blog/gratipay-2-0-2453d3c53077">Gratipay 

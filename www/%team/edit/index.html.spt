@@ -14,12 +14,12 @@ if not user.ADMIN and user.participant.username != team.owner:
     raise Response(403, _("You are not authorized to access this page."))
 
 if team.is_closed:
-    raise Response(403, _("You can't edit a closed team."))
+    raise Response(403, _("You can't edit a closed project."))
 
 if team.is_approved is False: # for teams under review, is_approved is None.
-    raise Response(403, _("You can't edit a rejected team."))
+    raise Response(403, _("You can't edit a rejected project."))
 
-title = _("Edit your team")
+title = _("Edit Your Project")
 banner = _("Edit")
 suppress_sidebar = True
 
@@ -41,15 +41,11 @@ suppress_sidebar = True
     }
 </style>
 
-<form action="edit.json" method="POST" id = "edit-team">
+<form action="edit.json" method="POST" id="edit-team">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-    <label><h2>{{ _("Team Name") }}</h2></label>
+    <label><h2>{{ _("Project Name") }}</h2></label>
     <input type="text" name="name" value="{{team.name}}" required autofocus>
-
-    <label><h2>{{ _("Image") }}</h2></label>
-    <img src="{{ team.get_image_url('small') }}" align="middle">
-    <input type="file" name="image" accept="image/png, image/jpeg">
 
     <label><h2>{{ _("Product or Service") }}</h2></label>
     <textarea name="product_or_service" required>{{team.product_or_service}}</textarea>
@@ -57,16 +53,20 @@ suppress_sidebar = True
     <label><h2>{{ _("Homepage") }}</h2></label>
     <input type="text" name="homepage" value="{{team.homepage}}" required>
 
-    <label><h2>{{ _("Self-onboarding Documentation URL") }}</h2></label>
-    <input type="text" name="onboarding_url" value="{{team.onboarding_url}}" required>
-
-    <label><h2>{{ _("To-do URL") }}</h2></label>
-    <input type="text" name="todo_url" value="{{team.todo_url}}" required>
+    <label><h2>{{ _("Image") }}</h2></label>
+    <img src="{{ team.get_image_url('small') }}" align="middle">
+    <input type="file" name="image" accept="image/png, image/jpeg">
 
     <br>
     <br>
     <button type="submit">{{ _("Modify") }}</button>
     <button onclick="window.location='../';return false;">{{ _("Cancel") }}</button>
 
+</form>
+<form action="close" method="POST" class="danger-zone more-top-margin less-bottom-margin"
+      id="close-team">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <h2>{{ _("Danger Zone") }}</h2>
+    <button type="submit">{{ _("Close Project") }}</button>
 </form>
 {% endblock %}

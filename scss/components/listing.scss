@@ -1,0 +1,121 @@
+table.listing {
+    width: 100%;
+
+    tr:first-child td { border-top: 0; }
+    tr:last-child td { border-bottom: 0; }
+
+    td.item {
+        position: relative;
+        color: $medium-gray;
+        border: 1px solid $light-brown;
+        border-style: solid none;
+        height: 64px;
+        padding-top: 35px;
+
+        a {
+            color: $medium-gray;
+            position: relative;
+            z-index: 2;
+        }
+        a:hover {
+            background: none !important;
+            color: $green !important;
+        }
+        img {
+            width: 48px;
+            height: 48px;
+            position: absolute;
+            top: 8px;
+            left: 0;
+        }
+        .name {
+            display: block;
+            color: $black;
+            font: bold 20px/24px $Ideal;
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 56px;
+            padding: 12px 0 0;
+            width: 100%;
+            height: 100%;
+        }
+        .details {
+            display: block;
+
+            /* duplicate width/max-width from layouts#wrapper to get overflow to work */
+            width: 98vw;
+            max-width: 576px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            padding-left: 56px;
+
+            font: normal 12px/15px $Ideal;
+            &.room-for-numbers {
+                padding-right: 80px;
+            }
+            .owner a {
+                color: $medium-gray;
+                position: relative;
+                z-index: 2;
+            }
+            .status-icon {
+                font-size: 12px;
+                padding: 0;
+            }
+            .description {
+                & * { display: inline; }
+            }
+        }
+        &:hover {
+            .room-for-numbers {
+                padding-right: 144px;
+            }
+        }
+        .numbers {
+            position: absolute;
+            bottom: 8px;
+            right: 0;
+            z-index: 0;
+            font-size: 11px;
+            line-height: 13px;
+            th {
+                text-align: right;
+                border-bottom: 1px solid transparent;
+            }
+            .label {
+                text-align: left;
+            }
+            td {
+                text-align: right;
+                padding: 1px 0 0 12px;
+                &:first-child {
+                    padding-left: 0;
+                }
+            }
+            th, .label {
+                color: $medium-gray;
+                visibility: hidden;
+            }
+        }
+
+        &:hover {
+            color: $black;
+            .status a {
+                color: $black;
+            }
+            .owner a {
+                color: $black;
+            }
+            th, .label {
+                visibility: visible;
+            }
+            th {
+                border-bottom: 1px solid $light-brown;
+            }
+        }
+    }
+}
+

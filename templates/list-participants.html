@@ -1,0 +1,29 @@
+{% from 'templates/avatar-url.html' import avatar_url, avatar_img with context %}
+{% macro list_participants(participants_and_excerpts, show_emails) %}
+    <table class="listing">
+        {% for i, (participant, excerpts) in enumerate(participants_and_excerpts, start=1) %}
+        <tr>
+            <td class="item">
+                {{ avatar_img(participant) }}
+                <a class="name" href="/~{{ participant.username }}/">{{ participant.username }}</a>
+
+                <div class="details">
+                    <span class="i">{{ i }}</span>
+                    <span class="ctime">&middot; {{ _("joined {ago}",
+                        ago=to_age(participant.claimed_time, add_direction=True)) }}</span>
+                    {% if show_emails %}<span class="email">&middot;
+                        <a href="mailto:{{ participant.email_address }}">{{
+                            participant.email_address }}</a></span>{% endif %}
+                    {% if excerpts %}
+                    <span class="description">
+                        {{ process_excerpt('&hellip; ' + excerpts[0]['excerpt'] + ' &hellip;') }}
+                    </span>
+                    {% else %}
+                    <span class="description">{{ get_processed_excerpt(participant) }}</span>
+                    {% endif%}
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endmacro %}
