@@ -115,7 +115,7 @@ suppress_sidebar = True
 
     <h2>{{ _("What is Gratipay?") }}</h2>
 
-    <p>{{ _("Gratipay provides payments and payroll for open work.") }}
+    <p>{{ _("Gratipay helps companies and others pay for open source.") }}
     <a href="/about/">{{ _("Learn more") }}</a></p>
 
   {% endif %}

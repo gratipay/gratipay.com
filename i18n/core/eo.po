@@ -282,24 +282,6 @@ msgstr "Aliĝu Komunumoj"
 msgid "Social Profiles"
 msgstr "Socia Profiloj"
 
-msgid "Other Receiving Options"
-msgstr "Aliaj ricevantaj agordoj"
-
-msgid "Other Giving Options"
-msgstr "Aliaj donantaj agordoj"
-
-msgid "Save"
-msgstr "Konservi"
-
-msgid "Cancel"
-msgstr "Nuligi"
-
-msgid "Delete"
-msgstr "Forviŝi"
-
-msgid "Edit"
-msgstr "Redakti"
-
 msgid "Project"
 msgstr ""
 
@@ -336,6 +318,9 @@ msgstr "Profilo"
 msgid "Statement"
 msgstr "Aserto"
 
+msgid "Edit"
+msgstr "Redakti"
+
 msgid "Tell us how you're making the world better."
 msgstr "Rakontu al ni kiamaniere vi faras la mondon esti pli bono."
 
@@ -352,6 +337,12 @@ msgstr "Kio estas Markdown?"
 
 msgid "View source."
 msgstr "Montri fonton."
+
+msgid "Save"
+msgstr "Konservi"
+
+msgid "Cancel"
+msgstr "Nuligi"
 
 msgid "Credit Card"
 msgstr "Kreditkarto"
@@ -946,7 +937,7 @@ msgstr "Konekti"
 msgid "What is Gratipay?"
 msgstr "Kio estas Gratipay?"
 
-msgid "Gratipay provides payments and payroll for open work."
+msgid "Gratipay helps companies and others pay for open source."
 msgstr ""
 
 msgid "Status"

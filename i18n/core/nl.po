@@ -284,24 +284,6 @@ msgstr "Vervoeg gemeenschappen"
 msgid "Social Profiles"
 msgstr "Sociale Profielen"
 
-msgid "Other Receiving Options"
-msgstr "Andere ontvangst opties"
-
-msgid "Other Giving Options"
-msgstr "Andere gift opties"
-
-msgid "Save"
-msgstr "Bewaar"
-
-msgid "Cancel"
-msgstr "Annuleer"
-
-msgid "Delete"
-msgstr "Verwijderen"
-
-msgid "Edit"
-msgstr "Verander"
-
 msgid "Project"
 msgstr ""
 
@@ -338,6 +320,9 @@ msgstr "Profiel"
 msgid "Statement"
 msgstr "Afschrift"
 
+msgid "Edit"
+msgstr "Verander"
+
 msgid "Tell us how you're making the world better."
 msgstr "Vertel ons iets over hoe jij bijdraagt aan een betere wereld."
 
@@ -354,6 +339,12 @@ msgstr "Wat is markdown?"
 
 msgid "View source."
 msgstr "Bekijk bron."
+
+msgid "Save"
+msgstr "Bewaar"
+
+msgid "Cancel"
+msgstr "Annuleer"
 
 msgid "Credit Card"
 msgstr "Kredietkaart"
@@ -948,8 +939,8 @@ msgstr "Verbinden"
 msgid "What is Gratipay?"
 msgstr "Wat is Gratipay?"
 
-msgid "Gratipay provides payments and payroll for open work."
-msgstr "Gratipay voorziet in betalingen en lonen voor open werk."
+msgid "Gratipay helps companies and others pay for open source."
+msgstr ""
 
 msgid "Status"
 msgstr "Status"
