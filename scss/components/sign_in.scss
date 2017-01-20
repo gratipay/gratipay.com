@@ -29,6 +29,7 @@
         border: 0;
         box-shadow: none;
         background: $green;
+        min-width: 140px;
         li {
             margin: 0;
             list-style: none;
@@ -98,7 +99,6 @@
             margin-top: 0;
             @include border-radius(0);
             background: $gold;
-            min-width: 165px;
             button {
                 color: $black;
                 &:hover {
