@@ -673,16 +673,6 @@ class Participant(Model, mixins.Identity):
     def get_credit_card_error(self):
         return getattr(ExchangeRoute.from_network(self, 'braintree-cc'), 'error', None)
 
-    def get_cryptocoin_addresses(self):
-        routes = self.db.all("""
-            SELECT network, address
-              FROM current_exchange_routes r
-             WHERE participant = %s
-               AND network = 'bitcoin'
-               AND error <> 'invalidated'
-        """, (self.id,))
-        return {r.network: r.address for r in routes}
-
     @property
     def has_payout_route(self):
         for network in ('paypal',):
@@ -1620,9 +1610,6 @@ class Participant(Model, mixins.Identity):
         for platform, account in accounts.items():
             fields = ['id', 'user_id', 'user_name']
             elsewhere[platform] = {k: getattr(account, k, None) for k in fields}
-
-        # Key: cryptocoins
-        output['cryptocoins'] = self.get_cryptocoin_addresses()
 
         return output
 

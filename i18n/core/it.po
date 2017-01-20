@@ -262,7 +262,7 @@ msgstr "Esci"
 msgid ""
 "{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
 "to get funded on Gratipay{_a}{_nowrap}."
-msgstr ""
+msgstr "{nowrap}I nostri nuovi {a}Termini di Servizio{_a}{_nowrap} {nowrap} rendono {a2}più facile trovare finanziamenti su Gratipay{_a}{_nowrap}."
 
 msgid "Blog"
 msgstr "Blog"
@@ -281,24 +281,6 @@ msgstr "Entra in una Comunità"
 
 msgid "Social Profiles"
 msgstr "Profili Social"
-
-msgid "Other Receiving Options"
-msgstr "Altre opzioni per la ricezione dei pagamenti"
-
-msgid "Other Giving Options"
-msgstr "Altre opzioni per l'invio dei pagamenti"
-
-msgid "Save"
-msgstr "Salva"
-
-msgid "Cancel"
-msgstr "Annulla"
-
-msgid "Delete"
-msgstr "Cancella"
-
-msgid "Edit"
-msgstr "Modifica"
 
 msgid "Project"
 msgstr "Progetto"
@@ -336,6 +318,9 @@ msgstr "Profilo"
 msgid "Statement"
 msgstr "Presentazione"
 
+msgid "Edit"
+msgstr "Modifica"
+
 msgid "Tell us how you're making the world better."
 msgstr "Dicci come stai rendendo il mondo un posto migliore."
 
@@ -352,6 +337,12 @@ msgstr "Cos'è il markdown?"
 
 msgid "View source."
 msgstr "Visualizza il codice sorgente."
+
+msgid "Save"
+msgstr "Salva"
+
+msgid "Cancel"
+msgstr "Annulla"
 
 msgid "Credit Card"
 msgstr "Carta di Credito"
@@ -607,7 +598,7 @@ msgid "Continue"
 msgstr "Continua"
 
 msgid "Fund Your Project"
-msgstr ""
+msgstr "Finanza il Tuo Progetto"
 
 msgid "created {ago}"
 msgstr "creato {ago}"
@@ -946,8 +937,8 @@ msgstr "Collega"
 msgid "What is Gratipay?"
 msgstr "Cos'è Gratipay?"
 
-msgid "Gratipay provides payments and payroll for open work."
-msgstr "Gratipay permette pagamenti di lavori gratuiti."
+msgid "Gratipay helps companies and others pay for open source."
+msgstr ""
 
 msgid "Status"
 msgstr "Stato"

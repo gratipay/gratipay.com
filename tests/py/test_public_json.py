@@ -51,7 +51,6 @@ class Tests(Harness):
         assert raw == '''\
 foo({
     "avatar": null,
-    "cryptocoins": {},
     "elsewhere": {
         "github": {
             "id": %(elsewhere_id)s,

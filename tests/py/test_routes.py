@@ -54,17 +54,6 @@ class TestRoutes(BillingHarness):
         assert not self.roman.has_payout_route
         assert "Only verified email addresses allowed." in r.body
 
-    def test_associate_bitcoin(self):
-        addr = '17NdbrSGoUotzeGCcMMCqnFkEvLymoou9j'
-        self.hit('roman', 'associate', 'bitcoin', addr)
-        route = ExchangeRoute.from_network(self.roman, 'bitcoin')
-        assert route.address == addr
-        assert route.error == ''
-
-    def test_associate_bitcoin_invalid(self):
-        self.hit('roman', 'associate', 'bitcoin', '12345', expected=400)
-        assert not ExchangeRoute.from_network(self.roman, 'bitcoin')
-
     def test_credit_card_page(self):
         self.make_participant('alice', claimed_time='now')
         actual = self.client.GET('/~alice/routes/credit-card', auth_as='alice').body

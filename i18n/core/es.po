@@ -287,24 +287,6 @@ msgstr "Únete a Comunidades"
 msgid "Social Profiles"
 msgstr "Perfiles Sociales"
 
-msgid "Other Receiving Options"
-msgstr "Otras Opciones para Recibir"
-
-msgid "Other Giving Options"
-msgstr "Otras Opciones para Dar"
-
-msgid "Save"
-msgstr "Guardar"
-
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgid "Delete"
-msgstr "Borrar"
-
-msgid "Edit"
-msgstr "Editar"
-
 msgid "Project"
 msgstr ""
 
@@ -341,6 +323,9 @@ msgstr "Perfil"
 msgid "Statement"
 msgstr "Estado de cuenta"
 
+msgid "Edit"
+msgstr "Editar"
+
 msgid "Tell us how you're making the world better."
 msgstr "Dinos qué estás haciendo para mejorar el mundo."
 
@@ -357,6 +342,12 @@ msgstr "¿Qué es markdown?"
 
 msgid "View source."
 msgstr "Ver código fuente."
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgid "Credit Card"
 msgstr "Tarjeta de Crédito"
@@ -951,8 +942,8 @@ msgstr "Conectar"
 msgid "What is Gratipay?"
 msgstr "¿Qué es Gratipay?"
 
-msgid "Gratipay provides payments and payroll for open work."
-msgstr "Gratipay proporciona pagos y payroll para el open work."
+msgid "Gratipay helps companies and others pay for open source."
+msgstr ""
 
 msgid "Status"
 msgstr "Estado"
