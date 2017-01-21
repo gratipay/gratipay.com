@@ -1,12 +1,12 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from aspen import Response
-from gratipay.elsewhere import PlatformOAuth1
+from gratipay.elsewhere import PlatformOAuth2
 from gratipay.elsewhere._extractors import any_key, key, not_available
 from gratipay.elsewhere._paginators import keys_paginator
 
 
-class Bitbucket(PlatformOAuth1):
+class Bitbucket(PlatformOAuth2):
 
     # Platform attributes
     name = 'bitbucket'
@@ -14,8 +14,7 @@ class Bitbucket(PlatformOAuth1):
     account_url = 'https://bitbucket.org/{user_name}'
 
     # Auth attributes
-    auth_url = 'https://bitbucket.org/api/1.0'
-    authorize_path = '/oauth/authenticate'
+    auth_url = 'https://bitbucket.org/site/oauth2/authorize'
     oauth_default_scope = ['account']
 
     # API attributes
