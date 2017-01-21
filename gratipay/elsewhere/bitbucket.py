@@ -16,6 +16,7 @@ class Bitbucket(PlatformOAuth1):
     # Auth attributes
     auth_url = 'https://bitbucket.org/api/1.0'
     authorize_path = '/oauth/authenticate'
+    oauth_default_scope = ['account']
 
     # API attributes
     api_format = 'json'
