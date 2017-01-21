@@ -383,8 +383,8 @@ msgstr "Widget"
 msgid "Events"
 msgstr "Eventi"
 
-msgid "Sign in"
-msgstr "Accedi"
+msgid "Sign in / Sign up"
+msgstr ""
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -938,7 +938,7 @@ msgid "What is Gratipay?"
 msgstr "Cos'è Gratipay?"
 
 msgid "Gratipay helps companies and others pay for open source."
-msgstr ""
+msgstr "Gratipay aiuta aziende e altri a pagare l'open source."
 
 msgid "Status"
 msgstr "Stato"

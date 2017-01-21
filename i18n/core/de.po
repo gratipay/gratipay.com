@@ -393,8 +393,8 @@ msgstr "Widgets"
 msgid "Events"
 msgstr "Events"
 
-msgid "Sign in"
-msgstr "Anmelden"
+msgid "Sign in / Sign up"
+msgstr ""
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
