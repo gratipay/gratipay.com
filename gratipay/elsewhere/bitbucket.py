@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from aspen import Response
 from gratipay.elsewhere import PlatformOAuth2
 from gratipay.elsewhere._extractors import any_key, key, not_available
 from gratipay.elsewhere._paginators import keys_paginator
