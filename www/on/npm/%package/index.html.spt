@@ -19,7 +19,7 @@ url = 'https://npmjs.com/package/' + package.name
 <a class="elsewhere" href="{{ url }}">
     <div class="avatar text">
         <div class="bg"></div>
-        <p>{{ package.description }} {{ package.description }}</p>
+        <p>{{ package.description }}</p>
         <img class="platform" src="{{ website.asset('npm-n.png') }}" />
     </div>
     {{ super () }}
