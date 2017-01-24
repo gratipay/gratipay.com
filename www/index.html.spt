@@ -42,9 +42,7 @@ for project in teams:
       else:
         unpopular.append(project)
 
-if len(teams) < 10:
-    tabs.pop('featured')
-else:
+def get_featured_projects(popular, unpopular):
     popular_sample_size = min(len(popular), 7)
     unpopular_sample_size = min(len(unpopular), 10-popular_sample_size)
     if popular_sample_size == 0:
@@ -52,7 +50,12 @@ else:
     elif unpopular_sample_size == 0:
         featured_projects = random.sample(popular, min(10, len(popular)))
     else:
-        featured_projects = random.sample(popular, popular_sample_size) + random.sample(unpopular, unpopular_sample_size)
+      featured_projects = random.sample(popular, popular_sample_size) + random.sample(unpopular, unpopular_sample_size)
+
+if len(tabs['approved']['teams']) < 10:
+    tabs.pop('featured')
+else:
+    get_featured_projects(popular, unpopular)
     random.shuffle(featured_projects)
     tabs['featured'] = {'teams': featured_projects}
 
