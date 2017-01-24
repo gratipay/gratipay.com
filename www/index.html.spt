@@ -37,10 +37,10 @@ unpopular = []
 for project in teams:
     tabs[project.status]['teams'].append(project)
     if project.status == 'approved':
-      if project.nreceiving_from >= 5:
-        popular.append(project)
-      else:
-        unpopular.append(project)
+        if project.nreceiving_from >= 5:
+            popular.append(project)
+        else:
+            unpopular.append(project)
 
 def get_featured_projects(popular, unpopular):
     popular_sample_size = min(len(popular), 7)
