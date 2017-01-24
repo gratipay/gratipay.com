@@ -9,13 +9,14 @@
         z-index: 2;
         overflow: hidden;
 
-        img {
+        img, p {
             display: block;
             position: absolute;
             top: 16px;
             left: 16px;
             width: 160px;
             height: 160px;
+            overflow: hidden;
             border: 2px solid $white;
             @include border-radius(5px);
             box-shadow: 0px 0px 32px 16px rgba($black, 0.5);
@@ -31,6 +32,30 @@
                 bottom: 24px;
                 box-shadow: none;
                 z-index: 4;
+            }
+        }
+
+        &.text {
+            .bg {
+                background: transparent;
+                background: linear-gradient( rgba(255,255,255,0)
+                                           , rgba(255,255,255,0) 70%
+                                           , rgba(255,255,255,1) 95%
+                                            );
+                width: 160px;
+                height: 160px;
+                display: block;
+                position: absolute;
+                top: 16px;
+                left: 16px;
+                z-index: 3;
+                @include border-radius(5px);
+            }
+            p {
+                color: $black;
+                font: normal 16px/20px $Chronicle;
+                padding: 16px;
+                margin: 0;
             }
         }
 
