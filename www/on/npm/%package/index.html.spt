@@ -27,15 +27,27 @@ url = 'https://npmjs.com/package/' + package.name
 {% endblock %}
 
 {% block content %}
-{% if user.ANON %}
 <h2>{{ _( '{npm_package} has not been claimed on Gratipay.'
         , npm_package=('<a href="' + url + '">' + 'npm/' + package_name + '</a>')|safe
          ) }}</h2>
-<p>{{ _('Is this yours? You can claim it on Gratipay with a couple clicks:') }}</p>
-{% include "templates/sign-in-using.html" %}
+{% if user.ANON %}
+    <p>{{ _('Is this yours? You can claim it on Gratipay with a couple clicks:') }}</p>
+    {% include "templates/sign-in-using.html" %}
 
-<h2>{{ _("What is Gratipay?") }}</h2>
-<p>{{ _("Gratipay helps companies and others pay for open source.") }}
-<a href="/about/">{{ _("Learn more") }}</a></p>
+    <h2>{{ _('What is Gratipay?') }}</h2>
+    <p>{{ _('Gratipay helps companies and others pay for open source.') }}
+    <a href="/about/">{{ _("Learn more") }}</a></p>
+{% else %}
+    <p>{{ _('Is this yours? You can claim it on Gratipay with one of these email addresses:')
+         }}</p>
+    <form action="" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <ul>
+            {% for email in emails %}
+            <li><input type="radio" name="email"> {{ email }}</li>
+            {% endfor %}
+        </ul>
+        <button type="submit">{{ _('Send confirmation link') }}</button>
+    </form>
 {% endif %}
 {% endblock %}
