@@ -50,12 +50,13 @@ def get_featured_projects(popular, unpopular):
     elif unpopular_sample_size == 0:
         featured_projects = random.sample(popular, min(10, len(popular)))
     else:
-      featured_projects = random.sample(popular, popular_sample_size) + random.sample(unpopular, unpopular_sample_size)
+        featured_projects = random.sample(popular, popular_sample_size) + random.sample(unpopular, unpopular_sample_size)
+    return featured_projects
 
 if len(tabs['approved']['teams']) < 10:
     tabs.pop('featured')
 else:
-    get_featured_projects(popular, unpopular)
+    featured_projects = get_featured_projects(popular, unpopular)
     random.shuffle(featured_projects)
     tabs['featured'] = {'teams': featured_projects}
 
