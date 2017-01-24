@@ -27,4 +27,15 @@ url = 'https://npmjs.com/package/' + package.name
 {% endblock %}
 
 {% block content %}
+{% if user.ANON %}
+<h2>{{ _( '{npm_package} has not been claimed on Gratipay.'
+        , npm_package='npm/' + package_name
+         ) }}</h2>
+<p>{{ _('Is this yours? You can claim it on Gratipay with a couple clicks:') }}</p>
+{% include "templates/sign-in-using.html" %}
+
+<h2>{{ _("What is Gratipay?") }}</h2>
+<p>{{ _("Gratipay helps companies and others pay for open source.") }}
+<a href="/about/">{{ _("Learn more") }}</a></p>
+{% endif %}
 {% endblock %}
