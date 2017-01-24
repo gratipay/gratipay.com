@@ -2,14 +2,14 @@ import requests
 
 from aspen import Response
 from gratipay.utils import markdown
+from gratipay.models.package import Package
 [---]
 package_name = request.path['package']
-package = website.db.one("select * from packages where package_manager='npm' "
-                         "and name=%s", (package_name,))
+package = Package.from_names('npm', package_name)
 if package is None:
     raise Response(404)
 banner = package_name
-page_id = "on-npm-foo"
+page_id = "package"
 suppress_sidebar = True
 url = 'https://npmjs.com/package/' + package.name
 [---]
@@ -26,5 +26,43 @@ url = 'https://npmjs.com/package/' + package.name
 </a>
 {% endblock %}
 
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('button.send').on('click', Gratipay.packages.post);
+    });
+</script>
+{{ super() }}
+{% endblock %}
+
 {% block content %}
+<h2>{{ _( '{npm_package} has not been claimed on Gratipay.'
+        , npm_package=('<a href="' + url + '">' + 'npm/' + package_name + '</a>')|safe
+         ) }}</h2>
+{% if user.ANON %}
+    <p>{{ _('Is this yours? You can claim it on Gratipay with a couple clicks:') }}</p>
+    {% include "templates/sign-in-using.html" %}
+
+    <h2>{{ _('What is Gratipay?') }}</h2>
+    <p>{{ _('Gratipay helps companies and others pay for open source.') }}
+    <a href="/about/">{{ _("Learn more") }}</a></p>
+{% else %}
+    <p>{{ _( 'Is this yours? You can claim it on Gratipay using any email address {a}on file{_a} in the maintainers field in the npm registry.'
+           , a=('<a href="https://registry.npmjs.com/' + package.name + '">')|safe
+           , _a='</a>'|safe
+            ) }}
+    {% if len(package.emails) == 0 %}
+    <p class="sorry">{{ _("Sorry, we didn't find any email addresses on file.") }}</p>
+    {% else %}
+    <input type="hidden" name="package_id" value="{{ package.id }}">
+    <ul class="emails">
+        {% for i, email in enumerate(package.emails) %}
+        <li><input type="radio" name="email" value="{{ email }}" id="email-{{i}}"
+                   {% if i == 0 %}checked{% endif %}>
+            <label for="email-{{ i }}">{{ email }}</a></li>
+        {% endfor %}
+    </ul>
+    <button type="submit" class="send selected">{{ _('Send confirmation link') }}</button>
+    {% endif %}
+{% endif %}
 {% endblock %}
