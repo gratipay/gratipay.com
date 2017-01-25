@@ -181,6 +181,15 @@ class Harness(unittest.TestCase):
         return team
 
 
+    def make_package(self, package_manager, name, description, emails):
+        """Factory for packages.
+        """
+        self.db.one( 'INSERT INTO packages (package_manager, name, description, emails) '
+                     'VALUES (%s, %s, %s, %s) RETURNING *'
+                   , (package_manager, name, description, emails)
+                    )
+
+
     def make_participant(self, username, **kw):
         """Factory for :py:class:`~gratipay.models.participant.Participant`.
         """
