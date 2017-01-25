@@ -29,7 +29,7 @@ url = 'https://npmjs.com/package/' + package.name
 {% block content %}
 {% if user.ANON %}
 <h2>{{ _( '{npm_package} has not been claimed on Gratipay.'
-        , npm_package='npm/' + package_name
+        , npm_package=('<a href="' + url + '">' + 'npm/' + package_name + '</a>')|safe
          ) }}</h2>
 <p>{{ _('Is this yours? You can claim it on Gratipay with a couple clicks:') }}</p>
 {% include "templates/sign-in-using.html" %}
