@@ -20,7 +20,7 @@
         height: 128px;
         .avatar {
             height: 128px;
-            img {
+            img, p {
                 width: 112px;
                 height: 112px;
                 top: 8px;
@@ -37,6 +37,20 @@
                     left: 94px;
                     bottom: 13px;
                     box-shadow: none;
+                }
+            }
+            &.text {
+                .bg {
+                    width: 112px;
+                    height: 112px;
+                    top: 8px;
+                    left: 8px;
+                    z-index: 3;
+                    @include border-radius(3px);
+                }
+                p {
+                    font: normal 12px/16px $Chronicle;
+                    padding: 8px;
                 }
             }
             .is-suspicious-label {

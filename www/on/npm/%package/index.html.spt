@@ -8,8 +8,7 @@ package = website.db.one("select * from packages where package_manager='npm' "
                          "and name=%s", (package_name,))
 if package is None:
     raise Response(404)
-banner = 'npm'
-title = package_name
+banner = package_name
 page_id = "on-npm-foo"
 suppress_sidebar = True
 url = 'https://npmjs.com/package/' + package.name
@@ -18,8 +17,9 @@ url = 'https://npmjs.com/package/' + package.name
 
 {% block banner %}
 <a class="elsewhere" href="{{ url }}">
-    <div class="avatar">
-        <img src="{{ website.asset('npm-wombat-typing.svg') }}" class="avatar">
+    <div class="avatar text">
+        <div class="bg"></div>
+        <p>{{ package.description }}</p>
         <img class="platform" src="{{ website.asset('npm-n.png') }}" />
     </div>
     {{ super () }}
@@ -27,8 +27,4 @@ url = 'https://npmjs.com/package/' + package.name
 {% endblock %}
 
 {% block content %}
-<p><i>{{ package.description }}</i></p>
-<a href="{{ url }}">{{ url }}</a>
-
-
 {% endblock %}
