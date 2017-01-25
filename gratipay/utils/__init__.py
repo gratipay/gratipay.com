@@ -1,6 +1,7 @@
 # encoding: utf8
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import random
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from datetime import datetime, timedelta
 
@@ -266,3 +267,14 @@ class LazyResponse(Response):
     def render_body(self, state):
         f = self.lazy_body
         self.body = f(*resolve_dependencies(f, state).as_args)
+
+def get_featured_projects(popular, unpopular):
+    popular_sample_size = min(len(popular), 7)
+    unpopular_sample_size = min(len(unpopular), 10-popular_sample_size)
+    if popular_sample_size == 0:
+        featured_projects = random.sample(unpopular, unpopular_sample_size)
+    elif unpopular_sample_size == 0:
+        featured_projects = random.sample(popular, min(10, len(popular)))
+    else:
+        featured_projects = random.sample(popular, popular_sample_size) + random.sample(unpopular, unpopular_sample_size)
+    return featured_projects

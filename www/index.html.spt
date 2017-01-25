@@ -1,5 +1,5 @@
 from collections import OrderedDict
-import random
+from gratipay.utils import get_featured_projects
 
 [---]
 i18ned_statuses = { "approved": _("Approved")
@@ -41,17 +41,6 @@ for project in teams:
             popular.append(project)
         else:
             unpopular.append(project)
-
-def get_featured_projects(popular, unpopular):
-    popular_sample_size = min(len(popular), 7)
-    unpopular_sample_size = min(len(unpopular), 10-popular_sample_size)
-    if popular_sample_size == 0:
-        featured_projects = random.sample(unpopular, unpopular_sample_size)
-    elif unpopular_sample_size == 0:
-        featured_projects = random.sample(popular, min(10, len(popular)))
-    else:
-        featured_projects = random.sample(popular, popular_sample_size) + random.sample(unpopular, unpopular_sample_size)
-    return featured_projects
 
 if len(tabs['approved']['teams']) < 10:
     tabs.pop('featured')

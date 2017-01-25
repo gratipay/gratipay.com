@@ -7,7 +7,7 @@ import pytest
 from aspen.http.response import Response
 from gratipay import utils
 from gratipay.testing import Harness, D
-from gratipay.utils import i18n, pricing, encode_for_querystring, decode_from_querystring, truncate
+from gratipay.utils import i18n, pricing, encode_for_querystring, decode_from_querystring, truncate, get_featured_projects
 from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUsername, \
                                                                            RanOutOfUsernameAttempts
 from psycopg2 import IntegrityError
@@ -266,3 +266,20 @@ class TestTruncate(Harness):
         assert truncate('I am a long sentence.',  0, ' the cheese!') == ' the cheese!'
         assert truncate('I am a long sentence.', -1, ' the cheese!') == ' the cheese!'
         assert truncate('I am a long sentence.', -1000, ' the cheese!') == ' the cheese!'
+
+class TestFeaturedTab(Harness):
+
+    def test_get_featured_projects_popular_zero(self):
+        popular = []
+        unpopular = [self.make_team()]
+        assert len(get_featured_projects(popular, unpopular)) == len(unpopular)
+
+    def test_get_featured_projects_unpopular_zero(self):
+        popular = [self.make_team()]
+        unpopular = []
+        assert len(get_featured_projects(popular, unpopular)) == len(popular)
+
+    def test_get_featured_projects_no_zeros(self):
+        popular = [self.make_team()]
+        unpopular = ['test', 'test2']
+        assert len(get_featured_projects(popular, unpopular)) == (len(popular) + len(unpopular))
