@@ -269,12 +269,7 @@ class LazyResponse(Response):
         self.body = f(*resolve_dependencies(f, state).as_args)
 
 def get_featured_projects(popular, unpopular):
-    popular_sample_size = min(len(popular), 7)
+    popular_sample_size = min(10 if (len(unpopular) == 0) else 7, len(popular))
     unpopular_sample_size = min(len(unpopular), 10-popular_sample_size)
-    if popular_sample_size == 0:
-        featured_projects = random.sample(unpopular, unpopular_sample_size)
-    elif unpopular_sample_size == 0:
-        featured_projects = random.sample(popular, min(10, len(popular)))
-    else:
-        featured_projects = random.sample(popular, popular_sample_size) + random.sample(unpopular, unpopular_sample_size)
+    featured_projects = random.sample(popular, popular_sample_size) + random.sample(unpopular, unpopular_sample_size)
     return featured_projects
