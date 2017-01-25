@@ -43,7 +43,7 @@ url = 'https://npmjs.com/package/' + package.name
     <form action="" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <ul>
-            {% for email in emails %}
+            {% for email in package.emails %}
             <li><input type="radio" name="email"> {{ email }}</li>
             {% endfor %}
         </ul>
