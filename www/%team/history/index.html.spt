@@ -72,7 +72,7 @@ years = list(range(current_year, team.ctime.year-1, -1))
         {% for event in payday['events'] %}
             <tr>
             {% if event['direction'] == 'to-team' %}
-                <td class="notes">{{ event['participant'] }}</td>
+                <td class="notes"> Anonymous </td>
                 <td class="debits"></td>
             {% else %}
                 <td class="credits"></td>
