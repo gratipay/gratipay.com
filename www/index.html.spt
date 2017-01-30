@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from gratipay.utils import get_featured_projects
+import random
 
 [---]
 i18ned_statuses = { "approved": _("Approved")
@@ -11,7 +12,7 @@ i18ned_statuses = { "approved": _("Approved")
 status_icons = { "approved": "&#xe008;"
                , "unreviewed": "&#xe009;"
                , "rejected": "&#xe010;"
-               , "featured": "&#xe011;"
+               , "featured": "&#xe9d9;"
                 }
 
 teams = website.db.all("""
