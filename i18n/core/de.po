@@ -36,13 +36,13 @@ msgid ""
 msgstr ""
 
 msgid "Thanks for using Gratipay! :-)"
-msgstr ""
+msgstr "Vielen Dank, dass Sie Gratipay verwenden! :-)"
 
 msgid "Something not right? Reply to this email for help."
 msgstr "Stimmt etwas nicht? Sie können uns erreichen, indem Sie auf diese E-Mail antworten."
 
 msgid "Greetings!"
-msgstr ""
+msgstr "Willkommen!"
 
 msgid "Oh no! A problem supporting {0}!"
 msgstr ""
@@ -58,27 +58,27 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Fix Credit Card"
-msgstr ""
+msgstr "Überprüfen Sie Ihre Kreditkarteninformationen"
 
 msgid "Follow this link to fix your credit card:"
-msgstr ""
+msgstr "Folgen Sie diesem Link um Ihre Kreditkarteninformationen zu ändern:"
 
 msgid "Thanks for supporting {0}!"
-msgstr ""
+msgstr "Vielen Dank, dass Sie {0} unterstützen!"
 
 msgid ""
 "We charged your credit card {0} today, to fund your ongoing support for {1}."
 " Thanks for using Gratipay!"
-msgstr ""
+msgstr "Wir haben deine Kreditkarte {0} heute belastet, um die Unterstützung für {1} zu ermöglichen. Danke, dass du Gratipay nutzt!"
 
 msgid "View Receipt"
-msgstr ""
+msgstr "Siehe Rechnung"
 
 msgid "Follow this link to view your receipt:"
-msgstr ""
+msgstr "Klicke auf diesen Link um deine Rechnung zu sehen."
 
 msgid "Follow this link if you want to view or modify your payments:"
-msgstr ""
+msgstr "Klicke auf diesen Link um deine Zahlungen zu sehen und zu bearbeiten."
 
 msgid "Identity Viewed"
 msgstr ""
@@ -108,7 +108,7 @@ msgid ""
 msgstr ""
 
 msgid "Project Application Approved!"
-msgstr ""
+msgstr "Projektantrag angenommen!"
 
 msgid ""
 "We've approved your application for the '{team}' project on Gratipay. For "
@@ -121,7 +121,7 @@ msgid ""
 msgstr ""
 
 msgid "Project Application Rejected"
-msgstr ""
+msgstr "Projektantrag Abgelehnt"
 
 msgid ""
 "We've rejected your application for the '{team}' project on Gratipay. For "
@@ -153,10 +153,10 @@ msgid ""
 msgstr "Wir verbinden {0} zu dem Konto {1} auf Gratipay. Diese Benachrichtigung wurde an {2} gesendet, weil dies die primäre E-Mail-Adresse ist, die wir gespeichert haben."
 
 msgid "You've consumed your quota of requests, you can try again in {0}."
-msgstr ""
+msgstr "Sie haben Ihr Anfragen Guthaben aufgebraucht. Versuchen Sie es in {0} noch einmal."
 
 msgid "You're making requests too fast, please try again later."
-msgstr ""
+msgstr "Sie stellen zu viele Anfragen. Versuchen Sie es später bitte noch einmal."
 
 msgid "{0} returned an error, please try again later."
 msgstr "{0} gab einen Fehler aus, bitte versuch es später wieder."
@@ -174,16 +174,16 @@ msgid "You are not authorized to access this page."
 msgstr "Du bist nicht berechtigt diese Seite aufzurufen."
 
 msgid "Forbidden"
-msgstr ""
+msgstr "Nicht erlaubt"
 
 msgid "Not Found"
-msgstr ""
+msgstr "Nicht gefunden"
 
 msgid "Too Many Requests"
-msgstr ""
+msgstr "Zu viele Anfragen"
 
 msgid "Internal Server Error"
-msgstr ""
+msgstr "Interner Serverfehler"
 
 msgid "Upstream Error"
 msgstr ""
@@ -293,10 +293,10 @@ msgid "Social Profiles"
 msgstr "Soziale Profile"
 
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 msgid "Amount ($)"
-msgstr ""
+msgstr "Betrag ($)"
 
 msgid "Due ($)"
 msgstr ""
@@ -308,19 +308,19 @@ msgid "{0} ago"
 msgstr ""
 
 msgid "joined {ago}"
-msgstr ""
+msgstr "Registrierdatum {ago}"
 
 msgid "Previous"
-msgstr ""
+msgstr "Vorherige"
 
 msgid "Next"
-msgstr ""
+msgstr "Nächste"
 
 msgid "First"
-msgstr ""
+msgstr "Erste"
 
 msgid "Last"
-msgstr ""
+msgstr "Letzte"
 
 msgid "Profile"
 msgstr "Profil"
@@ -506,12 +506,12 @@ msgid ""
 msgstr ""
 
 msgid "Apply for a payout"
-msgstr ""
+msgstr "Für eine Auszahlung bewerben"
 
 msgid ""
 "Please {a}connect a PayPal account{_a} and then return here to apply for "
 "payout."
-msgstr ""
+msgstr "Bitte {a}verbinde einen PayPal Account{_a} und bewirb dich anschließend für eine Auszahlung."
 
 msgid "You must sign in to apply for your project to join Gratipay."
 msgstr ""
@@ -566,7 +566,7 @@ msgid "What is the customer-facing web page for your project?"
 msgstr ""
 
 msgid "Image"
-msgstr ""
+msgstr "Bild"
 
 msgid ""
 "PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and"
@@ -583,19 +583,19 @@ msgid "I agree to the other {0}terms of service{1} as well."
 msgstr ""
 
 msgid "Approved"
-msgstr ""
+msgstr "Genehmigt"
 
 msgid "Under Review"
-msgstr ""
+msgstr "In Bearbeitung"
 
 msgid "Rejected"
-msgstr ""
+msgstr "Abgelehnt"
 
 msgid "Pay for open source."
 msgstr ""
 
 msgid "Welcome to Gratipay!"
-msgstr ""
+msgstr "Willkommen bei Gratipay!"
 
 msgid ""
 "We have {nteams} projects receiving and sharing about {volume} each week."
@@ -709,16 +709,16 @@ msgid "Member"
 msgstr ""
 
 msgid "Last{0} Week ($)"
-msgstr ""
+msgstr "Letzte{0} Woche ($)"
 
 msgid "This{0} Week ($)"
-msgstr ""
+msgstr "Diese{0} Woche ($)"
 
 msgid "Team{0} Balance ($)"
 msgstr ""
 
 msgid "This{0} Week (%)"
-msgstr ""
+msgstr "Diese{0} Woche (%)"
 
 msgid "Enter a Gratipay username"
 msgstr "Geben Sie einen Gratipay Usernamen ein"
@@ -727,13 +727,13 @@ msgid "Add"
 msgstr "Hinzufügen"
 
 msgid "Are you sure?"
-msgstr ""
+msgstr "Sind Sie sicher?"
 
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 msgid "No"
-msgstr ""
+msgstr "Nein"
 
 msgid "Already closed."
 msgstr ""
@@ -760,13 +760,13 @@ msgid "Sorry, there was a problem saving your image. Please try again."
 msgstr ""
 
 msgid "Edit Your Project"
-msgstr ""
+msgstr "Projekt Bearbeiten"
 
 msgid "Modify"
 msgstr ""
 
 msgid "Danger Zone"
-msgstr ""
+msgstr "Gefahrenzone"
 
 msgid "Close Project"
 msgstr ""
@@ -790,7 +790,7 @@ msgid "Payments Received, by Dollar Amount"
 msgstr ""
 
 msgid "Welcome!"
-msgstr ""
+msgstr "Willkommen!"
 
 msgid ""
 "Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} "
@@ -815,7 +815,7 @@ msgid "The Delpan Incident"
 msgstr ""
 
 msgid "Sign In"
-msgstr ""
+msgstr "Anmelden"
 
 msgid "1.0 Payout Review"
 msgstr ""
@@ -830,7 +830,7 @@ msgid "Please Confirm"
 msgstr "Bitte bestätige"
 
 msgid "{0} is connected to {1} on Gratipay."
-msgstr ""
+msgstr "{0} ist auf Gratipay mit {1} verbunden."
 
 msgid "Transfer it to your ~{username} account?"
 msgstr ""
@@ -842,7 +842,7 @@ msgid "Gives"
 msgstr "gibt"
 
 msgid "Takes"
-msgstr ""
+msgstr "Nimmt"
 
 msgid "How the accounts will be after the transfer"
 msgstr ""
@@ -854,12 +854,12 @@ msgid "Transfer it?"
 msgstr ""
 
 msgid "Friend Finder"
-msgstr ""
+msgstr "Freunde-Finder"
 
 msgid "You have {n} friend on {0}."
 msgid_plural "You have {n} friends on {0}."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sie haben {n} Freund auf {0}."
+msgstr[1] "Sie haben {n} Freunde auf {0}."
 
 msgid ""
 "Note: privacy settings may prevent Gratipay from seeing some of your {0} "
@@ -879,10 +879,10 @@ msgid "Connect your {0} account"
 msgstr ""
 
 msgid "No friends found."
-msgstr ""
+msgstr "Keine Freunde gefunden."
 
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 msgid "On Gratipay?"
 msgstr ""
@@ -900,7 +900,7 @@ msgid ""
 msgstr ""
 
 msgid "Are you really {0}?"
-msgstr ""
+msgstr "Sind Sie wirklich {0}?"
 
 msgid ""
 "Your attempt to claim this account failed because you're logged into {0} as "
@@ -942,10 +942,10 @@ msgid "Is this yours? Connect it to your Gratipay account."
 msgstr ""
 
 msgid "Connect"
-msgstr ""
+msgstr "Verbinden"
 
 msgid "What is Gratipay?"
-msgstr ""
+msgstr "Was ist Gratipay?"
 
 msgid "Gratipay helps companies and others pay for open source."
 msgstr ""
@@ -957,7 +957,7 @@ msgid "accepts gifts"
 msgstr ""
 
 msgid "hasn't joined Gratipay yet"
-msgstr ""
+msgstr "ist noch nicht Mitglied von Gratipay"
 
 msgid "You must sign in to apply for a new team."
 msgstr ""
@@ -1016,7 +1016,7 @@ msgid "Remove"
 msgstr "Löschen"
 
 msgid "Resend"
-msgstr ""
+msgstr "Erneut senden"
 
 msgid "Set as primary"
 msgstr "Als Standard festlegen"
@@ -1028,7 +1028,7 @@ msgid "Notifications"
 msgstr "Benachrichtigungen"
 
 msgid "Send me notifications via email:"
-msgstr ""
+msgstr "Benachrichtige mich per E-Mail:"
 
 msgid "When my credit card is charged:"
 msgstr ""
@@ -1107,7 +1107,7 @@ msgid "View your email addresses"
 msgstr "Liste Ihrer E-Mail Adressen"
 
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 msgid "Cancelled"
 msgstr "Abgebrochen"
@@ -1116,7 +1116,7 @@ msgid "These are payments that you recently cancelled."
 msgstr ""
 
 msgid "No results to show"
-msgstr ""
+msgstr "Keine Ergebnisse gefunden"
 
 msgid "Export History"
 msgstr "Verlauf exportieren"
@@ -1143,13 +1143,13 @@ msgid "Account Statement"
 msgstr ""
 
 msgid "Total given: {0}"
-msgstr ""
+msgstr "Gesamt gegeben: {0}"
 
 msgid "Export as CSV"
 msgstr "Als CSV exportieren"
 
 msgid "Total received: {0}"
-msgstr ""
+msgstr "Gesamt erhalten: {0}"
 
 msgid "Outside"
 msgstr "Außen"
@@ -1197,10 +1197,10 @@ msgid "Tax ID"
 msgstr ""
 
 msgid "Passport"
-msgstr ""
+msgstr "Pass"
 
 msgid "Driver's License"
-msgstr ""
+msgstr "Führerschein"
 
 msgid "ID Number"
 msgstr ""
@@ -1230,10 +1230,10 @@ msgid "Remove This Identity"
 msgstr ""
 
 msgid "Identities"
-msgstr ""
+msgstr "Identitäten"
 
 msgid "Verified"
-msgstr ""
+msgstr "Verifiziert"
 
 msgid "Add Identity"
 msgstr ""
@@ -1263,7 +1263,7 @@ msgid "This card number is invalid."
 msgstr "Die Kartennummer ist ungültig."
 
 msgid "Current: {0}"
-msgstr ""
+msgstr "Derzeit: {0}"
 
 msgid "Expiration"
 msgstr "Ablaufdatum"
@@ -1413,4 +1413,4 @@ msgid ""
 msgstr ""
 
 msgid "More Info"
-msgstr ""
+msgstr "Mehr Info"

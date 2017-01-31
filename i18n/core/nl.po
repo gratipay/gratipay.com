@@ -73,18 +73,18 @@ msgid "Follow this link if you want to view or modify your payments:"
 msgstr "Volg deze link als je je betaling wilt zien of veranderen:"
 
 msgid "Identity Viewed"
-msgstr ""
+msgstr "Identiteit bekeken"
 
 msgid ""
 "This is a transactional email to let you know that {a_viewer}{viewer}{_a} "
 "viewed your identity information for {a_country}{country_name}{_a} on "
 "Gratipay."
-msgstr ""
+msgstr "Dit is een automatische email om je te laten weten dat {a_viewer}{viewer}{_a} je identiteits info heeft geraadpleegd voor {a_country}{country_name}{_a}  op Gratipay."
 
 msgid ""
 "This is a transactional email to let you know that {viewer} viewed your "
 "identity information for {country_name} on Gratipay."
-msgstr ""
+msgstr "Dit is een automatische email om je te laten weten dat {viewer} je identiteits informatie heeft geraadpleegd voor {country_name}  op Gratipay."
 
 msgid "Connect to {0} on Gratipay?"
 msgstr "Verbind met {0} op Gratipay?"
@@ -154,7 +154,7 @@ msgid "{0} returned an error, please try again later."
 msgstr "{0} resulteert in een foutmelding, probeer het later nog een keer."
 
 msgid "Invalid character in elsewhere account username."
-msgstr ""
+msgstr "Ongeldig karakter in elders account gebruikersnaam."
 
 msgid "Account not found on {0}."
 msgstr "Account niet gevonden in {0}"
@@ -291,13 +291,13 @@ msgid "Amount ($)"
 msgstr "Bedrag ($)"
 
 msgid "Due ($)"
-msgstr ""
+msgstr "Tegoed ($)"
 
 msgid "First Set"
 msgstr "Eerste serie"
 
 msgid "{0} ago"
-msgstr ""
+msgstr "{0} geleden"
 
 msgid "joined {ago}"
 msgstr ""
@@ -353,7 +353,7 @@ msgid "PayPal"
 msgstr "PayPal"
 
 msgid "verified in: {country}"
-msgstr ""
+msgstr "gevalideerd in: {country}"
 
 msgid "Weekly"
 msgstr "Wekelijks"
@@ -418,13 +418,13 @@ msgid "Receiving"
 msgstr "Ontvangt"
 
 msgid "Joined {ago}"
-msgstr ""
+msgstr "Vervoegd {ago}"
 
 msgid "Applied {ago}"
-msgstr ""
+msgstr "Aangevraagd {ago}"
 
 msgid "Distributing"
-msgstr ""
+msgstr "Verspreiding"
 
 msgid "Projects"
 msgstr ""
@@ -449,21 +449,21 @@ msgid ""
 msgstr "Ondersteun je betaling met een {0}credit card{1} om er zeker van te zijn dat het aankomt!"
 
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 msgid "Status of Your 1.0 Payout"
-msgstr ""
+msgstr "Status van je 1.0 uitbetaling."
 
 msgid "Read about our plan to {a}refund the money from Gratipay 1.0{_a}."
-msgstr ""
+msgstr "Lees ons plan om {a}het geld van Gratipay 1.0 terug te betalen{_a}."
 
 msgid ""
 "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout "
 "threshold of {minimum}{_b}."
-msgstr ""
+msgstr "Jouw Gratipay 1.0 {a}balans{_a} is {b}lagen dan onze minimale uitbetalings limiet van {minimum}{_b}."
 
 msgid "You do not have a balance left over from Gratipay 1.0."
-msgstr ""
+msgstr "Je hebt geen balans meer over van Gratipay 1.0."
 
 msgid ""
 "You're all set! But ... can you help us spread the word and tell your "
@@ -471,10 +471,10 @@ msgid ""
 msgstr ""
 
 msgid "Your balance is {b}{balance}{_b}."
-msgstr ""
+msgstr "Je balans is {b}{balance}{_b}."
 
 msgid "You are {b}scheduled for a payout{_b} during our next weekly cycle."
-msgstr ""
+msgstr "Je bent {b}gepland voor een uitbetaling{_b} tijdens onze volgend wekelijkse cyclus."
 
 msgid ""
 "You should be all set! But ... can you help us spread the word and tell your"
@@ -484,26 +484,26 @@ msgstr ""
 msgid ""
 "You have applied for a payout. We will review your account and contact you "
 "at {b}{email}{_b} within the next week."
-msgstr ""
+msgstr "Je hebt een uitbetaling aangevraagd. We zullen je rekening nakijken en je contacteren via {b}{email}{_b} binnen de komende week."
 
 msgid ""
 "Meanwhile ... can you help us spread the word and tell your friends to check"
 " here, too? Thanks! :)"
-msgstr ""
+msgstr "Kan je ondertussen ons helpen het nieuws te verspreiden en je vrienden vragen hier eens te komen kijken? Bedankt! :)"
 
 msgid ""
 "You have applied for a payout, and we have rejected your application. You "
 "should have received a notification at {b}{email}{_b} from "
 "{a}support@gratipay.com{_a}."
-msgstr ""
+msgstr "Je hebt een uitbetaling aangevraagd, en we hebben je aanvraag geweigerd. Je zou een notificatie via {b}{email}{_b} van {a}support@gratipay.com{_a} ontvangen moeten hebben."
 
 msgid "Apply for a payout"
-msgstr ""
+msgstr "Vraag een uitbetaling aan"
 
 msgid ""
 "Please {a}connect a PayPal account{_a} and then return here to apply for "
 "payout."
-msgstr ""
+msgstr "{a}Verbind een PayPal account{_a} en kom hier terug voor een uitbetalingsaanvraag."
 
 msgid "You must sign in to apply for your project to join Gratipay."
 msgstr ""

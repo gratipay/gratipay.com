@@ -1,0 +1,1396 @@
+# Translations template for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# 
+# Translators:
+# Naofumi <naofum@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Gratipay\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"Language-Team: Japanese (http://www.transifex.com/gratipay/gratipay/language/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "1.0 Payout: Approved!"
+msgstr "1.0 支払い: 承認されました!"
+
+msgid ""
+"We've approved your application for a payout of your Gratipay 1.0 balance. "
+"Watch for that during our next weekly payment cycle."
+msgstr "あなたの Gratipay 1.0 残高の支払い申請を承認しました。 次週の支払いサイクルで確認してください。"
+
+msgid "Thanks for using Gratipay! :-)"
+msgstr "Gratipay をご利用いただきありがとうございます! :-)"
+
+msgid "Something not right? Reply to this email for help."
+msgstr "何か問題がありますか? このメールに返信してください。"
+
+msgid "Greetings!"
+msgstr "こんにちは!"
+
+msgid "Oh no! A problem supporting {0}!"
+msgstr "{0} のサポートに問題があります!"
+
+msgid ""
+"We tried to charge your credit card {0} today, to fund your ongoing support "
+"for {1}, but the charge failed with this message:"
+msgstr "{1} の継続的なサポートに対して資金を提供するために、今日、お使いのクレジットカード {0} への請求を試みましたが、このメッセージで請求できませんでした:"
+
+msgid "{0} and {n} other"
+msgid_plural "{0} and {n} others"
+msgstr[0] "{0} と {n} 他"
+
+msgid "Fix Credit Card"
+msgstr "クレジットカードを修正"
+
+msgid "Follow this link to fix your credit card:"
+msgstr "お使いのクレジットカードを修正するには、このリンクをクリックしてください:"
+
+msgid "Thanks for supporting {0}!"
+msgstr "{0} のサポートありがとうございます!"
+
+msgid ""
+"We charged your credit card {0} today, to fund your ongoing support for {1}."
+" Thanks for using Gratipay!"
+msgstr "{1} の継続的なサポートに対して資金を提供するため、今日、お使いのクレジットカード {0} に請求しました。 Gratipay をご利用いただきありがとうございます!"
+
+msgid "View Receipt"
+msgstr "領収書の表示"
+
+msgid "Follow this link to view your receipt:"
+msgstr "領収書を表示するには、このリンクをクリックしてください:"
+
+msgid "Follow this link if you want to view or modify your payments:"
+msgstr "支払いを表示または変更する場合は、このリンクをクリックしてください:"
+
+msgid "Identity Viewed"
+msgstr "ID を表示しました"
+
+msgid ""
+"This is a transactional email to let you know that {a_viewer}{viewer}{_a} "
+"viewed your identity information for {a_country}{country_name}{_a} on "
+"Gratipay."
+msgstr "これは、Gratipay で {a_country}{country_name}{_a} の {a_viewer}{viewer}{_a} が、あなたの ID 情報を閲覧したことを通知するメールです。"
+
+msgid ""
+"This is a transactional email to let you know that {viewer} viewed your "
+"identity information for {country_name} on Gratipay."
+msgstr "これは、Gratipay で {country_name} の {viewer} が、あなたの ID 情報を閲覧したことを通知するメールです。"
+
+msgid "Connect to {0} on Gratipay?"
+msgstr "Gratipay で {0} に接続しますか?"
+
+msgid "1.0 Payout: Rejected"
+msgstr "1.0 支払い: 否認されました!"
+
+msgid ""
+"We've rejected your application for a payout of your Gratipay 1.0 balance, "
+"because we couldn't determine what product or service you were offering for "
+"which people were paying you on Gratipay. Please reply if you would like to "
+"discuss this further."
+msgstr "Gratipay 1.0 の残高の支払いについて、Gratipay で支払われた製品やサービスを特定できなかったため、申請を否認しました。 これについてさらに検討したい場合は、ご返信ください。"
+
+msgid "Project Application Approved!"
+msgstr "プロジェクト申請を承認しました!"
+
+msgid ""
+"We've approved your application for the '{team}' project on Gratipay. For "
+"details, please refer to {a}our review ticket{_a}."
+msgstr "Gratipay の '{team}' プロジェクトの申請を承認しました。 詳細は、{a}レビューチケット{_a}をご覧ください。"
+
+msgid ""
+"We've approved your application for the '{team}' project on Gratipay. For "
+"details, please refer to our review ticket:"
+msgstr "Gratipay の '{team}' プロジェクトの申請を承認しました。 詳細は、レビューチケットをご覧ください:"
+
+msgid "Project Application Rejected"
+msgstr "プロジェクト申請を否認しました"
+
+msgid ""
+"We've rejected your application for the '{team}' project on Gratipay. For "
+"details, please refer to {a}our review ticket{_a}."
+msgstr "Gratipay の '{team}' プロジェクトの申請を否認しました。 詳細は、{a}レビューチケット{_a}をご覧ください。"
+
+msgid ""
+"We've rejected your application for the '{team}' project on Gratipay. For "
+"details, please refer to our review ticket:"
+msgstr "Gratipay の '{team}' プロジェクトの申請を否認しました。 詳細は、レビューチケットをご覧ください。"
+
+msgid ""
+"We've received a request to connect {0} to the {1} account on Gratipay. "
+"Sound familiar?"
+msgstr "Gratipay の {1} アカウントに {0} を接続するリクエストを受け取りました。 聞いたことがありますか?"
+
+msgid "Yes, proceed!"
+msgstr "はい、続行します!"
+
+msgid "Follow this link to finish connecting your email:"
+msgstr "お使いのメールに接続するには、このリンクをクリックしてください:"
+
+msgid "Connecting {0} to {1} on Gratipay."
+msgstr "Gratipay で {1} に {0} を接続しています。"
+
+msgid ""
+"We are connecting {0} to the {1} account on Gratipay. This is a notification"
+" sent to {2} because that is the primary email address we have on file."
+msgstr "Gratipay の {1} アカウントに {0} を接続しています。 これは、私たちがファイルに保存しているプライマリのメールアドレスのため、{2} に送信された通知です。"
+
+msgid "You've consumed your quota of requests, you can try again in {0}."
+msgstr "要求のクォータを消費しました。{0} で再試行できます。"
+
+msgid "You're making requests too fast, please try again later."
+msgstr "リクエストが速すぎます。しばらくしてからもう一度やり直してください。"
+
+msgid "{0} returned an error, please try again later."
+msgstr "{0} がエラーを返しました。後でもう一度やり直してください。"
+
+msgid "Invalid character in elsewhere account username."
+msgstr "他のアカウントのユーザー名に無効な文字があります。"
+
+msgid "Account not found on {0}."
+msgstr "{0} にアカウントが見つかりません。"
+
+msgid "You need to log in to access this page."
+msgstr "このページにアクセスするには、ログインする必要があります。"
+
+msgid "You are not authorized to access this page."
+msgstr "このページにアクセスする権限がありません。"
+
+msgid "Forbidden"
+msgstr "禁止"
+
+msgid "Not Found"
+msgstr "見つかりません"
+
+msgid "Too Many Requests"
+msgstr "リクエストが多すぎます"
+
+msgid "Internal Server Error"
+msgstr "内部サーバーエラー"
+
+msgid "Upstream Error"
+msgstr "アップストリームエラー"
+
+msgid "Your last PayPal payout failed!"
+msgstr "最後の PayPal 支払いが失敗しました!"
+
+msgid "Your credit card has failed!"
+msgstr "お使いのクレジットカードが失敗しました!"
+
+msgid "Fix your card"
+msgstr "クレジットカードを修正"
+
+msgid "Your credit card is about to expire!"
+msgstr "お使いのクレジットカードの有効期限が近づいています!"
+
+msgid "Update card"
+msgstr "カードを更新"
+
+msgid "Your account does not have an associated email address."
+msgstr "アカウントには関連するメールアドレスがありません。"
+
+msgid "Add an email address"
+msgstr "メールアドレスを追加"
+
+msgid "Overview"
+msgstr "概要"
+
+msgid "Stats"
+msgstr "統計"
+
+msgid "Pricing"
+msgstr "価格"
+
+msgid "Contact Us"
+msgstr "お問合せ"
+
+msgid "Payments"
+msgstr "支払"
+
+msgid "Do Not Track"
+msgstr "追跡しない"
+
+msgid "Terms of Service"
+msgstr "利用規約"
+
+msgid "Privacy Policy"
+msgstr "プライバシーポリシー"
+
+msgid "Disclosure"
+msgstr "開示"
+
+msgid "Hall of Fame (Legacy)"
+msgstr "表彰 (レガシー)"
+
+msgid "Basic Info"
+msgstr "基本情報"
+
+msgid "Features"
+msgstr "特徴"
+
+msgid "Policies"
+msgstr "ポリシー"
+
+msgid "Security"
+msgstr "セキュリティ"
+
+msgid "+ Add"
+msgstr "+ 追加"
+
+msgid "Disconnect"
+msgstr "切断"
+
+msgid "Search"
+msgstr "検索"
+
+msgid "About"
+msgstr "私たちについて"
+
+msgid "wk"
+msgstr "週"
+
+msgid "Sign out"
+msgstr "サインアウト"
+
+msgid ""
+"{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
+"to get funded on Gratipay{_a}{_nowrap}."
+msgstr "{nowrap}新しい {a}利用規約{_a}{_nowrap} {nowrap}は {a2}Gratipayで簡単に資金を調達することができるようになりました{_a}{_nowrap}."
+
+msgid "Blog"
+msgstr "ブログ"
+
+msgid "GitHub"
+msgstr "GitHub"
+
+msgid "Email"
+msgstr "メール"
+
+msgid "Communities"
+msgstr "コミュニティ"
+
+msgid "Join Communities"
+msgstr "コミュニティに参加"
+
+msgid "Social Profiles"
+msgstr "ソーシャルプロフィール"
+
+msgid "Project"
+msgstr "プロジェクト"
+
+msgid "Amount ($)"
+msgstr "金額 ($)"
+
+msgid "Due ($)"
+msgstr "期日 ($)"
+
+msgid "First Set"
+msgstr "最初に設定"
+
+msgid "{0} ago"
+msgstr "{0} 前"
+
+msgid "joined {ago}"
+msgstr "参加 {ago}"
+
+msgid "Previous"
+msgstr "前"
+
+msgid "Next"
+msgstr "次"
+
+msgid "First"
+msgstr "最初"
+
+msgid "Last"
+msgstr "最後"
+
+msgid "Profile"
+msgstr "プロフィール"
+
+msgid "Statement"
+msgstr "ステートメント"
+
+msgid "Edit"
+msgstr "編集"
+
+msgid "Tell us how you're making the world better."
+msgstr "よりよい世界にする方法を教えてください。"
+
+msgid ""
+"Gratipay allows you to have profile statements in multiple languages. Use "
+"the selector below to switch between them."
+msgstr "Gratipay は、複数の言語でプロフィールのステートメントを使用できます。 次のセレクタを使用して切り替えます。"
+
+msgid "Markdown supported."
+msgstr "マークダウンをサポートします。"
+
+msgid "What is markdown?"
+msgstr "マークダウンとは?"
+
+msgid "View source."
+msgstr "ソースを表示します。"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Credit Card"
+msgstr "クレジットカード"
+
+msgid "PayPal"
+msgstr "PayPal"
+
+msgid "verified in: {country}"
+msgstr "検証: {country}"
+
+msgid "Weekly"
+msgstr "毎週"
+
+msgid "Giving"
+msgstr "寄付"
+
+msgid "hidden"
+msgstr "非表示"
+
+msgid "Taking"
+msgstr "収入"
+
+msgid "Joined"
+msgstr "参加"
+
+msgid "History"
+msgstr "履歴"
+
+msgid "Emails"
+msgstr "メール"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Widgets"
+msgstr "ウィジェット"
+
+msgid "Events"
+msgstr "イベント"
+
+msgid "Sign in / Sign up"
+msgstr "サインイン / サインアップ"
+
+#, python-format
+msgid "Only {0}% of active users also {1}support Gratipay{2}."
+msgstr "{0}% のみのアクティブユーザーも {1}Gratipay をサポートしています{2}。"
+
+#, python-format
+msgid "{0}% of active users also {1}support Gratipay{2}."
+msgstr "{0}% のアクティブユーザーも {1}Gratipay をサポートしています{2}。"
+
+msgid "Will you help us reach {0}%?"
+msgstr "{0}% に到達するのを手伝ってくれますか?"
+
+msgid "Will you join them?"
+msgstr "参加しますか?"
+
+msgid "Other"
+msgstr "その他"
+
+msgid "No thanks"
+msgstr "結構です"
+
+msgid "We fund Gratipay solely through your voluntary payments!"
+msgstr "あなたの自主的な支払いを通じて Gratipay に資金を提供します!"
+
+msgid "Learn more"
+msgstr "さらに詳しく"
+
+msgid "Receiving"
+msgstr "受領"
+
+msgid "Joined {ago}"
+msgstr "参加 {ago}"
+
+msgid "Applied {ago}"
+msgstr "適用 {ago}"
+
+msgid "Distributing"
+msgstr "配布"
+
+msgid "Projects"
+msgstr "プロジェクト"
+
+msgid "{sign_in}{br}to give to{br}{team}"
+msgstr "{sign_in}{br}して寄付します{br}{team}"
+
+msgid "You Give"
+msgstr "寄付します"
+
+msgid "per week"
+msgstr "週あたり"
+
+msgid "Give to {0}"
+msgstr "{0} に寄付"
+
+msgid "Stop Giving"
+msgstr "寄付を停止"
+
+msgid ""
+"Back your payment with a {0}credit card{1} to make sure it goes through!"
+msgstr "{0}クレジットカード{1}での支払いを元に戻してください!"
+
+msgid "1.0"
+msgstr "1.0"
+
+msgid "Status of Your 1.0 Payout"
+msgstr "1.0 支払いのステータス"
+
+msgid "Read about our plan to {a}refund the money from Gratipay 1.0{_a}."
+msgstr "{a}Gratipay 1.0 からの払い戻し{_a} 予定についてお読みください。"
+
+msgid ""
+"Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout "
+"threshold of {minimum}{_b}."
+msgstr "Gratipay 1.0 の {a}残高{_a} が {b}最低支払額 {minimum} を下回ります{_b}。"
+
+msgid "You do not have a balance left over from Gratipay 1.0."
+msgstr "Gratipay 1.0 に残りの残高はありません。"
+
+msgid ""
+"You're all set! But ... can you help us spread the word and tell your "
+"friends to check here, too? Thanks! :)"
+msgstr "すべて設定しました! しかし ... 私たちのことを広めて、友達にここを確認するように伝えていただけませんか? ありがとうございます! :)"
+
+msgid "Your balance is {b}{balance}{_b}."
+msgstr "残高は {b}{balance}{_b}。"
+
+msgid "You are {b}scheduled for a payout{_b} during our next weekly cycle."
+msgstr "次週のサイクルに {b}支払いを予定しています{_b}。"
+
+msgid ""
+"You should be all set! But ... can you help us spread the word and tell your"
+" friends to check here, too? Thanks! :)"
+msgstr "すべて設定しました! しかし ... 私たちのことを広めて、友達にここを確認するように伝えていただけませんか? ありがとうございます! :)"
+
+msgid ""
+"You have applied for a payout. We will review your account and contact you "
+"at {b}{email}{_b} within the next week."
+msgstr "支払いを申請しました。 あなたのアカウントを確認し、次週 {b}{email}{_b} にご連絡します。"
+
+msgid ""
+"Meanwhile ... can you help us spread the word and tell your friends to check"
+" here, too? Thanks! :)"
+msgstr "その間に ... 私たちのことを広めて、友達にここを確認するように伝えていただけませんか? ありがとうございます! :)"
+
+msgid ""
+"You have applied for a payout, and we have rejected your application. You "
+"should have received a notification at {b}{email}{_b} from "
+"{a}support@gratipay.com{_a}."
+msgstr "支払いを申請されましたが、否認しました。 {b}{email}{_b} に {a}support@gratipay.com{_a} から通知を受け取っているはずです。"
+
+msgid "Apply for a payout"
+msgstr "支払いを申請する"
+
+msgid ""
+"Please {a}connect a PayPal account{_a} and then return here to apply for "
+"payout."
+msgstr "{a}PayPal アカウントに接続して{_a} ここに戻って支払いを申請してください。"
+
+msgid "You must sign in to apply for your project to join Gratipay."
+msgstr "プロジェクトが Gratipay に参加するには、サインインする必要があります。"
+
+msgid ""
+"You must have a verified email address to apply for your project to join "
+"Gratipay."
+msgstr "プロジェクトが Gratipay に参加するには、確認済みのメールアドレスが必要です。"
+
+msgid ""
+"You must attach a PayPal account to apply for your project to join Gratipay."
+msgstr "Gratipay に参加するには、PayPal アカウントに加入してプロジェクトを申請する必要があります。"
+
+msgid "Apply to Join Gratipay"
+msgstr "Gratipay に参加を申請する"
+
+msgid "Apply"
+msgstr "申請"
+
+msgid "Thanks! Your public project page is:"
+msgstr "ありがとうございます! 公開プロジェクトのページは:"
+
+msgid "And your public review ticket is:"
+msgstr "公開レビューチケットは:"
+
+msgid ""
+"You can watch and participate in our review process there. We will send a "
+"notification to {email} when we finish our review."
+msgstr "そこでレビュープロセスを見たり参加することができます。 レビューが完了したら {email} に通知を送信します。"
+
+msgid "Thanks for applying!"
+msgstr "申請ありがとうございます!"
+
+msgid "Project Name"
+msgstr "プロジェクト名"
+
+msgid ""
+"At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
+"periods (.), comma (,) and whitespace."
+msgstr "1 文字以上の文字 A〜Z、と数字、ダッシュ (-)、アンダースコア (_)、ピリオド (.)、カンマ (,)、および空白。"
+
+msgid "Product or Service"
+msgstr "製品またはサービス"
+
+msgid "What product or service does your project provide?"
+msgstr "あなたのプロジェクトはどのような製品やサービスを提供していますか?"
+
+msgid "Homepage"
+msgstr "ホームページ"
+
+msgid "What is the customer-facing web page for your project?"
+msgstr "プロジェクトの顧客対応 Web ページはどこですか?"
+
+msgid "Image"
+msgstr "画像"
+
+msgid ""
+"PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and"
+" 48 x 48 (with original saved for later)."
+msgstr "PNG または JPG 最大 256 KB。 正方形にトリミングされて、160 x 160および 48 x 48 にサイズ変更されます (後のためオリジナルも保存されます)。"
+
+msgid "Agreements"
+msgstr "同意"
+
+msgid "I agree to have my application {0}publicly reviewed{1}."
+msgstr "私は、申請が {0}公開でレビューされること{1} に同意します。"
+
+msgid "I agree to the other {0}terms of service{1} as well."
+msgstr "他の {0}利用規約{1} にも同意します。"
+
+msgid "Approved"
+msgstr "承認"
+
+msgid "Under Review"
+msgstr "レビュー中"
+
+msgid "Rejected"
+msgstr "否認"
+
+msgid "Pay for open source."
+msgstr "オープンソースに支払います。"
+
+msgid "Welcome to Gratipay!"
+msgstr "Gratipay へようこそ!"
+
+msgid ""
+"We have {nteams} projects receiving and sharing about {volume} each week."
+msgstr "毎週、{nteams} のプロジェクトを受け取り、{volume} を共有しています。"
+
+msgid "Continue to explore our projects, or {a}read more about us{_a}."
+msgstr "続けて、プロジェクトを見つけるか、{a}私たちについての詳細{_a}。"
+
+msgid "Continue"
+msgstr "続ける"
+
+msgid "Fund Your Project"
+msgstr "プロジェクトに資金を提供"
+
+msgid "created {ago}"
+msgstr "作成 {ago}"
+
+msgid "owned by {a}{owner}{_a}"
+msgstr "オーナー {a}{owner}{_a}"
+
+msgid "Search Gratipay"
+msgstr "Gratipay を検索"
+
+msgid "Found a matching project"
+msgid_plural "Found matching projects"
+msgstr[0] "一致するプロジェクトが見つかりました"
+
+msgid "Found a matching username"
+msgid_plural "Found matching usernames"
+msgstr[0] "一致するユーザー名が見つかりました"
+
+msgid "Found a matching user statement"
+msgid_plural "Found matching user statements"
+msgstr[0] "一致するユーザーステートメントが見つかりました"
+
+msgid "Found a matching email address"
+msgid_plural "Found matching email addresses"
+msgstr[0] "一致するメールアドレスが見つかりました"
+
+msgid "Sorry, we didn't find anything matching your query."
+msgstr "申し訳ありません。検索条件に一致するものは見つかりませんでした。"
+
+msgid "Sign Out"
+msgstr "サインアウト"
+
+msgid "Are you sure you wish to sign out?"
+msgstr "サインアウトしてもよろしいですか?"
+
+msgid "Yes!"
+msgstr "はい!"
+
+msgid "{a} Edit project {_a}"
+msgstr "{a} プロジェクトを編集 {_a}"
+
+msgid "owned by {a}~{owner}{_a}"
+msgstr "オーナー {a}~{owner}{_a}"
+
+msgid "Project Closed"
+msgstr "プロジェクトを閉じました"
+
+msgid "Please {a}email support{_a} to reopen."
+msgstr "再度開くには {a}サポートにメール{_a} してください。"
+
+msgid "Please sign in first"
+msgstr "まずサインインしてください"
+
+msgid "Payment changed to {0} per week. "
+msgstr "支払いを {0} 週ごとに変更しました。"
+
+msgid "Thank you so much for supporting {0}!"
+msgstr "{0} のサポートありがとうございます!"
+
+msgid "You have canceled your payment to {0}."
+msgstr "{0} への支払いをキャンセルしました。"
+
+msgid "User not found."
+msgstr "ユーザーが見つかりません。"
+
+msgid "That's not a valid number."
+msgstr "数が正しくありません。"
+
+msgid "Are you sure you want to remove {0} from this team?"
+msgstr "このチームから {0} を削除してもよろしいですか?"
+
+msgid "{0} has been removed from the team."
+msgstr "{0} はチームから削除されました。"
+
+msgid "{0} is already a member of this team."
+msgstr "{0} はすでにこのチームのメンバーです。"
+
+msgid "{0} has been added to the team."
+msgstr "{0} がチームに追加されました。"
+
+msgid "Are you sure you want to leave this team?"
+msgstr "このチームから離れてもよろしいですか?"
+
+msgid "Your take is now {0}."
+msgstr "収入は {0} になりました。"
+
+msgid "Team Members"
+msgstr "チームメンバー"
+
+msgid "Updating…"
+msgstr "更新中…"
+
+msgid "Member"
+msgstr "メンバー"
+
+msgid "Last{0} Week ($)"
+msgstr "直近{0} 週 ($)"
+
+msgid "This{0} Week ($)"
+msgstr "この{0} 週 ($)"
+
+msgid "Team{0} Balance ($)"
+msgstr "チーム{0} 残高 ($)"
+
+msgid "This{0} Week (%)"
+msgstr "この{0} 週 (%)"
+
+msgid "Enter a Gratipay username"
+msgstr "Gratipay ユーザー名を入力してください"
+
+msgid "Add"
+msgstr "追加"
+
+msgid "Are you sure?"
+msgstr "よろしいですか?"
+
+msgid "Yes"
+msgstr "はい"
+
+msgid "No"
+msgstr "いいえ"
+
+msgid "Already closed."
+msgstr "すでに閉じています。"
+
+msgid "You can't edit a closed project."
+msgstr "閉じたプロジェクトは編集できません。"
+
+msgid "You can't edit a rejected project."
+msgstr "否認したプロジェクトは編集できません。"
+
+msgid "Please upload a PNG or JPG image."
+msgstr "PNG または JPG 画像をアップロードしてください。"
+
+msgid "Please fill out the '{}' field."
+msgstr "'{}' フィールドに入力してください。"
+
+msgid "Please enter an http[s]:// URL for the '{}' field."
+msgstr "'{}' フィールドに http[s]:// URL を入力してください。"
+
+msgid "Please upload an image smaller than 100 kB."
+msgstr "100 KB より小さい画像をアップロードしてください。"
+
+msgid "Sorry, there was a problem saving your image. Please try again."
+msgstr "申し訳ありません。画像の保存中に問題が発生しました。 もう一度やり直してください。"
+
+msgid "Edit Your Project"
+msgstr "あなたのプロジェクトを編集"
+
+msgid "Modify"
+msgstr "更新"
+
+msgid "Danger Zone"
+msgstr "危険区域"
+
+msgid "Close Project"
+msgstr "プロジェクトを閉じる"
+
+msgid "{0} receives {1} per week from {2} ~users."
+msgstr "{0} は毎週 {1} {2} ~ユーザーから受け取ります。"
+
+msgid "Dollars Received Per Week"
+msgstr "ドル毎週受け取りました"
+
+msgid "weeks"
+msgstr "週間"
+
+msgid "Number of Payments Per Week"
+msgstr "毎週の支払い数"
+
+msgid "Payments Received, by Number of Payments"
+msgstr "支払いを受け取りました。支払い数"
+
+msgid "Payments Received, by Dollar Amount"
+msgstr "支払いを受け取りました。ドル金額"
+
+msgid "Welcome!"
+msgstr "ようこそ!"
+
+msgid ""
+"Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} "
+"projects{_b} and about {b}{nusers} ~users{_b}."
+msgstr "Gratipay は、{b}{nteams} プロジェクト{_b} の {b}毎週 {volume}{_b} と {b}{nusers} ~ユーザー{_b} について処理しています。"
+
+msgid ""
+"On average, ~users who give on Gratipay give {b}{amount} to one project{_b}."
+msgid_plural ""
+"On average, ~users who give on Gratipay give {b}{amount} each to {number} "
+"projects{_b}."
+msgstr[0] "平均して、~ユーザーは Gratipay に {b}{amount} をそれぞれ {number} プロジェクト{_b} に寄付しています。"
+
+msgid "Gratipay has processed about {b}{total}{_b} over {b}{age}+ years{_b}."
+msgstr "Gratipay は {b}{total}{_b} 以上 {b}{age}+ 年間{_b} 処理してきました。"
+
+msgid "{b}{escrow}{_b} is escrowed within Gratipay."
+msgstr "Gratipay で {b}{escrow}{_b} はエスクローされます。."
+
+msgid "The Delpan Incident"
+msgstr "The Delpan インシデント"
+
+msgid "Sign In"
+msgstr "サインイン"
+
+msgid "1.0 Payout Review"
+msgstr "1.0 支払いレビュー"
+
+msgid "Fraud Review Dashboard"
+msgstr "不正レビューダッシュボード"
+
+msgid "Transfer?"
+msgstr "振替しますか?"
+
+msgid "Please Confirm"
+msgstr "ご確認ください"
+
+msgid "{0} is connected to {1} on Gratipay."
+msgstr "Gratipay で {0} は {1} に接続しています。"
+
+msgid "Transfer it to your ~{username} account?"
+msgstr "~{username} アカウントに振替しますか?"
+
+msgid "How the accounts are now"
+msgstr "アカウントの現在の状態"
+
+msgid "Gives"
+msgstr "寄付"
+
+msgid "Takes"
+msgstr "収入"
+
+msgid "How the accounts will be after the transfer"
+msgstr "振替後のアカウントの状態"
+
+msgid "Abandoned:"
+msgstr "放棄しました:"
+
+msgid "Transfer it?"
+msgstr "振替しますか?"
+
+msgid "Friend Finder"
+msgstr "友達ファインダー"
+
+msgid "You have {n} friend on {0}."
+msgid_plural "You have {n} friends on {0}."
+msgstr[0] "{0} に {n} の友達がいます。"
+
+msgid ""
+"Note: privacy settings may prevent Gratipay from seeing some of your {0} "
+"friends."
+msgstr "注: プライバシー設定により、Gratipay は {0} の友達の一部を見ることができない場合があります。"
+
+msgid "Please refresh your {0} connection"
+msgstr "{0} 接続を更新してください"
+
+msgid "to find your friends from there."
+msgstr "そこから友達を見つけます。"
+
+msgid "Sign in with {0}"
+msgstr "{0} でサインイン"
+
+msgid "Connect your {0} account"
+msgstr "{0} アカウントに接続"
+
+msgid "No friends found."
+msgstr "友達が見つかりませんでした。"
+
+msgid "Name"
+msgstr "名前"
+
+msgid "On Gratipay?"
+msgstr "Gratipay に?"
+
+msgid "Failure"
+msgstr "失敗"
+
+msgid "Are you really an administrator of the {0} team?"
+msgstr "あなたは本当に {0} チームの管理者ですか?"
+
+msgid ""
+"Your attempt to claim this account failed because you're logged into {0} as "
+"someone who isn't an administrator of the {1} team. Please sign out and "
+"{2}try again{3}."
+msgstr "{0} に {1} チームの管理者ではないユーザーとしてログインしているため、このアカウントの申請は失敗しました。 ログアウトして {2}もう一度やり直してください{3}。"
+
+msgid "Are you really {0}?"
+msgstr "本当に {0} ですか?"
+
+msgid ""
+"Your attempt to claim this account failed because you're logged into {0} as "
+"someone else. Please sign out and {1}try again{2}."
+msgstr "{0} に他の人としてログインしているため、このアカウントの申請は失敗しました。 ログアウトして {1}もう一度やり直してください{2}。"
+
+msgid "{0} is a private team"
+msgstr "{0} は非公開チームです"
+
+msgid "{0} is a big team"
+msgstr "{0} は大きいチームです"
+
+msgid "{0} is a team with {n} public member"
+msgid_plural "{0} is a team with {n} public members"
+msgstr[0] "{0} は {n} 公開メンバーのいるチームです"
+
+msgid "A Lot"
+msgstr "たくさん"
+
+msgid "{0} has not joined Gratipay."
+msgstr "{0} は Gratipay に参加していません。"
+
+msgid ""
+"Are you an administrator of this {0} team account? Connect it to your "
+"Gratipay account."
+msgstr "この {0} チームアカウントの管理者ですか? Gratipay アカウントに接続します。"
+
+msgid "Connect team account"
+msgstr "チームアカウントに接続"
+
+msgid "Is this you? You can join Gratipay with a couple clicks:"
+msgstr "これはあなたですか? 数回のクリックで Gratipay に参加できます:"
+
+msgid "Join Gratipay"
+msgstr "Gratipay に参加"
+
+msgid "Is this yours? Connect it to your Gratipay account."
+msgstr "これはあなたのものですか? Gratipay アカウントに接続します。"
+
+msgid "Connect"
+msgstr "接続"
+
+msgid "What is Gratipay?"
+msgstr "Gratipay とは?"
+
+msgid "Gratipay helps companies and others pay for open source."
+msgstr "Gratipay は、企業や他の人々がオープンソースに対して支払うのに役立ちます。"
+
+msgid "Status"
+msgstr "ステータス"
+
+msgid "accepts gifts"
+msgstr "寄付を受け取る"
+
+msgid "hasn't joined Gratipay yet"
+msgstr "まだ Gratipay に参加していません"
+
+msgid "You must sign in to apply for a new team."
+msgstr "新しいチームに申請するには、サインインする必要があります。"
+
+msgid "You must have a verified email address to apply for a new team."
+msgstr "新しいチームに申請するには、確認済のメールアドレスが必要です。"
+
+msgid "You must attach a PayPal account to apply for a new team."
+msgstr "新しいチームを申請するには、PayPal アカウントに加入する必要があります。"
+
+msgid "How are you applying for a team!?"
+msgstr "チームを申請する方法は!?"
+
+msgid "Sorry, you must agree to have your application publicly reviewed."
+msgstr "申し訳ありませんが、申請を公開でレビューすることに同意する必要があります。"
+
+msgid "Sorry, you must agree to the terms of service."
+msgstr "申し訳ありませんが、利用規約に同意する必要があります。"
+
+msgid "Please enter an http[s]:// URL for the 'Homepage' field."
+msgstr "'ホームページ' フィールドに http[s]:// URL を入力してください。"
+
+msgid "Sorry, your team name is invalid."
+msgstr "申し訳ありません。チーム名が正しくありません。"
+
+msgid "Sorry, there is already a team using '{}'."
+msgstr "申し訳ありません。すでに '{}' を使用しているチームがあります。"
+
+msgid "You don't have a profile statement in this language yet."
+msgstr "まだこの言語で、プロフィールステートメントがありません。"
+
+msgid "You haven't saved your changes, are you sure you want to discard them?"
+msgstr "変更を保存していません。変更を破棄してもよろしいですか?"
+
+msgid "with {n} other"
+msgid_plural "with {n} others"
+msgstr[0] "{n} 他で"
+
+msgid "Invalid team slug."
+msgstr "無効なチームスラグ。"
+
+msgid "Your privacy setting has been changed."
+msgstr "プライバシー設定が変更されました。"
+
+msgid "Statement too big!"
+msgstr "ステートメントが大きすぎます!"
+
+msgid "Primary"
+msgstr "プライマリー"
+
+msgid "Unverified"
+msgstr "未確認"
+
+msgid "Remove"
+msgstr "削除"
+
+msgid "Resend"
+msgstr "再送信"
+
+msgid "Set as primary"
+msgstr "プライマリーとして設定"
+
+msgid "Add email address"
+msgstr "メールアドレスを追加"
+
+msgid "Notifications"
+msgstr "通知"
+
+msgid "Send me notifications via email:"
+msgstr "メールで通知を送信してください:"
+
+msgid "When my credit card is charged:"
+msgstr "クレジットカードが変更されたとき:"
+
+msgid "if the charge fails"
+msgstr "チャージに失敗した場合"
+
+msgid "if the charge succeeds"
+msgstr "チャージが成功した場合"
+
+msgid "Invalid email address."
+msgstr "メールアドレスが正しくありません。"
+
+msgid "A verification email has been sent to {0}."
+msgstr "確認メールを {0} に送信しました。"
+
+msgid "You have already added and verified this address."
+msgstr "このアドレスをすでに追加して、確認しています。"
+
+msgid "Please Sign In"
+msgstr "サインインしてください"
+
+msgid "Sign in to finish connecting your email."
+msgstr "サインインして、メールの接続を完了してください。"
+
+msgid "Wrong Account"
+msgstr "アカウントが間違っています"
+
+msgid ""
+"You're signed into the wrong Gratipay account to complete this email "
+"verification. If you accidentally created two Gratipay accounts, you can "
+"merge them by logging into the main one and adding the social accounts from "
+"the other. Email {0} if you'd like help."
+msgstr "間違った Gratipay アカウントにサインインして、このメールの確認を完了しています。 誤って 2 つの Gratipay アカウントを作成した場合は、メインのアカウントにログインして、他のアカウントからソーシャルアカウントを追加して、それらをマージすることができます。 ヘルプが必要な場合は、{0} にメールをお送りください。"
+
+msgid "Success!"
+msgstr "成功しました!"
+
+msgid "Your email address {0} is now connected to your Gratipay account."
+msgstr "メールアドレス {0} が、あなたの Gratipay アカウントに接続しました。"
+
+msgid "Address Taken"
+msgstr "アドレスが取得されました"
+
+msgid ""
+"The email address {0} is already connected to a different Gratipay account."
+msgstr "メールアドレス {0} はすでに別の Gratipay アカウントに接続されています。"
+
+msgid "Already Verified"
+msgstr "すでに確認済"
+
+msgid "Your email address {0} is already connected to your Gratipay account."
+msgstr "メールアドレス {0} はすでにあなたの Gratipay アカウントに接続しています。"
+
+msgid "Missing Info"
+msgstr "情報が不足しています"
+
+msgid ""
+"Sorry, that's a bad link. You'll need to view your email addresses and start"
+" over."
+msgstr "申し訳ありませんが、リンクが間違っています。メールアドレスを確認して、やり直す必要があります。"
+
+msgid "Expired"
+msgstr "期限切れ"
+
+msgid "The verification code for {0} has expired."
+msgstr "{0} の確認コードの有効期限が切れています。"
+
+msgid "The verification code for {0} is bad."
+msgstr "{0} の確認コードが間違っています。"
+
+msgid "Resend verification email"
+msgstr "確認メールを再送信"
+
+msgid "View your email addresses"
+msgstr "メールアドレスを参照"
+
+msgid "Active"
+msgstr "アクティブ"
+
+msgid "Cancelled"
+msgstr "キャンセルしました"
+
+msgid "These are payments that you recently cancelled."
+msgstr "最近キャンセルした支払いがあります。"
+
+msgid "No results to show"
+msgstr "表示する結果はありません"
+
+msgid "Export History"
+msgstr "履歴をエクスポート"
+
+msgid "pre"
+msgstr "事前"
+
+msgid "pending"
+msgstr "保留中"
+
+msgid "failed"
+msgstr "失敗"
+
+msgid "succeeded"
+msgstr "成功"
+
+msgid "Your balance is {0}."
+msgstr "あなたの残高は {0} です。"
+
+msgid "Their balance is {0}."
+msgstr "彼らの残高は {0} です。"
+
+msgid "Account Statement"
+msgstr "アカウントステートメント"
+
+msgid "Total given: {0}"
+msgstr "合計の寄付: {0}"
+
+msgid "Export as CSV"
+msgstr "CSV としてエクスポート"
+
+msgid "Total received: {0}"
+msgstr "合計の受け取り: {0}"
+
+msgid "Outside"
+msgstr "外部"
+
+msgid "Inside Gratipay"
+msgstr "Gratipay の内部"
+
+msgid "Bank"
+msgstr "銀行"
+
+msgid "Card"
+msgstr "カード"
+
+msgid "Fees"
+msgstr "手数料"
+
+msgid "Credits"
+msgstr "貸方"
+
+msgid "Debits"
+msgstr "借方"
+
+msgid "Balance"
+msgstr "残高"
+
+msgid "Notes"
+msgstr "メモ"
+
+msgid "Automatic Withdrawal"
+msgstr "自動払戻"
+
+msgid "Automatic Charge"
+msgstr "自動チャージ"
+
+msgid "Receipt"
+msgstr "領収書"
+
+msgid "No transactions to show."
+msgstr "表示する取引はありません"
+
+msgid "ID Type"
+msgstr "ID 種類"
+
+msgid "Tax ID"
+msgstr "税 ID"
+
+msgid "Passport"
+msgstr "パスポート"
+
+msgid "Driver's License"
+msgstr "運転免許証"
+
+msgid "ID Number"
+msgstr "ID 番号"
+
+msgid "Full Legal Name"
+msgstr "正式名"
+
+msgid "Date of Birth"
+msgstr "生年月日"
+
+msgid "Address, Line 1"
+msgstr "住所 1"
+
+msgid "Address, Line 2"
+msgstr "住所 2"
+
+msgid "City"
+msgstr "市区町村"
+
+msgid "Region (State, Province)"
+msgstr "都道府県 (州、地域)"
+
+msgid "Postcode (ZIP)"
+msgstr "郵便番号 (ZIP)"
+
+msgid "Remove This Identity"
+msgstr "この ID を削除"
+
+msgid "Identities"
+msgstr "ID"
+
+msgid "Verified"
+msgstr "確認済"
+
+msgid "Add Identity"
+msgstr "ID を追加"
+
+msgid "Which Country?"
+msgstr "どこの国ですか?"
+
+msgid "The address cannot be empty."
+msgstr "住所は空にできません。"
+
+msgid "Only verified email addresses allowed."
+msgstr "確認済みのメールアドレスのみが許可されます。"
+
+msgid "This is not a valid Bitcoin address."
+msgstr "これは有効な Bitcoin アドレスではありません。"
+
+msgid "and then you'll be able to add or change your credit card."
+msgstr "後でクレジットカードを追加または変更することができます。"
+
+msgid "Required"
+msgstr "必要です"
+
+msgid "Credit Card Number"
+msgstr "クレジットカード番号"
+
+msgid "This card number is invalid."
+msgstr "カード番号が正しくありません。"
+
+msgid "Current: {0}"
+msgstr "現在: {0}"
+
+msgid "Expiration"
+msgstr "有効期限"
+
+msgid "MM"
+msgstr "MM"
+
+msgid "Expiration Month"
+msgstr "有効期限の月"
+
+msgid "This expiration date is invalid."
+msgstr "この有効期限の日付は正しくありません。"
+
+msgid "YY"
+msgstr "YY"
+
+msgid "Expiration Year"
+msgstr "有効期限の年"
+
+msgid "CVV"
+msgstr "CVV"
+
+msgid "This verification code is invalid."
+msgstr "この確認コードは無効です。"
+
+msgid "ZIP or Postal Code"
+msgstr "郵便番号"
+
+msgid ""
+"To minimize processing fees, we charge your credit card at least $10 at a "
+"time. {0}Read more ...{1}"
+msgstr "取扱手数料を最小限に抑えるため、一度に最低 $10 をクレジットカードに請求しています。 {0}続きを読む ...{1}"
+
+msgid "Full Name on Card"
+msgstr "カードの氏名"
+
+msgid "Are you sure you want to disconnect your credit card?"
+msgstr "クレジットカードから切断してもよろしいですか?"
+
+msgid "Disconnect My Credit Card"
+msgstr "クレジットカードを切断"
+
+msgid "It seems you're trying to delete something that doesn't exist."
+msgstr "存在しないものを削除しようとしているようです。"
+
+msgid "Payment Routes"
+msgstr "支払い経路"
+
+msgid "Adding Money"
+msgstr "お金の追加"
+
+msgid "Your credit card is {0}working{1}"
+msgstr "クレジットカードは {0}取り扱い中{1}"
+
+msgid "Your credit card is {0}failing{1}"
+msgstr "クレジットカードが {0}失敗{1}"
+
+msgid "Withdrawing Money"
+msgstr "お金の払戻"
+
+msgid "Choose from one of your verified emails below:"
+msgstr "以下のいずれかの確認済みのメールから選択してください:"
+
+msgid "Can't find your PayPal email? {0}Add it here{1}."
+msgstr "PayPal のメールアドレスが見つかりませんか? {0}ここに追加{1}。"
+
+msgid "You must {0}add and verify{1} your PayPal email first."
+msgstr "最初に PayPal のメールアドレスを {0}追加して確認{1} する必要があります。"
+
+msgid "Are you sure you want to disconnect your PayPal account?"
+msgstr "PayPal アカウントから切断してもよろしいですか?"
+
+msgid "Disconnect {0}"
+msgstr "{0} の切断"
+
+msgid "Close Account"
+msgstr "アカウントを閉じる"
+
+msgid "You are {0}"
+msgstr "あなたは {0}"
+
+msgid ""
+"Have you linked to your Gratipay profile from other websites? Be sure to "
+"update those links!"
+msgstr "他のウェブサイトから Gratipay プロフィールにリンクしていますか? そのリンクを更新してください!"
+
+msgid "Available Money"
+msgstr "利用可能なお金"
+
+msgid "Available Balance"
+msgstr "利用可能残高"
+
+msgid "Request 1.0 Payout"
+msgstr "1.0 支払いのリクエスト"
+
+msgid "Check 1.0 Payout"
+msgstr "1.0 支払いの確認"
+
+msgid "API Credentials"
+msgstr "API 資格情報"
+
+msgid "User ID:"
+msgstr "ユーザー ID:"
+
+msgid "API Key:"
+msgstr "API キー:"
+
+msgid "Show Key"
+msgstr "キーを表示"
+
+msgid "Hide Key"
+msgstr "キーを非表示"
+
+msgid "Recreate"
+msgstr "再作成"
+
+msgid "API docs"
+msgstr "API ドキュメント"
+
+msgid "Privacy"
+msgstr "プライバシー"
+
+msgid "Hide total giving to others."
+msgstr "他の人への寄付合計を非表示にします。"
+
+msgid "Hide myself from search results."
+msgstr "検索結果から自分自身を非表示にします。"
+
+msgid "On"
+msgstr "オン"
+
+msgid "Off"
+msgstr "オフ"
+
+msgid "Giving & Taking Widgets"
+msgstr "寄付 & 受け取りウィジェット"
+
+msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
+msgstr "このコードを使用して、あなたのウェブサイトに Gratipay \"受け取り\" ウィジェットを追加します:"
+
+msgid "Here's what it looks like:"
+msgstr "これは、次のようになります:"
+
+msgid ""
+"Or, if you'd like to include a \"giving\" widget, you can add the {0} "
+"attribute:"
+msgstr "または、\"寄付\" ウィジェットを含める場合、{0} 属性を追加することができます:"
+
+msgid "More Info"
+msgstr "詳細情報"

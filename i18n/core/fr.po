@@ -103,7 +103,7 @@ msgid ""
 msgstr "Nous avons rejeté votre demande de paiement du solde issu de votre compte Gratipay 1.0 car nous n'avons pu déterminer quel produit ou service vous offriez pour les personnes qui vous finançaient. Merci de répondre à ce message si vous souhaitez en discuter d'avantage."
 
 msgid "Project Application Approved!"
-msgstr ""
+msgstr "Application du projet approuvé!"
 
 msgid ""
 "We've approved your application for the '{team}' project on Gratipay. For "
@@ -116,7 +116,7 @@ msgid ""
 msgstr ""
 
 msgid "Project Application Rejected"
-msgstr ""
+msgstr "Application du projet a été rejetée!"
 
 msgid ""
 "We've rejected your application for the '{team}' project on Gratipay. For "
@@ -157,10 +157,10 @@ msgid "{0} returned an error, please try again later."
 msgstr "{0} a renvoyé une erreur, veuillez réessayer plus tard."
 
 msgid "Invalid character in elsewhere account username."
-msgstr ""
+msgstr "Caractère invalide dans le nom d'utilisateur du compte externe."
 
 msgid "Account not found on {0}."
-msgstr ""
+msgstr "Compte introuvable sur {0}."
 
 msgid "You need to log in to access this page."
 msgstr "Vous devez vous identifier pour accéder à cette page."
@@ -631,8 +631,8 @@ msgstr[1] "Trouvé des présentations d'utilisateurs"
 
 msgid "Found a matching email address"
 msgid_plural "Found matching email addresses"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Une adresse de messagerie correspondante a été trouvée"
+msgstr[1] "Adresse de messagerie correspondante trouvée"
 
 msgid "Sorry, we didn't find anything matching your query."
 msgstr "Désolé, nous n'avons rien trouvé qui corresponde à votre requête."
@@ -999,7 +999,7 @@ msgid "Your privacy setting has been changed."
 msgstr "Votre préférence de vie privée a été modifiée."
 
 msgid "Statement too big!"
-msgstr ""
+msgstr "Présentation trop grande !"
 
 msgid "Primary"
 msgstr "Principale"
@@ -1394,7 +1394,7 @@ msgid "Off"
 msgstr "Désactivé"
 
 msgid "Giving & Taking Widgets"
-msgstr ""
+msgstr "Widget de dons et revenus"
 
 msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
 msgstr "Utilisez ce code pour ajouter un widget de \"revenu\" Gratipay sur votre site web :"
@@ -1408,4 +1408,4 @@ msgid ""
 msgstr "Ou, si vous voulez un widget qui affiche le montant de vos donations, vous pouvez ajouter l'attribut {0} de cette façon :"
 
 msgid "More Info"
-msgstr ""
+msgstr "Plus d'informations"
