@@ -7,7 +7,8 @@ import pytest
 from aspen.http.response import Response
 from gratipay import utils
 from gratipay.testing import Harness, D
-from gratipay.utils import i18n, pricing, encode_for_querystring, decode_from_querystring, truncate, get_featured_projects
+from gratipay.utils import i18n, pricing, encode_for_querystring, decode_from_querystring, \
+                                                                    truncate, get_featured_projects
 from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUsername, \
                                                                            RanOutOfUsernameAttempts
 from psycopg2 import IntegrityError
