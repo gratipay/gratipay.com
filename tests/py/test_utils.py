@@ -268,19 +268,35 @@ class TestTruncate(Harness):
         assert truncate('I am a long sentence.', -1, ' the cheese!') == ' the cheese!'
         assert truncate('I am a long sentence.', -1000, ' the cheese!') == ' the cheese!'
 
-class TestFeaturedTab(Harness):
 
-    def test_get_featured_projects_popular_zero(self):
-        popular = []
-        unpopular = [self.make_team()]
-        assert len(get_featured_projects(popular, unpopular)) == len(unpopular)
+class TestGetFeaturedProjects(Harness):
 
-    def test_get_featured_projects_unpopular_zero(self):
-        popular = [self.make_team()]
-        unpopular = []
-        assert len(get_featured_projects(popular, unpopular)) == len(popular)
+    def get_and_count(self, popular, unpopular):
+        featured = get_featured_projects(popular, unpopular)
+        npopular = len([p for p in featured if type(p) is int])
+        nunpopular = len([p for p in featured if type(p) is unicode])
+        return npopular, nunpopular
 
-    def test_get_featured_projects_no_zeros(self):
-        popular = [self.make_team()]
-        unpopular = ['test', 'test2']
-        assert len(get_featured_projects(popular, unpopular)) == (len(popular) + len(unpopular))
+    def test_includes_more_popular_than_unpopular(self):
+        popular, unpopular = range(100), list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+        assert self.get_and_count(popular, unpopular) == (7, 3)
+
+    def test_deals_with_zero_popular_projects(self):
+        popular, unpopular = range(0), list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+        assert self.get_and_count(popular, unpopular) == (0, 10)
+
+    def test_deals_with_some_but_too_few_popular_projects(self):
+        popular, unpopular = range(6), list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+        assert self.get_and_count(popular, unpopular) == (6, 4)
+
+    def test_deals_with_zero_unpopular_projects(self):
+        assert self.get_and_count(range(100), list('')) == (10, 0)
+
+    def test_deals_with_some_but_too_few_unpopular_projects(self):
+        assert self.get_and_count(range(100), list('AB')) == (8, 2)
+
+    def test_deals_with_zero_projects(self):
+        assert self.get_and_count(range(0), list('')) == (0, 0)
+
+    def test_deals_with_some_but_too_few_of_both(self):
+        assert self.get_and_count(range(4), list('A')) == (4, 1)
