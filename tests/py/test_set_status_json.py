@@ -33,7 +33,7 @@ class TestSetStatus(Harness):
         self.hit({'status': 'approved'})
         assert T('gratiteam').is_approved is True
 
-        # Change to Under Review
+        # Change to Unreviewed
         self.hit({'status': 'unreviewed'})
         assert T('gratiteam').is_approved is None
 

@@ -19,7 +19,7 @@ def get_processed_excerpt(participant):
 
 # Horribly WET; see www/index.html.spt
 i18ned_statuses = { "approved": _("Approved")
-                  , "unreviewed" : _("Under Review")
+                  , "unreviewed" : _("Unreviewed")
                   , "rejected": _("Rejected")
                    }
 status_icons = { "approved": "&#xe008;"

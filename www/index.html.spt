@@ -1,12 +1,18 @@
 from collections import OrderedDict
+from gratipay.utils import get_featured_projects
+import random
+
 [---]
 i18ned_statuses = { "approved": _("Approved")
-                  , "unreviewed" : _("Under Review")
+                  , "unreviewed" : _("Unreviewed")
                   , "rejected": _("Rejected")
+                  , "featured": _("Featured")
                    }
+
 status_icons = { "approved": "&#xe008;"
                , "unreviewed": "&#xe009;"
                , "rejected": "&#xe010;"
+               , "featured": "&#xe9d9;"
                 }
 
 teams = website.db.all("""
@@ -17,16 +23,32 @@ teams = website.db.all("""
   ORDER BY ctime DESC
 
 """)
+
 volume = website.db.one("SELECT volume FROM paydays ORDER BY ts_start DESC LIMIT 1", default=0)
 volume = int(round(volume, -2))
 
 tabs = OrderedDict()
+tabs['featured'] = {'teams': []}
 tabs['approved'] = {'teams': []}
 tabs['unreviewed'] = {'teams': []}
 tabs['rejected'] = {'teams': []}
 
-for team in teams:
-    tabs[team.status]['teams'].append(team)
+popular = []
+unpopular = []
+for project in teams:
+    tabs[project.status]['teams'].append(project)
+    if project.status == 'approved':
+        if project.nreceiving_from >= 5:
+            popular.append(project)
+        else:
+            unpopular.append(project)
+
+if len(tabs['approved']['teams']) < 10:
+    tabs.pop('featured')
+else:
+    featured_projects = get_featured_projects(popular, unpopular)
+    random.shuffle(featured_projects)
+    tabs['featured'] = {'teams': featured_projects}
 
 nteams = 0
 for key, tab in tabs.items():
