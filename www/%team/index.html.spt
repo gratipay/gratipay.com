@@ -33,7 +33,7 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
         {% if team.status == 'approved' %}
         <span class="status-icon approved">&#xe008;</span> {{ _("Approved") }}
         {% elif team.status == 'unreviewed' %}
-        <span class="status-icon unreviewed">&#xe009;</span> {{ _("Under Review") }}
+        <span class="status-icon unreviewed">&#xe009;</span> {{ _("Unreviewed") }}
         {% elif team.status == 'rejected' %}
         <span class="status-icon rejected">&#xe010;</span> {{ _("Rejected") }}
         {% endif %}
