@@ -1,4 +1,4 @@
-from datetime import datetime 
+from datetime import datetime
 
 from aspen import Response
 
@@ -19,7 +19,7 @@ title = _("History")
 
 current_year = datetime.utcnow().year
 try:
-    year = int(request.qs.get('year', current_year)) 
+    year = int(request.qs.get('year', current_year))
 except ValueError:
     raise Response(400, "Bad Year")
 years = list(range(current_year, team.ctime.year-1, -1))
@@ -52,8 +52,8 @@ years = list(range(current_year, team.ctime.year-1, -1))
 {% set events = iter_payday_events(website.db, team, year) %}
 
 {% for payday in events %}
-   
-    {% if payday['events'] %} 
+
+    {% if payday['events'] %}
         <tr>
             <th colspan="5"><h2>
         {{ payday['date'].strftime("%B %d, %Y").replace(' 0', ' ') }}
