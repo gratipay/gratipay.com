@@ -91,12 +91,3 @@ years = list(range(current_year, team.ctime.year-1, -1))
 {% endfor %}
 </table>
 {% endblock %}
-
-{% block scripts %}
-<script>
-$(document).ready(function() {
-    jQuery.get('../charts.json', Gratipay.charts.make);
-});
-</script>
-{{ super() }}
-{% endblock %}
