@@ -270,9 +270,14 @@ class LazyResponse(Response):
 
 
 def get_featured_projects(popular, unpopular):
-    popular_sample_size = min(10 if (len(unpopular) == 0) else 7, len(popular))
-    unpopular_sample_size = min(len(unpopular), 10-popular_sample_size)
-    featured_projects = ( random.sample(popular, popular_sample_size)
-                        + random.sample(unpopular, unpopular_sample_size)
-                         )
+    np, nu = len(popular), len(unpopular)
+
+    # surely optimizable & clarifiable, but it passes the tests
+    if np < 7 and nu < 3:     p, u = np, nu
+    elif np < 7 and nu >= 3:  p, u = np, 10 - np
+    elif np >= 7 and nu < 3:  p, u = 10 - nu, nu
+    else:                     p, u = 7, 3
+
+    featured_projects = random.sample(popular, p) + random.sample(unpopular, u)
+    random.shuffle(featured_projects)
     return featured_projects
