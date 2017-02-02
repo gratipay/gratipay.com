@@ -124,7 +124,7 @@ sudo apt-get install \
     libssl-dev
 ```
 
-On OS X you can [download Postgres directly](http://www.postgresql.org/download/macosx/) or install through [Homebrew](http://brew.sh/):
+On macOS you can [download Postgres directly](http://www.postgresql.org/download/macosx/) or install through [Homebrew](http://brew.sh/):
 
 ```shell
 brew install postgresql
