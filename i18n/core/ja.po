@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PROJECT project.
 # 
 # Translators:
+# Chad Whitacre <chad@zetaweb.com>, 2017
 # Naofumi <naofum@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -574,13 +575,13 @@ msgid "Approved"
 msgstr "承認"
 
 msgid "Unreviewed"
-msgstr ""
+msgstr "未点検"
 
 msgid "Rejected"
 msgstr "否認"
 
 msgid "Featured"
-msgstr ""
+msgstr "注目"
 
 msgid "Pay for open source."
 msgstr "オープンソースに支払います。"

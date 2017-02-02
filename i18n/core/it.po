@@ -576,13 +576,13 @@ msgid "Approved"
 msgstr "Approvati"
 
 msgid "Unreviewed"
-msgstr ""
+msgstr "Non visto"
 
 msgid "Rejected"
 msgstr "Rifiutati"
 
 msgid "Featured"
-msgstr ""
+msgstr "In primo piano"
 
 msgid "Pay for open source."
 msgstr "Paga per open source."
