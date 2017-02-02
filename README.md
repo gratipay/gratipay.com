@@ -115,7 +115,13 @@ met](http://initd.org/psycopg/docs/faq.html#problems-compiling-and-deploying-psy
 On Debian or Ubuntu you will need the following packages:
 
 ```shell
-sudo apt-get install postgresql-9.3 postgresql-contrib libpq-dev python-dev libffi-dev libssl-dev
+sudo apt-get install \
+    postgresql-9.3 \
+    postgresql-contrib \
+    libpq-dev \
+    python-dev \
+    libffi-dev \
+    libssl-dev
 ```
 
 On OS X you can [download Postgres directly](http://www.postgresql.org/download/macosx/) or install through [Homebrew](http://brew.sh/):
