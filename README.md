@@ -29,7 +29,7 @@ Given Python 2.7, Postgres 9.3, and a C/make toolchain:
 git clone git@github.com:gratipay/gratipay.com.git
 cd gratipay.com
 scripts/bootstrap-debian.sh
-make -j$(nproc) schema data
+make -j$(nproc) schema fake
 ```
 
 And then run
