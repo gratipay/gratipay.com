@@ -575,7 +575,7 @@ msgid "Approved"
 msgstr "承認"
 
 msgid "Unreviewed"
-msgstr "未点検"
+msgstr "未確認"
 
 msgid "Rejected"
 msgstr "否認"
