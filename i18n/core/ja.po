@@ -573,11 +573,14 @@ msgstr "他の {0}利用規約{1} にも同意します。"
 msgid "Approved"
 msgstr "承認"
 
-msgid "Under Review"
-msgstr "レビュー中"
+msgid "Unreviewed"
+msgstr ""
 
 msgid "Rejected"
 msgstr "否認"
+
+msgid "Featured"
+msgstr ""
 
 msgid "Pay for open source."
 msgstr "オープンソースに支払います。"
