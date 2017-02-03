@@ -51,6 +51,15 @@ years = list(range(current_year, team.ctime.year-1, -1))
 
 {% set events = iter_payday_events(website.db, team, year) %}
 
+
+
+<!---------------------------------------->
+{% for payment in events %}
+    {{ payment['payday'] }}
+{% endfor %}
+
+<!---------------------------------------->
+
 {% for payday in events %}
 
     {% if payday['events'] %}
@@ -66,8 +75,6 @@ years = list(range(current_year, team.ctime.year-1, -1))
             <td class="status">{{ _("Giver") }}</td>
             <td class="debits">{{ _("Taker") }}</td>
             <td class="balance">{{ _("Amount") }}</td>
-            <td class="status">{{ _("Status") }}</td>
-            <td class="notes">{{ _("Notes") }}</td>
         </tr>
         {% for event in payday['events'] %}
             <tr>
@@ -76,15 +83,9 @@ years = list(range(current_year, team.ctime.year-1, -1))
                 <td class="debits"></td>
             {% else %}
                 <td class="credits"></td>
-                <td class="debits">{{ event['participant'] }}</td>
+                <td class="debits"> Anonymous </td>
             {% endif %}
                 <td class="balance">{{ event['amount'] }}</td>
-                <td class="status">{{ event['status'] }}</td>
-                <td class="notes">
-                    {% if event['notes'] %}
-                        {{ event['notes'] }}
-                    {% endif %}
-                </td>
             </tr>
          {% endfor %}
     {% endif %}
