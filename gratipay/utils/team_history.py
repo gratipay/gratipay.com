@@ -34,7 +34,7 @@ def get_end_of_year_totals(db, team, year):
     return received, distributed
 
 
-def iter_payday_events(db, team, year=None):
+def iter_team_payment_events(db, team, year=None):
     """Yields payday events for the given Team.
     """
     current_year = datetime.utcnow().year

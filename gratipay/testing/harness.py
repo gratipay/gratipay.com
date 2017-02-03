@@ -266,6 +266,24 @@ class Harness(unittest.TestCase):
         record_exchange_result(self.db, e_id, status, error, participant)
         return e_id
 
+    def make_payment(self, participant, team, amount, direction, payday, timestamp=now()):
+        """Factory for payment"""
+
+        payment_id = self.db.one("""
+            INSERT INTO payments
+                        (timestamp, participant, team, amount, direction, payday)
+                 VALUES (%(timestamp)s, %(participant)s, %(team)s, %(amount)s, %(direction)s, %(payday)s)
+              RETURNING id
+            """, dict(timestamp=timestamp,
+                      participant=participant,
+                      team=team,
+                      amount=amount,
+                      direction=direction,
+                      payday=payday
+                    )
+                )
+        return payment_id
+
 
     def make_tip(self, tipper, tippee, amount, cursor=None):
         """Given a Participant or username, and amount as str, returns a dict.

@@ -49,16 +49,8 @@ years = list(range(current_year, team.ctime.year-1, -1))
     {{ _("Total Distributed : {0}", format_currency(distributed, "USD")) }}
     </td></tr>
 
-{% set events = iter_payday_events(website.db, team, year) %}
+{% set events = iter_team_payment_events(website.db, team, year) %}
 
-
-
-<!---------------------------------------->
-{% for payment in events %}
-    {{ payment['payday'] }}
-{% endfor %}
-
-<!---------------------------------------->
 
 {% for payday in events %}
 
