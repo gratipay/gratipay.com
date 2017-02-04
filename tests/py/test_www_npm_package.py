@@ -10,4 +10,4 @@ class TestAnon(Harness):
         self.make_package('npm', 'foo', 'The foo package', ['alice@example.com'])
 
     def test_gets_signin_page(self):
-        assert 'npm/foo has not been claimed' in self.client.GET('/on/npm/foo/').body
+        assert 'npm/foo</a> has not been claimed' in self.client.GET('/on/npm/foo/').body
