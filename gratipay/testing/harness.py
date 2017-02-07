@@ -181,13 +181,14 @@ class Harness(unittest.TestCase):
         return team
 
 
-    def make_package(self, package_manager, name, description, emails):
+    def make_package(self, package_manager='npm', name='foo', description='Foo',
+                                                                     emails=['alice@example.com']):
         """Factory for packages.
         """
-        self.db.one( 'INSERT INTO packages (package_manager, name, description, emails) '
-                     'VALUES (%s, %s, %s, %s) RETURNING *'
-                   , (package_manager, name, description, emails)
-                    )
+        return self.db.one( 'INSERT INTO packages (package_manager, name, description, emails) '
+                            'VALUES (%s, %s, %s, %s) RETURNING *'
+                          , (package_manager, name, description, emails)
+                           )
 
 
     def make_participant(self, username, **kw):
