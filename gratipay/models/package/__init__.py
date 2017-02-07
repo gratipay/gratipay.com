@@ -1,6 +1,9 @@
-from gratipay.models.team import Team
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
 
+from gratipay.models.team import Team
 from postgres.orm import Model
+
 
 class Package(Model):
     """Represent a gratipackage. :-)
@@ -18,6 +21,7 @@ class Package(Model):
             return True
         return self.id != other.id
 
+
     # Constructors
     # ============
 
@@ -25,33 +29,15 @@ class Package(Model):
     def from_id(cls, id):
         """Return an existing package based on id.
         """
-        return cls._from_thing("id", id)
+        return cls.db.one("SELECT packages.*::packages FROM packages WHERE id=%s", (id,))
 
     @classmethod
-    def from_team_slug(cls, slug):
-        """Return an existing package based on team's slug.
+    def from_names(cls, package_manager, name):
+        """Return an existing package based on package manager and package names.
         """
-        return cls._from_thing("team", slug)
+        return cls.db.one("SELECT packages.*::packages FROM packages "
+                          "WHERE package_manager=%s and name=%s", (package_manager, name))
 
-    @classmethod
-    def _from_thing(cls, thing, value):
-        assert thing in ("id", "team")
-        return cls.db.one("""
-
-            SELECT packages.*::packages
-              FROM packages
-             WHERE {}=%s
-
-        """.format(thing), (value,))
-
-    @classmethod
-    def insert(cls, owner, **fields):
-        return cls.db.one("""
-            INSERT INTO packages (package_manager, name, description, emails)
-                 VALUES (%(package_manager)s, %(name)s, %(description)s, %(emails)s)
-              RETURNING packages.*::packages
-
-        """, fields)
 
     def set_team(self, team):
         """Set team for a package.
