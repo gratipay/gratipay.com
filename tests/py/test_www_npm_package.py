@@ -18,4 +18,19 @@ class TestClaimingWorkflow(Harness):
         self.make_participant('bob', claimed_time='now')
         body = self.client.GET('/on/npm/foo/', auth_as='bob').body
         assert 'npm/foo</a> has not been claimed' in body
-        assert 'with one of these email addresses' in body
+        assert 'using any email address' in body
+        assert 'alice@example.com' in body
+
+    def test_auth_gets_multiple_options_if_present(self):
+        self.make_package('npm', 'bar', 'Bar', ['alice@example.com', 'alice@example.net'])
+        self.make_participant('bob', claimed_time='now')
+        body = self.client.GET('/on/npm/bar/', auth_as='bob').body
+        assert 'using any email address' in body
+        assert 'alice@example.com' in body
+        assert 'alice@example.net' in body
+
+    def test_auth_gets_something_if_no_emails(self):
+        self.make_package('npm', 'bar', 'Bar', [])
+        self.make_participant('bob', claimed_time='now')
+        body = self.client.GET('/on/npm/bar/', auth_as='bob').body
+        assert "didn&#39;t find any email addresses" in body
