@@ -4,6 +4,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from postgres.orm import Model
 
 
+NPM = 'npm'  # We are starting with a single package manager. If we see
+             # traction we will expand.
+
+
 class Package(Model):
     """Represent a gratipackage. :-)
     """
