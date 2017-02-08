@@ -26,6 +26,15 @@ url = 'https://npmjs.com/package/' + package.name
 </a>
 {% endblock %}
 
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('button.send').on('click', Gratipay.packages.post);
+    });
+</script>
+{{ super() }}
+{% endblock %}
+
 {% block content %}
 <h2>{{ _( '{npm_package} has not been claimed on Gratipay.'
         , npm_package=('<a href="' + url + '">' + 'npm/' + package_name + '</a>')|safe
@@ -40,14 +49,13 @@ url = 'https://npmjs.com/package/' + package.name
 {% else %}
     <p>{{ _('Is this yours? You can claim it on Gratipay with one of these email addresses:')
          }}</p>
-    <form action="" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <ul>
-            {% for email in package.emails %}
-            <li><input type="radio" name="email"> {{ email }}</li>
-            {% endfor %}
-        </ul>
-        <button type="submit">{{ _('Send confirmation link') }}</button>
-    </form>
+
+    <ul data-package-id="{{ package.id }}">
+        {% for i, email in enumerate(package.emails) %}
+        <li><input type="radio" name="email" value="{{ email }}" id="email-{{i}}">
+            <label for="email-{{ i }}">{{ email }}</a></li>
+        {% endfor %}
+    </ul>
+    <button type="submit" class="send">{{ _('Send confirmation link') }}</button>
 {% endif %}
 {% endblock %}
