@@ -580,11 +580,14 @@ msgstr ""
 msgid "Approved"
 msgstr "Approuvées"
 
-msgid "Under Review"
-msgstr "En cours d'examen"
+msgid "Unreviewed"
+msgstr ""
 
 msgid "Rejected"
 msgstr "Rejetées"
+
+msgid "Featured"
+msgstr ""
 
 msgid "Pay for open source."
 msgstr ""

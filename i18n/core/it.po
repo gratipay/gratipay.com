@@ -575,11 +575,14 @@ msgstr "Acconsento anche agli altri {0}termini di servizio{1}."
 msgid "Approved"
 msgstr "Approvati"
 
-msgid "Under Review"
-msgstr "In esaminazione"
+msgid "Unreviewed"
+msgstr "Non visto"
 
 msgid "Rejected"
 msgstr "Rifiutati"
+
+msgid "Featured"
+msgstr "In primo piano"
 
 msgid "Pay for open source."
 msgstr "Paga per open source."

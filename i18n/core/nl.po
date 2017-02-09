@@ -577,11 +577,14 @@ msgstr ""
 msgid "Approved"
 msgstr "Goedgekeurd"
 
-msgid "Under Review"
-msgstr "In behandeling"
+msgid "Unreviewed"
+msgstr ""
 
 msgid "Rejected"
 msgstr "Geweigerd"
+
+msgid "Featured"
+msgstr ""
 
 msgid "Pay for open source."
 msgstr ""

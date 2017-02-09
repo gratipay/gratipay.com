@@ -29,7 +29,7 @@ Given Python 2.7, Postgres 9.3, and a C/make toolchain:
 git clone git@github.com:gratipay/gratipay.com.git
 cd gratipay.com
 scripts/bootstrap-debian.sh
-make -j$(nproc) schema data
+make -j$(nproc) schema fake
 ```
 
 And then run
@@ -41,7 +41,7 @@ make run
 to boot the app and/or:
 
 ```shell
-make -j$(nproc) test
+make test
 ```
 
 to run the tests.
@@ -115,10 +115,16 @@ met](http://initd.org/psycopg/docs/faq.html#problems-compiling-and-deploying-psy
 On Debian or Ubuntu you will need the following packages:
 
 ```shell
-sudo apt-get install postgresql-9.3 postgresql-contrib libpq-dev python-dev libffi-dev libssl-dev
+sudo apt-get install \
+    postgresql-9.3 \
+    postgresql-contrib \
+    libpq-dev \
+    python-dev \
+    libffi-dev \
+    libssl-dev
 ```
 
-On OS X you can [download Postgres directly](http://www.postgresql.org/download/macosx/) or install through [Homebrew](http://brew.sh/):
+On macOS you can [download Postgres directly](http://www.postgresql.org/download/macosx/) or install through [Homebrew](http://brew.sh/):
 
 ```shell
 brew install postgresql
@@ -138,7 +144,7 @@ running `make`, then add
 for more information](http://stackoverflow.com/a/22355874/347246)):
 
 ```shell
-ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future make -j$(nproc) clean env
+ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future make clean env
 ```
 
 
@@ -157,20 +163,20 @@ To create virtualenv enviroment with all python dependencies installed
 in a sandbox:
 
 ```shell
-make -j$(nproc) env
+make env
 ```
 
 If you haven't run Gratipay for a while, you can reinstall the dependencies:
 
 ```shell
-make -j$(nproc) clean env
+make clean env
 ```
 
 Add the necessary schemas and insert dummy data into postgres:
 
 ```shell
-make -j$(nproc) schema
-make -j$(nproc) fake
+make schema
+make fake
 ```
 
 
@@ -344,8 +350,8 @@ $ docker logs [container_id]
 - run commands within the project root:
 
 ```shell
-$ docker exec [container_id] make -j$(nproc) schema
-$ docker exec [container_id] make -j$(nproc) fake
+$ docker exec [container_id] make schema
+$ docker exec [container_id] make fake
 ```
 
 Once you're done, kill the running container:
@@ -394,24 +400,24 @@ Testing [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/mast
 Our test suite is divided into through-the-web (TTW) tests and Python tests.
 You need to install [PhantomJS](http://phantomjs.org/) separately in order to
 run the TTW tests. For both suites we use the [pytest](http://pytest.org/) test
-runner; it's installed automatically as part of `make -j$(nproc) env`.
+runner; it's installed automatically as part of `make env`.
 
 The easiest way to run the whole test suite is:
 
 ```shell
-make -j$(nproc) test
+make test
 ```
 
 You can also do:
 
 ```shell
-make -j$(nproc) ttwtest
+make ttwtest
 ```
 
 and/or:
 
 ```shell
-make -j$(nproc) pytest
+make pytest
 ```
 
 To invoke `py.test` directly you should use the `honcho` utility that comes
@@ -456,7 +462,7 @@ psql -q gratipay-test -c 'alter database "gratipay-test" set synchronous_commit 
 Once Postgres is set up, run:
 
 ```shell
-make -j$(nproc) schema
+make schema
 ```
 
 Which populates the database named by `DATABASE_URL` with the schema from `sql/schema.sql`.
@@ -467,7 +473,7 @@ The gratipay database created in the last step is empty. To populate it with
 some fake data, so that more of the site is functional, run this command:
 
 ```shell
-make -j$(nproc) fake
+make fake
 ```
 
 
