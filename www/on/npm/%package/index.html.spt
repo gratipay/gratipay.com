@@ -9,10 +9,9 @@ package = Package.from_names('npm', package_name)
 if package is None:
     raise Response(404)
 banner = package_name
-page_id = "on-npm-foo"
+page_id = "package"
 suppress_sidebar = True
 url = 'https://npmjs.com/package/' + package.name
-nemails = len(package.emails)
 [---]
 {% extends "templates/base.html" %}
 
@@ -52,11 +51,11 @@ nemails = len(package.emails)
            , a=('<a href="https://registry.npmjs.com/' + package.name + '">')|safe
            , _a='</a>'|safe
             ) }}
-    {% if nemails == 0 %}
+    {% if len(package.emails) == 0 %}
     <p class="sorry">{{ _("Sorry, we didn't find any email addresses on file.") }}</p>
     {% else %}
     <input type="hidden" name="package_id" value="{{ package.id }}">
-    <ul>
+    <ul class="emails">
         {% for i, email in enumerate(package.emails) %}
         <li><input type="radio" name="email" value="{{ email }}" id="email-{{i}}"
                    {% if i == 0 %}checked{% endif %}>
