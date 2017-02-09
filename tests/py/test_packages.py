@@ -14,3 +14,9 @@ class TestPackage(Harness):
     def test_can_be_instantiated_from_names(self):
         self.make_package()
         assert Package.from_names(NPM, 'foo').name == 'foo'
+
+
+class TestSendConfirmationEmail(Harness):
+
+    def test_sends_confirmation_email(self):
+        pass
