@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from gratipay.models.package import NPM
 from gratipay.testing import Harness
 
 
@@ -22,7 +23,7 @@ class TestClaimingWorkflow(Harness):
         assert 'alice@example.com' in body
 
     def test_auth_gets_multiple_options_if_present(self):
-        self.make_package('npm', 'bar', 'Bar', ['alice@example.com', 'alice@example.net'])
+        self.make_package(NPM, 'bar', 'Bar', ['alice@example.com', 'alice@example.net'])
         self.make_participant('bob', claimed_time='now')
         body = self.client.GET('/on/npm/bar/', auth_as='bob').body
         assert 'using any email address' in body
@@ -30,7 +31,7 @@ class TestClaimingWorkflow(Harness):
         assert 'alice@example.net' in body
 
     def test_auth_gets_something_if_no_emails(self):
-        self.make_package('npm', 'bar', 'Bar', [])
+        self.make_package(NPM, 'bar', 'Bar', [])
         self.make_participant('bob', claimed_time='now')
         body = self.client.GET('/on/npm/bar/', auth_as='bob').body
         assert "didn&#39;t find any email addresses" in body
