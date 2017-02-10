@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from gratipay.models.package import NPM, Package
 from gratipay.testing import Harness
+from gratipay.testing.emails import EmailHarness
 
 
 class TestPackage(Harness):
@@ -16,7 +17,8 @@ class TestPackage(Harness):
         assert Package.from_names(NPM, 'foo').name == 'foo'
 
 
-class TestSendConfirmationEmail(Harness):
+class TestSendConfirmationEmail(EmailHarness):
 
     def test_sends_confirmation_email(self):
-        pass
+        p = self.make_package()
+        p.send_confirmation_email('alice@example.com')
