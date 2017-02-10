@@ -277,6 +277,9 @@ def compile_assets(website):
     for spt in find_files(website.www_root+'/assets/', '*.spt'):
         filepath = spt[:-4]                         # /path/to/www/assets/foo.css
         urlpath = spt[spt.rfind('/assets/'):-4]     # /assets/foo.css
+        if urlpath == '/assets/_well-known/acme-challenge/%token':
+            # This *should* be dynamic.
+            continue
         try:
             # Remove any existing compiled asset, so we can access the dynamic
             # one instead (Aspen prefers foo.css over foo.css.spt).

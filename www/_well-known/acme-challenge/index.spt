@@ -1,0 +1,15 @@
+from aspen import Response
+[----------]
+if not user.ADMIN:
+    raise Response(401 if user.ANON else 403)
+nchallenges = website.db.one('select count(*) from acme_challenges')
+banner = 'ACME'
+title = 'Challenges'
+[----------] text/html
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+<p>Number of open challenges: <b>{{ nchallenges }}</b>.</p>
+
+{% endblock %}
