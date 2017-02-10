@@ -1,6 +1,8 @@
 from aspen import Response
 [---------]
 token = request.path['token']
+if not token:
+    raise Response(404)
 if user.ADMIN:
     posted = request.method == 'POST'
     if posted:

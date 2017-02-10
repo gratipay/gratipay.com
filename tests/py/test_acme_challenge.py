@@ -9,6 +9,9 @@ class TestACMEChallenge(Harness):
     def test_cant_find_the_real_dot_well_known(self):
         assert self.client.GxT('/.well-known/README').code == 404
 
+    def test_the_index_is_empty(self):
+        assert self.client.GxT('/.well-known/acme-challenge/').code == 404
+
     def test_anon_sees_401_when_empty(self):
         assert self.client.GxT('/.well-known/acme-challenge/deadbeef').code == 401
 
