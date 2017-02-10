@@ -3,7 +3,7 @@ from datetime import datetime
 from aspen import Response
 
 from gratipay.utils import get_team
-from gratipay.utils.team_history import get_end_of_year_totals, iter_payday_events
+from gratipay.utils.team_history import get_end_of_year_totals, iter_team_payday_events
 
 [-----------------------------------------------------------------------------]
 
@@ -49,7 +49,7 @@ years = list(range(current_year, team.ctime.year-1, -1))
     {{ _("Total Distributed : {0}", format_currency(distributed, "USD")) }}
     </td></tr>
 
-{% set events = iter_team_payment_events(website.db, team, year) %}
+{% set events = iter_team_payday_events(website.db, team, year) %}
 
 
 {% for payday in events %}

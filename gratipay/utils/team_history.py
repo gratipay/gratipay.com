@@ -34,7 +34,7 @@ def get_end_of_year_totals(db, team, year):
     return received, distributed
 
 
-def iter_team_payment_events(db, team, year=None):
+def iter_team_payday_events(db, team, year=None):
     """Yields payday events for the given Team.
     """
     current_year = datetime.utcnow().year
@@ -46,13 +46,16 @@ def iter_team_payment_events(db, team, year=None):
          WHERE payments.payday = paydays.id
            AND team=%(team)s
            AND extract(year from timestamp) = %(year)s
-         ORDER BY payments.payday
-       """, dict(team=team.name, year=year), back_as=dict)
+         ORDER BY payments.payday, payments.id
+       """, dict(team=team.slug, year=year), back_as=dict)
 
     events = []
     payday_id = payments[0]['payday']
     payday_date = payments[0]['ts_start']
     payday_events = []
+
+    if not payments:
+        return payments
 
     #return payments
 
