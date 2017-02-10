@@ -957,3 +957,6 @@ BEGIN;
         tsvector_update_trigger_column(search_vector, search_conf, content_scrubbed);
 
 END;
+BEGIN;
+    CREATE TABLE acme_challenges (token text, "authorization" text);
+END;
