@@ -25,7 +25,7 @@ except ValueError:
 years = list(range(current_year, team.ctime.year-1, -1))
 
 if year not in years:
-    raise Response(400, "Bad Year")
+    raise Response(400, "Bad Year" )
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/team-base.html" %}

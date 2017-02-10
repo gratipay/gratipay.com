@@ -19,7 +19,7 @@ def make_history(harness):
     harness.bob = bob
 
     # Make team
-    enterprise = harness.make_team('The Enterprise', owner=picard, is_approved=True)
+    enterprise = harness.make_team('The Enterprise', ctime=datetime.datetime(2010, 1, 2, 0, 0, 0), owner=picard, is_approved=True)
     harness.enterprise = enterprise
 
     # Make paydays (about 4)
@@ -105,4 +105,4 @@ class TestTeamHistoryPage(Harness):
         assert self.client.GxT('/TheEnterprise/history/?year=2010').code == 401
 
     def test_bad_year_for_team_history(self):
-        assert self.client.GxT('/TheEnterprise/history/?year=2011').code == 400
+        assert self.client.GxT('/TheEnterprise/history/?year=2009', auth_as='picard').code == 400
