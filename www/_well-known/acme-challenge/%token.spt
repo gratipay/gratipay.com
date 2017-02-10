@@ -1,0 +1,44 @@
+from aspen import Response
+[---------]
+token = request.path['token']
+if not token:
+    raise Response(404)
+if user.ADMIN:
+    posted = request.method == 'POST'
+    if posted:
+        authorization = request.body['authorization']
+        with website.db.get_cursor() as c:
+            c.run('DELETE FROM acme_challenges WHERE token=%s', (token,))
+            c.run('INSERT INTO acme_challenges VALUES (%s, %s)', (token, authorization))
+else:
+    request.allow('GET')
+    authorization = website.db.one('''
+    DELETE FROM acme_challenges WHERE token=%s RETURNING "authorization"
+    ''', (token,))
+    if not authorization:
+        raise Response(401 if user.ANON else 403)
+    raise Response(200, authorization)
+
+title = 'Take the Challenge!'
+banner = 'ACME'
+suppress_sidebar = True
+[---------] text/html
+{% extends "templates/base.html" %}
+
+{% block content %}
+{% if posted %}
+
+<p>Okay! The next non-admin to <code>GET</code> this resource (and <i>only</i> the
+next <code>GET</code>) will receive this response:</p>
+
+<pre>{{ authorization }}</pre>
+{% else %}
+<form action="/.well-known/acme-challenge/{{ token }}" method="POST">
+    <p>Let's do it! Enter the authorization response for this token:</p>
+    <pre>{{ token }}</pre>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input placeholder="authorization" name="authorization" autofocus>
+    <button type="submit">Save</button>
+</form>
+{% endif %}
+{% endblock %}

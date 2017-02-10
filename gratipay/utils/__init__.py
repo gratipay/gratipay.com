@@ -32,14 +32,20 @@ def dict_to_querystring(mapping):
     return u'?' + u'&'.join(arguments)
 
 
-def use_tildes_for_participants(website, request):
-    if request.path.raw.startswith('/~/'):
-        to = '/~' + request.path.raw[3:]
+def _munge(website, request, url_prefix, fs_prefix):
+    if request.path.raw.startswith(fs_prefix):
+        to = url_prefix + request.path.raw[len(fs_prefix):]
         if request.qs.raw:
             to += '?' + request.qs.raw
         website.redirect(to)
-    elif request.path.raw.startswith('/~'):
-        request.path.__init__('/~/' + request.path.raw[2:])
+    elif request.path.raw.startswith(url_prefix):
+        request.path.__init__(fs_prefix + request.path.raw[len(url_prefix):])
+
+def help_aspen_find_well_known(website, request):
+    return _munge(website, request, '/.well-known/', '/_well-known/')
+
+def use_tildes_for_participants(website, request):
+    return _munge(website, request, '/~', '/~/')
 
 
 def canonicalize(redirect, path, base, canonical, given, arguments=None):

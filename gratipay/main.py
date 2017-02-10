@@ -98,6 +98,7 @@ algorithm.functions = [
     algorithm['parse_environ_into_request'],
     algorithm['parse_body_into_request'],
 
+    utils.help_aspen_find_well_known,
     utils.use_tildes_for_participants,
     algorithm['redirect_to_base_url'],
     i18n.set_up_i18n,
