@@ -1,0 +1,13 @@
+from aspen import Response
+[---------]
+request.allow('GET')
+token = request.path['token']
+if not token:
+    raise Response(404)
+authorization = website.db.one('''
+DELETE FROM acme_challenges WHERE token=%s RETURNING "authorization"
+''', (token,))
+if not authorization:
+    raise Response(404)
+raise Response(200, authorization)
+[---------]

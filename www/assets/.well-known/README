@@ -1,0 +1,3 @@
+Aspen can't find this hidden directory, so we have a function in the state
+chain algorithm in gratipay/main.py to internally redirect to ./_well-known
+instead.
