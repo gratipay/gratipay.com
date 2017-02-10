@@ -1,11 +1,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import datetime
-import json
 
-from mock import patch
-
-from gratipay.testing import Harness, D,P
+from gratipay.testing import Harness
 from gratipay.utils.team_history import get_end_of_year_totals, iter_team_payday_events
 
 
@@ -66,8 +63,8 @@ class TestTeamHistory(Harness):
         #payments = iter_team_payday_events(self.db, enterprise)
         #assert not payments
 
-        self.make_payment('alice', enterprise.slug, 50, 'to-team', payday_id, timestamp=date)
-        self.make_payment('picard', enterprise.slug, 25, 'to-participant', payday_id , timestamp=date)
+        self.make_payment(alice.username, enterprise.slug, 50, 'to-team', payday_id, timestamp=date)
+        self.make_payment(picard.username, enterprise.slug, 25, 'to-participant', payday_id , timestamp=date)
         payments = iter_team_payday_events(self.db, enterprise)
         assert len(payments) == 1
         assert len(payments[0]['events']) == 2

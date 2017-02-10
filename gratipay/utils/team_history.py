@@ -68,6 +68,6 @@ def iter_team_payday_events(db, team, year=None):
 
         payday_events.append(payment)
 
-    events.append (dict(id=payday_id, date=payment['ts_start'], events=payday_events))
+    events.append (dict(id=payday_id, date=payday_date, events=payday_events))
 
     return events
