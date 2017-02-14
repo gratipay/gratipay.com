@@ -2,13 +2,14 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from postgres.orm import Model
+from gratipay.models.package import mixins
 
 
 NPM = 'npm'  # We are starting with a single package manager. If we see
              # traction we will expand.
 
 
-class Package(Model):
+class Package(Model, mixins.Confirmation):
     """Represent a gratipackage. :-)
     """
 
@@ -40,10 +41,3 @@ class Package(Model):
         """
         return cls.db.one("SELECT packages.*::packages FROM packages "
                           "WHERE package_manager=%s and name=%s", (package_manager, name))
-
-
-    # Emails
-    # ======
-
-    def send_confirmation_email(self, address):
-        pass
