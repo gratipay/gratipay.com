@@ -5,7 +5,6 @@ Gratipay.emails.post = function(e) {
     var $this = $(this);
     var action = this.className;
     var $inputs = $('.emails button, .emails input');
-    console.log($this);
     var address = $this.parent().data('email') || $('input.add-email').val();
 
     $inputs.prop('disabled', true);

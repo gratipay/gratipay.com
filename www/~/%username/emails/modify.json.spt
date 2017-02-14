@@ -6,6 +6,7 @@ import re
 from aspen import Response
 from gratipay.exceptions import ProblemChangingEmail
 from gratipay.utils import get_participant
+from gratipay.models.package import Package
 
 email_re = re.compile(r'^[^@]+@[^@]+\.[^@]+$')
 
@@ -36,6 +37,11 @@ elif action == 'set-primary':
     participant.update_email(address)
 elif action == 'remove':
     participant.remove_email(address)
+elif action == 'add-email-and-claim-package':
+    package_id = request.body['package_id']
+    package = Package.from_id(package_id)
+    package.send_confirmation_email(address)
+    msg = _("Check {email} for a confirmation link.", email=address)
 else:
     raise Response(400, 'unknown action "%s"' % action)
 
