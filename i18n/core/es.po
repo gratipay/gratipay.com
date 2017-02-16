@@ -9,7 +9,7 @@
 # Juan Luis Cano <juanlu001@gmail.com>, 2014
 # Marco Mora-Huizar <marcomorahuizar@gmail.com>, 2014
 # Pablo Roberto “Jristz” Lezaeta Reyes <prflr88@gmail.com>, 2015
-# Sergi Alonso <sseerrggii@gmail.com>, 2016
+# Sergi Alonso <sseerrggii@gmail.com>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
@@ -103,7 +103,7 @@ msgid ""
 msgstr "Hemos rechazado tu solicitud para el pago en Gratipay 1.0, porque no hemos podido determinar qué producto o servicio ofreces en Gratipay. Por favor, haznos saber si te gustaría discutir sobre este asunto."
 
 msgid "Project Application Approved!"
-msgstr ""
+msgstr "Solicitud de Proyecto Aprobada!"
 
 msgid ""
 "We've approved your application for the '{team}' project on Gratipay. For "
@@ -288,7 +288,7 @@ msgid "Social Profiles"
 msgstr "Perfiles Sociales"
 
 msgid "Project"
-msgstr ""
+msgstr "Proyecto"
 
 msgid "Amount ($)"
 msgstr "Monto ($)"
@@ -303,7 +303,7 @@ msgid "{0} ago"
 msgstr "Hace {0}"
 
 msgid "joined {ago}"
-msgstr ""
+msgstr "unido {ago}"
 
 msgid "Previous"
 msgstr "Previo"
@@ -389,7 +389,7 @@ msgid "Events"
 msgstr "Eventos"
 
 msgid "Sign in / Sign up"
-msgstr ""
+msgstr "Entrar / Registro"
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -430,7 +430,7 @@ msgid "Distributing"
 msgstr "Distribuyendo"
 
 msgid "Projects"
-msgstr ""
+msgstr "Proyectos"
 
 msgid "{sign_in}{br}to give to{br}{team}"
 msgstr "{sign_in}{br}para dar a{br}{team}"
@@ -527,7 +527,7 @@ msgid "Apply"
 msgstr "Solicitar"
 
 msgid "Thanks! Your public project page is:"
-msgstr ""
+msgstr "Gracias! La página publica del proyecto es:"
 
 msgid "And your public review ticket is:"
 msgstr "Y tu ticket de opinión público es:"
@@ -541,7 +541,7 @@ msgid "Thanks for applying!"
 msgstr "¡Gracias por tu solicitud!"
 
 msgid "Project Name"
-msgstr ""
+msgstr "Nombre del Proyecto"
 
 msgid ""
 "At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
@@ -578,32 +578,19 @@ msgid "I agree to the other {0}terms of service{1} as well."
 msgstr ""
 
 msgid "Approved"
-msgstr "Aprovado"
+msgstr "Aprobado"
 
 msgid "Unreviewed"
-msgstr ""
+msgstr "Sin revisar"
 
 msgid "Rejected"
 msgstr "Rechazado"
 
 msgid "Featured"
-msgstr ""
+msgstr "Destacado"
 
 msgid "Pay for open source."
-msgstr ""
-
-msgid "Welcome to Gratipay!"
-msgstr "Bienvenido a Gratipay!"
-
-msgid ""
-"We have {nteams} projects receiving and sharing about {volume} each week."
-msgstr ""
-
-msgid "Continue to explore our projects, or {a}read more about us{_a}."
-msgstr ""
-
-msgid "Continue"
-msgstr "Continuar"
+msgstr "Pagar por código abierto."
 
 msgid "Fund Your Project"
 msgstr ""
@@ -656,7 +643,7 @@ msgid "owned by {a}~{owner}{_a}"
 msgstr "creado por {a}~{owner}{_a}"
 
 msgid "Project Closed"
-msgstr ""
+msgstr "Proyecto cerrado"
 
 msgid "Please {a}email support{_a} to reopen."
 msgstr ""
@@ -734,13 +721,13 @@ msgid "No"
 msgstr "No"
 
 msgid "Already closed."
-msgstr ""
+msgstr "Ya está cerrado."
 
 msgid "You can't edit a closed project."
-msgstr ""
+msgstr "No puedes editar un proyecto cerrado."
 
 msgid "You can't edit a rejected project."
-msgstr ""
+msgstr "No puedes editar un proyecto rechazado."
 
 msgid "Please upload a PNG or JPG image."
 msgstr "Por favor, añade solo imagenes PNG o JPG."
@@ -758,7 +745,7 @@ msgid "Sorry, there was a problem saving your image. Please try again."
 msgstr "Vaya, hemos tenido un problema al guardar tu imagen. Por favor inténtalo de nuevo."
 
 msgid "Edit Your Project"
-msgstr ""
+msgstr "Edita tu Proyecto"
 
 msgid "Modify"
 msgstr "Modificar"
@@ -767,7 +754,7 @@ msgid "Danger Zone"
 msgstr "Zona Peligrosa"
 
 msgid "Close Project"
-msgstr ""
+msgstr "Cierra el Proyecto"
 
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr "{0} recibe {1} por semana de {2} ~usuarios."
@@ -793,15 +780,15 @@ msgstr "¡Bienvenido!"
 msgid ""
 "Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} "
 "projects{_b} and about {b}{nusers} ~users{_b}."
-msgstr ""
+msgstr "Gratipay procesa cerca de {b}{volume} por semana{_b} para {b}{nteams} proyectos{_b} y {b}{nusers} ~usuarios{_b}."
 
 msgid ""
 "On average, ~users who give on Gratipay give {b}{amount} to one project{_b}."
 msgid_plural ""
 "On average, ~users who give on Gratipay give {b}{amount} each to {number} "
 "projects{_b}."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "De media los ~usuarios que donan en Gratipay aportan {b}{amount} a un proyecto{_b}."
+msgstr[1] "De media los ~usuarios que donan en Gratipay aportan {b}{amount} a {number} proyectos{_b}."
 
 msgid "Gratipay has processed about {b}{total}{_b} over {b}{age}+ years{_b}."
 msgstr "Gratipay ha procesado cerca de {b}{total}{_b} durante {b}{age}+ años{_b}."
@@ -946,7 +933,7 @@ msgid "What is Gratipay?"
 msgstr "¿Qué es Gratipay?"
 
 msgid "Gratipay helps companies and others pay for open source."
-msgstr ""
+msgstr "Gratipay ayuda a empresas, equipos, etc. a pagar por open source"
 
 msgid "Status"
 msgstr "Estado"
@@ -976,7 +963,7 @@ msgid "Sorry, you must agree to the terms of service."
 msgstr "Debes aceptar los términos del servicio."
 
 msgid "Please enter an http[s]:// URL for the 'Homepage' field."
-msgstr ""
+msgstr "Introduce http[s]:// URL para el campo 'Homepage'."
 
 msgid "Sorry, your team name is invalid."
 msgstr "El nombre de tu equipo no es válido."

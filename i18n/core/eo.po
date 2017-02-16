@@ -587,19 +587,6 @@ msgstr ""
 msgid "Pay for open source."
 msgstr ""
 
-msgid "Welcome to Gratipay!"
-msgstr "Bonvenon al Gratipay!"
-
-msgid ""
-"We have {nteams} projects receiving and sharing about {volume} each week."
-msgstr ""
-
-msgid "Continue to explore our projects, or {a}read more about us{_a}."
-msgstr ""
-
-msgid "Continue"
-msgstr "Daŭrigi"
-
 msgid "Fund Your Project"
 msgstr ""
 

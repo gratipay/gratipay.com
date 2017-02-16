@@ -386,8 +386,8 @@ msgstr "Widgets"
 msgid "Events"
 msgstr "Eventos"
 
-msgid "Sign in"
-msgstr "Logar"
+msgid "Sign in / Sign up"
+msgstr ""
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -578,26 +578,16 @@ msgstr ""
 msgid "Approved"
 msgstr ""
 
-msgid "Under Review"
+msgid "Unreviewed"
 msgstr ""
 
 msgid "Rejected"
 msgstr ""
 
+msgid "Featured"
+msgstr ""
+
 msgid "Pay for open source."
-msgstr ""
-
-msgid "Welcome to Gratipay!"
-msgstr ""
-
-msgid ""
-"We have {nteams} projects receiving and sharing about {volume} each week."
-msgstr ""
-
-msgid "Continue to explore our projects, or {a}read more about us{_a}."
-msgstr ""
-
-msgid "Continue"
 msgstr ""
 
 msgid "Fund Your Project"

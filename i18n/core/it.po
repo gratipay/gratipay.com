@@ -587,19 +587,6 @@ msgstr "In primo piano"
 msgid "Pay for open source."
 msgstr "Paga per open source."
 
-msgid "Welcome to Gratipay!"
-msgstr "Benvenuto su Gratipay!"
-
-msgid ""
-"We have {nteams} projects receiving and sharing about {volume} each week."
-msgstr "Abbiamo {nteams} progetti che ricevono e condividono circa {volume} ogni settimana."
-
-msgid "Continue to explore our projects, or {a}read more about us{_a}."
-msgstr "Continua a esplorare i nostri progetti, o {a}leggi di più su di noi{_a}."
-
-msgid "Continue"
-msgstr "Continua"
-
 msgid "Fund Your Project"
 msgstr "Finanza il Tuo Progetto"
 
