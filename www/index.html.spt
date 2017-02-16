@@ -62,7 +62,6 @@ for key, tab in tabs.items():
 
 title = _("Projects")
 suppress_sidebar = True
-suppress_welcome = 'suppress-welcome' in request.cookie
 page_id = "homepage"
 [---]
 {% extends "templates/base.html" %}
@@ -87,23 +86,6 @@ page_id = "homepage"
 {% endblock %}
 
 {% block content %}
-{% if not suppress_welcome %}
-<div class="welcome modal">
-    <p><b>{{ _("Welcome to Gratipay!") }}</b></p>
-    <p>{{ _( "We have {nteams} projects receiving and sharing about {volume} each week."
-           , nteams=tabs['approved']['n']
-           , volume=format_currency(volume, 'USD', trailing_zeroes=False)
-            ) }}</p>
-    <p>{{ _( "Continue to explore our projects, or {a}read more about us{_a}."
-           , a='<a href="/about/">'|safe
-           , _a='</a>'|safe
-            ) }}</p>
-    <div class="continue">
-        <button>{{ _("Continue") }}</button>
-    </div>
-</div>
-{% endif %}
-
 <form action="new" class="apply">
     <button type="submit">{{ _("Fund Your Project") }}</button>
 </form>
@@ -163,17 +145,4 @@ page_id = "homepage"
     </table>
     {% endfor %}
 </div>
-{% endblock %}
-
-
-{% block scripts %}
-<script>
-    $(document).ready(function () {
-        $('.welcome').show();
-        $('.welcome button').click(function() {
-            document.cookie = 'suppress-welcome=';
-            $(this).parent().parent().fadeOut(100);
-        });
-    });
-</script>
 {% endblock %}
