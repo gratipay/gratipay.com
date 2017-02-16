@@ -35,17 +35,17 @@ class TestSupportGratipay(Harness):
         assert not self.shown('alice')
 
 
-    def check_button(self, lang, amount):
+    def check_button(self, lang, decimal, currency):
         self.test_shown_when_on_the_fence()
         body = self.client.GET( '/'
                               , auth_as='alice'
                               , HTTP_ACCEPT_LANGUAGE=str(lang)
                                ).body.decode('utf8')
-        target = '<button class="low" data-amount="{amount}">${amount}</button>'
-        assert target.format(amount=amount) in body
+        target = '<button class="low" data-amount="{}">{}</button>'.format(decimal, currency)
+        assert target in body
 
     def test_amount_on_button_is_as_expected_in_english(self):
-        self.check_button('en', '0.05')
+        self.check_button('en', '0.05', '$0.05')
 
     def test_amount_on_button_is_as_expected_in_italian(self):
-        self.check_button('it', '0,05')
+        self.check_button('it', '0,05', 'US$\xa00,05')

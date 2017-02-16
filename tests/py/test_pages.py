@@ -7,7 +7,6 @@ from aspen import Response
 
 import braintree
 import mock
-import pytest
 from braintree.test.nonces import Nonces
 from gratipay.security.user import SESSION
 from gratipay.testing import Harness
