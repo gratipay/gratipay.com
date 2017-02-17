@@ -33,8 +33,7 @@ from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.community import Community
 from gratipay.models.country import Country
 from gratipay.models.exchange_route import ExchangeRoute
-from gratipay.models.participant import Participant
-from gratipay.models.participant.mixins import Identity
+from gratipay.models.participant import Participant, Identity
 from gratipay.models.team import Team
 from gratipay.models import GratipayDB
 from gratipay.security.crypto import EncryptingPacker
