@@ -48,12 +48,14 @@ class ExchangeRoute(Model):
         return r
 
     @classmethod
-    def insert(cls, participant, network, address, error='', fee_cap=None, cursor=None):
+    def insert(cls, participant, network, address, error='', fee_cap=None, cursor=None,
+                                                                                 is_deleted=False):
         participant_id = participant.id
         r = (cursor or cls.db).one("""
             INSERT INTO exchange_routes
-                        (participant, network, address, error, fee_cap)
-                 VALUES (%(participant_id)s, %(network)s, %(address)s, %(error)s, %(fee_cap)s)
+                        (participant, network, address, error, fee_cap, is_deleted)
+                 VALUES (%(participant_id)s, %(network)s, %(address)s, %(error)s, %(fee_cap)s,
+                         %(is_deleted)s)
               RETURNING exchange_routes.*::exchange_routes
         """, locals())
         if network == 'braintree-cc':

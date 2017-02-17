@@ -26,13 +26,16 @@ class TestRoutes(BillingHarness):
         assert len(cards) == 1
         assert self.roman.get_credit_card_error() == ''
 
-        self.hit('roman', 'delete', 'braintree-cc', cards[0].token)
+        address = cards[0].token
+        self.hit('roman', 'delete', 'braintree-cc', address)
 
         customer = self.roman.get_braintree_account()
         assert len(customer.credit_cards) == 0
 
         roman = P('roman')
-        assert roman.get_credit_card_error() == 'invalidated'
+        assert roman.get_credit_card_error() is None
+        assert self.db.one('select is_deleted from exchange_routes '
+                           'where address=%s', (address,))
         assert roman.braintree_customer_id
 
     def test_associate_invalid_card(self):
