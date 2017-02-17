@@ -181,7 +181,7 @@ def load_statuses():
     return statuses
 
 
-def post_back_to_gratipay():
+def post_back_to_gratipay(force=False):
 
     try:
         gratipay_api_key = os.environ['GRATIPAY_API_KEY']
@@ -192,6 +192,12 @@ def post_back_to_gratipay():
         gratipay_base_url = os.environ['GRATIPAY_BASE_URL']
     except KeyError:
         gratipay_base_url = 'https://gratipay.com'
+
+    nmasspays = int(requests.get(gratipay_base_url + '/dashboard/nmasspays').text())
+    if nmasspays < 10 and not force:
+        print("It looks like we didn't run MassPay last week! If you are absolutely sure that we "
+              "did, then rerun with -f.")
+        return
 
     statuses = load_statuses()
 
@@ -266,7 +272,7 @@ def main():
     elif '-o' in sys.argv:
         compute_output_csvs()
     elif '-p' in sys.argv:
-        post_back_to_gratipay()
+        post_back_to_gratipay('-f' in sys.argv)
 
 
 if __name__ == '__main__':

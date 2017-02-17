@@ -1,0 +1,16 @@
+[--------]
+nmasspays = website.db.one("""
+
+    WITH payday AS (SELECT ts_start FROM paydays ORDER BY ts_start DESC LIMIT 1)
+
+    SELECT count(*)
+      FROM exchanges e
+      JOIN exchange_routes er
+        ON e.route = er.id
+     WHERE er.network = 'paypal'
+       AND e.amount < 0
+       AND timestamp > (SELECT ts_start FROM payday)
+
+""")
+[--------] text/plain
+{{ nmasspays }}
