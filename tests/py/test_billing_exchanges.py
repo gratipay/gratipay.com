@@ -362,7 +362,8 @@ class TestsWithoutBillingHarness(Harness):
         record_exchange_result(self.db, e_id, 'failed', 'oops', alice)
         alice = P('alice')
         assert alice.balance == D('37.00')
-        assert pp.error == alice.get_paypal_error() == 'invalidated'
+        assert pp.is_deleted and pp.error == ''
+        assert alice.get_paypal_error() is None
 
     def test_re_result_doesnt_restore_balance_on_success(self):
         alice = self.make_participant('alice', balance=50, last_paypal_result='')

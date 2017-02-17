@@ -66,15 +66,8 @@ class ExchangeRoute(Model):
     def invalidate(self):
         if self.network == 'braintree-cc':
             braintree.PaymentMethod.delete(self.address)
-
-        # For Paypal, we remove the record entirely to prevent
-        # an integrity error if the user tries to add the route again
-        if self.network == 'paypal':
-            # XXX This doesn't sound right. Doesn't this corrupt history pages?
-            self.db.run("DELETE FROM exchange_routes WHERE id=%s", (self.id,))
-        else:
-            self.db.run("UPDATE exchange_routes SET is_deleted = true WHERE id = %s", (self.id, ))
-            self.set_attributes(is_deleted=True)
+        self.db.run("UPDATE exchange_routes SET is_deleted = true WHERE id = %s", (self.id, ))
+        self.set_attributes(is_deleted=True)
 
     def update_error(self, new_error):
         id = self.id
