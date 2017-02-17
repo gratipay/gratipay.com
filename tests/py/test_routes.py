@@ -1,12 +1,10 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from braintree.test.nonces import Nonces
-import mock
 
 from gratipay.testing import P
 from gratipay.testing.billing import BillingHarness
 from gratipay.models.exchange_route import ExchangeRoute
-from gratipay.models.participant import Participant
 
 
 class TestRoutes(BillingHarness):
@@ -42,33 +40,60 @@ class TestRoutes(BillingHarness):
         self.hit('roman', 'associate', 'braintree-cc', 'an-invalid-nonce', expected=400)
         assert self.roman.get_credit_card_error() is None
 
-    @mock.patch.object(Participant, 'send_email')
-    def test_associate_and_delete_valid_paypal(self, mailer):
-        mailer.return_value = 1 # Email successfully sent
-        self.roman.add_email('roman@gmail.com')
-        self.db.run("UPDATE emails SET verified=true WHERE address='roman@gmail.com'")
+
+    def add_and_verify_email(self, participant, email_address):
+        participant.add_email(email_address)
+        self.db.run("UPDATE emails SET verified=true WHERE address=%s", (email_address,))
+
+    def test_associate_and_delete_valid_paypal(self):
+        self.add_and_verify_email(self.roman, 'roman@gmail.com')
+
         self.hit('roman', 'associate', 'paypal', 'roman@gmail.com')
         assert ExchangeRoute.from_network(self.roman, 'paypal')
         assert self.roman.has_payout_route
 
-        self.hit('roman', 'delete' ,'paypal', 'roman@gmail.com')
+        self.hit('roman', 'delete', 'paypal', 'roman@gmail.com')
         assert not self.roman.has_payout_route
 
     def test_delete_paypal_with_exchanges(self):
-        self.roman.add_email('roman@gmail.com')
-        self.db.run("UPDATE emails SET verified=true WHERE address='roman@gmail.com'")
+        self.add_and_verify_email(self.roman, 'roman@gmail.com')
         self.hit('roman', 'associate', 'paypal', 'roman@gmail.com')
 
         self.make_exchange('paypal', 10, 0, self.roman)
-        self.hit('roman', 'delete' ,'paypal', 'roman@gmail.com')
+        self.hit('roman', 'delete', 'paypal', 'roman@gmail.com')
 
         assert not self.roman.has_payout_route
+
+    def test_add_new_paypal_address(self):
+        self.add_and_verify_email(self.roman, 'roman@gmail.com')
+        self.add_and_verify_email(self.roman, 'candle@gmail.com')
+
+        self.hit('roman', 'associate', 'paypal', 'roman@gmail.com')
+        self.hit('roman', 'delete', 'paypal', 'roman@gmail.com')
+        self.hit('roman', 'associate', 'paypal', 'candle@gmail.com')
+
+        assert self.roman.has_payout_route
+        assert ExchangeRoute.from_network(self.roman, 'paypal').address == 'candle@gmail.com'
+
+    def test_revive_previous_paypal_address(self):
+        self.add_and_verify_email(self.roman, 'roman@gmail.com')
+        self.add_and_verify_email(self.roman, 'candle@gmail.com')
+
+        self.hit('roman', 'associate', 'paypal', 'roman@gmail.com')
+        self.hit('roman', 'delete', 'paypal', 'roman@gmail.com')
+        self.hit('roman', 'associate', 'paypal', 'candle@gmail.com')
+        self.hit('roman', 'delete', 'paypal', 'candle@gmail.com')
+        self.hit('roman', 'associate', 'paypal', 'roman@gmail.com')
+
+        assert self.roman.has_payout_route
+        assert ExchangeRoute.from_network(self.roman, 'paypal').address == 'roman@gmail.com'
 
     def test_associate_paypal_invalid(self):
         r = self.hit('roman', 'associate', 'paypal', 'alice@gmail.com', expected=400)
         assert not ExchangeRoute.from_network(self.roman, 'paypal')
         assert not self.roman.has_payout_route
         assert "Only verified email addresses allowed." in r.body
+
 
     def test_credit_card_page(self):
         self.make_participant('alice', claimed_time='now')

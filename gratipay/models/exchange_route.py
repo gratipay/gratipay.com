@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import braintree
 from postgres.orm import Model
+from gratipay.models import add_event
 
 
 class ExchangeRoute(Model):
@@ -66,8 +67,27 @@ class ExchangeRoute(Model):
     def invalidate(self):
         if self.network == 'braintree-cc':
             braintree.PaymentMethod.delete(self.address)
-        self.db.run("UPDATE exchange_routes SET is_deleted = true WHERE id = %s", (self.id, ))
+        with self.db.get_cursor() as cursor:
+            self.db.run("UPDATE exchange_routes SET is_deleted=true WHERE id=%s", (self.id,))
+            payload = dict( id=self.participant.id
+                          , exchange_route=self.id
+                          , action='invalidate route'
+                          , address=self.address
+                           )
+            add_event(cursor, 'participant', payload)
         self.set_attributes(is_deleted=True)
+
+    def revive(self):
+        assert self.network == 'paypal'  # sanity check
+        with self.db.get_cursor() as cursor:
+            cursor.run("UPDATE exchange_routes SET is_deleted=false WHERE id=%s", (self.id,))
+            payload = dict( id=self.participant.id
+                          , exchange_route=self.id
+                          , action='revive route'
+                          , address=self.address
+                           )
+            add_event(cursor, 'participant', payload)
+        self.set_attributes(is_deleted=False)
 
     def update_error(self, new_error):
         id = self.id
