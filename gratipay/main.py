@@ -4,6 +4,7 @@ import base64
 
 import gratipay
 import gratipay.wireup
+import gratipay.minify
 from gratipay import utils, security
 from gratipay.cron import Cron
 from gratipay.models.participant import Participant
@@ -133,6 +134,7 @@ algorithm.functions = [
     algorithm['log_traceback_for_exception'],
     algorithm['log_result_of_request'],
 
+    gratipay.minify.minify_output,
     timer.end,
     tell_sentry,
 ]
