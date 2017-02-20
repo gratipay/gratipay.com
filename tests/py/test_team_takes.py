@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from pytest import raises
-from gratipay.models.team.mixins.takes import NotAllowed, PENNY, ZERO
+from gratipay.models.team.takes import NotAllowed, PENNY, ZERO
 from gratipay.testing import Harness, D,P,T
 from gratipay.testing.billing import PaydayMixin
 

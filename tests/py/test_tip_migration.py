@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import pytest
 from gratipay.testing import Harness
-from gratipay.models.team.mixins.tip_migration import AlreadyMigrated, migrate_all_tips
+from gratipay.models.team.tip_migration import AlreadyMigrated, migrate_all_tips
 
 
 class Tests(Harness):

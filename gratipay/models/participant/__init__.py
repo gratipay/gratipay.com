@@ -37,7 +37,7 @@ from gratipay.models import add_event
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.team import Team
-from gratipay.models.team.mixins.takes import ZERO
+from gratipay.models.team.takes import ZERO
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import (
     i18n,

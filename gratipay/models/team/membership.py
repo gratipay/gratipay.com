@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from .takes import ZERO, PENNY
 
 
-class MembershipMixin(object):
+class Membership(object):
     """Teams may have zero or more members, who are participants that take money from the team.
     """
 

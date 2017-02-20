@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 
-class AvailableMixin(object):
+class Available(object):
     """Teams can make money available for their members to take.
     """
 

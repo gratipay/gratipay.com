@@ -5,7 +5,7 @@ tips migrated if and when they become the owner of a new Gratipay 2.0 team.
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 
-class TipMigrationMixin(object):
+class TipMigration(object):
     """This mixin provides tip migration for teams.
     """
 

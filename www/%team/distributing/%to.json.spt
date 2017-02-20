@@ -6,7 +6,7 @@ from aspen import Response
 from babel.numbers import NumberFormatError
 from gratipay.utils import get_team
 from gratipay.models.participant import Participant
-from gratipay.models.team.mixins.takes import ZERO, PENNY
+from gratipay.models.team.takes import ZERO, PENNY
 
 [--------------------]
 request.allow('POST')
