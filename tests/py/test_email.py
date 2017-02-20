@@ -13,7 +13,7 @@ from gratipay.utils import emails, encode_for_querystring
 from gratipay.utils.emails import queue_branch_email as _queue_branch_email
 
 
-class TestEmail(EmailHarness):
+class AliceAndResend(EmailHarness):
 
     def setUp(self):
         EmailHarness.setUp(self)
@@ -23,6 +23,9 @@ class TestEmail(EmailHarness):
 
     def tearDown(self):
         self.client.website.env.resend_verification_threshold = self._old_threshold
+
+
+class TestEndpoints(AliceAndResend):
 
     def hit_email_spt(self, action, address, user='alice', should_fail=False):
         f = self.client.PxST if should_fail else self.client.POST
@@ -169,6 +172,38 @@ class TestEmail(EmailHarness):
         nonce2 = self.alice.get_email('alice@example.com').nonce
         assert nonce1 == nonce2
 
+    def test_emails_page_shows_emails(self):
+        self.verify_and_change_email('alice@example.com', 'alice@example.net')
+        body = self.client.GET("/~alice/emails/", auth_as="alice").body
+        assert 'alice@example.com' in body
+        assert 'alice@example.net' in body
+
+    def test_set_primary(self):
+        self.verify_and_change_email('alice@example.com', 'alice@example.net')
+        self.verify_and_change_email('alice@example.net', 'alice@example.org')
+        self.hit_email_spt('set-primary', 'alice@example.com')
+
+    def test_cannot_set_primary_to_unverified(self):
+        with self.assertRaises(EmailNotVerified):
+            self.hit_email_spt('set-primary', 'alice@example.com')
+
+    def test_remove_email(self):
+        # Can remove unverified
+        self.hit_email_spt('add-email', 'alice@example.com')
+        self.hit_email_spt('remove', 'alice@example.com')
+
+        # Can remove verified
+        self.verify_and_change_email('alice@example.com', 'alice@example.net')
+        self.verify_and_change_email('alice@example.net', 'alice@example.org')
+        self.hit_email_spt('remove', 'alice@example.net')
+
+        # Cannot remove primary
+        with self.assertRaises(CannotRemovePrimaryEmail):
+            self.hit_email_spt('remove', 'alice@example.com')
+
+
+class TestFunctions(AliceAndResend):
+
     def test_cannot_update_email_to_already_verified(self):
         bob = self.make_participant('bob', claimed_time='now')
         self.alice.add_email('alice@gratipay.com')
@@ -208,35 +243,6 @@ class TestEmail(EmailHarness):
         self.alice.add_email('alice@gratipay.coop')
         time.sleep(0.15)
         self.alice.add_email('alice@gratipay.coop', '0.1 seconds')
-
-    def test_emails_page_shows_emails(self):
-        self.verify_and_change_email('alice@example.com', 'alice@example.net')
-        body = self.client.GET("/~alice/emails/", auth_as="alice").body
-        assert 'alice@example.com' in body
-        assert 'alice@example.net' in body
-
-    def test_set_primary(self):
-        self.verify_and_change_email('alice@example.com', 'alice@example.net')
-        self.verify_and_change_email('alice@example.net', 'alice@example.org')
-        self.hit_email_spt('set-primary', 'alice@example.com')
-
-    def test_cannot_set_primary_to_unverified(self):
-        with self.assertRaises(EmailNotVerified):
-            self.hit_email_spt('set-primary', 'alice@example.com')
-
-    def test_remove_email(self):
-        # Can remove unverified
-        self.hit_email_spt('add-email', 'alice@example.com')
-        self.hit_email_spt('remove', 'alice@example.com')
-
-        # Can remove verified
-        self.verify_and_change_email('alice@example.com', 'alice@example.net')
-        self.verify_and_change_email('alice@example.net', 'alice@example.org')
-        self.hit_email_spt('remove', 'alice@example.net')
-
-        # Cannot remove primary
-        with self.assertRaises(CannotRemovePrimaryEmail):
-            self.hit_email_spt('remove', 'alice@example.com')
 
     def test_html_escaping(self):
         self.alice.add_email("foo'bar@example.com")
