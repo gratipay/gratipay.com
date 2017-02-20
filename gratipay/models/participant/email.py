@@ -22,14 +22,29 @@ EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 
 class Email(object):
+    """Participants may associate email addresses with their account.
+
+    Email addresses are stored in an ``emails`` table in the database, which
+    holds the addresses themselves as well as info related to address
+    verification. While a participant may have multiple email addresses on
+    file, verified or not, only one will be the *primary* email address: the
+    one also recorded in ``participants.email_address``. It's a bug for the
+    primary address not to be verified, or for an address to be in
+    ``participants.email_address`` but not also in ``emails``.
+
+    Having a verified email is a prerequisite for certain other features on
+    Gratipay, such as linking a PayPal account, or filing a national identity.
+
+    """
 
     def add_email(self, email, resend_threshold='3 minutes'):
-        """
-            This is called when
-            1) Adding a new email address
-            2) Resending the verification email for an unverified email address
+        """Add an email address for a participant.
 
-            Returns the number of emails sent.
+        This is called when adding a new email address, and when resending the
+        verification email for an unverified email address.
+
+        :returns: the number of emails sent.
+
         """
 
         # Check that this address isn't already verified
@@ -96,6 +111,8 @@ class Email(object):
         return 1
 
     def update_email(self, email):
+        """Set the email address for the participant.
+        """
         if not getattr(self.get_email(email), 'verified', False):
             raise EmailNotVerified(email)
         username = self.username
@@ -137,6 +154,8 @@ class Email(object):
         return emails.VERIFICATION_SUCCEEDED
 
     def get_email(self, email):
+        """Return a record for a single email address on file for this participant.
+        """
         return self.db.one("""
             SELECT *
               FROM emails
@@ -145,6 +164,8 @@ class Email(object):
         """, (self.id, email))
 
     def get_emails(self):
+        """Return a list of all email addresses on file for this participant.
+        """
         return self.db.all("""
             SELECT *
               FROM emails
@@ -153,9 +174,15 @@ class Email(object):
         """, (self.id,))
 
     def get_verified_email_addresses(self):
+        """Return a list of verified email addresses on file for this participant.
+        """
         return [email.address for email in self.get_emails() if email.verified]
 
     def remove_email(self, address):
+        """Remove the given email address from the participant's account.
+        Raises ``CannotRemovePrimaryEmail`` if the address is primary. It's a
+        noop if the email address is not on file.
+        """
         if address == self.email_address:
             raise CannotRemovePrimaryEmail()
         with self.db.get_cursor() as c:
@@ -164,6 +191,9 @@ class Email(object):
                   (self.id, address))
 
     def send_email(self, spt_name, **context):
+        """Given the name of an email template and context in kwargs, send an
+        email using the configured mailer.
+        """
         context['participant'] = self
         context['username'] = self.username
         context['button_style'] = (
@@ -208,6 +238,9 @@ class Email(object):
         return 1 # Sent
 
     def queue_email(self, spt_name, **context):
+        """Given the name of a template under ``emails/`` and context in
+        kwargs, queue a message to be sent.
+        """
         self.db.run("""
             INSERT INTO email_queue
                         (participant, spt_name, context)
@@ -216,6 +249,8 @@ class Email(object):
 
     @classmethod
     def dequeue_emails(cls):
+        """Load messages queued for sending, and send them.
+        """
         fetch_messages = lambda: cls.db.all("""
             SELECT *
               FROM email_queue
@@ -237,6 +272,9 @@ class Email(object):
         return nsent
 
     def set_email_lang(self, accept_lang):
+        """Given a language identifier, set it for the participant as their
+        preferred language in which to receive email.
+        """
         if not accept_lang:
             return
         self.db.run("UPDATE participants SET email_lang=%s WHERE id=%s",
