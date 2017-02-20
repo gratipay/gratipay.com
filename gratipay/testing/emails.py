@@ -11,7 +11,7 @@ class EmailHarness(Harness):
         self.mailer_patcher = mock.patch.object(Participant._mailer, 'send_email')
         self.mailer = self.mailer_patcher.start()
         self.addCleanup(self.mailer_patcher.stop)
-        sleep_patcher = mock.patch('gratipay.models.participant.sleep')
+        sleep_patcher = mock.patch('gratipay.models.participant.email.sleep')
         sleep_patcher.start()
         self.addCleanup(sleep_patcher.stop)
 
