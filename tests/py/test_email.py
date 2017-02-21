@@ -8,9 +8,9 @@ from gratipay.exceptions import CannotRemovePrimaryEmail, EmailAlreadyTaken, Ema
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
 from gratipay.testing import P
 from gratipay.testing.emails import EmailHarness
-from gratipay.models.participant import Participant
-from gratipay.utils import emails, encode_for_querystring
-from gratipay.utils.emails import queue_branch_email as _queue_branch_email
+from gratipay.models.participant import Participant, email as _email
+from gratipay.utils import encode_for_querystring
+from gratipay.email.cli import queue_branch_email as _queue_branch_email
 
 
 class AliceAndResend(EmailHarness):
@@ -99,7 +99,7 @@ class TestEndpoints(AliceAndResend):
         self.hit_email_spt('add-email', 'alice@example.com')
         nonce = 'fake-nonce'
         r = self.alice.verify_email('alice@gratipay.com', nonce)
-        assert r == emails.VERIFICATION_FAILED
+        assert r == _email.VERIFICATION_FAILED
         self.verify_email('alice@example.com', nonce)
         expected = None
         actual = P('alice').email_address
@@ -111,7 +111,7 @@ class TestEndpoints(AliceAndResend):
         nonce = self.alice.get_email(address).nonce
         r = self.alice.verify_email(address, nonce)
         r = self.alice.verify_email(address, nonce)
-        assert r == emails.VERIFICATION_REDUNDANT
+        assert r == _email.VERIFICATION_REDUNDANT
 
     def test_verify_email_expired_nonce(self):
         address = 'alice@example.com'
@@ -123,7 +123,7 @@ class TestEndpoints(AliceAndResend):
         """, (self.alice.id,))
         nonce = self.alice.get_email(address).nonce
         r = self.alice.verify_email(address, nonce)
-        assert r == emails.VERIFICATION_EXPIRED
+        assert r == _email.VERIFICATION_EXPIRED
         actual = P('alice').email_address
         assert actual == None
 
@@ -209,7 +209,7 @@ class TestFunctions(AliceAndResend):
         self.alice.add_email('alice@gratipay.com')
         nonce = self.alice.get_email('alice@gratipay.com').nonce
         r = self.alice.verify_email('alice@gratipay.com', nonce)
-        assert r == emails.VERIFICATION_SUCCEEDED
+        assert r == _email.VERIFICATION_SUCCEEDED
 
         with self.assertRaises(EmailAlreadyTaken):
             bob.add_email('alice@gratipay.com')

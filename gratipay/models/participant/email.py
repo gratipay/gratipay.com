@@ -15,10 +15,18 @@ from gratipay.exceptions import EmailAlreadyTaken, CannotRemovePrimaryEmail, Ema
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
 from gratipay.models import add_event
 from gratipay.security.crypto import constant_time_compare
-from gratipay.utils import emails, encode_for_querystring, i18n
+from gratipay.utils import encode_for_querystring, i18n
 
 
 EMAIL_HASH_TIMEOUT = timedelta(hours=24)
+
+( VERIFICATION_MISSING
+, VERIFICATION_FAILED
+, VERIFICATION_EXPIRED
+, VERIFICATION_REDUNDANT
+, VERIFICATION_STYMIED
+, VERIFICATION_SUCCEEDED
+ ) = range(6)
 
 
 class Email(object):
@@ -129,17 +137,17 @@ class Email(object):
 
     def verify_email(self, email, nonce):
         if '' in (email, nonce):
-            return emails.VERIFICATION_MISSING
+            return VERIFICATION_MISSING
         r = self.get_email(email)
         if r is None:
-            return emails.VERIFICATION_FAILED
+            return VERIFICATION_FAILED
         if r.verified:
             assert r.nonce is None  # and therefore, order of conditions matters
-            return emails.VERIFICATION_REDUNDANT
+            return VERIFICATION_REDUNDANT
         if not constant_time_compare(r.nonce, nonce):
-            return emails.VERIFICATION_FAILED
+            return VERIFICATION_FAILED
         if (utcnow() - r.verification_start) > EMAIL_HASH_TIMEOUT:
-            return emails.VERIFICATION_EXPIRED
+            return VERIFICATION_EXPIRED
         try:
             self.db.run("""
                 UPDATE emails
@@ -149,11 +157,11 @@ class Email(object):
                    AND verified IS NULL
             """, (self.id, email))
         except IntegrityError:
-            return emails.VERIFICATION_STYMIED
+            return VERIFICATION_STYMIED
 
         if not self.email_address:
             self.update_email(email)
-        return emails.VERIFICATION_SUCCEEDED
+        return VERIFICATION_SUCCEEDED
 
 
     def get_email(self, email):

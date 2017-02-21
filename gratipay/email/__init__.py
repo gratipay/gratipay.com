@@ -7,15 +7,6 @@ from aspen_jinja2_renderer import SimplateLoader
 from jinja2 import Environment
 
 
-( VERIFICATION_MISSING
-, VERIFICATION_FAILED
-, VERIFICATION_EXPIRED
-, VERIFICATION_REDUNDANT
-, VERIFICATION_STYMIED
-, VERIFICATION_SUCCEEDED
- ) = range(6)
-
-
 jinja_env = Environment()
 jinja_env_html = Environment(autoescape=True, extensions=['jinja2.ext.autoescape'])
 
