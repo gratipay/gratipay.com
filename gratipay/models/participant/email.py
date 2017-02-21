@@ -110,6 +110,7 @@ class Email(object):
             return 2
         return 1
 
+
     def update_email(self, email):
         """Set the email address for the participant.
         """
@@ -124,6 +125,7 @@ class Email(object):
                  WHERE username=%(username)s
             """, locals())
         self.set_attributes(email_address=email)
+
 
     def verify_email(self, email, nonce):
         if '' in (email, nonce):
@@ -153,6 +155,7 @@ class Email(object):
             self.update_email(email)
         return emails.VERIFICATION_SUCCEEDED
 
+
     def get_email(self, email):
         """Return a record for a single email address on file for this participant.
         """
@@ -162,6 +165,7 @@ class Email(object):
              WHERE participant_id=%s
                AND address=%s
         """, (self.id, email))
+
 
     def get_emails(self):
         """Return a list of all email addresses on file for this participant.
@@ -173,10 +177,12 @@ class Email(object):
           ORDER BY id
         """, (self.id,))
 
+
     def get_verified_email_addresses(self):
         """Return a list of verified email addresses on file for this participant.
         """
         return [email.address for email in self.get_emails() if email.verified]
+
 
     def remove_email(self, address):
         """Remove the given email address from the participant's account.
@@ -189,6 +195,43 @@ class Email(object):
             add_event(c, 'participant', dict(id=self.id, action='remove', values=dict(email=address)))
             c.run("DELETE FROM emails WHERE participant_id=%s AND address=%s",
                   (self.id, address))
+
+
+    def queue_email(self, spt_name, **context):
+        """Given the name of a template under ``emails/`` and context in
+        kwargs, queue a message to be sent.
+        """
+        self.db.run("""
+            INSERT INTO email_queue
+                        (participant, spt_name, context)
+                 VALUES (%s, %s, %s)
+        """, (self.id, spt_name, pickle.dumps(context)))
+
+
+    @classmethod
+    def dequeue_emails(cls):
+        """Load messages queued for sending, and send them.
+        """
+        fetch_messages = lambda: cls.db.all("""
+            SELECT *
+              FROM email_queue
+          ORDER BY id ASC
+             LIMIT 60
+        """)
+        nsent = 0
+        while True:
+            messages = fetch_messages()
+            if not messages:
+                break
+            for msg in messages:
+                p = cls.from_id(msg.participant)
+                r = p.send_email(msg.spt_name, **pickle.loads(msg.context))
+                cls.db.run("DELETE FROM email_queue WHERE id = %s", (msg.id,))
+                if r == 1:
+                    sleep(1)
+                nsent += r
+        return nsent
+
 
     def send_email(self, spt_name, **context):
         """Given the name of an email template and context in kwargs, send an
@@ -237,39 +280,6 @@ class Email(object):
         self._mailer.send_email(**message)
         return 1 # Sent
 
-    def queue_email(self, spt_name, **context):
-        """Given the name of a template under ``emails/`` and context in
-        kwargs, queue a message to be sent.
-        """
-        self.db.run("""
-            INSERT INTO email_queue
-                        (participant, spt_name, context)
-                 VALUES (%s, %s, %s)
-        """, (self.id, spt_name, pickle.dumps(context)))
-
-    @classmethod
-    def dequeue_emails(cls):
-        """Load messages queued for sending, and send them.
-        """
-        fetch_messages = lambda: cls.db.all("""
-            SELECT *
-              FROM email_queue
-          ORDER BY id ASC
-             LIMIT 60
-        """)
-        nsent = 0
-        while True:
-            messages = fetch_messages()
-            if not messages:
-                break
-            for msg in messages:
-                p = cls.from_id(msg.participant)
-                r = p.send_email(msg.spt_name, **pickle.loads(msg.context))
-                cls.db.run("DELETE FROM email_queue WHERE id = %s", (msg.id,))
-                if r == 1:
-                    sleep(1)
-                nsent += r
-        return nsent
 
     def set_email_lang(self, accept_lang):
         """Given a language identifier, set it for the participant as their
