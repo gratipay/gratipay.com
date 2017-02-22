@@ -21,7 +21,13 @@ class Website(BaseWebsite):
         BaseWebsite.__init__(self)
         self.app = app
 
+        self.configure_renderers()
         # TODO Can't do remaining config here because of wireup confustication.
+
+
+    def init_more(self, tell_sentry):
+        self.modify_algorithm(tell_sentry)
+        self.monkey_patch_response()
 
 
     def configure_renderers(self):

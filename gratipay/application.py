@@ -16,19 +16,6 @@ class Application(object):
     def __init__(self):
         website = Website(self)
 
-        website.configure_renderers()
-        # *Now* do wireup. It depends on renderers to ... compile assets or
-        # some such?
-        env, db, tell_sentry = self.wireup(website)
-        website.modify_algorithm(tell_sentry)
-        website.monkey_patch_response()
-
-        self.install_periodic_jobs(website, env, db)
-
-        self.website = website
-
-
-    def wireup(self, website):
         exc = None
         try:
             website.version = get_version()
@@ -59,7 +46,9 @@ class Application(object):
         if exc:
             tell_sentry(exc, {})
 
-        return env, db, tell_sentry
+        website.init_more(tell_sentry)  # TODO Fold this into Website.__init__
+        self.install_periodic_jobs(website, env, db)
+        self.website = website
 
 
     def install_periodic_jobs(self, website, env, db):
