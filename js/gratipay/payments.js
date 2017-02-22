@@ -35,7 +35,7 @@ Gratipay.payments.init = function() {
 
 Gratipay.payments.initSupportGratipay = function() {
     $('.support-gratipay button').click(function() {
-        var amount = parseFloat($(this).attr('data-amount'), 10);
+        var amount = $(this).attr('data-amount');
         Gratipay.payments.set('Gratipay', amount, function(data) {
             Gratipay.notification(data.msg, 'success');
             $('.support-gratipay').slideUp();
