@@ -9,7 +9,7 @@ from psycopg2 import IntegrityError
 
 import gratipay
 from gratipay.exceptions import EmailAlreadyVerified, EmailTaken, CannotRemovePrimaryEmail
-from gratipay.exceptions import EmailNotVerified, TooManyEmailAddresses, ResendingTooFast
+from gratipay.exceptions import EmailNotVerified, TooManyEmailAddresses
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import encode_for_querystring
 
@@ -41,16 +41,13 @@ class Email(object):
 
     """
 
-    def add_email(self, email, resend_threshold='3 minutes'):
+    def add_email(self, email):
         """Add an email address for a participant.
 
         This is called when adding a new email address, and when resending the
         verification email for an unverified email address.
 
         :param unicode email: the email address to add
-        :param unicode resend_threshold: the time interval within which a
-            previous call to this function will cause the current call to fail
-            with ``ResendingTooFast``
 
         :returns: ``None``
 
@@ -58,8 +55,6 @@ class Email(object):
             this participant
         :raises EmailTaken: if the email is verified for a different participant
         :raises TooManyEmailAddresses: if the participant already has 10 emails
-        :raises ResendingTooFast: if the participant has added an email within the
-            time limit specified by ``resend_threshold``
 
         """
 
@@ -82,13 +77,6 @@ class Email(object):
 
         nonce = str(uuid.uuid4())
         verification_start = utcnow()
-
-        nrecent = self.db.one( "SELECT count(*) FROM emails WHERE address=%s AND "
-                               "%s - verification_start < %s"
-                             , (email, verification_start, resend_threshold)
-                              )
-        if nrecent:
-            raise ResendingTooFast()
 
         try:
             with self.db.get_cursor() as c:

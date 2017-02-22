@@ -2,10 +2,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import json
 import sys
-import time
 
 from gratipay.exceptions import CannotRemovePrimaryEmail, EmailTaken, EmailNotVerified
-from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
+from gratipay.exceptions import TooManyEmailAddresses
 from gratipay.testing import P
 from gratipay.testing.email import QueuedEmailHarness, SentEmailHarness
 from gratipay.models.participant import email as _email
@@ -13,19 +12,14 @@ from gratipay.utils import encode_for_querystring
 from gratipay.cli import queue_branch_email as _queue_branch_email
 
 
-class AliceAndResend(QueuedEmailHarness):
+class Alice(QueuedEmailHarness):
 
     def setUp(self):
         QueuedEmailHarness.setUp(self)
         self.alice = self.make_participant('alice', claimed_time='now')
-        self._old_threshold = self.client.website.env.resend_verification_threshold
-        self.client.website.env.resend_verification_threshold = '0 seconds'
-
-    def tearDown(self):
-        self.client.website.env.resend_verification_threshold = self._old_threshold
 
 
-class TestEndpoints(AliceAndResend):
+class TestEndpoints(Alice):
 
     def hit_email_spt(self, action, address, user='alice', should_fail=False):
         f = self.client.PxST if should_fail else self.client.POST
@@ -210,7 +204,7 @@ class TestEndpoints(AliceAndResend):
             self.hit_email_spt('remove', 'alice@example.com')
 
 
-class TestFunctions(AliceAndResend):
+class TestFunctions(Alice):
 
     def test_cannot_update_email_to_already_verified(self):
         bob = self.make_participant('bob', claimed_time='now')
@@ -240,17 +234,6 @@ class TestFunctions(AliceAndResend):
         self.alice.add_email('alice@gratipay.py')
         with self.assertRaises(TooManyEmailAddresses):
             self.alice.add_email('alice@gratipay.coop')
-
-    def test_cannot_resend_verification_too_frequently(self):
-        self.alice.add_email('alice@gratipay.coop')
-        time.sleep(0.05)
-        with self.assertRaises(ResendingTooFast):
-            self.alice.add_email('alice@gratipay.coop', '0.1 seconds')
-
-    def test_can_resend_verification_after_a_while(self):
-        self.alice.add_email('alice@gratipay.coop')
-        time.sleep(0.15)
-        self.alice.add_email('alice@gratipay.coop', '0.1 seconds')
 
     def test_html_escaping(self):
         self.alice.add_email("foo'bar@example.com")

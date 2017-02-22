@@ -395,7 +395,6 @@ def env():
         TEAM_REVIEW_USERNAME            = unicode,
         TEAM_REVIEW_TOKEN               = unicode,
         RAISE_SIGNIN_NOTIFICATIONS      = is_yesish,
-        RESEND_VERIFICATION_THRESHOLD   = unicode,
         REQUIRE_YAJL                    = is_yesish,
         GUNICORN_OPTS                   = unicode,
     )
