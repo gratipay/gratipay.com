@@ -101,7 +101,7 @@ class TestEndpoints(AliceAndResend):
 
     def test_verify_email_without_adding_email(self):
         response = self.verify_email('', 'sample-nonce')
-        assert 'Missing Info' in response.body
+        assert 'Bad Info' in response.body
 
     def test_verify_email_wrong_nonce(self):
         self.hit_email_spt('add-email', 'alice@example.com')
