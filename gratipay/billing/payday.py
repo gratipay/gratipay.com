@@ -471,7 +471,8 @@ class Payday(object):
                           LIMIT 1
                        ) AS top_team
             """, locals())
-            p.queue_email(
+            self.app.email_queue.put(
+                p,
                 'charge_'+e.status,
                 exchange=dict(id=e.id, amount=e.amount, fee=e.fee, note=e.note),
                 nteams=nteams,

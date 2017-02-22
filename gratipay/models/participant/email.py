@@ -4,17 +4,15 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import pickle
 import uuid
 from datetime import timedelta
-from time import sleep
 
 from aspen.utils import utcnow
-from markupsafe import escape as htmlescape
 from psycopg2 import IntegrityError
 
 import gratipay
 from gratipay.exceptions import EmailAlreadyTaken, CannotRemovePrimaryEmail, EmailNotVerified
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
 from gratipay.security.crypto import constant_time_compare
-from gratipay.utils import encode_for_querystring, i18n
+from gratipay.utils import encode_for_querystring
 
 
 EMAIL_HASH_TIMEOUT = timedelta(hours=24)
@@ -202,90 +200,6 @@ class Email(object):
             self.app.add_event(c, 'participant', dict(id=self.id, action='remove', values=dict(email=address)))
             c.run("DELETE FROM emails WHERE participant_id=%s AND address=%s",
                   (self.id, address))
-
-
-    def queue_email(self, spt_name, **context):
-        """Given the name of a template under ``emails/`` and context in
-        kwargs, queue a message to be sent.
-        """
-        self.db.run("""
-            INSERT INTO email_queue
-                        (participant, spt_name, context)
-                 VALUES (%s, %s, %s)
-        """, (self.id, spt_name, pickle.dumps(context)))
-
-
-    @classmethod
-    def dequeue_emails(cls):
-        """Load messages queued for sending, and send them.
-        """
-        fetch_messages = lambda: cls.db.all("""
-            SELECT *
-              FROM email_queue
-          ORDER BY id ASC
-             LIMIT 60
-        """)
-        nsent = 0
-        while True:
-            messages = fetch_messages()
-            if not messages:
-                break
-            for msg in messages:
-                p = cls.from_id(msg.participant)
-                r = p.send_email(msg.spt_name, **pickle.loads(msg.context))
-                cls.db.run("DELETE FROM email_queue WHERE id = %s", (msg.id,))
-                if r == 1:
-                    sleep(1)
-                nsent += r
-        return nsent
-
-
-    def send_email(self, spt_name, **context):
-        """Given the name of an email template and context in kwargs, send an
-        email using the configured mailer.
-        """
-        context['participant'] = self
-        context['username'] = self.username
-        context['button_style'] = (
-            "color: #fff; text-decoration:none; display:inline-block; "
-            "padding: 0 15px; background: #396; white-space: nowrap; "
-            "font: normal 14px/40px Arial, sans-serif; border-radius: 3px"
-        )
-        context.setdefault('include_unsubscribe', True)
-        email = context.setdefault('email', self.email_address)
-        if not email:
-            return 0 # Not Sent
-        langs = i18n.parse_accept_lang(self.email_lang or 'en')
-        locale = i18n.match_lang(langs)
-        i18n.add_helpers_to_context(self._tell_sentry, context, locale)
-        context['escape'] = lambda s: s
-        context_html = dict(context)
-        i18n.add_helpers_to_context(self._tell_sentry, context_html, locale)
-        context_html['escape'] = htmlescape
-        spt = self._emails[spt_name]
-        base_spt = self._emails['base']
-        def render(t, context):
-            b = base_spt[t].render(context).strip()
-            return b.replace('$body', spt[t].render(context).strip())
-
-        message = {}
-        message['Source'] = 'Gratipay Support <support@gratipay.com>'
-        message['Destination'] = {}
-        message['Destination']['ToAddresses'] = ["%s <%s>" % (self.username, email)] # "Name <email@domain.com>"
-        message['Message'] = {}
-        message['Message']['Subject'] = {}
-        message['Message']['Subject']['Data'] = spt['subject'].render(context).strip()
-        message['Message']['Body'] = {
-            'Text': {
-                'Data': render('text/plain', context)
-            },
-            'Html': {
-                'Data': render('text/html', context_html)
-            }
-        }
-
-        self._mailer.send_email(**message)
-        return 1 # Sent
 
 
     def set_email_lang(self, accept_lang):

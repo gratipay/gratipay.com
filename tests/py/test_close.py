@@ -198,8 +198,7 @@ class TestClearPaymentInstructions(Harness):
 
 class TestClearPersonalInformation(Harness):
 
-    @mock.patch.object(Participant, '_mailer')
-    def test_clears_personal_information(self, mailer):
+    def test_clears_personal_information(self):
         alice = self.make_participant( 'alice'
                                      , anonymous_giving=True
                                      , avatar_url='img-url'

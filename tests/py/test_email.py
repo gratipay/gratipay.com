@@ -8,7 +8,7 @@ from gratipay.exceptions import CannotRemovePrimaryEmail, EmailAlreadyTaken, Ema
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
 from gratipay.testing import P
 from gratipay.testing.emails import EmailHarness
-from gratipay.models.participant import Participant, email as _email
+from gratipay.models.participant import email as _email
 from gratipay.utils import encode_for_querystring
 from gratipay.cli import queue_branch_email as _queue_branch_email
 
@@ -252,10 +252,10 @@ class TestFunctions(AliceAndResend):
 
     def test_can_dequeue_an_email(self):
         larry = self.make_participant('larry', email_address='larry@example.com')
-        larry.queue_email("verification")
+        self.app.email_queue.put(larry, "verification")
 
         assert self.db.one("SELECT spt_name FROM email_queue") == "verification"
-        Participant.dequeue_emails()
+        self.app.email_queue.flush()
         assert self.mailer.call_count == 1
         last_email = self.get_last_email()
         assert last_email['to'] == 'larry <larry@example.com>'
@@ -265,10 +265,10 @@ class TestFunctions(AliceAndResend):
 
     def test_dequeueing_an_email_without_address_just_skips_it(self):
         larry = self.make_participant('larry')
-        larry.queue_email("verification")
+        self.app.email_queue.put(larry, "verification")
 
         assert self.db.one("SELECT spt_name FROM email_queue") == "verification"
-        Participant.dequeue_emails()
+        self.app.email_queue.flush()
         assert self.mailer.call_count == 0
         assert self.db.one("SELECT spt_name FROM email_queue") is None
 
@@ -332,7 +332,7 @@ class TestGetRecentlyActiveParticipants(QueueHarness):
 class TestQueueBranchEmail(QueueHarness):
 
     def nsent(self):
-        Participant.dequeue_emails()
+        self.app.email_queue.flush()
         return self.mailer.call_count
 
     def test_is_fine_with_no_participants(self):

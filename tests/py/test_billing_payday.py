@@ -633,7 +633,7 @@ class TestNotifyParticipants(EmailHarness, PaydayMixin):
             emails = self.db.one('SELECT * FROM email_queue')
             assert emails.spt_name == 'charge_'+status
 
-            Participant.dequeue_emails()
+            self.app.email_queue.flush()
             assert self.get_last_email()['to'] == 'kalel <kalel@example.net>'
             assert 'Gratiteam' in self.get_last_email()['body_text']
             assert 'Gratiteam' in self.get_last_email()['body_html']

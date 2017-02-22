@@ -3,7 +3,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import atexit
-import fnmatch
 import os
 import sys
 import urlparse
@@ -15,7 +14,6 @@ from babel.core import Locale
 from babel.messages.pofile import read_po
 from babel.numbers import parse_pattern
 import balanced
-import boto3
 import braintree
 import gratipay
 import gratipay.billing.payday
@@ -31,11 +29,11 @@ from gratipay.elsewhere.google import Google
 from gratipay.elsewhere.openstreetmap import OpenStreetMap
 from gratipay.elsewhere.twitter import Twitter
 from gratipay.elsewhere.venmo import Venmo
-from gratipay.email import compile_email_spt, ConsoleMailer
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.participant import Participant, Identity
 from gratipay.models.team import Team
 from gratipay.security.crypto import EncryptingPacker
+from gratipay.utils import find_files
 from gratipay.utils.http_caching import asset_etag
 from gratipay.utils.i18n import (
     ALIASES, ALIASES_R, COUNTRIES, LANGUAGES_2, LOCALES,
@@ -64,25 +62,6 @@ def crypto(env):
     keys = [k.encode('ASCII') for k in env.crypto_keys.split()]
     out = Identity.encrypting_packer = EncryptingPacker(*keys)
     return out
-
-def mail(env, project_root='.'):
-    if env.aws_ses_access_key_id and env.aws_ses_secret_access_key and env.aws_ses_default_region:
-        aspen.log_dammit("AWS SES is configured! We'll send mail through SES.")
-        Participant._mailer = boto3.client( service_name='ses'
-                                          , region_name=env.aws_ses_default_region
-                                          , aws_access_key_id=env.aws_ses_access_key_id
-                                          , aws_secret_access_key=env.aws_ses_secret_access_key
-                                           )
-    else:
-        aspen.log_dammit("AWS SES is not configured! Mail will be dumped to the console here.")
-        Participant._mailer = ConsoleMailer()
-    emails = {}
-    emails_dir = project_root+'/emails/'
-    i = len(emails_dir)
-    for spt in find_files(emails_dir, '*.spt'):
-        base_name = spt[i:-4]
-        emails[base_name] = compile_email_spt(spt)
-    Participant._emails = emails
 
 def billing(env):
     balanced.configure(env.balanced_api_secret)
@@ -263,12 +242,6 @@ def accounts_elsewhere(website, env):
         platform.logo = website.asset('platforms/%s.png' % platform.name)
 
 
-def find_files(directory, pattern):
-    for root, dirs, files in os.walk(directory):
-        for filename in fnmatch.filter(files, pattern):
-            yield os.path.join(root, filename)
-
-
 def compile_assets(website):
     client = Client(website.www_root, website.project_root)
     client._website = website
@@ -413,7 +386,7 @@ def env():
         OPENSTREETMAP_AUTH_URL          = unicode,
         UPDATE_CTA_EVERY                = int,
         CHECK_DB_EVERY                  = int,
-        DEQUEUE_EMAILS_EVERY            = int,
+        FLUSH_EMAIL_QUEUE_EVERY         = int,
         OPTIMIZELY_ID                   = unicode,
         SENTRY_DSN                      = unicode,
         LOG_METRICS                     = is_yesish,
