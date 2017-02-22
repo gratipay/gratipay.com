@@ -20,9 +20,9 @@ class Tests(BrowserHarness):
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
         self.css('.lookup-container .query').first.fill('alice')
-        time.sleep(0.2)
+        time.sleep(0.3)
         self.css('.lookup-container button').first.click()
-        time.sleep(0.2)
+        time.sleep(0.3)
         assert [a.text for a in self.css('table.team a')] == ['alice']
 
 
