@@ -267,6 +267,15 @@ class Harness(unittest.TestCase):
         return e_id
 
 
+    def make_participant_with_exchange(self, name):
+        participant = self.make_participant( name
+                                           , claimed_time='now'
+                                           , email_address=name+'@example.com'
+                                            )
+        self.make_exchange('braintree-cc', 50, 0, participant)
+        return participant
+
+
     def make_tip(self, tipper, tippee, amount, cursor=None):
         """Given a Participant or username, and amount as str, returns a dict.
 

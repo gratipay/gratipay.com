@@ -2,11 +2,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from datetime import date
 
-import mock
 import pytest
 
 from gratipay.models.community import Community
-from gratipay.models.participant import Participant
 from gratipay.testing import Harness, D,P
 from gratipay.testing.billing import PaydayMixin
 

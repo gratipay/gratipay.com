@@ -4,7 +4,7 @@ Manages the authenticated user's email addresses.
 import re
 
 from aspen import Response
-from gratipay.exceptions import ProblemChangingEmail
+from gratipay.exceptions import EmailTaken, EmailAlreadyVerified
 from gratipay.utils import get_participant
 
 email_re = re.compile(r'^[^@]+@[^@]+\.[^@]+$')
@@ -27,11 +27,18 @@ if not participant.email_lang:
 
 msg = None
 if action in ('add-email', 'resend'):
-    r = participant.add_email(address, website.env.resend_verification_threshold)
-    if r:
-        msg = _("A verification email has been sent to {0}.", address)
+    try:
+        participant.add_email(address, website.env.resend_verification_threshold)
+    except EmailTaken:
+        raise Response(400, _( "{email_address} is already linked to a different Gratipay account."
+                             , email_address=address
+                              ))
+    except EmailAlreadyVerified:
+        raise Response(400, _( "You have already added and verified {email_address}."
+                             , email_address=address
+                              ))
     else:
-        raise Response(400, _("You have already added and verified this address."))
+        msg = _("A verification email has been sent to {email_address}.", email_address=address)
 elif action == 'set-primary':
     participant.update_email(address)
 elif action == 'remove':

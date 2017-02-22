@@ -4,19 +4,19 @@ import json
 import sys
 import time
 
-from gratipay.exceptions import CannotRemovePrimaryEmail, EmailAlreadyTaken, EmailNotVerified
+from gratipay.exceptions import CannotRemovePrimaryEmail, EmailTaken, EmailNotVerified
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
 from gratipay.testing import P
-from gratipay.testing.emails import EmailHarness
+from gratipay.testing.email import QueuedEmailHarness, SentEmailHarness
 from gratipay.models.participant import email as _email
 from gratipay.utils import encode_for_querystring
 from gratipay.cli import queue_branch_email as _queue_branch_email
 
 
-class AliceAndResend(EmailHarness):
+class AliceAndResend(QueuedEmailHarness):
 
     def setUp(self):
-        EmailHarness.setUp(self)
+        QueuedEmailHarness.setUp(self)
         self.alice = self.make_participant('alice', claimed_time='now')
         self._old_threshold = self.client.website.env.resend_verification_threshold
         self.client.website.env.resend_verification_threshold = '0 seconds'
@@ -53,10 +53,10 @@ class TestEndpoints(AliceAndResend):
 
     def test_adding_email_sends_verification_email(self):
         self.hit_email_spt('add-email', 'alice@gratipay.com')
-        assert self.mailer.call_count == 1
+        assert self.count_email_messages() == 1
         last_email = self.get_last_email()
         assert last_email['to'] == 'alice <alice@gratipay.com>'
-        expected = "We've received a request to connect alice@gratipay.com to the alice account on Gratipay"
+        expected = "We've received a request to connect alice@gratipay.com to the alice account"
         assert expected in last_email['body_text']
 
     def test_email_address_is_encoded_in_sent_verification_link(self):
@@ -73,14 +73,14 @@ class TestEndpoints(AliceAndResend):
 
     def test_adding_second_email_sends_verification_notice(self):
         self.verify_and_change_email('alice1@example.com', 'alice2@example.com')
-        assert self.mailer.call_count == 3
+        assert self.count_email_messages() == 3
         last_email = self.get_last_email()
         assert last_email['to'] == 'alice <alice1@example.com>'
         expected = "We are connecting alice2@example.com to the alice account on Gratipay"
         assert expected in last_email['body_text']
 
     def test_post_anon_returns_401(self):
-        response = self.hit_email_spt('add-email', 'anon@gratipay.com', user=None, should_fail=True)
+        response = self.hit_email_spt('add-email', 'anon@example.com', user=None, should_fail=True)
         assert response.code == 401
 
     def test_post_with_no_at_symbol_is_400(self):
@@ -211,7 +211,7 @@ class TestFunctions(AliceAndResend):
         r = self.alice.verify_email('alice@gratipay.com', nonce)
         assert r == _email.VERIFICATION_SUCCEEDED
 
-        with self.assertRaises(EmailAlreadyTaken):
+        with self.assertRaises(EmailTaken):
             bob.add_email('alice@gratipay.com')
             nonce = bob.get_email('alice@gratipay.com').nonce
             bob.verify_email('alice@gratipay.com', nonce)
@@ -250,58 +250,33 @@ class TestFunctions(AliceAndResend):
         assert 'foo&#39;bar' in last_email['body_html']
         assert '&#39;' not in last_email['body_text']
 
-    def test_can_dequeue_an_email(self):
+
+class FlushEmailQueue(SentEmailHarness):
+
+    def test_can_flush_an_email_from_the_queue(self):
         larry = self.make_participant('larry', email_address='larry@example.com')
         self.app.email_queue.put(larry, "verification")
 
         assert self.db.one("SELECT spt_name FROM email_queue") == "verification"
         self.app.email_queue.flush()
-        assert self.mailer.call_count == 1
+        assert self.count_email_messages() == 1
         last_email = self.get_last_email()
         assert last_email['to'] == 'larry <larry@example.com>'
         expected = "connect larry"
         assert expected in last_email['body_text']
         assert self.db.one("SELECT spt_name FROM email_queue") is None
 
-    def test_dequeueing_an_email_without_address_just_skips_it(self):
+    def test_flushing_an_email_without_address_just_skips_it(self):
         larry = self.make_participant('larry')
         self.app.email_queue.put(larry, "verification")
 
         assert self.db.one("SELECT spt_name FROM email_queue") == "verification"
         self.app.email_queue.flush()
-        assert self.mailer.call_count == 0
+        assert self.count_email_messages() == 0
         assert self.db.one("SELECT spt_name FROM email_queue") is None
 
 
-class QueueHarness(EmailHarness):
-
-    def make_participant_with_exchange(self, name):
-        participant = self.make_participant( name
-                                           , claimed_time='now'
-                                           , email_address=name+'@example.com'
-                                            )
-        self.make_exchange('braintree-cc', 50, 0, participant)
-        return participant
-
-
-    def queue_branch_email(self, username, _argv=None, _input=None, _print=None):
-        _argv = ['', username] if _argv is None else _argv
-        _input = _input or (lambda prompt: 'y')
-        stdout, stderr = [], []
-        def _print(string, file=None):
-            buf = stderr if file is sys.stderr else stdout
-            buf.append(str(string))
-        _print = _print or (lambda *a, **kw: None)
-        try:
-            _queue_branch_email.main(_argv, _input, _print, self.client.website)
-        except SystemExit as exc:
-            retcode = exc.args[0]
-        else:
-            retcode = 0
-        return retcode, stdout, stderr
-
-
-class TestGetRecentlyActiveParticipants(QueueHarness):
+class TestGetRecentlyActiveParticipants(QueuedEmailHarness):
 
     def check(self):
         return _queue_branch_email.get_recently_active_participants(self.db)
@@ -329,18 +304,31 @@ class TestGetRecentlyActiveParticipants(QueueHarness):
         assert self.check() == [alice, bob]
 
 
-class TestQueueBranchEmail(QueueHarness):
+class TestQueueBranchEmail(QueuedEmailHarness):
 
-    def nsent(self):
-        self.app.email_queue.flush()
-        return self.mailer.call_count
+    def queue_branch_email(self, username, _argv=None, _input=None, _print=None):
+        _argv = ['', username] if _argv is None else _argv
+        _input = _input or (lambda prompt: 'y')
+        stdout, stderr = [], []
+        def _print(string, file=None):
+            buf = stderr if file is sys.stderr else stdout
+            buf.append(str(string))
+        _print = _print or (lambda *a, **kw: None)
+        try:
+            _queue_branch_email.main(_argv, _input, _print, self.app)
+        except SystemExit as exc:
+            retcode = exc.args[0]
+        else:
+            retcode = 0
+        return retcode, stdout, stderr
+
 
     def test_is_fine_with_no_participants(self):
         retcode, output, errors = self.queue_branch_email('all')
         assert retcode == 0
         assert output == ['Okay, you asked for it!', '0']
         assert errors == []
-        assert self.nsent() == 0
+        assert self.count_email_messages() == 0
 
     def test_queues_for_one_participant(self):
         alice = self.make_participant_with_exchange('alice')
@@ -351,7 +339,7 @@ class TestQueueBranchEmail(QueueHarness):
                          , 'spotcheck: alice@example.com (alice={})'.format(alice.id)
                           ]
         assert errors == ['   1 queuing for alice@example.com (alice={})'.format(alice.id)]
-        assert self.nsent() == 1
+        assert self.count_email_messages() == 1
 
     def test_queues_for_two_participants(self):
         alice = self.make_participant_with_exchange('alice')
@@ -362,7 +350,7 @@ class TestQueueBranchEmail(QueueHarness):
         assert errors == [ '   1 queuing for alice@example.com (alice={})'.format(alice.id)
                          , '   2 queuing for bob@example.com (bob={})'.format(bob.id)
                           ]
-        assert self.nsent() == 2
+        assert self.count_email_messages() == 2
 
     def test_constrains_to_one_participant(self):
         self.make_participant_with_exchange('alice')
@@ -374,11 +362,11 @@ class TestQueueBranchEmail(QueueHarness):
                          , 'spotcheck: bob@example.com (bob={})'.format(bob.id)
                           ]
         assert errors == ['   1 queuing for bob@example.com (bob={})'.format(bob.id)]
-        assert self.nsent() == 1
+        assert self.count_email_messages() == 1
 
     def test_bails_if_told_to(self):
         retcode, output, errors = self.queue_branch_email('all', _input=lambda prompt: 'n')
         assert retcode == 1
         assert output == []
         assert errors == []
-        assert self.nsent() == 0
+        assert self.count_email_messages() == 0

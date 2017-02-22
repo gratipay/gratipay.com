@@ -38,12 +38,13 @@ if identity is None and nidentities >= 3:
 
 # notify users whenever someone views their info
 if identity is not None and participant != user.participant:
-    participant.send_email( 'identity-viewed'
-                          , viewer=user.participant.username
-                          , country_name=country_name
-                          , country_code=country.code
-                          , include_unsubscribe=False
-                           )
+    website.app.email_queue.put( participant
+                               , 'identity-viewed'
+                               , viewer=user.participant.username
+                               , country_name=country_name
+                               , country_code=country.code
+                               , include_unsubscribe=False
+                                )
 
 # handle POST requests
 if request.method == 'POST':

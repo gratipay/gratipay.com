@@ -83,17 +83,47 @@ class Queue(object):
             messages = fetch_messages()
             if not messages:
                 break
-            for msg in messages:
-                p = Participant.from_id(msg.participant)
-                r = self._flush_one(p, msg.spt_name, **pickle.loads(msg.context))
-                self.db.run("DELETE FROM email_queue WHERE id = %s", (msg.id,))
+            for rec in messages:
+                r = self._flush_one(rec)
+                self.db.run("DELETE FROM email_queue WHERE id = %s", (rec.id,))
                 if r == 1:
                     sleep(1)
                 nsent += r
         return nsent
 
 
-    def _flush_one(self, to, template, **context):
+    def _flush_one(self, rec):
+        """Send an email message using the underlying ``_mailer``.
+
+        :param Record rec: a database record from the ``email_queue`` table
+        :return int: the number of emails sent (0 or 1)
+
+        """
+        message = self._prepare_email_message_for_ses(rec)
+        if message is None:
+            return 0 # Not sent
+        self._mailer.send_email(**message)
+        return 1 # Sent
+
+
+    def _prepare_email_message_for_ses(self, rec):
+        """Prepare an email message for delivery via Amazon SES.
+
+        :param Record rec: a database record from the ``email_queue`` table
+
+        :returns: ``None`` if we can't find an email address to send to
+        :returns: ``dict`` if we can find an email address to send to
+
+        We look for an email address to send to in two places:
+
+        #. the context stored in ``rec.context``, and then
+        #. ``participant.email_address``.
+
+        """
+        to = Participant.from_id(rec.participant)
+        spt = self._email_templates[rec.spt_name]
+        context = pickle.loads(rec.context)
+
         context['participant'] = to
         context['username'] = to.username
         context['button_style'] = (
@@ -104,7 +134,7 @@ class Queue(object):
         context.setdefault('include_unsubscribe', True)
         email = context.setdefault('email', to.email_address)
         if not email:
-            return 0 # Not Sent
+            return None
         langs = i18n.parse_accept_lang(to.email_lang or 'en')
         locale = i18n.match_lang(langs)
         i18n.add_helpers_to_context(self.tell_sentry, context, locale)
@@ -112,7 +142,6 @@ class Queue(object):
         context_html = dict(context)
         i18n.add_helpers_to_context(self.tell_sentry, context_html, locale)
         context_html['escape'] = htmlescape
-        spt = self._email_templates[template]
         base_spt = self._email_templates['base']
         def render(t, context):
             b = base_spt[t].render(context).strip()
@@ -133,15 +162,18 @@ class Queue(object):
                 'Data': render('text/html', context_html)
             }
         }
-
-        self._mailer.send_email(**message)
-        return 1 # Sent
+        return message
 
 
 jinja_env = Environment()
 jinja_env_html = Environment(autoescape=True, extensions=['jinja2.ext.autoescape'])
 
 def compile_email_spt(fpath):
+    """Compile an email template from a simplate.
+
+    :param unicode fpath: the filesystem path of the simplate
+
+    """
     r = {}
     with open(fpath) as f:
         pages = list(split_and_escape(f.read()))

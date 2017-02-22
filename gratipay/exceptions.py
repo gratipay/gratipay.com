@@ -31,7 +31,10 @@ class ProblemChangingEmail(Response):
     def __init__(self, *args):
         Response.__init__(self, 400, self.msg.format(*args))
 
-class EmailAlreadyTaken(ProblemChangingEmail):
+class EmailAlreadyVerified(ProblemChangingEmail):
+    msg = "{} is already verified for this Gratipay account."
+
+class EmailTaken(ProblemChangingEmail):
     msg = "{} is already connected to a different Gratipay account."
 
 class CannotRemovePrimaryEmail(ProblemChangingEmail):

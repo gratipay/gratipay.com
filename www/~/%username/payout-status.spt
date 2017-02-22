@@ -41,9 +41,9 @@ with website.db.get_cursor() as c:
     ))
 
     if new_status == 'rejected':
-        participant.send_email('rejected-1.0', include_unsubscribe=False)
+        website.app.email_queue.put(participant, 'rejected-1.0', include_unsubscribe=False)
     elif new_status == 'pending-payout':
-        participant.send_email('approved-1.0', include_unsubscribe=False)
+        website.app.email_queue.put(participant, 'approved-1.0', include_unsubscribe=False)
 
 out = {"status": new_status}
 [---] application/json via json_dump
