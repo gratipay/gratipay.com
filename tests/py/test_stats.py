@@ -4,8 +4,8 @@ import datetime
 
 import pytest
 
+from gratipay import fake_data
 from gratipay.testing import Harness, D
-from gratipay.utils import fake_data
 
 
 class DateTime(datetime.datetime): pass

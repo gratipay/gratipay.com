@@ -10,7 +10,7 @@ from gratipay.testing import P
 from gratipay.testing.emails import EmailHarness
 from gratipay.models.participant import Participant, email as _email
 from gratipay.utils import encode_for_querystring
-from gratipay.email.cli import queue_branch_email as _queue_branch_email
+from gratipay.cli import queue_branch_email as _queue_branch_email
 
 
 class AliceAndResend(EmailHarness):

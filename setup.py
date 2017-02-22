@@ -7,12 +7,12 @@ setup( name='gratipay'
      , version=get_version()
      , packages=find_packages()
      , entry_points = { 'console_scripts'
-                      : [ 'payday=gratipay.cli:payday'
-                        , 'fake_data=gratipay.utils.fake_data:main'
-                        , 'sync-npm=gratipay.sync_npm.cli:main'
-                        , 'queue-branch-email=gratipay.email.cli.queue_branch_email:main'
-                        , 'dequeue-emails=gratipay.email.cli.dequeue_emails:main'
-                        , 'list-email-queue=gratipay.email.cli.list_email_queue:main'
+                      : [             'payday=gratipay.cli.payday:main'
+                        ,          'fake-data=gratipay.cli.fake_data:main'
+                        ,           'sync-npm=gratipay.cli.sync_npm:main'
+                        , 'queue-branch-email=gratipay.cli.queue_branch_email:main'
+                        ,     'dequeue-emails=gratipay.cli.dequeue_emails:main'
+                        ,   'list-email-queue=gratipay.cli.list_email_queue:main'
                          ]
                        }
       )
