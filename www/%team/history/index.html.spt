@@ -67,7 +67,7 @@ if year not in years:
         </tr>
         <tr class="head">
             <td class="status">{{ _("Giver") }}</td>
-            <td class="debits">{{ _("Taker") }}</td>
+            <td class="status">{{ _("Taker") }}</td>
             <td class="balance">{{ _("Amount") }}</td>
         </tr>
         {% for event in payday['events'] %}
@@ -77,7 +77,7 @@ if year not in years:
                 <td class="debits"></td>
             {% else %}
                 <td class="credits"></td>
-                <td class="debits"> Anonymous </td>
+                <td class="notes"> Anonymous </td>
             {% endif %}
                 <td class="balance">{{ event['amount'] }}</td>
             </tr>
