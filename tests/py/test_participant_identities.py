@@ -2,10 +2,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from cryptography.fernet import InvalidToken
 from gratipay.testing import Harness, P
-from gratipay.models.participant.mixins import identity, Identity
-from gratipay.models.participant.mixins.identity import _validate_info, rekey
-from gratipay.models.participant.mixins.identity import ParticipantIdentityInfoInvalid
-from gratipay.models.participant.mixins.identity import ParticipantIdentitySchemaUnknown
+from gratipay.models.participant import identity
+from gratipay.models.participant.identity import _validate_info, rekey
+from gratipay.models.participant.identity import ParticipantIdentityInfoInvalid
+from gratipay.models.participant.identity import ParticipantIdentitySchemaUnknown
 from gratipay.security.crypto import EncryptingPacker, Fernet
 from postgres.orm import ReadOnly
 from psycopg2 import IntegrityError
@@ -148,7 +148,7 @@ class Tests(Harness):
                )
 
     def test_sii_happily_overwrites_schema_name(self):
-        packed = Identity.encrypting_packer.pack({'name': 'Crusher'})
+        packed = identity.Identity.encrypting_packer.pack({'name': 'Crusher'})
         self.db.run( "INSERT INTO participant_identities "
                      "(participant_id, country_id, schema_name, info) "
                      "VALUES (%s, %s, %s, %s)"

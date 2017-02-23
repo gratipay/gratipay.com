@@ -8,7 +8,7 @@ from aspen.http.request import Request
 from base64 import urlsafe_b64decode
 from cryptography.fernet import Fernet, InvalidToken
 from gratipay import security
-from gratipay.models.participant.mixins import Identity
+from gratipay.models.participant import Identity
 from gratipay.security.crypto import EncryptingPacker
 from gratipay.testing import Harness
 from pytest import raises

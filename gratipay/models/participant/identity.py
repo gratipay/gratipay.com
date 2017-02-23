@@ -20,7 +20,7 @@ def _validate_info(schema_name, info):
     return None
 
 
-class IdentityMixin(object):
+class Identity(object):
     """This mixin provides management of national identities for
     :py:class:`~gratipay.models.participant.Participant` objects.
 

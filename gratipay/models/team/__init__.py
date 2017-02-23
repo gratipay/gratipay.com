@@ -10,8 +10,13 @@ from aspen import json, log
 from gratipay.billing.exchanges import MINIMUM_CHARGE
 from gratipay.exceptions import InvalidTeamName
 from gratipay.models import add_event
-from gratipay.models.team import mixins
 from postgres.orm import Model
+
+from .available import Available
+from .closing import Closing
+from .membership import Membership
+from .takes import Takes
+from .tip_migration import TipMigration
 
 
 # Should have at least one letter.
@@ -33,8 +38,7 @@ def slugize(name):
     return slug
 
 
-class Team(Model, mixins.Available, mixins.Closing, mixins.Membership, mixins.Takes,
-                                                                              mixins.TipMigration):
+class Team(Model, Available, Closing, Membership, Takes, TipMigration):
     """Represent a Gratipay team.
     """
 

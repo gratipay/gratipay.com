@@ -7,7 +7,7 @@ ZERO = D('0.00')
 PENNY = D('0.01')
 
 
-class TakesMixin(object):
+class Takes(object):
     """:py:class:`~gratipay.models.participant.Participant` s who are members
     of a :py:class:`~gratipay.models.team.Team` may take money from the team
     during :py:class:`~gratipay.billing.payday.Payday`. Only the team owner may

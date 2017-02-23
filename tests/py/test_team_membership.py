@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from test_team_takes import TeamTakesHarness, PENNY
-from gratipay.models.team import mixins
+from gratipay.models.team.membership import Membership
 
 
 class Tests(TeamTakesHarness):
@@ -15,7 +15,7 @@ class Tests(TeamTakesHarness):
 
 
     def test_team_object_subclasses_takes_mixin(self):
-        assert isinstance(self.enterprise, mixins.Membership)
+        assert isinstance(self.enterprise, Membership)
 
 
     # gm - get_memberships

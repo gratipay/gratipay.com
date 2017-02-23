@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from gratipay.models import add_event
 
 
-class ClosingMixin(object):
+class Closing(object):
     """This mixin implements team closing.
     """
 
