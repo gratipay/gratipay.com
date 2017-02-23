@@ -19,10 +19,10 @@ class PaydayMixin(object):
     @mock.patch.object(Payday, 'fetch_card_holds')
     def run_payday(self, fch):
         fch.return_value = {}
-        Payday.start().run()
+        return self.app.payday_runner.run_payday()
 
     def start_payday(self):
-        Payday.start()
+        return self.app.payday_runner._start_payday()
 
 
 class BillingHarness(Harness, PaydayMixin):

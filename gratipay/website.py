@@ -22,11 +22,17 @@ class Website(BaseWebsite):
         self.app = app
 
         self.configure_renderers()
-        # TODO Can't do remaining config here because of wireup confustication.
 
+        # TODO Can't do remaining config here because of lingering wireup
+        # confustication up in Application.__init__.
 
-    def init_more(self, tell_sentry):
-        self.modify_algorithm(tell_sentry)
+    def init_more(self, env, db, tell_sentry):
+        self.env = env
+        self.db = db
+        self.tell_sentry = tell_sentry
+
+    def init_even_more(self):
+        self.modify_algorithm(self.tell_sentry)
         self.monkey_patch_response()
 
 

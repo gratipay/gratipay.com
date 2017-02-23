@@ -5,13 +5,13 @@ from datetime import date
 import mock
 import pytest
 
-from gratipay.billing.payday import Payday
 from gratipay.models.community import Community
 from gratipay.models.participant import Participant
 from gratipay.testing import Harness, D,P
+from gratipay.testing.billing import PaydayMixin
 
 
-class TestClose(Harness):
+class TestClose(Harness, PaydayMixin):
 
     def test_close_closes(self):
         alice = self.make_participant('alice', claimed_time='now')
@@ -46,7 +46,7 @@ class TestClose(Harness):
         assert P('alice').is_closed
 
 
-class TestClosePage(Harness):
+class TestClosePage(Harness, PaydayMixin):
 
     def test_close_page_is_usually_available(self):
         self.make_participant('alice', claimed_time='now')
@@ -126,17 +126,17 @@ class TestClosePage(Harness):
 
     def test_close_page_is_not_available_during_payday(self):
         self.make_participant('alice', claimed_time='now')
-        Payday.start()
+        self.start_payday()
         self.check_under_payday('alice')
 
     def test_even_for_admin(self):
         self.make_participant('admin', claimed_time='now', is_admin=True)
         self.make_participant('alice', claimed_time='now')
-        Payday.start()
+        self.start_payday()
         self.check_under_payday('admin')
 
     def test_cant_post_to_close_page_during_payday(self):
-        Payday.start()
+        self.start_payday()
         self.make_participant('alice', claimed_time='now')
         body = self.client.POST('/~alice/settings/close', auth_as='alice').body
         assert 'Try Again Later' in body
