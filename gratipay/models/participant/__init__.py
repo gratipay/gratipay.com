@@ -13,8 +13,8 @@ from postgres.orm import Model
 from psycopg2 import IntegrityError
 
 import gratipay
-from gratipay import NotSane
 from gratipay.exceptions import (
+    NotSane,
     UsernameIsEmpty,
     UsernameTooLong,
     UsernameContainsInvalidCharacters,
@@ -40,6 +40,9 @@ from gratipay.utils.username import safely_reserve_a_username
 
 from .identity import Identity
 from .email import Email
+
+MAX_TIP = MAX_PAYMENT = Decimal('1000.00')
+MIN_TIP = MIN_PAYMENT = Decimal('0.00')
 
 ASCII_ALLOWED_IN_USERNAME = set("0123456789"
                                 "abcdefghijklmnopqrstuvwxyz"
@@ -593,7 +596,7 @@ class Participant(Model, Email, Identity):
         assert self.is_claimed  # sanity check
 
         amount = Decimal(amount)  # May raise InvalidOperation
-        if (amount < gratipay.MIN_PAYMENT) or (amount > gratipay.MAX_PAYMENT):
+        if (amount < MIN_PAYMENT) or (amount > MAX_PAYMENT):
             raise BadAmount
 
         # Insert payment instruction

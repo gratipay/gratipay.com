@@ -6,7 +6,7 @@ import datetime
 import pytest
 from aspen.utils import utcnow
 
-from gratipay import NotSane
+from gratipay.exceptions import NotSane
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.participant import (
     NeedConfirmation, Participant, TeamCantBeOnlyAuth, WontTakeOverWithIdentities

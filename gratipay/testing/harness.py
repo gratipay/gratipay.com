@@ -8,7 +8,6 @@ from collections import defaultdict
 from os.path import dirname, join, realpath
 from decimal import Decimal
 
-import gratipay
 from aspen import resources
 from aspen.utils import utcnow
 from aspen.testing.client import Client
@@ -18,7 +17,7 @@ from gratipay.elsewhere import UserInfo
 from gratipay.exceptions import NoSelfTipping, NoTippee, BadAmount
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
-from gratipay.models.participant import Participant
+from gratipay.models.participant import Participant, MAX_TIP, MIN_TIP
 from gratipay.security import user
 from gratipay.testing.vcr import use_cassette
 from psycopg2 import IntegrityError, InternalError
@@ -297,7 +296,7 @@ class Harness(unittest.TestCase):
             raise NoSelfTipping
 
         amount = Decimal(amount)  # May raise InvalidOperation
-        if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
+        if (amount < MIN_TIP) or (amount > MAX_TIP):
             raise BadAmount
 
         # Insert tip

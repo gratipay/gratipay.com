@@ -6,10 +6,9 @@ import base64
 import aspen
 from aspen.website import Website as BaseWebsite
 
-import gratipay
 from . import utils, security
 from .security import authentication, csrf
-from .utils import erase_cookie, http_caching, i18n, set_cookie, timer
+from .utils import erase_cookie, http_caching, i18n, set_cookie, set_version_header, timer
 from .renderers import csv_dump, jinja2_htmlescaped, eval_, scss
 
 
@@ -96,7 +95,7 @@ class Website(BaseWebsite):
             tell_sentry,
             algorithm['get_response_for_exception'],
 
-            gratipay.set_version_header,
+            set_version_header,
             authentication.add_auth_to_response,
             csrf.add_token_to_response,
             http_caching.add_caching_to_response,

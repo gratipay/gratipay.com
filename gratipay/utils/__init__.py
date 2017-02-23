@@ -288,3 +288,7 @@ def get_featured_projects(popular, unpopular):
     featured_projects = random.sample(popular, p) + random.sample(unpopular, u)
     random.shuffle(featured_projects)
     return featured_projects
+
+
+def set_version_header(response, website):
+    response.headers['X-Gratipay-Version'] = website.version

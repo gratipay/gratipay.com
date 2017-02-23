@@ -14,6 +14,7 @@ class Application(object):
     """
 
     def __init__(self):
+        utils.i18n.set_locale()
         website = Website(self)
 
         exc = None

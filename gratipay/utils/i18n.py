@@ -1,8 +1,9 @@
 # encoding: utf8
 from __future__ import print_function, unicode_literals
 
-from io import BytesIO
+import locale
 import re
+from io import BytesIO
 from unicodedata import combining, normalize
 
 from aspen.simplates.pagination import parse_specline, split_and_escape
@@ -242,3 +243,17 @@ def extract_spt(fileobj, *args, **kw):
         if extractor:
             for match in extractor(f, *args, **kw):
                 yield match
+
+
+def set_locale():
+    try:  # XXX This can't be right.
+        locale.setlocale(locale.LC_ALL, b"en_US.utf8")          # Heroku
+    except locale.Error:
+        import sys
+        if sys.platform == 'win32':
+            locale.setlocale(locale.LC_ALL, b'')                # Windows
+        else:
+            try:
+                locale.setlocale(locale.LC_ALL, b"en_US.UTF-8") # Mac OS
+            except locale.Error:
+                locale.setlocale(locale.LC_ALL, b"C.UTF-8")     # Read the Docs
