@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import braintree
 from postgres.orm import Model
-from gratipay.models import add_event
 
 
 class ExchangeRoute(Model):
@@ -73,7 +72,7 @@ class ExchangeRoute(Model):
                           , action='invalidate route'
                           , address=self.address
                            )
-            add_event(cursor, 'participant', payload)
+            self.app.add_event(cursor, 'participant', payload)
         self.set_attributes(is_deleted=True)
 
     def revive(self):
@@ -85,7 +84,7 @@ class ExchangeRoute(Model):
                           , action='revive route'
                           , address=self.address
                            )
-            add_event(cursor, 'participant', payload)
+            self.app.add_event(cursor, 'participant', payload)
         self.set_attributes(is_deleted=False)
 
     def update_error(self, new_error):

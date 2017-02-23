@@ -1,6 +1,5 @@
 from aspen import Response
 
-from gratipay.models import add_event
 from gratipay.models.team import Team
 from gratipay.models.participant import Participant
 [---]
@@ -31,7 +30,7 @@ with website.db.get_cursor() as c:
             """, (is_approved, team.slug))
         status = {True: 'approved', False: 'rejected', None: 'unreviewed'}[is_approved]
 
-        add_event(c, 'team', dict(
+        website.app.add_event(c, 'team', dict(
             id=team.id,
             recorder=dict(id=user.participant.id, username=user.participant.username),
             action='set', values=dict(status=status)

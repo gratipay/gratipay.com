@@ -5,6 +5,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import atexit
 import fnmatch
 import os
+import sys
 import urlparse
 from tempfile import mkstemp
 
@@ -20,6 +21,7 @@ import gratipay
 import gratipay.billing.payday
 import raven
 from environment import Environment, is_yesish
+from gratipay.application import Application
 from gratipay.elsewhere import PlatformRegistry
 from gratipay.elsewhere.bitbucket import Bitbucket
 from gratipay.elsewhere.bountysource import Bountysource
@@ -31,12 +33,8 @@ from gratipay.elsewhere.twitter import Twitter
 from gratipay.elsewhere.venmo import Venmo
 from gratipay.email import compile_email_spt, ConsoleMailer
 from gratipay.models.account_elsewhere import AccountElsewhere
-from gratipay.models.community import Community
-from gratipay.models.country import Country
-from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant, Identity
 from gratipay.models.team import Team
-from gratipay.models import GratipayDB
 from gratipay.security.crypto import EncryptingPacker
 from gratipay.utils.http_caching import asset_etag
 from gratipay.utils.i18n import (
@@ -51,15 +49,16 @@ def secure_cookies(env):
     gratipay.use_secure_cookies = env.base_url.startswith('https')
 
 def db(env):
-    dburl = env.database_url
-    maxconn = env.database_maxconn
-    db = GratipayDB(dburl, maxconn=maxconn)
 
-    for model in (AccountElsewhere, Community, Country, ExchangeRoute, Participant, Team):
-        db.register_model(model)
-    gratipay.billing.payday.Payday.db = db
+    # Instantiating Application calls the rest of these wireup functions, and
+    # is side-effecty (e.g., writing to stdout, which interferes with some of
+    # our scripts). Eventually scripts that use this function should be
+    # rewritten to instantiate Application directly.
 
-    return db
+    sys.stdout = sys.stderr
+    app = Application()
+    sys.stdout = sys.__stdout__
+    return app.db
 
 def crypto(env):
     keys = [k.encode('ASCII') for k in env.crypto_keys.split()]

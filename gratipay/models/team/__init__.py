@@ -7,9 +7,7 @@ from decimal import Decimal
 
 import requests
 from aspen import json, log
-from gratipay.billing.exchanges import MINIMUM_CHARGE
 from gratipay.exceptions import InvalidTeamName
-from gratipay.models import add_event
 from postgres.orm import Model
 
 from .available import Available
@@ -192,10 +190,10 @@ class Team(Model, Available, Closing, Membership, Takes, TipMigration):
                WHERE id = %s
               """.format(cols, placeholders), vals+(self.id,)
             )
-            add_event(c, 'team', dict( action='update'
-                                     , id=self.id
-                                     , **old_value
-                                      ))
+            self.app.add_event(c, 'team', dict( action='update'
+                                              , id=self.id
+                                              , **old_value
+                                               ))
             self.set_attributes(**kw)
 
 
@@ -222,6 +220,7 @@ class Team(Model, Available, Closing, Membership, Takes, TipMigration):
 
 
     def get_upcoming_payment(self):
+        from gratipay.billing.exchanges import MINIMUM_CHARGE  # dodge circular import
         return self.db.one("""
             SELECT COALESCE(SUM(amount + due), 0)
               FROM current_payment_instructions cpi
@@ -351,10 +350,10 @@ class Team(Model, Available, Closing, Membership, Takes, TipMigration):
                       WHERE id=%s"""
                  , (oids['original'], oids['large'], oids['small'], image_type, self.id)
                   )
-            add_event(c, 'team', dict( action='upsert_image'
-                                     , id=self.id
-                                     , **oids
-                                      ))
+            self.app.add_event(c, 'team', dict( action='upsert_image'
+                                              , id=self.id
+                                              , **oids
+                                               ))
             self.set_attributes( image_type=image_type
                                , **{'image_oid_'+size: oids[size] for size in oids}
                                 )

@@ -273,23 +273,6 @@ class TestFunctions(AliceAndResend):
         assert self.db.one("SELECT spt_name FROM email_queue") is None
 
 
-def queue_branch_email(username, _argv=None, _input=None, _print=None):
-    _argv = ['', username] if _argv is None else _argv
-    _input = _input or (lambda prompt: 'y')
-    stdout, stderr = [], []
-    def _print(string, file=None):
-        buf = stderr if file is sys.stderr else stdout
-        buf.append(str(string))
-    _print = _print or (lambda *a, **kw: None)
-    try:
-        _queue_branch_email.main(_argv, _input, _print)
-    except SystemExit as exc:
-        retcode = exc.args[0]
-    else:
-        retcode = 0
-    return retcode, stdout, stderr
-
-
 class QueueHarness(EmailHarness):
 
     def make_participant_with_exchange(self, name):
@@ -299,6 +282,23 @@ class QueueHarness(EmailHarness):
                                             )
         self.make_exchange('braintree-cc', 50, 0, participant)
         return participant
+
+
+    def queue_branch_email(self, username, _argv=None, _input=None, _print=None):
+        _argv = ['', username] if _argv is None else _argv
+        _input = _input or (lambda prompt: 'y')
+        stdout, stderr = [], []
+        def _print(string, file=None):
+            buf = stderr if file is sys.stderr else stdout
+            buf.append(str(string))
+        _print = _print or (lambda *a, **kw: None)
+        try:
+            _queue_branch_email.main(_argv, _input, _print, self.client.website)
+        except SystemExit as exc:
+            retcode = exc.args[0]
+        else:
+            retcode = 0
+        return retcode, stdout, stderr
 
 
 class TestGetRecentlyActiveParticipants(QueueHarness):
@@ -336,7 +336,7 @@ class TestQueueBranchEmail(QueueHarness):
         return self.mailer.call_count
 
     def test_is_fine_with_no_participants(self):
-        retcode, output, errors = queue_branch_email('all')
+        retcode, output, errors = self.queue_branch_email('all')
         assert retcode == 0
         assert output == ['Okay, you asked for it!', '0']
         assert errors == []
@@ -344,7 +344,7 @@ class TestQueueBranchEmail(QueueHarness):
 
     def test_queues_for_one_participant(self):
         alice = self.make_participant_with_exchange('alice')
-        retcode, output, errors = queue_branch_email('all')
+        retcode, output, errors = self.queue_branch_email('all')
         assert retcode == 0
         assert output == [ 'Okay, you asked for it!'
                          , '1'
@@ -356,7 +356,7 @@ class TestQueueBranchEmail(QueueHarness):
     def test_queues_for_two_participants(self):
         alice = self.make_participant_with_exchange('alice')
         bob = self.make_participant_with_exchange('bob')
-        retcode, output, errors = queue_branch_email('all')
+        retcode, output, errors = self.queue_branch_email('all')
         assert retcode == 0
         assert output[:2] == ['Okay, you asked for it!', '2']
         assert errors == [ '   1 queuing for alice@example.com (alice={})'.format(alice.id)
@@ -367,7 +367,7 @@ class TestQueueBranchEmail(QueueHarness):
     def test_constrains_to_one_participant(self):
         self.make_participant_with_exchange('alice')
         bob = self.make_participant_with_exchange('bob')
-        retcode, output, errors = queue_branch_email('bob')
+        retcode, output, errors = self.queue_branch_email('bob')
         assert retcode == 0
         assert output == [ 'Okay, just bob.'
                          , '1'
@@ -377,7 +377,7 @@ class TestQueueBranchEmail(QueueHarness):
         assert self.nsent() == 1
 
     def test_bails_if_told_to(self):
-        retcode, output, errors = queue_branch_email('all', _input=lambda prompt: 'n')
+        retcode, output, errors = self.queue_branch_email('all', _input=lambda prompt: 'n')
         assert retcode == 1
         assert output == []
         assert errors == []

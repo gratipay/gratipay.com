@@ -24,7 +24,6 @@ from gratipay.exceptions import (
 )
 
 from gratipay.billing.instruments import CreditCard
-from gratipay.models import add_event
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.team import Team
@@ -247,7 +246,10 @@ class Participant(Model, Email, Identity):
         api_key = self._generate_api_key()
         SQL = "UPDATE participants SET api_key=%s WHERE username=%s RETURNING api_key"
         with self.db.get_cursor() as c:
-            add_event(c, 'participant', dict(action='set', id=self.id, values=dict(api_key=api_key)))
+            self.app.add_event( c
+                              , 'participant'
+                              , dict(action='set', id=self.id, values=dict(api_key=api_key))
+                               )
             api_key = c.one(SQL, (api_key, self.username))
         self.set_attributes(api_key=api_key)
         return api_key
@@ -273,7 +275,7 @@ class Participant(Model, Email, Identity):
 
     def set_as_claimed(self):
         with self.db.get_cursor() as c:
-            add_event(c, 'participant', dict(id=self.id, action='claim'))
+            self.app.add_event(c, 'participant', dict(id=self.id, action='claim'))
             claimed_time = c.one("""\
 
                 UPDATE participants
@@ -304,10 +306,10 @@ class Participant(Model, Email, Identity):
                         "WHERE username=%(username)s"
                       , dict(username=self.username, is_closed=is_closed)
                        )
-            add_event( cursor
-                     , 'participant'
-                     , dict(id=self.id, action='set', values=dict(is_closed=is_closed))
-                      )
+            self.app.add_event( cursor
+                              , 'participant'
+                              , dict(id=self.id, action='set', values=dict(is_closed=is_closed))
+                               )
             self.set_attributes(is_closed=is_closed)
 
 
@@ -556,7 +558,13 @@ class Participant(Model, Email, Identity):
                 AND user_id=%s
                 RETURNING participant
             """, (self.username, platform, user_id), default=NonexistingElsewhere)
-            add_event(c, 'participant', dict(id=self.id, action='disconnect', values=dict(platform=platform, user_id=user_id)))
+            self.app.add_event( c
+                              , 'participant'
+                              , dict( id=self.id
+                                    , action='disconnect'
+                                    , values=dict(platform=platform, user_id=user_id)
+                                     )
+                               )
         self.update_avatar()
 
     def update_avatar(self):
@@ -816,10 +824,13 @@ class Participant(Model, Email, Identity):
                         "WHERE username=%(username)s"
                       , dict(username=self.username, is_free_rider=is_free_rider)
                        )
-            add_event( cursor
-                     , 'participant'
-                     , dict(id=self.id, action='set', values=dict(is_free_rider=is_free_rider))
-                      )
+            self.app.add_event( cursor
+                              , 'participant'
+                              , dict( id=self.id
+                                    , action='set'
+                                    , values=dict(is_free_rider=is_free_rider)
+                                     )
+                               )
             self.set_attributes(is_free_rider=is_free_rider)
 
 
@@ -911,7 +922,13 @@ class Participant(Model, Email, Identity):
             try:
                 # Will raise IntegrityError if the desired username is taken.
                 with self.db.get_cursor(back_as=tuple) as c:
-                    add_event(c, 'participant', dict(id=self.id, action='set', values=dict(username=suggested)))
+                    self.app.add_event( c
+                                      , 'participant'
+                                      , dict( id=self.id
+                                            , action='set'
+                                            , values=dict(username=suggested)
+                                             )
+                                       )
                     actual = c.one( "UPDATE participants "
                                     "SET username=%s, username_lower=%s "
                                     "WHERE username=%s "
@@ -990,12 +1007,12 @@ class Participant(Model, Email, Identity):
             return check
 
         archived_as = safely_reserve_a_username(cursor, reserve=reserve)
-        add_event(cursor, 'participant', dict( id=self.id
-                                             , action='archive'
-                                             , values=dict( new_username=archived_as
-                                                          , old_username=self.username
-                                                           )
-                                              ))
+        self.app.add_event(cursor, 'participant', dict( id=self.id
+                                                      , action='archive'
+                                                      , values=dict( new_username=archived_as
+                                                                   , old_username=self.username
+                                                                    )
+                                                       ))
         return archived_as
 
 
