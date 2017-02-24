@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Álvaro Ortiz <alvaro@furilo.com>, 2014
+# Chad Whitacre <chad@zetaweb.com>, 2017
 # Changaco <changaco@changaco.oy.lc>, 2014-2015
 # JoseLuis Torres <jl@joseluistorres.me>, 2014
 # Juan Luis Cano <juanlu001@gmail.com>, 2014
@@ -49,7 +50,7 @@ msgstr "Hoy hemos intentado cargar en tu tarjeta de crédito {0}, para financiar
 
 msgid "{0} and {n} other"
 msgid_plural "{0} and {n} others"
-msgstr[0] "{0} y {1}"
+msgstr[0] "{0} y otro"
 msgstr[1] "{0} y otros {n}"
 
 msgid "Fix Credit Card"
