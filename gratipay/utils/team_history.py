@@ -46,7 +46,7 @@ def iter_team_payday_events(db, team, year=None):
          WHERE payments.payday = paydays.id
            AND team=%(team)s
            AND extract(year from timestamp) = %(year)s
-         ORDER BY payments.payday, direction, amount DESC
+         ORDER BY payments.payday DESC, direction, amount DESC
        """, dict(team=team.slug, year=year), back_as=dict)
 
     events = []
