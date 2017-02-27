@@ -1,6 +1,13 @@
 {% set unprivileged = not(participant == user.participant or user.ADMIN) %}
 {% set approved_open_teams = participant.get_teams(unprivileged, unprivileged) %}
+{% if (user.ADMIN or user.participant == participant) or approved_open_teams %}
     <h2>{{ _("Projects") }}</h2>
+    {% if user.participant == participant %}
+        <form action="/new" class="apply">
+            <button type="submit">{{ _("Fund Your Project") }}</button>
+        </form>
+    {% endif %}
+{% endif %}
     <table class="listing">
         {% for team in approved_open_teams %}
 		      <tr>
