@@ -56,6 +56,10 @@ table.listing {
             &.room-for-numbers {
                 padding-right: 80px;
             }
+            &.profile {
+                max-width: 384px;
+            }
+
             .owner a {
                 color: $medium-gray;
                 position: relative;
