@@ -1,38 +1,39 @@
+{% set unprivileged = not(participant == user.participant or user.ADMIN) %}
+{% set approved_open_teams = participant.get_teams(unprivileged, unprivileged) %}
     <h2>{{ _("Projects") }}</h2>
     <table class="listing">
-        {% for team in participant.get_teams() %}
-        <tr>
-            <td class="item">
-                <img src="{{ team.get_image_url('small') }}">
-                <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
-
-                <div class="details room-for-numbers profile">
-                    <span class="i">{{ i }}</span>
-                    <span class="status">&middot;
-                        <a href="{{ team.review_url }}"><span
-                            class="status-icon {{ team.status }}"
-                            >{{ status_icons[team.status]|safe }}</span
-                            >{{ i18ned_statuses[team.status] }}</a>
-                    </span>
-                    <span class="ctime">&middot; {{ _("created {ago}",
-                        ago=to_age(team.ctime, add_direction=True)) }}</span>
-                </div>
-                {% if team.status == 'approved' %}
-                <table class="numbers mono">
-                    <tr>
-                        <th class="label">{{ _("Weekly") }}</th>
-                        <th>&#x03A3; &nbsp;</th>
-                        <th>n</th>
-                    </tr>
-                    <tr>
-                        <td class="label">{{ _("Receiving") }}</td>
-                        <td>{{ format_currency(team.receiving, 'USD')
-                                if team.receiving else '- &nbsp;'|safe }}</td>
-                        <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
-                    </tr>
-                </table>
-                {% endif %}
-            </td>
-        </tr>
+        {% for team in approved_open_teams %}
+		      <tr>
+		          <td class="item">
+		              <img src="{{ team.get_image_url('small') }}">
+		              <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
+		              <div class="details room-for-numbers profile">
+		                  <span class="i">{{ i }}</span>
+		                  <span class="status">&middot;
+		                      <a href="{{ team.review_url }}"><span
+		                          class="status-icon {{ team.status }}"
+		                          >{{ status_icons[team.status]|safe }}</span
+		                          >{{ i18ned_statuses[team.status] }}</a>
+		                  </span>
+		                  <span class="ctime">&middot; {{ _("created {ago}",
+		                      ago=to_age(team.ctime, add_direction=True)) }}</span>
+		              </div>
+		              {% if team.status == 'approved' %}
+			              <table class="numbers mono">
+			                  <tr>
+			                      <th class="label">{{ _("Weekly") }}</th>
+			                      <th>&#x03A3; &nbsp;</th>
+			                      <th>n</th>
+			                  </tr>
+			                  <tr>
+			                      <td class="label">{{ _("Receiving") }}</td>
+			                      <td>{{ format_currency(team.receiving, 'USD')
+			                              if team.receiving else '- &nbsp;'|safe }}</td>
+			                      <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
+			                  </tr>
+			              </table>
+		              {% endif %}
+		          </td>
+	         </tr>
         {% endfor %}
     </table>
