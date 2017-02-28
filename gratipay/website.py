@@ -6,7 +6,7 @@ import base64
 import aspen
 from aspen.website import Website as BaseWebsite
 
-from . import utils, security
+from . import utils, security, version
 from .security import authentication, csrf
 from .utils import erase_cookie, http_caching, i18n, set_cookie, set_version_header, timer
 from .renderers import csv_dump, jinja2_htmlescaped, eval_, scss
@@ -19,7 +19,7 @@ class Website(BaseWebsite):
     def __init__(self, app):
         BaseWebsite.__init__(self)
         self.app = app
-
+        self.version = version.get_version()
         self.configure_renderers()
 
         # TODO Can't do remaining config here because of lingering wireup

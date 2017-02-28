@@ -8,7 +8,6 @@ from .cron import Cron
 from .models import GratipayDB
 from .models.participant import Participant
 from .payday_runner import PaydayRunner
-from .version import get_version
 from .website import Website
 
 
@@ -27,13 +26,6 @@ class Application(object):
         utils.i18n.set_locale()
         website = Website(self)
 
-        exc = None
-        try:
-            website.version = get_version()
-        except Exception, e:
-            exc = e
-            website.version = 'x'
-
         env = self.env = wireup.env()
         db = self.db = GratipayDB(self, env.database_url, env.database_maxconn)
         tell_sentry = self.tell_sentry = wireup.make_sentry_teller(env)
@@ -50,9 +42,6 @@ class Application(object):
         wireup.load_i18n(website.project_root, tell_sentry)
         wireup.other_stuff(website, env)
         wireup.accounts_elsewhere(website, env)
-
-        if exc:
-            tell_sentry(exc, {})
 
         website.init_even_more()                # TODO Fold this into Website.__init__
         self.install_periodic_jobs(website, env, db)
