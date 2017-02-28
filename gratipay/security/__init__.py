@@ -41,6 +41,10 @@ def add_headers_to_response(response):
     if 'X-XSS-Protection' not in response.headers:
         response.headers['X-XSS-Protection'] = '1; mode=block'
 
+    # https://www.w3.org/TR/referrer-policy/
+    if 'Referrer-Policy' not in response.headers:
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
     if 'content-security-policy-report-only' not in response.headers:
         response.headers['content-security-policy-report-only'] = (
