@@ -53,6 +53,10 @@ class TestSecurity(Harness):
         headers = self.client.GET('/about/').headers
         assert headers['X-XSS-Protection'] == '1; mode=block'
 
+    def test_ahtr_sets_strict_transport_security(self):
+        headers = self.client.GET('/about/').headers
+        assert headers['strict-transport-security'] == 'max-age=31536000; includeSubDomains'
+
     def test_ahtr_sets_content_security_policy(self):
         headers = self.client.GET('/about/').headers
         policy = (

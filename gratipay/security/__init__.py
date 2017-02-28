@@ -41,6 +41,10 @@ def add_headers_to_response(response):
     if 'X-XSS-Protection' not in response.headers:
         response.headers['X-XSS-Protection'] = '1; mode=block'
 
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+    if 'strict-transport-security' not in response.headers:
+        response.headers['strict-transport-security'] = 'max-age=31536000; includeSubDomains'
+
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
     if 'content-security-policy-report-only' not in response.headers:
         response.headers['content-security-policy-report-only'] = (
