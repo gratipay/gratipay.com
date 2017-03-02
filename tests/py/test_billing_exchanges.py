@@ -279,9 +279,10 @@ class TestsWithoutBillingHarness(Harness):
                        , fee=D("0.41")
                        , participant=alice
                        , status='pre'
+                       , ref='alice-braintree-cc-trans-id'
                         )
         actual = self.db.one("""
-            SELECT amount, fee, participant, status, route
+            SELECT amount, fee, participant, status, route, ref
               FROM exchanges
         """, back_as=dict)
         expected = { "amount": D('0.59')
@@ -289,6 +290,7 @@ class TestsWithoutBillingHarness(Harness):
                    , "participant": "alice"
                    , "status": 'pre'
                    , "route": ExchangeRoute.from_network(alice, 'braintree-cc').id
+                   , "ref" : 'alice-braintree-cc-trans-id'
                     }
         assert actual == expected
 
@@ -302,6 +304,7 @@ class TestsWithoutBillingHarness(Harness):
                            , fee=D("0.41")
                            , participant=alice
                            , status='pre'
+                           , ref='bob-braintree-cc-trans-id'
                             )
 
     def test_re_stores_error_in_note(self):
@@ -312,6 +315,7 @@ class TestsWithoutBillingHarness(Harness):
                        , fee=D("0.41")
                        , participant=alice
                        , status='pre'
+                       , ref='alice-braintree-cc-trans-id'
                        , error='Card payment failed'
                         )
         exchange = self.db.one("SELECT * FROM exchanges")
@@ -325,6 +329,7 @@ class TestsWithoutBillingHarness(Harness):
                        , fee=D("0.41")
                        , participant=alice
                        , status='pre'
+                       , ref='alice-braintree-cc-trans-id'
                         )
         assert P('alice').balance == D('0.00')
 
@@ -336,6 +341,7 @@ class TestsWithoutBillingHarness(Harness):
                        , fee=D('0.75')
                        , participant=alice
                        , status='pre'
+                       , ref='alice-paypal-trans-id'
                         )
         assert P('alice').balance == D('13.41')
 
@@ -343,12 +349,12 @@ class TestsWithoutBillingHarness(Harness):
         alice = self.make_participant('alice', last_paypal_result='')
         ba = ExchangeRoute.from_network(alice, 'paypal')
         with pytest.raises(NegativeBalance):
-            record_exchange(self.db, ba, D("-10.00"), D("0.41"), alice, 'pre')
+            record_exchange(self.db, ba, D("-10.00"), D("0.41"), alice, 'pre', 'paypal-transid')
 
     def test_re_result_restores_balance_on_error(self):
         alice = self.make_participant('alice', balance=30, last_paypal_result='')
         ba = ExchangeRoute.from_network(alice, 'paypal')
-        e_id = record_exchange(self.db, ba, D('-27.06'), D('0.81'), alice, 'pre')
+        e_id = record_exchange(self.db, ba, D('-27.06'), D('0.81'), alice, 'pre', 'paypal-transid')
         assert alice.balance == D('02.13')
         record_exchange_result(self.db, e_id, 'failed', 'SOME ERROR', alice)
         assert P('alice').balance == D('30.00')
@@ -356,7 +362,7 @@ class TestsWithoutBillingHarness(Harness):
     def test_re_result_restores_balance_on_error_with_invalidated_route(self):
         alice = self.make_participant('alice', balance=37, last_paypal_result='')
         pp = ExchangeRoute.from_network(alice, 'paypal')
-        e_id = record_exchange(self.db, pp, D('-32.45'), D('0.86'), alice, 'pre')
+        e_id = record_exchange(self.db, pp, D('-32.45'), D('0.86'), alice, 'pre', 'paypal-transid')
         assert alice.balance == D('3.69')
         pp.update_error('invalidated')
         record_exchange_result(self.db, e_id, 'failed', 'oops', alice)
@@ -367,7 +373,7 @@ class TestsWithoutBillingHarness(Harness):
     def test_re_result_doesnt_restore_balance_on_success(self):
         alice = self.make_participant('alice', balance=50, last_paypal_result='')
         ba = ExchangeRoute.from_network(alice, 'paypal')
-        e_id = record_exchange(self.db, ba, D('-43.98'), D('1.60'), alice, 'pre')
+        e_id = record_exchange(self.db, ba, D('-43.98'), D('1.60'), alice, 'pre', 'paypal-transid')
         assert alice.balance == D('4.42')
         record_exchange_result(self.db, e_id, 'succeeded', None, alice)
         assert P('alice').balance == D('4.42')
@@ -375,7 +381,7 @@ class TestsWithoutBillingHarness(Harness):
     def test_re_result_updates_balance_for_positive_amounts(self):
         alice = self.make_participant('alice', balance=4, last_bill_result='')
         cc = ExchangeRoute.from_network(alice, 'braintree-cc')
-        e_id = record_exchange(self.db, cc, D('31.59'), D('0.01'), alice, 'pre')
+        e_id = record_exchange(self.db, cc, D('31.59'), D('0.01'), alice, 'pre', 'paypal-transid')
         assert alice.balance == D('4.00')
         record_exchange_result(self.db, e_id, 'succeeded', None, alice)
         assert P('alice').balance == D('35.59')

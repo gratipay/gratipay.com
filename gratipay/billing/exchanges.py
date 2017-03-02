@@ -74,6 +74,7 @@ def create_card_hold(db, participant, amount):
 
     hold = None
     error = ""
+    ref = ""
     try:
         result = braintree.Transaction.sale({
             'amount': str(cents/100.0),
@@ -82,6 +83,7 @@ def create_card_hold(db, participant, amount):
             'options': { 'submit_for_settlement': False },
             'custom_fields': {'participant_id': participant.id}
         })
+        ref = result.transaction.id
 
         if result.is_success and result.transaction.status == 'authorized':
             error = ""
@@ -98,8 +100,7 @@ def create_card_hold(db, participant, amount):
         log(msg + "succeeded.")
     else:
         log(msg + "failed: %s" % error)
-        ref = result.transaction.id
-        record_exchange(db, route, amount, fee, participant, 'failed', error, ref)
+        record_exchange(db, route, amount, fee, participant, 'failed', ref, error)
 
     return hold, error
 
@@ -230,7 +231,7 @@ def get_ready_payout_routes_by_network(db, network):
     return out
 
 
-def record_exchange(db, route, amount, fee, participant, status, error=None, ref):
+def record_exchange(db, route, amount, fee, participant, status, ref, error=None):
     """Given a Bunch of Stuff, return an int (exchange_id).
 
     Records in the exchanges table have these characteristics:
