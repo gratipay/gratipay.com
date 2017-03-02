@@ -89,11 +89,11 @@ class ExchangeRoute(Model):
         self.set_attributes(is_deleted=False)
 
     def update_error(self, new_error):
-        id = self.id
-        old_error = self.error
-
         if self.is_deleted:
             return
+
+        id = self.id
+        old_error = self.error
 
         self.db.run("""
             UPDATE exchange_routes
