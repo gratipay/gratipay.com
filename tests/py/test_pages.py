@@ -7,7 +7,6 @@ from aspen import Response
 
 import braintree
 import mock
-import pytest
 from braintree.test.nonces import Nonces
 from gratipay.security.user import SESSION
 from gratipay.testing import Harness
@@ -86,18 +85,16 @@ class TestPages(Harness):
             alice.update_is_free_rider(None)
         self.browse(setup, auth_as='alice')
 
-    @pytest.mark.xfail(reason="migrating to Teams; #3399")
-    def test_username_is_in_button(self):
-        self.make_participant('alice', claimed_time='now')
-        self.make_participant('bob', claimed_time='now')
-        body = self.client.GET('/~alice/', auth_as='bob').body
-        assert '<span class="zero">Give to alice</span>' in body
+    def test_team_name_is_in_unauth_giving_cta(self):
+        self.make_team(is_approved=True)
+        body = self.client.GET('/TheEnterprise/').body
+        assert 'to give to<br>The Enterprise' in body
 
-    @pytest.mark.xfail(reason="migrating to Teams; #3399")
-    def test_username_is_in_unauth_giving_cta(self):
+    def test_team_name_is_in_button(self):
         self.make_participant('alice', claimed_time='now')
-        body = self.client.GET('/~alice/').body
-        assert 'give to alice' in body
+        self.make_team(is_approved=True)
+        body = self.client.GET('/TheEnterprise/', auth_as='alice').body
+        assert '<span class="zero">Give to The Enterprise</span>' in body
 
     def test_widget(self):
         self.make_participant('cheese', claimed_time='now')

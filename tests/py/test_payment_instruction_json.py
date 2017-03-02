@@ -2,7 +2,7 @@ from __future__ import print_function, unicode_literals
 
 import json
 
-from gratipay.testing import Harness
+from gratipay.testing import Harness, D, T
 
 
 class TestPaymentInstructionJson(Harness):
@@ -66,3 +66,20 @@ class TestPaymentInstructionJson(Harness):
                                     )
         assert "unapproved team" in response.body
         assert response.code == 400
+
+
+    def check_parsing(self, lang, amount):
+        alice = self.make_participant('alice', claimed_time='now', last_bill_result='')
+        self.make_team(is_approved=True)
+        self.client.POST( '/TheEnterprise/payment-instruction.json'
+                        , data={'amount': amount}
+                        , auth_as='alice'
+                        , HTTP_ACCEPT_LANGUAGE=str(lang)
+                         )
+        assert alice.get_payment_instruction(T('TheEnterprise'))['amount'] == D('0.05')
+
+    def test_amount_is_parsed_as_expected_in_english(self):
+        self.check_parsing('en', '0.05')
+
+    def test_amount_is_parsed_as_expected_in_italian(self):
+        self.check_parsing('it', '0,05')
