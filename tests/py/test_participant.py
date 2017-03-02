@@ -312,7 +312,7 @@ class Tests(Harness):
 
         # Alice updates her card..
         ExchangeRoute.from_network(alice, 'braintree-cc').invalidate()
-        ExchangeRoute.insert(alice, 'braintree-cc', '/cards/bar', '')
+        ExchangeRoute.insert(alice, 'braintree-cc', '/cards/bar')
 
         assert alice.giving == D('5.00')
         assert T(team.slug).receiving == D('5.00')

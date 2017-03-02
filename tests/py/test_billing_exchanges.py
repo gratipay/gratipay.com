@@ -101,7 +101,9 @@ class TestsWithBillingHarness(BillingHarness):
 
     def test_cch_deleted_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
-        ExchangeRoute.insert(bob, 'braintree-cc', 'foo', is_deleted=True)
+        route = ExchangeRoute.insert(bob, 'braintree-cc', 'foo')
+        self.db.run("UPDATE exchange_routes SET is_deleted=true WHERE id=%s", (route.id,))
+
         self.hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 

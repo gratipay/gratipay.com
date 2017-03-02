@@ -201,9 +201,11 @@ class Harness(unittest.TestCase):
 
         # Insert exchange routes
         if 'last_bill_result' in kw:
-            ExchangeRoute.insert(participant, 'braintree-cc', '/cards/foo', kw.pop('last_bill_result'))
+            route = ExchangeRoute.insert(participant, 'braintree-cc', '/cards/foo')
+            route.update_error(kw.pop('last_bill_result'))
         if 'last_paypal_result' in kw:
-            ExchangeRoute.insert(participant, 'paypal', 'abcd@gmail.com', kw.pop('last_paypal_result'))
+            route = ExchangeRoute.insert(participant, 'paypal', 'abcd@gmail.com')
+            route.update_error(kw.pop('last_paypal_result'))
 
         # Update participant
         verified_in = kw.pop('verified_in', [])
