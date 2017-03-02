@@ -99,9 +99,11 @@ class TestsWithBillingHarness(BillingHarness):
         self.hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
-    def test_cch_invalidated_card(self):
+    def test_cch_deleted_card(self):
         bob = self.make_participant('bob', is_suspicious=False)
-        ExchangeRoute.insert(bob, 'braintree-cc', 'foo', error='invalidated')
+        route = ExchangeRoute.insert(bob, 'braintree-cc', 'foo')
+        self.db.run("UPDATE exchange_routes SET is_deleted=true WHERE id=%s", (route.id,))
+
         self.hold, error = create_card_hold(self.db, bob, D('10.00'))
         assert error == 'No credit card'
 
@@ -358,11 +360,12 @@ class TestsWithoutBillingHarness(Harness):
         pp = ExchangeRoute.from_network(alice, 'paypal')
         e_id = record_exchange(self.db, pp, D('-32.45'), D('0.86'), alice, 'pre')
         assert alice.balance == D('3.69')
-        pp.update_error('invalidated')
+        pp.invalidate()
         record_exchange_result(self.db, e_id, 'failed', 'oops', alice)
         alice = P('alice')
         assert alice.balance == D('37.00')
-        assert pp.error == alice.get_paypal_error() == 'invalidated'
+        assert pp.is_deleted and pp.error == ''
+        assert alice.get_paypal_error() is None
 
     def test_re_result_doesnt_restore_balance_on_success(self):
         alice = self.make_participant('alice', balance=50, last_paypal_result='')
