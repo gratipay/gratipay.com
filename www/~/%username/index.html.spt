@@ -2,7 +2,7 @@
 """
 from collections import OrderedDict
 
-from gratipay.utils import get_participant, markdown, truncate
+from gratipay.utils import get_participant, markdown, truncate, icons
 
 LONG_STATEMENT = 256
 
@@ -27,17 +27,13 @@ def with_others(obj):
     others = obj.nmembers - 1
     return ngettext("with {n} other", "with {n} others", others)
 
+status_icons = icons.statusicons()
+# Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
-                  , "unreviewed" : _("Unreviewed")
-                  , "rejected": _("Rejected")
-                  , "featured": _("Featured")
-                   }
-
-status_icons = { "approved": "&#xe008;"
-               , "unreviewed": "&#xe009;"
-               , "rejected": "&#xe010;"
-               , "featured": "&#xe9d9;"
-                }
+                      , "unreviewed" : _("Unreviewed")
+                      , "rejected": _("Rejected")
+                      , "featured": _("Featured")
+                       }
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/profile.html" %}

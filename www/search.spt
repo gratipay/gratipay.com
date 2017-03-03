@@ -1,4 +1,4 @@
-from gratipay.utils import markdown, truncate
+from gratipay.utils import markdown, truncate, icons
 from gratipay.utils.i18n import LANGUAGES_2, SEARCH_CONFS, strip_accents
 from markupsafe import Markup
 [---]
@@ -17,15 +17,13 @@ def get_processed_excerpt(participant):
     statement = truncate(statement, 128, '')
     return process_excerpt(statement)
 
-# Horribly WET; see www/index.html.spt
+status_icons = icons.statusicons()
+# Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
-                  , "unreviewed" : _("Unreviewed")
-                  , "rejected": _("Rejected")
-                   }
-status_icons = { "approved": "&#xe008;"
-               , "unreviewed": "&#xe009;"
-               , "rejected": "&#xe010;"
-                }
+                      , "unreviewed" : _("Unreviewed")
+                      , "rejected": _("Rejected")
+                      , "featured": _("Featured")
+                       }
 
 action = request.qs.get('action')
 query = request.qs.get('q')

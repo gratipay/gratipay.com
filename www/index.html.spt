@@ -1,19 +1,15 @@
 from collections import OrderedDict
-from gratipay.utils import get_featured_projects
+from gratipay.utils import get_featured_projects, icons
 import random
 
 [---]
+status_icons = icons.statusicons()
+# Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
-                  , "unreviewed" : _("Unreviewed")
-                  , "rejected": _("Rejected")
-                  , "featured": _("Featured")
-                   }
-
-status_icons = { "approved": "&#xe008;"
-               , "unreviewed": "&#xe009;"
-               , "rejected": "&#xe010;"
-               , "featured": "&#xe9d9;"
-                }
+                      , "unreviewed" : _("Unreviewed")
+                      , "rejected": _("Rejected")
+                      , "featured": _("Featured")
+                       }
 
 teams = website.db.all("""
 
