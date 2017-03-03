@@ -3,8 +3,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import json
 import sys
 
+from pytest import raises
+
 from gratipay.exceptions import CannotRemovePrimaryEmail, EmailTaken, EmailNotVerified
-from gratipay.exceptions import TooManyEmailAddresses
+from gratipay.exceptions import TooManyEmailAddresses, Throttled
 from gratipay.testing import P
 from gratipay.testing.email import QueuedEmailHarness, SentEmailHarness
 from gratipay.models.participant import email as _email
@@ -34,11 +36,13 @@ class TestEndpoints(Alice):
         f = self.client.GxT if should_fail else self.client.GET
         return f(url, auth_as=username)
 
-    def verify_and_change_email(self, old_email, new_email, username='alice'):
+    def verify_and_change_email(self, old_email, new_email, username='alice', _flush=True):
         self.hit_email_spt('add-email', old_email)
         nonce = P(username).get_email(old_email).nonce
         self.verify_email(old_email, nonce)
         self.hit_email_spt('add-email', new_email)
+        if _flush:
+            self.app.email_queue.flush()
 
     def test_participant_can_add_email(self):
         response = self.hit_email_spt('add-email', 'alice@gratipay.com')
@@ -66,9 +70,10 @@ class TestEndpoints(Alice):
         assert "To stop receiving" not in last_email['body_text']
 
     def test_adding_second_email_sends_verification_notice(self):
-        self.verify_and_change_email('alice1@example.com', 'alice2@example.com')
+        self.verify_and_change_email('alice1@example.com', 'alice2@example.com', _flush=False)
         assert self.count_email_messages() == 3
         last_email = self.get_last_email()
+        self.app.email_queue.flush()
         assert last_email['to'] == 'alice <alice1@example.com>'
         expected = "We are connecting alice2@example.com to the alice account on Gratipay"
         assert expected in last_email['body_text']
@@ -206,12 +211,15 @@ class TestEndpoints(Alice):
 
 class TestFunctions(Alice):
 
+    def add_and_verify(self, participant, address):
+        participant.add_email('alice@gratipay.com')
+        nonce = participant.get_email('alice@gratipay.com').nonce
+        r = participant.verify_email('alice@gratipay.com', nonce)
+        assert r == _email.VERIFICATION_SUCCEEDED
+
     def test_cannot_update_email_to_already_verified(self):
         bob = self.make_participant('bob', claimed_time='now')
-        self.alice.add_email('alice@gratipay.com')
-        nonce = self.alice.get_email('alice@gratipay.com').nonce
-        r = self.alice.verify_email('alice@gratipay.com', nonce)
-        assert r == _email.VERIFICATION_SUCCEEDED
+        self.add_and_verify(self.alice, 'alice@gratipay.com')
 
         with self.assertRaises(EmailTaken):
             bob.add_email('alice@gratipay.com')
@@ -225,12 +233,15 @@ class TestFunctions(Alice):
         self.alice.add_email('alice@gratipay.com')
         self.alice.add_email('alice@gratipay.net')
         self.alice.add_email('alice@gratipay.org')
+        self.app.email_queue.flush()
         self.alice.add_email('alice@gratipay.co.uk')
         self.alice.add_email('alice@gratipay.io')
         self.alice.add_email('alice@gratipay.co')
+        self.app.email_queue.flush()
         self.alice.add_email('alice@gratipay.eu')
         self.alice.add_email('alice@gratipay.asia')
         self.alice.add_email('alice@gratipay.museum')
+        self.app.email_queue.flush()
         self.alice.add_email('alice@gratipay.py')
         with self.assertRaises(TooManyEmailAddresses):
             self.alice.add_email('alice@gratipay.coop')
@@ -240,6 +251,30 @@ class TestFunctions(Alice):
         last_email = self.get_last_email()
         assert 'foo&#39;bar' in last_email['body_html']
         assert '&#39;' not in last_email['body_text']
+
+    def test_queueing_email_is_throttled(self):
+        self.app.email_queue.put(self.alice, "verification")
+        self.app.email_queue.put(self.alice, "branch")
+        self.app.email_queue.put(self.alice, "verification_notice")
+        raises(Throttled, self.app.email_queue.put, self.alice, "branch")
+
+    def test_only_user_initiated_messages_count_towards_throttling(self):
+        self.app.email_queue.put(self.alice, "verification")
+        self.app.email_queue.put(self.alice, "verification", _user_initiated=False)
+        self.app.email_queue.put(self.alice, "branch")
+        self.app.email_queue.put(self.alice, "branch", _user_initiated=False)
+        self.app.email_queue.put(self.alice, "verification_notice")
+        self.app.email_queue.put(self.alice, "verification_notice", _user_initiated=False)
+        raises(Throttled, self.app.email_queue.put, self.alice, "branch")
+
+    def test_flushing_queue_resets_throttling(self):
+        self.add_and_verify(self.alice, 'alice@example.com')
+        assert self.app.email_queue.flush() == 1
+        self.app.email_queue.put(self.alice, "verification")
+        self.app.email_queue.put(self.alice, "branch")
+        self.app.email_queue.put(self.alice, "verification_notice")
+        assert self.app.email_queue.flush() == 3
+        self.app.email_queue.put(self.alice, "verification_notice")
 
 
 class FlushEmailQueue(SentEmailHarness):

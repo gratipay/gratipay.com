@@ -44,6 +44,7 @@ if identity is not None and participant != user.participant:
                                , country_name=country_name
                                , country_code=country.code
                                , include_unsubscribe=False
+                               , _user_initiated=False
                                 )
 
 # handle POST requests

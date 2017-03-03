@@ -47,6 +47,10 @@ class TooManyEmailAddresses(ProblemChangingEmail):
     msg = "You've reached the maximum number of email addresses we allow."
 
 
+class Throttled(Exception):
+    msg = "You've initiated too many emails too quickly. Please try again in a minute or two."
+
+
 class ProblemChangingNumber(Exception):
     def __str__(self):
         return self.msg

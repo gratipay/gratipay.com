@@ -13,6 +13,7 @@ from aspen_jinja2_renderer import SimplateLoader
 from jinja2 import Environment
 from markupsafe import escape as htmlescape
 
+from gratipay.exceptions import Throttled
 from gratipay.models.participant import Participant
 from gratipay.utils import find_files, i18n
 
@@ -35,6 +36,8 @@ class Queue(object):
 
         self.db = db
         self.tell_sentry = tell_sentry
+        self.sleep_for = env.email_queue_sleep_for
+        self.allow_up_to = env.email_queue_allow_up_to
 
         templates = {}
         templates_dir = os.path.join(root, 'emails')
@@ -52,21 +55,35 @@ class Queue(object):
            and env.aws_ses_default_region
 
 
-    def put(self, to, template, **context):
+    def put(self, to, template, _user_initiated=True, **context):
         """Put an email message on the queue.
 
         :param Participant to: the participant to send the email message to
         :param unicode template: the name of the template to use when rendering
-          the email, corresponding to a filename in ``emails/`` without the file
-          extension
+            the email, corresponding to a filename in ``emails/`` without the
+            file extension
+        :param bool _user_initiated: user-initiated emails are throttled;
+            system-initiated messages don't count against throttling
         :param dict context: the values to use when rendering the template
 
+        :raise Throttled: if the participant already has a few messages in the
+            queue (that they put there); the specific number is tunable with
+            the ``EMAIL_QUEUE_ALLOW_UP_TO`` envvar.
+
+        :returns: ``None``
+
         """
-        self.db.run("""
-            INSERT INTO email_queue
-                        (participant, spt_name, context)
-                 VALUES (%s, %s, %s)
-        """, (to.id, template, pickle.dumps(context)))
+        with self.db.get_cursor() as cursor:
+            cursor.run("""
+                INSERT INTO email_queue
+                            (participant, spt_name, context, user_initiated)
+                     VALUES (%s, %s, %s, %s)
+            """, (to.id, template, pickle.dumps(context), _user_initiated))
+            if _user_initiated:
+                n = cursor.one('SELECT count(*) FROM email_queue '
+                               'WHERE participant=%s AND user_initiated', (to.id,))
+                if n > self.allow_up_to:
+                    raise Throttled()
 
 
     def flush(self):
@@ -87,7 +104,7 @@ class Queue(object):
                 r = self._flush_one(rec)
                 self.db.run("DELETE FROM email_queue WHERE id = %s", (rec.id,))
                 if r == 1:
-                    sleep(1)
+                    sleep(self.sleep_for)
                 nsent += r
         return nsent
 

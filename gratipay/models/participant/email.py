@@ -55,6 +55,7 @@ class Email(object):
             this participant
         :raises EmailTaken: if the email is verified for a different participant
         :raises TooManyEmailAddresses: if the participant already has 10 emails
+        :raises Throttled: if the participant adds too many emails too quickly
 
         """
 
@@ -113,6 +114,10 @@ class Email(object):
                                     , 'verification_notice'
                                     , new_email=email
                                     , include_unsubscribe=False
+
+                                    # Don't count this one against their sending quota.
+                                    # It's going to their own verified address, anyway.
+                                    , _user_initiated=False
                                      )
 
 
