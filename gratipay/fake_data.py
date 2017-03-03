@@ -1,5 +1,8 @@
-"""This module contains utilities for populating a non-production environment with fake data.
+# -*- coding: utf-8 -*-
+"""Populate a non-production environment with fake data.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import datetime
 from decimal import Decimal as D
 import random
@@ -9,11 +12,10 @@ import sys
 from faker import Factory
 from psycopg2 import IntegrityError
 
-from gratipay import wireup, MAX_TIP, MIN_TIP
+from gratipay import MAX_TIP, MIN_TIP
 from gratipay.elsewhere import PLATFORMS
 from gratipay.models.participant import Participant
 from gratipay.models.team import slugize, Team
-from gratipay.models import check_db
 from gratipay.exceptions import InvalidTeamName
 
 faker = Factory.create()
@@ -450,23 +452,3 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
 
         date = end_date
     print("")
-
-
-def _wireup():
-    env = wireup.env()
-    db = wireup.db(env)
-    wireup.crypto(env)
-    return db
-
-
-def main(db=None, *a, **kw):
-    db = db or _wireup()
-    clean_db(db)
-    prep_db(db)
-    populate_db(db, *a, **kw)
-    clean_db(db)
-    check_db(db)
-
-
-if __name__ == '__main__':
-    main()

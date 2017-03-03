@@ -1,18 +1,17 @@
 from __future__ import print_function, unicode_literals
 
-from gratipay.utils import fake_data
+from gratipay import fake_data
 from gratipay.testing import Harness
+from gratipay.cli.fake_data import main
 
 
 class TestFakeData(Harness):
-    """
-    Ensure the fake_data script doesn't throw any exceptions
-    """
-    def test_fake_data(self):
+
+    def test_fake_data_cli(self):
         num_participants = 6
         num_tips = 25
         num_teams = 5
-        fake_data.main(self.db, num_participants, num_tips, num_teams)
+        main(self.db, num_participants, num_tips, num_teams)
         participants = self.db.all("SELECT * FROM participants")
         teams = self.db.all("SELECT * FROM teams")
         payment_instructions = self.db.all("SELECT * FROM payment_instructions")
@@ -28,5 +27,5 @@ class TestFakeData(Harness):
 
     def test_fake_team_doesnt_fail_for_name_with_apostrophe(self):
         crusher = self.make_participant('crusher', email_address='crusher@example.com')
-        team = fake_data.fake_team(self.db, crusher, "D'Amorebury") 
+        team = fake_data.fake_team(self.db, crusher, "D'Amorebury")
         assert team.name != "d-amorebury"

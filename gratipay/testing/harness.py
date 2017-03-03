@@ -12,10 +12,10 @@ import gratipay
 from aspen import resources
 from aspen.utils import utcnow
 from aspen.testing.client import Client
+from gratipay.application import Application
 from gratipay.billing.exchanges import record_exchange, record_exchange_result
 from gratipay.elsewhere import UserInfo
 from gratipay.exceptions import NoSelfTipping, NoTippee, BadAmount
-from gratipay.main import website
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import Participant
@@ -28,12 +28,26 @@ TOP = realpath(join(dirname(dirname(__file__)), '..'))
 WWW_ROOT = str(realpath(join(TOP, 'www')))
 PROJECT_ROOT = str(TOP)
 
+_app = None
+def _get_app():
+
+    # The Application object is designed to only be instantiated once per
+    # process. The class structure that unittest gives us is not amenable to
+    # controlling instantiation with such granularity, so we handle it with a
+    # global instead.
+
+    global _app
+    if not _app:
+        _app = Application()
+    return _app
+
 
 class ClientWithAuth(Client):
 
     def __init__(self, *a, **kw):
         Client.__init__(self, *a, **kw)
-        Client.website = website
+        Client.app = _get_app()
+        Client.website = Client.app.website
 
     def build_wsgi_environ(self, *a, **kw):
         """Extend base class to support authenticating as a certain user.

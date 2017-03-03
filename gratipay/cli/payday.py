@@ -3,7 +3,7 @@
 from gratipay import wireup
 
 
-def payday():
+def main():
 
     # Wire things up.
     # ===============
