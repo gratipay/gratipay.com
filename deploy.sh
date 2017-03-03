@@ -49,7 +49,7 @@ version="$((prev + 1))"
 
 # Check that the environment contains all required variables
 heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin \
-    ./env/bin/python gratipay/wireup.py
+    ./env/bin/python -m gratipay.wireup
 
 
 # Sync the translations
