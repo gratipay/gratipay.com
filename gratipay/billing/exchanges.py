@@ -74,7 +74,7 @@ def create_card_hold(db, participant, amount):
 
     hold = None
     error = ""
-    ref = ""
+    ref = None
     try:
         result = braintree.Transaction.sale({
             'amount': str(cents/100.0),
