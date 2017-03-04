@@ -27,7 +27,6 @@ def with_others(obj):
     others = obj.nmembers - 1
     return ngettext("with {n} other", "with {n} others", others)
 
-status_icons = icons.STATUS_ICONS
 # Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
                       , "unreviewed" : _("Unreviewed")

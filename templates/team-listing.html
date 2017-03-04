@@ -19,7 +19,7 @@
                     <span class="status">&middot;
                         <a href="{{ team.review_url }}"><span
                             class="status-icon {{ team.status }}"
-                            >{{ status_icons[team.status]|safe }}</span
+                            >{{ icons.STATUS_ICONS[team.status]|safe }}</span
                             >{{ i18ned_statuses[team.status] }}</a>
                     </span>
                     <span class="ctime">&middot; {{ _("created {ago}",

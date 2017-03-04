@@ -3,7 +3,6 @@ from gratipay.utils import get_featured_projects, icons
 import random
 
 [---]
-status_icons = icons.STATUS_ICONS
 # Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
                       , "unreviewed" : _("Unreviewed")
@@ -51,7 +50,7 @@ for key, tab in tabs.items():
     n = tab['n'] = len(tab['teams'])
     nteams += n
     tab['name'] = '<span class="status-icon {}">{}</span> {} (n={})'.format( key
-                                                                           , status_icons[key]
+                                                                           , icons.STATUS_ICONS[key]
                                                                            , i18ned_statuses[key]
                                                                            , n
                                                                             )
@@ -106,7 +105,7 @@ page_id = "homepage"
                     <span class="status">&middot;
                         <a href="{{ team.review_url }}"><span
                             class="status-icon {{ team.status }}"
-                            >{{ status_icons[team.status]|safe }}</span
+                            >{{ icons.STATUS_ICONS[team.status]|safe }}</span
                             >{{ i18ned_statuses[team.status] }}</a>
                     </span>
                     <span class="ctime">&middot; {{ _("created {ago}",

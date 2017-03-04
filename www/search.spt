@@ -17,7 +17,6 @@ def get_processed_excerpt(participant):
     statement = truncate(statement, 128, '')
     return process_excerpt(statement)
 
-status_icons = icons.STATUS_ICONS
 # Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
                       , "unreviewed" : _("Unreviewed")
@@ -177,7 +176,7 @@ zip = zip
                     <span class="status">&middot;
                         <a href="{{ team.review_url }}"><span
                             class="status-icon {{ team.status }}"
-                            >{{ status_icons[team.status]|safe }}</span
+                            >{{ icons.STATUS_ICONS[team.status]|safe }}</span
                             >{{ i18ned_statuses[team.status] }}</a>
                     </span>
                     <span class="ctime">&middot; {{ _("created {ago}",
