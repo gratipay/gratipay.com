@@ -17,7 +17,7 @@ def get_processed_excerpt(participant):
     statement = truncate(statement, 128, '')
     return process_excerpt(statement)
 
-status_icons = icons.statusicons()
+status_icons = icons.STATUS_ICONS
 # Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
                       , "unreviewed" : _("Unreviewed")

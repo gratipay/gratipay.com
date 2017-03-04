@@ -3,7 +3,7 @@ from gratipay.utils import get_featured_projects, icons
 import random
 
 [---]
-status_icons = icons.statusicons()
+status_icons = icons.STATUS_ICONS
 # Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
                       , "unreviewed" : _("Unreviewed")
