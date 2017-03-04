@@ -22,3 +22,7 @@ _vimrc_local.vim
 npm-debug.log
 phantomjsdriver.log
 ghostdriver.log
+
+*.crt
+
+*.key
