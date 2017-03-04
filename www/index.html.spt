@@ -95,47 +95,7 @@ page_id = "homepage"
     {% for tab in tabs %}
     <table class="listing tab" data-tab="{{ tab }}">
         {% for i, team in enumerate(tabs[tab]['teams'], start=1) %}
-        <tr>
-            <td class="item">
-                <img src="{{ team.get_image_url('small') }}">
-                <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
-
-                <div class="details room-for-numbers">
-                    <span class="i">{{ i }}</span>
-                    <span class="status">&middot;
-                        <a href="{{ team.review_url }}"><span
-                            class="status-icon {{ team.status }}"
-                            >{{ icons.STATUS_ICONS[team.status]|safe }}</span
-                            >{{ i18ned_statuses[team.status] }}</a>
-                    </span>
-                    <span class="ctime">&middot; {{ _("created {ago}",
-                        ago=to_age(team.ctime, add_direction=True)) }}</span>
-                    <span class="owner">&middot;
-                        {{ _( "owned by {a}{owner}{_a}"
-                            , owner='~'+team.owner
-                            , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
-                            , _a='</a>'|safe
-                             ) }}
-                    </span>
-                </div>
-
-                {% if team.status == 'approved' %}
-                <table class="numbers mono">
-                    <tr>
-                        <th class="label">{{ _("Weekly") }}</th>
-                        <th>&#x03A3; &nbsp;</th>
-                        <th>n</th>
-                    </tr>
-                    <tr>
-                        <td class="label">{{ _("Receiving") }}</td>
-                        <td>{{ format_currency(team.receiving, 'USD')
-                                if team.receiving else '- &nbsp;'|safe }}</td>
-                        <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
-                    </tr>
-                </table>
-                {% endif %}
-            </td>
-        </tr>
+            {% include "templates/team-listing.html" %}
         {% endfor %}
     </table>
     {% endfor %}
