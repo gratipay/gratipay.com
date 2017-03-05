@@ -95,7 +95,7 @@ page_id = "homepage"
     {% for tab in tabs %}
     <table class="listing tab" data-tab="{{ tab }}">
         {% set project_list = tabs[tab]['teams'] %}
-        {% include "templates/team-listing.html" %}
+        {% include "templates/project-listing.html" %}
     </table>
     {% endfor %}
 </div>

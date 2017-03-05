@@ -80,7 +80,7 @@ i18ned_statuses = { "approved": _("Approved")
         {% endif %}
     {% endif %}
     <table class="listing">
-        {% include "templates/team-listing.html" %}
+        {% include "templates/project-listing.html" %}
     </table>
 
     {% include "templates/connected-accounts.html" %}

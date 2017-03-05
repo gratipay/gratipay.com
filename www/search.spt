@@ -166,7 +166,7 @@ zip = zip
                     len(projects)) }}</h2>
     <table class="listing">
         {% set project_list = projects %}
-        {% include "templates/team-listing.html" %}
+        {% include "templates/project-listing.html" %}
     </table>
     {% endif %}
 
