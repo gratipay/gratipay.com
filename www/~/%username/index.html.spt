@@ -56,6 +56,10 @@ i18ned_statuses = { "approved": _("Approved")
 {% endblock %}
 
 {% block content %}
+{% set unprivileged = not(participant == user.participant or user.ADMIN) %}
+{% set approved_open_teams = participant.get_teams(unprivileged, unprivileged) %}
+{% set project_list = approved_open_teams %}
+
 {% if user.participant == participant %}
     <div id="profile-edit">
         {% include "templates/profile-edit.html" %}
@@ -66,9 +70,8 @@ i18ned_statuses = { "approved": _("Approved")
         {{ markdown.render(statement) }}
     </div>
     {% endif %}
-    {% set unprivileged = not(participant == user.participant or user.ADMIN) %}
-    {% set approved_open_teams = participant.get_teams(unprivileged, unprivileged) %}
-    {% if (user.ADMIN or user.participant == participant) or approved_open_teams %}
+
+    {% if user.ADMIN or approved_open_teams %}
         <h2>{{ _("Projects") }}</h2>
         {% if user.participant == participant %}
             <form action="/new" class="apply">
@@ -77,9 +80,7 @@ i18ned_statuses = { "approved": _("Approved")
         {% endif %}
     {% endif %}
     <table class="listing">
-        {% for team in approved_open_teams %}
-            {% include "templates/team-listing.html" %}
-        {% endfor %}
+        {% include "templates/team-listing.html" %}
     </table>
 
     {% include "templates/connected-accounts.html" %}

@@ -165,9 +165,8 @@ zip = zip
                     "Found matching projects",
                     len(projects)) }}</h2>
     <table class="listing">
-        {% for i, team in enumerate(projects, start=1) %}
-            {% include "templates/team-listing.html" %}
-        {% endfor %}
+        {% set project_list = projects %}
+        {% include "templates/team-listing.html" %}
     </table>
     {% endif %}
 
