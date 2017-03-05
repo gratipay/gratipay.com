@@ -1,29 +1,29 @@
-{% for i, team in enumerate(project_list, start=1) %}
+{% for i, project in enumerate(project_list, start=1) %}
     <tr>
         <td class="item">
-            <img src="{{ team.get_image_url('small') }}">
-            <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
+            <img src="{{ project.get_image_url('small') }}">
+            <a class="name" href="/{{ project.slug }}/">{{ project.name }}</a>
 
-            <div class="details{% if team.status == 'approved' %} room-for-numbers{% endif %}">
+            <div class="details{% if project.status == 'approved' %} room-for-numbers{% endif %}">
                 <span class="i">{{ i }}</span>
                 <span class="status">&middot;
-                    <a href="{{ team.review_url }}"><span
-                        class="status-icon {{ team.status }}"
-                        >{{ icons.STATUS_ICONS[team.status]|safe }}</span
-                        >{{ i18ned_statuses[team.status] }}</a>
+                    <a href="{{ project.review_url }}"><span
+                        class="status-icon {{ project.status }}"
+                        >{{ icons.STATUS_ICONS[project.status]|safe }}</span
+                        >{{ i18ned_statuses[project.status] }}</a>
                 </span>
                 <span class="ctime">&middot; {{ _("created {ago}",
-                    ago=to_age(team.ctime, add_direction=True)) }}</span>
+                    ago=to_age(project.ctime, add_direction=True)) }}</span>
                 <span class="owner">&middot;
                     {{ _( "owned by {a}{owner}{_a}"
-                        , owner='~'+team.owner
-                        , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
+                        , owner='~'+project.owner
+                        , a=('<a class="owner" href="/~{}/">'|safe).format(project.owner)
                         , _a='</a>'|safe
                          ) }}
                 </span>
             </div>
 
-            {% if team.status == 'approved' %}
+            {% if project.status == 'approved' %}
             <table class="numbers mono">
                 <tr>
                     <th class="label">{{ _("Weekly") }}</th>
@@ -32,9 +32,9 @@
                 </tr>
                 <tr>
                     <td class="label">{{ _("Receiving") }}</td>
-                    <td>{{ format_currency(team.receiving, 'USD')
-                            if team.receiving else '- &nbsp;'|safe }}</td>
-                    <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
+                    <td>{{ format_currency(project.receiving, 'USD')
+                            if project.receiving else '- &nbsp;'|safe }}</td>
+                    <td>{{ project.nreceiving_from if project.nreceiving_from else '-' }}</td>
                 </tr>
             </table>
             {% endif %}
