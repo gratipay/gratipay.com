@@ -1,10 +1,11 @@
+{% set current_page = request.path.raw.split('/')[1] %}
 {% for i, project in enumerate(project_list, start=1) %}
     <tr>
         <td class="item">
             <img src="{{ project.get_image_url('small') }}">
             <a class="name" href="/{{ project.slug }}/">{{ project.name }}</a>
 
-            <div class="details{% if project.status == 'approved' %} room-for-numbers{% endif %}">
+            <div class="details{% if project.status == 'approved' %} room-for-numbers{% endif %}{% if current_page == '~' %} profile{% endif %}">
                 <span class="i">{{ i }}</span>
                 <span class="status">&middot;
                     <a href="{{ project.review_url }}"><span

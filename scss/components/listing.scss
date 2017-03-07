@@ -9,7 +9,7 @@ table.listing {
         color: $medium-gray;
         border: 1px solid $light-brown;
         border-style: solid none;
-        height: 64px;
+        height: 70px;
         padding-top: 35px;
 
         a {
@@ -55,6 +55,9 @@ table.listing {
             font: normal 12px/15px $Ideal;
             &.room-for-numbers {
                 padding-right: 80px;
+            }
+            &.profile {
+                max-width: 384px;
             }
 
             .owner a {
@@ -119,3 +122,4 @@ table.listing {
         }
     }
 }
+
