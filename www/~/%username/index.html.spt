@@ -64,6 +64,14 @@ i18ned_statuses = { "approved": _("Approved")
     <div id="profile-edit">
         {% include "templates/profile-edit.html" %}
     </div>
+    <h2>{{ _("Projects") }}</h2>
+    <form action="/new" class="apply">
+        <button type="submit">{{ _("Fund Your Project") }}</button>
+    </form>
+    <table class="listing">
+        {% include "templates/project-listing.html" %}
+    </table>
+    {% include "templates/connected-accounts.html" %}
 {% else %}
     {% if statement %}
     <div class="statement profile-statement">
@@ -73,11 +81,6 @@ i18ned_statuses = { "approved": _("Approved")
 
     {% if user.ADMIN or approved_open_teams %}
         <h2>{{ _("Projects") }}</h2>
-        {% if user.participant == participant %}
-            <form action="/new" class="apply">
-                <button type="submit">{{ _("Fund Your Project") }}</button>
-            </form>
-        {% endif %}
     {% endif %}
     <table class="listing">
         {% include "templates/project-listing.html" %}
