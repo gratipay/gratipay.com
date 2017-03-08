@@ -26,7 +26,7 @@ Local
 Given Python 2.7, Postgres 9.3, and a C/make toolchain:
 
 ```shell
-git clone git@github.com:gratipay/gratipay.com.git
+git clone https://github.com/gratipay/gratipay.com.git
 cd gratipay.com
 scripts/bootstrap-debian.sh
 make -j$(nproc) schema fake
@@ -318,7 +318,7 @@ You can also install/run Gratipay with Docker.
 Build it with the included Dockerfile:
 
 ```shell
-$ git clone git@github.com:gratipay/gratipay.com.git
+$ git clone https://github.com/gratipay/gratipay.com.git
 $ cd gratipay.com
 $ docker build -t gratipay .
 ```
