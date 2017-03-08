@@ -1,0 +1,53 @@
+
+unreviewed = """
+
+    SELECT teams.*::teams
+    FROM teams
+    WHERE not is_closed and is_approved = False
+
+"""
+
+rejected = """
+
+    SELECT teams.*::teams
+    FROM teams
+    WHERE is_closed
+
+"""
+
+approved = """
+
+    SELECT teams.*::teams
+    FROM teams
+    WHERE not is_closed AND is_approved = True
+  ORDER BY ctime DESC
+
+"""
+
+[-------------------------------------]
+status = request.qs['status'].lower()
+if status == 'approved':
+    teams = website.db.all(approved)
+elif status == 'unreviewed':
+    teams = website.db.all(unreviewed)
+elif status == 'rejected':
+    teams = website.db.all(rejected)
+else:
+    raise Response(400, "'status' query contains no valid status")
+
+teams_out = []
+for team in teams:
+    teams_out.append({
+        'name': team.name,
+        'image_url': team.get_image_url('small'),
+        'review_url': team.review_url,
+        'status': team.status,
+        'owner': team.owner,
+        'ctime': team.ctime,
+        'receiving': team.receiving,
+        'nreceiving_from': team.nreceiving_from,
+    })
+
+
+[---] application/json via json_dump
+teams_out

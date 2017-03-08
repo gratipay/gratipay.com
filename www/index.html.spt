@@ -15,14 +15,32 @@ status_icons = { "approved": "&#xe008;"
                , "featured": "&#xe9d9;"
                 }
 
-teams = website.db.all("""
+count_unreviewed = website.db.one("""
 
-    SELECT teams.*::teams
-      FROM teams
-     WHERE not is_closed
-  ORDER BY ctime DESC
+    SELECT count(id)
+    FROM teams
+    WHERE not is_closed and is_approved = False
 
 """)
+
+count_rejected = website.db.one("""
+
+    SELECT count(id)
+    FROM teams
+    WHERE is_closed
+
+""")
+
+count_approved = website.db.one("""
+
+    SELECT count(id)
+    FROM teams
+    WHERE not is_closed AND is_approved = True
+
+""")
+
+featured_length = 10
+counts = {'featured': featured_length, 'approved': count_approved, 'unreviewed': count_unreviewed, 'rejected': count_rejected}
 
 volume = website.db.one("SELECT volume FROM paydays ORDER BY ts_start DESC LIMIT 1", default=0)
 volume = int(round(volume, -2))
@@ -33,32 +51,23 @@ tabs['approved'] = {'teams': []}
 tabs['unreviewed'] = {'teams': []}
 tabs['rejected'] = {'teams': []}
 
-popular = []
-unpopular = []
-for project in teams:
-    tabs[project.status]['teams'].append(project)
-    if project.status == 'approved':
-        if project.nreceiving_from >= 5:
-            popular.append(project)
-        else:
-            unpopular.append(project)
-
-if len(tabs['approved']['teams']) < 10:
-    tabs.pop('featured')
-else:
-    featured_projects = get_featured_projects(popular, unpopular)
-    random.shuffle(featured_projects)
-    tabs['featured'] = {'teams': featured_projects}
-
 nteams = 0
 for key, tab in tabs.items():
     n = tab['n'] = len(tab['teams'])
-    nteams += n
-    tab['name'] = '<span class="status-icon {}">{}</span> {} (n={})'.format( key
+    print(key)
+    if n > 0:
+      nteams += n
+      tab['name'] = '<span class="status-icon {}">{}</span> {} (n={})'.format( key
                                                                            , status_icons[key]
                                                                            , i18ned_statuses[key]
                                                                            , n
                                                                             )
+    else:
+      tab['name'] = '<span class="status-icon {}">{}</span> {} (n={})'.format( key
+                                                                       , status_icons[key]
+                                                                       , i18ned_statuses[key]
+                                                                       , counts[key]
+                                                                        )
 
 title = _("Projects")
 suppress_sidebar = True
