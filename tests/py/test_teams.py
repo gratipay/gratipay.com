@@ -504,3 +504,9 @@ class TestTeams(Harness):
 
     def test_slugize_disallows_slashes(self):
         self.assertRaises(InvalidTeamName, slugize, 'abc/def')
+
+    def test_slugize_disallows_questions(self):
+        self.assertRaises(InvalidTeamName, slugize, 'abc?def')
+
+    def test_slugize_disallows_backslashes(self):
+        self.assertRaises(InvalidTeamName, slugize, 'abc\def')
