@@ -44,7 +44,7 @@ from .email import Email
 ASCII_ALLOWED_IN_USERNAME = set("0123456789"
                                 "abcdefghijklmnopqrstuvwxyz"
                                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                                ".,-_:@ ")
+                                ".,_:@ -")
 # We use | in Sentry logging, so don't make that allowable. :-)
 
 USERNAME_MAX_SIZE = 32
