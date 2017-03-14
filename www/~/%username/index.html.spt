@@ -29,10 +29,10 @@ def with_others(obj):
 
 # Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
-                      , "unreviewed" : _("Unreviewed")
-                      , "rejected": _("Rejected")
-                      , "featured": _("Featured")
-                       }
+                  , "unreviewed" : _("Unreviewed")
+                  , "rejected": _("Rejected")
+                  , "featured": _("Featured")
+                   }
 
 [-----------------------------------------------------------------------------]
 {% extends "templates/profile.html" %}
