@@ -59,7 +59,7 @@ suppress_sidebar = True
         {% if result == email.VERIFICATION_SUCCEEDED %}
             <h1>{{ _("Success!") }}</h1>
             <p>{{ _("Your email address {0} is now connected to your Gratipay account.",
-                    ("<b>%s</b>"|safe) % email) }}</p>
+                    ("<b>%s</b>"|safe) % email_address) }}</p>
         {% elif result == email.VERIFICATION_STYMIED %}
             <h1>{{ _("Address Taken") }}</h1>
             <p>{{ _("The email address {0} is already connected to a different Gratipay account.",
