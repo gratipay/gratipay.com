@@ -112,5 +112,7 @@ class Tests2(Harness):
 
     def test_caching_of_simplates(self):
         r = self.client.GET('/about/')
-        assert r.headers['Cache-Control'] == 'no-cache'
+        assert r.headers['Cache-Control'] == 'private, no-cache, no-store, no-transform, must-revalidate, max-age=0'
+        assert r.headers['Pragma'] == 'no-cache'
+        assert r.headers['Expires'] == '0'
         assert 'Vary' not in r.headers
