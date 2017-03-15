@@ -1,19 +1,14 @@
 from collections import OrderedDict
-from gratipay.utils import get_featured_projects
+from gratipay.utils import get_featured_projects, icons
 import random
 
 [---]
+# Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
                   , "unreviewed" : _("Unreviewed")
                   , "rejected": _("Rejected")
                   , "featured": _("Featured")
                    }
-
-status_icons = { "approved": "&#xe008;"
-               , "unreviewed": "&#xe009;"
-               , "rejected": "&#xe010;"
-               , "featured": "&#xe9d9;"
-                }
 
 teams = website.db.all("""
 
@@ -55,7 +50,7 @@ for key, tab in tabs.items():
     n = tab['n'] = len(tab['teams'])
     nteams += n
     tab['name'] = '<span class="status-icon {}">{}</span> {} (n={})'.format( key
-                                                                           , status_icons[key]
+                                                                           , icons.STATUS_ICONS[key]
                                                                            , i18ned_statuses[key]
                                                                            , n
                                                                             )
@@ -99,49 +94,8 @@ page_id = "homepage"
 
     {% for tab in tabs %}
     <table class="listing tab" data-tab="{{ tab }}">
-        {% for i, team in enumerate(tabs[tab]['teams'], start=1) %}
-        <tr>
-            <td class="item">
-                <img src="{{ team.get_image_url('small') }}">
-                <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
-
-                <div class="details room-for-numbers">
-                    <span class="i">{{ i }}</span>
-                    <span class="status">&middot;
-                        <a href="{{ team.review_url }}"><span
-                            class="status-icon {{ team.status }}"
-                            >{{ status_icons[team.status]|safe }}</span
-                            >{{ i18ned_statuses[team.status] }}</a>
-                    </span>
-                    <span class="ctime">&middot; {{ _("created {ago}",
-                        ago=to_age(team.ctime, add_direction=True)) }}</span>
-                    <span class="owner">&middot;
-                        {{ _( "owned by {a}{owner}{_a}"
-                            , owner='~'+team.owner
-                            , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
-                            , _a='</a>'|safe
-                             ) }}
-                    </span>
-                </div>
-
-                {% if team.status == 'approved' %}
-                <table class="numbers mono">
-                    <tr>
-                        <th class="label">{{ _("Weekly") }}</th>
-                        <th>&#x03A3; &nbsp;</th>
-                        <th>n</th>
-                    </tr>
-                    <tr>
-                        <td class="label">{{ _("Receiving") }}</td>
-                        <td>{{ format_currency(team.receiving, 'USD')
-                                if team.receiving else '- &nbsp;'|safe }}</td>
-                        <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
-                    </tr>
-                </table>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
+        {% set project_list = tabs[tab]['teams'] %}
+        {% include "templates/project-listing.html" %}
     </table>
     {% endfor %}
 </div>
