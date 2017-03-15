@@ -389,6 +389,17 @@ msgstr "Widgets"
 msgid "Events"
 msgstr "Eventos"
 
+msgid "{amount}/wk from one giver"
+msgid_plural "{amount}/wk from {number_of} givers"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "no givers yet"
+msgstr ""
+
+msgid "owned by {a}{owner}{_a}"
+msgstr "creado por {a}{owner}{_a}"
+
 msgid "Sign in / Sign up"
 msgstr "Entrar / Registro"
 
@@ -429,9 +440,6 @@ msgstr "Solicitó {ago}"
 
 msgid "Distributing"
 msgstr "Distribuyendo"
-
-msgid "Projects"
-msgstr "Proyectos"
 
 msgid "{sign_in}{br}to give to{br}{team}"
 msgstr "{sign_in}{br}para dar a{br}{team}"
@@ -590,17 +598,14 @@ msgstr "Rechazado"
 msgid "Featured"
 msgstr "Destacado"
 
+msgid "Projects"
+msgstr "Proyectos"
+
 msgid "Pay for open source."
 msgstr "Pagar por código abierto."
 
 msgid "Fund Your Project"
 msgstr ""
-
-msgid "created {ago}"
-msgstr "creado {ago}"
-
-msgid "owned by {a}{owner}{_a}"
-msgstr "creado por {a}{owner}{_a}"
 
 msgid "Search Gratipay"
 msgstr "Búsqueda en Gratipay"

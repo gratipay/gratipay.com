@@ -382,6 +382,16 @@ msgstr "ウィジェット"
 msgid "Events"
 msgstr "イベント"
 
+msgid "{amount}/wk from one giver"
+msgid_plural "{amount}/wk from {number_of} givers"
+msgstr[0] ""
+
+msgid "no givers yet"
+msgstr ""
+
+msgid "owned by {a}{owner}{_a}"
+msgstr "オーナー {a}{owner}{_a}"
+
 msgid "Sign in / Sign up"
 msgstr "サインイン / サインアップ"
 
@@ -422,9 +432,6 @@ msgstr "適用 {ago}"
 
 msgid "Distributing"
 msgstr "配布"
-
-msgid "Projects"
-msgstr "プロジェクト"
 
 msgid "{sign_in}{br}to give to{br}{team}"
 msgstr "{sign_in}{br}して寄付します{br}{team}"
@@ -583,17 +590,14 @@ msgstr "否認"
 msgid "Featured"
 msgstr "注目"
 
+msgid "Projects"
+msgstr "プロジェクト"
+
 msgid "Pay for open source."
 msgstr "オープンソースに支払います。"
 
 msgid "Fund Your Project"
 msgstr "プロジェクトに資金を提供"
-
-msgid "created {ago}"
-msgstr "作成 {ago}"
-
-msgid "owned by {a}{owner}{_a}"
-msgstr "オーナー {a}{owner}{_a}"
 
 msgid "Search Gratipay"
 msgstr "Gratipay を検索"
