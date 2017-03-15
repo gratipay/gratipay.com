@@ -20,7 +20,7 @@ from .tip_migration import TipMigration
 
 
 # Should have at least one letter.
-TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,-_ ]+)$')
+TEAM_NAME_PATTERN = re.compile(r'^(?=.*[A-Za-z])([A-Za-z0-9.,_ -]+)$')
 
 
 def slugize(name):
