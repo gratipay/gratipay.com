@@ -2,7 +2,7 @@
 """
 from collections import OrderedDict
 
-from gratipay.utils import get_participant, markdown, truncate
+from gratipay.utils import get_participant, markdown, truncate, icons
 
 LONG_STATEMENT = 256
 
@@ -27,6 +27,13 @@ def with_others(obj):
     others = obj.nmembers - 1
     return ngettext("with {n} other", "with {n} others", others)
 
+# Can't factor this out because of translations?
+i18ned_statuses = { "approved": _("Approved")
+                  , "unreviewed" : _("Unreviewed")
+                  , "rejected": _("Rejected")
+                  , "featured": _("Featured")
+                   }
+
 [-----------------------------------------------------------------------------]
 {% extends "templates/profile.html" %}
 
@@ -49,10 +56,22 @@ def with_others(obj):
 {% endblock %}
 
 {% block content %}
+{% set unprivileged = not(participant == user.participant or user.ADMIN) %}
+{% set approved_open_teams = participant.get_teams(unprivileged, unprivileged) %}
+{% set project_list = approved_open_teams %}
+
 {% if user.participant == participant %}
     <div id="profile-edit">
         {% include "templates/profile-edit.html" %}
     </div>
+    <h2>{{ _("Projects") }}</h2>
+    <form action="/new" class="apply">
+        <button type="submit">{{ _("Fund Your Project") }}</button>
+    </form>
+    <table class="listing">
+        {% include "templates/project-listing.html" %}
+    </table>
+    {% include "templates/connected-accounts.html" %}
 {% else %}
     {% if statement %}
     <div class="statement profile-statement">
@@ -60,7 +79,13 @@ def with_others(obj):
     </div>
     {% endif %}
 
-    {% include "templates/team-listing.html" %}
+    {% if user.ADMIN or approved_open_teams %}
+        <h2>{{ _("Projects") }}</h2>
+    {% endif %}
+    <table class="listing">
+        {% include "templates/project-listing.html" %}
+    </table>
+
     {% include "templates/connected-accounts.html" %}
 {% endif %}
 {% endblock %}

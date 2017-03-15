@@ -90,7 +90,7 @@
             {% if not suppress_sidebar %}
             <div id="sidebar">{% block sidebar %}{% endblock %}</div>
             {% endif %}
-            <div id="content"{% if suppress_sidebar %} class="without-sidebar"{% endif %}>
+            <div id="content" class="with{% if suppress_sidebar %}out{% endif %}-sidebar">
                 {% block subnav %}{% endblock %}
                 {% if title %}<h1>{{ title }}</h1>{% endif %}
                 {% block content %}{% endblock %}
