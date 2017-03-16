@@ -385,11 +385,11 @@ msgstr "Eventi"
 
 msgid "{amount}/wk from one giver"
 msgid_plural "{amount}/wk from {number_of} givers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{amount}/settimana da un donatore"
+msgstr[1] "{amount}/settimana da {number_of} donatori"
 
 msgid "no givers yet"
-msgstr ""
+msgstr "Ancora nessun donatore"
 
 msgid "owned by {a}{owner}{_a}"
 msgstr "Proprietà di {a}{owner}{_a}"
