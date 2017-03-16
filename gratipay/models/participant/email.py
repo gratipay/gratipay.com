@@ -13,7 +13,6 @@ from psycopg2 import IntegrityError
 import gratipay
 from gratipay.exceptions import EmailAlreadyTaken, CannotRemovePrimaryEmail, EmailNotVerified
 from gratipay.exceptions import TooManyEmailAddresses, ResendingTooFast
-from gratipay.models import add_event
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import encode_for_querystring, i18n
 
@@ -84,7 +83,7 @@ class Email(object):
 
         try:
             with self.db.get_cursor() as c:
-                add_event(c, 'participant', dict(id=self.id, action='add', values=dict(email=email)))
+                self.app.add_event(c, 'participant', dict(id=self.id, action='add', values=dict(email=email)))
                 c.run("""
                     INSERT INTO emails
                                 (address, nonce, verification_start, participant_id)
@@ -126,7 +125,7 @@ class Email(object):
             raise EmailNotVerified(email)
         username = self.username
         with self.db.get_cursor() as c:
-            add_event(c, 'participant', dict(id=self.id, action='set', values=dict(primary_email=email)))
+            self.app.add_event(c, 'participant', dict(id=self.id, action='set', values=dict(primary_email=email)))
             c.run("""
                 UPDATE participants
                    SET email_address=%(email)s
@@ -200,7 +199,7 @@ class Email(object):
         if address == self.email_address:
             raise CannotRemovePrimaryEmail()
         with self.db.get_cursor() as c:
-            add_event(c, 'participant', dict(id=self.id, action='remove', values=dict(email=address)))
+            self.app.add_event(c, 'participant', dict(id=self.id, action='remove', values=dict(email=address)))
             c.run("DELETE FROM emails WHERE participant_id=%s AND address=%s",
                   (self.id, address))
 

@@ -12,9 +12,8 @@ import sys
 from faker import Factory
 from psycopg2 import IntegrityError
 
-from gratipay import MAX_TIP, MIN_TIP
 from gratipay.elsewhere import PLATFORMS
-from gratipay.models.participant import Participant
+from gratipay.models.participant import Participant, MAX_TIP, MIN_TIP
 from gratipay.models.team import slugize, Team
 from gratipay.exceptions import InvalidTeamName
 

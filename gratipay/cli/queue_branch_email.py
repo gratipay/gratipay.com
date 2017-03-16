@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import sys
 import random
 
-from gratipay import wireup
+from gratipay.application import Application
 
 
 def get_recently_active_participants(db):
@@ -24,7 +24,7 @@ def get_recently_active_participants(db):
     """)
 
 
-def main(_argv=sys.argv, _input=raw_input, _print=print):
+def main(_argv=sys.argv, _input=raw_input, _print=print, _app=None):
     """This is a script to enqueue global site notification emails.
 
     It should only be used for important transactional messages like a Terms of
@@ -42,7 +42,7 @@ def main(_argv=sys.argv, _input=raw_input, _print=print):
             - push to GitHub
 
     """
-    db = wireup.db(wireup.env())
+    app = _app or Application()
 
     def prompt(msg):
         answer = _input(msg + " [y/N]")
@@ -64,11 +64,11 @@ def main(_argv=sys.argv, _input=raw_input, _print=print):
         prompt("Are you REALLY ready?")
         prompt("... ?")
         _print("Okay, you asked for it!")
-        participants = get_recently_active_participants(db)
+        participants = get_recently_active_participants(app.db)
     else:
         _print("Okay, just {}.".format(username))
-        participants = db.all("SELECT p.*::participants FROM participants p "
-                              "WHERE p.username=%s", (username,))
+        participants = app.db.all("SELECT p.*::participants FROM participants p "
+                                  "WHERE p.username=%s", (username,))
 
     N = len(participants)
     _print(N)

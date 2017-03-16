@@ -2,7 +2,6 @@ from __future__ import print_function, unicode_literals
 
 from aspen import Response
 from gratipay.utils import get_participant
-from gratipay.models import add_event
 
 workflow = ['too-little', 'pending-application', 'pending-review', 'rejected', 'pending-payout',
             'completed']
@@ -35,7 +34,7 @@ with website.db.get_cursor() as c:
      RETURNING status_of_1_0_payout
     """, (new_status, participant.id))
 
-    add_event(c, 'participant', dict(
+    website.app.add_event(c, 'participant', dict(
         id=participant.id,
         recorder=dict(id=user.participant.id, username=user.participant.username),
         action='set', values=dict(status_of_1_0_payout=new_status)
