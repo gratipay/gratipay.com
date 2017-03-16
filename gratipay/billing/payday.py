@@ -24,7 +24,6 @@ from gratipay.billing.exchanges import (
 from gratipay.exceptions import NegativeBalance
 from gratipay.models import check_db
 from gratipay.utils.threaded_map import threaded_map
-from psycopg2 import IntegrityError
 
 
 with open(os.path.join(os.path.dirname(__file__), '../../sql/payday.sql')) as f:
@@ -61,37 +60,10 @@ class Payday(object):
     """
 
 
-    @classmethod
-    def start(cls):
-        """Try to start a new Payday.
-
-        If there is a Payday that hasn't finished yet, then the UNIQUE
-        constraint on ts_end will kick in and notify us of that. In that case
-        we load the existing Payday and work on it some more. We use the start
-        time of the current Payday to synchronize our work.
-
-        """
-        try:
-            d = cls.db.one("""
-                INSERT INTO paydays DEFAULT VALUES
-                RETURNING id, (ts_start AT TIME ZONE 'UTC') AS ts_start, stage
-            """, back_as=dict)
-            log("Starting a new payday.")
-        except IntegrityError:  # Collision, we have a Payday already.
-            d = cls.db.one("""
-                SELECT id, (ts_start AT TIME ZONE 'UTC') AS ts_start, stage
-                  FROM paydays
-                 WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz
-            """, back_as=dict)
-            log("Picking up with an existing payday.")
-
-        d['ts_start'] = d['ts_start'].replace(tzinfo=aspen.utils.utc)
-
-        log("Payday started at %s." % d['ts_start'])
-
-        payday = Payday()
-        payday.__dict__.update(d)
-        return payday
+    def __init__(self, runner):
+        self.runner = runner
+        self.app = runner.app
+        self.db = runner.app.db
 
 
     def run(self):

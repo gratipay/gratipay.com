@@ -4,8 +4,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from . import utils, wireup
 from .cron import Cron
 from .models.participant import Participant
+from .payday_runner import PaydayRunner
 from .version import get_version
-
 from .website import Website
 
 
@@ -23,14 +23,11 @@ class Application(object):
             exc = e
             website.version = 'x'
 
-        env = wireup.env()
-        db = wireup.db(env)
-        tell_sentry = wireup.make_sentry_teller(env)
+        env = self.env = wireup.env()
+        db = self.db = wireup.db(env)
+        tell_sentry = self.tell_sentry = wireup.make_sentry_teller(env)
 
-        # TODO Move these directly onto self.
-        website.env = env
-        website.db = db
-        website.tell_sentry = tell_sentry
+        website.init_more(env, db, tell_sentry) # TODO Fold this into Website.__init__
 
         wireup.crypto(env)
         wireup.mail(env, website.project_root)
@@ -46,9 +43,10 @@ class Application(object):
         if exc:
             tell_sentry(exc, {})
 
-        website.init_more(tell_sentry)  # TODO Fold this into Website.__init__
+        website.init_even_more()                # TODO Fold this into Website.__init__
         self.install_periodic_jobs(website, env, db)
         self.website = website
+        self.payday_runner = PaydayRunner(self)
 
 
     def install_periodic_jobs(self, website, env, db):

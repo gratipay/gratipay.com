@@ -11,7 +11,7 @@ from gratipay.billing.payday import NoPayday, Payday
 from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
 from gratipay.testing import Foobar, D,P
-from gratipay.testing.billing import BillingHarness
+from gratipay.testing.billing import BillingHarness, PaydayMixin
 from gratipay.testing.emails import EmailHarness
 
 
@@ -22,7 +22,7 @@ class TestPayday(BillingHarness):
         self.obama.set_payment_instruction(Enterprise, MINIMUM_CHARGE)  # must be >= MINIMUM_CHARGE
 
         fch.return_value = {}
-        Payday.start().run()
+        self.run_payday()
 
         obama = P('obama')
         picard = P('picard')
@@ -48,7 +48,7 @@ class TestPayday(BillingHarness):
         assert self.obama.get_due(Enterprise) == D('5.00')
 
         fch.return_value = {}
-        Payday.start().run()
+        self.run_payday()
 
         obama = P('obama')
         picard = P('picard')
@@ -63,7 +63,7 @@ class TestPayday(BillingHarness):
         self.obama.set_payment_instruction(Enterprise, '2.00')  # < MINIMUM_CHARGE
 
         fch.return_value = {}
-        Payday.start().run()    # payday 0
+        self.run_payday()    # payday 0
 
         assert self.obama.get_due(Enterprise) == D('2.00')
 
@@ -71,26 +71,26 @@ class TestPayday(BillingHarness):
         self.obama.set_payment_instruction(Enterprise, '2.50')  # cumulatively still < MINIMUM_CHARGE
 
         fch.return_value = {}
-        Payday.start().run()    # payday 1
+        self.run_payday()    # payday 1
 
         assert self.obama.get_due(Enterprise) == D('4.50')
 
         fch.return_value = {}
-        Payday.start().run()    # payday 2
+        self.run_payday()    # payday 2
 
         assert self.obama.get_due(Enterprise) == D('7.00')
 
         self.obama.set_payment_instruction(Enterprise, '1.00')  # cumulatively still < MINIMUM_CHARGE
 
         fch.return_value = {}
-        Payday.start().run()    # payday 3
+        self.run_payday()    # payday 3
 
         assert self.obama.get_due(Enterprise) == D('8.00')
 
         self.obama.set_payment_instruction(Enterprise, '4.00')  # cumulatively > MINIMUM_CHARGE
 
         fch.return_value = {}
-        Payday.start().run()    # payday 4
+        self.run_payday()    # payday 4
 
         obama = P('obama')
         picard = P('picard')
@@ -106,18 +106,18 @@ class TestPayday(BillingHarness):
         assert self.obama.get_due(Enterprise) == D('0.00')
 
         fch.return_value = {}
-        Payday.start().run()    # payday 0
+        self.run_payday()    # payday 0
 
         assert self.obama.get_due(Enterprise) == D('4.00')
 
         fch.return_value = {}
         self.obama_route.update_error("failed") # card fails
-        Payday.start().run()    # payday 1
+        self.run_payday()    # payday 1
 
         assert self.obama.get_due(Enterprise) == D('4.00')
 
         fch.return_value = {}
-        Payday.start().run()    # payday 2
+        self.run_payday()    # payday 2
 
         assert self.obama.get_due(Enterprise) == D('4.00')
 
@@ -126,7 +126,7 @@ class TestPayday(BillingHarness):
         Enterprise  = self.make_team(is_approved=True)
         self.obama.set_payment_instruction(Enterprise, '6.00')  # not enough to reach MINIMUM_CHARGE
         fch.return_value = {}
-        Payday.start().run()
+        self.run_payday()
 
         obama = P('obama')
         picard = P('picard')
@@ -146,7 +146,7 @@ class TestPayday(BillingHarness):
         team = self.make_team(owner=self.homer, is_approved=True)
         self.obama.set_payment_instruction(team, MINIMUM_CHARGE)  # >= MINIMUM_CHARGE!
         fch.return_value = {}
-        Payday.start().run()
+        self.run_payday()
 
         obama = P('obama')
         homer = P('homer')
@@ -164,7 +164,7 @@ class TestPayday(BillingHarness):
         team = self.make_team(owner=self.homer, is_approved=True)
         self.obama.set_payment_instruction(team, MINIMUM_CHARGE)  # >= MINIMUM_CHARGE!
         fch.return_value = {}
-        Payday.start().run()
+        self.run_payday()
 
         obama = P('obama')
         homer = P('homer')
@@ -177,20 +177,20 @@ class TestPayday(BillingHarness):
         Enterprise  = self.make_team(is_approved=True)
         self.obama.set_payment_instruction(Enterprise, '6.00')  # below MINIMUM_CHARGE
         fch.return_value = {}
-        Payday.start().run()
+        self.run_payday()
 
         assert self.obama.get_due(Enterprise) == D('6.00')
 
         nusers = self.db.one("SELECT nusers FROM paydays")
         assert nusers == 1
 
-    @mock.patch('gratipay.billing.payday.log')
+    @mock.patch('aspen.log')
     def test_start_prepare(self, log):
         self.clear_tables()
         self.make_participant('bob', balance=10, claimed_time=None)
         self.make_participant('carl', balance=10, claimed_time='now')
 
-        payday = Payday.start()
+        payday = self.start_payday()
 
         get_participants = lambda c: c.all("SELECT * FROM payday_participants")
 
@@ -210,7 +210,7 @@ class TestPayday(BillingHarness):
         log.reset_mock()
 
         # run a second time, we should see it pick up the existing payday
-        second_payday = Payday.start()
+        second_payday = self.start_payday()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
             second_participants = get_participants(cursor)
@@ -233,20 +233,20 @@ class TestPayday(BillingHarness):
             assert args[0] == expected_logging_call_args.pop()
 
     def test_end(self):
-        Payday.start().end()
+        self.start_payday().end()
         result = self.db.one("SELECT count(*) FROM paydays "
                              "WHERE ts_end > '1970-01-01'")
         assert result == 1
 
     def test_end_raises_NoPayday(self):
         with self.assertRaises(NoPayday):
-            Payday().end()
+            Payday(self.client.website).end()
 
     @mock.patch('gratipay.billing.payday.log')
     @mock.patch('gratipay.billing.payday.Payday.payin')
     def test_payday(self, payin, log):
         greeting = 'Greetings, program! It\'s PAYDAY!!!!'
-        Payday.start().run()
+        self.run_payday()
         log.assert_any_call(greeting)
         assert payin.call_count == 1
 
@@ -254,7 +254,7 @@ class TestPayday(BillingHarness):
 class TestPayin(BillingHarness):
 
     def create_card_holds(self):
-        payday = Payday.start()
+        payday = self.start_payday()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
             return payday.create_card_holds(cursor)
@@ -284,7 +284,7 @@ class TestPayin(BillingHarness):
         sfs.return_value.transaction = submitted_txn
         sfs.return_value.is_success = True
 
-        Payday.start().payin()
+        self.start_payday().payin()
         payments = self.db.all("SELECT amount, direction FROM payments")
         assert payments == [(MINIMUM_CHARGE, 'to-team'), (MINIMUM_CHARGE, 'to-participant')]
 
@@ -294,14 +294,14 @@ class TestPayin(BillingHarness):
         self.obama_route.update_error('error')
         self.obama.set_payment_instruction(team, 1)
 
-        Payday.start().payin()
+        self.start_payday().payin()
         assert not sale.called
 
 
     # fetch_card_holds - fch
 
     def test_fch_returns_an_empty_dict_when_there_are_no_card_holds(self):
-        assert Payday.start().fetch_card_holds([]) == {}
+        assert self.start_payday().fetch_card_holds([]) == {}
 
 
     @mock.patch.object(Payday, 'fetch_card_holds')
@@ -365,7 +365,7 @@ class TestPayin(BillingHarness):
                                       is_suspicious=False)
         self.make_exchange('balanced-cc', 50, 0, alice)
         alice.set_tip_to(self.janet, 50)
-        Payday.start().payin()
+        self.start_payday().payin()
         assert log.call_args_list[-3][0] == ("Captured 0 card holds.",)
         assert log.call_args_list[-2][0] == ("Canceled 1 card holds.",)
         assert P('alice').balance == 0
@@ -376,7 +376,7 @@ class TestPayin(BillingHarness):
         self.db.run("""
             UPDATE participants SET balance = -10 WHERE username='janet'
         """)
-        payday = Payday.start()
+        payday = self.start_payday()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
             cursor.run("""
@@ -392,7 +392,7 @@ class TestPayin(BillingHarness):
         alice = self.make_participant('alice', claimed_time='now')
         alice.set_payment_instruction(team, 1)
         alice.set_payment_instruction(team, 0)
-        Payday.start().payin()
+        self.start_payday().payin()
         payments = self.db.all("SELECT * FROM payments WHERE amount = 0")
         assert not payments
 
@@ -405,7 +405,7 @@ class TestPayin(BillingHarness):
         alice.set_payment_instruction(Enterprise, D('0.51'))
         alice.set_payment_instruction(Trident, D('0.50'))
 
-        payday = Payday.start()
+        payday = self.start_payday()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
             payday.process_payment_instructions(cursor)
@@ -431,7 +431,7 @@ class TestPayin(BillingHarness):
         Enterprise.set_take_for(crusher, 10, crusher)
         alice.set_payment_instruction(Enterprise, D('80'))
 
-        payday = Payday.start()
+        payday = self.start_payday()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
             payday.process_payment_instructions(cursor)
@@ -462,7 +462,7 @@ class TestPayin(BillingHarness):
         picard = Participant.from_username(enterprise.owner)
         self.make_participant('bob', claimed_time='now', elsewhere='twitter')
         alice.set_payment_instruction(enterprise, 18)
-        payday = Payday.start()
+        payday = self.start_payday()
         with self.db.get_cursor() as cursor:
             payday.prepare(cursor)
 
@@ -497,7 +497,7 @@ class TestPayin(BillingHarness):
         open_.side_effect = open
         with mock.patch.dict(__builtins__, {'open': open_}):
             with self.assertRaises(Foobar):
-                Payday.start().payin()
+                self.start_payday().payin()
         filename = open_.call_args_list[-1][0][0]
         assert filename.endswith('_payments.csv')
         os.unlink(filename)
@@ -529,12 +529,9 @@ class TestTakes(BillingHarness):
 
 
     payday = None
-    def start_payday(self):
-        self.payday = Payday.start()
-
     def run_through_takes(self):
         if not self.payday:
-            self.start_payday()
+            self.payday = self.start_payday()
         with self.db.get_cursor() as cursor:
             self.payday.prepare(cursor)
             cursor.run("UPDATE payday_teams SET balance=537")
@@ -619,7 +616,7 @@ class TestTakes(BillingHarness):
         assert P('picard').balance  == D('200.00')
 
 
-class TestNotifyParticipants(EmailHarness):
+class TestNotifyParticipants(EmailHarness, PaydayMixin):
 
     def test_it_notifies_participants(self):
         kalel = self.make_participant('kalel', claimed_time='now', is_suspicious=False,
@@ -628,7 +625,7 @@ class TestNotifyParticipants(EmailHarness):
         kalel.set_payment_instruction(team, 10)
 
         for status in ('failed', 'succeeded'):
-            payday = Payday.start()
+            payday = self.start_payday()
             self.make_exchange('balanced-cc', 10, 0, kalel, status)
             payday.end()
             payday.notify_participants()
