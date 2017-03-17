@@ -253,7 +253,7 @@ class Harness(unittest.TestCase):
 
 
     def make_exchange(self, route, amount, fee, participant, status='succeeded', error='',
-                                                                          address='dummy-address'):
+                                                   ref='dummy-trans-id', address='dummy-address'):
         """Factory for exchanges.
         """
         if not isinstance(route, ExchangeRoute):
@@ -262,7 +262,7 @@ class Harness(unittest.TestCase):
             if not route:
                 route = ExchangeRoute.insert(participant, network, address)
                 assert route
-        e_id = record_exchange(self.db, route, amount, fee, participant, 'pre')
+        e_id = record_exchange(self.db, route, amount, fee, participant, 'pre', ref)
         record_exchange_result(self.db, e_id, status, error, participant)
         return e_id
 

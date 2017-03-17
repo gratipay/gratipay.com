@@ -221,6 +221,8 @@ def fake_payment(db, participant, team, timestamp, amount, payday, direction):
 
 
 def fake_exchange(db, participant, amount, fee, timestamp):
+    route=get_exchange_route(db, participant.id)
+    ref = '%s-%s-%s' % (participant.username, route, timestamp.microsecond)
     return insert_fake_data( db
                            , "exchanges"
                            , timestamp=timestamp
@@ -228,7 +230,8 @@ def fake_exchange(db, participant, amount, fee, timestamp):
                            , amount=amount
                            , fee=fee
                            , status='succeeded'
-                           , route=get_exchange_route(db, participant.id)
+                           , route=route
+                           , ref=ref
                             )
 
 
