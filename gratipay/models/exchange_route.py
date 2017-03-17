@@ -2,16 +2,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import braintree
 from postgres.orm import Model
+from gratipay.models import add_event
 
 
 class ExchangeRoute(Model):
 
     typname = "exchange_routes"
-
-    def __bool__(self):
-        return self.error != 'invalidated'
-
-    __nonzero__ = __bool__
 
     @classmethod
     def from_id(cls, id):
@@ -53,8 +49,9 @@ class ExchangeRoute(Model):
         return r
 
     @classmethod
-    def insert(cls, participant, network, address, error='', fee_cap=None, cursor=None):
+    def insert(cls, participant, network, address, fee_cap=None, cursor=None):
         participant_id = participant.id
+        error = ''
         r = (cursor or cls.db).one("""
             INSERT INTO exchange_routes
                         (participant, network, address, error, fee_cap)
@@ -69,20 +66,35 @@ class ExchangeRoute(Model):
     def invalidate(self):
         if self.network == 'braintree-cc':
             braintree.PaymentMethod.delete(self.address)
+        with self.db.get_cursor() as cursor:
+            self.db.run("UPDATE exchange_routes SET is_deleted=true WHERE id=%s", (self.id,))
+            payload = dict( id=self.participant.id
+                          , exchange_route=self.id
+                          , action='invalidate route'
+                          , address=self.address
+                           )
+            add_event(cursor, 'participant', payload)
+        self.set_attributes(is_deleted=True)
 
-        # For Paypal, we remove the record entirely to prevent
-        # an integrity error if the user tries to add the route again
-        if self.network == 'paypal':
-            # XXX This doesn't sound right. Doesn't this corrupt history pages?
-            self.db.run("DELETE FROM exchange_routes WHERE id=%s", (self.id,))
-        else:
-            self.update_error('invalidated')
+    def revive(self):
+        assert self.network == 'paypal'  # sanity check
+        with self.db.get_cursor() as cursor:
+            cursor.run("UPDATE exchange_routes SET is_deleted=false WHERE id=%s", (self.id,))
+            payload = dict( id=self.participant.id
+                          , exchange_route=self.id
+                          , action='revive route'
+                          , address=self.address
+                           )
+            add_event(cursor, 'participant', payload)
+        self.set_attributes(is_deleted=False)
 
     def update_error(self, new_error):
+        if self.is_deleted:
+            return
+
         id = self.id
         old_error = self.error
-        if old_error == 'invalidated':
-            return
+
         self.db.run("""
             UPDATE exchange_routes
                SET error = %(new_error)s

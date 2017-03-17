@@ -7,6 +7,7 @@ import braintree
 from gratipay.billing.exchanges import repr_exception
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.utils import bitcoin, get_participant
+from psycopg2 import IntegrityError, errorcodes
 
 [---]
 
@@ -31,7 +32,6 @@ if change:
             "payment_method_nonce": address,
             "options": {"verify_card": True}
         })
-
         if result.is_success:
             ExchangeRoute.insert(participant, network, result.payment_method.token)
         else:
@@ -40,7 +40,13 @@ if change:
     elif network == 'paypal':
         if address not in participant.get_verified_email_addresses():
             raise Response(400, _("Only verified email addresses allowed."))
-        ExchangeRoute.insert(participant, network, address)
+        try:
+            ExchangeRoute.insert(participant, network, address)
+        except IntegrityError as e:
+            if e.pgcode != errorcodes.UNIQUE_VIOLATION:
+                raise
+            existing_route = ExchangeRoute.from_address(participant, network, address)
+            existing_route.revive()
 
     elif network == 'bitcoin':
         if not bitcoin.validate(address):

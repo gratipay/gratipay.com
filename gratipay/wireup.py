@@ -29,6 +29,7 @@ from gratipay.elsewhere.google import Google
 from gratipay.elsewhere.openstreetmap import OpenStreetMap
 from gratipay.elsewhere.twitter import Twitter
 from gratipay.elsewhere.venmo import Venmo
+from gratipay.email import compile_email_spt, ConsoleMailer
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.community import Community
 from gratipay.models.country import Country
@@ -37,7 +38,6 @@ from gratipay.models.participant import Participant, Identity
 from gratipay.models.team import Team
 from gratipay.models import GratipayDB
 from gratipay.security.crypto import EncryptingPacker
-from gratipay.utils.emails import compile_email_spt, ConsoleMailer
 from gratipay.utils.http_caching import asset_etag
 from gratipay.utils.i18n import (
     ALIASES, ALIASES_R, COUNTRIES, LANGUAGES_2, LOCALES,
@@ -476,5 +476,6 @@ def env():
     return env
 
 
-if __name__ == '__main__':
+def __main__():
+    # deploy.sh uses this to validate production env config
     env()
