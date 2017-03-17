@@ -1017,11 +1017,14 @@ msgstr "チャージが成功した場合"
 msgid "Invalid email address."
 msgstr "メールアドレスが正しくありません。"
 
-msgid "A verification email has been sent to {0}."
-msgstr "確認メールを {0} に送信しました。"
+msgid "{email_address} is already linked to a different Gratipay account."
+msgstr ""
 
-msgid "You have already added and verified this address."
-msgstr "このアドレスをすでに追加して、確認しています。"
+msgid "You have already added and verified {email_address}."
+msgstr ""
+
+msgid "A verification email has been sent to {email_address}."
+msgstr ""
 
 msgid "Please Sign In"
 msgstr "サインインしてください"
@@ -1042,41 +1045,26 @@ msgstr "間違った Gratipay アカウントにサインインして、この�
 msgid "Success!"
 msgstr "成功しました!"
 
-msgid "Your email address {0} is now connected to your Gratipay account."
-msgstr "メールアドレス {0} が、あなたの Gratipay アカウントに接続しました。"
+msgid "{email_address} is now connected to your Gratipay account."
+msgstr ""
 
 msgid "Address Taken"
 msgstr "アドレスが取得されました"
 
-msgid ""
-"The email address {0} is already connected to a different Gratipay account."
-msgstr "メールアドレス {0} はすでに別の Gratipay アカウントに接続されています。"
+msgid "{email_address} is already connected to a different Gratipay account."
+msgstr ""
 
 msgid "Already Verified"
 msgstr "すでに確認済"
 
-msgid "Your email address {0} is already connected to your Gratipay account."
-msgstr "メールアドレス {0} はすでにあなたの Gratipay アカウントに接続しています。"
+msgid "{email_address} is already connected to your Gratipay account."
+msgstr ""
 
-msgid "Missing Info"
-msgstr "情報が不足しています"
+msgid "Bad Info"
+msgstr ""
 
-msgid ""
-"Sorry, that's a bad link. You'll need to view your email addresses and start"
-" over."
-msgstr "申し訳ありませんが、リンクが間違っています。メールアドレスを確認して、やり直す必要があります。"
-
-msgid "Expired"
-msgstr "期限切れ"
-
-msgid "The verification code for {0} has expired."
-msgstr "{0} の確認コードの有効期限が切れています。"
-
-msgid "The verification code for {0} is bad."
-msgstr "{0} の確認コードが間違っています。"
-
-msgid "Resend verification email"
-msgstr "確認メールを再送信"
+msgid "Sorry, that's a bad or expired link. You'll need to start over."
+msgstr ""
 
 msgid "View your email addresses"
 msgstr "メールアドレスを参照"

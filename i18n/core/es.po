@@ -1033,11 +1033,14 @@ msgstr "si se realiza el cobro"
 msgid "Invalid email address."
 msgstr "Correo electrónico no valido."
 
-msgid "A verification email has been sent to {0}."
-msgstr "Se ha enviado un correo de verificación a {0}."
+msgid "{email_address} is already linked to a different Gratipay account."
+msgstr ""
 
-msgid "You have already added and verified this address."
-msgstr "Ya has añadido y verificado este correo."
+msgid "You have already added and verified {email_address}."
+msgstr ""
+
+msgid "A verification email has been sent to {email_address}."
+msgstr ""
 
 msgid "Please Sign In"
 msgstr "Por favor inicia sesión"
@@ -1058,41 +1061,26 @@ msgstr "Has ingresado a la cuenta de Gratipay equivocada para completar la verif
 msgid "Success!"
 msgstr "¡Éxito!"
 
-msgid "Your email address {0} is now connected to your Gratipay account."
-msgstr "Tu correo electrónico {0} ahora está conectado tu cuenta de Gratipay."
+msgid "{email_address} is now connected to your Gratipay account."
+msgstr ""
 
 msgid "Address Taken"
 msgstr "Correo tomado"
 
-msgid ""
-"The email address {0} is already connected to a different Gratipay account."
-msgstr "El correo electrónico {0} ya está conectado a una cuenta de Gratipay diferente."
+msgid "{email_address} is already connected to a different Gratipay account."
+msgstr ""
 
 msgid "Already Verified"
 msgstr "Ya verificado"
 
-msgid "Your email address {0} is already connected to your Gratipay account."
-msgstr "Tu correo electrónico {0} ya está conectado a tu cuenta de Gratipay."
+msgid "{email_address} is already connected to your Gratipay account."
+msgstr ""
 
-msgid "Missing Info"
-msgstr "Información faltante"
+msgid "Bad Info"
+msgstr ""
 
-msgid ""
-"Sorry, that's a bad link. You'll need to view your email addresses and start"
-" over."
-msgstr "Lo sentimos, este es un enlace defectuoso. Tendrás que ver tus correos electrónicos y empezar de nuevo."
-
-msgid "Expired"
-msgstr "Expirado"
-
-msgid "The verification code for {0} has expired."
-msgstr "El código de verificación de {0} ha expirado."
-
-msgid "The verification code for {0} is bad."
-msgstr "El código de verificación para {0} es defectuoso."
-
-msgid "Resend verification email"
-msgstr "Reenviar correo electrónico de verificación"
+msgid "Sorry, that's a bad or expired link. You'll need to start over."
+msgstr ""
 
 msgid "View your email addresses"
 msgstr "Ver tus correos electrónicos"
