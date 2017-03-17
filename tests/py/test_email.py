@@ -91,6 +91,14 @@ class TestEndpoints(AliceAndResend):
         response = self.hit_email_spt('add-email', 'test@gratipay', should_fail=True)
         assert response.code == 400
 
+    def test_post_with_long_address_is_okay(self):
+        response = self.hit_email_spt('add-email', ('a'*242) + '@example.com')
+        assert response.code == 200
+
+    def test_post_with_looooong_address_is_400(self):
+        response = self.hit_email_spt('add-email', ('a'*243) + '@example.com', should_fail=True)
+        assert response.code == 400
+
     def test_verify_email_without_adding_email(self):
         response = self.verify_email('', 'sample-nonce')
         assert 'Missing Info' in response.body
