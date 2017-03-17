@@ -1,7 +1,8 @@
 [--------]
-nmasspays = website.db.one("""
-
-    WITH payday AS (SELECT ts_start FROM paydays ORDER BY ts_start DESC LIMIT 1)
+starts = website.db.all("""
+    SELECT ts_start FROM paydays ORDER BY ts_start DESC LIMIT 2
+""")
+nmasspays = 0 if len(starts) < 2 else website.db.one("""
 
     SELECT count(*)
       FROM exchanges e
@@ -9,8 +10,9 @@ nmasspays = website.db.one("""
         ON e.route = er.id
      WHERE er.network = 'paypal'
        AND e.amount < 0
-       AND timestamp > (SELECT ts_start FROM payday)
+       AND timestamp < %s
+       AND timestamp > %s
 
-""")
+""", starts)
 [--------] text/plain
 {{ nmasspays }}

@@ -1027,11 +1027,19 @@ msgstr ""
 msgid "Invalid email address."
 msgstr "Malvalida retpoŝtadreso."
 
-msgid "A verification email has been sent to {0}."
-msgstr "Retpoŝto por kontrolo sendis jam al {0}."
+msgid "{email_address} is already linked to a different Gratipay account."
+msgstr ""
 
-msgid "You have already added and verified this address."
-msgstr "Vi aldonis kaj kontrolis ĉi tiun adreson jam."
+msgid "You have already added and verified {email_address}."
+msgstr ""
+
+msgid ""
+"You've initiated too many emails too quickly. Please try again in a minute "
+"or two."
+msgstr ""
+
+msgid "A verification email has been sent to {email_address}."
+msgstr ""
 
 msgid "Please Sign In"
 msgstr "Bonvolu ensaluti"
@@ -1052,41 +1060,26 @@ msgstr "Vi estas ensalutita la malkorektan Gratipay-an konton kompletigi tiun re
 msgid "Success!"
 msgstr "Sukcese!"
 
-msgid "Your email address {0} is now connected to your Gratipay account."
-msgstr "Via retpoŝtadreso {0} estas konektita nun al vian Gratipay-a konto."
+msgid "{email_address} is now connected to your Gratipay account."
+msgstr ""
 
 msgid "Address Taken"
 msgstr "Adreso okupita jam"
 
-msgid ""
-"The email address {0} is already connected to a different Gratipay account."
-msgstr "La retpoŝtadreso {0} estas konektita jam al malsama Gratipay-a konto."
+msgid "{email_address} is already connected to a different Gratipay account."
+msgstr ""
 
 msgid "Already Verified"
 msgstr "Kontrolita jam"
 
-msgid "Your email address {0} is already connected to your Gratipay account."
-msgstr "Via retpoŝtadreso {0} estas kontrolita jam al via Gratipay-a konto."
+msgid "{email_address} is already connected to your Gratipay account."
+msgstr ""
 
-msgid "Missing Info"
-msgstr "Informaĵo estas manka"
+msgid "Bad Info"
+msgstr ""
 
-msgid ""
-"Sorry, that's a bad link. You'll need to view your email addresses and start"
-" over."
-msgstr "Bedaŭrinde, tio estas mala ligo. Vi bezonos montri viajn retpoŝtadresojn kaj restartas."
-
-msgid "Expired"
-msgstr "Senvalidiĝita"
-
-msgid "The verification code for {0} has expired."
-msgstr "La kontrolkodo por {0} senvalidiĝis."
-
-msgid "The verification code for {0} is bad."
-msgstr "La kontrolkodo por {0} estas malvalida."
-
-msgid "Resend verification email"
-msgstr "Resendi retpoŝton por kontrolo"
+msgid "Sorry, that's a bad or expired link. You'll need to start over."
+msgstr ""
 
 msgid "View your email addresses"
 msgstr "Montri viajn Retpoŝtadresojn"

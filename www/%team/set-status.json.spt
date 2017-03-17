@@ -1,6 +1,5 @@
 from aspen import Response
 
-from gratipay.models import add_event
 from gratipay.models.team import Team
 from gratipay.models.participant import Participant
 [---]
@@ -31,7 +30,7 @@ with website.db.get_cursor() as c:
             """, (is_approved, team.slug))
         status = {True: 'approved', False: 'rejected', None: 'unreviewed'}[is_approved]
 
-        add_event(c, 'team', dict(
+        website.app.add_event(c, 'team', dict(
             id=team.id,
             recorder=dict(id=user.participant.id, username=user.participant.username),
             action='set', values=dict(status=status)
@@ -39,7 +38,13 @@ with website.db.get_cursor() as c:
 
         if status in ('rejected', 'approved'):
             owner = Participant.from_username(team.owner)
-            owner.send_email('team-'+status, team=team, include_unsubscribe=False)
+            website.app.email_queue.put( owner
+                                       , 'team-'+status
+                                       , team_name=team.name
+                                       , review_url=team.review_url
+                                       , include_unsubscribe=False
+                                       , _user_initiated=False
+                                        )
 
 [---] application/json via json_dump
 {"status": status}

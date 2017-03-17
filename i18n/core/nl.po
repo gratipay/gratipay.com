@@ -1029,11 +1029,19 @@ msgstr "als de aanrekening lukt"
 msgid "Invalid email address."
 msgstr "Ongeldig e-mailadres"
 
-msgid "A verification email has been sent to {0}."
-msgstr "Een verificatie e-mail is verzonden naar {0}."
+msgid "{email_address} is already linked to a different Gratipay account."
+msgstr ""
 
-msgid "You have already added and verified this address."
-msgstr "U hebt dit e-mailadres al toegevoegd en geverifieerd."
+msgid "You have already added and verified {email_address}."
+msgstr ""
+
+msgid ""
+"You've initiated too many emails too quickly. Please try again in a minute "
+"or two."
+msgstr ""
+
+msgid "A verification email has been sent to {email_address}."
+msgstr ""
 
 msgid "Please Sign In"
 msgstr "Logt u alstublieft in"
@@ -1054,41 +1062,26 @@ msgstr "U hebt ingelogd met de verkeerde Gratipay account om de e-mailadres veri
 msgid "Success!"
 msgstr "Gelukt!"
 
-msgid "Your email address {0} is now connected to your Gratipay account."
-msgstr "Uw e-mailadres {0} is nu gekoppeld aan uw Gratipay account."
+msgid "{email_address} is now connected to your Gratipay account."
+msgstr ""
 
 msgid "Address Taken"
 msgstr "Dit e-mailadres is reeds geclaimd"
 
-msgid ""
-"The email address {0} is already connected to a different Gratipay account."
-msgstr "Het e-mailadres {0} is al gekoppeld aan een andere Gratipay account."
+msgid "{email_address} is already connected to a different Gratipay account."
+msgstr ""
 
 msgid "Already Verified"
 msgstr "Deze is reeds geverifieerd"
 
-msgid "Your email address {0} is already connected to your Gratipay account."
-msgstr "Uw e-mailadres {0} is al gekoppeld aan uw Gratipay account."
+msgid "{email_address} is already connected to your Gratipay account."
+msgstr ""
 
-msgid "Missing Info"
-msgstr "Deze informatie mist nog"
+msgid "Bad Info"
+msgstr ""
 
-msgid ""
-"Sorry, that's a bad link. You'll need to view your email addresses and start"
-" over."
-msgstr "Excuses, die link klopt niet. Controleer alstublieft uw e-mailadres en begin opnieuw."
-
-msgid "Expired"
-msgstr "Verlopen"
-
-msgid "The verification code for {0} has expired."
-msgstr "De verificatie code voor {0} is verlopen."
-
-msgid "The verification code for {0} is bad."
-msgstr "De verificatie code voor {0} klopt niet."
-
-msgid "Resend verification email"
-msgstr "Verficatie e-mail opnieuw versturen"
+msgid "Sorry, that's a bad or expired link. You'll need to start over."
+msgstr ""
 
 msgid "View your email addresses"
 msgstr "Bekijk uw e-mailadressen."

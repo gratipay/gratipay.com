@@ -2,10 +2,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from gratipay.models.country import Country
 from gratipay.testing import P
-from gratipay.testing.emails import EmailHarness
+from gratipay.testing.email import QueuedEmailHarness
 
 
-class Tests(EmailHarness):
+class Tests(QueuedEmailHarness):
 
     def setUp(self):
         super(Tests, self).setUp()

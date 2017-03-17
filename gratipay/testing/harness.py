@@ -8,7 +8,6 @@ from collections import defaultdict
 from os.path import dirname, join, realpath
 from decimal import Decimal
 
-import gratipay
 from aspen import resources
 from aspen.utils import utcnow
 from aspen.testing.client import Client
@@ -18,8 +17,8 @@ from gratipay.elsewhere import UserInfo
 from gratipay.exceptions import NoSelfTipping, NoTippee, BadAmount
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
-from gratipay.models.participant import Participant
 from gratipay.models.team import Team
+from gratipay.models.participant import Participant, MAX_TIP, MIN_TIP
 from gratipay.security import user
 from gratipay.testing.vcr import use_cassette
 from psycopg2 import IntegrityError, InternalError
@@ -78,6 +77,7 @@ class Harness(unittest.TestCase):
     """
 
     client = ClientWithAuth(www_root=WWW_ROOT, project_root=PROJECT_ROOT)
+    app = client.app
     db = client.website.db
     platforms = client.website.platforms
     tablenames = db.all("SELECT tablename FROM pg_tables "
@@ -295,6 +295,15 @@ class Harness(unittest.TestCase):
         return payment_id
 
 
+    def make_participant_with_exchange(self, name):
+        participant = self.make_participant( name
+                                           , claimed_time='now'
+                                           , email_address=name+'@example.com'
+                                            )
+        self.make_exchange('braintree-cc', 50, 0, participant)
+        return participant
+
+
     def make_tip(self, tipper, tippee, amount, cursor=None):
         """Given a Participant or username, and amount as str, returns a dict.
 
@@ -324,7 +333,7 @@ class Harness(unittest.TestCase):
             raise NoSelfTipping
 
         amount = Decimal(amount)  # May raise InvalidOperation
-        if (amount < gratipay.MIN_TIP) or (amount > gratipay.MAX_TIP):
+        if (amount < MIN_TIP) or (amount > MAX_TIP):
             raise BadAmount
 
         # Insert tip

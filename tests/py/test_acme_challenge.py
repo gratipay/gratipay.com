@@ -122,4 +122,4 @@ class TestAssetsACMEChallenge(Harness):
         response = self.client.GET( '/assets/.well-known/acme-challenge/foo'
                                   , raise_immediately=False
                                    )
-        assert response.headers['Cache-Control'] == 'no-cache'
+        assert 'no-cache' in response.headers['Cache-Control'] 

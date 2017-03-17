@@ -31,7 +31,10 @@ class ProblemChangingEmail(Response):
     def __init__(self, *args):
         Response.__init__(self, 400, self.msg.format(*args))
 
-class EmailAlreadyTaken(ProblemChangingEmail):
+class EmailAlreadyVerified(ProblemChangingEmail):
+    msg = "{} is already verified for this Gratipay account."
+
+class EmailTaken(ProblemChangingEmail):
     msg = "{} is already connected to a different Gratipay account."
 
 class CannotRemovePrimaryEmail(ProblemChangingEmail):
@@ -43,13 +46,23 @@ class EmailNotVerified(ProblemChangingEmail):
 class TooManyEmailAddresses(ProblemChangingEmail):
     msg = "You've reached the maximum number of email addresses we allow."
 
-class ResendingTooFast(ProblemChangingEmail):
-    msg = "Sorry, please try resending the verification email again in a minute or two."
+
+class Throttled(Exception):
+    msg = "You've initiated too many emails too quickly. Please try again in a minute or two."
 
 
 class ProblemChangingNumber(Exception):
     def __str__(self):
         return self.msg
+
+
+class NotSane(Exception):
+    """This is used when a sanity check fails.
+
+    A sanity check is when it really seems like the logic shouldn't allow the
+    condition to arise, but you never know.
+
+    """
 
 
 class TooGreedy(Exception): pass

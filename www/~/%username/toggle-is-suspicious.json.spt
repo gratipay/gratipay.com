@@ -1,5 +1,4 @@
 from aspen import Response
-from gratipay.models import add_event
 from gratipay.utils import get_participant
 [---]
 if not user.ADMIN:
@@ -31,7 +30,7 @@ with website.db.get_cursor() as c:
 
         """, (to == 'true', request.path['username'],))
 
-    add_event(c, 'participant', dict(
+    website.app.add_event(c, 'participant', dict(
         id=get_participant(state).id,
         recorder=dict(id=user.participant.id, username=user.participant.username),
         action='set', values=dict(is_suspicious=is_suspicious)
