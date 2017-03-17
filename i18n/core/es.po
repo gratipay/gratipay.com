@@ -1039,6 +1039,11 @@ msgstr ""
 msgid "You have already added and verified {email_address}."
 msgstr ""
 
+msgid ""
+"You've initiated too many emails too quickly. Please try again in a minute "
+"or two."
+msgstr ""
+
 msgid "A verification email has been sent to {email_address}."
 msgstr ""
 
