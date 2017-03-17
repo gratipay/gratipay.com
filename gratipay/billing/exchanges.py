@@ -74,6 +74,7 @@ def create_card_hold(db, participant, amount):
 
     hold = None
     error = ""
+    ref = None
     try:
         result = braintree.Transaction.sale({
             'amount': str(cents/100.0),
@@ -82,6 +83,7 @@ def create_card_hold(db, participant, amount):
             'options': { 'submit_for_settlement': False },
             'custom_fields': {'participant_id': participant.id}
         })
+        ref = result.transaction.id
 
         if result.is_success and result.transaction.status == 'authorized':
             error = ""
@@ -98,7 +100,7 @@ def create_card_hold(db, participant, amount):
         log(msg + "succeeded.")
     else:
         log(msg + "failed: %s" % error)
-        record_exchange(db, route, amount, fee, participant, 'failed', error)
+        record_exchange(db, route, amount, fee, participant, 'failed', ref, error)
 
     return hold, error
 
@@ -118,14 +120,15 @@ def capture_card_hold(db, participant, amount, hold):
 
     cents, amount_str, charge_amount, fee = _prep_hit(amount)
     amount = charge_amount - fee  # account for possible rounding
-    e_id = record_exchange(db, route, amount, fee, participant, 'pre')
+    ref = hold.id
+    e_id = record_exchange(db, route, amount, fee, participant, 'pre', ref)
 
     # TODO: Find a way to link transactions and corresponding exchanges
     # meta = dict(participant_id=participant.id, exchange_id=e_id)
 
     error = ''
     try:
-        result = braintree.Transaction.submit_for_settlement(hold.id, str(cents/100.00))
+        result = braintree.Transaction.submit_for_settlement(ref, str(cents/100.00))
         assert result.is_success
         if result.transaction.status != 'submitted_for_settlement':
             error = result.transaction.status
@@ -228,7 +231,7 @@ def get_ready_payout_routes_by_network(db, network):
     return out
 
 
-def record_exchange(db, route, amount, fee, participant, status, error=None):
+def record_exchange(db, route, amount, fee, participant, status, ref, error=None):
     """Given a Bunch of Stuff, return an int (exchange_id).
 
     Records in the exchanges table have these characteristics:
@@ -240,6 +243,8 @@ def record_exchange(db, route, amount, fee, participant, status, error=None):
 
         fee     The payment processor's fee. It's always positive.
 
+        ref     transaction id in the external system.
+
     """
 
     assert route.participant.id == participant.id
@@ -248,10 +253,10 @@ def record_exchange(db, route, amount, fee, participant, status, error=None):
 
         exchange_id = cursor.one("""
             INSERT INTO exchanges
-                   (amount, fee, participant, status, route, note)
-            VALUES (%s, %s, %s, %s, %s, %s)
+                   (amount, fee, participant, status, route, note, ref)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
          RETURNING id
-        """, (amount, fee, participant.username, status, route.id, error))
+        """, (amount, fee, participant.username, status, route.id, error, ref))
 
         if status == 'failed':
             propagate_exchange(cursor, participant, route, error, 0)
