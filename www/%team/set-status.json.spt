@@ -43,6 +43,7 @@ with website.db.get_cursor() as c:
                                        , team_name=team.name
                                        , review_url=team.review_url
                                        , include_unsubscribe=False
+                                       , _user_initiated=False
                                         )
 
 [---] application/json via json_dump

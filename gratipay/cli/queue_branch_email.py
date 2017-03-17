@@ -86,4 +86,4 @@ def main(_argv=sys.argv, _input=raw_input, _print=print, _app=None):
         _print( "{:>4} queuing for {} ({}={})".format(i, p.email_address, p.username, p.id)
               , file=sys.stderr
                )
-        app.email_queue.put(p, 'branch', include_unsubscribe=False)
+        app.email_queue.put(p, 'branch', include_unsubscribe=False, _user_initiated=False)

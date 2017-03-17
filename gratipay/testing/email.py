@@ -8,6 +8,15 @@ from gratipay.testing import Harness
 
 class _AbstractEmailHarness(Harness):
 
+    def setUp(self):
+        Harness.setUp(self)
+        self.__sleep_for = self.app.email_queue.sleep_for
+        self.app.email_queue.sleep_for = 0
+
+    def tearDown(self):
+        Harness.tearDown(self)
+        self.app.email_queue.sleep_for = self.__sleep_for
+
     def _get_last_email(self):
         raise NotImplementedError
 
@@ -45,7 +54,7 @@ class SentEmailHarness(_AbstractEmailHarness):
     """
 
     def setUp(self):
-        Harness.setUp(self)
+        _AbstractEmailHarness.setUp(self)
         self.mailer_patcher = mock.patch.object(self.app.email_queue._mailer, 'send_email')
         self.mailer = self.mailer_patcher.start()
         self.addCleanup(self.mailer_patcher.stop)

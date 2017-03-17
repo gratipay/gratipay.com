@@ -40,10 +40,18 @@ with website.db.get_cursor() as c:
         action='set', values=dict(status_of_1_0_payout=new_status)
     ))
 
-    if new_status == 'rejected':
-        website.app.email_queue.put(participant, 'rejected-1.0', include_unsubscribe=False)
-    elif new_status == 'pending-payout':
-        website.app.email_queue.put(participant, 'approved-1.0', include_unsubscribe=False)
+template = None
+if new_status == 'rejected':
+    template = 'rejected-1.0'
+elif new_status == 'pending-payout':
+    template = 'approved-1.0'
+
+if template:
+    website.app.email_queue.put( participant
+                               , template
+                               , include_unsubscribe=False
+                               , _user_initiated=False
+                                )
 
 out = {"status": new_status}
 [---] application/json via json_dump

@@ -52,7 +52,7 @@ class Application(object):
         cron = Cron(website)
         cron(env.update_cta_every, lambda: utils.update_cta(website))
         cron(env.check_db_every, db.self_check, True)
-        cron(env.flush_email_queue_every, self.email_queue.flush, True)
+        cron(env.email_queue_flush_every, self.email_queue.flush, True)
 
 
     def add_event(self, c, type, payload):

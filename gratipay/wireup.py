@@ -386,7 +386,9 @@ def env():
         OPENSTREETMAP_AUTH_URL          = unicode,
         UPDATE_CTA_EVERY                = int,
         CHECK_DB_EVERY                  = int,
-        FLUSH_EMAIL_QUEUE_EVERY         = int,
+        EMAIL_QUEUE_FLUSH_EVERY         = int,
+        EMAIL_QUEUE_SLEEP_FOR           = int,
+        EMAIL_QUEUE_ALLOW_UP_TO         = int,
         OPTIMIZELY_ID                   = unicode,
         SENTRY_DSN                      = unicode,
         LOG_METRICS                     = is_yesish,
@@ -395,7 +397,6 @@ def env():
         TEAM_REVIEW_USERNAME            = unicode,
         TEAM_REVIEW_TOKEN               = unicode,
         RAISE_SIGNIN_NOTIFICATIONS      = is_yesish,
-        RESEND_VERIFICATION_THRESHOLD   = unicode,
         REQUIRE_YAJL                    = is_yesish,
         GUNICORN_OPTS                   = unicode,
     )

@@ -477,6 +477,7 @@ class Payday(object):
                 exchange=dict(id=e.id, amount=e.amount, fee=e.fee, note=e.note),
                 nteams=nteams,
                 top_team=top_team,
+                _user_initiated=False
             )
 
 
