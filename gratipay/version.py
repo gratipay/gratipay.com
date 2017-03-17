@@ -1,6 +1,7 @@
 from os.path import abspath, dirname, join
 
 def get_version():
+    # setup.py uses this
     root = dirname(dirname(abspath(__file__)))
     with open(join(root, 'www/version.txt')) as f:
         version = f.read().strip()

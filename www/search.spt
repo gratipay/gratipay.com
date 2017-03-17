@@ -1,4 +1,4 @@
-from gratipay.utils import markdown, truncate
+from gratipay.utils import markdown, truncate, icons
 from gratipay.utils.i18n import LANGUAGES_2, SEARCH_CONFS, strip_accents
 from markupsafe import Markup
 [---]
@@ -17,15 +17,12 @@ def get_processed_excerpt(participant):
     statement = truncate(statement, 128, '')
     return process_excerpt(statement)
 
-# Horribly WET; see www/index.html.spt
+# Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
                   , "unreviewed" : _("Unreviewed")
                   , "rejected": _("Rejected")
+                  , "featured": _("Featured")
                    }
-status_icons = { "approved": "&#xe008;"
-               , "unreviewed": "&#xe009;"
-               , "rejected": "&#xe010;"
-                }
 
 action = request.qs.get('action')
 query = request.qs.get('q')
@@ -168,49 +165,8 @@ zip = zip
                     "Found matching projects",
                     len(projects)) }}</h2>
     <table class="listing">
-        {% for i, team in enumerate(projects, start=1) %}
-        <tr>
-            <td class="item">
-                <img src="{{ team.get_image_url('small') }}">
-                <a class="name" href="/{{ team.slug }}/">{{ team.name }}</a>
-
-                <div class="details{% if team.status == 'approved' %} room-for-numbers{% endif %}">
-                    <span class="i">{{ i }}</span>
-                    <span class="status">&middot;
-                        <a href="{{ team.review_url }}"><span
-                            class="status-icon {{ team.status }}"
-                            >{{ status_icons[team.status]|safe }}</span
-                            >{{ i18ned_statuses[team.status] }}</a>
-                    </span>
-                    <span class="ctime">&middot; {{ _("created {ago}",
-                        ago=to_age(team.ctime, add_direction=True)) }}</span>
-                    <span class="owner">&middot;
-                        {{ _( "owned by {a}{owner}{_a}"
-                            , owner='~'+team.owner
-                            , a=('<a class="owner" href="/~{}/">'|safe).format(team.owner)
-                            , _a='</a>'|safe
-                             ) }}
-                    </span>
-                </div>
-
-                {% if team.status == 'approved' %}
-                <table class="numbers mono">
-                    <tr>
-                        <th class="label">{{ _("Weekly") }}</th>
-                        <th>&#x03A3; &nbsp;</th>
-                        <th>n</th>
-                    </tr>
-                    <tr>
-                        <td class="label">{{ _("Receiving") }}</td>
-                        <td>{{ format_currency(team.receiving, 'USD')
-                                if team.receiving else '- &nbsp;'|safe }}</td>
-                        <td>{{ team.nreceiving_from if team.nreceiving_from else '-' }}</td>
-                    </tr>
-                </table>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
+        {% set project_list = projects %}
+        {% include "templates/project-listing.html" %}
     </table>
     {% endif %}
 

@@ -53,7 +53,7 @@ class TestHistory(BillingHarness):
 
     def test_iter_payday_events(self):
         now = datetime.now()
-        Payday().start().run()
+        self.run_payday()
         self.shift_all_paydays_by('-1 week')
 
         Enterprise = self.make_team(is_approved=True)
@@ -61,7 +61,7 @@ class TestHistory(BillingHarness):
         for i in range(2):
             with patch.object(Payday, 'fetch_card_holds') as fch:
                 fch.return_value = {}
-                Payday.start().run()
+                self.run_payday()
             self.shift_all_paydays_by('-1 week')
 
         obama = P('obama')
@@ -70,7 +70,7 @@ class TestHistory(BillingHarness):
         assert obama.balance == D('0.00')
         assert picard.balance == D('20.00')
 
-        Payday().start()  # to demonstrate that we ignore any open payday?
+        self.start_payday()  # to demonstrate that we ignore any open payday?
 
         # Make all events in the same year.
         if now.month < 2:

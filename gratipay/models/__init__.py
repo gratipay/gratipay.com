@@ -9,7 +9,13 @@ everything on Gratipay.
 from contextlib import contextmanager
 
 from postgres import Postgres
-import psycopg2.extras
+
+from .account_elsewhere import AccountElsewhere
+from .community import Community
+from .country import Country
+from .exchange_route import ExchangeRoute
+from .participant import Participant
+from .team import Team
 
 
 @contextmanager
@@ -20,6 +26,15 @@ def just_yield(obj):
 class GratipayDB(Postgres):
     """Model the Gratipay database.
     """
+
+    def __init__(self, app, *a, **kw):
+        """Extend to make the ``Application`` object available on models at
+        ``.app``.
+        """
+        Postgres.__init__(self, *a, **kw)
+        for model in (AccountElsewhere, Community, Country, ExchangeRoute, Participant, Team):
+            self.register_model(model)
+            model.app = app
 
     def get_cursor(self, cursor=None, **kw):
         if cursor:
@@ -192,23 +207,3 @@ def _check_orphans_no_tips(cursor):
          WHERE NOT EXISTS (SELECT 1 FROM elsewhere WHERE participant=username)
     """)
     assert len(orphans_with_tips) == 0, orphans_with_tips
-
-
-def add_event(c, type, payload):
-    """Log an event.
-
-    This is the function we use to capture interesting events that happen
-    across the system in one place, the ``events`` table.
-
-    :param c: a :py:class:`Postres` or :py:class:`Cursor` instance
-    :param unicode type: an indicator of what type of event it is--either ``participant``, ``team``
-      or ``payday``
-    :param payload: an arbitrary JSON-serializable data structure; for ``participant`` type, ``id``
-      must be the id of the participant in question
-
-    """
-    SQL = """
-        INSERT INTO events (type, payload)
-        VALUES (%s, %s)
-    """
-    c.run(SQL, (type, psycopg2.extras.Json(payload)))

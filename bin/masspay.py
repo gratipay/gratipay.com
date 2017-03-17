@@ -193,7 +193,7 @@ def post_back_to_gratipay(force=False):
     except KeyError:
         gratipay_base_url = 'https://gratipay.com'
 
-    nmasspays = int(requests.get(gratipay_base_url + '/dashboard/nmasspays').text())
+    nmasspays = int(requests.get(gratipay_base_url + '/dashboard/nmasspays').text)
     if nmasspays < 10 and not force:
         print("It looks like we didn't run MassPay last week! If you are absolutely sure that we "
               "did, then rerun with -f.")

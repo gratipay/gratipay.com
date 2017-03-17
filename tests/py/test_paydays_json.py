@@ -2,14 +2,14 @@ from __future__ import unicode_literals
 
 import json
 
-from gratipay.billing.payday import Payday
 from gratipay.testing import Harness
+from gratipay.testing.billing import PaydayMixin
 
 
-class Tests(Harness):
+class Tests(Harness, PaydayMixin):
 
     def test_paydays_json_gives_paydays(self):
-        Payday.start()
+        self.start_payday()
         self.make_participant("alice")
 
         response = self.client.GET("/about/paydays.json")

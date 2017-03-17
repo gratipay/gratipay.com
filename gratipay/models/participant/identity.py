@@ -1,7 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from psycopg2 import IntegrityError
-from gratipay.models import add_event
 
 
 class ParticipantIdentityError(StandardError): pass
@@ -78,7 +77,7 @@ class Identity(object):
                           , identity_id=identity_id
                           , action=action + ' identity'
                            )
-            add_event(cursor, 'participant', payload)
+            self.app.add_event(cursor, 'participant', payload)
 
         params = dict( participant_id=self.id
                      , country_id=country_id
@@ -144,7 +143,7 @@ class Identity(object):
                           , action='retrieve identity'
                            )
 
-            add_event(cursor, 'participant', payload)
+            self.app.add_event(cursor, 'participant', payload)
 
         return info
 
@@ -224,7 +223,7 @@ class Identity(object):
                           , action=action + ' identity'
                            )
 
-            add_event(cursor, 'participant', payload)
+            self.app.add_event(cursor, 'participant', payload)
             self._update_has_verified_identity(cursor)
 
 
@@ -249,7 +248,7 @@ class Identity(object):
                           , country_id=country_id
                           , action='clear identity'
                            )
-            add_event(cursor, 'participant', payload)
+            self.app.add_event(cursor, 'participant', payload)
             self._update_has_verified_identity(cursor)
 
 

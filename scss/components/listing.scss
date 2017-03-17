@@ -53,9 +53,6 @@ table.listing {
             padding-left: 56px;
 
             font: normal 12px/15px $Ideal;
-            &.room-for-numbers {
-                padding-right: 80px;
-            }
             .owner a {
                 color: $medium-gray;
                 position: relative;
@@ -68,36 +65,10 @@ table.listing {
             .description {
                 & * { display: inline; }
             }
-        }
-        &:hover {
-            .room-for-numbers {
-                padding-right: 144px;
-            }
-        }
-        .numbers {
-            position: absolute;
-            bottom: 8px;
-            right: 0;
-            z-index: 0;
-            font-size: 11px;
-            line-height: 13px;
-            th {
-                text-align: right;
-                border-bottom: 1px solid transparent;
-            }
-            .label {
-                text-align: left;
-            }
-            td {
-                text-align: right;
-                padding: 1px 0 0 12px;
-                &:first-child {
-                    padding-left: 0;
-                }
-            }
-            th, .label {
-                color: $medium-gray;
-                visibility: hidden;
+
+            a {
+                font-weight: normal;
+                text-decoration: underline;
             }
         }
 
@@ -118,4 +89,6 @@ table.listing {
         }
     }
 }
-
+.with-sidebar table.listing td.item .details {
+    max-width: 384px;
+}
