@@ -3,10 +3,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import psycopg2.extras
 
-from . import utils
+from . import email, utils
 from .cron import Cron
 from .models import GratipayDB
-from .models.participant import Participant
 from .payday_runner import PaydayRunner
 from .website import Website
 
@@ -33,7 +32,6 @@ class Application(object):
         website.init_more(env, db, tell_sentry) # TODO Fold this into Website.__init__
 
         wireup.crypto(env)
-        wireup.mail(env, website.project_root)
         wireup.base_url(website, env)
         wireup.secure_cookies(env)
         wireup.billing(env)
@@ -44,6 +42,7 @@ class Application(object):
         wireup.accounts_elsewhere(website, env)
 
         website.init_even_more()                # TODO Fold this into Website.__init__
+        self.email_queue = email.Queue(env, db, tell_sentry, website.project_root)
         self.install_periodic_jobs(website, env, db)
         self.website = website
         self.payday_runner = PaydayRunner(self)
@@ -53,7 +52,7 @@ class Application(object):
         cron = Cron(website)
         cron(env.update_cta_every, lambda: utils.update_cta(website))
         cron(env.check_db_every, db.self_check, True)
-        cron(env.dequeue_emails_every, Participant.dequeue_emails, True)
+        cron(env.flush_email_queue_every, self.email_queue.flush, True)
 
 
     def add_event(self, c, type, payload):

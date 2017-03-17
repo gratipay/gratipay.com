@@ -1,7 +1,9 @@
 # encoding: utf8
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import fnmatch
 import random
+import os
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from datetime import datetime, timedelta
 
@@ -292,3 +294,9 @@ def get_featured_projects(popular, unpopular):
 
 def set_version_header(response, website):
     response.headers['X-Gratipay-Version'] = website.version
+
+
+def find_files(directory, pattern):
+    for root, dirs, files in os.walk(directory):
+        for filename in fnmatch.filter(files, pattern):
+            yield os.path.join(root, filename)

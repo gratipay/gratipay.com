@@ -12,7 +12,7 @@ from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
 from gratipay.testing import Foobar, D,P
 from gratipay.testing.billing import BillingHarness, PaydayMixin
-from gratipay.testing.emails import EmailHarness
+from gratipay.testing.email import SentEmailHarness
 
 
 class TestPayday(BillingHarness):
@@ -616,11 +616,11 @@ class TestTakes(BillingHarness):
         assert P('picard').balance  == D('200.00')
 
 
-class TestNotifyParticipants(EmailHarness, PaydayMixin):
+class TestNotifyParticipants(SentEmailHarness, PaydayMixin):
 
     def test_it_notifies_participants(self):
         kalel = self.make_participant('kalel', claimed_time='now', is_suspicious=False,
-                                      email_address='kalel@example.net', notify_charge=3)
+                                                email_address='kalel@example.net', notify_charge=3)
         team = self.make_team('Gratiteam', is_approved=True)
         kalel.set_payment_instruction(team, 10)
 
@@ -633,7 +633,7 @@ class TestNotifyParticipants(EmailHarness, PaydayMixin):
             emails = self.db.one('SELECT * FROM email_queue')
             assert emails.spt_name == 'charge_'+status
 
-            Participant.dequeue_emails()
+            self.app.email_queue.flush()
             assert self.get_last_email()['to'] == 'kalel <kalel@example.net>'
             assert 'Gratiteam' in self.get_last_email()['body_text']
             assert 'Gratiteam' in self.get_last_email()['body_html']

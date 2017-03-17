@@ -2,11 +2,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from datetime import date
 
-import mock
 import pytest
 
 from gratipay.models.community import Community
-from gratipay.models.participant import Participant
 from gratipay.testing import Harness, D,P
 from gratipay.testing.billing import PaydayMixin
 
@@ -198,8 +196,7 @@ class TestClearPaymentInstructions(Harness):
 
 class TestClearPersonalInformation(Harness):
 
-    @mock.patch.object(Participant, '_mailer')
-    def test_clears_personal_information(self, mailer):
+    def test_clears_personal_information(self):
         alice = self.make_participant( 'alice'
                                      , anonymous_giving=True
                                      , avatar_url='img-url'
