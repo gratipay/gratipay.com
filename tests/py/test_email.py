@@ -98,6 +98,14 @@ class TestEndpoints(Alice):
         response = self.hit_email_spt('add-email', ('a'*243) + '@example.com', should_fail=True)
         assert response.code == 400
 
+    def test_post_too_quickly_is_400(self):
+        self.hit_email_spt('add-email', 'alice@example.com')
+        self.hit_email_spt('add-email', 'alice+a@example.com')
+        self.hit_email_spt('add-email', 'alice+b@example.com')
+        response = self.hit_email_spt('add-email', 'alice+c@example.com', should_fail=True)
+        assert response.code == 400
+        assert 'too quickly' in response.body
+
     def test_verify_email_without_adding_email(self):
         response = self.verify_email('', 'sample-nonce')
         assert 'Bad Info' in response.body
