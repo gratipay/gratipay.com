@@ -4,7 +4,7 @@ Manages the authenticated user's email addresses.
 import re
 
 from aspen import Response
-from gratipay.exceptions import EmailTaken, EmailAlreadyVerified
+from gratipay.exceptions import EmailTaken, EmailAlreadyVerified, Throttled
 from gratipay.utils import get_participant
 
 # exactly one @, and at least one . after @
@@ -37,6 +37,8 @@ if action in ('add-email', 'resend'):
         raise Response(400, _( "You have already added and verified {email_address}."
                              , email_address=address
                               ))
+    except Throttled:
+        raise Response(400, _("You've initiated too many emails too quickly. Please try again in a minute or two."))
     else:
         msg = _("A verification email has been sent to {email_address}.", email_address=address)
 elif action == 'set-primary':
