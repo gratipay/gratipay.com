@@ -1028,18 +1028,18 @@ msgid "Invalid email address."
 msgstr "Indirizzo email non valido."
 
 msgid "{email_address} is already linked to a different Gratipay account."
-msgstr ""
+msgstr "{email_address} è già associato a un altro account Gratipay."
 
 msgid "You have already added and verified {email_address}."
-msgstr ""
+msgstr "Hai già aggiunto e verificato {email_address}."
 
 msgid ""
 "You've initiated too many emails too quickly. Please try again in a minute "
 "or two."
-msgstr ""
+msgstr "Hai iniziato troppe email troppo in fretta. Per favore, prova nuovamente in un minuto o due."
 
 msgid "A verification email has been sent to {email_address}."
-msgstr ""
+msgstr "Un'email di conferma è stata inviata a {email_address}."
 
 msgid "Please Sign In"
 msgstr "Per favore, Accedi"
@@ -1061,25 +1061,25 @@ msgid "Success!"
 msgstr "Successo!"
 
 msgid "{email_address} is now connected to your Gratipay account."
-msgstr ""
+msgstr "Il tuo indirizzo email {email_address} è ora associato al tuo account Gratipay."
 
 msgid "Address Taken"
 msgstr "Indirizzo già in uso"
 
 msgid "{email_address} is already connected to a different Gratipay account."
-msgstr ""
+msgstr "{email_address} è già collegato a un altro account Gratipay."
 
 msgid "Already Verified"
 msgstr "Già Verificato"
 
 msgid "{email_address} is already connected to your Gratipay account."
-msgstr ""
+msgstr "{email_address} è già collegato al tuo account Gratipay."
 
 msgid "Bad Info"
-msgstr ""
+msgstr "Informazioni Scorrette"
 
 msgid "Sorry, that's a bad or expired link. You'll need to start over."
-msgstr ""
+msgstr "Scusa, pare sia un link invalido o scaduto. Dovrai ricominciare."
 
 msgid "View your email addresses"
 msgstr "Guarda il tuo indirizzo email"
