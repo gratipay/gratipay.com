@@ -44,11 +44,13 @@
 @import "scss/components/nav";
 @import "scss/components/payments-by";
 @import "scss/components/profile-statement";
+@import "scss/components/select";
 @import "scss/components/sidebar";
 @import "scss/components/sign_in";
 @import "scss/components/status-icon";
 @import "scss/components/support_gratipay";
 @import "scss/components/table";
+@import "scss/components/text-treatments";
 @import "scss/components/payment-distribution";
 @import "scss/components/tipr";
 @import "scss/components/upgrade";

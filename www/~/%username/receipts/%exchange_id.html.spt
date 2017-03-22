@@ -9,13 +9,18 @@ from gratipay.billing.instruments import CreditCard
 
 participant = get_participant(state, restrict=True)
 
+try:
+    exchange_id = int(request.path['exchange_id'])
+except ValueError:
+    raise Response(400)
+
 exchange = website.db.one("""
     SELECT *
       FROM exchanges
      WHERE id = %s
        AND participant = %s
        AND amount > 0
-""", (request.path['exchange_id'], participant.username))
+""", (exchange_id, participant.username))
 if exchange is None:
     raise Response(404)
 

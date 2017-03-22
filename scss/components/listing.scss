@@ -1,9 +1,3 @@
-.sorry {
-    text-align: center;
-    font: normal 12px/15px $Ideal;
-    color: $medium-gray;
-}
-
 table.listing {
     width: 100%;
 
@@ -27,17 +21,29 @@ table.listing {
             background: none !important;
             color: $green !important;
         }
-        img {
+        img.avatar {
             width: 48px;
             height: 48px;
             position: absolute;
             top: 8px;
             left: 0;
         }
-        .name {
+        .package-manager {
+            position: absolute;
+            top: 40px;
+            left: 32px;
+            width: 16px;
+            height: 16px;
+            border-radius: 2px 0 0 0;
+            background: white;
+            img {
+                width: 14px;
+                height: 14px;
+                margin: 2px 0 0 2px;
+            }
+        }
+        .listing-name {
             display: block;
-            color: $black;
-            font: bold 20px/24px $Ideal;
             position: absolute;
             z-index: 1;
             top: 0;
@@ -46,7 +52,7 @@ table.listing {
             width: 100%;
             height: 100%;
         }
-        .details {
+        .listing-details {
             display: block;
 
             /* duplicate width/max-width from layouts#wrapper to get overflow to work */
@@ -58,7 +64,6 @@ table.listing {
 
             padding-left: 56px;
 
-            font: normal 12px/15px $Ideal;
             .owner a {
                 color: $medium-gray;
                 position: relative;
@@ -72,10 +77,6 @@ table.listing {
                 & * { display: inline; }
             }
 
-            a {
-                font-weight: normal;
-                text-decoration: underline;
-            }
         }
 
         &:hover {
@@ -95,6 +96,6 @@ table.listing {
         }
     }
 }
-.with-sidebar table.listing td.item .details {
+.with-sidebar table.listing td.item .listing-details {
     max-width: 384px;
 }

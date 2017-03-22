@@ -49,8 +49,9 @@ nteams = 0
 for key, tab in tabs.items():
     n = tab['n'] = len(tab['teams'])
     nteams += n
-    tab['name'] = '<span class="status-icon {}">{}</span> {}'.format( key
-                                                                    , icons.STATUS_ICONS[key]
+    status = icons.REVIEW_MAP[key]
+    tab['name'] = '<span class="status-icon {}">{}</span> {}'.format( status
+                                                                    , icons.STATUS_ICONS[status]
                                                                     , i18ned_statuses[key]
                                                                      )
 
@@ -80,7 +81,7 @@ page_id = "homepage"
 {% endblock %}
 
 {% block content %}
-<form action="new" class="apply">
+<form action="/apply" class="apply-button">
     <button type="submit">{{ _("Fund Your Project") }}</button>
 </form>
 

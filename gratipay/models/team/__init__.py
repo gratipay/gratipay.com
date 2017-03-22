@@ -5,16 +5,17 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import re
 from decimal import Decimal
 
-import requests
-from aspen import json, log
-from gratipay.exceptions import InvalidTeamName
+from aspen import Response
 from postgres.orm import Model
 
 from .available import Available
 from .closing import Closing
 from .membership import Membership
+from .package import Package
 from .takes import Takes
 from .tip_migration import TipMigration
+from ...exceptions import InvalidTeamName
+from ...utils import canonicalize
 
 
 # Should have at least one letter.
@@ -36,7 +37,7 @@ def slugize(name):
     return slug
 
 
-class Team(Model, Available, Closing, Membership, Takes, TipMigration):
+class Team(Model, Available, Closing, Membership, Package, Takes, TipMigration):
     """Represent a Gratipay team.
     """
 
@@ -70,6 +71,13 @@ class Team(Model, Available, Closing, Membership, Takes, TipMigration):
     nreceiving_from = 0
 
 
+    @property
+    def url_path(self):
+        """The path part of the URL for this team on Gratipay.
+        """
+        return '/{}/'.format(self.slug)
+
+
     # Constructors
     # ============
 
@@ -98,9 +106,10 @@ class Team(Model, Available, Closing, Membership, Takes, TipMigration):
 
     @classmethod
     def insert(cls, owner, **fields):
+        cursor = fields.pop('_cursor') if '_cursor' in fields else None
         fields['slug_lower'] = fields['slug'].lower()
         fields['owner'] = owner.username
-        return cls.db.one("""
+        return (cursor or cls.db).one("""
 
             INSERT INTO teams
                         (slug, slug_lower, name, homepage,
@@ -170,8 +179,11 @@ class Team(Model, Available, Closing, Membership, Takes, TipMigration):
 
 
     def update(self, **kw):
-        updateable = frozenset(['name', 'product_or_service', 'homepage',
-                                'onboarding_url'])
+        if self.package:
+            updateable = frozenset(['name', 'product_or_service', 'onboarding_url'])
+        else:
+            updateable = frozenset(['name', 'product_or_service', 'homepage',
+                                    'onboarding_url'])
 
         cols, vals = zip(*kw.items())
         assert set(cols).issubset(updateable)
@@ -236,30 +248,6 @@ class Team(Model, Available, Closing, Membership, Takes, TipMigration):
         """, {'team_id': self.id, 'mcharge': MINIMUM_CHARGE})
 
 
-    def create_github_review_issue(self):
-        """POST to GitHub, and return the URL of the new issue.
-        """
-        api_url = "https://api.github.com/repos/{}/issues".format(self.review_repo)
-        data = json.dumps({ "title": self.name
-                          , "body": "https://gratipay.com/{}/\n\n".format(self.slug) +
-                                    "(This application will remain open for at least a week.)"
-                           })
-        out = ''
-        try:
-            r = requests.post(api_url, auth=self.review_auth, data=data)
-            if r.status_code == 201:
-                out = r.json()['html_url']
-            else:
-                log(r.status_code)
-                log(r.text)
-            err = str(r.status_code)
-        except:
-            err = "eep"
-        if not out:
-            out = "https://github.com/gratipay/team-review/issues#error-{}".format(err)
-        return out
-
-
     def set_review_url(self, review_url):
         self.db.run("UPDATE teams SET review_url=%s WHERE id=%s", (review_url, self.id))
         self.set_attributes(review_url=review_url)
@@ -306,12 +294,14 @@ class Team(Model, Available, Closing, Membership, Takes, TipMigration):
                            , ndistributing_to=r.ndistributing_to
                             )
 
+
     @property
     def status(self):
         return { None: 'unreviewed'
                , False: 'rejected'
                , True: 'approved'
                 }[self.is_approved]
+
 
     def to_dict(self):
         return {
@@ -367,3 +357,35 @@ class Team(Model, Available, Closing, Membership, Takes, TipMigration):
             with self.db.get_connection() as c:
                 image = c.lobject(oid, mode='rb').read()
         return image
+
+
+def cast(path_part, state):
+    """This is an Aspen typecaster. Given a slug and a state dict, raise
+    Response or return Team.
+    """
+    redirect = state['website'].redirect
+    request = state['request']
+    user = state['user']
+    slug = path_part
+    qs = request.line.uri.querystring
+
+    try:
+        team = Team.from_slug(slug)
+    except:
+        raise Response(400, 'bad slug')
+
+    if team is None:
+        # Try to redirect to a Participant.
+        from gratipay.models.participant import Participant # avoid circular import
+        participant = Participant.from_username(slug)
+        if participant is not None:
+            qs = '?' + request.qs.raw if request.qs.raw else ''
+            redirect('/~' + request.path.raw[1:] + qs)
+        raise Response(404)
+
+    canonicalize(redirect, request.line.uri.path.raw, '/', team.slug, slug, qs)
+
+    if team.is_closed and not user.ADMIN:
+        raise Response(410)
+
+    return team

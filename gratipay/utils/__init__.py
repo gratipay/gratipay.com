@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 
 from aspen import Response, json
 from aspen.utils import to_rfc822, utcnow
-from dependency_injection import resolve_dependencies
 from postgres.cursors import SimpleCursorBase
 
 import gratipay
@@ -35,6 +34,15 @@ def dict_to_querystring(mapping):
 
 
 def _munge(website, request, url_prefix, fs_prefix):
+    """Given website and requests objects along with URL and filesystem
+    prefixes, redirect or modify the request. The idea here is that sometimes
+    for various reasons the dispatcher can't handle a mapping, so this is a
+    hack to rewrite the URL to help the dispatcher map to the filesystem.
+
+    If you access the filesystem version directly through the web, we redirect
+    you to the URL version. If you access the URL version as desired, then we
+    rewrite so we can find it on the filesystem.
+    """
     if request.path.raw.startswith(fs_prefix):
         to = url_prefix + request.path.raw[len(fs_prefix):]
         if request.qs.raw:
@@ -111,35 +119,6 @@ def get_participant(state, restrict=True, resolve_unclaimed=True):
                 raise Response(403, _("You are not authorized to access this page."))
 
     return participant
-
-
-def get_team(state):
-    """Given a Request, raise Response or return Team.
-    """
-    redirect = state['website'].redirect
-    request = state['request']
-    user = state['user']
-    slug = request.line.uri.path['team']
-    qs = request.line.uri.querystring
-
-    from gratipay.models.team import Team  # avoid circular import
-    team = Team.from_slug(slug)
-
-    if team is None:
-        # Try to redirect to a Participant.
-        from gratipay.models.participant import Participant # avoid circular import
-        participant = Participant.from_username(slug)
-        if participant is not None:
-            qs = '?' + request.qs.raw if request.qs.raw else ''
-            redirect('/~' + request.path.raw[1:] + qs)
-        raise Response(404)
-
-    canonicalize(redirect, request.line.uri.path.raw, '/', team.slug, slug, qs)
-
-    if team.is_closed and not user.ADMIN:
-        raise Response(410)
-
-    return team
 
 
 def encode_for_querystring(s):
@@ -265,17 +244,6 @@ def to_javascript(obj):
     """For when you want to inject an object into a <script> tag.
     """
     return json.dumps(obj).replace('</', '<\\/')
-
-
-class LazyResponse(Response):
-
-    def __init__(self, code, lazy_body, **kw):
-        Response.__init__(self, code, '', **kw)
-        self.lazy_body = lazy_body
-
-    def render_body(self, state):
-        f = self.lazy_body
-        self.body = f(*resolve_dependencies(f, state).as_args)
 
 
 def get_featured_projects(popular, unpopular):

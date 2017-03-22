@@ -1,14 +1,12 @@
 from aspen import Response
 
-from gratipay.utils import get_team
-
 [---]
 request.allow('GET')
 
 if user.ANON:
     raise Response(401, _("You need to log in to access this page."))
 
-team = get_team(state)
+team = request.path['team']
 
 if not user.ADMIN and user.participant.username != team.owner:
     raise Response(403, _("You are not authorized to access this page."))
@@ -39,6 +37,9 @@ suppress_sidebar = True
     input[type="file"] {
         margin-left: 10px;
     }
+    input:disabled {
+        background: #CCC;
+    }
 </style>
 
 <form action="edit.json" method="POST" id="edit-team">
@@ -51,7 +52,11 @@ suppress_sidebar = True
     <textarea name="product_or_service" required>{{team.product_or_service}}</textarea>
 
     <label><h2>{{ _("Homepage") }}</h2></label>
+    {% if team.package %}
+    <a href="{{ team.homepage }}">{{ team.homepage }}</a>
+    {% else %}
     <input type="text" name="homepage" value="{{team.homepage}}" required>
+    {% endif %}
 
     <label><h2>{{ _("Image") }}</h2></label>
     <img src="{{ team.get_image_url('small') }}" align="middle">

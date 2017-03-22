@@ -1,9 +1,14 @@
 Gratipay.packages = {};
 
+Gratipay.packages.init = function() {
+    Gratipay.Select('.gratipay-select');
+    $('button.apply').on('click', Gratipay.packages.post);
+};
+
 Gratipay.packages.post = function(e) {
     e.preventDefault();
     var $this = $(this);
-    var action = 'add-email-and-claim-package';
+    var action = 'start-verification';
     var package_id = $('input[name=package_id]').val();
     var email = $('input[name=email]:checked').val();
 

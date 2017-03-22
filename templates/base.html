@@ -1,3 +1,4 @@
+{% from "templates/sign-in-using.html" import sign_in_using with context %}
 <!DOCTYPE html>
 <html lang="{{ locale.language }}">
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
@@ -41,7 +42,7 @@
             {% set current_page = request.path.raw.split('/')[1] %}
             {% include "templates/nav.html" %}
             {% if user.ANON %}
-                {% include "templates/sign-in-using.html" %}
+                {{ sign_in_using() }}
             {% else %}
             <ul class="nav you-are">
                 <li>

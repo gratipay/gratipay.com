@@ -27,30 +27,28 @@ if not participant.email_lang:
     participant.set_email_lang(request.headers.get("Accept-Language"))
 
 msg = None
-if action in ('add-email', 'resend'):
-    try:
-        participant.add_email(address)
-    except EmailTaken:
-        raise Response(400, _( "{email_address} is already linked to a different Gratipay account."
-                             , email_address=address
-                              ))
-    except EmailAlreadyVerified:
-        raise Response(400, _( "You have already added and verified {email_address}."
-                             , email_address=address
-                              ))
-    except Throttled:
-        raise Response(400, _("You've initiated too many emails too quickly. Please try again in a minute or two."))
-    else:
-        msg = _("A verification email has been sent to {email_address}.", email_address=address)
+if action in ('add-email', 'resend', 'start-verification'):
+    packages = []
+    if action == 'start-verification':
+        # work around Aspen limitation
+        package_ids = request.body.all('package_id') if 'package_id' in request.body else []
+
+        for package_id in package_ids:
+            try:
+                package = Package.from_id(package_id)
+                assert address in package.emails
+            except:
+                raise Response(400)
+            packages.append(package)
+    elif 'package_id' in request.body:
+        raise Response(400)
+
+    participant.start_email_verification(address, *packages)
+    msg = _("Check your inbox for a verification link.")
 elif action == 'set-primary':
-    participant.update_email(address)
+    participant.set_primary_email(address)
 elif action == 'remove':
     participant.remove_email(address)
-elif action == 'add-email-and-claim-package':
-    package_id = request.body['package_id']
-    package = Package.from_id(package_id)
-    package.send_confirmation_email(address)
-    msg = _("Check {email} for a confirmation link.", email=address)
 else:
     raise Response(400, 'unknown action "%s"' % action)
 

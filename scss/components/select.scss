@@ -1,0 +1,103 @@
+.gratipay-select {
+
+    position: relative;
+    height: 64px;
+
+    ul {
+
+        /* Opening and closing. */
+
+        li {
+            display: none;
+            &.selected {
+                display: block;
+            }
+        }
+        &.open {
+            li {
+                display: block;
+            }
+            .arrow {
+                display: none;
+            }
+        }
+
+        .arrow {
+            display: block;
+            position: absolute;
+            z-index: 0;
+            right: 5px;
+            width: 0;
+            height: 0;
+            border-right: 5px solid transparent;
+            border-left: 5px solid transparent;
+            content: "";
+
+            &.up {
+                bottom: 22px;
+                border-top: 8px solid $light-gray;
+            }
+            &.down {
+                top: 22px;
+                border-bottom: 8px solid $light-gray;
+            }
+        }
+        li.hover .arrow {
+            &.up { border-top-color: $green; }
+            &.down { border-bottom-color: $green; }
+        }
+
+
+        /* Everything else. */
+
+        width: 66%;
+        background: white;
+        position: absolute;
+        left: 17%;
+
+        border-radius: 5px;
+        box-shadow: 2px 2px 8px $black;
+
+        li {
+            margin: 0;
+            list-style: none;
+            position: relative;
+            text-align: left;
+            height: 64px;
+
+            input {
+                display: none;
+            }
+            .listing-wrapper {
+                height: 64px;
+                label {
+                    white-space: nowrap;
+                    display: block;
+                    height: 64px;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    padding: 12px 24px 0 56px;
+                    z-index: 1;
+                }
+                .listing-details {
+                    display: block;
+                    padding: 36px 24px 0 56px;
+                    white-space: nowrap;
+                }
+            }
+            &.hover:not(.disabled) label {
+                cursor: pointer;
+            }
+            &.disabled label {
+                color: $medium-gray ! important;
+            }
+        }
+        &.open .hover:not(.disabled) label {
+            color: $green ! important;
+        }
+    }
+}

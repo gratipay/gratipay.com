@@ -1,14 +1,20 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
+import Queue
 import sys
+import threading
+import urllib
 
+import mock
 from pytest import raises
 
 from gratipay.exceptions import CannotRemovePrimaryEmail, EmailTaken, EmailNotVerified
-from gratipay.exceptions import TooManyEmailAddresses, Throttled
-from gratipay.testing import P
+from gratipay.exceptions import TooManyEmailAddresses, Throttled, EmailAlreadyVerified
+from gratipay.exceptions import EmailNotOnFile, ProblemChangingEmail
+from gratipay.testing import P, Harness
 from gratipay.testing.email import QueuedEmailHarness, SentEmailHarness
+from gratipay.models.package import Package
 from gratipay.models.participant import email as _email
 from gratipay.utils import encode_for_querystring
 from gratipay.cli import queue_branch_email as _queue_branch_email
@@ -20,16 +26,42 @@ class Alice(QueuedEmailHarness):
         QueuedEmailHarness.setUp(self)
         self.alice = self.make_participant('alice', claimed_time='now')
 
+    def add(self, participant, address, _flush=False):
+        participant.start_email_verification(address)
+        nonce = participant.get_email(address).nonce
+        r = participant.finish_email_verification(address, nonce)
+        assert r == _email.VERIFICATION_SUCCEEDED
+        if _flush:
+            self.app.email_queue.flush()
+
 
 class TestEndpoints(Alice):
 
-    def hit_email_spt(self, action, address, user='alice', should_fail=False):
+    def hit_email_spt(self, action, address, user='alice', package_ids=[], should_fail=False):
         f = self.client.PxST if should_fail else self.client.POST
-        data = {'action': action, 'address': address}
-        headers = {b'HTTP_ACCEPT_LANGUAGE': b'en'}
-        return f('/~alice/emails/modify.json', data, auth_as=user, **headers)
 
-    def verify_email(self, email, nonce, username='alice', should_fail=False):
+        # Aspen's test client should really support URL-encoding POST data for
+        # us, but it doesn't (it only supports multipart, which I think maybe
+        # doesn't work because of other Aspen bugs around multiple package_id
+        # values in the same POST body in that case?), so let's do that
+        # ourselves.
+
+        data = [ ('action', action)
+               , ('address', address)
+                ] + [('package_id', str(p)) for p in package_ids]
+        body = urllib.urlencode(data)
+
+        response = f( '/~alice/emails/modify.json'
+                    , body=body
+                    , content_type=b'application/x-www-form-urlencoded'
+                    , auth_as=user
+                    , HTTP_ACCEPT_LANGUAGE=b'en'
+                     )
+        if issubclass(response.__class__, (Throttled, ProblemChangingEmail)):
+            response.render_body({'_': lambda a: a})
+        return response
+
+    def finish_email_verification(self, email, nonce, username='alice', should_fail=False):
         # Email address is encoded in url.
         url = '/~%s/emails/verify.html?email2=%s&nonce=%s'
         url %= (username, encode_for_querystring(email), nonce)
@@ -39,17 +71,16 @@ class TestEndpoints(Alice):
     def verify_and_change_email(self, old_email, new_email, username='alice', _flush=True):
         self.hit_email_spt('add-email', old_email)
         nonce = P(username).get_email(old_email).nonce
-        self.verify_email(old_email, nonce)
+        self.finish_email_verification(old_email, nonce)
         self.hit_email_spt('add-email', new_email)
         if _flush:
             self.app.email_queue.flush()
 
-    def test_participant_can_add_email(self):
+    def test_participant_can_start_email_verification(self):
         response = self.hit_email_spt('add-email', 'alice@gratipay.com')
-        actual = json.loads(response.body)
-        assert actual
+        assert json.loads(response.body) == 'Check your inbox for a verification link.'
 
-    def test_adding_email_sends_verification_email(self):
+    def test_starting_email_verification_triggers_verification_email(self):
         self.hit_email_spt('add-email', 'alice@gratipay.com')
         assert self.count_email_messages() == 1
         last_email = self.get_last_email()
@@ -69,7 +100,7 @@ class TestEndpoints(Alice):
         last_email = self.get_last_email()
         assert "To stop receiving" not in last_email['body_text']
 
-    def test_adding_second_email_sends_verification_notice(self):
+    def test_verifying_second_email_sends_verification_notice(self):
         self.verify_and_change_email('alice1@example.com', 'alice2@example.com', _flush=False)
         assert self.count_email_messages() == 3
         last_email = self.get_last_email()
@@ -107,15 +138,15 @@ class TestEndpoints(Alice):
         assert 'too quickly' in response.body
 
     def test_verify_email_without_adding_email(self):
-        response = self.verify_email('', 'sample-nonce')
+        response = self.finish_email_verification('', 'sample-nonce')
         assert 'Bad Info' in response.body
 
     def test_verify_email_wrong_nonce(self):
         self.hit_email_spt('add-email', 'alice@example.com')
         nonce = 'fake-nonce'
-        r = self.alice.verify_email('alice@gratipay.com', nonce)
+        r = self.alice.finish_email_verification('alice@gratipay.com', nonce)
         assert r == _email.VERIFICATION_FAILED
-        self.verify_email('alice@example.com', nonce)
+        self.finish_email_verification('alice@example.com', nonce)
         expected = None
         actual = P('alice').email_address
         assert expected == actual
@@ -124,8 +155,8 @@ class TestEndpoints(Alice):
         address = 'alice@example.com'
         self.hit_email_spt('add-email', address)
         nonce = self.alice.get_email(address).nonce
-        r = self.alice.verify_email(address, nonce)
-        r = self.alice.verify_email(address, nonce)
+        r = self.alice.finish_email_verification(address, nonce)
+        r = self.alice.finish_email_verification(address, nonce)
         assert r == _email.VERIFICATION_REDUNDANT
 
     def test_verify_email_expired_nonce(self):
@@ -137,18 +168,26 @@ class TestEndpoints(Alice):
              WHERE participant_id = %s;
         """, (self.alice.id,))
         nonce = self.alice.get_email(address).nonce
-        r = self.alice.verify_email(address, nonce)
+        r = self.alice.finish_email_verification(address, nonce)
         assert r == _email.VERIFICATION_EXPIRED
         actual = P('alice').email_address
         assert actual == None
 
-    def test_verify_email(self):
+    def test_finish_email_verification(self):
         self.hit_email_spt('add-email', 'alice@example.com')
         nonce = self.alice.get_email('alice@example.com').nonce
-        self.verify_email('alice@example.com', nonce)
-        expected = 'alice@example.com'
-        actual = P('alice').email_address
-        assert expected == actual
+        assert self.finish_email_verification('alice@example.com', nonce).code == 200
+        assert P('alice').email_address == 'alice@example.com'
+
+    def test_empty_email_results_in_missing(self):
+        for empty in ('', '    '):
+            result = self.alice.finish_email_verification(empty, 'foobar')
+            assert result == _email.VERIFICATION_MISSING
+
+    def test_empty_nonce_results_in_missing(self):
+        for empty in ('', '    '):
+            result = self.alice.finish_email_verification('foobar', empty)
+            assert result == _email.VERIFICATION_MISSING
 
     def test_email_verification_is_backwards_compatible(self):
         """Test email verification still works with unencoded email in verification link.
@@ -175,17 +214,17 @@ class TestEndpoints(Alice):
     def test_verify_email_after_update(self):
         self.verify_and_change_email('alice@example.com', 'alice@example.net')
         nonce = self.alice.get_email('alice@example.net').nonce
-        self.verify_email('alice@example.net', nonce)
+        self.finish_email_verification('alice@example.net', nonce)
         expected = 'alice@example.com'
         actual = P('alice').email_address
         assert expected == actual
 
-    def test_nonce_is_reused_when_resending_email(self):
+    def test_nonce_is_not_reused_when_resending_email(self):
         self.hit_email_spt('add-email', 'alice@example.com')
         nonce1 = self.alice.get_email('alice@example.com').nonce
         self.hit_email_spt('resend', 'alice@example.com')
         nonce2 = self.alice.get_email('alice@example.com').nonce
-        assert nonce1 == nonce2
+        assert nonce1 != nonce2
 
     def test_emails_page_shows_emails(self):
         self.verify_and_change_email('alice@example.com', 'alice@example.net')
@@ -217,96 +256,128 @@ class TestEndpoints(Alice):
             self.hit_email_spt('remove', 'alice@example.com')
 
 
-class TestFunctions(Alice):
+    def test_participant_can_verify_a_package_along_with_email(self):
+        foo = self.make_package(name='foo', emails=['alice@gratipay.com'])
+        response = self.hit_email_spt( 'start-verification'
+                                     , 'alice@gratipay.com'
+                                     , package_ids=[foo.id]
+                                      )
+        assert json.loads(response.body) == 'Check your inbox for a verification link.'
+        assert self.db.all('select package_id from claims order by package_id') == [foo.id]
 
-    def add_and_verify(self, participant, address):
-        participant.add_email('alice@gratipay.com')
-        nonce = participant.get_email('alice@gratipay.com').nonce
-        r = participant.verify_email('alice@gratipay.com', nonce)
-        assert r == _email.VERIFICATION_SUCCEEDED
+    def test_participant_cant_verify_packages_with_add_email_or_resend(self):
+        foo = self.make_package(name='foo', emails=['alice@gratipay.com'])
+        for action in ('add-email', 'resend'):
+            assert self.hit_email_spt( action
+                                     , 'alice@gratipay.com'
+                                     , package_ids=[foo.id]
+                                     , should_fail=True
+                                      ).code == 400
+
+    def test_participant_can_verify_multiple_packages_along_with_email(self):
+        package_ids = [self.make_package(name=name, emails=['alice@gratipay.com']).id
+                       for name in ('foo', 'bar', 'baz', 'buz')]
+        response = self.hit_email_spt( 'start-verification'
+                                     , 'alice@gratipay.com'
+                                     , package_ids=package_ids
+                                      )
+        assert json.loads(response.body) == 'Check your inbox for a verification link.'
+        assert self.db.all('select package_id from claims order by package_id') == package_ids
+
+    def test_package_verification_fails_if_email_not_listed(self):
+        foo = self.make_package()
+        response = self.hit_email_spt( 'start-verification'
+                                     , 'bob@gratipay.com'
+                                     , package_ids=[foo.id]
+                                     , should_fail=True
+                                      )
+        assert response.code == 400
+        assert self.db.all('select package_id from claims order by package_id') == []
+
+    def test_package_verification_fails_package_id_is_garbage(self):
+        response = self.hit_email_spt( 'start-verification'
+                                     , 'bob@gratipay.com'
+                                     , package_ids=['cheese monkey']
+                                     , should_fail=True
+                                      )
+        assert response.code == 400
+        assert self.db.all('select package_id from claims order by package_id') == []
+
+
+class TestFunctions(Alice):
 
     def test_cannot_update_email_to_already_verified(self):
         bob = self.make_participant('bob', claimed_time='now')
-        self.add_and_verify(self.alice, 'alice@gratipay.com')
+        self.add(self.alice, 'alice@gratipay.com')
 
         with self.assertRaises(EmailTaken):
-            bob.add_email('alice@gratipay.com')
+            bob.start_email_verification('alice@gratipay.com')
             nonce = bob.get_email('alice@gratipay.com').nonce
-            bob.verify_email('alice@gratipay.com', nonce)
+            bob.finish_email_verification('alice@gratipay.com', nonce)
 
         email_alice = P('alice').email_address
         assert email_alice == 'alice@gratipay.com'
 
-    def test_cannot_add_too_many_emails(self):
-        self.alice.add_email('alice@gratipay.com')
-        self.alice.add_email('alice@gratipay.net')
-        self.alice.add_email('alice@gratipay.org')
-        self.app.email_queue.flush()
-        self.alice.add_email('alice@gratipay.co.uk')
-        self.alice.add_email('alice@gratipay.io')
-        self.alice.add_email('alice@gratipay.co')
-        self.app.email_queue.flush()
-        self.alice.add_email('alice@gratipay.eu')
-        self.alice.add_email('alice@gratipay.asia')
-        self.alice.add_email('alice@gratipay.museum')
-        self.app.email_queue.flush()
-        self.alice.add_email('alice@gratipay.py')
-        with self.assertRaises(TooManyEmailAddresses):
-            self.alice.add_email('alice@gratipay.coop')
-
     def test_html_escaping(self):
-        self.alice.add_email("foo'bar@example.com")
+        self.alice.start_email_verification("foo'bar@example.com")
         last_email = self.get_last_email()
         assert 'foo&#39;bar' in last_email['body_html']
         assert '&#39;' not in last_email['body_text']
 
+    def test_npm_package_name_is_handled_safely(self):
+        foo = self.make_package(name='<script>')
+        self.alice.start_email_verification("alice@example.com", foo)
+        last_email = self.get_last_email()
+        assert '<b>&lt;script&gt;</b>' in last_email['body_html']
+        assert '<script>' in last_email['body_text']
+
     def test_queueing_email_is_throttled(self):
-        self.app.email_queue.put(self.alice, "verification")
-        self.app.email_queue.put(self.alice, "branch")
-        self.app.email_queue.put(self.alice, "verification_notice")
-        raises(Throttled, self.app.email_queue.put, self.alice, "branch")
+        self.app.email_queue.put(self.alice, "base")
+        self.app.email_queue.put(self.alice, "base")
+        self.app.email_queue.put(self.alice, "base")
+        raises(Throttled, self.app.email_queue.put, self.alice, "base")
 
     def test_only_user_initiated_messages_count_towards_throttling(self):
-        self.app.email_queue.put(self.alice, "verification")
-        self.app.email_queue.put(self.alice, "verification", _user_initiated=False)
-        self.app.email_queue.put(self.alice, "branch")
-        self.app.email_queue.put(self.alice, "branch", _user_initiated=False)
-        self.app.email_queue.put(self.alice, "verification_notice")
-        self.app.email_queue.put(self.alice, "verification_notice", _user_initiated=False)
+        self.app.email_queue.put(self.alice, "base")
+        self.app.email_queue.put(self.alice, "base", _user_initiated=False)
+        self.app.email_queue.put(self.alice, "base")
+        self.app.email_queue.put(self.alice, "base", _user_initiated=False)
+        self.app.email_queue.put(self.alice, "base")
+        self.app.email_queue.put(self.alice, "base", _user_initiated=False)
         raises(Throttled, self.app.email_queue.put, self.alice, "branch")
 
     def test_flushing_queue_resets_throttling(self):
-        self.add_and_verify(self.alice, 'alice@example.com')
+        self.add(self.alice, 'alice@example.com')
         assert self.app.email_queue.flush() == 1
-        self.app.email_queue.put(self.alice, "verification")
-        self.app.email_queue.put(self.alice, "branch")
-        self.app.email_queue.put(self.alice, "verification_notice")
+        self.app.email_queue.put(self.alice, "base")
+        self.app.email_queue.put(self.alice, "base")
+        self.app.email_queue.put(self.alice, "base")
         assert self.app.email_queue.flush() == 3
-        self.app.email_queue.put(self.alice, "verification_notice")
+        self.app.email_queue.put(self.alice, "base")
 
 
 class FlushEmailQueue(SentEmailHarness):
 
     def put_message(self, email_address='larry@example.com'):
         larry = self.make_participant('larry', email_address=email_address)
-        self.app.email_queue.put(larry, "verification")
+        self.app.email_queue.put(larry, "base")
 
     def test_can_flush_an_email_from_the_queue(self):
         self.put_message()
 
-        assert self.db.one("SELECT spt_name FROM email_queue") == "verification"
+        assert self.db.one("SELECT spt_name FROM email_queue") == "base"
         self.app.email_queue.flush()
         assert self.count_email_messages() == 1
         last_email = self.get_last_email()
         assert last_email['to'] == 'larry <larry@example.com>'
-        expected = "connect larry"
+        expected = "Something not right?"
         assert expected in last_email['body_text']
         assert self.db.one("SELECT spt_name FROM email_queue") is None
 
     def test_flushing_an_email_without_address_just_skips_it(self):
         self.put_message(email_address=None)
 
-        assert self.db.one("SELECT spt_name FROM email_queue") == "verification"
+        assert self.db.one("SELECT spt_name FROM email_queue") == "base"
         self.app.email_queue.flush()
         assert self.count_email_messages() == 0
         assert self.db.one("SELECT spt_name FROM email_queue") is None
@@ -428,3 +499,389 @@ class TestQueueBranchEmail(QueuedEmailHarness):
         assert output == []
         assert errors == []
         assert self.count_email_messages() == 0
+
+
+class StartEmailVerification(Alice):
+
+    def test_starts_email_verification(self):
+        self.alice.start_email_verification('alice@example.com')
+        assert self.get_last_email()['subject'] == 'Connect to alice on Gratipay?'
+
+    def test_raises_if_already_verified(self):
+        self.add(self.alice, 'alice@example.com')
+        raises(EmailAlreadyVerified, self.alice.start_email_verification, 'alice@example.com')
+
+    def test_raises_if_already_taken(self):
+        self.add(self.alice, 'alice@example.com')
+        bob = self.make_participant('bob', claimed_time='now')
+        raises(EmailTaken, bob.start_email_verification, 'alice@example.com')
+
+    def test_maxes_out_at_10(self):
+        for i in range(10):
+            self.add(self.alice, 'alice-{}@example.com'.format(i), _flush=True)
+        raises(TooManyEmailAddresses, self.alice.start_email_verification, 'alice@example.com')
+
+    def test_can_include_packages_in_verification(self):
+        foo = self.make_package()
+        self.alice.start_email_verification('alice@example.com', foo)
+        assert self.get_last_email()['subject'] == 'Connect to alice on Gratipay?'
+        assert self.db.one('select package_id from claims') == foo.id
+
+    def test_can_claim_package_even_when_address_already_verified(self):
+        self.add(self.alice, 'alice@example.com')
+        foo = self.make_package()
+        self.alice.start_email_verification('alice@example.com', foo)
+        assert self.get_last_email()['subject'] == 'Connect to alice on Gratipay?'
+        assert self.db.one('select package_id from claims') == foo.id
+
+    def test_claiming_package_with_verified_address_doesnt_count_against_max(self):
+        for i in range(10):
+            self.add(self.alice, 'alice-{}@example.com'.format(i), _flush=True)
+        foo = self.make_package(emails=['alice-4@example.com'])
+        self.alice.start_email_verification('alice-4@example.com', foo)
+        assert self.db.one('select package_id from claims') == foo.id
+
+    def test_claiming_package_with_someone_elses_verified_address_is_a_no_go(self):
+        self.add(self.alice, 'alice@example.com')
+        bob = self.make_participant('bob', claimed_time='now')
+        foo = self.make_package()
+        raises(EmailTaken, bob.start_email_verification, 'alice@example.com', foo)
+
+    def test_claiming_package_with_an_address_not_on_file_is_a_no_go(self):
+        foo = self.make_package(emails=['bob@example.com'])
+        raises(EmailNotOnFile, self.alice.start_email_verification, 'alice@example.com', foo)
+
+    def test_restarting_verification_clears_old_claims(self):
+        foo = self.make_package()
+        start = lambda: self.alice.start_email_verification('alice@example.com', foo)
+        nonce = lambda: self.db.one('select nonce from claims')
+        start()
+        nonce1 = nonce()
+        start()
+        assert nonce1 != nonce()
+
+    def test_finishing_verification_clears_competing_claims_and_emails(self):
+        bob = self.make_participant('bob', claimed_time='now')
+        foo = self.make_package()
+
+        self.alice.start_email_verification('alice@example.com', foo)
+        anonce = self.alice.get_emails()[0].nonce
+
+        bob.start_email_verification('alice@example.com', foo)
+        bnonce = bob.get_emails()[0].nonce
+
+        emails = lambda: self.db.all('select participant_id as i from emails order by i')
+        claims = lambda: dict(self.db.all('select nonce, package_id from claims'))
+
+        assert claims() == {anonce: foo.id, bnonce: foo.id}
+        assert emails() == [self.alice.id, bob.id]
+
+        r = self.alice.finish_email_verification('alice@example.com', anonce)
+        assert r == _email.VERIFICATION_SUCCEEDED
+
+        assert claims() == {}
+        assert emails() == [self.alice.id]
+
+        r = bob.finish_email_verification('alice@example.com', bnonce)
+        assert r == _email.VERIFICATION_FAILED
+
+
+class RemoveEmail(Alice):
+
+    def test_removing_email_clears_claims(self):
+        foo = self.make_package()
+        self.alice.start_email_verification('alice@example.com', foo)
+        claims = lambda: self.db.all('select package_id from claims')
+        assert claims() == [foo.id]
+        self.alice.remove_email('alice@example.com')
+        assert claims() == []
+
+
+class GetEmailVerificationLink(Harness):
+
+    def get_claims(self):
+        return self.db.all('''
+            SELECT name
+              FROM claims c
+              JOIN packages p
+                ON c.package_id = p.id
+          ORDER BY name
+        ''')
+
+    def test_returns_a_link(self):
+        with self.db.get_cursor() as c:
+            alice = self.make_participant('alice')
+            link = alice.get_email_verification_link(c, 'alice@example.com')
+        assert link.startswith('/~alice/emails/verify.html?email2=YWxpY2VAZXhhbXBsZS5jb20~&nonce=')
+
+    def test_makes_no_claims_by_default(self):
+        with self.db.get_cursor() as c:
+            self.make_participant('alice').get_email_verification_link(c, 'alice@example.com')
+        assert self.get_claims() == []
+
+    def test_makes_a_claim_if_asked_to(self):
+        alice = self.make_participant('alice')
+        foo = self.make_package()
+        with self.db.get_cursor() as c:
+            alice.get_email_verification_link(c, 'alice@example.com', foo)
+        assert self.get_claims() == ['foo']
+
+    def test_can_make_two_claims(self):
+        alice = self.make_participant('alice')
+        foo = self.make_package()
+        bar = self.make_package(name='bar')
+        with self.db.get_cursor() as c:
+            alice.get_email_verification_link(c, 'alice@example.com', foo, bar)
+        assert self.get_claims() == ['bar', 'foo']
+
+    def test_will_happily_make_competing_claims(self):
+        foo = self.make_package()
+        with self.db.get_cursor() as c:
+            self.make_participant('alice').get_email_verification_link(c, 'alice@example.com', foo)
+        with self.db.get_cursor() as c:
+            self.make_participant('bob').get_email_verification_link(c, 'bob@example.com', foo)
+        assert self.get_claims() == ['foo', 'foo']
+
+    def test_adds_events(self):
+        foo = self.make_package()
+        with self.db.get_cursor() as c:
+            self.make_participant('alice').get_email_verification_link(c, 'alice@example.com', foo)
+        events = [e.payload['action'] for e in self.db.all('select * from events order by id')]
+        assert events == ['add', 'start-claim']
+
+
+class VerificationBase(Alice):
+
+    def check(self, *package_names, **kw):
+        packages = [self.make_package(name=n) for n in package_names]
+        self.alice.start_email_verification('alice@example.com', *packages)
+        message = self.get_last_email()
+        return message['subject'], message['body_html'], message['body_text']
+
+    def preverify(self, address='alice@example.com'):
+        self.alice.start_email_verification(address)
+        nonce = self.alice.get_email(address).nonce
+        self.alice.finish_email_verification(address, nonce)
+
+
+class VerificationMessage(VerificationBase):
+
+    def check(self, *a, **kw):
+        subject, html, text = VerificationBase.check(self, *a, **kw)
+        assert subject == 'Connect to alice on Gratipay?'
+        return html, text
+
+    def test_chokes_on_just_verified_address(self):
+        self.preverify()
+        raises(EmailAlreadyVerified, self.check)
+
+    def test_handles_just_address(self):
+        html, text = self.check()
+        assert ' connect <b>alice@example.com</b> to ' in html
+        assert ' connect alice@example.com to ' in text
+
+    # NB: The next two also exercise skipping the verification notice when
+    # sending package verification to an already-verified address, since the
+    # last email sent would be the verification notice if we didn't skip it.
+
+    def test_handles_verified_address_and_one_package(self):
+        self.preverify()
+        html, text = self.check('foo')
+        assert ' connect the <b>foo</b> npm package ' in html
+        assert ' connect the foo npm package ' in text
+
+    def test_handles_verified_address_and_multiple_packages(self):
+        self.preverify()
+        html, text = self.check('foo', 'bar')
+        assert ' connect 2 npm packages ' in html
+        assert ' connect 2 npm packages ' in text
+
+    def test_handles_unverified_address_and_one_package(self):
+        html, text = self.check('foo')
+        assert ' <b>alice@example.com</b> and the <b>foo</b> npm package ' in html
+        assert ' alice@example.com and the foo npm package ' in text
+
+    def test_handles_unverified_address_and_multiple_packages(self):
+        html, text = self.check('foo', 'bar')
+        assert ' <b>alice@example.com</b> and 2 npm packages ' in html
+        assert ' alice@example.com and 2 npm packages ' in text
+
+
+class VerificationNotice(VerificationBase):
+
+    def setUp(self):
+        VerificationBase.setUp(self)
+        self.preverify('alice@gratipay.com')
+
+    def check(self, *a, **kw):
+        subject, html, text = VerificationBase.check(self, *a, **kw)
+        assert subject == 'New activity on your account'
+        assert ' notification sent to <b>alice@gratipay.com</b> because' in html
+        assert ' notification sent to alice@gratipay.com because' in text
+        return html, text
+
+    def test_sends_notice_for_new_address(self):
+        html, text = self.check()
+        assert ' connecting <b>alice@example.com</b> to ' in html
+        assert ' connecting alice@example.com to ' in text
+
+    def test_sends_notice_for_verified_address_and_one_package(self):
+        self.preverify()
+        html, text = self.check('foo')
+        assert ' connecting the <b>foo</b> npm package ' in html
+        assert ' connecting the foo npm package to ' in text
+
+    def test_sends_notice_for_verified_address_and_multiple_packages(self):
+        self.preverify()
+        html, text = self.check('foo', 'bar')
+        assert ' connecting 2 npm packages ' in html
+        assert ' connecting 2 npm packages ' in text
+
+    def test_sends_notice_for_unverified_address_and_one_package(self):
+        html, text = self.check('foo')
+        assert ' connecting <b>alice@example.com</b> and the <b>foo</b> npm package ' in html
+        assert ' connecting alice@example.com and the foo npm package ' in text
+
+    def test_sends_notice_for_unverified_address_and_multiple_packages(self):
+        html, text = self.check('foo', 'bar')
+        assert ' connecting <b>alice@example.com</b> and 2 npm packages ' in html
+        assert ' connecting alice@example.com and 2 npm packages ' in text
+
+
+class PackageLinking(VerificationBase):
+
+    address = 'alice@example.com'
+
+    def start(self, address, *package_names):
+        packages = [self.make_package(name=name, emails=[address]) for name in package_names]
+        self.alice.start_email_verification(address, *packages)
+        return self.alice.get_email(address).nonce
+
+    @mock.patch('gratipay.project_review_repo.ConsolePoster.post')
+    def check(self, *package_names):
+        package_names, post = package_names[:-1], package_names[-1]
+        post.return_value = 'some-github-url'
+
+        nonce = self.start(self.address, *package_names)
+        retval = self.alice.finish_email_verification(self.address, nonce)
+
+        # email?
+        assert retval == _email.VERIFICATION_SUCCEEDED
+        assert self.alice.email_address == P('alice').email_address == self.address
+
+        # database?
+        for name in package_names:
+            package = Package.from_names('npm', name)
+            assert package.team.package == package
+            assert package.team.review_url == 'some-github-url'
+
+        # GitHub issue?
+        npackages = len(package_names)
+        if npackages == 0:
+            assert not post.called
+        else:
+            assert post.call_count == 1
+            posted = json.loads(post.mock_calls[0][1][0])
+            if npackages == 1:
+                assert posted['title'] == 'foo'
+                assert 'for at least a week' in posted['body']
+            else:
+                assert posted['title'] == 'foo and bar'
+                assert 'for at least a week' in posted['body']
+            assert self.db.all('select review_url from teams') == ['some-github-url'] * npackages
+
+
+    def test_preverify_preverifies(self):
+        assert self.alice.email_address is None
+        self.preverify()
+        assert self.alice.email_address == self.address
+
+
+    def test_unverified_address_and_no_packages_succeeds(self):
+        self.check()
+
+    def test_unverified_address_and_one_package_succeeds(self):
+        self.check('foo')
+
+    def test_unverified_address_and_multiple_packages_succeeds(self):
+        self.check('foo', 'bar')
+
+    def test_verified_address_and_no_packages_is_a_no_go(self):
+        self.preverify()
+        raises(EmailAlreadyVerified, self.check)
+
+    def test_verified_address_and_one_package_succeeds(self):
+        self.preverify()
+        self.check('foo')
+
+    def test_verified_address_and_multiple_packages_succeeds(self):
+        self.preverify()
+        self.check('foo', 'bar')
+
+
+    def test_bob_cannot_steal_a_package_claim_from_alice(self):
+        foo = self.make_package()
+        self.alice.start_email_verification(self.address, foo)
+        nonce = self.alice.get_email(self.address).nonce
+
+        # u so bad bob!
+        bob = self.make_participant('bob', claimed_time='now')
+        bob.start_email_verification(self.address, foo)
+        result = bob.finish_email_verification(self.address, nonce)  # using alice's nonce, even!
+        assert result == _email.VERIFICATION_FAILED
+        assert len(bob.get_teams()) == 0
+
+        result = self.alice.finish_email_verification(self.address, nonce)
+        assert result == _email.VERIFICATION_SUCCEEDED
+        teams = self.alice.get_teams()
+        assert len(teams) == 1
+        assert teams[0].package == foo
+
+
+    def test_while_we_are_at_it_that_packages_have_unique_teams_that_survive_comparison(self):
+        self.test_verified_address_and_multiple_packages_succeeds()
+
+        foo = Package.from_names('npm', 'foo')
+        bar = Package.from_names('npm', 'bar')
+
+        assert foo.team == foo.team
+        assert bar.team == bar.team
+        assert foo.team != bar.team
+
+
+    def test_finishing_email_verification_is_thread_safe(self):
+        foo = self.make_package()
+        self.alice.start_email_verification(self.address, foo)
+        nonce = self.alice.get_email(self.address).nonce
+
+        results = {}
+        def finish():
+            key = threading.current_thread().ident
+            results[key] = self.alice.finish_email_verification(self.address, nonce)
+
+        def t():
+            t = threading.Thread(target=finish)
+            t.daemon = True
+            return t
+
+        go = Queue.Queue()
+        def monkey(self, *a, **kw):
+            team = old_get_or_create_linked_team(self, *a, **kw)
+            go.get()
+            return team
+        old_get_or_create_linked_team = Package.get_or_create_linked_team
+        Package.get_or_create_linked_team = monkey
+
+        try:
+            a, b = t(), t()
+            a.start()
+            b.start()
+            go.put('')
+            go.put('')
+            b.join()
+            a.join()
+        finally:
+            Package.get_or_create_linked_team = old_get_or_create_linked_team
+
+        assert results[a.ident] == _email.VERIFICATION_SUCCEEDED
+        assert results[b.ident] == _email.VERIFICATION_REDUNDANT

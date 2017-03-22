@@ -1,68 +1,129 @@
 import requests
 
 from aspen import Response
-from gratipay.utils import markdown
+from gratipay.utils import icons, markdown, truncate
 from gratipay.models.package import Package
+from gratipay.models.package.emails import PRIMARY, VERIFIED, UNVERIFIED, UNLINKED, OTHER
+
 [---]
+
 package_name = request.path['package']
 package = Package.from_names('npm', package_name)
 if package is None:
     raise Response(404)
-banner = package_name
+elif package.team:
+    website.redirect(package.team.url_path)
+
 page_id = "package"
 suppress_sidebar = True
-url = 'https://npmjs.com/package/' + package.name
+banner = package_name
+
+if user.participant:
+    emails = package.classify_emails_for_participant(user.participant)
+    has_email_options = bool([x for x in emails if x[1] != OTHER])
 [---]
 {% extends "templates/base.html" %}
 
 {% block banner %}
-<a class="elsewhere" href="{{ url }}">
-    <div class="avatar text">
-        <div class="bg"></div>
-        <p>{{ package.description }}</p>
+<a class="elsewhere" href="{{ package.remote_human_url }}">
+    <div class="avatar">
+        <img class="avatar" src="{{ website.asset('package-default-large.png') }}" />
         <img class="platform" src="{{ website.asset('npm-n.png') }}" />
     </div>
-    {{ super () }}
+    {{ super() }}
 </a>
 {% endblock %}
 
 {% block scripts %}
 <script>
     $(document).ready(function() {
-        $('button.send').on('click', Gratipay.packages.post);
+        Gratipay.packages.init();
     });
 </script>
 {{ super() }}
 {% endblock %}
 
 {% block content %}
-<h2>{{ _( '{npm_package} has not been claimed on Gratipay.'
-        , npm_package=('<a href="' + url + '">' + 'npm/' + package_name + '</a>')|safe
-         ) }}</h2>
-{% if user.ANON %}
-    <p>{{ _('Is this yours? You can claim it on Gratipay with a couple clicks:') }}</p>
-    {% include "templates/sign-in-using.html" %}
 
-    <h2>{{ _('What is Gratipay?') }}</h2>
-    <p>{{ _('Gratipay helps companies and others pay for open source.') }}
-    <a href="/about/">{{ _("Learn more") }}</a></p>
+{% if package.description %}
+<p class="description important-thing-at-the-top{% if len(package.description) > 256 %} long{% endif %}">{{ package.description }}</p>
 {% else %}
-    <p>{{ _( 'Is this yours? You can claim it on Gratipay using any email address {a}on file{_a} in the maintainers field in the npm registry.'
-           , a=('<a href="https://registry.npmjs.com/' + package.name + '">')|safe
-           , _a='</a>'|safe
-            ) }}
-    {% if len(package.emails) == 0 %}
-    <p class="sorry">{{ _("Sorry, we didn't find any email addresses on file.") }}</p>
+<p class="note important-thing-at-the-top">{{ _("No description available.") }}</p>
+{% endif %}
+
+<p class="instructions">
+    {{ _( 'Apply to accept payments for the {package_link} npm package:'
+        , package_link=('<a href="' + package.remote_human_url + '">' + package_name + '</a>')|safe
+         ) }}
+ </p>
+
+{% if user.ANON %}
+    <div class="button-wrapper">
+        {{ sign_in_using(button_class='large') }}
+    </div>
+{% else %}
+    {% if len(emails) == 0 %}
+    <p class="note">{{ _("No email addresses on file.") }}</p>
     {% else %}
     <input type="hidden" name="package_id" value="{{ package.id }}">
-    <ul class="emails">
-        {% for i, email in enumerate(package.emails) %}
-        <li><input type="radio" name="email" value="{{ email }}" id="email-{{i}}"
-                   {% if i == 0 %}checked{% endif %}>
-            <label for="email-{{ i }}">{{ email }}</a></li>
+    <div class="gratipay-select">
+        <ul>
+        {% for i, (email, group) in enumerate(emails, start=1) %}
+            <li class="{% if group == OTHER %}disabled{% endif %}
+                       {% if i == 1 %}selected{% endif %}">
+                <input type="radio" name="email" value="{{ email }}" id="email-{{i}}"
+                       {% if i == 1 %}checked{% endif %}>
+                <span class="icon">&#xe007;</span>
+                <div class="listing-wrapper">
+                    <label class="listing-name" for="email-{{ i }}">{{ email }}</label>
+                    <div class="listing-details">
+                        <span class="i">{{ i }}</span>
+                        <span>&middot;
+                        {% if group == OTHER %}
+                            <span class="status-icon failure">
+                                {{ icons.STATUS_ICONS['failure']|safe }}</span>
+                            {{ _('Linked to a different account') }}
+                        {% else %}
+                            {{ _('Ready to use') }}
+                            {% if group == PRIMARY %}
+                                &middot; <span class="status-icon feature">
+                                    {{ icons.STATUS_ICONS['feature']|safe }}</span>
+                                {{ _('Your primary email address') }}
+                            {% elif group == VERIFIED %}
+                                &middot; <span class="status-icon success">
+                                    {{ icons.STATUS_ICONS['success']|safe }}</span>
+                                {{ _('Linked to your account') }}
+                            {% elif group == UNVERIFIED %}
+                                &middot; <span class="status-icon warning">
+                                    {{ icons.STATUS_ICONS['warning']|safe }}</span>
+                                {{ _('Half-linked to your account') }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <span class="arrow up"></span>
+                <span class="arrow down"></span>
+            </li>
         {% endfor %}
-    </ul>
-    <button type="submit" class="send selected">{{ _('Send confirmation link') }}</button>
+        </ul>
+    </div>
+
+    <div class="button-wrapper">
+        <button type="submit" class="apply selected large"
+                {% if not has_email_options %} disabled{% endif %}>
+            {{ _('Apply to accept payments') }}
+        </button>
+    </div>
     {% endif %}
+    <p class="note">{{ _( 'Addresses are from {a}{code}maintainers{_code}{_a}.'
+                        , a=('<a href="' + package.remote_api_url + '">')|safe
+                        , _a='</a>'|safe
+                        , code='<code>'|safe
+                        , _code='</code>'|safe
+                         ) }}</p>
+    <p class="note">{{ _( 'Out of date? Update {a}at npm{_a} and refresh.'
+                        , a=('<a href="' + package.remote_human_url + '">')|safe
+                        , _a='</a>'|safe
+                         ) }}</p>
 {% endif %}
 {% endblock %}

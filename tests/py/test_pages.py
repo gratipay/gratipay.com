@@ -42,8 +42,8 @@ class TestPages(Harness):
         i = len(self.client.www_root)
         urls = []
         for spt in find_files(self.client.www_root, '*.spt'):
-            url = spt[i:-4].replace('/%team/', '/alice/') \
-                           .replace('/alice/%sub', '/alice/foo') \
+            url = spt[i:-4].replace('/%team/', '/Gratipay/') \
+                           .replace('/Gratipay/%sub', '/alice/foo') \
                            .replace('/~/%username/', '/~alice/') \
                            .replace('/for/%slug/', '/for/wonderland/') \
                            .replace('/%platform/', '/github/') \
@@ -51,7 +51,7 @@ class TestPages(Harness):
                            .replace('/%user_name/', '/gratipay/') \
                            .replace('/%to', '/1') \
                            .replace('/%country', '/TT') \
-                           .replace('/%exchange_id.int', '/%s' % exchange_id) \
+                           .replace('/%exchange_id', '/%s' % exchange_id) \
                            .replace('/%redirect_to', '/giving') \
                            .replace('/%endpoint', '/public') \
                            .replace('/about/me/%sub', '/about/me')
@@ -72,7 +72,9 @@ class TestPages(Harness):
                     raise
             assert r.code != 404
             assert r.code < 500
-            assert not overescaping_re.search(r.body.decode('utf8'))
+            type_in = lambda *x: any([r.headers['Content-Type'].startswith(y) for y in x])
+            if r.code == 200 and type_in('text', 'application/json'):
+                assert not overescaping_re.search(r.body.decode('utf8'))
 
     def test_anon_can_browse(self):
         self.browse()

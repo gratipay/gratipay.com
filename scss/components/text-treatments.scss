@@ -1,0 +1,35 @@
+.icon {
+    font: normal 20px/20px 'icomoon';
+}
+
+#content {
+    .important-thing-at-the-top {
+        margin: 20px 0 60px;
+    }
+    .sorry {
+        text-align: center;
+        font: normal 12px/15px $Ideal;
+        color: $medium-gray;
+    }
+    .note {
+        font: normal 12px/15px $Ideal;
+        color: $medium-gray;
+        a {
+            font-weight: normal;
+            text-decoration: underline;
+            color: $medium-gray;
+        }
+    }
+    .listing-name {
+        color: $black;
+        font: bold 20px/24px $Ideal;
+    }
+    .listing-details {
+        color: $medium-gray;
+        font: normal 12px/15px $Ideal;
+        a {
+            font-weight: normal;
+            text-decoration: underline;
+        }
+    }
+}

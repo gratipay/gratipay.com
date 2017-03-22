@@ -1,5 +1,4 @@
 from aspen import Response
-from gratipay.utils import get_team
 
 [----------------------------------------------------------------------------]
 
@@ -8,7 +7,7 @@ if user.ANON:
 
 request.allow('POST')
 
-team = get_team(state)
+team = request.path['team']
 
 if not user.ADMIN and user.participant.username != team.owner:
     raise Response(403, _("You are not authorized to access this page."))

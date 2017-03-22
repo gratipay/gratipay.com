@@ -1,0 +1,72 @@
+{{ _("New activity on your account") }}
+
+[---] text/html
+{% if new_email_verified %}
+{{ ngettext( "We are connecting the {package_name} npm package to the {username} account on "
+             "Gratipay. This is a notification sent to {email_address} because that is the "
+             "primary email address we have on file."
+           , "We are connecting {n} npm packages to the {username} account on Gratipay. This is "
+             "a notification sent to {email_address} because that is the primary email address "
+             "we have on file."
+           , n=npackages
+           , package_name=('<b>{}</b>'|safe).format(package_name)
+           , username=('<b><a href="https://gratipay.com/{0}/">{0}</a></b>'|safe).format(username)
+           , email_address=('<b>{}</b>'|safe).format(email)
+            ) }}
+{% elif npackages > 0 %}
+{{ ngettext( "We are connecting {email_address} and the {package_name} npm package to the "
+             "{username} account on Gratipay. This is a notification sent to {email_address_2} "
+             "because that is the primary email address we have on file."
+           , "We are connecting {email_address} and {n} npm packages to the {username} account on "
+             "Gratipay. This is a notification sent to {email_address_2} because that is the "
+             "primary email address we have on file."
+           , n=npackages
+           , package_name=('<b>{}</b>'|safe).format(package_name)
+           , username=('<b><a href="https://gratipay.com/{0}/">{0}</a></b>'|safe).format(username)
+           , email_address=('<b>{}</b>'|safe).format(new_email)
+           , email_address_2=('<b>{}</b>'|safe).format(email)
+            ) }}
+{% else %}
+{{ _( "We are connecting {email_address} to the {username} account on Gratipay. This is a "
+      "notification sent to {email_address_2} because that is the primary email address we have "
+      "on file."
+    , username=('<b><a href="https://gratipay.com/{0}/">{0}</a></b>'|safe).format(username)
+    , email_address=('<b>{}</b>'|safe).format(new_email)
+    , email_address_2=('<b>{}</b>'|safe).format(email)
+     ) }}
+ {% endif %}
+[---] text/plain
+{% if new_email_verified %}
+{{ ngettext( "We are connecting the {package_name} npm package to the {username} account on "
+             "Gratipay. This is a notification sent to {email_address} because that is the "
+             "primary email address we have on file."
+           , "We are connecting {n} npm packages to the {username} account on Gratipay. This is "
+             "a notification sent to {email_address} because that is the primary email address "
+             "we have on file."
+           , n=npackages
+           , package_name=package_name
+           , username=username
+           , email_address=email
+            ) }}
+{% elif npackages > 0 %}
+{{ ngettext( "We are connecting {email_address} and the {package_name} npm package to the "
+             "{username} account on Gratipay. This is a notification sent to {email_address_2} "
+             "because that is the primary email address we have on file."
+           , "We are connecting {email_address} and {n} npm packages to the {username} account on "
+             "Gratipay. This is a notification sent to {email_address_2} because that is the "
+             "primary email address we have on file."
+           , n=npackages
+           , package_name=package_name
+           , username=username
+           , email_address=new_email
+           , email_address_2=email
+            ) }}
+{% else %}
+{{ _( "We are connecting {email_address} to the {username} account on Gratipay. This is a "
+      "notification sent to {email_address_2} because that is the primary email address we have "
+      "on file."
+    , username=username
+    , email_address=new_email
+    , email_address_2=email
+     ) }}
+ {% endif %}

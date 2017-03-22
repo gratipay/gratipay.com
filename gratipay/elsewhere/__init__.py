@@ -17,7 +17,7 @@ from oauthlib.oauth2 import TokenExpiredError
 from requests_oauthlib import OAuth1Session, OAuth2Session
 
 from gratipay.elsewhere._extractors import not_available
-from gratipay.utils import LazyResponse
+from gratipay.utils.i18n import LocalizedErrorResponse
 
 
 ACTIONS = {'opt-in', 'connect'}
@@ -137,13 +137,13 @@ class Platform(object):
                     return _("You've consumed your quota of requests, you can try again in {0}.", to_age(reset))
                 else:
                     return _("You're making requests too fast, please try again later.")
-            raise LazyResponse(status, msg)
+            raise LocalizedErrorResponse(status, msg)
         if status != 200:
             log('{} api responded with {}:\n{}'.format(self.name, status, response.text)
                , level=logging.ERROR)
             msg = lambda _: _("{0} returned an error, please try again later.",
                               self.display_name)
-            raise LazyResponse(502, msg)
+            raise LocalizedErrorResponse(502, msg)
 
         return response
 

@@ -14,29 +14,6 @@ from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUs
 from psycopg2 import IntegrityError
 
 
-class TestGetTeam(Harness):
-
-    def test_gets_team(self):
-        team = self.make_team()
-        state = self.client.GET( '/TheEnterprise/'
-                               , return_after='dispatch_request_to_filesystem'
-                               , want='state'
-                                )
-        assert utils.get_team(state) == team
-
-    def test_canonicalizes(self):
-        self.make_team()
-        state = self.client.GET( '/theenterprise/'
-                               , return_after='dispatch_request_to_filesystem'
-                               , want='state'
-                                )
-
-        with self.assertRaises(Response) as cm:
-            utils.get_team(state)
-        assert cm.exception.code == 302
-        assert cm.exception.headers['Location'] == '/TheEnterprise/'
-
-
 class TestGetParticipant(Harness):
 
     def test_gets_participant(self):
