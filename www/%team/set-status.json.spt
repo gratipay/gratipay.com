@@ -10,7 +10,7 @@ status = request.body.get('status')
 if not status in ('approved', 'rejected', 'unreviewed'):
     raise Response(400)
 
-team = Team.from_slug(request.path['team'])
+team = request.path['team']
 
 if not team:
     raise Response(404)

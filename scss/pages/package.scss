@@ -1,8 +1,64 @@
-#package {
-    .emails {
-        margin: 1em 0;
-        li {
-            list-style: none;
+#package #content {
+    text-align: center;
+
+    .instructions {
+        text-align: center;
+        margin: 0 0 30px;
+        font-family: $Ideal;
+    }
+    .description {
+        font: normal 18pt/24pt $Chronicle;
+        &.long {
+            font: normal 11pt/15pt $Chronicle;
+        }
+        padding: 0 17%;
+    }
+
+    .selected .icon { display: block; }
+    .icon {
+        display: none;
+        position: absolute;
+        top: 12px;
+        left: 16px;
+        font-size: 24px;
+        line-height: 24px;
+    }
+    .disabled .icon {
+        color: $medium-gray;
+    }
+
+    .status-icon {
+        font-size: 12px;
+        line-height: 12px;
+        width: auto;
+        margin: 0;
+    }
+    ul:not(.open) .status-icon {
+        color: $medium-gray;
+    }
+
+    .button-wrapper {
+        margin: 38px auto 30px;
+
+        button.large {
+            font: normal 16px/32px $Ideal;
+            padding: 10px 16px;
+            border-radius: 5px;
+
+            .caret {
+                border-top: 8px solid #fff;
+                border-right: 5px solid transparent;
+                border-left: 5px solid transparent;
+                margin-top: 13px;
+            }
+        }
+        .dropdown-menu {
+            top: 50px;
+            width: 90%;
+            left: 5%;
+            border-radius: 0 0 3px 3px;
         }
     }
+
+
 }

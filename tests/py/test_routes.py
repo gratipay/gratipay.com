@@ -41,10 +41,6 @@ class TestRoutes(BillingHarness):
         assert self.roman.get_credit_card_error() is None
 
 
-    def add_and_verify_email(self, participant, email_address):
-        participant.add_email(email_address)
-        self.db.run("UPDATE emails SET verified=true WHERE address=%s", (email_address,))
-
     def test_associate_and_delete_valid_paypal(self):
         self.add_and_verify_email(self.roman, 'roman@gmail.com')
 
