@@ -3,7 +3,7 @@
 [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
 [![Open Bounties](https://api.bountysource.com/badge/team?team_id=423&style=bounties_received)](https://www.bountysource.com/teams/gratipay/issues)
 
-[Gratipay](http://gratipay.com) helps companies fund open source,
+[Gratipay](https://gratipay.com) helps companies fund open source,
 in order to cultivate an economy of gratitude, generosity, and love.
 
 
@@ -13,7 +13,7 @@ in order to cultivate an economy of gratitude, generosity, and love.
 |:-------|:------|
 | **product**<br>*customer-facing pages* | https://gratipay.com/about |
 | **company**<br>*policies, procedures, etc.* | http://inside.gratipay.com |
-| **software** | http://gratipay.readthedocs.io/ |
+| **software** | https://gratipay.readthedocs.io/ |
 | **installation** | You're there! Read on ... |
 
 
@@ -124,7 +124,7 @@ sudo apt-get install \
     libssl-dev
 ```
 
-On macOS you can [download Postgres directly](http://www.postgresql.org/download/macosx/) or install through [Homebrew](http://brew.sh/):
+On macOS you can [download Postgres directly](https://www.postgresql.org/download/macosx/) or install through [Homebrew](https://brew.sh/):
 
 ```shell
 brew install postgresql
@@ -141,7 +141,7 @@ If you are getting an error about `unknown argument: '-mno-fused-madd'` when
 running `make`, then add
 `Wno-error=unused-command-line-argument-hard-error-in-future` to your
 `ARCHFLAGS` environment variable and run `make clean env` again (see [this Stack Overflow answer
-for more information](http://stackoverflow.com/a/22355874/347246)):
+for more information](https://stackoverflow.com/a/22355874/347246)):
 
 ```shell
 ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future make clean env
@@ -256,7 +256,7 @@ with the `TWITTER_*` keys, but there they required us to spell it `127.0.0.1`.
 
 If you are running Gratipay somewhere other than `localhost:8537`, then you'll
 need to set `BASE_URL`, but your options are limited because we use proprietary
-fonts from [Typography.com](http://www.typography.com/), and they filter by
+fonts from [Typography.com](https://www.typography.com/), and they filter by
 `Referer`. You won't get the right fonts unless you use an approved domain.
 We've configured `gratipay.dev` as well as `localhost`, so if you don't want to
 run on `localhost` then configure `gratipay.dev` in your
@@ -287,7 +287,7 @@ Vagrant
 Vagrant provides a convenient interface to VirtualBox to run and test
 Gratipay in virtual machine. This may be handy if you're on Windows.
 
-You will need [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/)
+You will need [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/)
 installed. On Linux you may need to install `nfs-kernel-server` as well.
 
 With Vagrant, you can run Gratipay by running `vagrant up` from the project
@@ -386,7 +386,7 @@ Modifying the Database
 ======================
 
 We write SQL, specifically the [PostgreSQL
-variant](http://www.postgresql.org/docs/9.3/static/). We keep our database
+variant](https://www.postgresql.org/docs/9.3/static/). We keep our database
 schema in
 [`schema.sql`](https://github.com/gratipay/gratipay.com/blob/master/sql/schema.sql),
 and we write schema changes for each PR branch in a `sql/branch.sql` file, which
@@ -435,7 +435,7 @@ Local Database Setup
 --------------------
 
 For the best development experience, you need a local
-installation of [Postgres](http://www.postgresql.org/download/). The best
+installation of [Postgres](https://www.postgresql.org/download/). The best
 version of Postgres to use is 9.3.5, because that's what we're using in
 production at Heroku. You need at least 9.2, because we depend on being able to
 specify a URI to `psql`, and that was added in 9.2.
@@ -617,4 +617,4 @@ anonymous. If authenticated, the user is guaranteed to also be a participant.
 License
 ========
 
-Gratipay is dedicated to public domain. See the text of [CC0 1.0 Universal](http://creativecommons.org/publicdomain/zero/1.0/) dedication in [COPYING](COPYING) here.
+Gratipay is dedicated to public domain. See the text of [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) dedication in [COPYING](COPYING) here.
