@@ -26,7 +26,7 @@ class Application(object):
         website = Website(self)
 
         env = self.env = wireup.env()
-        db = self.db = GratipayDB(self, env.database_url, env.database_maxconn)
+        db = self.db = GratipayDB(self, url=env.database_url, maxconn=env.database_maxconn)
         tell_sentry = self.tell_sentry = wireup.make_sentry_teller(env)
 
         website.init_more(env, db, tell_sentry) # TODO Fold this into Website.__init__
