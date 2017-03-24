@@ -55,7 +55,8 @@ class TestSecurity(Harness):
 
     def test_ahtr_sets_referrer_policy(self):
         headers = self.client.GET('/about/').headers
-        assert headers['Referrer-Policy'] == 'strict-origin-when-cross-origin'
+        assert headers['Referrer-Policy'] == \
+                                      'no-referrer-when-downgrade, strict-origin-when-cross-origin'
 
     def test_ahtr_sets_content_security_policy(self):
         headers = self.client.GET('/about/').headers
@@ -65,9 +66,7 @@ class TestSecurity(Harness):
             "style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com;"
             "img-src *;"
             "font-src 'self' assets.gratipay.com cloud.typography.com data:;"
-            "upgrade-insecure-requests;"
             "block-all-mixed-content;"
-            "reflected-xss block;"
             "report-uri https://gratipay.report-uri.io/r/default/csp/reportOnly;"
         )
         assert headers['content-security-policy-report-only'] == policy
