@@ -25,7 +25,7 @@ Gratipay.notification = function(text, type, timeout, closeCallback) {
     $('#notification-area .notifications-fixed').prepend($dialog.get(1));
 
     function close() {
-        $dialog.fadeOut(null, $dialog.remove);
+        $dialog.fadeOut(null, function() { $dialog.remove(); delete $dialog; });
         if (closeCallback) closeCallback();
     }
 
