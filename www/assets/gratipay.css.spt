@@ -33,6 +33,7 @@
 @import "scss/components/danger-zone";
 @import "scss/components/dropdown";
 @import "scss/components/emails";
+@import "scss/components/github-ribbon";
 @import "scss/components/js-edit";
 @import "scss/components/linear_gradient";
 @import "scss/components/listing";
