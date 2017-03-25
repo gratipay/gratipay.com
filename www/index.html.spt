@@ -49,10 +49,9 @@ nteams = 0
 for key, tab in tabs.items():
     n = tab['n'] = len(tab['teams'])
     nteams += n
-    tab['name'] = '<span class="status-icon {}">{}</span> {} (n={})'.format( key
+    tab['name'] = '<span class="status-icon {}">{}</span> {}'.format( key
                                                                            , icons.STATUS_ICONS[key]
                                                                            , i18ned_statuses[key]
-                                                                           , n
                                                                             )
 
 title = _("Projects")
