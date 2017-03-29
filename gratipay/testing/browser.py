@@ -99,7 +99,7 @@ class BrowserHarness(Harness):
         while time.time() < end_time:
             if not self.has_element(selector):
                 return
-        raise NeverLeft()
+        raise NeverLeft(selector)
 
     def wait_for(self, selector, timeout=2):
         """Wait up to ``timeout`` seconds for element specified by ``selector``
@@ -109,7 +109,7 @@ class BrowserHarness(Harness):
         while time.time() < end_time:
             if self.has_element(selector):
                 return self.find_by_css(selector)
-        raise NeverShowedUp()
+        raise NeverShowedUp(selector)
 
     def wait_for_notification(self, type='notice'):
         """Wait for a certain ``type`` of notification. Dismiss the
