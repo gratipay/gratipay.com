@@ -287,9 +287,12 @@ class TestFunctions(Alice):
 
 class FlushEmailQueue(SentEmailHarness):
 
-    def test_can_flush_an_email_from_the_queue(self):
-        larry = self.make_participant('larry', email_address='larry@example.com')
+    def put_message(self, email_address='larry@example.com'):
+        larry = self.make_participant('larry', email_address=email_address)
         self.app.email_queue.put(larry, "verification")
+
+    def test_can_flush_an_email_from_the_queue(self):
+        self.put_message()
 
         assert self.db.one("SELECT spt_name FROM email_queue") == "verification"
         self.app.email_queue.flush()
@@ -301,13 +304,34 @@ class FlushEmailQueue(SentEmailHarness):
         assert self.db.one("SELECT spt_name FROM email_queue") is None
 
     def test_flushing_an_email_without_address_just_skips_it(self):
-        larry = self.make_participant('larry')
-        self.app.email_queue.put(larry, "verification")
+        self.put_message(email_address=None)
 
         assert self.db.one("SELECT spt_name FROM email_queue") == "verification"
         self.app.email_queue.flush()
         assert self.count_email_messages() == 0
         assert self.db.one("SELECT spt_name FROM email_queue") is None
+
+    def test_we_dont_resend_dead_letters(self):
+        self.put_message()
+        self.db.run("UPDATE email_queue SET dead=true")
+        self.app.email_queue.flush()
+        assert self.count_email_messages() == 0
+
+    def test_failed_flushes_are_marked_as_dead_letters(self):
+
+        # patch mailer
+        class SomeProblem(Exception): pass
+        def failer(*a, **kw): raise SomeProblem()
+        self.app.email_queue._mailer.send_email = failer
+
+        # queue a message
+        self.put_message()
+        assert not self.db.one("SELECT dead FROM email_queue")
+
+        # now try to send it
+        raises(SomeProblem, self.app.email_queue.flush)
+        assert self.count_email_messages() == 0  # nothing sent
+        assert self.db.one("SELECT dead FROM email_queue")
 
 
 class TestGetRecentlyActiveParticipants(QueuedEmailHarness):
