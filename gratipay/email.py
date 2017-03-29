@@ -92,6 +92,7 @@ class Queue(object):
         fetch_messages = lambda: self.db.all("""
             SELECT *
               FROM email_queue
+             WHERE not dead
           ORDER BY id ASC
              LIMIT 60
         """)
@@ -101,7 +102,11 @@ class Queue(object):
             if not messages:
                 break
             for rec in messages:
-                r = self._flush_one(rec)
+                try:
+                    r = self._flush_one(rec)
+                except:
+                    self.db.run("UPDATE email_queue SET dead=true WHERE id = %s", (rec.id,))
+                    raise
                 self.db.run("DELETE FROM email_queue WHERE id = %s", (rec.id,))
                 if r == 1:
                     sleep(self.sleep_for)
