@@ -65,7 +65,7 @@ class TestTeamHistory(Harness):
 
         self.make_payment(alice.username, enterprise.slug, 50, 'to-team', payday_id, timestamp=date)
         self.make_payment(picard.username, enterprise.slug, 25, 'to-participant', payday_id , timestamp=date)
-        payments = iter_team_payday_events(self.db, enterprise)
+        payments = iter_team_payday_events(self.db, enterprise, datetime.datetime.utcnow().year)
         assert len(payments) == 1
         assert len(payments[0]['events']) == 2
         assert payments[0]['events'][0]['amount'] == 50
@@ -73,7 +73,7 @@ class TestTeamHistory(Harness):
         assert payments[0]['events'][1]['amount'] == 25
         assert payments[0]['events'][1]['direction'] == 'to-participant'
         assert payments[0]['id'] == payments[0]['events'][0]['payday']
-        assert payments[0]['date'] == payments[0]['events'][0]['ts_start']  # !?!
+        assert payments[0]['date'] == payments[0]['events'][0]['payday_start']  # !?!
 
 
     def test_get_end_of_year_totals(self):

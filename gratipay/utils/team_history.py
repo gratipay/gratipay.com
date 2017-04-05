@@ -16,9 +16,6 @@ def get_end_of_year_totals(db, team, year):
            AND direction='to-team';
     """, locals() )
 
-    if received is None:
-       received = D(0.00)
-
     distributed = db.one("""
         SELECT COALESCE(sum(amount), 0) AS Distributed
           FROM payments
@@ -28,22 +25,22 @@ def get_end_of_year_totals(db, team, year):
            AND direction='to-participant';
     """, locals())
 
-    if distributed is None:
-        distributed = D(0.00)
-
     return received, distributed
 
 
-def iter_team_payday_events(db, team, year=None):
+def iter_team_payday_events(db, team, year):
     """Yields payday events for the given Team.
+
+       Arguments:
+       team -- The Team object that the events are being iterated.
+       year -- The integer year for the events being iterated.
     """
-    current_year = datetime.utcnow().year
-    year = year or current_year
 
     payments = db.all("""
-        SELECT payments.*, paydays.ts_start
-          FROM payments, paydays
-         WHERE payments.payday = paydays.id
+        SELECT payments.*, paydays.ts_start as payday_start
+          FROM payments
+          JOIN paydays
+            ON payments.payday = paydays.id
            AND team=%(team)s
            AND extract(year from timestamp) = %(year)s
          ORDER BY payments.payday DESC, direction, amount DESC
@@ -51,19 +48,18 @@ def iter_team_payday_events(db, team, year=None):
 
     events = []
     payday_id = payments[0]['payday']
-    payday_date = payments[0]['ts_start']
+    payday_date = payments[0]['payday_start']
     payday_events = []
 
     if not payments:
         return payments
 
-    #return payments
 
     for payment in payments:
         if payment['payday'] != payday_id:
-            events.append (dict(id=payday_id, date=payment['ts_start'], events=payday_events))
+            events.append (dict(id=payday_id, date=payment['payday_start'], events=payday_events))
             payday_id = payment['payday']
-            payday_date = payment['ts_start']
+            payday_date = payment['payday_start']
             payday_events = []
 
         payday_events.append(payment)
