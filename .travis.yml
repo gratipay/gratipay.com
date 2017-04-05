@@ -1,8 +1,10 @@
+dist: trusty
 language: python
 git:
   depth: 5
 addons:
   postgresql: 9.3
+  firefox: latest
 before_install:
  - git branch -vv | grep '^*'
  - pwd
@@ -12,11 +14,20 @@ before_install:
  - git clone -b "2.1.0" --depth 1 https://github.com/lloyd/yajl.git && cd yajl && ./configure && sudo make install && cd ..
 
  - npm install marky-markdown
+
+ # For ttw tests
+ - wget https://github.com/mozilla/geckodriver/releases/download/v0.15.0/geckodriver-v0.15.0-linux64.tar.gz
+ - mkdir -p geckodriver
+ - tar -xzf geckodriver-v0.15.0-linux64.tar.gz -C geckodriver
+ - export PATH="geckodriver:$PATH"
+ - geckodriver --version
+ - firefox --version
 cache:
   directories:
     - env/bin
     - env/lib/python2.7/site-packages
     - node_modules
+    - geckodriver
 install:
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rf env; fi
  - touch requirements.txt package.json
@@ -27,7 +38,7 @@ before_script:
  - echo "REQUIRE_YAJL=true" | tee -a tests/local.env local.env
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
-script: LD_LIBRARY_PATH=/usr/local/lib make bgrun test doc -j2
+script: LD_LIBRARY_PATH=/usr/local/lib xvfb-run make bgrun test doc -j2
 notifications:
   email: false
   irc: false

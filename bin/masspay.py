@@ -21,12 +21,13 @@ from gratipay.billing.exchanges import get_ready_payout_routes_by_network
 from httplib import IncompleteRead
 
 
-os.chdir('../logs/masspay')
+base_dir = '../logs/masspay'
 ts = datetime.datetime.now().strftime('%Y-%m-%d')
-INPUT_CSV = '{}.input.csv'.format(ts)
-PAYPAL_CSV = '{}.output.paypal.csv'.format(ts)
-GRATIPAY_CSV = '{}.output.gratipay.csv'.format(ts)
-REPORT_CSV = '{}.report.paypal.csv'.format(ts)
+logpath = lambda t: os.path.join(base_dir, t.format(ts))
+INPUT_CSV = logpath('{}.input.csv')
+PAYPAL_CSV = logpath('{}.output.paypal.csv')
+GRATIPAY_CSV = logpath('{}.output.gratipay.csv')
+REPORT_CSV = logpath('{}.report.paypal.csv')
 
 
 def round_(d):
