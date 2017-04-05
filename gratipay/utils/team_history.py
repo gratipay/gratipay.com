@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from itertools import groupby
+
 def get_end_of_year_totals(db, team, year):
     """Gets the year end received and distributed for a team
 
@@ -49,6 +51,13 @@ def iter_team_payday_events(db, team, year):
        """, dict(team=team.slug, year=year), back_as=dict)
 
     events = []
+
+    grouped_payments = groupby(payments, lambda x: (x['payday'], x['payday_start']))
+    for (payday_id, payday_start), _payments in grouped_payments:
+        events.append(dict(id=payday_id, date=payday_start, events=list(_payments)))
+
+    return events
+    """
     payday_id = payments[0]['payday']
     payday_date = payments[0]['payday_start']
     payday_events = []
@@ -69,3 +78,4 @@ def iter_team_payday_events(db, team, year):
     events.append (dict(id=payday_id, date=payday_date, events=payday_events))
 
     return events
+    """
