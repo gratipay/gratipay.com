@@ -78,7 +78,7 @@ class TestTeamHistory(Harness):
 
     def test_get_end_of_year_totals(self):
         make_history(self)
-        balance = get_end_of_year_totals(self.db, team='TheEnterprise', year='2010' )
+        balance = get_end_of_year_totals(self.db, team=self.enterprise, year='2010' )
         assert balance[0] == 225
         assert balance[1] == 150
 

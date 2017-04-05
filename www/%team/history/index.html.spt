@@ -43,7 +43,7 @@ if year not in years:
 {% endif %}
 
 <table id="history">
-{% set received, distributed = get_end_of_year_totals(website.db, team.slug, year)  %}
+{% set received, distributed = get_end_of_year_totals(website.db, team, year)  %}
     <tr><td colspan="4" class="totals">
     {{ _("Total Received : {0}", format_currency(received, "USD"))}}
     </td></tr>

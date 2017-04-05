@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from datetime import datetime
-from decimal import Decimal as D
-
-
 def get_end_of_year_totals(db, team, year):
+    """Gets the year end received and distributed for a team
+
+       Arguments:
+       team -- The Team object for the year end totals being returned.
+       year -- The integer year of the totals being returned.
+    """
 
     received = db.one("""
         SELECT COALESCE(sum(amount), 0) AS Received
@@ -14,7 +16,7 @@ def get_end_of_year_totals(db, team, year):
            AND extract(year from timestamp) = %(year)s
            AND amount > 0
            AND direction='to-team';
-    """, locals() )
+    """, dict(team=team.slug, year=year) )
 
     distributed = db.one("""
         SELECT COALESCE(sum(amount), 0) AS Distributed
@@ -23,7 +25,7 @@ def get_end_of_year_totals(db, team, year):
            AND extract(year from timestamp) = %(year)s
            AND amount > 0
            AND direction='to-participant';
-    """, locals())
+    """, dict(team=team.slug, year=year) )
 
     return received, distributed
 
