@@ -11,7 +11,7 @@ setup( name='gratipay'
                         ,          'fake-data=gratipay.cli.fake_data:main'
                         ,           'sync-npm=gratipay.cli.sync_npm:main'
                         , 'queue-branch-email=gratipay.cli.queue_branch_email:main'
-                        ,     'dequeue-emails=gratipay.cli.dequeue_emails:main'
+                        ,  'flush-email-queue=gratipay.cli.flush_email_queue:main'
                         ,   'list-email-queue=gratipay.cli.list_email_queue:main'
                          ]
                        }

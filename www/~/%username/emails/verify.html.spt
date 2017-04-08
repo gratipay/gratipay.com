@@ -29,16 +29,6 @@ if participant == user.participant:
 suppress_sidebar = True
 [-----------------------------------------------------------------------------]
 {% extends "templates/base.html" %}
-
-{% block scripts %}
-<script>
-    $(document).ready(function() {
-        $('button.resend').on('click', Gratipay.emails.post);
-    });
-</script>
-{{ super() }}
-{% endblock %}
-
 {% block content %}
     {% if user.ANON %}
         <h1>{{ _("Please Sign In") }}</h1>
@@ -58,31 +48,22 @@ suppress_sidebar = True
     {% else %}
         {% if result == email.VERIFICATION_SUCCEEDED %}
             <h1>{{ _("Success!") }}</h1>
-            <p>{{ _("Your email address {0} is now connected to your Gratipay account.",
-                    ("<b>%s</b>"|safe) % email) }}</p>
+            <p>{{ _( "{email_address} is now connected to your Gratipay account."
+                   , email_address=("<b>%s</b>"|safe) % email_address
+                    ) }}</p>
         {% elif result == email.VERIFICATION_STYMIED %}
             <h1>{{ _("Address Taken") }}</h1>
-            <p>{{ _("The email address {0} is already connected to a different Gratipay account.",
-                    ("<b>%s</b>"|safe) % email_address) }}</p>
+            <p>{{ _( "{email_address} is already connected to a different Gratipay account."
+                   , email_address=("<b>%s</b>"|safe) % email_address
+                    ) }}</p>
         {% elif result == email.VERIFICATION_REDUNDANT %}
             <h1>{{ _("Already Verified") }}</h1>
-            <p>{{ _("Your email address {0} is already connected to your Gratipay account.",
-                    ("<b>%s</b>"|safe) % email_address) }}</p>
-        {% elif result == email.VERIFICATION_MISSING %}
-            <h1>{{ _("Missing Info") }}</h1>
-            <p>{{ _("Sorry, that's a bad link. You'll need to view your email addresses "
-                    "and start over.") }}</p>
+            <p>{{ _( "{email_address} is already connected to your Gratipay account."
+                   , email_address=("<b>%s</b>"|safe) % email_address
+                    ) }}</p>
         {% else %}
-            {% if result == email.VERIFICATION_EXPIRED  %}
-                <h1>{{ _("Expired") }}</h1>
-                <p>{{ _("The verification code for {0} has expired.",
-                        ("<b>%s</b>"|safe) % email_address) }}</p>
-            {% elif result == email.VERIFICATION_FAILED %}
-                <h1>{{ _("Failure") }}</h1>
-                <p>{{ _("The verification code for {0} is bad.",
-                        ("<b>%s</b>"|safe) % email_address) }}</p>
-            {% endif %}
-            <p data-email="{{ email_address }}"><button class="resend">{{ _("Resend verification email") }}</button></p>
+            <h1>{{ _("Bad Info") }}</h1>
+            <p>{{ _("Sorry, that's a bad or expired link. You'll need to start over.") }}</p>
         {% endif %}
         <a href="/{{ participant.username }}/emails/">{{ _("View your email addresses") }}.</a>
     {% endif %}

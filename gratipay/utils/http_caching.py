@@ -61,7 +61,9 @@ def add_caching_to_response(response, request=None, etag=None):
     if not etag:
         # This is a dynamic resource, disable caching by default
         if 'Cache-Control' not in response.headers:
-            response.headers['Cache-Control'] = 'no-cache'
+            response.headers['Cache-Control'] = 'private, no-cache, no-store, no-transform, must-revalidate, max-age=0'
+            response.headers['Pragma'] = 'no-cache'
+            response.headers['Expires'] = '0'
         return
 
     assert request is not None  # sanity check

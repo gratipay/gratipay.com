@@ -6,7 +6,7 @@ import datetime
 import pytest
 from aspen.utils import utcnow
 
-from gratipay import NotSane
+from gratipay.exceptions import NotSane
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.participant import (
     NeedConfirmation, Participant, TeamCantBeOnlyAuth, WontTakeOverWithIdentities
@@ -190,10 +190,10 @@ class TestTakeOver(Harness):
         alice.verify_email('alice@example.org', alice.get_email('alice@example.org').nonce)
         bob_github = self.make_elsewhere('github', 2, 'bob')
         bob = bob_github.opt_in('bob')[0].participant
-        bob.add_email('alice@example.com', '0 seconds')
+        bob.add_email('alice@example.com')
         bob.verify_email('alice@example.com', bob.get_email('alice@example.com').nonce)
-        bob.add_email('alice@example.net', '0 seconds')
-        bob.add_email('bob@example.net', '0 seconds')
+        bob.add_email('alice@example.net')
+        bob.add_email('bob@example.net')
         alice.take_over(bob_github, have_confirmation=True)
 
         alice_emails = {e.address: e for e in alice.get_emails()}

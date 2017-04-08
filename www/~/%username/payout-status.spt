@@ -2,7 +2,6 @@ from __future__ import print_function, unicode_literals
 
 from aspen import Response
 from gratipay.utils import get_participant
-from gratipay.models import add_event
 
 workflow = ['too-little', 'pending-application', 'pending-review', 'rejected', 'pending-payout',
             'completed']
@@ -35,16 +34,24 @@ with website.db.get_cursor() as c:
      RETURNING status_of_1_0_payout
     """, (new_status, participant.id))
 
-    add_event(c, 'participant', dict(
+    website.app.add_event(c, 'participant', dict(
         id=participant.id,
         recorder=dict(id=user.participant.id, username=user.participant.username),
         action='set', values=dict(status_of_1_0_payout=new_status)
     ))
 
-    if new_status == 'rejected':
-        participant.send_email('rejected-1.0', include_unsubscribe=False)
-    elif new_status == 'pending-payout':
-        participant.send_email('approved-1.0', include_unsubscribe=False)
+template = None
+if new_status == 'rejected':
+    template = 'rejected-1.0'
+elif new_status == 'pending-payout':
+    template = 'approved-1.0'
+
+if template:
+    website.app.email_queue.put( participant
+                               , template
+                               , include_unsubscribe=False
+                               , _user_initiated=False
+                                )
 
 out = {"status": new_status}
 [---] application/json via json_dump

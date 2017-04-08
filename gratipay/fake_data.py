@@ -12,9 +12,8 @@ import sys
 from faker import Factory
 from psycopg2 import IntegrityError
 
-from gratipay import MAX_TIP, MIN_TIP
 from gratipay.elsewhere import PLATFORMS
-from gratipay.models.participant import Participant
+from gratipay.models.participant import Participant, MAX_TIP, MIN_TIP
 from gratipay.models.team import slugize, Team
 from gratipay.exceptions import InvalidTeamName
 
@@ -222,6 +221,10 @@ def fake_payment(db, participant, team, timestamp, amount, payday, direction):
 
 
 def fake_exchange(db, participant, amount, fee, timestamp):
+    """Create a fake exchange for a participant
+    """
+    route=get_exchange_route(db, participant.id)
+    ref = '%s-%s-%s' % (participant.username, route, timestamp.microsecond)
     return insert_fake_data( db
                            , "exchanges"
                            , timestamp=timestamp
@@ -229,7 +232,8 @@ def fake_exchange(db, participant, amount, fee, timestamp):
                            , amount=amount
                            , fee=fee
                            , status='succeeded'
-                           , route=get_exchange_route(db, participant.id)
+                           , route=route
+                           , ref=ref
                             )
 
 

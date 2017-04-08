@@ -21,12 +21,13 @@ from gratipay.billing.exchanges import get_ready_payout_routes_by_network
 from httplib import IncompleteRead
 
 
-os.chdir('../logs/masspay')
+base_dir = '../logs/masspay'
 ts = datetime.datetime.now().strftime('%Y-%m-%d')
-INPUT_CSV = '{}.input.csv'.format(ts)
-PAYPAL_CSV = '{}.output.paypal.csv'.format(ts)
-GRATIPAY_CSV = '{}.output.gratipay.csv'.format(ts)
-REPORT_CSV = '{}.report.paypal.csv'.format(ts)
+logpath = lambda t: os.path.join(base_dir, t.format(ts))
+INPUT_CSV = logpath('{}.input.csv')
+PAYPAL_CSV = logpath('{}.output.paypal.csv')
+GRATIPAY_CSV = logpath('{}.output.gratipay.csv')
+REPORT_CSV = logpath('{}.report.paypal.csv')
 
 
 def round_(d):
@@ -193,7 +194,7 @@ def post_back_to_gratipay(force=False):
     except KeyError:
         gratipay_base_url = 'https://gratipay.com'
 
-    nmasspays = int(requests.get(gratipay_base_url + '/dashboard/nmasspays').text())
+    nmasspays = int(requests.get(gratipay_base_url + '/dashboard/nmasspays').text)
     if nmasspays < 10 and not force:
         print("It looks like we didn't run MassPay last week! If you are absolutely sure that we "
               "did, then rerun with -f.")

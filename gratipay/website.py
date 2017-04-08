@@ -6,10 +6,9 @@ import base64
 import aspen
 from aspen.website import Website as BaseWebsite
 
-import gratipay
-from . import utils, security
+from . import utils, security, version
 from .security import authentication, csrf
-from .utils import erase_cookie, http_caching, i18n, set_cookie, timer
+from .utils import erase_cookie, http_caching, i18n, set_cookie, set_version_header, timer
 from .renderers import csv_dump, jinja2_htmlescaped, eval_, scss
 
 
@@ -20,13 +19,19 @@ class Website(BaseWebsite):
     def __init__(self, app):
         BaseWebsite.__init__(self)
         self.app = app
-
+        self.version = version.get_version()
         self.configure_renderers()
-        # TODO Can't do remaining config here because of wireup confustication.
 
+        # TODO Can't do remaining config here because of lingering wireup
+        # confustication up in Application.__init__.
 
-    def init_more(self, tell_sentry):
-        self.modify_algorithm(tell_sentry)
+    def init_more(self, env, db, tell_sentry):
+        self.env = env
+        self.db = db
+        self.tell_sentry = tell_sentry
+
+    def init_even_more(self):
+        self.modify_algorithm(self.tell_sentry)
         self.monkey_patch_response()
 
 
@@ -90,7 +95,7 @@ class Website(BaseWebsite):
             tell_sentry,
             algorithm['get_response_for_exception'],
 
-            gratipay.set_version_header,
+            set_version_header,
             authentication.add_auth_to_response,
             csrf.add_token_to_response,
             http_caching.add_caching_to_response,

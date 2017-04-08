@@ -383,6 +383,17 @@ msgstr "Widget"
 msgid "Events"
 msgstr "Eventi"
 
+msgid "{amount}/wk from one giver"
+msgid_plural "{amount}/wk from {number_of} givers"
+msgstr[0] "{amount}/settimana da un donatore"
+msgstr[1] "{amount}/settimana da {number_of} donatori"
+
+msgid "no givers yet"
+msgstr "Ancora nessun donatore"
+
+msgid "owned by {a}{owner}{_a}"
+msgstr "Proprietà di {a}{owner}{_a}"
+
 msgid "Sign in / Sign up"
 msgstr "Accedi / Registrati"
 
@@ -423,9 +434,6 @@ msgstr "Si è proposto {ago}"
 
 msgid "Distributing"
 msgstr "Distribuendo"
-
-msgid "Projects"
-msgstr "Progetti"
 
 msgid "{sign_in}{br}to give to{br}{team}"
 msgstr "{sign_in}{br}per donare a{br}{team}"
@@ -584,17 +592,14 @@ msgstr "Rifiutati"
 msgid "Featured"
 msgstr "In primo piano"
 
+msgid "Projects"
+msgstr "Progetti"
+
 msgid "Pay for open source."
 msgstr "Paga per open source."
 
 msgid "Fund Your Project"
 msgstr "Finanza il Tuo Progetto"
-
-msgid "created {ago}"
-msgstr "creato {ago}"
-
-msgid "owned by {a}{owner}{_a}"
-msgstr "Proprietà di {a}{owner}{_a}"
 
 msgid "Search Gratipay"
 msgstr "Cerca su Gratipay"
@@ -1022,11 +1027,19 @@ msgstr "Se l'addebito ha successo"
 msgid "Invalid email address."
 msgstr "Indirizzo email non valido."
 
-msgid "A verification email has been sent to {0}."
-msgstr "Un'email di conferma è stata inviata a {0}. "
+msgid "{email_address} is already linked to a different Gratipay account."
+msgstr "{email_address} è già associato a un altro account Gratipay."
 
-msgid "You have already added and verified this address."
-msgstr "Hai già aggiunto e verificato questo indirizzo email."
+msgid "You have already added and verified {email_address}."
+msgstr "Hai già aggiunto e verificato {email_address}."
+
+msgid ""
+"You've initiated too many emails too quickly. Please try again in a minute "
+"or two."
+msgstr "Hai iniziato troppe email troppo in fretta. Per favore, prova nuovamente in un minuto o due."
+
+msgid "A verification email has been sent to {email_address}."
+msgstr "Un'email di conferma è stata inviata a {email_address}."
 
 msgid "Please Sign In"
 msgstr "Per favore, Accedi"
@@ -1047,41 +1060,26 @@ msgstr "Sei entrato con l'account Gratipay errato per completare questa verifica
 msgid "Success!"
 msgstr "Successo!"
 
-msgid "Your email address {0} is now connected to your Gratipay account."
-msgstr "Il tuo indirizzo email {0} è ora associato al tuo account Gratipay."
+msgid "{email_address} is now connected to your Gratipay account."
+msgstr "Il tuo indirizzo email {email_address} è ora associato al tuo account Gratipay."
 
 msgid "Address Taken"
 msgstr "Indirizzo già in uso"
 
-msgid ""
-"The email address {0} is already connected to a different Gratipay account."
-msgstr "L'indirizzo email {0} è già associato ad un altro account Gratipay."
+msgid "{email_address} is already connected to a different Gratipay account."
+msgstr "{email_address} è già collegato a un altro account Gratipay."
 
 msgid "Already Verified"
 msgstr "Già Verificato"
 
-msgid "Your email address {0} is already connected to your Gratipay account."
-msgstr "Il tuo indirizzo email {0} è già associato al tuo account Gratipay."
+msgid "{email_address} is already connected to your Gratipay account."
+msgstr "{email_address} è già collegato al tuo account Gratipay."
 
-msgid "Missing Info"
-msgstr "Informazioni Mancanti"
+msgid "Bad Info"
+msgstr "Informazioni Scorrette"
 
-msgid ""
-"Sorry, that's a bad link. You'll need to view your email addresses and start"
-" over."
-msgstr "Scusa, pare sia un link invalido. Dovrai tornare alla pagina delle Impostazioni e ricominciare la procedura."
-
-msgid "Expired"
-msgstr "Scaduto"
-
-msgid "The verification code for {0} has expired."
-msgstr "Il codice di verifica per {0} è scaduto."
-
-msgid "The verification code for {0} is bad."
-msgstr "Il codice di verifica per {0} è invalido."
-
-msgid "Resend verification email"
-msgstr "Reinvia l'email di verifica"
+msgid "Sorry, that's a bad or expired link. You'll need to start over."
+msgstr "Scusa, pare sia un link invalido o scaduto. Dovrai ricominciare."
 
 msgid "View your email addresses"
 msgstr "Guarda il tuo indirizzo email"
