@@ -1,4 +1,4 @@
-Here's an email subject!
+suspicious true email
 
 [---] text/html
 HTML HERE Last week we started sending out email notifications for credit card charges. Three days ago we <a href="https://github.com/gratipay/gratipay.com/issues/3352">accidentally</a> sent you a second notification. Don't worry, though: We didn't charge you twice, we just notified you twice. You can double-check your <a href="https://gratipay.com/about/me/history/">transaction history here</a>. Sorry for the error!
