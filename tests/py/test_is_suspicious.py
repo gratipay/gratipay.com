@@ -1,6 +1,8 @@
 from __future__ import print_function, unicode_literals
+from gratipay.models.participant import email as _email
 
 from gratipay.testing import Harness, P
+from gratipay.testing.email import QueuedEmailHarness, SentEmailHarness
 
 
 class TestIsSuspicious(Harness):
@@ -44,3 +46,19 @@ class TestIsSuspicious(Harness):
         assert actual == ('participant', dict(id=foo.id,
             recorder=dict(id=self.bar.id, username=self.bar.username), action='set',
             values=dict(is_suspicious=True)))
+
+class TestIsSuspiciousEmail(QueuedEmailHarness,Harness):
+
+    def setUp(self):
+       Harness.setUp(self) 
+       QueuedEmailHarness.setUp(self)
+       self.make_participant('alice', claimed_time='now', email_address="alice@gratipay.com", is_suspicious=False)
+
+    def test_marking_suspicious_sends_email(self):
+        self.toggle_is_suspicious()
+        last_email = self.get_last_email()
+        assert last_email['to'] == 'alice <alice@gratipay.com>'
+        expected = "suspicious true"
+        assert expected in last_email['body_text']
+
+
