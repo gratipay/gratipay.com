@@ -50,14 +50,18 @@ class TestIsSuspicious(Harness):
 class TestIsSuspiciousEmail(QueuedEmailHarness,Harness):
 
     def setUp(self):
-       Harness.setUp(self) 
-       QueuedEmailHarness.setUp(self)
-       self.make_participant('alice', claimed_time='now', email_address="alice@gratipay.com", is_suspicious=False)
+        Harness.setUp(self) 
+        QueuedEmailHarness.setUp(self)
+        self.bar = self.make_participant('bar', is_admin=True)
+
+    def toggle_is_suspicious(self):
+        self.client.POST('/~foo/toggle-is-suspicious.json', auth_as='bar')
 
     def test_marking_suspicious_sends_email(self):
+        self.make_participant('foo', claimed_time='now', email_address="foo@gratipay.com", is_suspicious=False)
         self.toggle_is_suspicious()
         last_email = self.get_last_email()
-        assert last_email['to'] == 'alice <alice@gratipay.com>'
+        assert last_email['to'] == 'foo <foo@gratipay.com>'
         expected = "suspicious true"
         assert expected in last_email['body_text']
 
