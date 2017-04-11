@@ -1,17 +1,7 @@
-suspicious true email
+Your account has been temporarily suspended
 
 [---] text/html
-HTML HERE suspicious true email Last week we started sending out email notifications for credit card charges. Three days ago we <a href="https://github.com/gratipay/gratipay.com/issues/3352">accidentally</a> sent you a second notification. Don't worry, though: We didn't charge you twice, we just notified you twice. You can double-check your <a href="https://gratipay.com/about/me/history/">transaction history here</a>. Sorry for the error!
+We've suspended your account while we investigate potentially fradulent activity. Please contact <a href="maito:support@gratipay.com">support@gratipay.com</a> if you have any questions.
 
 [---] text/plain
-PLAIN HERE suspicious true email Last week we started sending out email notifications for credit card charges. Three days ago we accidentally sent you a second notification. Don't worry, though: We didn't charge you twice, we just notified you twice.
-
-Here's a link to the GitHub issue related to the incident:
-
-https://github.com/gratipay/gratipay.com/issues/3352
-
-You can double-check your transaction history by following the link below.
-
-https://gratipay.com/about/me/history/
-
-Sorry for the error!
+We've suspended your account while we investigate potentially fradulent activity. Please contact support@gratipay.com if you have any questions.

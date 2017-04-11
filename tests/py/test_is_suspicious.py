@@ -61,7 +61,15 @@ class TestIsSuspiciousEmail(QueuedEmailHarness,Harness):
         self.toggle_is_suspicious()
         last_email = self.get_last_email()
         assert last_email['to'] == 'foo <foo@gratipay.com>'
-        expected = "suspicious true"
+        expected = "We've suspended your account"
+        assert expected in last_email['body_text']
+
+    def test_unmarking_suspicious_sends_email(self):
+        self.make_participant('foo', claimed_time='now', email_address="foo@gratipay.com", is_suspicious=True)
+        self.toggle_is_suspicious()
+        last_email = self.get_last_email()
+        assert last_email['to'] == 'foo <foo@gratipay.com>'
+        expected = "We've reactivated your account."
         assert expected in last_email['body_text']
 
 
