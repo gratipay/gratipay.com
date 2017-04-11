@@ -1,8 +1,7 @@
 from __future__ import print_function, unicode_literals
-from gratipay.models.participant import email as _email
 
 from gratipay.testing import Harness, P
-from gratipay.testing.email import QueuedEmailHarness, SentEmailHarness
+from gratipay.testing.email import QueuedEmailHarness
 
 
 class TestIsSuspicious(Harness):
