@@ -1,11 +1,6 @@
-Your account has been reactivated
+{{ _("Your account has been reactivated") }}
 
 [---] text/html
-We've reactivated your account. Please contact <a href="maito:support@gratipay.com">support@gratipay.com</a> if you have any questions.
-
-Sorry for the trouble, and thanks for using Gratipay!
-
+{{ _("We've reactivated your account. Sorry for the trouble, and thanks for using Gratipay!") }}
 [---] text/plain
-We've reactivated your account. Please contact support@gratipay.com if you have any questions.
-
-Sorry for the trouble, and thanks for using Gratipay!
+{{ _("We've reactivated your account. Sorry for the trouble, and thanks for using Gratipay!") }}
