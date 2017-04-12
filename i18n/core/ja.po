@@ -96,6 +96,20 @@ msgid ""
 "discuss this further."
 msgstr "Gratipay 1.0 の残高の支払いについて、Gratipay で支払われた製品やサービスを特定できなかったため、申請を否認しました。 これについてさらに検討したい場合は、ご返信ください。"
 
+msgid "Your account has been reactivated"
+msgstr ""
+
+msgid ""
+"We've reactivated your account. Sorry for the trouble, and thanks for using "
+"Gratipay!"
+msgstr ""
+
+msgid "Your account has been suspended"
+msgstr ""
+
+msgid "We have suspended your account."
+msgstr ""
+
 msgid "Project Application Approved!"
 msgstr "プロジェクト申請を承認しました!"
 
@@ -749,6 +763,21 @@ msgstr "危険区域"
 
 msgid "Close Project"
 msgstr "プロジェクトを閉じる"
+
+msgid "Total Received : {0}"
+msgstr ""
+
+msgid "Total Distributed : {0}"
+msgstr ""
+
+msgid "Giver"
+msgstr ""
+
+msgid "Taker"
+msgstr ""
+
+msgid "Amount"
+msgstr ""
 
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr "{0} は毎週 {1} {2} ~ユーザーから受け取ります。"
