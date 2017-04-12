@@ -1,6 +1,7 @@
 from __future__ import print_function, unicode_literals
 
 from gratipay.testing import Harness, P
+from gratipay.testing.email import QueuedEmailHarness
 
 
 class TestIsSuspicious(Harness):
@@ -44,3 +45,31 @@ class TestIsSuspicious(Harness):
         assert actual == ('participant', dict(id=foo.id,
             recorder=dict(id=self.bar.id, username=self.bar.username), action='set',
             values=dict(is_suspicious=True)))
+
+class TestIsSuspiciousEmail(QueuedEmailHarness,Harness):
+
+    def setUp(self):
+        Harness.setUp(self) 
+        QueuedEmailHarness.setUp(self)
+        self.bar = self.make_participant('bar', is_admin=True)
+
+    def toggle_is_suspicious(self):
+        self.client.POST('/~foo/toggle-is-suspicious.json', auth_as='bar')
+
+    def test_marking_suspicious_sends_email(self):
+        self.make_participant('foo', claimed_time='now', email_address="foo@gratipay.com", is_suspicious=False)
+        self.toggle_is_suspicious()
+        last_email = self.get_last_email()
+        assert last_email['to'] == 'foo <foo@gratipay.com>'
+        expected = "We've suspended your account"
+        assert expected in last_email['body_text']
+
+    def test_unmarking_suspicious_sends_email(self):
+        self.make_participant('foo', claimed_time='now', email_address="foo@gratipay.com", is_suspicious=True)
+        self.toggle_is_suspicious()
+        last_email = self.get_last_email()
+        assert last_email['to'] == 'foo <foo@gratipay.com>'
+        expected = "We've reactivated your account."
+        assert expected in last_email['body_text']
+
+
