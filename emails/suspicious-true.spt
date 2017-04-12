@@ -1,7 +1,5 @@
-Your account has been temporarily suspended
-
+{{ _("Your account has been suspended") }}
 [---] text/html
-We've suspended your account while we investigate potentially fradulent activity. Please contact <a href="maito:support@gratipay.com">support@gratipay.com</a> if you have any questions.
-
+{{ _("We have suspended your account.") }}
 [---] text/plain
-We've suspended your account while we investigate potentially fradulent activity. Please contact support@gratipay.com if you have any questions.
+{{ _("We have suspended your account.") }}
