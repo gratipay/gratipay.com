@@ -1,0 +1,87 @@
+from datetime import datetime
+
+from aspen import Response
+
+from gratipay.utils import get_team
+from gratipay.utils.team_history import get_end_of_year_totals, iter_team_payday_events
+
+[-----------------------------------------------------------------------------]
+
+team = get_team(state)
+
+if user.ANON:
+    raise Response(401)
+if not (user.ADMIN or user.participant.username == team.owner):
+    raise Response(403)
+
+banner = team.name
+title = _("History")
+
+current_year = datetime.utcnow().year
+try:
+    year = int(request.qs.get('year', current_year))
+except ValueError:
+    raise Response(400, "Bad Year")
+years = list(range(current_year, team.ctime.year-1, -1))
+
+if year not in years:
+    raise Response(400, "Bad Year" )
+
+[-----------------------------------------------------------------------------]
+{% extends "templates/team-base.html" %}
+{% block content %}
+
+
+<h2>Project Account Statements</h2>
+
+{% if len(years) > 1 %}
+<ul class="nav">
+    {% for y in years %}
+        <li><a href="?year={{ y }}" class="{{ 'selected' if y == year }}">{{ y }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<table id="history">
+{% set received, distributed = get_end_of_year_totals(website.db, team, year)  %}
+    <tr><td colspan="4" class="totals">
+    {{ _("Total Received : {0}", format_currency(received, "USD"))}}
+    </td></tr>
+    <tr><td colspan="4" class="totals">
+    {{ _("Total Distributed : {0}", format_currency(distributed, "USD")) }}
+    </td></tr>
+
+{% set events = iter_team_payday_events(website.db, team, year) %}
+
+{% for payday in events %}
+
+    {% if payday['events'] %}
+        <tr>
+            <th colspan="5"><h2>
+        {{ payday['date'].strftime("%B %d, %Y").replace(' 0', ' ') }}
+        {% if payday['id'] %}
+         &mdash; Weekly Payday #{{ payday['id'] }}
+        {% endif %}
+            </h2></th>
+        </tr>
+        <tr class="head">
+            <td class="status">{{ _("Giver") }}</td>
+            <td class="status">{{ _("Taker") }}</td>
+            <td class="balance">{{ _("Amount") }}</td>
+        </tr>
+        {% for event in payday['events'] %}
+            <tr>
+            {% if event['direction'] == 'to-team' %}
+                <td class="notes"> Anonymous </td>
+                <td class="debits"></td>
+            {% else %}
+                <td class="credits"></td>
+                <td class="notes">{{ event['participant'] }}</td>
+            {% endif %}
+                <td class="balance">{{ event['amount'] }}</td>
+            </tr>
+         {% endfor %}
+    {% endif %}
+{% endfor %} 
+</table>
+{% endblock %}

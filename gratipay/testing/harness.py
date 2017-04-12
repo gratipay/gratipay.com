@@ -17,6 +17,7 @@ from gratipay.elsewhere import UserInfo
 from gratipay.exceptions import NoSelfTipping, NoTippee, BadAmount
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.models.team import Team
 from gratipay.models.participant import Participant, MAX_TIP, MIN_TIP
 from gratipay.security import user
 from gratipay.testing.vcr import use_cassette
@@ -173,6 +174,9 @@ class Harness(unittest.TestCase):
             _kw['is_closed'] = False
         if 'available' not in _kw:
             _kw['available'] = 0
+        if 'ctime' not in _kw:
+            _kw['ctime'] = utcnow()
+
 
         if Participant.from_username(_kw['owner']) is None:
             self.make_participant( _kw['owner']
@@ -184,9 +188,9 @@ class Harness(unittest.TestCase):
 
         team = self.db.one("""
             INSERT INTO teams
-                        (slug, slug_lower, name, homepage, product_or_service,
+                        (slug, ctime, slug_lower, name, homepage, product_or_service,
                          onboarding_url, owner, is_approved, is_closed, available)
-                 VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s, %(product_or_service)s,
+                 VALUES (%(slug)s, %(ctime)s, %(slug_lower)s, %(name)s, %(homepage)s, %(product_or_service)s,
                          %(onboarding_url)s, %(owner)s, %(is_approved)s, %(is_closed)s,
                          %(available)s)
               RETURNING teams.*::teams
@@ -265,6 +269,30 @@ class Harness(unittest.TestCase):
         e_id = record_exchange(self.db, route, amount, fee, participant, 'pre', ref)
         record_exchange_result(self.db, e_id, status, error, participant)
         return e_id
+
+    def make_payment(self, participant, team, amount, direction, payday, timestamp=utcnow()):
+        """Factory for payment"""
+
+        if isinstance(participant, Participant):
+            participant = participant.username
+
+        if isinstance(team, Team):
+            team = team.slug
+
+        payment_id = self.db.one("""
+            INSERT INTO payments
+                        (timestamp, participant, team, amount, direction, payday)
+                 VALUES (%(timestamp)s, %(participant)s, %(team)s, %(amount)s, %(direction)s, %(payday)s)
+              RETURNING id
+            """, dict(timestamp=timestamp,
+                      participant=participant,
+                      team=team,
+                      amount=amount,
+                      direction=direction,
+                      payday=payday
+                    )
+                )
+        return payment_id
 
 
     def make_participant_with_exchange(self, name):
