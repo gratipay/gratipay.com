@@ -187,11 +187,11 @@ class Email(object):
         # do a little SQL construction. Do it in such a way that we still avoid
         # Python string interpolation (~= SQLi vector).
 
-        extra_sql, values = '', []
+        extra_sql, values = [], []
         for p in packages:
-            extra_sql += ' (%s, %s)'
+            extra_sql.append('(%s, %s)')
             values += [nonce, p.id]
-        c.run('INSERT INTO claims (nonce, package_id) VALUES' + extra_sql, values)
+        c.run('INSERT INTO claims (nonce, package_id) VALUES' + ', '.join(extra_sql), values)
         self.app.add_event( c
                           , 'participant'
                           , dict( id=self.id
