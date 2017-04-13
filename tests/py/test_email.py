@@ -36,7 +36,12 @@ class TestEndpoints(Alice):
     def hit_email_spt(self, action, address, user='alice', package_ids=[], should_fail=False):
         f = self.client.PxST if should_fail else self.client.POST
 
-        # Hack to work around Aspen test client limitations.
+        # Aspen's test client should really support URL-encoding POST data for
+        # us, but it doesn't (it only supports multipart, which I think maybe
+        # doesn't work because of other Aspen bugs around multiple package_id
+        # values in the same POST body in that case?), so let's do that
+        # ourselves.
+
         data = [ ('action', action)
                , ('address', address)
                 ] + [('package_id', str(p)) for p in package_ids]
