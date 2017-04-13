@@ -9,7 +9,7 @@ from psycopg2 import IntegrityError
 
 import gratipay
 from gratipay.exceptions import EmailAlreadyVerified, EmailTaken, CannotRemovePrimaryEmail
-from gratipay.exceptions import EmailNotVerified, TooManyEmailAddresses, EmailNotOnFile
+from gratipay.exceptions import EmailNotVerified, TooManyEmailAddresses, EmailNotOnFile, NoPackages
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import encode_for_querystring
 
@@ -132,7 +132,8 @@ class Email(object):
                           , dict(id=self.id, action='add', values=dict(email=email))
                            )
         nonce = self.get_email_verification_nonce(c, email)
-        self.start_package_claims(c, nonce, *packages)
+        if packages:
+            self.start_package_claims(c, nonce, *packages)
         link = "{base_url}/~{username}/emails/verify.html?email2={encoded_email}&nonce={nonce}"
         return link.format( base_url=gratipay.base_url
                           , username=self.username_lower
@@ -177,16 +178,20 @@ class Email(object):
 
     def start_package_claims(self, c, nonce, *packages):
         """Takes a cursor, nonce and list of packages, inserts into ``claims``
-        and returns ``None``.
+        and returns ``None`` (or raise :py:exc:`NoPackages`).
         """
         if not packages:
-            return
-        VALUES, values = [], []
+            raise NoPackages()
+
+        # We want to make a single db call to insert all claims, so we need to
+        # do a little SQL construction. Do it in such a way that we still avoid
+        # Python string interpolation (~= SQLi vector).
+
+        extra_sql, values = '', []
         for p in packages:
-            VALUES.append('(%s, %s)')
+            extra_sql += ' (%s, %s)'
             values += [nonce, p.id]
-        VALUES = ', '.join(VALUES)
-        c.run('INSERT INTO claims (nonce, package_id) VALUES ' + VALUES, values)
+        c.run('INSERT INTO claims (nonce, package_id) VALUES' + extra_sql, values)
         self.app.add_event( c
                           , 'participant'
                           , dict( id=self.id
