@@ -398,9 +398,11 @@ Testing [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/mast
 =======
 
 Our test suite is divided into through-the-web (TTW) tests and Python tests.
-You need to install [PhantomJS](http://phantomjs.org/) separately in order to
-run the TTW tests. For both suites we use the [pytest](http://pytest.org/) test
-runner; it's installed automatically as part of `make env`.
+You need to install [Firefox](https://www.mozilla.org/en-US/firefox/new/) and
+[geckodriver](https://github.com/mozilla/geckodriver/releases/) separately in
+order to run the TTW tests. For both suites we use the
+[pytest](http://pytest.org/) test runner; it's installed automatically as part
+of `make env`.
 
 The easiest way to run the whole test suite is:
 
@@ -421,8 +423,8 @@ make pytest
 ```
 
 To invoke `py.test` directly you should use the `honcho` utility that comes
-with the install. First `make tests/env`, the activate the virtualenv by running
-`source env/bin/activate`, and then:
+with the install. First `make tests/env`, then activate the virtualenv by
+running `source env/bin/activate`, and then:
 
     [gratipay] $ cd tests/
     [gratipay] $ honcho run -e defaults.env,local.env py.test

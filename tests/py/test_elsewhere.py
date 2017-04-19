@@ -154,6 +154,9 @@ class TestConfirmTakeOver(Harness):
         assert response.code == 200
         assert 'Please Confirm' in response.body
 
+    def test_confirm_gives_400_for_garbage(self):
+        assert self.client.GxT('/on/confirm.html?id=garbage', auth_as='bob').code == 400
+
     def test_take_over(self):
         data = {'account_id': self.alice_elsewhere.id, 'should_transfer': 'yes'}
 
