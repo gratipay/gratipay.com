@@ -5,6 +5,7 @@ import json
 import random
 import string
 import time
+import hmac
 
 from cryptography.fernet import Fernet, MultiFernet
 
@@ -58,7 +59,7 @@ def constant_time_compare(val1, val2):
 
     The time taken is independent of the number of characters that match.
     """
-    return hmac.compare_digest(force_bytes(val1), force_bytes(val2))
+    return hmac.compare_digest(bytes(val1, encoding='utf-8'), bytes(val2, encoding='utf-8'))
 
 
 # Encrypting Packer
