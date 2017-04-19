@@ -59,7 +59,7 @@ def constant_time_compare(val1, val2):
 
     The time taken is independent of the number of characters that match.
     """
-    return hmac.compare_digest(bytes(val1, encoding='utf-8'), bytes(val2, encoding='utf-8'))
+    return hmac.compare_digest(bytes(val1), bytes(val2))
 
 
 # Encrypting Packer
