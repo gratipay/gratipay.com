@@ -58,6 +58,7 @@ def constant_time_compare(val1, val2):
     Returns True if the two strings are equal, False otherwise.
 
     The time taken is independent of the number of characters that match.
+    https://codahale.com/a-lesson-in-timing-attacks/
     """
     return hmac.compare_digest(bytes(val1), bytes(val2))
 
