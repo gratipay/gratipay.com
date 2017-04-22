@@ -4,7 +4,7 @@ git:
   depth: 5
 addons:
   postgresql: 9.3
-  firefox: latest
+  firefox: latest-esr
 before_install:
  - git branch -vv | grep '^*'
  - pwd
