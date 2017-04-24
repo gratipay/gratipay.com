@@ -98,18 +98,18 @@ msgid ""
 msgstr "Abbiamo rifiutato la tua richiesta di pagamento del tuo saldo Gratipay 1.0 perché non abbiamo potuto determinare quale prodotto o servizio offrivi per il quale venivi pagato tramite Gratipay. Per favore rispondici se desideri discuterne di più."
 
 msgid "Your account has been reactivated"
-msgstr ""
+msgstr "Il tuo account è stato riattivato"
 
 msgid ""
 "We've reactivated your account. Sorry for the trouble, and thanks for using "
 "Gratipay!"
-msgstr ""
+msgstr "Abbiamo riattivato il tuo account. Ci scusiamo per il disagio e grazie per usare Gratipay!"
 
 msgid "Your account has been suspended"
-msgstr ""
+msgstr "Il tuo account è stato sospeso"
 
 msgid "We have suspended your account."
-msgstr ""
+msgstr "Abbiamo sospeso il tuo account."
 
 msgid "Project Application Approved!"
 msgstr "Proposta di Progetto Approvata!"
@@ -771,19 +771,19 @@ msgid "Close Project"
 msgstr "Chiudi Progetto"
 
 msgid "Total Received : {0}"
-msgstr ""
+msgstr "Totale Ricevuto : {0}"
 
 msgid "Total Distributed : {0}"
-msgstr ""
+msgstr "Totale Distribuito : {0}"
 
 msgid "Giver"
-msgstr ""
+msgstr "Donatore"
 
 msgid "Taker"
-msgstr ""
+msgstr "Ricevente"
 
 msgid "Amount"
-msgstr ""
+msgstr "Ammontare"
 
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr "{0} riceve {1} a settimana da {2} ~utenti."
