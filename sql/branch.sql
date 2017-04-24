@@ -1,3 +1,0 @@
-BEGIN;
-    ALTER TABLE email_queue ADD COLUMN dead bool NOT NULL DEFAULT FALSE;
-END;

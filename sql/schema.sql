@@ -984,3 +984,8 @@ END;
 -- https://github.com/gratipay/gratipay.com/pull/4349
 
 ALTER TABLE email_queue ADD COLUMN user_initiated bool NOT NULL DEFAULT TRUE;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4395
+
+ALTER TABLE email_queue ADD COLUMN dead bool NOT NULL DEFAULT FALSE;
