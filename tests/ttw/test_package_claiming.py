@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import pickle
 from gratipay.testing import BrowserHarness, P
 
 
@@ -66,3 +67,16 @@ class Test(BrowserHarness):
         self.css('.your-payment button.save').click()
         assert self.wait_for_success() == 'Payment changed to $10.00 per week. ' \
                                           'Thank you so much for supporting foo!'
+
+
+    def test_visiting_verify_link_shows_helpful_information(self):
+        self.make_package()
+        self.check()
+
+        link = pickle.loads(self.db.one('select context from email_queue'))['link']
+        link = link[len(self.base_url):]  # strip because visit will add it back
+
+        self.visit(link)
+        assert self.css('.withdrawal-notice a').text == 'update'
+        assert self.css('.withdrawal-notice b').text == 'alice@example.com'
+        assert self.css('.listing-name').text == 'foo'

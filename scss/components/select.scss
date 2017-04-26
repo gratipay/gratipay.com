@@ -87,6 +87,9 @@
                     display: block;
                     padding: 36px 24px 0 56px;
                     white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: 100%;
                 }
             }
             &.hover:not(.disabled) label {
