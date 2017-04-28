@@ -245,6 +245,15 @@ def random_country_id(db):
     return db.one("SELECT id FROM countries ORDER BY random() LIMIT 1")
 
 
+def fake_package(db):
+    insert_fake_data( db
+                    , 'packages'
+                    , package_manager='npm'
+                    , name=faker.word()
+                    , description=fake_sentence(stop=50)
+                    , emails=[faker.email() for i in range(random.choice(range(10)))]
+                     )
+
 
 def prep_db(db):
     db.run("""
@@ -312,7 +321,7 @@ def clean_db(db):
         DROP FUNCTION IF EXISTS process_payment() CASCADE;
         """)
 
-def populate_db(db, num_participants=100, ntips=200, num_teams=5):
+def populate_db(db, num_participants=100, ntips=200, num_teams=5, num_packages=5):
     """Populate DB with fake data.
     """
     print("Making Participants")
@@ -344,6 +353,11 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
     # Creating a fake Gratipay Team
     teamowner = random.choice(participants)
     teams.append(fake_team(db, teamowner, "Gratipay"))
+
+    print("Making Packages")
+    packages = []
+    for i in xrange(num_packages):
+        packages.append(fake_package(db))
 
     print("Making Payment Instructions")
     npayment_instructions = 0
