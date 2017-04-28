@@ -353,7 +353,7 @@ def populate_db(db, nparticipants=100, ntips=200, nteams=5):
                          VALUES (%(ts_start)s, %(ts_end)s)
                       RETURNING id
                     """, params)
-        sys.stdout.write("\rMaking Paydays (%i/%i)" % (payday_id, paydays_total))
+        sys.stdout.write("\rMaking Paydays (%i/%i)" % (payday_counter, paydays_total))
         sys.stdout.flush()
 
 
