@@ -52,6 +52,22 @@ def make_history(harness):
                   WHERE username = 'bob';
         """, tip)
 
+    # Payments under Gratipay 2.x
+    Enterprise = harness.make_team(is_approved=True)
+    payday_id = harness.db.one("""
+        INSERT INTO paydays
+                    (ts_start, ts_end)
+             VALUES (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '1 hour')
+          RETURNING id
+    """)
+    alice.set_payment_instruction(Enterprise, '10.00')  # >= MINIMUM_CHARGE!
+    harness.make_payment(alice, Enterprise, 10, 'to-team', payday_id)
+    harness.db.run("""
+        UPDATE participants
+           SET balance = balance - 10
+         WHERE username = 'alice'
+    """)
+
     harness.alice = Participant.from_username('alice')
     harness.past_year = past_year
 
@@ -141,11 +157,14 @@ class TestHistory(BillingHarness):
 
         past_year, current_year = self.past_year, self.past_year+1
 
-        balance = get_end_of_year_balance(self.db, self.alice, past_year, current_year)
-        assert balance == 10 # 0 (previous), +60 (payin), -40 (payout), -10 (bob)
+        balance = get_end_of_year_balance(self.db, self.alice, past_year, current_year+1)
+        assert balance == 10 # +60(payin), -40(payout), -10(bob)
 
-        balance = get_end_of_year_balance(self.db, self.alice, current_year, current_year)
-        assert balance == 20 # 10 (previous), +45 (payin), -15 (payout), -20 (bob)
+        balance = get_end_of_year_balance(self.db, self.alice, current_year, current_year+1)
+        assert balance == 10 # +45(payin), -15(payout), -20(bob), -10(enterprise)
+
+        balance = get_end_of_year_balance(self.db, self.alice, current_year+1, current_year+1)
+        assert balance == 10 # Should return balance directly
 
 
 class TestHistoryPage(Harness):
@@ -158,7 +177,7 @@ class TestHistoryPage(Harness):
         assert self.client.GET('/~alice/history/', auth_as='alice').code == 200
 
     def test_admin_can_view_closed_participant_history(self):
-        self.make_exchange('paypal', -20, 0, self.alice)
+        self.make_exchange('paypal', -10, 0, self.alice)
         self.alice.close()
 
         self.make_participant('carl', claimed_time='now', is_admin=True)
@@ -174,17 +193,18 @@ class TestExport(Harness):
     def test_export_json(self):
         r = self.client.GET('/~alice/history/export.json', auth_as='alice')
 
-        expected = {
-            'given': [{'amount': 20, 'tippee': 'bob'}],
-            'taken': []
-        }
-        actual = json.loads(r.body)
-        assert expected == actual
+        response = json.loads(r.body)
+
+        assert len(response['given']) == 2
+        assert {'amount': 10, 'tippee': 'TheEnterprise'} in response['given']
+        assert {'amount': 20, 'tippee': '~bob'} in response['given']
+
+        # TODO: Add tests for 'taken'
 
     def test_export_json_for_year(self):
         r = self.client.GET('/~alice/history/export.json?year=%s' % (self.past_year), auth_as='alice')
         expected = {
-            'given': [{'amount': 10, 'tippee': 'bob'}],
+            'given': [{'amount': 10, 'tippee': '~bob'}],
             'taken': []
         }
         actual = json.loads(r.body)
@@ -193,4 +213,10 @@ class TestExport(Harness):
     def test_export_csv(self):
         r = self.client.GET('/~alice/history/export.csv?key=given', auth_as='alice')
 
-        assert r.body.count('\n') == 2 # Tip to bob, Ending newline
+        lines = r.body.strip().split('\n')
+        assert len(lines) == 3 # header + 2
+        assert lines.pop(0).strip() == 'tippee,amount'
+
+        lines.sort()
+        assert lines[0].strip() == 'TheEnterprise,10.00'
+        assert lines[1].strip() == '~bob,20.00'
