@@ -184,11 +184,19 @@ def export_history(participant, year, key, back_as='namedtuple', require_key=Fal
     params = dict(username=participant.username, year=year)
     out = {}
 
-    # FIXME - values from the `payments` table should be included too!
     out['given'] = lambda: db.all("""
-        SELECT tippee, sum(amount) AS amount
+        SELECT CONCAT('~', tippee) as tippee, sum(amount) AS amount
           FROM transfers
          WHERE tipper = %(username)s
+           AND extract(year from timestamp) = %(year)s
+      GROUP BY tippee
+
+         UNION
+
+        SELECT team as tippee, sum(amount) AS amount
+          FROM payments
+         WHERE participant = %(username)s
+           AND direction = 'to-team'
            AND extract(year from timestamp) = %(year)s
       GROUP BY tippee
     """, params, back_as=back_as)
