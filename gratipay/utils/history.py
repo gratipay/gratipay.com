@@ -30,7 +30,6 @@ def get_end_of_year_balance(db, participant, year, current_year):
     username = participant.username
     start_balance = get_end_of_year_balance(db, participant, year-1, current_year)
 
-    # FIXME - delta from the `payments` table should be included too!
     delta = db.one("""
         SELECT (
                   SELECT COALESCE(sum(amount), 0) AS a
@@ -55,6 +54,18 @@ def get_end_of_year_balance(db, participant, year, current_year):
                   SELECT COALESCE(sum(amount), 0) AS a
                     FROM transfers
                    WHERE tippee = %(username)s
+                     AND extract(year from timestamp) = %(year)s
+               ) + (
+                  SELECT COALESCE(sum(amount), 0) AS a
+                    FROM payments
+                   WHERE participant = %(username)s
+                     AND direction = 'to-participant'
+                     AND extract(year from timestamp) = %(year)s
+               ) + (
+                  SELECT COALESCE(sum(-amount), 0) AS a
+                    FROM payments
+                   WHERE participant = %(username)s
+                     AND direction = 'to-team'
                      AND extract(year from timestamp) = %(year)s
                ) AS delta
     """, locals())
