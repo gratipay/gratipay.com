@@ -1,3 +1,9 @@
+"""Helpers to fetch logs of payments made to/from a participant.
+
+Data is fetched from 3 tables: `transfers`, `payments` and `exchanges`. For
+details on what these tables represent, see :ref:`db-schema`.
+"""
+
 from datetime import datetime
 from decimal import Decimal
 
@@ -23,6 +29,8 @@ def get_end_of_year_balance(db, participant, year, current_year):
 
     username = participant.username
     start_balance = get_end_of_year_balance(db, participant, year-1, current_year)
+
+    # FIXME - delta from the `payments` table should be included too!
     delta = db.one("""
         SELECT (
                   SELECT COALESCE(sum(amount), 0) AS a
@@ -164,6 +172,8 @@ def export_history(participant, year, mode, key, back_as='namedtuple', require_k
     db = participant.db
     params = dict(username=participant.username, year=year)
     out = {}
+
+    # FIXME - values from the `payments` table should be included too!
     if mode == 'aggregate':
         out['given'] = lambda: db.all("""
             SELECT tippee, sum(amount) AS amount
