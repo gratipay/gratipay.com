@@ -200,6 +200,8 @@ def export_history(participant, year, key, back_as='namedtuple', require_key=Fal
            AND extract(year from timestamp) = %(year)s
       GROUP BY tippee
     """, params, back_as=back_as)
+
+    # FIXME: Include values from the `payments` table
     out['taken'] = lambda: db.all("""
         SELECT tipper AS team, sum(amount) AS amount
           FROM transfers
