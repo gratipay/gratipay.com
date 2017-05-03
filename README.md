@@ -23,7 +23,7 @@ Quick Start
 Local
 -----
 
-Given Python 2.7, Postgres 9.3, and a C/make toolchain:
+Given Python 2.7, Postgres 9.6, and a C/make toolchain:
 
 ```shell
 git clone https://github.com/gratipay/gratipay.com.git
@@ -116,7 +116,7 @@ On Debian or Ubuntu you will need the following packages:
 
 ```shell
 sudo apt-get install \
-    postgresql-9.3 \
+    postgresql-9.6 \
     postgresql-contrib \
     libpq-dev \
     python-dev \
@@ -386,7 +386,7 @@ Modifying the Database
 ======================
 
 We write SQL, specifically the [PostgreSQL
-variant](https://www.postgresql.org/docs/9.3/static/). We keep our database
+variant](https://www.postgresql.org/docs/9.6/static/). We keep our database
 schema in
 [`schema.sql`](https://github.com/gratipay/gratipay.com/blob/master/sql/schema.sql),
 and we write schema changes for each PR branch in a `sql/branch.sql` file, which
@@ -436,11 +436,10 @@ database configured in your testing environment.
 Local Database Setup
 --------------------
 
-For the best development experience, you need a local
-installation of [Postgres](https://www.postgresql.org/download/). The best
-version of Postgres to use is 9.3.5, because that's what we're using in
-production at Heroku. You need at least 9.2, because we depend on being able to
-specify a URI to `psql`, and that was added in 9.2.
+For the best development experience, you need a local installation of
+[Postgres](https://www.postgresql.org/download/). The best version of Postgres
+to use is 9.6.2, because that's what we're using in production at Heroku. You
+need at least 9.5 to support the features we depend on.
 
 + Mac: use Homebrew: `brew install postgres`
 + Ubuntu: use Apt: `apt-get install postgresql postgresql-contrib libpq-dev`

@@ -8,7 +8,7 @@ from aspen.http.response import Response
 from gratipay import utils
 from gratipay.testing import Harness, D
 from gratipay.utils import i18n, pricing, encode_for_querystring, decode_from_querystring, \
-                                                                    truncate, get_featured_projects
+                                                            sentry, truncate, get_featured_projects
 from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUsername, \
                                                                            RanOutOfUsernameAttempts
 from psycopg2 import IntegrityError
@@ -300,3 +300,26 @@ class TestGetFeaturedProjects(Harness):
 
     def test_deals_with_some_but_too_few_of_both(self):
         assert self.get_and_count(range(4), list('A')) == (4, 1)
+
+
+class FailCollector:
+
+    def __init__(self):
+        self.fails = []
+
+    def __call__(self, fail, whatever):
+        self.fails.append(fail)
+
+
+class Heck(Exception):
+    pass
+
+
+class SentryTellerTests(Harness):
+
+    def test_with_sentry_logs_to_sentry_and_continues(self):
+        class env: sentry_dsn = ''
+        noop = FailCollector()
+        with sentry.teller(env, noop):
+            raise Heck
+        assert noop.fails == [Heck]

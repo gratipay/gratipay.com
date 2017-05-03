@@ -68,6 +68,6 @@
   ./vendor/ipaddress-1.0.16.tar.gz
 ./vendor/cryptography-1.5.3.tar.gz
 
-./vendor/ijson-2.3.tar.gz
+./vendor/CouchDB-1.1.tar.gz
 
 -e .

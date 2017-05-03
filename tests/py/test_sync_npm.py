@@ -1,108 +1,80 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from subprocess import Popen, PIPE
-
-import pytest
-
-from gratipay import sync_npm
 from gratipay.testing import Harness
 
-
-def load(raw):
-    serialized = Popen( ('env/bin/sync-npm', 'serialize', '/dev/stdin')
-                      , stdin=PIPE, stdout=PIPE
-                       ).communicate(raw)[0]
-    Popen( ('env/bin/sync-npm', 'upsert', '/dev/stdin')
-         , stdin=PIPE, stdout=PIPE
-          ).communicate(serialized)[0]
+from gratipay.cli import sync_npm
 
 
-class FailCollector:
+class ProcessDocTests(Harness):
 
-    def __init__(self):
-        self.fails = []
+    def test_returns_None_if_no_name(self):
+        assert sync_npm.process_doc({}) is None
 
-    def __call__(self, fail, whatever):
-        self.fails.append(fail)
+    def test_backfills_missing_keys(self):
+        actual = sync_npm.process_doc({'name': 'foo'})
+        assert actual == {'name': 'foo', 'description': '', 'emails': []}
+
+    def test_extracts_maintainer_emails(self):
+        doc = {'name': 'foo', 'maintainers': [{'email': 'alice@example.com'}]}
+        assert sync_npm.process_doc(doc)['emails'] == ['alice@example.com']
+
+    def test_skips_empty_emails(self):
+        doc = {'name': 'foo', 'maintainers': [{'email': ''}, {'email': '     '}]}
+        assert sync_npm.process_doc(doc)['emails'] == []
+
+    def test_sorts_emails(self):
+        doc = {'name': 'foo', 'maintainers': [{'email': 'bob'}, {'email': 'alice'}]}
+        assert sync_npm.process_doc(doc)['emails'] == ['alice', 'bob']
+
+    def test_dedupes_emails(self):
+        doc = {'name': 'foo', 'maintainers': [{'email': 'alice'}, {'email': 'alice'}]}
+        assert sync_npm.process_doc(doc)['emails'] == ['alice']
 
 
-class Heck(Exception):
-    pass
+class ConsumeChangeStreamTests(Harness):
 
+    def change_stream(self, docs):
+        def change_stream(seq):
+            for i, doc in enumerate(docs):
+                if i < seq: continue
+                yield {'seq': i, 'doc': doc}
+        return change_stream
 
-class Tests(Harness):
 
     def test_packages_starts_empty(self):
         assert self.db.all('select * from packages') == []
 
 
-    # sn - sync-npm
-
-    def test_sn_inserts_packages(self):
-        load(br'''
-        { "_updated": 1234567890
-        , "testing-package":
-            { "name":"testing-package"
-            , "description":"A package for testing"
-            , "maintainers":[{"email":"alice@example.com"}]
-            , "author": {"email":"bob@example.com"}
-            , "time":{"modified":"2015-09-12T03:03:03.135Z"}
-             }
-         }
-        ''')
+    def test_consumes_change_stream(self):
+        docs = [ {'name': 'foo', 'description': 'Foo.'}
+               , {'name': 'foo', 'description': 'Foo?'}
+               , {'name': 'foo', 'description': 'Foo!'}
+                ]
+        sync_npm.consume_change_stream(self.change_stream(docs), self.db)
 
         package = self.db.one('select * from packages')
         assert package.package_manager == 'npm'
-        assert package.name == 'testing-package'
-        assert package.description == 'A package for testing'
-        assert package.name == 'testing-package'
-
-
-    def test_sn_handles_quoting(self):
-        load(br'''
-        { "_updated": 1234567890
-        , "testi\\\"ng-pa\\\"ckage":
-            { "name":"testi\\\"ng-pa\\\"ckage"
-            , "description":"A package for \"testing\""
-            , "maintainers":[{"email":"alice@\"example\".com"}]
-            , "author": {"email":"\\\\\"bob\\\\\"@example.com"}
-            , "time":{"modified":"2015-09-12T03:03:03.135Z"}
-             }
-         }
-        ''')
-
-        package = self.db.one('select * from packages')
-        assert package.package_manager == 'npm'
-        assert package.name == r'testi\"ng-pa\"ckage'
-        assert package.description == 'A package for "testing"'
-        assert package.emails == ['alice@"example".com', r'\\"bob\\"@example.com']
-
-
-    def test_sn_handles_empty_description_and_emails(self):
-        load(br'''
-        { "_updated": 1234567890
-        , "empty-description":
-            { "name":"empty-description"
-            , "description":""
-            , "time":{"modified":"2015-09-12T03:03:03.135Z"}
-             }
-         }
-        ''')
-
-        package = self.db.one('select * from packages')
-        assert package.package_manager == 'npm'
-        assert package.name == 'empty-description'
-        assert package.description == ''
+        assert package.name == 'foo'
+        assert package.description == 'Foo!'
         assert package.emails == []
 
 
-    # with sentry(env)
+    def test_picks_up_with_last_seq(self):
+        docs = [ {'name': 'foo', 'description': 'Foo.'}
+               , {'name': 'foo', 'description': 'See alice?', 'maintainers': [{'email': 'alice'}]}
+               , {'name': 'foo', 'description': "No, I don't see alice!"}
+                ]
+        self.db.run('update worker_coordination set npm_last_seq=2')
+        sync_npm.consume_change_stream(self.change_stream(docs), self.db)
 
-    def test_with_sentry_logs_to_sentry_and_raises(self):
-        class env: sentry_dsn = ''
-        noop = FailCollector()
-        with pytest.raises(Heck):
-            with sync_npm.sentry(env, noop):
-                raise Heck
-        assert noop.fails == [Heck]
+        package = self.db.one('select * from packages')
+        assert package.description == "No, I don't see alice!"
+        assert package.emails == []
+
+
+    def test_sets_last_seq(self):
+        docs = [{'name': 'foo', 'description': 'Foo.'}] * 13
+        assert self.db.one('select npm_last_seq from worker_coordination') == -1
+        sync_npm.consume_change_stream(self.change_stream(docs), self.db)
+        assert self.db.one('select npm_last_seq from worker_coordination') == 12
