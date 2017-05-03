@@ -6,32 +6,54 @@ import json
 from mock import patch
 
 from gratipay.billing.payday import Payday
+from gratipay.models.participant import Participant
 from gratipay.testing import Harness, D,P
 from gratipay.testing.billing import BillingHarness
 from gratipay.utils.history import get_end_of_year_balance, iter_payday_events
 
 
 def make_history(harness):
-    alice = harness.make_participant('alice', claimed_time=datetime(2001, 1, 1, 0, 0, 0))
-    harness.alice = alice
-    harness.make_exchange('braintree-cc', 50, 0, alice)
+    alice = harness.make_participant('alice', claimed_time=datetime(2001, 1, 1))
+
+    # Exchanges for the previous year
+    harness.make_exchange('braintree-cc', 60, 0, alice)
     harness.make_exchange('braintree-cc', 12, 0, alice, status='failed')
     harness.make_exchange('paypal', -40, 0, alice)
     harness.make_exchange('paypal', -5, 0, alice, status='failed')
-    harness.db.run("""
+    past_year = harness.db.all("""
         UPDATE exchanges
            SET timestamp = "timestamp" - interval '1 year'
-    """)
-    harness.past_year = int(harness.db.one("""
-        SELECT extract(year from timestamp)
-          FROM exchanges
-      ORDER BY timestamp ASC
-         LIMIT 1
-    """))
-    harness.make_exchange('braintree-cc', 35, 0, alice)
+     RETURNING extract(year from timestamp)::int
+    """)[0]
+
+    # Exchanges for the current year
+    harness.make_exchange('braintree-cc', 45, 0, alice)
     harness.make_exchange('braintree-cc', 49, 0, alice, status='failed')
     harness.make_exchange('paypal', -15, 0, alice)
     harness.make_exchange('paypal', -7, 0, alice, status='failed')
+
+    # Tips under Gratipay 1.0
+    harness.make_participant('bob')
+    tips = [
+        {'timestamp': datetime(past_year, 1, 1), 'amount': 10},
+        {'timestamp': datetime(past_year+1, 1, 1), 'amount': 20}
+    ]
+    for tip in tips:
+        harness.db.run("""
+            INSERT INTO transfers (tipper, tippee, amount, context, timestamp)
+                 VALUES ('alice', 'bob', %(amount)s, 'tip', %(timestamp)s);
+
+                 UPDATE participants
+                    SET balance = (balance - %(amount)s)
+                  WHERE username = 'alice';
+
+                 UPDATE participants
+                    SET balance = (balance + %(amount)s)
+                  WHERE username = 'bob';
+        """, tip)
+
+    harness.alice = Participant.from_username('alice')
+    harness.past_year = past_year
 
 
 class TestHistory(BillingHarness):
@@ -116,8 +138,14 @@ class TestHistory(BillingHarness):
 
     def test_get_end_of_year_balance(self):
         make_history(self)
-        balance = get_end_of_year_balance(self.db, self.alice, self.past_year, datetime.now().year)
-        assert balance == 10
+
+        past_year, current_year = self.past_year, self.past_year+1
+
+        balance = get_end_of_year_balance(self.db, self.alice, past_year, current_year)
+        assert balance == 10 # 0 (previous), +60 (payin), -40 (payout), -10 (bob)
+
+        balance = get_end_of_year_balance(self.db, self.alice, current_year, current_year)
+        assert balance == 20 # 10 (previous), +45 (payin), -15 (payout), -20 (bob)
 
 
 class TestHistoryPage(Harness):
@@ -130,11 +158,11 @@ class TestHistoryPage(Harness):
         assert self.client.GET('/~alice/history/', auth_as='alice').code == 200
 
     def test_admin_can_view_closed_participant_history(self):
-        self.make_exchange('braintree-cc', -30, 0, self.alice)
+        self.make_exchange('paypal', -20, 0, self.alice)
         self.alice.close()
 
-        self.make_participant('bob', claimed_time='now', is_admin=True)
-        response = self.client.GET('/~alice/history/?year=%s' % self.past_year, auth_as='bob')
+        self.make_participant('carl', claimed_time='now', is_admin=True)
+        response = self.client.GET('/~alice/history/?year=%s' % self.past_year, auth_as='carl')
         assert "automatic charge" in response.body
 
 class TestExport(Harness):
@@ -145,16 +173,24 @@ class TestExport(Harness):
 
     def test_export_json(self):
         r = self.client.GET('/~alice/history/export.json', auth_as='alice')
-        assert json.loads(r.body)
 
-    def test_export_json_aggregate(self):
-        r = self.client.GET('/~alice/history/export.json?mode=aggregate', auth_as='alice')
-        assert json.loads(r.body)
+        expected = {
+            'given': [{'amount': 20, 'tippee': 'bob'}],
+            'taken': []
+        }
+        actual = json.loads(r.body)
+        assert expected == actual
 
-    def test_export_json_past_year(self):
-        r = self.client.GET('/~alice/history/export.json?year=%s' % self.past_year, auth_as='alice')
-        assert len(json.loads(r.body)['exchanges']) == 4
+    def test_export_json_for_year(self):
+        r = self.client.GET('/~alice/history/export.json?year=%s' % (self.past_year), auth_as='alice')
+        expected = {
+            'given': [{'amount': 10, 'tippee': 'bob'}],
+            'taken': []
+        }
+        actual = json.loads(r.body)
+        assert expected == actual
 
     def test_export_csv(self):
-        r = self.client.GET('/~alice/history/export.csv?key=exchanges', auth_as='alice')
-        assert r.body.count('\n') == 5
+        r = self.client.GET('/~alice/history/export.csv?key=given', auth_as='alice')
+
+        assert r.body.count('\n') == 2 # Tip to bob, Ending newline
