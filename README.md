@@ -439,7 +439,8 @@ Local Database Setup
 For the best development experience, you need a local installation of
 [Postgres](https://www.postgresql.org/download/). The best version of Postgres
 to use is 9.6.2, because that's what we're using in production at Heroku. You
-need at least 9.5 to support the features we depend on.
+need at least 9.5 to support the features we depend on, along with the
+`pg_stat_statments` and `pg_trgm` extensions.
 
 + Mac: use Homebrew: `brew install postgres`
 + Ubuntu: use Apt: `apt-get install postgresql postgresql-contrib libpq-dev`
