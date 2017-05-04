@@ -386,6 +386,7 @@ def env():
         OPENSTREETMAP_AUTH_URL          = unicode,
         UPDATE_CTA_EVERY                = int,
         CHECK_DB_EVERY                  = int,
+        CHECK_NPM_SYNC_EVERY            = int,
         EMAIL_QUEUE_FLUSH_EVERY         = int,
         EMAIL_QUEUE_SLEEP_FOR           = int,
         EMAIL_QUEUE_ALLOW_UP_TO         = int,

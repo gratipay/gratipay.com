@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from gratipay.testing import Harness
 
-from gratipay.cli import sync_npm
+from gratipay import sync_npm
 
 
 class ProcessDocTests(Harness):
@@ -78,3 +78,13 @@ class ConsumeChangeStreamTests(Harness):
         assert self.db.one('select npm_last_seq from worker_coordination') == -1
         sync_npm.consume_change_stream(self.change_stream(docs), self.db)
         assert self.db.one('select npm_last_seq from worker_coordination') == 12
+
+
+    def test_logs_lag(self):
+        captured = {}
+        def capture(message):
+            captured['message'] = message
+        self.db.run('update worker_coordination set npm_last_seq=500')
+        sync_npm.check(self.db, capture)
+        assert captured['message'].startswith('count#npm-sync-lag=')
+        assert captured['message'].split('=')[1].isdigit()
