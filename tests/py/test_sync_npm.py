@@ -34,11 +34,12 @@ class ProcessDocTests(Harness):
 
 class ConsumeChangeStreamTests(Harness):
 
-    def change_stream(self, docs):
+    def change_stream(self, changes):
         def change_stream(seq):
-            for i, doc in enumerate(docs):
+            for i, change in enumerate(changes):
                 if i < seq: continue
-                yield {'seq': i, 'doc': doc}
+                change['seq'] = i
+                yield change
         return change_stream
 
 
@@ -47,9 +48,9 @@ class ConsumeChangeStreamTests(Harness):
 
 
     def test_consumes_change_stream(self):
-        docs = [ {'name': 'foo', 'description': 'Foo.'}
-               , {'name': 'foo', 'description': 'Foo?'}
-               , {'name': 'foo', 'description': 'Foo!'}
+        docs = [ {'doc': {'name': 'foo', 'description': 'Foo.'}}
+               , {'doc': {'name': 'foo', 'description': 'Foo?'}}
+               , {'doc': {'name': 'foo', 'description': 'Foo!'}}
                 ]
         sync_npm.consume_change_stream(self.change_stream(docs), self.db)
 
@@ -60,10 +61,23 @@ class ConsumeChangeStreamTests(Harness):
         assert package.emails == []
 
 
+    def test_not_afraid_to_delete_docs(self):
+        docs = [ {'doc': {'name': 'foo', 'description': 'Foo.'}}
+               , {'doc': {'name': 'foo', 'description': 'Foo?'}}
+               , {'deleted': True, 'id': 'foo'}
+                ]
+        sync_npm.consume_change_stream(self.change_stream(docs), self.db)
+        assert self.db.one('select * from packages') is None
+
+
+    # TODO Test for packages linked to teams when we get there.
+
+
     def test_picks_up_with_last_seq(self):
-        docs = [ {'name': 'foo', 'description': 'Foo.'}
-               , {'name': 'foo', 'description': 'See alice?', 'maintainers': [{'email': 'alice'}]}
-               , {'name': 'foo', 'description': "No, I don't see alice!"}
+        docs = [ {'doc': {'name': 'foo', 'description': 'Foo.'}}
+               , {'doc': {'name': 'foo', 'description': 'See alice?',
+                  'maintainers': [{'email': 'alice'}]}}
+               , {'doc': {'name': 'foo', 'description': "No, I don't see alice!"}}
                 ]
         self.db.run('update worker_coordination set npm_last_seq=2')
         sync_npm.consume_change_stream(self.change_stream(docs), self.db)
@@ -74,7 +88,7 @@ class ConsumeChangeStreamTests(Harness):
 
 
     def test_sets_last_seq(self):
-        docs = [{'name': 'foo', 'description': 'Foo.'}] * 13
+        docs = [{'doc': {'name': 'foo', 'description': 'Foo.'}}] * 13
         assert self.db.one('select npm_last_seq from worker_coordination') == -1
         sync_npm.consume_change_stream(self.change_stream(docs), self.db)
         assert self.db.one('select npm_last_seq from worker_coordination') == 12

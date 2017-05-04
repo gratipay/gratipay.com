@@ -47,22 +47,35 @@ def consume_change_stream(change_stream, db):
     """
     last_seq = get_last_seq(db)
     log("Picking up with npm sync at {}.".format(last_seq))
-    with db.get_connection() as conn:
+    with db.get_connection() as connection:
         for change in change_stream(last_seq):
-            processed = process_doc(change['doc'])
+            if change.get('deleted'):
+                # Hack to work around conflation of design docs and packages in updates
+                op, doc = delete, {'name': change['id']}
+            else:
+                op, doc = upsert, change['doc']
+            processed = process_doc(doc)
             if not processed:
                 continue
-            cursor = conn.cursor()
-            cursor.run('''
-            INSERT INTO packages
-                        (package_manager, name, description, emails)
-                 VALUES ('npm', %(name)s, %(description)s, %(emails)s)
+            cursor = connection.cursor()
+            op(cursor, processed)
+            cursor.run('UPDATE worker_coordination SET npm_last_seq=%(seq)s', change)
+            connection.commit()
 
-            ON CONFLICT (package_manager, name) DO UPDATE
-                    SET description=%(description)s, emails=%(emails)s
-            ''', processed)
-            cursor.run('UPDATE worker_coordination SET npm_last_seq=%s', (change['seq'],))
-            cursor.connection.commit()
+
+def delete(cursor, processed):
+    cursor.run("DELETE FROM packages WHERE package_manager='npm' AND name=%(name)s", processed)
+
+
+def upsert(cursor, processed):
+    cursor.run('''
+    INSERT INTO packages
+                (package_manager, name, description, emails)
+         VALUES ('npm', %(name)s, %(description)s, %(emails)s)
+
+    ON CONFLICT (package_manager, name) DO UPDATE
+            SET description=%(description)s, emails=%(emails)s
+    ''', processed)
 
 
 def check(db, _print=print):
