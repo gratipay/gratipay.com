@@ -1,3 +1,9 @@
+"""Helpers to fetch logs of payments made to/from a participant.
+
+Data is fetched from 3 tables: `transfers`, `payments` and `exchanges`. For
+details on what these tables represent, see :ref:`db-schema`.
+"""
+
 from datetime import datetime
 from decimal import Decimal
 
@@ -23,6 +29,7 @@ def get_end_of_year_balance(db, participant, year, current_year):
 
     username = participant.username
     start_balance = get_end_of_year_balance(db, participant, year-1, current_year)
+
     delta = db.one("""
         SELECT (
                   SELECT COALESCE(sum(amount), 0) AS a
@@ -47,6 +54,18 @@ def get_end_of_year_balance(db, participant, year, current_year):
                   SELECT COALESCE(sum(amount), 0) AS a
                     FROM transfers
                    WHERE tippee = %(username)s
+                     AND extract(year from timestamp) = %(year)s
+               ) + (
+                  SELECT COALESCE(sum(amount), 0) AS a
+                    FROM payments
+                   WHERE participant = %(username)s
+                     AND direction = 'to-participant'
+                     AND extract(year from timestamp) = %(year)s
+               ) + (
+                  SELECT COALESCE(sum(-amount), 0) AS a
+                    FROM payments
+                   WHERE participant = %(username)s
+                     AND direction = 'to-team'
                      AND extract(year from timestamp) = %(year)s
                ) AS delta
     """, locals())
@@ -160,57 +179,37 @@ def iter_payday_events(db, participant, year=None):
     yield dict(kind='day-close', balance=balance)
 
 
-def export_history(participant, year, mode, key, back_as='namedtuple', require_key=False):
+def export_history(participant, year, key, back_as='namedtuple', require_key=False):
     db = participant.db
     params = dict(username=participant.username, year=year)
     out = {}
-    if mode == 'aggregate':
-        out['given'] = lambda: db.all("""
-            SELECT tippee, sum(amount) AS amount
-              FROM transfers
-             WHERE tipper = %(username)s
-               AND extract(year from timestamp) = %(year)s
-          GROUP BY tippee
-        """, params, back_as=back_as)
-        out['taken'] = lambda: db.all("""
-            SELECT tipper AS team, sum(amount) AS amount
-              FROM transfers
-             WHERE tippee = %(username)s
-               AND context = 'take'
-               AND extract(year from timestamp) = %(year)s
-          GROUP BY tipper
-        """, params, back_as=back_as)
-    else:
-        out['exchanges'] = lambda: db.all("""
-            SELECT timestamp, amount, fee, status, note
-              FROM exchanges
-             WHERE participant = %(username)s
-               AND extract(year from timestamp) = %(year)s
-          ORDER BY timestamp ASC
-        """, params, back_as=back_as)
-        out['given'] = lambda: db.all("""
-            SELECT timestamp, tippee, amount, context
-              FROM transfers
-             WHERE tipper = %(username)s
-               AND extract(year from timestamp) = %(year)s
-          ORDER BY timestamp ASC
-        """, params, back_as=back_as)
-        out['taken'] = lambda: db.all("""
-            SELECT timestamp, tipper AS team, amount
-              FROM transfers
-             WHERE tippee = %(username)s
-               AND context = 'take'
-               AND extract(year from timestamp) = %(year)s
-          ORDER BY timestamp ASC
-        """, params, back_as=back_as)
-        out['received'] = lambda: db.all("""
-            SELECT timestamp, amount, context
-              FROM transfers
-             WHERE tippee = %(username)s
-               AND context NOT IN ('take', 'take-over')
-               AND extract(year from timestamp) = %(year)s
-          ORDER BY timestamp ASC
-        """, params, back_as=back_as)
+
+    out['given'] = lambda: db.all("""
+        SELECT CONCAT('~', tippee) as tippee, sum(amount) AS amount
+          FROM transfers
+         WHERE tipper = %(username)s
+           AND extract(year from timestamp) = %(year)s
+      GROUP BY tippee
+
+         UNION
+
+        SELECT team as tippee, sum(amount) AS amount
+          FROM payments
+         WHERE participant = %(username)s
+           AND direction = 'to-team'
+           AND extract(year from timestamp) = %(year)s
+      GROUP BY tippee
+    """, params, back_as=back_as)
+
+    # FIXME: Include values from the `payments` table
+    out['taken'] = lambda: db.all("""
+        SELECT tipper AS team, sum(amount) AS amount
+          FROM transfers
+         WHERE tippee = %(username)s
+           AND context = 'take'
+           AND extract(year from timestamp) = %(year)s
+      GROUP BY tipper
+    """, params, back_as=back_as)
 
     if key:
         try:
