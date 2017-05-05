@@ -9,15 +9,57 @@ from psycopg2 import IntegrityError
 from pytest import raises
 
 
-class TestPackage(Harness):
+Foo = lambda cursor=None: Package.from_names(NPM, 'foo', cursor)
+
+
+class Basics(Harness):
 
     def test_can_be_instantiated_from_id(self):
-        p = self.make_package()
-        assert Package.from_id(p.id).id == p.id
+        package = self.make_package()
+        assert Package.from_id(package.id).id == package.id
+
+    def test_from_id_can_use_a_cursor(self):
+        package = self.make_package()
+        with self.db.get_cursor() as cursor:
+            assert Package.from_id(package.id, cursor).id == package.id
 
     def test_can_be_instantiated_from_names(self):
         self.make_package()
         assert Package.from_names(NPM, 'foo').name == 'foo'
+
+    def test_from_names_can_use_a_cursor(self):
+        self.make_package()
+        with self.db.get_cursor() as cursor:
+            assert Package.from_names(NPM, 'foo', cursor).name == 'foo'
+
+
+    def test_can_be_inserted_via_upsert(self):
+        Package.upsert(NPM, name='foo', description='Foo!', emails=[])
+        assert Foo().name == 'foo'
+
+    def test_can_be_updated_via_upsert(self):
+        self.make_package()
+        Package.upsert(NPM, name='foo', description='Bar!', emails=[])
+        assert Foo().description == 'Bar!'
+
+    def test_can_be_upserted_in_a_transaction(self):
+        self.make_package(description='Before')
+        with self.db.get_cursor() as cursor:
+            Package.upsert(NPM, name='foo', description='After', emails=[], cursor=cursor)
+            assert Foo().description == 'Before'
+        assert Foo().description == 'After'
+
+
+    def test_can_be_deleted(self):
+        self.make_package().delete()
+        assert Foo() is None
+
+    def test_can_be_deleted_in_a_transaction(self):
+        package = self.make_package()
+        with self.db.get_cursor() as cursor:
+            package.delete(cursor)
+            assert Foo() == package
+        assert Foo() is None
 
 
 class Linking(Harness):
@@ -98,6 +140,12 @@ class Linking(Harness):
         _, _, team = self.link()
         team.close()
         assert Package.from_names('npm', 'foo').team is None
+
+    def test_deleting_package_leaves_team_unlinked(self):
+        _, package, team = self.link()
+        assert team.package is not None
+        package.delete()
+        assert team.package is None
 
 
 class GroupEmailsForParticipant(Harness):

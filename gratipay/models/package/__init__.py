@@ -65,14 +65,58 @@ class Package(Model, Emails, Team):
     # ============
 
     @classmethod
-    def from_id(cls, id):
+    def from_id(cls, id, cursor=None):
         """Return an existing package based on id.
         """
-        return cls.db.one("SELECT packages.*::packages FROM packages WHERE id=%s", (id,))
+        cursor = cursor or cls.db
+        return cursor.one("SELECT packages.*::packages FROM packages WHERE id=%s", (id,))
+
 
     @classmethod
-    def from_names(cls, package_manager, name):
+    def from_names(cls, package_manager, name, cursor=None):
         """Return an existing package based on package manager and package names.
         """
-        return cls.db.one("SELECT packages.*::packages FROM packages "
-                          "WHERE package_manager=%s and name=%s", (package_manager, name))
+        cursor = cursor or cls.db
+        return cursor.one( "SELECT packages.*::packages FROM packages "
+                           "WHERE package_manager=%s and name=%s"
+                         , (package_manager, name)
+                          )
+
+
+    @classmethod
+    def upsert(cls, package_manager, **kw):
+        """Upsert a package. Required keyword arguments:
+
+        - ``name`` (string)
+        - ``description`` (string)
+        - ``emails`` (list of strings)
+
+        Optional keyword argument:
+
+        - ``cursor``
+
+        :return None:
+
+        """
+        cursor = kw.pop('cursor', cls.db)
+        cursor.run('''
+        INSERT INTO packages
+                    (package_manager, name, description, emails)
+             VALUES ('npm', %(name)s, %(description)s, %(emails)s)
+
+        ON CONFLICT (package_manager, name) DO UPDATE
+                SET description=%(description)s, emails=%(emails)s
+        ''', kw)
+
+
+    def delete(self, cursor=None):
+        """Delete the package, unlinking any team (the team itself lives on)
+        and clearing any claim.
+        """
+        cursor = cursor or self.db
+        if self.load_team(cursor):
+            self.unlink_team(cursor)
+        cursor.run("DELETE FROM claims WHERE package_id=%s", (self.id,))
+        cursor.run( "DELETE FROM packages WHERE package_manager=%s AND name=%s"
+                  , (self.package_manager, self.name)
+                   )

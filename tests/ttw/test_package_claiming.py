@@ -3,6 +3,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import pickle
 from gratipay.testing import BrowserHarness, P
+from gratipay.models.package import NPM, Package
+from gratipay.models.participant import email
 
 
 class Test(BrowserHarness):
@@ -14,9 +16,14 @@ class Test(BrowserHarness):
         self.css('label')[0].click() # activate select
         self.css('label')[choice].click()
         self.css('button')[0].click()
-        assert self.has_element('.notification.notification-success', 1)
-        assert self.has_text('Check your inbox for a verification link.')
+        assert self.wait_for_success() == 'Check your inbox for a verification link.'
         return self.db.one('select address from claims c join emails e on c.nonce = e.nonce')
+
+    def finish_claiming(self):
+        alice = P('alice')
+        nonce = alice.get_email('alice@example.com').nonce
+        return alice.finish_email_verification('alice@example.com', nonce)
+
 
     def test_appears_to_work(self):
         self.make_package()
@@ -44,13 +51,10 @@ class Test(BrowserHarness):
         assert self.db.all('select * from claims') == []
 
 
-    def test_that_claimed_packages_can_be_given_to(self):
+    def test_claimed_packages_can_be_given_to(self):
         package = self.make_package()
         self.check()
-
-        alice = P('alice')
-        nonce = alice.get_email('alice@example.com').nonce
-        alice.finish_email_verification('alice@example.com', nonce)
+        self.finish_claiming()
 
         self.make_participant('admin', claimed_time='now', is_admin=True)
         self.sign_in('admin')
@@ -80,3 +84,28 @@ class Test(BrowserHarness):
         assert self.css('.withdrawal-notice a').text == 'update'
         assert self.css('.withdrawal-notice b').text == 'alice@example.com'
         assert self.css('.listing-name').text == 'foo'
+
+
+    def test_deleted_packages_are_404(self):
+        self.make_package()
+        Package.from_names(NPM, 'foo').delete()
+        self.visit('/on/npm/foo/')
+        assert self.css('#content h1').text == '404'
+
+
+    def test_claiming_deleted_packages_is_a_noop(self):
+        self.make_package()
+        self.check()
+        Package.from_names(NPM, 'foo').delete()
+        assert self.finish_claiming() == (email.VERIFICATION_SUCCEEDED, [], None)
+
+
+    def test_but_once_claimed_then_team_persists(self):
+        self.make_package()
+        self.check()
+        foo = Package.from_names(NPM, 'foo')
+        assert self.finish_claiming() == (email.VERIFICATION_SUCCEEDED, [foo], True)
+        foo.delete()
+        self.visit('/foo/')
+        foo = self.css('#content .statement p')
+        assert foo.text == 'Foo fooingly.'

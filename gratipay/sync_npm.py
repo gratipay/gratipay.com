@@ -4,6 +4,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import requests
 from couchdb import Database
 
+from gratipay.models.package import NPM, Package
+
 
 REGISTRY_URL = 'https://replicate.npmjs.com/'
 
@@ -49,33 +51,22 @@ def consume_change_stream(stream, db):
 
             # Decide what to do.
             if change.get('deleted'):
-                op, arg = delete, change['id']
+                package = Package.from_names(NPM, change['id'])
+                assert package is not None  # right?
+                op, kw = package.delete, {}
             else:
-                processed_doc = process_doc(change['doc'])
-                if not processed_doc:
+                op = Package.upsert
+                kw = process_doc(change['doc'])
+                if not kw:
                     continue
-                op, arg = upsert, processed_doc
+                kw['package_manager'] = NPM
 
             # Do it.
             cursor = connection.cursor()
-            op(cursor, arg)
+            kw['cursor'] = cursor
+            op(**kw)
             cursor.run('UPDATE worker_coordination SET npm_last_seq=%(seq)s', change)
             connection.commit()
-
-
-def delete(cursor, name):
-    cursor.run("DELETE FROM packages WHERE package_manager='npm' AND name=%s", (name,))
-
-
-def upsert(cursor, processed):
-    cursor.run('''
-    INSERT INTO packages
-                (package_manager, name, description, emails)
-         VALUES ('npm', %(name)s, %(description)s, %(emails)s)
-
-    ON CONFLICT (package_manager, name) DO UPDATE
-            SET description=%(description)s, emails=%(emails)s
-    ''', processed)
 
 
 def check(db, _print=print):

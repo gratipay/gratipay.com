@@ -30,7 +30,7 @@ class Alice(QueuedEmailHarness):
         participant.start_email_verification(address)
         nonce = participant.get_email(address).nonce
         result = participant.finish_email_verification(address, nonce)
-        assert result == (_email.VERIFICATION_SUCCEEDED, [], False)
+        assert result == (_email.VERIFICATION_SUCCEEDED, [], None)
         if _flush:
             self.app.email_queue.flush()
 
@@ -767,7 +767,7 @@ class PackageLinking(VerificationBase):
 
         # email?
         packages = [Package.from_names(NPM, name) for name in package_names]
-        assert result == (_email.VERIFICATION_SUCCEEDED, packages, bool(packages))
+        assert result == (_email.VERIFICATION_SUCCEEDED, packages, True if packages else None)
         assert self.alice.email_address == P('alice').email_address == self.address
 
         # database?
@@ -857,6 +857,16 @@ class PackageLinking(VerificationBase):
         result = self.alice.finish_email_verification(self.address, nonce)
         foo = Package.from_names('npm', 'foo')
         assert result == (_email.VERIFICATION_SUCCEEDED, [foo], False)
+
+
+    def test_deleting_package_removes_open_claims(self):
+        self.add_and_verify_email(self.alice, self.address)
+        self.alice.set_paypal_address(self.address)
+        self.start(self.address, 'foo')
+        load = lambda: self.db.one('select * from claims')
+        assert load() is not None
+        Package.from_names('npm', 'foo').delete()
+        assert load() is None
 
 
     def test_finishing_email_verification_is_thread_safe(self):
