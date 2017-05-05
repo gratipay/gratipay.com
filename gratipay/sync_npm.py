@@ -35,8 +35,8 @@ def process_doc(doc):
     return {'name': name, 'description': description, 'emails': sorted(set(emails))}
 
 
-def consume_change_stream(change_stream, db):
-    """Given a function similar to :py:func:`production_change_stream` and a
+def consume_change_stream(stream, db):
+    """Given an iterable of CouchDB change notifications and a
     :py:class:`~GratipayDB`, read from the stream and write to the db.
 
     The npm registry is a CouchDB app, which means we get a change stream from
@@ -45,10 +45,8 @@ def consume_change_stream(change_stream, db):
     database, and write as we read.
 
     """
-    last_seq = get_last_seq(db)
-    log("Picking up with npm sync at {}.".format(last_seq))
     with db.get_connection() as connection:
-        for change in change_stream(last_seq):
+        for change in stream:
 
             # Decide what to do.
             if change.get('deleted'):

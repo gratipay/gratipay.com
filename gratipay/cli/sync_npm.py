@@ -25,7 +25,10 @@ def main():
     db = wireup.db(env)
     while 1:
         with sentry.teller(env):
-            consume_change_stream(production_change_stream, db)
+            last_seq = get_last_seq(db)
+            log("Picking up with npm sync at {}.".format(last_seq))
+            stream = production_change_stream(last_seq)
+            consume_change_stream(stream, db)
         try:
             last_seq = get_last_seq(db)
             sleep_for = 60

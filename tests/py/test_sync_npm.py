@@ -40,7 +40,8 @@ class ConsumeChangeStreamTests(Harness):
                 if i < seq: continue
                 change['seq'] = i
                 yield change
-        return change_stream
+        last_seq = sync_npm.get_last_seq(self.db)
+        return change_stream(last_seq)
 
 
     def test_packages_starts_empty(self):
