@@ -53,8 +53,7 @@ class Application(object):
         cron(env.update_cta_every, lambda: utils.update_cta(website))
         cron(env.check_db_every, db.self_check, True)
         cron(env.email_queue_flush_every, self.email_queue.flush, True)
-        if website.log_metrics:
-            cron(env.check_npm_sync_every, lambda: sync_npm.check(db), True)
+        cron(env.check_npm_sync_every, lambda: sync_npm.check(db))
 
 
     def add_event(self, c, type, payload):
