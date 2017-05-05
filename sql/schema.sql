@@ -989,3 +989,9 @@ ALTER TABLE email_queue ADD COLUMN user_initiated bool NOT NULL DEFAULT TRUE;
 -- https://github.com/gratipay/gratipay.com/pull/4395
 
 ALTER TABLE email_queue ADD COLUMN dead bool NOT NULL DEFAULT FALSE;
+
+-- https://github.com/gratipay/gratipay.com/pull/4438
+BEGIN;
+    CREATE TABLE worker_coordination (npm_last_seq bigint not null default -1);
+    INSERT INTO worker_coordination DEFAULT VALUES;
+END;
