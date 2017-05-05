@@ -3,7 +3,7 @@ language: python
 git:
   depth: 5
 addons:
-  postgresql: 9.6
+  postgresql: 9.5
   firefox: latest-esr
 before_install:
  - git branch -vv | grep '^*'
