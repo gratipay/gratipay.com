@@ -49,22 +49,25 @@ def consume_change_stream(change_stream, db):
     log("Picking up with npm sync at {}.".format(last_seq))
     with db.get_connection() as connection:
         for change in change_stream(last_seq):
+
+            # Decide what to do.
             if change.get('deleted'):
-                # Hack to work around conflation of design docs and packages in updates
-                op, doc = delete, {'name': change['id']}
+                op, arg = delete, change['id']
             else:
-                op, doc = upsert, change['doc']
-            processed = process_doc(doc)
-            if not processed:
-                continue
+                processed_doc = process_doc(change['doc'])
+                if not processed_doc:
+                    continue
+                op, arg = upsert, processed_doc
+
+            # Do it.
             cursor = connection.cursor()
-            op(cursor, processed)
+            op(cursor, arg)
             cursor.run('UPDATE worker_coordination SET npm_last_seq=%(seq)s', change)
             connection.commit()
 
 
-def delete(cursor, processed):
-    cursor.run("DELETE FROM packages WHERE package_manager='npm' AND name=%(name)s", processed)
+def delete(cursor, name):
+    cursor.run("DELETE FROM packages WHERE package_manager='npm' AND name=%s", (name,))
 
 
 def upsert(cursor, processed):
