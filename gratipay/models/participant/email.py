@@ -17,17 +17,25 @@ from gratipay.utils import encode_for_querystring
 EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
 
+class VerificationResult(object):
+    def __init__(self, name):
+        self.name = name
+    def __repr__(self):
+        return "<VerificationResult: %r>" % self.name
+    __str__ = __repr__
+
+
 #: Signal that verifying an email address failed.
-VERIFICATION_FAILED = object()
+VERIFICATION_FAILED = VerificationResult('Failed')
 
 #: Signal that verifying an email address was redundant.
-VERIFICATION_REDUNDANT = object()
+VERIFICATION_REDUNDANT = VerificationResult('Redundant')
 
 #: Signal that an email address is already verified for a different :py:class:`Participant`.
-VERIFICATION_STYMIED = object()
+VERIFICATION_STYMIED = VerificationResult('Stymied')
 
 #: Signal that email verification succeeded.
-VERIFICATION_SUCCEEDED = object()
+VERIFICATION_SUCCEEDED = VerificationResult('Succeeded')
 
 
 class Email(object):
@@ -257,8 +265,9 @@ class Email(object):
             if (utcnow() - record.verification_start) > EMAIL_HASH_TIMEOUT:
                 return VERIFICATION_FAILED, None, None
             try:
-                paypal_updated = False
+                paypal_updated = None
                 if packages:
+                    paypal_updated = False
                     self.finish_package_claims(cursor, nonce, *packages)
                 self.save_email_address(cursor, email)
                 has_no_paypal = not self.get_payout_routes(good_only=True)
