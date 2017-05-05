@@ -6,7 +6,7 @@ from aspen import log
 from couchdb import Database
 
 
-REGISTRY_URL = 'https://skimdb.npmjs.com/registry'
+REGISTRY_URL = 'https://replicate.npmjs.com/'
 
 
 def get_last_seq(db):
