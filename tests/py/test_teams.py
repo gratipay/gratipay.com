@@ -8,6 +8,7 @@ import base64
 from aspen.testing.client import FileUpload
 from gratipay.testing import Harness, D,T
 from gratipay.models.team import Team, slugize, InvalidTeamName
+from gratipay.testing.email import QueuedEmailHarness, SentEmailHarness
 
 
 REVIEW_URL = "https://github.com/gratipay/test-gremlin/issues/9"
@@ -220,6 +221,24 @@ class TestTeams(Harness):
         assert team.product_or_service == 'We make widgets.'
         fallback = 'https://github.com/gratipay/team-review/issues#error-401'
         assert team.review_url in (REVIEW_URL, fallback)
+
+
+
+
+
+    def test_project_application_sends_verification_notice(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
+        self.post_new(dict(self.valid_data))
+        team = T('gratiteam')
+        last_email = self.get_last_email()
+        self.app.email_queue.flush()
+        assert last_email['to'] == 'alice <alice@example.com>'
+        expected = "Thanks for your project application"
+        assert expected in last_email['body_text']
+
+
+
+
 
     def test_casing_of_urls_survives(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
