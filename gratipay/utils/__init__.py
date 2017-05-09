@@ -43,10 +43,6 @@ def _munge(website, request, url_prefix, fs_prefix):
     elif request.path.raw.startswith(url_prefix):
         request.path.__init__(fs_prefix + request.path.raw[len(url_prefix):])
 
-def help_aspen_find_well_known(website, request):
-    _munge(website, request, '/.well-known/', '/_well-known/')
-    _munge(website, request, '/assets/.well-known/', '/assets/_well-known/')
-
 def use_tildes_for_participants(website, request):
     return _munge(website, request, '/~', '/~/')
 
