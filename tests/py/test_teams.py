@@ -1,7 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
-import mock
 import pytest
 import base64
 
@@ -9,8 +8,6 @@ from aspen.testing.client import FileUpload
 from gratipay.testing import Harness, D,T
 from gratipay.models.team import Team, slugize, InvalidTeamName
 
-
-REVIEW_URL = "https://github.com/gratipay/test-gremlin/issues/9"
 
 IMAGE = base64.b64decode(b"""\
 iVBORw0KGgoAAAANSUhEUgAAAEQAAAAdCAYAAAATksqNAAAYKGlDQ1BJQ0MgUHJvZmlsZQAAWIWV
@@ -201,9 +198,7 @@ class TestTeams(Harness):
         assert team.name == 'The Enterprise'
         assert team.owner == 'picard'
 
-    @mock.patch('gratipay.models.team.Team.create_github_review_issue')
-    def test_can_create_new_team(self, cgri):
-        cgri.return_value = REVIEW_URL
+    def test_can_create_new_team(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
         r = self.post_new(dict(self.valid_data))
         team = self.db.one("SELECT * FROM teams")
@@ -218,8 +213,7 @@ class TestTeams(Harness):
         assert team.name == 'Gratiteam'
         assert team.homepage == 'http://gratipay.com/'
         assert team.product_or_service == 'We make widgets.'
-        fallback = 'https://github.com/gratipay/team-review/issues#error-401'
-        assert team.review_url in (REVIEW_URL, fallback)
+        assert team.review_url == 'some-github-issue'
 
     def test_casing_of_urls_survives(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
@@ -450,6 +444,13 @@ class TestTeams(Harness):
                 with pytest.raises(AssertionError):
                     team.update(field='foo')
 
+    def test_homepage_not_allowed_for_package(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        package = self.make_package(name='enterprise')
+        with self.db.get_cursor() as c:
+            team = package.get_or_create_linked_team(c, alice)
+        pytest.raises(AssertionError, team.update, homepage='foo')
+
     def test_update_records_the_old_values_as_events(self):
         team = self.make_team(slug='enterprise', product_or_service='Product')
         team.update(name='Enterprise', product_or_service='We save galaxies.')
@@ -510,3 +511,17 @@ class TestTeams(Harness):
 
     def test_slugize_disallows_backslashes(self):
         self.assertRaises(InvalidTeamName, slugize, 'abc\def')
+
+
+class Cast(Harness):
+
+    def test_casts_team(self):
+        team = self.make_team()
+        state = self.client.GET('/TheEnterprise/', return_after='cast', want='state')
+        assert state['request'].path['team'] == team
+
+    def test_canonicalizes(self):
+        self.make_team()
+        response = self.client.GxT('/theenterprise/', return_after='cast')
+        assert response.code == 302
+        assert response.headers['Location'] == '/TheEnterprise/'

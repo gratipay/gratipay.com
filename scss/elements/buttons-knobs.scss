@@ -27,27 +27,31 @@ button,
     display: inline;
 
     &:disabled {
-        opacity: .5;
+        background: $medium-gray;
 
         &:hover {
-            background: $gray;
             cursor: default;
         }
     }
 }
-button:hover,
-.button:hover {
+button:hover:not(:disabled),
+.button:hover:not(:disabled) {
     background: $darker-gray;
 }
-button.selected,
-.button.selected {
+button.selected:not(:disabled),
+.button.selected:not(:disabled) {
     background: $green;
 }
-button.selected:hover, button.selected.drag,
-.button.selected:hover, .button.selected.drag {
+button.selected:hover:not(:disabled), button.selected.drag,
+.button.selected:hover:not(:disabled), .button.selected.drag {
     background: $darker-green;
 }
 
 .buttons button {
     margin-top: 3px;
+}
+.apply-button {
+    position: absolute;
+    top: 0;
+    right: 0;
 }

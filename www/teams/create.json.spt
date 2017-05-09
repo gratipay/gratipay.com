@@ -84,7 +84,7 @@ if request.method == 'POST':
 
     team.save_image(image, large, small, image_type)
 
-    review_url = team.create_github_review_issue()
+    review_url = website.app.project_review_repo.create_issue(team)
     team.set_review_url(review_url)
 
     team_url = website.env.base_url + '/{}/'.format(team.slug)

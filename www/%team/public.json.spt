@@ -3,13 +3,12 @@
 import re
 
 from aspen import json, Response
-from gratipay.utils import get_team
 
 callback_pattern = re.compile(r'^[_A-Za-z0-9.]+$')
 
 [-----------------------------------------------------------------------------]
 
-team = get_team(state)
+team = request.path['team']
 
 # CORS - see https://github.com/gratipay/aspen-python/issues/138
 response.headers["Access-Control-Allow-Origin"] = "*"

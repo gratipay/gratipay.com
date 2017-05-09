@@ -208,7 +208,7 @@ class TestClearPersonalInformation(Harness):
                                      , taking=40
                                       )
         alice.upsert_statement('en', 'not forgetting to be awesome!')
-        alice.add_email('alice@example.net')
+        alice.start_email_verification('alice@example.net')
 
         with self.db.get_cursor() as cursor:
             alice.clear_personal_information(cursor)

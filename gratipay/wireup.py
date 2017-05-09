@@ -31,7 +31,6 @@ from gratipay.elsewhere.twitter import Twitter
 from gratipay.elsewhere.venmo import Venmo
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.participant import Participant, Identity
-from gratipay.models.team import Team
 from gratipay.security.crypto import EncryptingPacker
 from gratipay.utils import find_files
 from gratipay.utils.http_caching import asset_etag
@@ -77,11 +76,6 @@ def billing(env):
         env.braintree_public_key,
         env.braintree_private_key
     )
-
-
-def team_review(env):
-    Team.review_repo = env.team_review_repo
-    Team.review_auth = (env.team_review_username, env.team_review_token)
 
 
 def username_restrictions(website):
@@ -391,9 +385,9 @@ def env():
         SENTRY_DSN                      = unicode,
         LOG_METRICS                     = is_yesish,
         INCLUDE_PIWIK                   = is_yesish,
-        TEAM_REVIEW_REPO                = unicode,
-        TEAM_REVIEW_USERNAME            = unicode,
-        TEAM_REVIEW_TOKEN               = unicode,
+        PROJECT_REVIEW_REPO             = unicode,
+        PROJECT_REVIEW_USERNAME         = unicode,
+        PROJECT_REVIEW_TOKEN            = unicode,
         RAISE_SIGNIN_NOTIFICATIONS      = is_yesish,
         REQUIRE_YAJL                    = is_yesish,
         GUNICORN_OPTS                   = unicode,
@@ -417,7 +411,7 @@ def env():
         aspen.log_dammit("See ./default_local.env for hints.")
 
         aspen.log_dammit("=" * 42)
-        keys = ', '.join([key for key in env.malformed])
+        keys = ', '.join([key for key, value in env.malformed])
         raise BadEnvironment("Malformed envvar{}: {}.".format(plural, keys))
 
     if env.missing:

@@ -1,5 +1,11 @@
-STATUS_ICONS = { "approved": "&#xe008;"
-               , "unreviewed": "&#xe009;"
-               , "rejected": "&#xe010;"
-               , "featured": "&#xe9d9;"
+STATUS_ICONS = { "success": "&#xe008;"
+               , "warning": "&#xe009;"
+               , "failure": "&#xe010;"
+               , "feature": "&#xe9d9;"
                 }
+
+REVIEW_MAP = { 'approved': 'success'
+             , 'unreviewed': 'warning'
+             , 'rejected': 'failure'
+             , 'featured': 'feature'
+              }
