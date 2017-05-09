@@ -428,6 +428,8 @@ running `source env/bin/activate`, and then:
 
     [gratipay] $ cd tests/
     [gratipay] $ honcho run -e defaults.env,local.env py.test
+    
+Type `deactivate` to exit the virtualenv.
 
 Be careful! The test suite deletes data in all tables in the public schema of the
 database configured in your testing environment.
