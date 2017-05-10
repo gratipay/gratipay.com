@@ -1,0 +1,1913 @@
+# Translations template for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-05-10 09:44-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+
+#: emails/approved-1.0.spt:1
+msgid "1.0 Payout: Approved!"
+msgstr ""
+
+#: emails/approved-1.0.spt:3 emails/approved-1.0.spt:8
+msgid "We've approved your application for a payout of your Gratipay 1.0 balance. Watch for that during our next weekly payment cycle."
+msgstr ""
+
+#: emails/approved-1.0.spt:6 emails/approved-1.0.spt:10
+#: emails/team-approved.spt:10 emails/team-approved.spt:18
+msgid "Thanks for using Gratipay! :-)"
+msgstr ""
+
+#: emails/base.spt:12 emails/base.spt:29
+msgid "Something not right? Reply to this email for help."
+msgstr ""
+
+#: emails/base.spt:25
+msgid "Greetings!"
+msgstr ""
+
+#: emails/charge_failed.spt:1
+msgid "Oh no! A problem supporting {0}!"
+msgstr ""
+
+#: emails/charge_failed.spt:4 emails/charge_failed.spt:19
+msgid "We tried to charge your credit card {0} today, to fund your ongoing support for {1}, but the charge failed with this message:"
+msgstr ""
+
+#: emails/charge_failed.spt:8 emails/charge_failed.spt:21
+#: emails/charge_succeeded.spt:8 emails/charge_succeeded.spt:20
+msgid "{0} and {n} other"
+msgid_plural "{0} and {n} others"
+msgstr[0] ""
+msgstr[1] ""
+
+#: emails/charge_failed.spt:16
+msgid "Fix Credit Card"
+msgstr ""
+
+#: emails/charge_failed.spt:28
+msgid "Follow this link to fix your credit card:"
+msgstr ""
+
+#: emails/charge_succeeded.spt:1
+msgid "Thanks for supporting {0}!"
+msgstr ""
+
+#: emails/charge_succeeded.spt:4 emails/charge_succeeded.spt:18
+msgid "We charged your credit card {0} today, to fund your ongoing support for {1}. Thanks for using Gratipay!"
+msgstr ""
+
+#: emails/charge_succeeded.spt:15
+msgid "View Receipt"
+msgstr ""
+
+#: emails/charge_succeeded.spt:25
+msgid "Follow this link to view your receipt:"
+msgstr ""
+
+#: emails/charge_succeeded.spt:27
+msgid "Follow this link if you want to view or modify your payments:"
+msgstr ""
+
+#: emails/identity-viewed.spt:1
+msgid "Identity Viewed"
+msgstr ""
+
+#: emails/identity-viewed.spt:3
+msgid "This is a transactional email to let you know that {a_viewer}{viewer}{_a} viewed your identity information for {a_country}{country_name}{_a} on Gratipay."
+msgstr ""
+
+#: emails/identity-viewed.spt:11
+msgid "This is a transactional email to let you know that {viewer} viewed your identity information for {country_name} on Gratipay."
+msgstr ""
+
+#: emails/initial.spt:1 emails/verification.spt:1
+msgid "Connect to {0} on Gratipay?"
+msgstr ""
+
+#: emails/rejected-1.0.spt:1
+msgid "1.0 Payout: Rejected"
+msgstr ""
+
+#: emails/rejected-1.0.spt:3 emails/rejected-1.0.spt:5
+msgid "We've rejected your application for a payout of your Gratipay 1.0 balance, because we couldn't determine what product or service you were offering for which people were paying you on Gratipay. Please reply if you would like to discuss this further."
+msgstr ""
+
+#: emails/suspicious-false.spt:1
+msgid "Your account has been reactivated"
+msgstr ""
+
+#: emails/suspicious-false.spt:4 emails/suspicious-false.spt:6
+msgid "We've reactivated your account. Sorry for the trouble, and thanks for using Gratipay!"
+msgstr ""
+
+#: emails/suspicious-true.spt:1
+msgid "Your account has been suspended"
+msgstr ""
+
+#: emails/suspicious-true.spt:3 emails/suspicious-true.spt:5
+msgid "We have suspended your account."
+msgstr ""
+
+#: emails/team-approved.spt:1
+msgid "Project Application Approved!"
+msgstr ""
+
+#: emails/team-approved.spt:3
+msgid "We've approved your application for the '{team}' project on Gratipay. For details, please refer to {a}our review ticket{_a}."
+msgstr ""
+
+#: emails/team-approved.spt:12
+msgid "We've approved your application for the '{team}' project on Gratipay. For details, please refer to our review ticket:"
+msgstr ""
+
+#: emails/team-rejected.spt:1
+msgid "Project Application Rejected"
+msgstr ""
+
+#: emails/team-rejected.spt:3
+msgid "We've rejected your application for the '{team}' project on Gratipay. For details, please refer to {a}our review ticket{_a}."
+msgstr ""
+
+#: emails/team-rejected.spt:9
+msgid "We've rejected your application for the '{team}' project on Gratipay. For details, please refer to our review ticket:"
+msgstr ""
+
+#: emails/verification-notice.spt:1
+msgid "New activity on your account"
+msgstr ""
+
+#: emails/verification-notice.spt:5 emails/verification-notice.spt:40
+msgid "We are connecting the {package_name} npm package to the {username} account on Gratipay. This is a notification sent to {email_address} because that is the primary email address we have on file."
+msgid_plural "We are connecting {n} npm packages to the {username} account on Gratipay. This is a notification sent to {email_address} because that is the primary email address we have on file."
+msgstr[0] ""
+msgstr[1] ""
+
+#: emails/verification-notice.spt:17 emails/verification-notice.spt:52
+msgid "We are connecting {email_address} and the {package_name} npm package to the {username} account on Gratipay. This is a notification sent to {email_address_2} because that is the primary email address we have on file."
+msgid_plural "We are connecting {email_address} and {n} npm packages to the {username} account on Gratipay. This is a notification sent to {email_address_2} because that is the primary email address we have on file."
+msgstr[0] ""
+msgstr[1] ""
+
+#: emails/verification-notice.spt:30 emails/verification-notice.spt:65
+msgid "We are connecting {email_address} to the {username} account on Gratipay. This is a notification sent to {email_address_2} because that is the primary email address we have on file."
+msgstr ""
+
+#: emails/verification.spt:5 emails/verification.spt:36
+msgid "We've received a request to connect the {package_name} npm package to the {username} account on Gratipay. Sound familiar?"
+msgid_plural "We've received a request to connect {n} npm packages to the {username} account on Gratipay. Sound familiar?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: emails/verification.spt:14 emails/verification.spt:45
+msgid "We've received a request to connect {email_address} and the {package_name} npm package to the {username} account on Gratipay. Sound familiar?"
+msgid_plural "We've received a request to connect {email_address} and {n} npm packages to the {username} account on Gratipay. Sound familiar?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: emails/verification.spt:24 emails/verification.spt:55
+msgid "We've received a request to connect {email_address} to the {username} account on Gratipay. Sound familiar?"
+msgstr ""
+
+#: emails/verification.spt:32
+msgid "Yes, proceed!"
+msgstr ""
+
+#: emails/verification.spt:62
+msgid "Follow this link to finish connecting:"
+msgstr ""
+
+#: gratipay/exceptions.py:35
+msgid "You have already added and verified that address."
+msgstr ""
+
+#: gratipay/exceptions.py:39
+msgid "That address is already linked to a different Gratipay account."
+msgstr ""
+
+#: gratipay/exceptions.py:43
+msgid "You cannot remove your primary email address."
+msgstr ""
+
+#: gratipay/exceptions.py:47
+msgid "That email address is not on file for this package."
+msgstr ""
+
+#: gratipay/exceptions.py:51
+msgid "That email address is not verified."
+msgstr ""
+
+#: gratipay/exceptions.py:55
+msgid "You've reached the maximum number of email addresses we allow."
+msgstr ""
+
+#: gratipay/exceptions.py:60
+msgid "You've initiated too many emails too quickly. Please try again in a minute or two."
+msgstr ""
+
+#: gratipay/elsewhere/__init__.py:137
+msgid "You've consumed your quota of requests, you can try again in {0}."
+msgstr ""
+
+#: gratipay/elsewhere/__init__.py:139
+msgid "You're making requests too fast, please try again later."
+msgstr ""
+
+#: gratipay/elsewhere/__init__.py:144 www/on/%platform/associate.spt:35
+msgid "{0} returned an error, please try again later."
+msgstr ""
+
+#: gratipay/models/account_elsewhere.py:262
+msgid "Invalid character in elsewhere account username."
+msgstr ""
+
+#: gratipay/models/account_elsewhere.py:279
+msgid "Account not found on {0}."
+msgstr ""
+
+#: gratipay/utils/__init__.py:85 www/%team/edit/close.spt:6
+#: www/%team/edit/edit.json.spt:25 www/%team/edit/index.html.spt:7
+#: www/about/me/%sub.spt:8
+msgid "You need to log in to access this page."
+msgstr ""
+
+#: gratipay/utils/__init__.py:115 www/%team/edit/close.spt:13
+#: www/%team/edit/edit.json.spt:30 www/%team/edit/index.html.spt:12
+msgid "You are not authorized to access this page."
+msgstr ""
+
+#: gratipay/utils/i18n.py:93
+msgid "Forbidden"
+msgstr ""
+
+#: gratipay/utils/i18n.py:94
+msgid "Not Found"
+msgstr ""
+
+#: gratipay/utils/i18n.py:95
+msgid "Too Many Requests"
+msgstr ""
+
+#: gratipay/utils/i18n.py:96
+msgid "Internal Server Error"
+msgstr ""
+
+#: gratipay/utils/i18n.py:97
+msgid "Upstream Error"
+msgstr ""
+
+#: gratipay/utils/notifications.py:5
+msgid "Your last PayPal payout failed!"
+msgstr ""
+
+#: gratipay/utils/notifications.py:13
+msgid "Your credit card has failed!"
+msgstr ""
+
+#: gratipay/utils/notifications.py:14
+msgid "Fix your card"
+msgstr ""
+
+#: gratipay/utils/notifications.py:22
+msgid "Your credit card is about to expire!"
+msgstr ""
+
+#: gratipay/utils/notifications.py:23
+msgid "Update card"
+msgstr ""
+
+#: gratipay/utils/notifications.py:31
+msgid "Your account does not have an associated email address."
+msgstr ""
+
+#: gratipay/utils/notifications.py:32
+msgid "Add an email address"
+msgstr ""
+
+#: templates/about-basic-info.html:5 templates/profile-routes.html:5
+msgid "Overview"
+msgstr ""
+
+#: templates/about-basic-info.html:6 www/about/stats.spt:7
+msgid "Stats"
+msgstr ""
+
+#: templates/about-basic-info.html:7 www/about/pricing.spt:5
+msgid "Pricing"
+msgstr ""
+
+#: templates/about-basic-info.html:8 www/about/contact.spt:3
+msgid "Contact Us"
+msgstr ""
+
+#: templates/about-features.html:5 templates/profile.html:122
+msgid "Payments"
+msgstr ""
+
+#: templates/about-features.html:6 www/about/features/dnt.spt:3
+#: www/~/%username/settings/index.html.spt:89
+msgid "Do Not Track"
+msgstr ""
+
+#: templates/about-policies.html:5 www/about/policies/terms-of-service.spt:14
+msgid "Terms of Service"
+msgstr ""
+
+#: templates/about-policies.html:6 www/about/policies/privacy.spt:3
+msgid "Privacy Policy"
+msgstr ""
+
+#: templates/about-security.html:5
+msgid "Disclosure"
+msgstr ""
+
+#: templates/about-security.html:6 www/about/security/hall-of-fame.spt:65
+msgid "Hall of Fame (Legacy)"
+msgstr ""
+
+#: templates/about.html:6
+msgid "Basic Info"
+msgstr ""
+
+#: templates/about.html:7 www/about/features/index.spt:3
+msgid "Features"
+msgstr ""
+
+#: templates/about.html:8
+msgid "Policies"
+msgstr ""
+
+#: templates/about.html:9
+msgid "Security"
+msgstr ""
+
+#: templates/account-row.html:29 templates/venmo-account.html:29
+#: www/~/%username/routes/index.spt:45 www/~/%username/routes/index.spt:64
+msgid "+ Add"
+msgstr ""
+
+#: templates/account-row.html:32 templates/venmo-account.html:34
+msgid "Disconnect"
+msgstr ""
+
+#: templates/base.html:41 www/search.spt:50 www/search.spt:210
+msgid "Search"
+msgstr ""
+
+#: templates/base.html:41 templates/base.html:104 www/about/contact.spt:2
+#: www/about/index.spt:2 www/about/pricing.spt:4 www/about/stats.spt:6
+#: www/about/features/dnt.spt:2 www/about/features/index.spt:2
+#: www/about/policies/privacy.spt:2 www/about/policies/terms-of-service.spt:13
+#: www/about/security/hall-of-fame.spt:64
+msgid "About"
+msgstr ""
+
+#: templates/base.html:55
+msgid "wk"
+msgstr ""
+
+#: templates/base.html:62
+msgid "Sign out"
+msgstr ""
+
+#: templates/base.html:77
+msgid "{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier to get funded on Gratipay{_a}{_nowrap}."
+msgstr ""
+
+#: templates/base.html:109
+msgid "Blog"
+msgstr ""
+
+#: templates/base.html:115
+msgid "GitHub"
+msgstr ""
+
+#: templates/base.html:121
+msgid "Email"
+msgstr ""
+
+#: templates/community-listing.html:2
+msgid "Communities"
+msgstr ""
+
+#: templates/community-listing.html:12
+msgid "Join Communities"
+msgstr ""
+
+#: templates/connected-accounts.html:5
+msgid "Social Profiles"
+msgstr ""
+
+#: templates/giving-table.html:5
+msgid "Project"
+msgstr ""
+
+#: templates/giving-table.html:7
+msgid "Amount ($)"
+msgstr ""
+
+#: templates/giving-table.html:9
+msgid "Due ($)"
+msgstr ""
+
+#: templates/giving-table.html:12
+msgid "First Set"
+msgstr ""
+
+#: templates/giving-table.html:40
+msgid "{0} ago"
+msgstr ""
+
+#: templates/list-participants.html:14 templates/project-listing.html:37
+msgid "joined {ago}"
+msgstr ""
+
+#: templates/pagination.html:5
+msgid "Previous"
+msgstr ""
+
+#: templates/pagination.html:10
+msgid "Next"
+msgstr ""
+
+#: templates/pagination.html:16
+msgid "First"
+msgstr ""
+
+#: templates/pagination.html:21
+msgid "Last"
+msgstr ""
+
+#: templates/profile-edit.html:3 templates/profile.html:118
+#: templates/team-base.html:62
+msgid "Profile"
+msgstr ""
+
+#: templates/profile-edit.html:4
+msgid "Statement"
+msgstr ""
+
+#: templates/profile-edit.html:5 templates/your-payment.html:17
+#: www/%team/edit/index.html.spt:21 www/~/%username/routes/index.spt:45
+#: www/~/%username/routes/index.spt:64
+#: www/~/%username/settings/index.html.spt:24
+msgid "Edit"
+msgstr ""
+
+#: templates/profile-edit.html:9
+msgid "Tell us how you're making the world better."
+msgstr ""
+
+#: templates/profile-edit.html:11
+msgid "Gratipay allows you to have profile statements in multiple languages. Use the selector below to switch between them."
+msgstr ""
+
+#: templates/profile-edit.html:23
+msgid "Markdown supported."
+msgstr ""
+
+#: templates/profile-edit.html:24
+msgid "What is markdown?"
+msgstr ""
+
+#: templates/profile-edit.html:25
+msgid "View source."
+msgstr ""
+
+#: templates/profile-edit.html:27 templates/your-payment.html:26
+#: www/~/%username/identities/%country.spt:136
+#: www/~/%username/routes/credit-card.spt:90
+#: www/~/%username/settings/index.html.spt:27
+msgid "Save"
+msgstr ""
+
+#: templates/profile-edit.html:28 templates/your-payment.html:27
+#: www/%team/edit/index.html.spt:68 www/~/%username/settings/index.html.spt:28
+msgid "Cancel"
+msgstr ""
+
+#: templates/profile-routes.html:6 www/~/%username/routes/credit-card.spt:12
+#: www/~/%username/routes/index.spt:36
+msgid "Credit Card"
+msgstr ""
+
+#: templates/profile-routes.html:7 www/~/%username/routes/paypal.spt:7
+msgid "PayPal"
+msgstr ""
+
+#: templates/profile.html:50 templates/profile.html:51
+msgid "verified in: {country}"
+msgstr ""
+
+#: templates/profile.html:61 templates/team-base.html:15
+msgid "Weekly"
+msgstr ""
+
+#: templates/profile.html:66 templates/profile.html:119
+#: www/~/%username/giving/index.html.spt:10
+msgid "Giving"
+msgstr ""
+
+#: templates/profile.html:73 www/on/%platform/index.spt:104
+msgid "hidden"
+msgstr ""
+
+#: templates/profile.html:82
+msgid "Taking"
+msgstr ""
+
+#: templates/profile.html:89
+msgid "Joined"
+msgstr ""
+
+#: templates/profile.html:120 templates/team-base.html:63
+#: www/%team/history/index.html.spt:17
+#: www/~/%username/history/index.html.spt:12
+msgid "History"
+msgstr ""
+
+#: templates/profile.html:121 www/~/%username/emails/index.spt:7
+msgid "Emails"
+msgstr ""
+
+#: templates/profile.html:123 www/~/%username/settings/index.html.spt:7
+msgid "Settings"
+msgstr ""
+
+#: templates/profile.html:124 www/~/%username/widgets/index.html.spt:7
+msgid "Widgets"
+msgstr ""
+
+#: templates/profile.html:125 www/~/%username/events/index.html.spt:9
+msgid "Events"
+msgstr ""
+
+#: templates/project-listing.html:24
+msgid "{amount}/wk from one giver"
+msgid_plural "{amount}/wk from {number_of} givers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/project-listing.html:31
+msgid "no givers yet"
+msgstr ""
+
+#: templates/project-listing.html:39
+msgid "has not joined"
+msgstr ""
+
+#: templates/project-listing.html:44
+msgid "owned by {a}{owner}{_a}"
+msgstr ""
+
+#: templates/sign-in-using.html:7
+msgid "Sign in / Sign up"
+msgstr ""
+
+#: templates/support-gratipay.html:8
+#, python-format
+msgid "Only {0}% of active users also {1}support Gratipay{2}."
+msgstr ""
+
+#: templates/support-gratipay.html:10
+#, python-format
+msgid "{0}% of active users also {1}support Gratipay{2}."
+msgstr ""
+
+#: templates/support-gratipay.html:14
+msgid "Will you help us reach {0}%?"
+msgstr ""
+
+#: templates/support-gratipay.html:16
+msgid "Will you join them?"
+msgstr ""
+
+#: templates/support-gratipay.html:26
+msgid "Other"
+msgstr ""
+
+#: templates/support-gratipay.html:26
+msgid "No thanks"
+msgstr ""
+
+#: templates/support-gratipay.html:31
+msgid "We fund Gratipay solely through your voluntary payments!"
+msgstr ""
+
+#: templates/support-gratipay.html:32
+#: www/on/%platform/%user_name/index.html.spt:119
+msgid "Learn more"
+msgstr ""
+
+#: templates/team-base.html:20 templates/team-base.html:64
+#: www/%team/receiving/index.html.spt:14
+msgid "Receiving"
+msgstr ""
+
+#: templates/team-base.html:29
+msgid "Joined {ago}"
+msgstr ""
+
+#: templates/team-base.html:31
+msgid "Applied {ago}"
+msgstr ""
+
+#: templates/team-base.html:65
+msgid "Distributing"
+msgstr ""
+
+#: templates/your-payment.html:5
+msgid "{sign_in}{br}to give to{br}{team}"
+msgstr ""
+
+#: templates/your-payment.html:10
+msgid "You Give"
+msgstr ""
+
+#: templates/your-payment.html:14 templates/your-payment.html:25
+msgid "per week"
+msgstr ""
+
+#: templates/your-payment.html:16
+msgid "Give to {0}"
+msgstr ""
+
+#: templates/your-payment.html:28
+msgid "Stop Giving"
+msgstr ""
+
+#: templates/your-payment.html:34
+msgid "Back your payment with a {0}credit card{1} to make sure it goes through!"
+msgstr ""
+
+#: www/1.0-payout.spt:10
+msgid "1.0"
+msgstr ""
+
+#: www/1.0-payout.spt:11
+msgid "Status of Your 1.0 Payout"
+msgstr ""
+
+#: www/1.0-payout.spt:17
+msgid "Read about our plan to {a}refund the money from Gratipay 1.0{_a}."
+msgstr ""
+
+#: www/1.0-payout.spt:23
+msgid "Your {a}balance{_a} from Gratipay 1.0 is {b}below our minimum payout threshold of {minimum}{_b}."
+msgstr ""
+
+#: www/1.0-payout.spt:31
+msgid "You do not have a balance left over from Gratipay 1.0."
+msgstr ""
+
+#: www/1.0-payout.spt:32
+msgid "You're all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)"
+msgstr ""
+
+#: www/1.0-payout.spt:34
+msgid "Your balance is {b}{balance}{_b}."
+msgstr ""
+
+#: www/1.0-payout.spt:41
+msgid "You are {b}scheduled for a payout{_b} during our next weekly cycle."
+msgstr ""
+
+#: www/1.0-payout.spt:45
+msgid "You should be all set! But ... can you help us spread the word and tell your friends to check here, too? Thanks! :)"
+msgstr ""
+
+#: www/1.0-payout.spt:48
+msgid "You have applied for a payout. We will review your account and contact you at {b}{email}{_b} within the next week."
+msgstr ""
+
+#: www/1.0-payout.spt:53
+msgid "Meanwhile ... can you help us spread the word and tell your friends to check here, too? Thanks! :)"
+msgstr ""
+
+#: www/1.0-payout.spt:56
+msgid "You have applied for a payout, and we have rejected your application. You should have received a notification at {b}{email}{_b} from {a}support@gratipay.com{_a}."
+msgstr ""
+
+#: www/1.0-payout.spt:66
+msgid "Apply for a payout"
+msgstr ""
+
+#: www/1.0-payout.spt:68
+msgid "Please {a}connect a PayPal account{_a} and then return here to apply for payout."
+msgstr ""
+
+#: www/apply.spt:9
+msgid "You must sign in to apply for your project to join Gratipay."
+msgstr ""
+
+#: www/apply.spt:12
+msgid "You must have a verified email address to apply for your project to join Gratipay."
+msgstr ""
+
+#: www/apply.spt:15
+msgid "You must attach a PayPal account to apply for your project to join Gratipay."
+msgstr ""
+
+#: www/apply.spt:17
+msgid "Apply to Join Gratipay"
+msgstr ""
+
+#: www/apply.spt:18 www/apply.spt:84
+msgid "Apply"
+msgstr ""
+
+#: www/apply.spt:36
+msgid "Thanks! Your public project page is:"
+msgstr ""
+
+#: www/apply.spt:38
+msgid "And your public review ticket is:"
+msgstr ""
+
+#: www/apply.spt:40
+msgid "You can watch and participate in our review process there. We will send a notification to {email} when we finish our review."
+msgstr ""
+
+#: www/apply.spt:43
+msgid "Thanks for applying!"
+msgstr ""
+
+#: www/apply.spt:48 www/%team/edit/index.html.spt:48
+msgid "Project Name"
+msgstr ""
+
+#: www/apply.spt:49
+msgid "At least one letter A through Z, plus numbers, dashes (-), underscores (_), periods (.), comma (,) and whitespace."
+msgstr ""
+
+#: www/apply.spt:52 www/%team/edit/index.html.spt:51
+msgid "Product or Service"
+msgstr ""
+
+#: www/apply.spt:53
+msgid "What product or service does your project provide?"
+msgstr ""
+
+#: www/apply.spt:56 www/%team/index.html.spt:42
+#: www/%team/edit/index.html.spt:54
+msgid "Homepage"
+msgstr ""
+
+#: www/apply.spt:57
+msgid "What is the customer-facing web page for your project?"
+msgstr ""
+
+#: www/apply.spt:60 www/%team/edit/index.html.spt:61
+msgid "Image"
+msgstr ""
+
+#: www/apply.spt:61
+msgid "PNG or JPG up to 256 kB. Will be cropped square and resized to 160 x 160 and 48 x 48 (with original saved for later)."
+msgstr ""
+
+#: www/apply.spt:64
+msgid "Agreements"
+msgstr ""
+
+#: www/apply.spt:67
+msgid "I agree to have my application {0}publicly reviewed{1}."
+msgstr ""
+
+#: www/apply.spt:76
+msgid "I agree to the other {0}terms of service{1} as well."
+msgstr ""
+
+#: www/index.html.spt:7 www/search.spt:41 www/%team/index.html.spt:34
+#: www/~/%username/index.html.spt:31 www/~/%username/emails/verify.html.spt:31
+msgid "Approved"
+msgstr ""
+
+#: www/index.html.spt:8 www/search.spt:42 www/%team/index.html.spt:36
+#: www/~/%username/index.html.spt:32 www/~/%username/emails/verify.html.spt:32
+msgid "Unreviewed"
+msgstr ""
+
+#: www/index.html.spt:9 www/search.spt:43 www/%team/index.html.spt:38
+#: www/~/%username/index.html.spt:33 www/~/%username/emails/verify.html.spt:33
+msgid "Rejected"
+msgstr ""
+
+#: www/index.html.spt:10 www/search.spt:44 www/~/%username/index.html.spt:34
+#: www/~/%username/emails/verify.html.spt:34
+msgid "Featured"
+msgstr ""
+
+#: www/index.html.spt:58 www/~/%username/index.html.spt:67
+#: www/~/%username/index.html.spt:85
+msgid "Projects"
+msgstr ""
+
+#: www/index.html.spt:80
+msgid "Pay for open source."
+msgstr ""
+
+#: www/index.html.spt:85 www/~/%username/index.html.spt:69
+msgid "Fund Your Project"
+msgstr ""
+
+#: www/search.spt:208
+msgid "Search Gratipay"
+msgstr ""
+
+#: www/search.spt:219
+msgid "Found a matching project"
+msgid_plural "Found matching projects"
+msgstr[0] ""
+msgstr[1] ""
+
+#: www/search.spt:229
+msgid "Found a matching username"
+msgid_plural "Found matching usernames"
+msgstr[0] ""
+msgstr[1] ""
+
+#: www/search.spt:236
+msgid "Found a matching user statement"
+msgid_plural "Found matching user statements"
+msgstr[0] ""
+msgstr[1] ""
+
+#: www/search.spt:243
+msgid "Found a matching email address"
+msgid_plural "Found matching email addresses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: www/search.spt:250
+msgid "Sorry, we didn't find anything matching your query."
+msgstr ""
+
+#: www/sign-out.html.spt:21
+msgid "Sign Out"
+msgstr ""
+
+#: www/sign-out.html.spt:25
+msgid "Are you sure you wish to sign out?"
+msgstr ""
+
+#: www/sign-out.html.spt:29
+msgid "Yes!"
+msgstr ""
+
+#: www/%team/index.html.spt:45
+msgid "{a} Edit project {_a}"
+msgstr ""
+
+#: www/%team/index.html.spt:52
+msgid "owned by {a}~{owner}{_a}"
+msgstr ""
+
+#: www/%team/index.html.spt:63
+msgid "Project Closed"
+msgstr ""
+
+#: www/%team/index.html.spt:64
+msgid "Please {a}email support{_a} to reopen."
+msgstr ""
+
+#: www/%team/payment-instruction.json.spt:12
+msgid "Please sign in first"
+msgstr ""
+
+#: www/%team/payment-instruction.json.spt:43
+msgid "Payment changed to {0} per week. "
+msgstr ""
+
+#: www/%team/payment-instruction.json.spt:44
+msgid "Thank you so much for supporting {0}!"
+msgstr ""
+
+#: www/%team/payment-instruction.json.spt:46
+msgid "You have canceled your payment to {0}."
+msgstr ""
+
+#: www/%team/distributing/%to.json.spt:23
+msgid "User not found."
+msgstr ""
+
+#: www/%team/distributing/%to.json.spt:31
+msgid "That's not a valid number."
+msgstr ""
+
+#: www/%team/distributing/%to.json.spt:42
+msgid "Are you sure you want to remove {0} from this team?"
+msgstr ""
+
+#: www/%team/distributing/%to.json.spt:46
+msgid "{0} has been removed from the team."
+msgstr ""
+
+#: www/%team/distributing/%to.json.spt:50
+msgid "{0} is already a member of this team."
+msgstr ""
+
+#: www/%team/distributing/%to.json.spt:53
+msgid "{0} has been added to the team."
+msgstr ""
+
+#: www/%team/distributing/%to.json.spt:61
+msgid "Are you sure you want to leave this team?"
+msgstr ""
+
+#: www/%team/distributing/%to.json.spt:72
+msgid "Your take is now {0}."
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:7
+#: www/on/%platform/%user_name/index.html.spt:71
+msgid "Team Members"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:20
+msgid "Updating…"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:24
+#: www/on/%platform/%user_name/index.html.spt:127
+msgid "Member"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:25
+msgid "Last{0} Week ($)"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:26
+msgid "This{0} Week ($)"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:27
+msgid "Team{0} Balance ($)"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:28
+msgid "This{0} Week (%)"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:48
+msgid "Enter a Gratipay username"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:50
+msgid "Add"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:63
+msgid "Are you sure?"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:66 www/on/confirm.html.spt:150
+msgid "Yes"
+msgstr ""
+
+#: www/%team/distributing/index.html.spt:67 www/on/confirm.html.spt:151
+msgid "No"
+msgstr ""
+
+#: www/%team/edit/close.spt:16
+msgid "Already closed."
+msgstr ""
+
+#: www/%team/edit/edit.json.spt:33 www/%team/edit/index.html.spt:15
+msgid "You can't edit a closed project."
+msgstr ""
+
+#: www/%team/edit/edit.json.spt:36 www/%team/edit/index.html.spt:18
+msgid "You can't edit a rejected project."
+msgstr ""
+
+#: www/%team/edit/edit.json.spt:48 www/%team/edit/edit.json.spt:67
+#: www/teams/create.json.spt:56 www/teams/create.json.spt:76
+msgid "Please upload a PNG or JPG image."
+msgstr ""
+
+#: www/%team/edit/edit.json.spt:52 www/teams/create.json.spt:60
+msgid "Please fill out the '{}' field."
+msgstr ""
+
+#: www/%team/edit/edit.json.spt:56
+msgid "Please enter an http[s]:// URL for the '{}' field."
+msgstr ""
+
+#: www/%team/edit/edit.json.spt:65 www/teams/create.json.spt:74
+msgid "Please upload an image smaller than 100 kB."
+msgstr ""
+
+#: www/%team/edit/edit.json.spt:69 www/teams/create.json.spt:78
+msgid "Sorry, there was a problem saving your image. Please try again."
+msgstr ""
+
+#: www/%team/edit/index.html.spt:20
+msgid "Edit Your Project"
+msgstr ""
+
+#: www/%team/edit/index.html.spt:67
+msgid "Modify"
+msgstr ""
+
+#: www/%team/edit/index.html.spt:74 www/~/%username/identities/%country.spt:142
+#: www/~/%username/settings/index.html.spt:98
+msgid "Danger Zone"
+msgstr ""
+
+#: www/%team/edit/index.html.spt:75
+msgid "Close Project"
+msgstr ""
+
+#: www/%team/history/index.html.spt:47
+msgid "Total Received : {0}"
+msgstr ""
+
+#: www/%team/history/index.html.spt:50
+msgid "Total Distributed : {0}"
+msgstr ""
+
+#: www/%team/history/index.html.spt:67
+msgid "Giver"
+msgstr ""
+
+#: www/%team/history/index.html.spt:68
+msgid "Taker"
+msgstr ""
+
+#: www/%team/history/index.html.spt:69
+msgid "Amount"
+msgstr ""
+
+#: www/%team/receiving/index.html.spt:21
+msgid "{0} receives {1} per week from {2} ~users."
+msgstr ""
+
+#: www/%team/receiving/index.html.spt:25
+msgid "Dollars Received Per Week"
+msgstr ""
+
+#: www/%team/receiving/index.html.spt:27 www/%team/receiving/index.html.spt:33
+msgid "weeks"
+msgstr ""
+
+#: www/%team/receiving/index.html.spt:31
+msgid "Number of Payments Per Week"
+msgstr ""
+
+#: www/%team/receiving/index.html.spt:50
+msgid "Payments Received, by Number of Payments"
+msgstr ""
+
+#: www/%team/receiving/index.html.spt:53
+msgid "Payments Received, by Dollar Amount"
+msgstr ""
+
+#: www/about/index.spt:3
+msgid "Welcome!"
+msgstr ""
+
+#: www/about/stats.spt:43
+msgid "Gratipay processes about {b}{volume} per week{_b} for {b}{nteams} projects{_b} and about {b}{nusers} ~users{_b}."
+msgstr ""
+
+#: www/about/stats.spt:51
+msgid "On average, ~users who give on Gratipay give {b}{amount} to one project{_b}."
+msgid_plural "On average, ~users who give on Gratipay give {b}{amount} each to {number} projects{_b}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: www/about/stats.spt:62
+msgid "Gratipay has processed about {b}{total}{_b} over {b}{age}+ years{_b}."
+msgstr ""
+
+#: www/about/stats.spt:69
+msgid "{b}{escrow}{_b} is escrowed within Gratipay."
+msgstr ""
+
+#: www/about/fraud/2012-11-05.spt:526
+msgid "The Delpan Incident"
+msgstr ""
+
+#: www/about/me/%sub.spt:6
+msgid "Sign In"
+msgstr ""
+
+#: www/dashboard/1.0-payouts.spt:18
+msgid "1.0 Payout Review"
+msgstr ""
+
+#: www/dashboard/index.spt:27
+msgid "Fraud Review Dashboard"
+msgstr ""
+
+#: www/on/confirm.html.spt:35
+msgid "Transfer?"
+msgstr ""
+
+#: www/on/confirm.html.spt:36
+msgid "Please Confirm"
+msgstr ""
+
+#: www/on/confirm.html.spt:46
+msgid "{0} is connected to {1} on Gratipay."
+msgstr ""
+
+#: www/on/confirm.html.spt:49
+msgid "Transfer it to your ~{username} account?"
+msgstr ""
+
+#: www/on/confirm.html.spt:52
+msgid "How the accounts are now"
+msgstr ""
+
+#: www/on/confirm.html.spt:57 www/on/confirm.html.spt:70
+#: www/on/confirm.html.spt:90 www/on/confirm.html.spt:118
+#: www/on/%platform/index.spt:96
+msgid "Gives"
+msgstr ""
+
+#: www/on/confirm.html.spt:58 www/on/confirm.html.spt:71
+#: www/on/confirm.html.spt:91 www/on/confirm.html.spt:119
+#: www/on/%platform/index.spt:97
+msgid "Takes"
+msgstr ""
+
+#: www/on/confirm.html.spt:85
+msgid "How the accounts will be after the transfer"
+msgstr ""
+
+#: www/on/confirm.html.spt:135
+msgid "Abandoned:"
+msgstr ""
+
+#: www/on/confirm.html.spt:145
+msgid "Transfer it?"
+msgstr ""
+
+#: www/on/%platform/index.spt:16
+msgid "Friend Finder"
+msgstr ""
+
+#: www/on/%platform/index.spt:52
+msgid "You have {n} friend on {0}."
+msgid_plural "You have {n} friends on {0}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: www/on/%platform/index.spt:62
+msgid "Note: privacy settings may prevent Gratipay from seeing some of your {0} friends."
+msgstr ""
+
+#: www/on/%platform/index.spt:73
+msgid "Please refresh your {0} connection"
+msgstr ""
+
+#: www/on/%platform/index.spt:76 www/on/%platform/index.spt:86
+msgid "to find your friends from there."
+msgstr ""
+
+#: www/on/%platform/index.spt:82
+msgid "Sign in with {0}"
+msgstr ""
+
+#: www/on/%platform/index.spt:83
+msgid "Connect your {0} account"
+msgstr ""
+
+#: www/on/%platform/index.spt:89
+msgid "No friends found."
+msgstr ""
+
+#: www/on/%platform/index.spt:94
+msgid "Name"
+msgstr ""
+
+#: www/on/%platform/index.spt:95
+msgid "On Gratipay?"
+msgstr ""
+
+#: www/on/%platform/%user_name/failure.html.spt:12
+#: www/~/%username/routes/credit-card.spt:36
+msgid "Failure"
+msgstr ""
+
+#: www/on/%platform/%user_name/failure.html.spt:20
+msgid "Are you really an administrator of the {0} team?"
+msgstr ""
+
+#: www/on/%platform/%user_name/failure.html.spt:22
+msgid "Your attempt to claim this account failed because you're logged into {0} as someone who isn't an administrator of the {1} team. Please sign out and {2}try again{3}."
+msgstr ""
+
+#: www/on/%platform/%user_name/failure.html.spt:32
+msgid "Are you really {0}?"
+msgstr ""
+
+#: www/on/%platform/%user_name/failure.html.spt:34
+msgid "Your attempt to claim this account failed because you're logged into {0} as someone else. Please sign out and {1}try again{2}."
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:29
+msgid "{0} is a private team"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:31
+msgid "{0} is a big team"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:33
+msgid "{0} is a team with {n} public member"
+msgid_plural "{0} is a team with {n} public members"
+msgstr[0] ""
+msgstr[1] ""
+
+#: www/on/%platform/%user_name/index.html.spt:72
+msgid "A Lot"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:85
+#: www/on/%platform/%user_name/index.html.spt:96
+msgid "{0} has not joined Gratipay."
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:86
+msgid "Are you an administrator of this {0} team account? Connect it to your Gratipay account."
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:90
+msgid "Connect team account"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:100
+msgid "Is this you? You can join Gratipay with a couple clicks:"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:102
+msgid "Join Gratipay"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:105
+msgid "Is this yours? Connect it to your Gratipay account."
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:107
+msgid "Connect"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:116
+msgid "What is Gratipay?"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:118
+msgid "Gratipay helps companies and others pay for open source."
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:127
+#: www/~/%username/history/index.html.spt:88
+msgid "Status"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:141
+msgid "accepts gifts"
+msgstr ""
+
+#: www/on/%platform/%user_name/index.html.spt:151
+msgid "hasn't joined Gratipay yet"
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:51
+msgid "No description available."
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:55
+msgid "Apply to accept payments for the {package_link} npm package:"
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:66
+msgid "No email addresses on file."
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:85
+msgid "Linked to a different account"
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:87
+msgid "Ready to use"
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:91
+msgid "Your primary email address"
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:95
+msgid "Linked to your account"
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:99
+msgid "Half-linked to your account"
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:114
+msgid "Apply to accept payments"
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:118
+msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
+msgstr ""
+
+#: www/on/npm/%package/index.html.spt:124
+msgid "Out of date? Update {a}at npm{_a} and refresh."
+msgstr ""
+
+#: www/teams/create.json.spt:28
+msgid "You must sign in to apply for a new team."
+msgstr ""
+
+#: www/teams/create.json.spt:30
+msgid "You must have a verified email address to apply for a new team."
+msgstr ""
+
+#: www/teams/create.json.spt:32
+msgid "You must attach a PayPal account to apply for a new team."
+msgstr ""
+
+#: www/teams/create.json.spt:37
+msgid "How are you applying for a team!?"
+msgstr ""
+
+#: www/teams/create.json.spt:40
+msgid "Sorry, you must agree to have your application publicly reviewed."
+msgstr ""
+
+#: www/teams/create.json.spt:42
+msgid "Sorry, you must agree to the terms of service."
+msgstr ""
+
+#: www/teams/create.json.spt:64
+msgid "Please enter an http[s]:// URL for the 'Homepage' field."
+msgstr ""
+
+#: www/teams/create.json.spt:69
+msgid "Sorry, your team name is invalid."
+msgstr ""
+
+#: www/teams/create.json.spt:83
+msgid "Sorry, there is already a team using '{}'."
+msgstr ""
+
+#: www/~/%username/index.html.spt:23
+msgid "You don't have a profile statement in this language yet."
+msgstr ""
+
+#: www/~/%username/index.html.spt:24
+msgid "You haven't saved your changes, are you sure you want to discard them?"
+msgstr ""
+
+#: www/~/%username/index.html.spt:28
+msgid "with {n} other"
+msgid_plural "with {n} others"
+msgstr[0] ""
+msgstr[1] ""
+
+#: www/~/%username/payment-instructions.json.spt:36
+msgid "Invalid team slug."
+msgstr ""
+
+#: www/~/%username/privacy.json.spt:24
+msgid "Your privacy setting has been changed."
+msgstr ""
+
+#: www/~/%username/statement.json.spt:20
+msgid "Statement too big!"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:27
+msgid "Primary"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:28 www/~/%username/identities/index.spt:23
+msgid "Unverified"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:29
+msgid "Remove"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:30
+msgid "Resend"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:31
+msgid "Set as primary"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:37
+msgid "Add email address"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:41
+msgid "Notifications"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:43
+msgid "Send me notifications via email:"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:46
+msgid "When my credit card is charged:"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:51
+msgid "if the charge fails"
+msgstr ""
+
+#: www/~/%username/emails/index.spt:57
+msgid "if the charge succeeds"
+msgstr ""
+
+#: www/~/%username/emails/modify.json.spt:24
+msgid "Invalid email address."
+msgstr ""
+
+#: www/~/%username/emails/modify.json.spt:47
+msgid "Check your inbox for a verification link."
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:42
+msgid "Please Sign In"
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:44
+msgid "Sign in to finish connecting your email."
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:48
+msgid "Wrong Account"
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:50
+msgid "You're signed into the wrong Gratipay account to complete this email verification. If you accidentally created two Gratipay accounts, you can merge them by logging into the main one and adding the social accounts from the other. Email {0} if you'd like help."
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:58
+msgid "Success!"
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:59
+msgid "{email_address} is now connected to your Gratipay account."
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:63
+msgid "Address Taken"
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:64
+msgid "{email_address} is already connected to a different Gratipay account."
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:68
+msgid "Already Verified"
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:69
+msgid "{email_address} is already connected to your Gratipay account."
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:73
+msgid "Bad Info"
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:74
+msgid "Sorry, that's a bad or expired link. You'll need to start over."
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:78
+msgid "View your email addresses"
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:82
+msgid "Withdrawals"
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:84
+msgid "We will send your money via PayPal to {email_address} ({a}update{_a})."
+msgstr ""
+
+#: www/~/%username/emails/verify.html.spt:93
+msgid "New Projects"
+msgstr ""
+
+#: www/~/%username/giving/index.html.spt:23
+msgid "Active"
+msgstr ""
+
+#: www/~/%username/giving/index.html.spt:31
+msgid "Cancelled"
+msgstr ""
+
+#: www/~/%username/giving/index.html.spt:32
+msgid "These are payments that you recently cancelled."
+msgstr ""
+
+#: www/~/%username/giving/index.html.spt:70
+msgid "No results to show"
+msgstr ""
+
+#: www/~/%username/history/export.spt:12
+msgid "Export History"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:16
+msgid "pre"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:17
+msgid "pending"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:18
+msgid "failed"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:19
+msgid "succeeded"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:31
+msgid "Your balance is {0}."
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:33
+msgid "Their balance is {0}."
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:45
+msgid "Account Statement"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:59
+msgid "Total given: {0}"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:62
+msgid "Export as CSV"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:66
+msgid "Total received: {0}"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:78
+msgid "Outside"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:79
+msgid "Inside Gratipay"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:82
+msgid "Bank"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:83
+msgid "Card"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:84
+msgid "Fees"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:85
+msgid "Credits"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:86
+msgid "Debits"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:87
+msgid "Balance"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:89
+msgid "Notes"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:102
+msgid "Automatic Withdrawal"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:121
+msgid "Automatic Charge"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:128
+msgid "Receipt"
+msgstr ""
+
+#: www/~/%username/history/index.html.spt:213
+msgid "No transactions to show."
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:82
+msgid "ID Type"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:84
+msgid "Tax ID"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:85
+msgid "Passport"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:86
+msgid "Driver's License"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:91
+msgid "ID Number"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:97
+msgid "Full Legal Name"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:102
+msgid "Date of Birth"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:107
+msgid "Address, Line 1"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:112
+msgid "Address, Line 2"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:117
+msgid "City"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:122
+msgid "Region (State, Province)"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:127
+msgid "Postcode (ZIP)"
+msgstr ""
+
+#: www/~/%username/identities/%country.spt:144
+msgid "Remove This Identity"
+msgstr ""
+
+#: www/~/%username/identities/index.spt:5
+msgid "Identities"
+msgstr ""
+
+#: www/~/%username/identities/index.spt:21
+msgid "Verified"
+msgstr ""
+
+#: www/~/%username/identities/index.spt:31
+msgid "Add Identity"
+msgstr ""
+
+#: www/~/%username/identities/index.spt:39
+msgid "Which Country?"
+msgstr ""
+
+#: www/~/%username/routes/associate.json.spt:26
+msgid "The address cannot be empty."
+msgstr ""
+
+#: www/~/%username/routes/associate.json.spt:41
+msgid "Only verified email addresses allowed."
+msgstr ""
+
+#: www/~/%username/routes/associate.json.spt:46
+msgid "This is not a valid Bitcoin address."
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:43
+msgid "Required"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:46
+msgid "Credit Card Number"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:48
+msgid "This card number is invalid."
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:50
+msgid "Current: {0}"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:55
+msgid "Expiration"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:56
+msgid "MM"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:56
+msgid "Expiration Month"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:58
+msgid "This expiration date is invalid."
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:60
+msgid "YY"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:60
+msgid "Expiration Year"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:65
+msgid "CVV"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:67
+msgid "This verification code is invalid."
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:71
+msgid "ZIP or Postal Code"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:76
+msgid "To minimize processing fees, we charge your credit card at least $10 at a time. {0}Read more ...{1}"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:84
+msgid "Full Name on Card"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:96
+msgid "Are you sure you want to disconnect your credit card?"
+msgstr ""
+
+#: www/~/%username/routes/credit-card.spt:97
+msgid "Disconnect My Credit Card"
+msgstr ""
+
+#: www/~/%username/routes/delete.json.spt:30
+msgid "It seems you're trying to delete something that doesn't exist."
+msgstr ""
+
+#: www/~/%username/routes/index.spt:8
+msgid "Payment Routes"
+msgstr ""
+
+#: www/~/%username/routes/index.spt:14
+msgid "Adding Money"
+msgstr ""
+
+#: www/~/%username/routes/index.spt:38
+msgid "Your credit card is {0}working{1}"
+msgstr ""
+
+#: www/~/%username/routes/index.spt:40
+msgid "Your credit card is {0}failing{1}"
+msgstr ""
+
+#: www/~/%username/routes/index.spt:51
+msgid "Withdrawing Money"
+msgstr ""
+
+#: www/~/%username/routes/paypal.spt:28
+msgid "Choose from one of your verified emails below:"
+msgstr ""
+
+#: www/~/%username/routes/paypal.spt:39
+msgid "Can't find your PayPal email? {0}Add it here{1}."
+msgstr ""
+
+#: www/~/%username/routes/paypal.spt:41
+msgid "You must {0}add and verify{1} your PayPal email first."
+msgstr ""
+
+#: www/~/%username/routes/paypal.spt:48
+msgid "Are you sure you want to disconnect your PayPal account?"
+msgstr ""
+
+#: www/~/%username/routes/paypal.spt:49
+msgid "Disconnect {0}"
+msgstr ""
+
+#: www/~/%username/settings/close.spt:6
+#: www/~/%username/settings/index.html.spt:100
+msgid "Close Account"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:22
+msgid "You are {0}"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:30
+msgid "Have you linked to your Gratipay profile from other websites? Be sure to update those links!"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:36
+msgid "Available Money"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:43
+msgid "Available Balance"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:52
+msgid "Request 1.0 Payout"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:54
+msgid "Check 1.0 Payout"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:63
+msgid "API Credentials"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:64
+msgid "User ID:"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:66
+msgid "API Key:"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:67
+msgid "Show Key"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:68
+msgid "Hide Key"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:69
+msgid "Recreate"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:71
+msgid "API docs"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:74
+msgid "Privacy"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:79
+msgid "Hide total giving to others."
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:85
+msgid "Hide myself from search results."
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:91
+msgid "On"
+msgstr ""
+
+#: www/~/%username/settings/index.html.spt:93
+msgid "Off"
+msgstr ""
+
+#: www/~/%username/widgets/index.html.spt:102
+msgid "Giving & Taking Widgets"
+msgstr ""
+
+#: www/~/%username/widgets/index.html.spt:104
+msgid "Use this code to add a Gratipay \"receiving\" widget on your website:"
+msgstr ""
+
+#: www/~/%username/widgets/index.html.spt:109
+#: www/~/%username/widgets/index.html.spt:120
+msgid "Here's what it looks like:"
+msgstr ""
+
+#: www/~/%username/widgets/index.html.spt:113
+msgid "Or, if you'd like to include a \"giving\" widget, you can add the {0} attribute:"
+msgstr ""
+
+#: www/~/%username/widgets/index.html.spt:124
+msgid "More Info"
+msgstr ""
+
