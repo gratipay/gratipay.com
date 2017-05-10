@@ -225,8 +225,7 @@ class TestTeams(Harness):
         assert team.name == 'Gratiproject'
         assert team.homepage == 'http://gratipay.com/'
         assert team.product_or_service == 'We make widgets.'
-        fallback = 'https://github.com/gratipay/team-review/issues#error-401'
-        assert team.review_url in (REVIEW_URL, fallback)
+        assert team.review_url == 'some-github-issue'
 
     def test_all_fields_persist(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
