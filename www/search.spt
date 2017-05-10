@@ -17,6 +17,26 @@ def get_processed_excerpt(participant):
     statement = truncate(statement, 128, '')
     return process_excerpt(statement)
 
+class FakeProject(object):
+
+    def __init__(self, package):
+        self.package = package
+        self.name = package.name
+        self.url_path = '/on/{}/{}/'.format(package.package_manager, package.name)
+
+    def get_image_url(self, size):
+        assert size in ('large', 'small'), size
+        return website.asset('package-default-{}.png'.format(size))
+
+def with_unclaimed_packages_wrapped(projects_and_unclaimed_packages):
+    out = []
+    for project, unclaimed_package in projects_and_unclaimed_packages:
+        if unclaimed_package:
+            assert project is None
+            project = FakeProject(unclaimed_package)
+        out.append(project)
+    return out
+
 # Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
                   , "unreviewed" : _("Unreviewed")
@@ -48,16 +68,33 @@ if query:
              ) _""", locals())
         if action in (None, 'search_projects'):
             results['projects'] = website.db.all("""
-            SELECT project FROM (
-                SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
+            SELECT project, package FROM (
+
+                SELECT t.name                       AS name
+                     , t.*::teams                   AS project
+                     , null                         AS package
+                     , similarity(t.name, %(q)s)    AS rank
                   FROM teams t
-                 WHERE name %% %(q)s
-                   AND NOT is_closed
-                   AND is_approved
+                 WHERE t.name %% %(q)s
+                   AND NOT t.is_closed
+                   AND t.is_approved
+
+                 UNION
+
+                SELECT pkg.name                     AS name
+                     , null                         AS project
+                     , pkg.*::packages              AS package
+                     , similarity(pkg.name, %(q)s)  AS rank
+                  FROM packages pkg
+             LEFT JOIN teams_to_packages tp
+                    ON tp.package_id = pkg.id
+                 WHERE pkg.name %% %(q)s
+                   AND tp.package_id IS NULL
+
               ORDER BY rank DESC, name
                  LIMIT 10
-            ) _""", locals())
 
+            ) _""", locals())
     else:
         if action in (None, 'search_usernames'):
             results['usernames'] = website.db.all("""
@@ -82,13 +119,31 @@ if query:
             ) _""", locals())
         if action in (None, 'search_projects'):
             results['projects'] = website.db.all("""
-            SELECT project FROM (
-                SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
+            SELECT project, package FROM (
+
+                SELECT t.name                       AS name
+                     , t.*::teams                   AS project
+                     , null                         AS package
+                     , similarity(t.name, %(q)s)    AS rank
                   FROM teams t
-                 WHERE name %% %(q)s
-                   AND NOT is_closed
+                 WHERE t.name %% %(q)s
+                   AND NOT t.is_closed
+
+                 UNION
+
+                SELECT pkg.name                     AS name
+                     , null                         AS project
+                     , pkg.*::packages              AS package
+                     , similarity(pkg.name, %(q)s)  AS rank
+                  FROM packages pkg
+             LEFT JOIN teams_to_packages tp
+                    ON tp.package_id = pkg.id
+                 WHERE pkg.name %% %(q)s
+                   AND tp.package_id IS NULL
+
               ORDER BY rank DESC, name
                  LIMIT 10
+
             ) _""", locals())
 
     if action in (None, 'search_statements'):
@@ -158,7 +213,7 @@ zip = zip
     {% set usernames = zip(results.get('usernames', []), empty_excerpts()) %}
     {% set statements = results.get('statements') %}
     {% set emails = zip(results.get('emails', []), empty_excerpts()) %}
-    {% set projects = results.get('projects') %}
+    {% set projects = with_unclaimed_packages_wrapped(results.get('projects', [])) %}
 
     {% if projects %}
     <h2>{{ ngettext("Found a matching project",

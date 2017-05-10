@@ -179,14 +179,7 @@ class Harness(unittest.TestCase):
         if 'ctime' not in _kw:
             _kw['ctime'] = utcnow()
 
-
-        if Participant.from_username(_kw['owner']) is None:
-            self.make_participant( _kw['owner']
-                                 , claimed_time='now'
-                                 , last_paypal_result=''
-                                 , email_address=_kw['owner']+'@example.com'
-                                 , verified_in='TT'
-                                  )
+        self.make_owner(_kw['owner'])
 
         team = self.db.one("""
             INSERT INTO teams
@@ -201,15 +194,36 @@ class Harness(unittest.TestCase):
         return team
 
 
+    def make_owner(self, username='picard'):
+        owner = Participant.from_username(username)
+        if owner is None:
+            owner = self.make_participant( username
+                                         , claimed_time='now'
+                                         , last_paypal_result=''
+                                         , email_address=username+'@example.com'
+                                         , verified_in='TT'
+                                          )
+        return owner
+
+
+    def make_admin(self, username='admin'):
+        return self.make_participant(username, claimed_time='now', is_admin=True)
+
+
     def make_package(self, package_manager=NPM, name='foo', description='Foo fooingly.',
-                                                                     emails=['alice@example.com']):
+                                                      emails=['alice@example.com'], claimed=False):
         """Factory for packages.
         """
         self.db.run( 'INSERT INTO packages (package_manager, name, description, emails) '
                      'VALUES (%s, %s, %s, %s) RETURNING *'
                    , (package_manager, name, description, emails)
                     )
-        return Package.from_names(NPM, name)
+        package = Package.from_names(NPM, name)
+        if claimed:
+            admin = self.make_admin()
+            team = package.get_or_create_linked_team(self.db, self.make_owner('picard'))
+            team.update_review_status('approved', admin)
+        return package
 
 
     def make_participant(self, username, **kw):

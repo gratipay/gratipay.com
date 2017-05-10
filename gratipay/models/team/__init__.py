@@ -12,6 +12,7 @@ from .available import Available
 from .closing import Closing
 from .membership import Membership
 from .package import Package
+from .review_status import ReviewStatus
 from .takes import Takes
 from .tip_migration import TipMigration
 from ...exceptions import InvalidTeamName
@@ -37,7 +38,7 @@ def slugize(name):
     return slug
 
 
-class Team(Model, Available, Closing, Membership, Package, Takes, TipMigration):
+class Team(Model, Available, Closing, Membership, Package, ReviewStatus, Takes, TipMigration):
     """Represent a Gratipay team.
     """
 
@@ -293,14 +294,6 @@ class Team(Model, Available, Closing, Membership, Package, Takes, TipMigration):
                            , distributing=r.distributing
                            , ndistributing_to=r.ndistributing_to
                             )
-
-
-    @property
-    def status(self):
-        return { None: 'unreviewed'
-               , False: 'rejected'
-               , True: 'approved'
-                }[self.is_approved]
 
 
     def to_dict(self):
