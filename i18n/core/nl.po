@@ -139,24 +139,88 @@ msgid ""
 "details, please refer to our review ticket:"
 msgstr ""
 
+msgid "New activity on your account"
+msgstr ""
+
 msgid ""
-"We've received a request to connect {0} to the {1} account on Gratipay. "
-"Sound familiar?"
-msgstr "We hebben een aanvraag ontvangen om {0} met de {1} account op Gratipay te verbinden. Klinkt dit bekend?"
+"We are connecting the {package_name} npm package to the {username} account "
+"on Gratipay. This is a notification sent to {email_address} because that is "
+"the primary email address we have on file."
+msgid_plural ""
+"We are connecting {n} npm packages to the {username} account on Gratipay. "
+"This is a notification sent to {email_address} because that is the primary "
+"email address we have on file."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"We are connecting {email_address} and the {package_name} npm package to the "
+"{username} account on Gratipay. This is a notification sent to "
+"{email_address_2} because that is the primary email address we have on file."
+msgid_plural ""
+"We are connecting {email_address} and {n} npm packages to the {username} "
+"account on Gratipay. This is a notification sent to {email_address_2} "
+"because that is the primary email address we have on file."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"We are connecting {email_address} to the {username} account on Gratipay. "
+"This is a notification sent to {email_address_2} because that is the primary"
+" email address we have on file."
+msgstr ""
+
+msgid ""
+"We've received a request to connect the {package_name} npm package to the "
+"{username} account on Gratipay. Sound familiar?"
+msgid_plural ""
+"We've received a request to connect {n} npm packages to the {username} "
+"account on Gratipay. Sound familiar?"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"We've received a request to connect {email_address} and the {package_name} "
+"npm package to the {username} account on Gratipay. Sound familiar?"
+msgid_plural ""
+"We've received a request to connect {email_address} and {n} npm packages to "
+"the {username} account on Gratipay. Sound familiar?"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"We've received a request to connect {email_address} to the {username} "
+"account on Gratipay. Sound familiar?"
+msgstr ""
 
 msgid "Yes, proceed!"
 msgstr "Ja, doe maar!"
 
-msgid "Follow this link to finish connecting your email:"
-msgstr "Volg deze link om de procedure af te ronden voor het koppelen van uw emailadres:"
+msgid "Follow this link to finish connecting:"
+msgstr ""
 
-msgid "Connecting {0} to {1} on Gratipay."
-msgstr "{0} met {1} verbinden op Gratipay"
+msgid "You have already added and verified that address."
+msgstr ""
+
+msgid "That address is already linked to a different Gratipay account."
+msgstr ""
+
+msgid "You cannot remove your primary email address."
+msgstr ""
+
+msgid "That email address is not on file for this package."
+msgstr ""
+
+msgid "That email address is not verified."
+msgstr ""
+
+msgid "You've reached the maximum number of email addresses we allow."
+msgstr ""
 
 msgid ""
-"We are connecting {0} to the {1} account on Gratipay. This is a notification"
-" sent to {2} because that is the primary email address we have on file."
-msgstr "We hebben {0} met de {1} account verbonden op Gratipay. Dit is een notificatie voor {2} omdat dit het primaire email adres dat we geregistreerd hebben."
+"You've initiated too many emails too quickly. Please try again in a minute "
+"or two."
+msgstr ""
 
 msgid "You've consumed your quota of requests, you can try again in {0}."
 msgstr "Je hebt je quota aanvragen opgebruikt, probeer opnieuw over {0}."
@@ -975,6 +1039,39 @@ msgstr "donaties accepteren"
 msgid "hasn't joined Gratipay yet"
 msgstr "is nog geen lid geworden van Gratipay"
 
+msgid "No description available."
+msgstr ""
+
+msgid "Apply to accept payments for the {package_link} npm package:"
+msgstr ""
+
+msgid "No email addresses on file."
+msgstr ""
+
+msgid "Linked to a different account"
+msgstr ""
+
+msgid "Ready to use"
+msgstr ""
+
+msgid "Your primary email address"
+msgstr ""
+
+msgid "Linked to your account"
+msgstr ""
+
+msgid "Half-linked to your account"
+msgstr ""
+
+msgid "Apply to accept payments"
+msgstr ""
+
+msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
+msgstr ""
+
+msgid "Out of date? Update {a}at npm{_a} and refresh."
+msgstr ""
+
 msgid "You must sign in to apply for a new team."
 msgstr "U moet inloggen om u aan te melden bij een nieuw team."
 
@@ -1058,18 +1155,7 @@ msgstr "als de aanrekening lukt"
 msgid "Invalid email address."
 msgstr "Ongeldig e-mailadres"
 
-msgid "{email_address} is already linked to a different Gratipay account."
-msgstr ""
-
-msgid "You have already added and verified {email_address}."
-msgstr ""
-
-msgid ""
-"You've initiated too many emails too quickly. Please try again in a minute "
-"or two."
-msgstr ""
-
-msgid "A verification email has been sent to {email_address}."
+msgid "Check your inbox for a verification link."
 msgstr ""
 
 msgid "Please Sign In"
@@ -1114,6 +1200,15 @@ msgstr ""
 
 msgid "View your email addresses"
 msgstr "Bekijk uw e-mailadressen."
+
+msgid "Withdrawals"
+msgstr ""
+
+msgid "We will send your money via PayPal to {email_address} ({a}update{_a})."
+msgstr ""
+
+msgid "New Projects"
+msgstr ""
 
 msgid "Active"
 msgstr "Actief"
@@ -1258,9 +1353,6 @@ msgstr "Alleen geverifieerde e-mailadressen zijn toegestaan."
 
 msgid "This is not a valid Bitcoin address."
 msgstr "Dit is geen geldig Bitcoin adres."
-
-msgid "and then you'll be able to add or change your credit card."
-msgstr "en dan kun je een creditcard toevoegen of wijzigen."
 
 msgid "Required"
 msgstr "Nodig"

@@ -108,7 +108,9 @@ class BrowserHarness(Harness):
         end_time = time.time() + timeout
         while time.time() < end_time:
             if self.has_element(selector):
-                return self.find_by_css(selector)
+                element = self.find_by_css(selector)
+                if element.visible:
+                    return element
         raise NeverShowedUp(selector)
 
     def wait_for_notification(self, type='notice'):

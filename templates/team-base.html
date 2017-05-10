@@ -3,6 +3,9 @@
 {% block banner %}
 <div class="avatar">
     <img class="avatar" src="{{ team.get_image_url('large') }}">
+    {% if team.package %}
+    <img class="platform" src="{{ website.asset('npm-n.png') }}" />
+    {% endif %}
 </div>
 
 <div class="details mono{% if not team.is_approved %} luxury{% endif %}">

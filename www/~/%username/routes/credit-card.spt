@@ -22,25 +22,16 @@ else:
 {% extends "templates/profile-routes.html" %}
 
 {% block scripts %}
-
-{% if not user.ANON %}
 <script>
     $(document).ready(function() {
         Gratipay.routes.cc.init();
         $('#country').chosen();
     });
 </script>
-{% endif %}
-
 {{ super() }}
 {% endblock %}
 
 {% block content %}
-  {% if user.ANON %}
-    {% include "templates/sign-in-using.html" %}
-    {{ _("and then you'll be able to add or change your credit card.") }}
-  {% else %}
-
     <div id="feedback">{% if last_bill_result %}
     <h2><span>{{ _("Failure") }}</span></h2>
     <div class="details"><p>{{ last_bill_result }}</p></div>
@@ -115,5 +106,4 @@ else:
             <img src="https://s3.amazonaws.com/braintree-badges/braintree-badge-dark.png" width="164px" height ="44px" border="0"/>
         </a>
     </div>
-    {% endif %}
 {% endblock %}

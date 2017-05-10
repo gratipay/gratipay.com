@@ -6,10 +6,11 @@ import base64
 import aspen
 from aspen.website import Website as BaseWebsite
 
-from . import utils, security, version
+from . import utils, security, typecasting, version
 from .security import authentication, csrf
 from .utils import erase_cookie, http_caching, i18n, set_cookie, set_version_header, timer
 from .renderers import csv_dump, jinja2_htmlescaped, eval_, scss
+from .models import team
 
 
 class Website(BaseWebsite):
@@ -20,6 +21,7 @@ class Website(BaseWebsite):
         BaseWebsite.__init__(self)
         self.app = app
         self.version = version.get_version()
+        self.configure_typecasters()
         self.configure_renderers()
 
         # TODO Can't do remaining config here because of lingering wireup
@@ -33,6 +35,10 @@ class Website(BaseWebsite):
     def init_even_more(self):
         self.modify_algorithm(self.tell_sentry)
         self.monkey_patch_response()
+
+
+    def configure_typecasters(self):
+        self.typecasters['team'] = team.cast
 
 
     def configure_renderers(self):
@@ -72,7 +78,6 @@ class Website(BaseWebsite):
             algorithm['parse_environ_into_request'],
             algorithm['parse_body_into_request'],
 
-            utils.help_aspen_find_well_known,
             utils.use_tildes_for_participants,
             algorithm['redirect_to_base_url'],
             i18n.set_up_i18n,
@@ -87,7 +92,7 @@ class Website(BaseWebsite):
             http_caching.get_etag_for_file if self.cache_static else noop,
             http_caching.try_to_serve_304 if self.cache_static else noop,
 
-            algorithm['apply_typecasters_to_path'],
+            typecasting.cast,
             algorithm['get_resource_for_request'],
             algorithm['extract_accept_from_request'],
             algorithm['get_response_for_resource'],
