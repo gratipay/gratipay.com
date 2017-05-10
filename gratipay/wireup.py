@@ -441,6 +441,6 @@ def env():
     return env
 
 
-def __main__():
+if __name__ == '__main__':
     # deploy.sh uses this to validate production env config
     env()
