@@ -75,3 +75,17 @@ class TestSearch(Harness):
         alice.upsert_statement('en', FULL)
         assert ('&middot; &hellip; consecrate—we can not <b>hallow</b>—this ground. The brave '
                 'men, living &hellip;') in self.search('hallow')
+
+    def test_includes_unclaimed_packages_with_projects(self):
+        self.make_package()
+        body = self.search('fo')
+        assert 'foo' in body
+        assert 'has not joined' in body
+        assert 'owned by'       not in body
+
+    def test_does_not_include_claimed_packages(self):
+        self.make_package(claimed=True)
+        body = self.search('fo')
+        assert 'foo' in body
+        assert 'has not joined' not in body
+        assert 'owned by'       in body

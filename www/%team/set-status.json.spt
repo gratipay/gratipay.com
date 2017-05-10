@@ -1,7 +1,6 @@
 from aspen import Response
 
 from gratipay.models.team import Team
-from gratipay.models.participant import Participant
 [---]
 if not user.ADMIN:
     raise Response(403)
@@ -15,36 +14,7 @@ team = request.path['team']
 if not team:
     raise Response(404)
 
-with website.db.get_cursor() as c:
-
-    # Do a goofy dance.
-    is_approved = {'approved': True, 'rejected': False, 'unreviewed': None}[status]
-    if not(is_approved is team.is_approved):
-        is_approved = website.db.one("""
-
-            UPDATE teams
-               SET is_approved=%s
-             WHERE slug=%s
-         RETURNING is_approved
-
-            """, (is_approved, team.slug))
-        status = {True: 'approved', False: 'rejected', None: 'unreviewed'}[is_approved]
-
-        website.app.add_event(c, 'team', dict(
-            id=team.id,
-            recorder=dict(id=user.participant.id, username=user.participant.username),
-            action='set', values=dict(status=status)
-        ))
-
-        if status in ('rejected', 'approved'):
-            owner = Participant.from_username(team.owner)
-            website.app.email_queue.put( owner
-                                       , 'team-'+status
-                                       , team_name=team.name
-                                       , review_url=team.review_url
-                                       , include_unsubscribe=False
-                                       , _user_initiated=False
-                                        )
+team.update_review_status(status, user.participant)
 
 [---] application/json via json_dump
 {"status": status}
