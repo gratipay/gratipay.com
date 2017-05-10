@@ -1,0 +1,25 @@
+import os
+asset_root = os.path.join(website.www_root, 'assets')
+[---]
+
+# Load order
+files = [
+    'jquery.min.js',
+    'chosen.jquery.min.js',
+    'tipr.min.js',
+    'bootstrap-dropdown.js',
+]
+
+catted = []
+for filename in files:
+    if filename.endswith('.js'):
+        base = asset_root[len(asset_root)+0:]
+        catted.append('/' + ('*'*70) + '/\n')
+        catted.append('/*' + (base + '/' + filename).center(68) + '*/\n')
+        catted.append('/' + ('*'*70) + '/' + '\n\n')
+        content = open(os.path.join(asset_root, filename)).read()
+        content = content.decode('ascii')
+        catted.append(content + '\n')
+js = "".join(catted)
+[---] via stdlib_format
+{js}
