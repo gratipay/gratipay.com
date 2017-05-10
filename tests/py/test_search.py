@@ -75,3 +75,7 @@ class TestSearch(Harness):
         alice.upsert_statement('en', FULL)
         assert ('&middot; &hellip; consecrate—we can not <b>hallow</b>—this ground. The brave '
                 'men, living &hellip;') in self.search('hallow')
+
+    def test_includes_unclaimed_packages_with_projects(self):
+        self.make_package()
+        assert 'foo' in self.search('fo')

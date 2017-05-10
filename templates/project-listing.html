@@ -6,16 +6,18 @@
             {% if project.package %}
             <div class="package-manager"><img src="{{ website.asset('npm-n.png') }}"></div>
             {% endif %}
-            <a class="listing-name" href="/{{ project.slug }}/">{{ project.name }}</a>
+            <a class="listing-name" href="{{ project.url_path }}">{{ project.name }}</a>
 
             <div class="listing-details{% if current_page == '~' %} profile{% endif %}">
                 <span class="i">{{ i }}</span>
+                {% if project.review_url %}
                 <span class="status">&middot;
                     <a href="{{ project.review_url }}"><span
                         class="status-icon {{ icons.REVIEW_MAP[project.status] }}"
                         >{{ icons.STATUS_ICONS[icons.REVIEW_MAP[project.status]]|safe }}</span
                         >{{ i18ned_statuses[project.status] }}</a>
                 </span>
+                {% endif %}
                 {% if project.status == 'approved' %}
                 <span class="receiving">&middot;
                 {% if project.nreceiving_from %}
@@ -30,8 +32,14 @@
                 {% endif %}
                 </span>
                 {% endif %}
-                <span class="ctime">&middot; {{ _("joined {ago}",
-                    ago=to_age(project.ctime, add_direction=True)) }}</span>
+                <span class="ctime">&middot;
+                {% if project.ctime %}
+                    {{ _("joined {ago}", ago=to_age(project.ctime, add_direction=True)) }}
+                {% else %}
+                    {{ _("has not yet joined") }}
+                {% endif %}
+                </span>
+                {% if project.owner %}
                 <span class="owner">&middot;
                     {{ _( "owned by {a}{owner}{_a}"
                         , owner='~'+project.owner
@@ -39,6 +47,7 @@
                         , _a='</a>'|safe
                          ) }}
                 </span>
+                {% endif %}
             </div>
         </td>
     </tr>
