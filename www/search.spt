@@ -149,7 +149,7 @@ zip = zip
 {% from 'templates/list-participants.html' import list_participants with context %}
 {% block content %}
 
-    <form action="/search" method="get">
+    <form action="/search" method="get" class="important-thing-at-the-top">
         <input type="text" name="q" placeholder="{{ _('Search Gratipay') }}"
                value="{{ query or '' }}" autofocus />
         <button type="submit">{{ _("Search") }}</button>
@@ -192,7 +192,7 @@ zip = zip
     {% endif %}
 
     {% if query and not (usernames or statements or emails or projects) %}
-    <p class="sorry">{{ _("Sorry, we didn't find anything matching your query.") }}</p>
+    <p class="note">{{ _("Sorry, we didn't find anything matching your query.") }}</p>
     {% endif %}
 
 {% endblock %}

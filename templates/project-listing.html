@@ -2,15 +2,18 @@
 {% for i, project in enumerate(project_list, start=1) %}
     <tr>
         <td class="item">
-            <img src="{{ project.get_image_url('small') }}">
-            <a class="name" href="/{{ project.slug }}/">{{ project.name }}</a>
+            <img class="avatar" src="{{ project.get_image_url('small') }}">
+            {% if project.package %}
+            <div class="package-manager"><img src="{{ website.asset('npm-n.png') }}"></div>
+            {% endif %}
+            <a class="listing-name" href="/{{ project.slug }}/">{{ project.name }}</a>
 
-            <div class="details{% if current_page == '~' %} profile{% endif %}">
+            <div class="listing-details{% if current_page == '~' %} profile{% endif %}">
                 <span class="i">{{ i }}</span>
                 <span class="status">&middot;
                     <a href="{{ project.review_url }}"><span
-                        class="status-icon {{ project.status }}"
-                        >{{ icons.STATUS_ICONS[project.status]|safe }}</span
+                        class="status-icon {{ icons.REVIEW_MAP[project.status] }}"
+                        >{{ icons.STATUS_ICONS[icons.REVIEW_MAP[project.status]]|safe }}</span
                         >{{ i18ned_statuses[project.status] }}</a>
                 </span>
                 {% if project.status == 'approved' %}

@@ -19,7 +19,7 @@ callback_pattern = re.compile(r'^[_A-Za-z0-9.]+$')
 
 [---]
 
-slug = request.path['team']
+team = request.path['team']
 
 # Fetch data from the database.
 # =============================
@@ -45,7 +45,7 @@ payments = website.db.all("""\
       AND direction='to-team'
  ORDER BY timestamp DESC
 
-""", (slug,), back_as=dict)
+""", (team.slug,), back_as=dict)
 
 
 if not payments:

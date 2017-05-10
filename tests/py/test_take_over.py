@@ -152,8 +152,9 @@ class TestTakeOver(Harness):
     def test_take_over_is_fine_with_identity_info_on_primary(self):
         TT = self.db.one("SELECT id FROM countries WHERE code='TT'")
         alice = self.make_participant('alice')
-        alice.add_email('alice@example.com')
-        alice.verify_email('alice@example.com', alice.get_email('alice@example.com').nonce)
+        alice.start_email_verification('alice@example.com')
+        nonce = alice.get_email('alice@example.com').nonce
+        alice.finish_email_verification('alice@example.com', nonce)
         alice.store_identity_info(TT, 'nothing-enforced', {})
 
         bob_github = self.make_elsewhere('github', 2, 'bob')
@@ -168,8 +169,8 @@ class TestTakeOver(Harness):
 
         bob_github = self.make_elsewhere('github', 2, 'bob')
         bob = bob_github.opt_in('bob')[0].participant
-        bob.add_email('bob@example.com')
-        bob.verify_email('bob@example.com', bob.get_email('bob@example.com').nonce)
+        bob.start_email_verification('bob@example.com')
+        bob.finish_email_verification('bob@example.com', bob.get_email('bob@example.com').nonce)
         bob.store_identity_info(TT, 'nothing-enforced', {})
 
         pytest.raises(WontTakeOverWithIdentities, alice.take_over, bob_github)
@@ -183,19 +184,35 @@ class TestTakeOver(Harness):
         self.db.self_check()
 
     def test_email_addresses_merging(self):
+        # person starts a bunch of email verifications as alice
         alice = self.make_participant('alice')
-        alice.add_email('alice@example.com')
-        alice.add_email('alice@example.net')
-        alice.add_email('alice@example.org')
-        alice.verify_email('alice@example.org', alice.get_email('alice@example.org').nonce)
+        alice.start_email_verification('alice@example.com')
+        alice.start_email_verification('alice@example.net')
+        alice.start_email_verification('alice@example.org')
+
+        # person finishes one of them, as alice
+        nonce = alice.get_email('alice@example.org').nonce
+        alice.finish_email_verification('alice@example.org', nonce)
+
+        # person signs up as bob
         bob_github = self.make_elsewhere('github', 2, 'bob')
         bob = bob_github.opt_in('bob')[0].participant
-        bob.add_email('alice@example.com')
-        bob.verify_email('alice@example.com', bob.get_email('alice@example.com').nonce)
-        bob.add_email('alice@example.net')
-        bob.add_email('bob@example.net')
+
+        # person verifies one of the same emails as alice, using bob
+        bob.start_email_verification('alice@example.com')
+        nonce = bob.get_email('alice@example.com').nonce
+        bob.finish_email_verification('alice@example.com', nonce)
+
+        # ... starts verification for another of the same
+        bob.start_email_verification('alice@example.net')
+
+        # ... and for a new email
+        bob.start_email_verification('bob@example.net')
+
+        # Now: alice takes over bob!
         alice.take_over(bob_github, have_confirmation=True)
 
+        # alice gets all the addresses, verified or not
         alice_emails = {e.address: e for e in alice.get_emails()}
         assert len(alice_emails) == 4
         assert alice_emails['alice@example.com'].verified
@@ -203,6 +220,7 @@ class TestTakeOver(Harness):
         assert not alice_emails['alice@example.net'].verified
         assert not alice_emails['bob@example.net'].verified
 
+        # bob has no email addresses
         assert not Participant.from_id(bob.id).get_emails()
 
 

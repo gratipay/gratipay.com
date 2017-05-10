@@ -1,6 +1,7 @@
+{% from "templates/sign-in-using.html" import sign_in_using with context %}
 {% if user.ANON %}
     <div class="sign-in-to">
-        {% include "templates/sign-in-using.html" %}
+        {{ sign_in_using() }}
         {{ _("{sign_in}{br}to give to{br}{team}").format(sign_in="", team=team.name, br='<br>'|safe) }}
     </div>
 {% else %}

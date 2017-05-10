@@ -11,7 +11,7 @@ echo "==========================================================================
 
 # I got the idea for dropping the schema as a way to clear out the db from
 # http://www.postgresql.org/message-id/200408241254.19075.josh@agliodbs.com. On
-# Heroku Postgres we don't have permission to drop and create the db as a 
+# Heroku Postgres we don't have permission to drop and create the db as a
 # whole.
 
 echo "Recreating public schema ... "
@@ -21,21 +21,22 @@ echo "CREATE SCHEMA public" | psql "$DATABASE_URL"
 
 echo "=============================================================================="
 echo "Applying sql/schema.sql ..."
-echo 
+echo
 
 psql "$DATABASE_URL" < sql/schema.sql
+psql "$DATABASE_URL" < sql/payday.sql
 
 
 echo "=============================================================================="
 echo "Looking for sql/branch.sql ..."
-echo 
+echo
 
 if [ -f sql/branch.sql ]
 then psql "$DATABASE_URL" < sql/branch.sql
-else 
+else
     echo "None found. That's cool. You only need a sql/branch.sql file if you want to "
     echo "include schema changes with your pull request."
 fi
 
-echo 
+echo
 echo "=============================================================================="

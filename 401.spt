@@ -4,7 +4,8 @@ banner = "401"
 [---] text/html via jinja2
 {% extends "templates/base.html" %}
 {% block content %}
-Please {% include "templates/sign-in-using.html" %} to continue.
+<p>{{ _('Please sign in to continue.') }}</p>
+<p>{{ sign_in_using() }}</p>
 {% endblock %}
 [---] application/json via stdlib_percent
 { "error_code": 401

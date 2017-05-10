@@ -71,7 +71,19 @@ class ConsumeChangeStreamTests(Harness):
         assert self.db.one('select * from packages') is None
 
 
-    # TODO Test for packages linked to teams when we get there.
+    def test_even_deletes_package_with_linked_team(self):
+
+        # Set up package linked to team.
+        foo = self.make_package()
+        alice = self.make_participant('alice')
+        with self.db.get_cursor() as cursor:
+            team = foo.get_or_create_linked_team(cursor, alice)
+        assert self.db.one('select p.*::packages from packages p').team == team
+
+        # Delete package.
+        docs = [{'deleted': True, 'id': 'foo'}]
+        sync_npm.consume_change_stream(self.change_stream(docs), self.db)
+        assert self.db.one('select * from packages') is None
 
 
     def test_picks_up_with_last_seq(self):

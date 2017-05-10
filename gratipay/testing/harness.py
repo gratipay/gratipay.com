@@ -17,8 +17,9 @@ from gratipay.elsewhere import UserInfo
 from gratipay.exceptions import NoSelfTipping, NoTippee, BadAmount
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
-from gratipay.models.team import Team
+from gratipay.models.package import NPM, Package
 from gratipay.models.participant import Participant, MAX_TIP, MIN_TIP
+from gratipay.models.team import Team
 from gratipay.security import user
 from gratipay.testing.vcr import use_cassette
 from psycopg2 import IntegrityError, InternalError
@@ -200,6 +201,17 @@ class Harness(unittest.TestCase):
         return team
 
 
+    def make_package(self, package_manager=NPM, name='foo', description='Foo fooingly.',
+                                                                     emails=['alice@example.com']):
+        """Factory for packages.
+        """
+        self.db.run( 'INSERT INTO packages (package_manager, name, description, emails) '
+                     'VALUES (%s, %s, %s, %s) RETURNING *'
+                   , (package_manager, name, description, emails)
+                    )
+        return Package.from_names(NPM, name)
+
+
     def make_participant(self, username, **kw):
         """Factory for :py:class:`~gratipay.models.participant.Participant`.
         """
@@ -377,3 +389,12 @@ class Harness(unittest.TestCase):
              LIMIT 1
 
         """, (tipper, tippee), back_as=dict, default=default)['amount']
+
+
+    def add_and_verify_email(self, participant, *emails):
+        """Given a participant and some email addresses, add and verify them.
+        """
+        for email in emails:
+            participant.start_email_verification(email)
+            nonce = participant.get_email(email).nonce
+            participant.finish_email_verification(email, nonce)

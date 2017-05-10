@@ -11,6 +11,7 @@ pip := $(env_bin)/pip
 honcho := $(env_bin)/honcho
 honcho_run := $(honcho) run -e defaults.env,local.env
 py_test := $(honcho) run -e $(test_env_files) $(env_bin)/py.test
+pg_dump := pg_dump --schema-only --no-owner --no-privileges
 
 ifdef PYTEST
 	pytest = ./tests/py/$(PYTEST)
@@ -36,8 +37,8 @@ schema: env
 	$(honcho_run) ./recreate-schema.sh
 
 schema-diff: test-schema
-	pg_dump -sO `heroku config:get DATABASE_URL -a gratipay` >prod.sql
-	$(honcho) run -e $(test_env_files) sh -c 'pg_dump -sO "$$DATABASE_URL"' >local.sql
+	$(pg_dump) `heroku config:get DATABASE_URL -a gratipay` >prod.sql
+	$(honcho) run -e $(test_env_files) sh -c '$(pg_dump) "$$DATABASE_URL"' >local.sql
 	diff -uw prod.sql local.sql
 	rm prod.sql local.sql
 
