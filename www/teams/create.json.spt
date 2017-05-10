@@ -89,7 +89,7 @@ if request.method == 'POST':
     team.set_review_url(review_url)
 
     team_url = website.env.base_url + '/{}/'.format(team.slug)
-    
+
     owner = Participant.from_username(team.owner)
     website.app.email_queue.put( owner
                                        , 'project-review'

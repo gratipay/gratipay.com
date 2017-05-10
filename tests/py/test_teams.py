@@ -174,17 +174,6 @@ class TestTeams(Harness):
         'image': FileUpload(IMAGE, 'logo.png'),
     }
 
-    valid_data2 = {
-        'name': 'Gratiproject',
-        'product_or_service': 'We make widgets.',
-        'homepage': 'http://gratipay.com/',
-        'onboarding_url': 'http://inside.gratipay.com/',
-        'agree_public': 'true',
-        'agree_payroll': 'true',
-        'agree_terms': 'true',
-        'image': FileUpload(IMAGE, 'logo.png'),
-    }
-
     def post_new(self, data, auth_as='alice', expected=200):
         r =  self.client.POST( '/teams/create.json'
                              , data=data
@@ -217,15 +206,6 @@ class TestTeams(Harness):
         assert team
         assert team.owner == 'alice'
         assert json.loads(r.body)['review_url'] == team.review_url
-
-    def test_all_fields_persist_two(self):
-        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
-        self.post_new(dict(self.valid_data2))
-        team = T('gratiproject')
-        assert team.name == 'Gratiproject'
-        assert team.homepage == 'http://gratipay.com/'
-        assert team.product_or_service == 'We make widgets.'
-        assert team.review_url == 'some-github-issue'
 
     def test_all_fields_persist(self):
         self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
