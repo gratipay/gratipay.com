@@ -176,7 +176,7 @@ class TestTeams(Harness):
         'agree_terms': 'true',
         'image': FileUpload(IMAGE, 'logo.png'),
     }
-
+    
     valid_data2 = {
         'name': 'Gratiproject',
         'product_or_service': 'We make widgets.',
