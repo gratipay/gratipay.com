@@ -86,7 +86,10 @@ if query:
                      , pkg.*::packages              AS package
                      , similarity(pkg.name, %(q)s)  AS rank
                   FROM packages pkg
+             LEFT JOIN teams_to_packages tp
+                    ON tp.package_id = pkg.id
                  WHERE pkg.name %% %(q)s
+                   AND tp.package_id IS NULL
 
               ORDER BY rank DESC, name
                  LIMIT 10
@@ -133,7 +136,10 @@ if query:
                      , pkg.*::packages              AS package
                      , similarity(pkg.name, %(q)s)  AS rank
                   FROM packages pkg
+             LEFT JOIN teams_to_packages tp
+                    ON tp.package_id = pkg.id
                  WHERE pkg.name %% %(q)s
+                   AND tp.package_id IS NULL
 
               ORDER BY rank DESC, name
                  LIMIT 10

@@ -36,7 +36,7 @@
                 {% if project.ctime %}
                     {{ _("joined {ago}", ago=to_age(project.ctime, add_direction=True)) }}
                 {% else %}
-                    {{ _("has not yet joined") }}
+                    {{ _("has not joined") }}
                 {% endif %}
                 </span>
                 {% if project.owner %}
