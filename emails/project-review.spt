@@ -1,4 +1,4 @@
-{{ _("text with no links yet") }}
+{{ _("We have your application!") }}
 
 [---] text/html
 {{ _("Thanks for your project application for {0}! Your public project page is: "
