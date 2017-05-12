@@ -52,7 +52,10 @@ def consume_change_stream(stream, db):
             # Decide what to do.
             if change.get('deleted'):
                 package = Package.from_names(NPM, change['id'])
-                assert package is not None  # right?
+                if not package:
+                    # We've received 'deleted' events on production that didn't
+                    # have a corresponding package in our database.
+                    continue
                 op, kw = package.delete, {}
             else:
                 op = Package.upsert

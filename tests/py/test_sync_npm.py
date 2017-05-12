@@ -70,6 +70,9 @@ class ConsumeChangeStreamTests(Harness):
         sync_npm.consume_change_stream(self.change_stream(docs), self.db)
         assert self.db.one('select * from packages') is None
 
+    def test_delete_tolerates_inexistent_packages(self):
+        docs = [{'deleted': True, 'id': 'foo'}]
+        sync_npm.consume_change_stream(self.change_stream(docs), self.db)
 
     def test_even_deletes_package_with_linked_team(self):
 
