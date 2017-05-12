@@ -53,8 +53,9 @@ def consume_change_stream(stream, db):
             if change.get('deleted'):
                 package = Package.from_names(NPM, change['id'])
                 if not package:
-                    # We've received 'deleted' events on production that didn't
-                    # have a corresponding package in our database.
+                    # As a result of CouchDB's compaction algorithm, we might
+                    # receive 'deleted' events for docs even if we haven't seen
+                    # the corresponding events for when the doc was created
                     continue
                 op, kw = package.delete, {}
             else:
