@@ -1,4 +1,5 @@
 import os
+from gratipay.utils import http_caching
 asset_root = os.path.join(website.www_root, 'assets')
 [---]
 
@@ -10,16 +11,6 @@ files = [
     'bootstrap-dropdown.js',
 ]
 
-catted = []
-for filename in files:
-    if filename.endswith('.js'):
-        base = asset_root[len(asset_root)+0:]
-        catted.append('/' + ('*'*70) + '/\n')
-        catted.append('/*' + (base + '/' + filename).center(68) + '*/\n')
-        catted.append('/' + ('*'*70) + '/' + '\n\n')
-        content = open(os.path.join(asset_root, filename)).read()
-        content = content.decode('ascii')
-        catted.append(content + '\n')
-js = "".join(catted)
+js = http_caching.concat_files(files, asset_root, ".js")
 [---] via stdlib_format
 {js}
