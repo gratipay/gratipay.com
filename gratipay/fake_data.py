@@ -312,55 +312,17 @@ def clean_db(db):
         DROP FUNCTION IF EXISTS process_payment() CASCADE;
         """)
 
-def populate_db(db, num_participants=100, ntips=200, num_teams=5):
+def populate_db(db, nparticipants=100, ntips=200, nteams=5):
     """Populate DB with fake data.
     """
     print("Making Participants")
-    make_flag_tester = num_participants > 1
-
-    participants = {}
-    for i in xrange(num_participants - 1 if make_flag_tester else num_participants):
-        participant = fake_participant(db)
-        participants[participant.id] = participant
-
-    if make_flag_tester:
-        # make a participant for testing weird flags
-        flag_tester = fake_participant(db, random_identities=False)
-        participants[flag_tester.id] = flag_tester
-
-        nepal = db.one("SELECT id FROM countries WHERE code='NP'")
-        flag_tester.store_identity_info(nepal, 'nothing-enforced', {})
-        flag_tester.set_identity_verification(nepal, True)
-
-        vatican = db.one("SELECT id FROM countries WHERE code='VA'")
-        flag_tester.store_identity_info(vatican, 'nothing-enforced', {})
-        flag_tester.set_identity_verification(vatican, True)
+    participants = _populate_participants(db, nparticipants)
 
     print("Making Teams")
-    teams = {}
-    teamowners = random.sample(participants.values(), num_teams)
-    for teamowner in teamowners:
-        team = fake_team(db, teamowner)
-        teams[team.id] = team
-
-    # Creating a fake Gratipay Team
-    team_owner = random.choice(participants.values())
-    team = fake_team(db, team_owner, "Gratipay")
-    teams[team.id] = team
+    teams = _populate_teams(db, nteams, participants)
 
     print("Making Payment Instructions")
-    npayment_instructions = 0
-    payment_instructions = []
-    for participant in participants.itervalues():
-        for team in teams.itervalues():
-            #eliminate self-payment
-            if participant.username != team.owner:
-                npayment_instructions += 1
-                if npayment_instructions > ntips:
-                    break
-                payment_instructions.append(fake_payment_instruction(db, participant, team))
-        if npayment_instructions > ntips:
-            break
+    payment_instructions = _populate_payment_instructions(db, ntips, participants, teams)
 
     print("Making Elsewheres")
     for p in participants.itervalues():
@@ -457,3 +419,64 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
 
         date = end_date
     print("")
+
+def _populate_participants(db, nparticipants):
+    make_flag_tester = nparticipants > 1
+
+    participants = {}
+
+    if make_flag_tester:
+        flag_tester = _make_flag_tester(db)
+        participants[flag_tester.id] = flag_tester
+        nparticipants -= 1
+
+    for i in xrange(nparticipants):
+        participant = fake_participant(db)
+        participants[participant.id] = participant
+
+    return participants
+
+def _make_flag_tester(db):
+    """Make a participant for testing weird flags"""
+
+    flag_tester = fake_participant(db, random_identities=False)
+
+    nepal = db.one("SELECT id FROM countries WHERE code='NP'")
+    flag_tester.store_identity_info(nepal, 'nothing-enforced', {})
+    flag_tester.set_identity_verification(nepal, True)
+
+    vatican = db.one("SELECT id FROM countries WHERE code='VA'")
+    flag_tester.store_identity_info(vatican, 'nothing-enforced', {})
+    flag_tester.set_identity_verification(vatican, True)
+
+    return flag_tester
+
+def _populate_teams(db, nteams, participants):
+    teams = {}
+    teamowners = random.sample(participants.values(), nteams)
+    for teamowner in teamowners:
+        team = fake_team(db, teamowner)
+        teams[team.id] = team
+
+    # Creating a fake Gratipay Team
+    team_owner = random.choice(participants.values())
+    team = fake_team(db, team_owner, "Gratipay")
+    teams[team.id] = team
+
+    return teams
+
+def _populate_payment_instructions(db, ntips, participants, teams):
+    npayment_instructions = 0
+    payment_instructions = []
+    for participant in participants.itervalues():
+        for team in teams.itervalues():
+            #eliminate self-payment
+            if participant.username != team.owner:
+                npayment_instructions += 1
+                if npayment_instructions > ntips:
+                    break
+                payment_instructions.append(fake_payment_instruction(db, participant, team))
+        if npayment_instructions > ntips:
+            break
+
+    return payment_instructions
