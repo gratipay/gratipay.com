@@ -318,14 +318,15 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
     print("Making Participants")
     make_flag_tester = num_participants > 1
 
-    participants = []
+    participants = {}
     for i in xrange(num_participants - 1 if make_flag_tester else num_participants):
-        participants.append(fake_participant(db))
+        participant = fake_participant(db)
+        participants[participant.id] = participant
 
     if make_flag_tester:
         # make a participant for testing weird flags
         flag_tester = fake_participant(db, random_identities=False)
-        participants.append(flag_tester)
+        participants[flag_tester.id] = flag_tester
 
         nepal = db.one("SELECT id FROM countries WHERE code='NP'")
         flag_tester.store_identity_info(nepal, 'nothing-enforced', {})
@@ -336,20 +337,22 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
         flag_tester.set_identity_verification(vatican, True)
 
     print("Making Teams")
-    teams = []
-    teamowners = random.sample(participants, num_teams)
+    teams = {}
+    teamowners = random.sample(participants.values(), num_teams)
     for teamowner in teamowners:
-        teams.append(fake_team(db, teamowner))
+        team = fake_team(db, teamowner)
+        teams[team.id] = team
 
     # Creating a fake Gratipay Team
-    teamowner = random.choice(participants)
-    teams.append(fake_team(db, teamowner, "Gratipay"))
+    team_owner = random.choice(participants.values())
+    team = fake_team(db, team_owner, "Gratipay")
+    teams[team.id] = team
 
     print("Making Payment Instructions")
     npayment_instructions = 0
     payment_instructions = []
-    for participant in participants:
-        for team in teams:
+    for participant in participants.itervalues():
+        for team in teams.itervalues():
             #eliminate self-payment
             if participant.username != team.owner:
                 npayment_instructions += 1
@@ -360,13 +363,11 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
             break
 
     print("Making Elsewheres")
-    for p in participants:
+    for p in participants.itervalues():
         #All participants get between 1 and 3 elsewheres
         num_elsewheres = random.randint(1, 3)
         for platform_name in random.sample(PLATFORMS, num_elsewheres):
             fake_elsewhere(db, p, platform_name)
-
-
 
     # Paydays
     # First determine the boundaries - min and max date
@@ -396,8 +397,8 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
 
         week_payments = []
         for payment_instruction in week_payment_instructions:
-            participant = Participant.from_id(payment_instruction['participant_id'])
-            team = Team.from_id(payment_instruction['team_id'])
+            participant = participants[payment_instruction['participant_id']]
+            team = teams[payment_instruction['team_id']]
             amount = payment_instruction['amount']
             assert participant.username != team.owner
             week_payments.append(fake_payment(
@@ -422,7 +423,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
                     timestamp=date + datetime.timedelta(seconds=1)
                  )
 
-        for team in teams:
+        for team in teams.values():
             week_payments_to_team = filter(lambda x: x['team'] == team.slug, week_payments)
             pay_out = sum(t['amount'] for t in week_payments_to_team)
 
