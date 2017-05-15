@@ -19,9 +19,6 @@ teams = website.db.all("""
 
 """)
 
-volume = website.db.one("SELECT volume FROM paydays ORDER BY ts_start DESC LIMIT 1", default=0)
-volume = int(round(volume, -2))
-
 tabs = OrderedDict()
 tabs['featured'] = {'teams': []}
 tabs['approved'] = {'teams': []}
