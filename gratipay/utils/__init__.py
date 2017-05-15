@@ -261,15 +261,16 @@ def get_featured_projects(db):
         else:
             unpopular.append(project)
 
-    np, nu = len(popular), len(unpopular)
+    npopular, nunpopular = len(popular), len(unpopular)
 
-    # surely optimizable & clarifiable, but it passes the tests
-    if np < 7 and nu < 3:     p, u = np, nu
-    elif np < 7 and nu >= 3:  p, u = np, 10 - np
-    elif np >= 7 and nu < 3:  p, u = 10 - nu, nu
-    else:                     p, u = 7, 3
+    # Attempt to maintain a 70-30 ratio
+    if npopular >= 7:
+        npopular = max(7, 10-nunpopular)
 
-    featured_projects = random.sample(popular, p) + random.sample(unpopular, u)
+    # Fill in the rest with unpopular
+    nunpopular = min(nunpopular, 10-npopular)
+
+    featured_projects = random.sample(popular, npopular) + random.sample(unpopular, nunpopular)
     random.shuffle(featured_projects)
     return featured_projects
 
