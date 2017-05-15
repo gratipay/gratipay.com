@@ -4,8 +4,7 @@ js_root = os.path.join(website.project_root, 'js')
 [---]
 catted = []
 for root, dirs, files in os.walk(js_root):
-    for filename in files:
-        catted.append(http_caching.concat_files(files, root, '.js') + '\n')
+    catted.append(http_caching.concat_files(files, root, '.js') + '\n')
 js = "".join(catted)
 [---] via stdlib_format
 {js}
