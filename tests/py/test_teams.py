@@ -6,8 +6,8 @@ import base64
 
 from aspen.testing.client import FileUpload
 from gratipay.testing import Harness, D,T
+from gratipay.testing.email import QueuedEmailHarness
 from gratipay.models.team import Team, slugize, InvalidTeamName
-
 
 IMAGE = base64.b64decode(b"""\
 iVBORw0KGgoAAAANSUhEUgAAAEQAAAAdCAYAAAATksqNAAAYKGlDQ1BJQ0MgUHJvZmlsZQAAWIWV
@@ -525,3 +525,35 @@ class Cast(Harness):
         response = self.client.GxT('/theenterprise/', return_after='cast')
         assert response.code == 302
         assert response.headers['Location'] == '/TheEnterprise/'
+        
+        
+class TestTeamEmails(QueuedEmailHarness,Harness):
+
+    valid_data = {
+        'name': 'Gratiteam',
+        'product_or_service': 'We make widgets.',
+        'homepage': 'http://gratipay.com/',
+        'onboarding_url': 'http://inside.gratipay.com/',
+        'agree_public': 'true',
+        'agree_payroll': 'true',
+        'agree_terms': 'true',
+        'image': FileUpload(IMAGE, 'logo.png'),
+    }
+
+    def post_new(self, data, auth_as='alice', expected=200):
+        r =  self.client.POST( '/teams/create.json'
+                             , data=data
+                             , auth_as=auth_as
+                             , raise_immediately=False
+                              )
+        assert r.code == expected
+        return r 
+      
+    def test_application_email_sent_to_owner(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        self.post_new(dict(self.valid_data))
+        last_email = self.get_last_email()
+        self.app.email_queue.flush()
+        assert last_email['to'] == 'alice <alice@example.com>'
+        expected = "Thanks for your project application for"
+        assert expected in last_email['body_text']
