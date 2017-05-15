@@ -296,15 +296,15 @@ class TestTeams(Harness):
 
     def test_approved_team_shows_up_on_homepage(self):
         self.make_team(is_approved=True)
-        assert 'The Enterprise' in self.client.GET("/").body
+        assert 'The Enterprise' in self.client.GET("/?status=approved").body
 
     def test_unreviewed_team_shows_up_on_homepage(self):
         self.make_team(is_approved=None)
-        assert 'The Enterprise' in self.client.GET("/").body
+        assert 'The Enterprise' in self.client.GET("/?status=unreviewed").body
 
     def test_rejected_team_shows_up_on_homepage(self):
         self.make_team(is_approved=False)
-        assert 'The Enterprise' in self.client.GET("/").body
+        assert 'The Enterprise' in self.client.GET("/?status=rejected").body
 
     def test_stripping_required_inputs(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
