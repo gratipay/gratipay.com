@@ -42,10 +42,8 @@ else:
     random.shuffle(featured_projects)
     tabs['featured'] = {'teams': featured_projects}
 
-nteams = 0
 for key, tab in tabs.items():
     n = tab['n'] = len(tab['teams'])
-    nteams += n
     status = icons.REVIEW_MAP[key]
     tab['name'] = '<span class="status-icon {}">{}</span> {}'.format( status
                                                                     , icons.STATUS_ICONS[status]
