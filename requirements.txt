@@ -31,7 +31,7 @@
 ./vendor/balanced-1.1.1.tar.gz
 
 ./vendor/contextlib2-0.5.4.tar.gz
-./vendor/raven-5.32.0.tar.gz
+./vendor/raven-6.0.0.tar.gz
 
     ./vendor/six-1.8.0.tar.gz
   ./vendor/python-dateutil-2.5.3.tar.gz
