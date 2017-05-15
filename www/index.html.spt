@@ -28,11 +28,8 @@ tabs['rejected'] = {'teams': []}
 for project in teams:
     tabs[project.status]['teams'].append(project)
 
-if len(tabs['approved']['teams']) < 10:
-    tabs.pop('featured')
-else:
-    featured_projects = get_featured_projects(website.db)
-    tabs['featured'] = {'teams': featured_projects}
+featured_projects = get_featured_projects(website.db)
+tabs['featured'] = {'teams': featured_projects}
 
 for key, tab in tabs.items():
     n = tab['n'] = len(tab['teams'])
