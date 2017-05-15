@@ -242,7 +242,25 @@ def to_javascript(obj):
     return json.dumps(obj).replace('</', '<\\/')
 
 
-def get_featured_projects(popular, unpopular):
+def get_featured_projects(db):
+    teams = db.all("""
+
+        SELECT teams.*::teams
+          FROM teams
+         WHERE not is_closed
+           AND is_approved
+      ORDER BY ctime DESC
+
+    """)
+
+    popular = []
+    unpopular = []
+    for project in teams:
+        if project.nreceiving_from >= 5:
+            popular.append(project)
+        else:
+            unpopular.append(project)
+
     np, nu = len(popular), len(unpopular)
 
     # surely optimizable & clarifiable, but it passes the tests

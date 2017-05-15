@@ -13,7 +13,6 @@ from gratipay.utils.username import safely_reserve_a_username, FailedToReserveUs
                                                                            RanOutOfUsernameAttempts
 from psycopg2 import IntegrityError
 
-
 class TestGetParticipant(Harness):
 
     def test_gets_participant(self):
@@ -248,35 +247,46 @@ class TestTruncate(Harness):
 
 class TestGetFeaturedProjects(Harness):
 
-    def get_and_count(self, popular, unpopular):
-        featured = get_featured_projects(popular, unpopular)
-        npopular = len([p for p in featured if type(p) is int])
-        nunpopular = len([p for p in featured if type(p) is unicode])
+    def get_and_count(self):
+        featured = get_featured_projects(self.db)
+        npopular = len([p for p in featured if p.name.endswith("Popular!")])
+        nunpopular = len([p for p in featured if p.name.endswith("Unpopular!")])
         return npopular, nunpopular
 
     def test_includes_more_popular_than_unpopular(self):
-        popular, unpopular = range(100), list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-        assert self.get_and_count(popular, unpopular) == (7, 3)
+        self._make_teams(100, 50)
+        assert self.get_and_count() == (7, 3)
 
     def test_deals_with_zero_popular_projects(self):
-        popular, unpopular = range(0), list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-        assert self.get_and_count(popular, unpopular) == (0, 10)
+        self._make_teams(0, 50)
+        assert self.get_and_count() == (0, 10)
 
     def test_deals_with_some_but_too_few_popular_projects(self):
-        popular, unpopular = range(6), list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-        assert self.get_and_count(popular, unpopular) == (6, 4)
+        self._make_teams(6, 50)
+        assert self.get_and_count() == (6, 4)
 
     def test_deals_with_zero_unpopular_projects(self):
-        assert self.get_and_count(range(100), list('')) == (10, 0)
+        self._make_teams(100, 0)
+        assert self.get_and_count() == (10, 0)
 
     def test_deals_with_some_but_too_few_unpopular_projects(self):
-        assert self.get_and_count(range(100), list('AB')) == (8, 2)
+        self._make_teams(100, 2)
+        assert self.get_and_count() == (8, 2)
 
     def test_deals_with_zero_projects(self):
-        assert self.get_and_count(range(0), list('')) == (0, 0)
+        assert self.get_and_count() == (0, 0)
 
     def test_deals_with_some_but_too_few_of_both(self):
-        assert self.get_and_count(range(4), list('A')) == (4, 1)
+        self._make_teams(4, 1)
+        assert self.get_and_count() == (4, 1)
+
+    def _make_teams(self, npopular, nunpopular):
+        for i in xrange(npopular):
+            team = self.make_team("%s Popular!" % str(i), is_approved=True)
+            self.db.run("UPDATE teams SET nreceiving_from = 10 WHERE id = %s", (team.id, ))
+
+        for i in xrange(nunpopular):
+            self.make_team("%s Unpopular!" % str(i), is_approved=True)
 
 
 class FailCollector:
