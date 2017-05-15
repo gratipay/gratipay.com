@@ -243,25 +243,24 @@ def to_javascript(obj):
 
 
 def get_featured_projects(db):
-    teams = db.all("""
+    npopular, nunpopular = db.one("""
 
-        SELECT teams.*::teams
-          FROM teams
-         WHERE not is_closed
-           AND is_approved
-      ORDER BY ctime DESC
+        WITH eligible_teams AS (
+            SELECT *
+              FROM teams
+             WHERE not is_closed
+               AND is_approved
+        )
 
-    """)
+        SELECT (SELECT COUNT(1)
+                  FROM eligible_teams
+                 WHERE nreceiving_from > 5) AS npopular,
 
-    popular = []
-    unpopular = []
-    for project in teams:
-        if project.nreceiving_from >= 5:
-            popular.append(project)
-        else:
-            unpopular.append(project)
+               (SELECT COUNT(1)
+                  FROM eligible_teams
+                 WHERE nreceiving_from <= 5) AS nunpopular
 
-    npopular, nunpopular = len(popular), len(unpopular)
+    """, back_as=tuple)
 
     # Attempt to maintain a 70-30 ratio
     if npopular >= 7:
@@ -270,10 +269,33 @@ def get_featured_projects(db):
     # Fill in the rest with unpopular
     nunpopular = min(nunpopular, 10-npopular)
 
-    featured_projects = random.sample(popular, npopular) + random.sample(unpopular, nunpopular)
+    featured_projects = db.all("""
+
+        WITH eligible_teams AS (
+            SELECT *
+              FROM teams
+             WHERE not is_closed
+               AND is_approved
+        )
+
+        (SELECT t.*::teams
+          FROM eligible_teams t
+         WHERE nreceiving_from > 5
+      ORDER BY random()
+         LIMIT %(npopular)s)
+
+         UNION
+
+        (SELECT t.*::teams
+          FROM eligible_teams t
+         WHERE nreceiving_from <= 5
+      ORDER BY random()
+         LIMIT %(nunpopular)s)
+
+    """, locals())
+
     random.shuffle(featured_projects)
     return featured_projects
-
 
 def set_version_header(response, website):
     response.headers['X-Gratipay-Version'] = website.version
