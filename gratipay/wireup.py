@@ -389,7 +389,6 @@ def env():
         PROJECT_REVIEW_USERNAME         = unicode,
         PROJECT_REVIEW_TOKEN            = unicode,
         RAISE_SIGNIN_NOTIFICATIONS      = is_yesish,
-        REQUIRE_YAJL                    = is_yesish,
         GUNICORN_OPTS                   = unicode,
     )
 
