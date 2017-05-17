@@ -354,9 +354,7 @@ msgstr "semaine"
 msgid "Sign out"
 msgstr "Déconnexion"
 
-msgid ""
-"{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
-"to get funded on Gratipay{_a}{_nowrap}."
+msgid "{nowrap}We have {a}integrated npm{_a} into Gratipay.{_nowrap}{_nowrap}"
 msgstr ""
 
 msgid "Blog"

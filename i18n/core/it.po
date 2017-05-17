@@ -88,14 +88,14 @@ msgid "Connect to {0} on Gratipay?"
 msgstr "Connettersi a {0} su Gratipay?"
 
 msgid "We have your application!"
-msgstr ""
+msgstr "Abbiamo la tua candidatura!"
 
 msgid ""
 "Thanks for your project application for {0}! Your public project page is: "
 "{1} and your public review ticket is: {2}. You can watch and participate in "
 "our review process there. We will send a notification to {3} when we finish "
 "our review. Thanks for applying!"
-msgstr ""
+msgstr "Grazie per la candidatura del tuo progetto per {0}! La pagina pubblica del tuo progetto è: {1} e il tuo ticket di verifica pubblico è: {2}. Lì puoi guardare e partecipare al nostro processo di verifica. Invieremo una notifica a {3} quando completeremo la verifica. Grazie per la candidatura!"
 
 msgid "1.0 Payout: Rejected"
 msgstr "Pagamento 1.0: Rifiutato"
@@ -122,30 +122,30 @@ msgid "We have suspended your account."
 msgstr "Abbiamo sospeso il tuo account."
 
 msgid "Project Application Approved!"
-msgstr "Proposta di Progetto Approvata!"
+msgstr "Candidatura Progetto Approvata!"
 
 msgid ""
 "We've approved your application for the '{team}' project on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr "Abbiamo approvato la proposta per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro {a} ticket di revisione{_a}."
+msgstr "Abbiamo approvato la candidatura per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro {a} ticket di verifica{_a}."
 
 msgid ""
 "We've approved your application for the '{team}' project on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr "Abbiamo approvato la proposta per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro ticket di revisione:"
+msgstr "Abbiamo approvato la candidatura per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro ticket di verifica:"
 
 msgid "Project Application Rejected"
-msgstr "Proposta di Progetto Rifiutata"
+msgstr "Candidatura Progetto Rifiutata"
 
 msgid ""
 "We've rejected your application for the '{team}' project on Gratipay. For "
 "details, please refer to {a}our review ticket{_a}."
-msgstr "Abbiamo rifiutato la proposta per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento {a}al nostro ticket di revisione{_a}."
+msgstr "Abbiamo rifiutato la candidatura per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento {a}al nostro ticket di revisione{_a}."
 
 msgid ""
 "We've rejected your application for the '{team}' project on Gratipay. For "
 "details, please refer to our review ticket:"
-msgstr "Abbiamo rifiutato la proposta per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro ticket di revisione:"
+msgstr "Abbiamo rifiutato la candidatura per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro ticket di revisione:"
 
 msgid "New activity on your account"
 msgstr "Nuova attività sul tuo account"
@@ -347,10 +347,8 @@ msgstr "settimana"
 msgid "Sign out"
 msgstr "Esci"
 
-msgid ""
-"{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
-"to get funded on Gratipay{_a}{_nowrap}."
-msgstr "{nowrap}I nostri nuovi {a}Termini di Servizio{_a}{_nowrap} {nowrap} rendono {a2}più facile trovare finanziamenti su Gratipay{_a}{_nowrap}."
+msgid "{nowrap}We have {a}integrated npm{_a} into Gratipay.{_nowrap}{_nowrap}"
+msgstr ""
 
 msgid "Blog"
 msgstr "Blog"
@@ -480,7 +478,7 @@ msgid "no givers yet"
 msgstr "Ancora nessun donatore"
 
 msgid "has not joined"
-msgstr ""
+msgstr "non si è unito"
 
 msgid "owned by {a}{owner}{_a}"
 msgstr "Proprietà di {a}{owner}{_a}"
@@ -666,7 +664,7 @@ msgid "Agreements"
 msgstr "Condizioni"
 
 msgid "I agree to have my application {0}publicly reviewed{1}."
-msgstr "Accetto a rendere la mia domanda {0}pubblicamente visibile{1}."
+msgstr "Accetto a rendere la mia candidatura {0}pubblicamente visibile{1}."
 
 msgid "I agree to the other {0}terms of service{1} as well."
 msgstr "Acconsento anche agli altri {0}termini di servizio{1}."
@@ -1096,7 +1094,7 @@ msgid "How are you applying for a team!?"
 msgstr "Come ti stai proponendo per un team!?"
 
 msgid "Sorry, you must agree to have your application publicly reviewed."
-msgstr "Scusa, devi accettare di rendere la tua domanda pubblicamente visibile."
+msgstr "Scusa, devi accettare di rendere la tua candidatura pubblicamente visibile."
 
 msgid "Sorry, you must agree to the terms of service."
 msgstr "Scusa, devi accettare i termini di servizio."

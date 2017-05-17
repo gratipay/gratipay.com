@@ -342,10 +342,8 @@ msgstr "週"
 msgid "Sign out"
 msgstr "サインアウト"
 
-msgid ""
-"{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
-"to get funded on Gratipay{_a}{_nowrap}."
-msgstr "{nowrap}新しい {a}利用規約{_a}{_nowrap} {nowrap}は {a2}Gratipayで簡単に資金を調達することができるようになりました{_a}{_nowrap}."
+msgid "{nowrap}We have {a}integrated npm{_a} into Gratipay.{_nowrap}{_nowrap}"
+msgstr ""
 
 msgid "Blog"
 msgstr "ブログ"
