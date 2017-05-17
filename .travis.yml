@@ -17,9 +17,6 @@ before_install:
  - sudo apt-get update
  - sudo apt-get install postgresql-9.6
 
- # Sometimes ya just halfta ...
- - git clone -b "2.1.0" --depth 1 https://github.com/lloyd/yajl.git && cd yajl && ./configure && sudo make install && cd ..
-
  - npm install marky-markdown
 
  # For ttw tests
@@ -39,10 +36,8 @@ install:
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rf env; fi
  - touch requirements.txt package.json
  - make env -j2
- - env/bin/pip install --upgrade ijson==2.3.0
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
- - echo "REQUIRE_YAJL=true" | tee -a tests/local.env local.env
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
 script: LD_LIBRARY_PATH=/usr/local/lib xvfb-run make bgrun test doc -j2
