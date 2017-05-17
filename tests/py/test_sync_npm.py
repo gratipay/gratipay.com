@@ -35,14 +35,9 @@ class ProcessDocTests(Harness):
 class ConsumeChangeStreamTests(Harness):
 
     def change_stream(self, changes):
-        def change_stream(seq):
-            for i, change in enumerate(changes):
-                if i < seq: continue
-                change['seq'] = i
-                yield change
-        last_seq = sync_npm.get_last_seq(self.db)
-        return change_stream(last_seq)
-
+        for i, change in enumerate(changes):
+            change['seq'] = i
+            yield change
 
     def test_packages_starts_empty(self):
         assert self.db.all('select * from packages') == []
@@ -70,6 +65,9 @@ class ConsumeChangeStreamTests(Harness):
         sync_npm.consume_change_stream(self.change_stream(docs), self.db)
         assert self.db.one('select * from packages') is None
 
+    def test_delete_tolerates_inexistent_packages(self):
+        docs = [{'deleted': True, 'id': 'foo'}]
+        sync_npm.consume_change_stream(self.change_stream(docs), self.db)
 
     def test_even_deletes_package_with_linked_team(self):
 
@@ -84,21 +82,6 @@ class ConsumeChangeStreamTests(Harness):
         docs = [{'deleted': True, 'id': 'foo'}]
         sync_npm.consume_change_stream(self.change_stream(docs), self.db)
         assert self.db.one('select * from packages') is None
-
-
-    def test_picks_up_with_last_seq(self):
-        docs = [ {'doc': {'name': 'foo', 'description': 'Foo.'}}
-               , {'doc': {'name': 'foo', 'description': 'See alice?',
-                  'maintainers': [{'email': 'alice'}]}}
-               , {'doc': {'name': 'foo', 'description': "No, I don't see alice!"}}
-                ]
-        self.db.run('update worker_coordination set npm_last_seq=2')
-        sync_npm.consume_change_stream(self.change_stream(docs), self.db)
-
-        package = self.db.one('select * from packages')
-        assert package.description == "No, I don't see alice!"
-        assert package.emails == []
-
 
     def test_sets_last_seq(self):
         docs = [{'doc': {'name': 'foo', 'description': 'Foo.'}}] * 13
