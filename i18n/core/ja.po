@@ -86,6 +86,16 @@ msgstr "これは、Gratipay で {country_name} の {viewer} が、あなたの 
 msgid "Connect to {0} on Gratipay?"
 msgstr "Gratipay で {0} に接続しますか?"
 
+msgid "We have your application!"
+msgstr ""
+
+msgid ""
+"Thanks for your project application for {0}! Your public project page is: "
+"{1} and your public review ticket is: {2}. You can watch and participate in "
+"our review process there. We will send a notification to {3} when we finish "
+"our review. Thanks for applying!"
+msgstr ""
+
 msgid "1.0 Payout: Rejected"
 msgstr "1.0 支払い: 否認されました!"
 
@@ -461,6 +471,9 @@ msgid_plural "{amount}/wk from {number_of} givers"
 msgstr[0] ""
 
 msgid "no givers yet"
+msgstr ""
+
+msgid "has not joined"
 msgstr ""
 
 msgid "owned by {a}{owner}{_a}"

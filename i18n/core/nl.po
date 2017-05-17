@@ -89,6 +89,16 @@ msgstr "Dit is een automatische email om je te laten weten dat {viewer} je ident
 msgid "Connect to {0} on Gratipay?"
 msgstr "Verbind met {0} op Gratipay?"
 
+msgid "We have your application!"
+msgstr ""
+
+msgid ""
+"Thanks for your project application for {0}! Your public project page is: "
+"{1} and your public review ticket is: {2}. You can watch and participate in "
+"our review process there. We will send a notification to {3} when we finish "
+"our review. Thanks for applying!"
+msgstr ""
+
 msgid "1.0 Payout: Rejected"
 msgstr "1.0 Betaling: geweigerd"
 
@@ -469,6 +479,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "no givers yet"
+msgstr ""
+
+msgid "has not joined"
 msgstr ""
 
 msgid "owned by {a}{owner}{_a}"
