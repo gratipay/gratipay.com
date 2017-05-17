@@ -27,4 +27,4 @@ class TestNotifications(Harness):
         assert alice.notifications == ["abcd", "bcde"]
 
     def test_blog_announcement(self):
-        assert 'projects-45c46718507b">easier' in self.client.GET('/').body
+        assert 'integrating-npm-39333109419d">integrated' in self.client.GET('/').body
