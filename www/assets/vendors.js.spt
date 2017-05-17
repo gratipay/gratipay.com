@@ -1,6 +1,6 @@
 import os
 from gratipay.utils import http_caching
-asset_root = os.path.join(website.www_root, 'assets')
+vendor_root = os.path.join(website.project_root, 'js', 'vendor')
 [---]
 
 # Load order
@@ -9,8 +9,9 @@ files = [
     'chosen.jquery.min.js',
     'tipr.min.js',
     'bootstrap-dropdown.js',
+    'jquery.mousewheel.min.js',
 ]
 
-js = http_caching.concat_files(files, asset_root, ".js")
+js = http_caching.concat_files(files, vendor_root)
 [---] via stdlib_format
 {js}

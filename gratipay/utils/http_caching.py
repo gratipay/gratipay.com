@@ -22,19 +22,24 @@ def asset_etag(path):
     return h
 
 
-def concat_files(files, root, endswith=None):
-    """Concatenate a list of files and potentially filter them by type
+def concat_files(files, root):
+    """Concatenate a list of files.
+
+    :param list files: a list of relative file paths
+    :param string root: the root relative to which the files are
+
+    :return: the concatenated files as a string, with files demarcated by
+        JavaScript block-style comments
+
     """
     catted = []
-    for filename in files:
-        if endswith is None or filename.endswith(endswith):
-            base = root[len(root)+0:]
-            catted.append('/' + ('*'*70) + '/\n')
-            catted.append('/*' + (base + '/' + filename).center(68) + '*/\n')
-            catted.append('/' + ('*'*70) + '/' + '\n\n')
-            content = open(os.path.join(root, filename)).read()
-            content = content.decode('ascii')
-            catted.append(content + '\n')
+    for filepath in files:
+        catted.append('/' + ('*'*70) + '/\n')
+        catted.append('/*' + filepath.center(68) + '*/\n')
+        catted.append('/' + ('*'*70) + '/' + '\n\n')
+        content = open(os.path.join(root, filepath)).read()
+        content = content.decode('ascii')
+        catted.append(content + '\n')
     return "".join(catted)
 
 

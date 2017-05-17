@@ -2,9 +2,11 @@ import os
 from gratipay.utils import http_caching
 js_root = os.path.join(website.project_root, 'js')
 [---]
-catted = []
-for root, dirs, files in os.walk(js_root):
-    catted.append(http_caching.concat_files(files, root, '.js') + '\n')
-js = "".join(catted)
+to_cat = ['console.js', 'gratipay.js']
+for root, dirs, files in os.walk(os.path.join(js_root, 'gratipay')):
+    for filename in files:
+        relpath = os.path.join(root, filename)[len(js_root)+1:]
+        to_cat.append(relpath)
+js = http_caching.concat_files(to_cat, js_root)
 [---] via stdlib_format
 {js}
