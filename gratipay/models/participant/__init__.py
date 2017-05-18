@@ -1262,6 +1262,15 @@ class Participant(Model, Email, Identity, ExchangeRoutes):
 
                 cursor.run(MERGE_EMAIL_ADDRESSES, dict(live=self.id, dead=other.id))
 
+                # Take over payment routes.
+                # =========================
+                # Route ids logged in add_event call below, to keep the thread alive.
+
+                route_ids = cursor.all( "UPDATE exchange_routes SET participant=%s "
+                                        "WHERE participant=%s RETURNING id"
+                                      , (self.id, other.id)
+                                       )
+
                 # Take over team ownership.
                 # =========================
 
@@ -1294,6 +1303,17 @@ class Participant(Model, Email, Identity, ExchangeRoutes):
                             , archive_username
                              )
                            )
+
+                self.app.add_event( cursor
+                                  , 'participant'
+                                  , dict( action='take-over'
+                                        , id=self.id
+                                        , values=dict( other_id=other.id
+                                                     , exchange_routes=route_ids
+                                                      )
+                                         )
+                                   )
+
 
         if new_balance is not None:
             self.set_attributes(balance=new_balance)
