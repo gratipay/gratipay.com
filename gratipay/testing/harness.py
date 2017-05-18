@@ -211,7 +211,7 @@ class Harness(unittest.TestCase):
 
 
     def make_package(self, package_manager=NPM, name='foo', description='Foo fooingly.',
-                                                      emails=['alice@example.com'], claimed=False):
+                                                    emails=['alice@example.com'], claimed_by=None):
         """Factory for packages.
         """
         self.db.run( 'INSERT INTO packages (package_manager, name, description, emails) '
@@ -219,9 +219,11 @@ class Harness(unittest.TestCase):
                    , (package_manager, name, description, emails)
                     )
         package = Package.from_names(NPM, name)
-        if claimed:
+        if claimed_by:
+            if claimed_by == 'picard':
+                claimed_by = self.make_owner('picard')
             admin = self.make_admin()
-            team = package.get_or_create_linked_team(self.db, self.make_owner('picard'))
+            team = package.get_or_create_linked_team(self.db, claimed_by)
             team.update_review_status('approved', admin)
         return package
 

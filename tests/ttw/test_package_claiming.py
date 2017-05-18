@@ -109,3 +109,21 @@ class Test(BrowserHarness):
         self.visit('/foo/')
         foo = self.css('#content .statement p')
         assert foo.text == 'Foo fooingly.'
+
+
+    def test_jdorfman_can_merge_accounts(self):
+        self.make_participant('jdorfman', claimed_time='now', elsewhere='twitter')
+        deadbeef = self.make_participant('deadbeef', claimed_time='now', elsewhere='github')
+        self.make_package(NPM, 'shml', claimed_by=deadbeef)
+
+        github = deadbeef.get_account_elsewhere('github')
+        token, _ = github.make_connect_token()
+        self._browser.cookies.add({'connect_{}'.format(github.id): token})
+
+        self.sign_in('jdorfman')
+        self.visit('/~jdorfman/')
+        assert len(self.css('.projects .listing tr')) == 0
+
+        self.visit('/on/confirm.html?id={}'.format(github.id))
+        self.css('button[value=yes]').click()
+        assert len(self.css('.projects .listing tr')) == 1
