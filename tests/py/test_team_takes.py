@@ -282,3 +282,14 @@ class ClearTakes(TeamTakesHarness):
         assert self.db.one("select count(*) from current_takes") == 2
         self.crusher.clear_takes(self.db)
         assert self.db.one("select count(*) from current_takes") == 0
+
+    def test_doesnt_choke_on_unverified_team_owners(self):
+        jdorfman = self.make_participant( 'jdorfman'
+                                        , claimed_time='now'
+                                        , last_paypal_result=''
+                                        , email_address='jdorfman@example.com'
+                                         )
+        self.make_team('shml', owner='jdorfman')
+        assert self.db.one("select count(*) from current_takes") == 0
+        jdorfman.clear_takes(self.db)
+        assert self.db.one("select count(*) from current_takes") == 0
