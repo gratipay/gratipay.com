@@ -84,7 +84,7 @@ class TestSearch(Harness):
         assert 'owned by'       not in body
 
     def test_does_not_include_claimed_packages(self):
-        self.make_package(claimed=True)
+        self.make_package(claimed_by='picard')
         body = self.search('fo')
         assert 'foo' in body
         assert 'has not joined' not in body

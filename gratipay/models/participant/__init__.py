@@ -341,6 +341,14 @@ class Participant(Model, Email, Identity, ExchangeRoutes):
         """Leave all teams by zeroing all takes.
         """
         for team in self.get_teams():
+            if team.owner == self.username and team.get_take_for(self) == 0:
+
+                # Team owners don't necessarily have takes, and we also don't
+                # hard-require team owners to have a a national identity on
+                # file. But we *do* require national identity before we will
+                # set a take--even if setting it to zero.
+
+                continue
             team.set_take_for(self, ZERO, recorder=self, cursor=cursor)
 
 
@@ -1253,6 +1261,13 @@ class Participant(Model, Email, Identity, ExchangeRoutes):
                 # ==========================
 
                 cursor.run(MERGE_EMAIL_ADDRESSES, dict(live=self.id, dead=other.id))
+
+                # Take over team ownership.
+                # =========================
+
+                cursor.run( "UPDATE teams SET owner=%s WHERE owner=%s"
+                          , (self.username, other.username)
+                           )
 
                 # Disconnect any remaining elsewhere account.
                 # ===========================================

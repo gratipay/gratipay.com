@@ -123,7 +123,9 @@ class Test(BrowserHarness):
         self.sign_in('jdorfman')
         self.visit('/~jdorfman/')
         assert len(self.css('.projects .listing tr')) == 0
+        assert len(self.css('.accounts tr.has-avatar')) == 1
 
         self.visit('/on/confirm.html?id={}'.format(github.id))
         self.css('button[value=yes]').click()
         assert len(self.css('.projects .listing tr')) == 1
+        assert len(self.css('.accounts tr.has-avatar')) == 2
