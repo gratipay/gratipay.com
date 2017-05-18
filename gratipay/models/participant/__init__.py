@@ -344,7 +344,7 @@ class Participant(Model, Email, Identity, ExchangeRoutes):
             if team.owner == self.username and team.get_take_for(self) == 0:
 
                 # Team owners don't necessarily have takes, and we also don't
-                # hard-require team owners to have a a national identity on
+                # hard-require team owners to have a national identity on
                 # file. But we *do* require national identity before we will
                 # set a take--even if setting it to zero.
 
