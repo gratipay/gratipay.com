@@ -3,6 +3,8 @@ from gratipay.utils import get_featured_projects, icons
 import random
 
 [---]
+PROJECT_LIMIT = 10
+
 # Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
                   , "unreviewed" : _("Unreviewed")
@@ -17,15 +19,26 @@ if status_filter and status_filter in ['unreviewed', 'rejected', 'approved']:
         'rejected': False,
         'approved': True
     }[status_filter]
+
+    page = request.qs.get('page', 1)
+    try:
+      page = int(page)
+    except ValueError:
+      page = 1
+
+    limit, offset = PROJECT_LIMIT, (page - 1) * PROJECT_LIMIT
+
     projects = website.db.all("""
 
         SELECT teams.*::teams
           FROM teams
          WHERE is_approved IS %s
            AND not is_closed
-      ORDER BY ctime DESC
+      ORDER BY id DESC
+         LIMIT %s
+        OFFSET %s
 
-    """, (status_value, ))
+    """, (status_value, limit, offset))
 else:
     projects = get_featured_projects(website.db)
 
