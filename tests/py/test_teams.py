@@ -294,18 +294,6 @@ class TestTeams(Harness):
         assert self.db.one("SELECT COUNT(*) FROM teams") == 1
         assert "Sorry, there is already a team using 'Gratiteam'." in r.body
 
-    def test_approved_team_shows_up_on_homepage(self):
-        self.make_team(is_approved=True)
-        assert 'The Enterprise' in self.client.GET("/?status=approved").body
-
-    def test_unreviewed_team_shows_up_on_homepage(self):
-        self.make_team(is_approved=None)
-        assert 'The Enterprise' in self.client.GET("/?status=unreviewed").body
-
-    def test_rejected_team_shows_up_on_homepage(self):
-        self.make_team(is_approved=False)
-        assert 'The Enterprise' in self.client.GET("/?status=rejected").body
-
     def test_stripping_required_inputs(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         data = dict(self.valid_data)
@@ -525,8 +513,8 @@ class Cast(Harness):
         response = self.client.GxT('/theenterprise/', return_after='cast')
         assert response.code == 302
         assert response.headers['Location'] == '/TheEnterprise/'
-        
-        
+
+
 class TestTeamEmails(QueuedEmailHarness,Harness):
 
     valid_data = {
@@ -547,8 +535,8 @@ class TestTeamEmails(QueuedEmailHarness,Harness):
                              , raise_immediately=False
                               )
         assert r.code == expected
-        return r 
-      
+        return r
+
     def test_application_email_sent_to_owner(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
         self.post_new(dict(self.valid_data))
