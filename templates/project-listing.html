@@ -1,5 +1,8 @@
 {% set current_page = request.path.raw.split('/')[1] %}
-{% for i, project in enumerate(project_list, start=1) %}
+{% if start_index is not defined %}
+    {% set start_index = 1 %}
+{% endif %}
+{% for i, project in enumerate(project_list, start=start_index) %}
     <tr>
         <td class="item">
             <img class="avatar" src="{{ project.get_image_url('small') }}">

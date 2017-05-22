@@ -3,7 +3,7 @@ from gratipay.utils import get_featured_projects, icons
 import random
 
 [---]
-PROJECT_LIMIT = 10
+PROJECTS_PER_PAGE = 10
 
 # Can't factor this out because of translations?
 i18ned_statuses = { "approved": _("Approved")
@@ -13,20 +13,31 @@ i18ned_statuses = { "approved": _("Approved")
                    }
 
 status_filter = request.qs.get('status')
-if status_filter and status_filter in ['unreviewed', 'rejected', 'approved']:
+status_filter_active = (status_filter and status_filter in ['unreviewed', 'rejected', 'approved'])
+
+page = request.qs.get('page', 1)
+try:
+  page = int(page)
+except ValueError:
+  page = 1
+
+if status_filter_active:
     status_value = {
         'unreviewed': None,
         'rejected': False,
         'approved': True
     }[status_filter]
 
-    page = request.qs.get('page', 1)
-    try:
-      page = int(page)
-    except ValueError:
-      page = 1
+    total_project_count = website.db.one("""
 
-    limit, offset = PROJECT_LIMIT, (page - 1) * PROJECT_LIMIT
+        SELECT COUNT(1)
+          FROM teams
+         WHERE is_approved IS %s
+           AND not is_closed
+
+    """, (status_value, ))
+
+    limit, offset = PROJECTS_PER_PAGE, (page - 1) * PROJECTS_PER_PAGE
 
     projects = website.db.all("""
 
@@ -39,8 +50,10 @@ if status_filter and status_filter in ['unreviewed', 'rejected', 'approved']:
         OFFSET %s
 
     """, (status_value, limit, offset))
+
 else:
     projects = get_featured_projects(website.db)
+
 
 tabs = OrderedDict()
 tabs['featured'] = {}
@@ -104,7 +117,16 @@ page_id = "homepage"
 
 <table class="listing">
     {% set project_list = projects %}
+    {% set start_index = ((page - 1) * PROJECTS_PER_PAGE) + 1 %}
     {% include "templates/project-listing.html" %}
 </table>
+
+{% if status_filter_active and (total_project_count > PROJECTS_PER_PAGE) %}
+    {% set total_project_count = total_project_count %}
+    {% set projects_per_page = PROJECTS_PER_PAGE %}
+    {% set current_page = page %}
+    {% set status_filter = status_filter %}
+    {% include "templates/project-pagination.html" %}
+{% endif %}
 
 {% endblock %}

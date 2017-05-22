@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import base64
+from math import ceil
 
 import aspen
 from aspen.website import Website as BaseWebsite
@@ -67,6 +68,9 @@ class Website(BaseWebsite):
             'to_javascript': utils.to_javascript,
             'type': type,
             'unicode': unicode,
+            'min': min,
+            'max': max,
+            'ceil': ceil
         }
 
 
