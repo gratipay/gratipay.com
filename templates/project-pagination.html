@@ -2,22 +2,26 @@
 {% set last_page = ceil(total_project_count / projects_per_page) | int %}
 {% set end = min(start + 9, last_page) %}
 
-<ul class="nav">
+<ul class="pagination">
+    <li class="arrow-button arrow-left">
     {% if current_page > 1 %}
-    <li>
-        <a href="/?status={{status_filter}}&page={{current_page - 1}}">< Previous</a>
-    </li>
+        <a href="/?status={{status_filter}}&page={{current_page - 1}}"><span class="arrow"><</span> Back</a>
     {% endif %}
-
-    {% for i in range(start, end + 1) %}
-    <li>
-        <a class="{{'selected' if current_page == i }}" href="/?status={{status_filter}}&page={{i}}">{{i}}</a>
     </li>
-    {% endfor %}
 
+    <li class="numbered-list">
+
+    <span class="show-on-mobile">Page {{current_page}} of {{last_page}}</span>
+
+    {% for i in range(start, end + 1) %}<a
+        class="{{'selected' if current_page == i }} hide-on-mobile"
+        href="/?status={{status_filter}}&page={{i}}"
+        >{{i}}</a>{% endfor %}
+    </li>
+
+    <li class="arrow-button arrow-right">
     {% if current_page < last_page %}
-    <li>
-        <a href="/?status={{status_filter}}&page={{current_page + 1}}">Next ></a>
-    </li>
+        <a href="/?status={{status_filter}}&page={{current_page + 1}}">Next <span class="arrow">></span></a>
     {% endif %}
+    </li>
 </ul>
