@@ -341,15 +341,12 @@ class Participant(Model, Email, Identity, ExchangeRoutes):
         """Leave all teams by zeroing all takes.
         """
         for team in self.get_teams():
-            if team.owner == self.username and team.get_take_for(self) == 0:
-
-                # Team owners don't necessarily have takes, and we also don't
-                # hard-require team owners to have a national identity on
-                # file. But we *do* require national identity before we will
-                # set a take--even if setting it to zero.
-
-                continue
-            team.set_take_for(self, ZERO, recorder=self, cursor=cursor)
+            # `get_teams` returns teams that a participant is either a member or owner of.
+            #
+            # Owners don't necessarily have takes, so we filter out those cases before setting
+            # their take to zero.
+            if self.member_of(team):
+                team.set_take_for(self, ZERO, recorder=self, cursor=cursor)
 
 
     def clear_personal_information(self, cursor):
