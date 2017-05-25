@@ -348,7 +348,7 @@ msgid "Sign out"
 msgstr "Esci"
 
 msgid "{nowrap}We have {a}integrated npm{_a} into Gratipay.{_nowrap}{_nowrap}"
-msgstr ""
+msgstr "{nowrap}Abbiamo {a}integrato npm{_a} in Gratipay.{_nowrap}{_nowrap}"
 
 msgid "Blog"
 msgstr "Blog"
