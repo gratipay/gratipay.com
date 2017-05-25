@@ -109,3 +109,37 @@ class Test(BrowserHarness):
         self.visit('/foo/')
         foo = self.css('#content .statement p')
         assert foo.text == 'Foo fooingly.'
+
+
+    def test_jdorfman_can_merge_accounts(self):
+        jdorfman = self.make_participant('jdorfman', claimed_time='now', elsewhere='twitter')
+        deadbeef = self.make_participant('deadbeef', claimed_time='now', elsewhere='github',
+                                                                             last_paypal_result='')
+        self.make_package(NPM, 'shml', claimed_by=deadbeef)
+
+        github = deadbeef.get_account_elsewhere('github')
+        token, _ = github.make_connect_token()
+        self._browser.cookies.add({'connect_{}'.format(github.id): token})
+
+        # jdorfman has nothing much right yet
+        self.sign_in('jdorfman')
+        self.visit('/~jdorfman/')
+        assert len(self.css('.projects .listing tr')) == 0
+        assert len(self.css('.accounts tr.has-avatar')) == 1
+        self.visit('/~jdorfman/routes/')
+        assert self.css('.account-details span').text == ''
+
+        # jdorfman can take over deadbeef
+        self.visit('/on/confirm.html?id={}'.format(github.id))
+        self.css('button[value=yes]').click()
+        assert len(self.css('.projects .listing tr')) == 1
+        assert len(self.css('.accounts tr.has-avatar')) == 2
+        self.visit('/~jdorfman/routes/')
+        assert self.css('.account-details span').text == 'abcd@gmail.com'
+
+        # admin can browse event
+        self.sign_in('admin')
+        self.visit('/~jdorfman/events/')
+        payload = eval(self.css('table#events td.payload').text)
+        assert payload['action'] == 'take-over'
+        assert payload['values']['exchange_routes'] == [r.id for r in jdorfman.get_payout_routes()]

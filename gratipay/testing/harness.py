@@ -21,6 +21,7 @@ from gratipay.models.package import NPM, Package
 from gratipay.models.participant import Participant, MAX_TIP, MIN_TIP
 from gratipay.models.team import Team
 from gratipay.security import user
+from gratipay.testing import P
 from gratipay.testing.vcr import use_cassette
 from psycopg2 import IntegrityError, InternalError
 
@@ -211,7 +212,7 @@ class Harness(unittest.TestCase):
 
 
     def make_package(self, package_manager=NPM, name='foo', description='Foo fooingly.',
-                                                      emails=['alice@example.com'], claimed=False):
+                                                    emails=['alice@example.com'], claimed_by=None):
         """Factory for packages.
         """
         self.db.run( 'INSERT INTO packages (package_manager, name, description, emails) '
@@ -219,9 +220,12 @@ class Harness(unittest.TestCase):
                    , (package_manager, name, description, emails)
                     )
         package = Package.from_names(NPM, name)
-        if claimed:
+        if claimed_by:  # either a username (existing or not) or a Participant object
+            if type(claimed_by) is unicode:
+                maybe = P(claimed_by)
+                claimed_by = maybe if maybe is not None else self.make_owner(claimed_by)
             admin = self.make_admin()
-            team = package.get_or_create_linked_team(self.db, self.make_owner('picard'))
+            team = package.get_or_create_linked_team(self.db, claimed_by)
             team.update_review_status('approved', admin)
         return package
 

@@ -341,7 +341,12 @@ class Participant(Model, Email, Identity, ExchangeRoutes):
         """Leave all teams by zeroing all takes.
         """
         for team in self.get_teams():
-            team.set_take_for(self, ZERO, recorder=self, cursor=cursor)
+            # `get_teams` returns teams that a participant is either a member or owner of.
+            #
+            # Owners don't necessarily have takes, so we filter out those cases before setting
+            # their take to zero.
+            if self.member_of(team):
+                team.set_take_for(self, ZERO, recorder=self, cursor=cursor)
 
 
     def clear_personal_information(self, cursor):
@@ -1254,6 +1259,22 @@ class Participant(Model, Email, Identity, ExchangeRoutes):
 
                 cursor.run(MERGE_EMAIL_ADDRESSES, dict(live=self.id, dead=other.id))
 
+                # Take over payment routes.
+                # =========================
+                # Route ids logged in add_event call below, to keep the thread alive.
+
+                route_ids = cursor.all( "UPDATE exchange_routes SET participant=%s "
+                                        "WHERE participant=%s RETURNING id"
+                                      , (self.id, other.id)
+                                       )
+
+                # Take over team ownership.
+                # =========================
+
+                cursor.run( "UPDATE teams SET owner=%s WHERE owner=%s"
+                          , (self.username, other.username)
+                           )
+
                 # Disconnect any remaining elsewhere account.
                 # ===========================================
 
@@ -1279,6 +1300,17 @@ class Participant(Model, Email, Identity, ExchangeRoutes):
                             , archive_username
                              )
                            )
+
+                self.app.add_event( cursor
+                                  , 'participant'
+                                  , dict( action='take-over'
+                                        , id=self.id
+                                        , values=dict( other_id=other.id
+                                                     , exchange_routes=route_ids
+                                                      )
+                                         )
+                                   )
+
 
         if new_balance is not None:
             self.set_attributes(balance=new_balance)
