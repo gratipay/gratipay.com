@@ -5,12 +5,12 @@
 <ul class="pagination">
     <li class="arrow-button arrow-left">
     {% if current_page > 1 %}
-        <a href="/?status={{status_filter}}&page={{current_page - 1}}"><span class="arrow"><</span> Back</a>
+        <a href="/?status={{status_filter}}&page={{current_page - 1}}"><span class="arrow"><</span> {{ _("Back") }}</a>
     {% endif %}
     </li>
 
     <li class="numbered-list">
-        <span class="show-on-mobile">Page {{current_page}} of {{last_page}}</span>
+        <span class="show-on-mobile">{{ _("Page {0} of {1}", current_page, last_page) }}</span>
 
         {% if start > 1 %}
             <a class="hide-on-mobile" href="/?status={{status_filter}}&page=1">1</a>
@@ -30,7 +30,7 @@
 
     <li class="arrow-button arrow-right">
     {% if current_page < last_page %}
-        <a href="/?status={{status_filter}}&page={{current_page + 1}}">Next <span class="arrow">></span></a>
+        <a href="/?status={{status_filter}}&page={{current_page + 1}}">{{ _("Next") }} <span class="arrow">></span></a>
     {% endif %}
     </li>
 </ul>
