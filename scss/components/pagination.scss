@@ -18,6 +18,10 @@
         font: normal 15px/15px $Ideal;
         line-height: 35px;
     }
+
+    & span.filler {
+        color: $light-brown;
+    }
 }
 
 .pagination .arrow-button {
