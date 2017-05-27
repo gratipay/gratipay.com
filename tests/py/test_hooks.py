@@ -97,14 +97,14 @@ class Tests2(Harness):
         assert r.code == 403
 
     def test_caching_of_assets(self):
-        r = self.client.GET('/assets/jquery.min.js')
+        r = self.client.GET('/assets/gratipay.js')
         assert r.headers['Access-Control-Allow-Origin'] == 'https://gratipay.com'
         assert r.headers['Cache-Control'] == 'public, max-age=5'
         assert 'Vary' not in r.headers
         assert not r.headers.cookie
 
     def test_caching_of_assets_with_etag(self):
-        r = self.client.GET(self.client.website.asset('jquery.min.js'))
+        r = self.client.GET(self.client.website.asset('vendors.js'))
         assert r.headers['Access-Control-Allow-Origin'] == 'https://gratipay.com'
         assert r.headers['Cache-Control'] == 'public, max-age=31536000'
         assert 'Vary' not in r.headers
