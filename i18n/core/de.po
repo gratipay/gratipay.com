@@ -494,6 +494,12 @@ msgstr ""
 msgid "owned by {a}{owner}{_a}"
 msgstr ""
 
+msgid "Back"
+msgstr ""
+
+msgid "Page {0} of {1}"
+msgstr ""
+
 msgid "Sign in / Sign up"
 msgstr "Anmelden / Registrieren"
 

@@ -490,6 +490,12 @@ msgstr ""
 msgid "owned by {a}{owner}{_a}"
 msgstr "géré par {a}{owner}{_a}"
 
+msgid "Back"
+msgstr ""
+
+msgid "Page {0} of {1}"
+msgstr ""
+
 msgid "Sign in / Sign up"
 msgstr "Connexion / Inscription"
 
