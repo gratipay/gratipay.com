@@ -136,8 +136,8 @@ def fake_participant_identity(participant, verification=None):
 def fake_team(db, teamowner, teamname=None):
     """Create a fake team
     """
-    isapproved = [True, False]
-    productorservice = ['Product','Service']
+    is_approved = [True, False, None]
+    product_or_service = ['Product','Service']
 
     if teamname is None:
         teamname = faker.first_name() + fake_text_id(3)
@@ -154,12 +154,12 @@ def fake_team(db, teamowner, teamname=None):
                         , name=teamname
                         , homepage=homepage
                         , ctime=ctime
-                        , product_or_service=random.sample(productorservice,1)[0]
+                        , product_or_service=random.choice(product_or_service)
                         , onboarding_url=homepage + '/contributing'
                         , owner=teamowner.username
-                        , is_approved=random.sample(isapproved,1)[0]
-                        , receiving=0.1
-                        , nreceiving_from=3
+                        , is_approved=random.choice(is_approved)
+                        , receiving=6
+                        , nreceiving_from=9
                          )
     except (IntegrityError, InvalidTeamName):
         return fake_team(db, teamowner)
@@ -321,7 +321,7 @@ def clean_db(db):
         DROP FUNCTION IF EXISTS process_payment() CASCADE;
         """)
 
-def populate_db(db, nparticipants=100, ntips=200, nteams=5, npackages=5):
+def populate_db(db, nparticipants=100, ntips=200, nteams=100, npackages=5):
     """Populate DB with fake data.
     """
     print("Making Participants")

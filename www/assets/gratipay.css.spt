@@ -42,6 +42,7 @@
 @import "scss/components/memberships";
 @import "scss/components/modal";
 @import "scss/components/nav";
+@import "scss/components/pagination";
 @import "scss/components/payments-by";
 @import "scss/components/profile-statement";
 @import "scss/components/select";
