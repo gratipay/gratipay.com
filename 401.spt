@@ -1,11 +1,14 @@
 from aspen.http import status_strings
 [---]
-banner = "401"
+banner = _("Sign In")
+suppress_sidebar = True
 [---] text/html via jinja2
 {% extends "templates/base.html" %}
 {% block content %}
-<p>{{ _('Please sign in to continue.') }}</p>
-<p>{{ sign_in_using() }}</p>
+<p class="description important-thing-at-the-top">{{ _('Please sign in to continue.') }}</p>
+<div class="important-button">
+    {{ sign_in_using(button_class='large') }}
+</div>
 {% endblock %}
 [---] application/json via stdlib_percent
 { "error_code": 401
