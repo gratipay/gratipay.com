@@ -86,9 +86,10 @@ class Queue(object):
                     raise Throttled()
 
 
-    def flush(self):
+    def flush(self, _flush_one=None):
         """Load messages queued for sending, and send them.
         """
+        flush_one = _flush_one or self._flush_one
         fetch_messages = lambda: self.db.all("""
             SELECT *
               FROM email_queue
@@ -103,7 +104,7 @@ class Queue(object):
                 break
             for rec in messages:
                 try:
-                    r = self._flush_one(rec)
+                    r = flush_one(rec)
                 except:
                     self.db.run("UPDATE email_queue SET dead=true WHERE id = %s", (rec.id,))
                     raise

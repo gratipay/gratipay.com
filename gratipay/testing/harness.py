@@ -240,6 +240,13 @@ class Harness(unittest.TestCase):
               RETURNING participants.*::participants
         """, (username, username.lower()))
 
+        if 'id' in kw:
+            new_id = kw.pop('id')
+            self.db.run( 'UPDATE participants SET id=%s WHERE id=%s'
+                       , (new_id, participant.id)
+                        )
+            participant.set_attributes(id=new_id)
+
         if 'elsewhere' in kw or 'claimed_time' in kw:
             platform = kw.pop('elsewhere', 'github')
             self.db.run("""
@@ -258,7 +265,10 @@ class Harness(unittest.TestCase):
 
         # Handle email address
         if 'email_address' in kw:
-            self.add_and_verify_email(participant, kw.pop('email_address'))
+            address = kw.pop('email_address')
+            if address:
+                self.add_and_verify_email(participant, address)
+                self.app.email_queue.flush(_flush_one=lambda *a, **kw: 0)
 
         # Update participant
         verified_in = kw.pop('verified_in', [])
