@@ -256,6 +256,10 @@ class Harness(unittest.TestCase):
             route = ExchangeRoute.insert(participant, 'paypal', 'abcd@gmail.com')
             route.update_error(kw.pop('last_paypal_result'))
 
+        # Handle email address
+        if 'email_address' in kw:
+            self.add_and_verify_email(participant, kw.pop('email_address'))
+
         # Update participant
         verified_in = kw.pop('verified_in', [])
         if kw:
