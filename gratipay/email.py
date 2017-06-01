@@ -86,10 +86,9 @@ class Queue(object):
                     raise Throttled()
 
 
-    def flush(self, _flush_one=None):
+    def flush(self):
         """Load messages queued for sending, and send them.
         """
-        flush_one = _flush_one or self._flush_one
         fetch_messages = lambda: self.db.all("""
             SELECT *
               FROM email_queue
@@ -104,7 +103,7 @@ class Queue(object):
                 break
             for rec in messages:
                 try:
-                    r = flush_one(rec)
+                    r = self._flush_one(rec)
                 except:
                     self.db.run("UPDATE email_queue SET dead=true WHERE id = %s", (rec.id,))
                     raise
@@ -186,6 +185,12 @@ class Queue(object):
             }
         }
         return message
+
+
+    def purge(self):
+        """Remove all messages from the queue.
+        """
+        self.db.run('DELETE FROM email_queue')
 
 
 jinja_env = Environment()
