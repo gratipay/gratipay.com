@@ -58,7 +58,7 @@ if user.participant:
  </p>
 
 {% if user.ANON %}
-    <div class="button-wrapper">
+    <div class="important-button">
         {{ sign_in_using(button_class='large') }}
     </div>
 {% else %}
@@ -108,7 +108,7 @@ if user.participant:
         </ul>
     </div>
 
-    <div class="button-wrapper">
+    <div class="important-button">
         <button type="submit" class="apply selected large"
                 {% if not has_email_options %} disabled{% endif %}>
             {{ _('Apply to accept payments') }}

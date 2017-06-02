@@ -5,7 +5,16 @@
 #content {
     .important-thing-at-the-top {
         margin: 20px 0 60px;
+        text-align: center;
+        &.description {
+            font: normal 18pt/24pt $Chronicle;
+            &.long {
+                font: normal 11pt/15pt $Chronicle;
+            }
+            padding: 0 17%;
+        }
     }
+
     .sorry {
         text-align: center;
         font: normal 12px/15px $Ideal;

@@ -249,9 +249,9 @@ class TestPages(Harness):
         body = self.client.GET("/~alice/routes/credit-card.html", auth_as="alice").body
         assert  "Braintree" in body
 
-    def test_dashboard_is_403_for_anon(self):
+    def test_dashboard_is_401_for_anon(self):
         self.make_participant('admin', is_admin=True)
-        assert self.client.GxT('/dashboard/').code == 403
+        assert self.client.GxT('/dashboard/').code == 401
 
     def test_dashboard_is_403_for_non_admin(self):
         self.make_participant('alice')

@@ -55,3 +55,31 @@ button.selected:hover:not(:disabled), button.selected.drag,
     top: 0;
     right: 0;
 }
+
+
+.important-button {
+    margin: 38px auto 30px;
+    text-align: center;
+
+    button.large {
+        font: normal 16px/32px $Ideal;
+        padding: 10px 16px;
+        border-radius: 5px;
+
+        .caret {
+            border-top: 8px solid #fff;
+            border-right: 5px solid transparent;
+            border-left: 5px solid transparent;
+            margin-top: 13px;
+        }
+    }
+    .dropdown-menu {
+                                    /* override components/sign_in */
+        border-radius: 0 0 3px 3px  ! important;
+        top: 50px                   ! important;
+        width: 90%;
+        left: 5%;
+    }
+}
+
+
