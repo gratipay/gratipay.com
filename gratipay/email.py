@@ -187,6 +187,12 @@ class Queue(object):
         return message
 
 
+    def purge(self):
+        """Remove all messages from the queue.
+        """
+        self.db.run('DELETE FROM email_queue')
+
+
 jinja_env = Environment()
 jinja_env_html = Environment(autoescape=True, extensions=['jinja2.ext.autoescape'])
 

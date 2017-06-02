@@ -33,8 +33,9 @@ from gratipay.utils import (
 from gratipay.utils.username import safely_reserve_a_username
 
 from .email import Email
-from .identity import Identity
 from .exchange_routes import ExchangeRoutes
+from .identity import Identity
+from .packages import Packages
 
 MAX_TIP = MAX_PAYMENT = Decimal('1000.00')
 MIN_TIP = MIN_PAYMENT = Decimal('0.00')
@@ -48,7 +49,7 @@ ASCII_ALLOWED_IN_USERNAME = set("0123456789"
 USERNAME_MAX_SIZE = 32
 
 
-class Participant(Model, Email, Identity, ExchangeRoutes):
+class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
     """Represent a Gratipay participant.
     """
 

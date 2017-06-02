@@ -240,6 +240,13 @@ class Harness(unittest.TestCase):
               RETURNING participants.*::participants
         """, (username, username.lower()))
 
+        if 'id' in kw:
+            new_id = kw.pop('id')
+            self.db.run( 'UPDATE participants SET id=%s WHERE id=%s'
+                       , (new_id, participant.id)
+                        )
+            participant.set_attributes(id=new_id)
+
         if 'elsewhere' in kw or 'claimed_time' in kw:
             platform = kw.pop('elsewhere', 'github')
             self.db.run("""
@@ -255,6 +262,13 @@ class Harness(unittest.TestCase):
         if 'last_paypal_result' in kw:
             route = ExchangeRoute.insert(participant, 'paypal', 'abcd@gmail.com')
             route.update_error(kw.pop('last_paypal_result'))
+
+        # Handle email address
+        if 'email_address' in kw:
+            address = kw.pop('email_address')
+            if address:
+                self.add_and_verify_email(participant, address)
+                self.app.email_queue.purge()
 
         # Update participant
         verified_in = kw.pop('verified_in', [])
