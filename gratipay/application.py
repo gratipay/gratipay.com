@@ -55,6 +55,7 @@ class Application(object):
         cron(env.check_db_every, db.self_check, True)
         cron(env.email_queue_flush_every, self.email_queue.flush, True)
         cron(env.check_npm_sync_every, lambda: sync_npm.check(db))
+        cron(env.email_queue_log_metrics_every, self.email_queue.log_metrics)
 
 
     def add_event(self, c, type, payload):
