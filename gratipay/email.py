@@ -187,6 +187,12 @@ class Queue(object):
         return message
 
 
+    def log_metrics(self, _print=print):
+        ndead = self.db.one('SELECT COUNT(*) FROM email_queue WHERE dead')
+        ntotal = self.db.one('SELECT COUNT(*) FROM email_queue')
+        _print('count#email_queue_dead=%d count#email_queue_total=%d' % (ndead, ntotal))
+
+
     def purge(self):
         """Remove all messages from the queue.
         """

@@ -362,6 +362,18 @@ class TestFunctions(Alice):
         assert self.app.email_queue.flush() == 3
         self.app.email_queue.put(self.alice, "base")
 
+    def test_log_metrics(self):
+        self.app.email_queue.put(self.alice, "base")
+        self.app.email_queue.put(self.alice, "base")
+        self.app.email_queue.put(self.alice, "base")
+
+        self.db.run("UPDATE email_queue SET dead = 'true' WHERE id IN (SELECT id FROM email_queue LIMIT 1)")
+
+        mock_print = mock.Mock()
+
+        self.app.email_queue.log_metrics(_print=mock_print)
+        mock_print.assert_called_once_with('count#email_queue_dead=1 count#email_queue_total=3')
+
 
 class FlushEmailQueue(SentEmailHarness):
 
