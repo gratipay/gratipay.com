@@ -381,6 +381,7 @@ def env():
         EMAIL_QUEUE_FLUSH_EVERY         = int,
         EMAIL_QUEUE_SLEEP_FOR           = int,
         EMAIL_QUEUE_ALLOW_UP_TO         = int,
+        EMAIL_QUEUE_LOG_METRICS_EVERY   = int,
         OPTIMIZELY_ID                   = unicode,
         SENTRY_DSN                      = unicode,
         LOG_METRICS                     = is_yesish,
