@@ -484,10 +484,10 @@ msgid "owned by {a}{owner}{_a}"
 msgstr "Proprietà di {a}{owner}{_a}"
 
 msgid "Back"
-msgstr ""
+msgstr "Indietro"
 
 msgid "Page {0} of {1}"
-msgstr ""
+msgstr "Pagina {0} di {1}"
 
 msgid "Sign in / Sign up"
 msgstr "Accedi / Registrati"
