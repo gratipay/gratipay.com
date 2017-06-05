@@ -4,6 +4,7 @@ import json
 import Queue
 import sys
 import threading
+import time
 import urllib
 
 import mock
@@ -336,6 +337,12 @@ class TestFunctions(Alice):
         self.app.email_queue.put(self.alice, "base")
         self.app.email_queue.put(self.alice, "base")
         raises(Throttled, self.app.email_queue.put, self.alice, "base")
+
+    def test_queueing_email_writes_timestamp(self):
+        self.app.email_queue.put(self.alice, "base")
+
+        ctime = self.db.one("SELECT EXTRACT(epoch FROM ctime) FROM email_queue")
+        assert abs(ctime - time.time()) < 300
 
     def test_only_user_initiated_messages_count_towards_throttling(self):
         self.app.email_queue.put(self.alice, "base")
