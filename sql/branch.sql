@@ -1,1 +1,0 @@
-ALTER TABLE email_queue ADD COLUMN ctime timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP;

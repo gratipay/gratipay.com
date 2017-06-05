@@ -1021,3 +1021,8 @@ BEGIN;
      );
 
 END;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4501
+
+ALTER TABLE email_queue ADD COLUMN ctime timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP;
