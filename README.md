@@ -496,11 +496,6 @@ an array of objects, one per week, showing aggregate numbers over time. The
 an array of objects, one per week, showing aggregate numbers over time. The old
 charts page used to use this.
 
-**[/about/stats.json](https://gratipay.com/about/stats.json)**
-([source](https://github.com/gratipay/gratipay.com/tree/master/www/about/stats.spt))&mdash;<i>public</i>&mdash;Returns
-an object giving a point-in-time snapshot of Gratipay. The
-[stats](https://gratipay.com/about/stats.html) page displays the same info.
-
 **/`~username`/public.json**
 ([example](https://gratipay.com/Gratipay/public.json),
 [source](https://github.com/gratipay/gratipay.com/blob/master/www/~/%25username/public.json.spt))&mdash;<i>public</i>&mdash;Returns an object with these keys:
