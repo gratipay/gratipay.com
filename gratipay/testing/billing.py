@@ -49,6 +49,14 @@ class BillingHarness(Harness, PaydayMixin):
                                            claimed_time='now', email_address='abcd@gmail.com')
         self.homer_route = ExchangeRoute.insert(self.homer, 'paypal', 'abcd@gmail.com')
 
+        # A customer with both Braintree and Paypal attached.
+        self.marge = self.make_participant('marge', is_suspicious=False, verified_in='US',
+                                           claimed_time='now', email_address='marge@example.com')
+        self.marge_paypal_route = ExchangeRoute.insert(self.marge, 'paypal', 'marge@example.com')
+        self.marge_braintree_route = ExchangeRoute.insert(self.marge, 'braintree-cc',
+                                                                               self.marge_cc_token)
+        self.marge_route = self.marge_paypal_route  # so hacky
+
 
     @classmethod
     def tearDownClass(cls):
@@ -66,9 +74,11 @@ def install_fixture():
         cls = BillingHarness
         cls.roman_bt_id = braintree.Customer.create().customer.id
         cls.obama_bt_id = braintree.Customer.create().customer.id
+        cls.marge_bt_id = braintree.Customer.create().customer.id
         cls.bt_card = braintree.PaymentMethod.create({
             "customer_id": cls.obama_bt_id,
             "payment_method_nonce": Nonces.Transactable
         }).payment_method
         cls.obama_cc_token = cls.bt_card.token
+        cls.marge_cc_token = cls.bt_card.token
         cls._fixture_installed = True

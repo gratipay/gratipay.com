@@ -637,3 +637,62 @@ class TestNotifyParticipants(SentEmailHarness, PaydayMixin):
             assert self.get_last_email()['to'] == 'kalel <kalel@example.net>'
             assert 'Gratiteam' in self.get_last_email()['body_text']
             assert 'Gratiteam' in self.get_last_email()['body_html']
+
+
+class TestNegativeBalances(BillingHarness):
+
+    def send_negative(self, username, new_balance):
+        # There are two ways to record an exchange:
+        #  - self.make_exchange -> gratipay.billing.record_exchange # disallows negative balances
+        #  - /~user/history/record-an-exchange                      # allows negative balances
+        self.make_participant('admin', claimed_time='now', is_admin=True).username
+        self.client.PxST( '/~{}/history/record-an-exchange'.format(username)
+                        , { 'amount': unicode(new_balance)
+                          , 'fee': '0'
+                          , 'note': 'overpayment!'
+                          , 'status': 'succeeded'
+                          , 'route_id': unicode(getattr(self, username + '_route').id)
+                           }
+                        , auth_as='admin'
+                         )  # responds with 302
+        assert P(username).balance == new_balance
+
+    def ncharges(self, username):
+        return self.db.one("""
+
+            SELECT count(*)
+              FROM exchanges e
+              JOIN exchange_routes er
+                ON e.route = er.id
+             WHERE er.network='braintree-cc'
+               AND e.participant=%s
+               AND e.amount > 0
+
+        """, (username,))
+
+    def team_for(self, participant):
+        team = self.make_team(owner=participant, is_approved=True)
+        self.obama.set_payment_instruction(team, '20.00')
+
+    def run_returning_balance(self, username):
+        self.send_negative(username, -10)
+        self.run_payday()
+        assert self.ncharges(username) == 0
+        return P(username).balance
+
+
+    # nb - negative balance
+
+    def test_nb_stays_negative_when_no_card_attached_and_no_taking(self):
+        assert self.run_returning_balance('homer') == -10
+
+    def test_nb_stays_negative_even_when_card_attached_and_no_taking(self):
+        assert self.run_returning_balance('obama') == -10
+
+    def test_nb_increases_when_no_card_attached_and_taking(self):
+        self.team_for(self.homer)
+        assert self.run_returning_balance('homer') == 10
+
+    def test_nb_increase_comes_from_taking_and_not_card(self):
+        self.team_for(self.marge)
+        assert self.run_returning_balance('marge') == 10

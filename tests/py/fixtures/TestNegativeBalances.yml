@@ -1,0 +1,387 @@
+interactions:
+- request:
+    body: !!python/unicode <transaction><payment_method_token>g79ztd</payment_method_token><amount>10.61</amount><customer_id></customer_id><type>sale</type><options><submit_for_settlement
+      type="boolean">false</submit_for_settlement></options><custom_fields><participant_id
+      type="integer">4</participant_id></custom_fields></transaction>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions
+  response:
+    body:
+      string: !!binary |
+        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
+        n/4GAAD//wMA0MsZVJQSAAA=
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"3451697fb82f46f2c16d160323fee871"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 201, message: Created}
+- request:
+    body: !!python/unicode <transaction><payment_method_token>g79ztd</payment_method_token><amount>20.91</amount><customer_id>80594570</customer_id><type>sale</type><options><submit_for_settlement
+      type="boolean">false</submit_for_settlement></options><custom_fields><participant_id
+      type="integer">2</participant_id></custom_fields></transaction>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions
+  response:
+    body:
+      string: !!binary |
+        H4sIAKwmXVgAA9xYS2/jNhC+51cEvjOy/Iq9ULQoUBTtoQWKbBZoLwuKGltcS6SWpBw7v75DUZKl
+        iEpyKVD0Zs18HHKG8/jo6PO5yG9PoDSX4mEW3s1ntyCYTLk4PMyevvxCtrPP8U1kFBWaMoOo+Ob2
+        NuJpvFqc00v54xgF+GFl2lBT6ZhWJpOKv0AaBY3Ias2lhFjTHKKg/mllrFIKd7sQriXBTSF+evw5
+        CsZiC6aFrISJF/O7XRgFzZdVFKBYRoUhlDErJHgebZLdcXX/8pJ8X6jN+nsU+FD1qauEeHS3gucP
+        M6MqmAVuF6oNqA9BpUoR6VEwBdRASqi5tTF4mKX4aXgBM3Qr3JBwQRbLL+Hy02L3KVz/jZHoFtTr
+        qzL9+PoNrr8uaOKtjUQP7Ie7xO18vVut7+ftJaJ0z5U2RNACXp8flTmd1jFZlFRcPBooKM898mdI
+        NDc+W2UmhU++p+dRVIO+W1HC8xyT9+ri8+XfdU4bBYD5kKYKtPZ5fzYgUnsLk5BcMppz4zOv4IBF
+        5wuRxOrKXX3sVuH8Pgr6ovbYmKPqMu2VU9sVhOZlRhcfQi3fQ4kK74Oz8V31rgdd21ci9RVKp9FN
+        olOl6GWgxHj2mpLPSEmV4RgODcbkUAAW63CFz/i1e71nvmc2oYZlXkzGy7Kfjb6U/l+m5BsJ8p/J
+        xf7tNL2R7DnkqW79sRnEeEnduFhghQ0lvfbTWxnRkyaglFQEg1tKocEbkxrXi9kQHf+OU+5NQGti
+        eN2vQL85K29iav9Pp/HKsdBCDzhTnukFNd/BlQeOKT3OiKhUkuFuGIe2rGgNry39tXn8df0nhvQt
+        0NDK8CjhfD7vLx8f1KMzmPrxTyVqTpagTCHq0KYptyfB4I9hI19PkjN7QXu8eFyBSZeAGkeksvQB
+        d3EcYQJl6Jk4guNVwRmKsqUAiZQ5UDGL9zTXllx1gJZyoBeEUdWOQCOPIOLD/e7FYADcl9MkXMSr
+        ebjYbm2fFv0WtIrD7RZpV/PRVBkaJTWZ+8o1xWzpvtsuU3LlLrOQwmRxiBU0Eo6wF6AK+cxiPgDX
+        0mbfZt4T26NqSvr0eGUBV+n1lJnM63D7Ow8v6AFIpfI4M6bUn4KAauzu+i5RlAtbOE3G32HLxRZw
+        sU3/WwGYrem3XB5kcEL/70px+AzixJUUFvCgqUgTeUb20dlv2oqCkmL3+EPaBHS/nSYDmpsMT4xM
+        WByFfBZR0JM5UAoJN1e9+2xUlcKLwyw8VLklfj3Ua003QyyjxTF5hfZkbRu8KJn3EK2gCZ/WFXZR
+        nILieMUMpMOuLPfEaqlgENvtxtI2TjKtWN1or1tfZQ5UCf6jgqaSUIyR59iKVbxasu0q3KeMLdly
+        v9ksN+s9rMP5ksEWEoY5PrnUWT6BKCTR6XGi0jp9MwaGldY8h0jGMS3VZUA1ujFdIwANNRdoyxPp
+        PCqK8oMUv8N3Ft58h9WIqaeUC6jGCCiZcVPSKj9iydaS7nw9VqQltjOIacnxHGO58zJ47WYnaULj
+        GmNO/SyrSjRTvJxkYT1918ZqiklKnPoyJUh0iA2ip/BfIfFYynixeORX+9jpQHAQeChkynWd014d
+        OCuyTbKJljT1/sEmMj7b0CjSM/uARr8m8rbTuwGBr1kBY6t45yc70fYAU7PIbiufibvNkRbDkFRK
+        O4acgsEnYMurhir/3fTotX/7IWb0n8EH4XC2AcD2rPzHsE8NzFSkdj6DFWMe9ow3MuG79bysDPhS
+        o5krhAvkapV7rthZ6vrKN9tXomAKNGQ7PUeHpKhPeCZB79uqKdJ7tjoeZTKcoATLy+Yd4NH3chix
+        QfOIb/4BAAD//wMAgM3Yt5QSAAA=
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"14a1aef85001740ce165d85d9d8c899b"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 201, message: Created}
+- request:
+    body: <transaction><amount>20.91</amount></transaction>
+    headers: {}
+    method: PUT
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions/42xdypqk/submit_for_settlement
+  response:
+    body:
+      string: !!binary |
+        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
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"9fb20ebdb99b72e0d4547bf3731eb426"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers: {}
+    method: PUT
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions/6fs85rcg/void
+  response:
+    body:
+      string: !!binary |
+        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
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"e41281c064e4f749d94b62e592acf907"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode <transaction><payment_method_token>g79ztd</payment_method_token><amount>20.91</amount><customer_id>80594570</customer_id><type>sale</type><options><submit_for_settlement
+      type="boolean">false</submit_for_settlement></options><custom_fields><participant_id
+      type="integer">2</participant_id></custom_fields></transaction>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions
+  response:
+    body:
+      string: !!binary |
+        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
+        xBd/AwAA//8DAOuN7PGUEgAA
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"73ece7609f13be9f2101acf8363a60a0"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 201, message: Created}
+- request:
+    body: <transaction><amount>20.91</amount></transaction>
+    headers: {}
+    method: PUT
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions/b9gwkvpa/submit_for_settlement
+  response:
+    body:
+      string: !!binary |
+        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
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"350135356fead9430fa453cbf5047172"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode <transaction><payment_method_token>g79ztd</payment_method_token><amount>10.61</amount><customer_id>80594570</customer_id><type>sale</type><options><submit_for_settlement
+      type="boolean">false</submit_for_settlement></options><custom_fields><participant_id
+      type="integer">2</participant_id></custom_fields></transaction>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions
+  response:
+    body:
+      string: !!binary |
+        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
+        i78BAAD//wMAPOq5LZQSAAA=
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"321ce9a2a144bd7424b6d1a3150fe027"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 201, message: Created}
+- request:
+    body: <transaction><amount>10.61</amount></transaction>
+    headers: {}
+    method: PUT
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions/hpgd6ne2/submit_for_settlement
+  response:
+    body:
+      string: !!binary |
+        H4sIALImXVgAA9xYTW/jNhC9768IfGdk2Y7jLBQtWhQFiqJFgc3uoZeAokYWNxKpkpRj59d3KEqy
+        ZFFJelhg0Zs18zjkDOfj0dGnY1lcHUBpLsX9IrxeLq5AMJlysb9ffHn4lewWn+IPkVFUaMoMouIP
+        V1cRT+O82qdbAasowA8r04aaWse6TkpuDKSPmVSPGowpoARhoqAFWKw5VRBrWkAUND+tjNVK4d4n
+        wrUkeASIv3z+JQqmYgumpayFicPl9TaMgvbLKkpQLKfCEMqYFRI8nTbJ3dPm9uUl+bZS25tvUeBD
+        NT7UCfHorgQv7hdG1bAI3C5UG1DvgkqVItKjYAooholQc2VjcL9I8dPwEhbxahluSbgiq/VDuP64
+        uvu4Cv/GSPQLmvV1lf639ecFbby1keiB/XBXulve3G1ubpfdlaI040obImgJl+dHZUHndUyWFRUn
+        jwZKyguP/BkSzY3PVpVL4ZNn9DiJajB0K0p4UWAqn118Pn1f57RRAJgPaapAa5/3RwMitbcwCykk
+        owU3PvMK9liCvhBJrK7C1cfdJlzeRsFQ1B0bc1Sd5r1yaruC0KLK6epdqPVbKFHjfXA2vavB9aBr
+        WS1SX6H0Gt0mOlWKnkZKjOegRfmMVFQZjuE4N6SLFT7jtDa5VPzlbfMDswk1LPdicl5Vw2z0pfT/
+        MiVfSZAfJheHt9P2RpJxKFLd+WMziPGKunGBg+9CMmg/g5URPWgCSklFMLiVFBq8MWlwg5iN0fEf
+        OOVeBXQmxtd9AfrNWXkV0/h/OExXToUWuseZ8kxPqPkGrjxwTOlpRkSVkgx3wzh0ZUUbeGPp578e
+        bn/fYUhfA42tjI8SLpfL4fLpQT06g6kf/1Sh5gCpd3WDaEKbptyeBIM/hU18PUjO7AVlePG4ApMu
+        ATWNSG3pA+7iOMIMytAjcQTHq4IjlFVHARIpC6BiEWe00JZc9YCOcqAXhFHVjUAjn0DE+9u7F4MB
+        cF9Ok3ARb5bharezfVoMW9AmDnc7pF3tR1tlaJQ0ZO4r1xSzpf/uukzFlbvMUgqTxyFW0EQ4wZ6A
+        KuQzq+UI3Ejbfdt5T2yPagjql89nFnCWnk+Zy6IJt7/z8JLugdSqiHNjKv0xCKjG7q6vE0W5sIXT
+        Zvw1tlxsASfb9B9LwGxNHwu5l8EB/b+uxP4TiANXUljAvaYiTeQR2Udvv20rCiqK3eNPaRPQ/Xaa
+        HGhhcjwxMmHxJOSziIKBzIFSSLg5691nq6oVXhxm4b4uLPEboC41/QyxjBbH5Bk6kHVt8KRkMUB0
+        gjZ8WtfYRXEKiqczZiQdd2WZEaulgkFst5tKuzjJtGZNoz1vfZY5UC34PzW0lYRijDzHVqzizZrt
+        NmGWMrZm62y7XW9vMrgJl2sGO0gY5vjsUmf5AKKURKdPM5XW69sxMK609nFEco5pqU4jqtGP6QYB
+        aKi9QFueSOdRUVbvpPg9vrfQPrrOTGb4DmsQc08pF1CNEVAy56aidfGEJdtI+vMNWJGW2M4gphXH
+        c0zlzstg6uZ39vw979EfIA69pE0RNyAK6mebdaKZ4tUsGx3o+3beUG1SIfuRKUHCR2xIPQ3wAonH
+        UsaLxSNf7GOnJMGB6KHSKddNbXt14KzIrthmWvPcOxCb6fRsY6NIU+0fCejXTP32ejco8VUvYGoV
+        7/xgJ3sGMDeT7bbymbjbnGgxDEmttHsppGDwKdzxy7HKfzeDZ4Z/+zFm8t/JO+FwtAHAMaX8x7BP
+        LsxUpLg+gzVjnlcE3siM79bzqjbgS412vhIukLPW7tlmOYXrr4+2v0bBHGjM+gaOjsnhkPjNgt62
+        1VDFt2z1fNLkyCQIlpfNO8CjZ3IcsVHziD/8CwAA//8DAA6Cmh6qEwAA
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"a1f656408e096853e37f2a56125525f2"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode <search><status type="array"><item>authorized</item></status></search>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions/advanced_search_ids
+  response:
+    body:
+      string: !!binary |
+        H4sIALMmXVgAA1yNMQqAMBRDd09RuktF0OnbuxQNtaCl/F+HenqtiIPZkrwQEjie15Yhx5bFNkpR
+        ch6thBMql4RJh5jhwdoOHZmvfNCwyAs5Zld0DasoZOx2TX4ZI3oyj60Dcy9sQ+Z/ewEAAP//AwDo
+        mRL1iAAAAA==
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"6f5535d34c0a06bdb78f8f86ee304b12"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode <search><status type="array"><item>authorized</item></status><ids
+      type="array"><item>hpgd6ne2</item></ids></search>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/j9gwdfjdkxymhdgr/transactions/advanced_search
+  response:
+    body:
+      string: !!binary |
+        H4sIALMmXVgAA3TOwQrCMAwG4FcZuddtB8FD1918An2A2oVSaNORZkN9essQkaHH5P9+Ej3eU2xW
+        5BIyDdAfOmiQXJ4C+QGul7M6wWi0Y5yCKGd5UsKWinVSC6WRx4wDuBwjbhuodmFGEjVbj4qWdEN+
+        s0CCHhlMr9sfyuhtKOGJ+8Kx0+0nNFqy2KiCYCp7WeFXauqhP6+bFwAAAP//AwCNtt0D+wAAAA==
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"a94a39ca276658f6f807aad2955608bf"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 200, message: OK}
+version: 1
