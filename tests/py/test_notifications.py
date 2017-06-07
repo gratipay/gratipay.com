@@ -26,5 +26,5 @@ class TestNotifications(Harness):
         alice.remove_notification('1234')
         assert alice.notifications == ["abcd", "bcde"]
 
-    def test_blog_announcement(self):
-        assert 'integrating-npm-39333109419d">integrated' in self.client.GET('/').body
+    def test_star_announcement(self):
+        assert '/on/npm/">integrate' in self.client.GET('/').body

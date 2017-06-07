@@ -51,17 +51,22 @@ if user.participant:
 <p class="sorry important-thing-at-the-top">{{ _("No description available.") }}</p>
 {% endif %}
 
-<p class="instructions">
-    {{ _( 'Apply to accept payments for the {package_link} npm package:'
-        , package_link=('<a href="' + package.remote_human_url + '">' + package_name + '</a>')|safe
-         ) }}
-</p>
-
 {% if user.ANON %}
+    <p class="instructions">
+        {{ _( 'Claim the {package_link} npm package on Gratipay:'
+            , package_link=('<a href="' + package.remote_human_url + '">' + package_name + '</a>')|safe
+             ) }}
+    </p>
     <div class="important-button">
         {{ sign_in_using(button_class='large') }}
     </div>
 {% else %}
+    <p class="instructions">
+        {{ _( 'Apply to accept payments for the {package_link} npm package:'
+            , package_link=('<a href="' + package.remote_human_url + '">' + package_name + '</a>')|safe
+             ) }}
+    </p>
+
     {% if len(emails) == 0 %}
     <p class="sorry">{{ _("No email addresses on file.") }}</p>
     {% else %}

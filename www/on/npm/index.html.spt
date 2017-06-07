@@ -1,6 +1,12 @@
-from gratipay.utils import icons
+import json
+from collections import OrderedDict
+
+from aspen import Response
+from gratipay.utils import icons, tabs, listings, ghost
+
+GROUPS = ('dependencies', 'devDependencies', 'optionalDependencies')
 [---]
-banner = manager = "npm"
+banner = manager = page_id = "npm"
 suppress_sidebar = True
 npm_stats = website.db.one('''
     select (select count(*) from teams_to_packages) as claimed_packages
@@ -9,7 +15,67 @@ npm_stats = website.db.one('''
 if user.participant:
     packages_for_claiming = user.participant.get_packages_for_claiming(manager)
     any_claimable = any([rec.claimed_by is None for rec in packages_for_claiming])
+
+# Can't factor this out because of translations?
+i18ned_statuses = { "approved": _("Approved")
+                  , "unreviewed" : _("Unreviewed")
+                  , "rejected": _("Rejected")
+                  , "featured": _("Featured")
+                   }
+
+flow = request.qs.get('flow')
+i18ned_flows = {'give': _('Give'), 'receive' : _('Receive')}
+tab_html = lambda key, tab: '{}'.format(i18ned_flows[key])
+tabs = tabs.make(tab_html, 'flow', flow, 'give', 'receive')
+
+discovered = []
+if request.method == 'POST':
+    try:
+        package_json = json.loads(request.body['package.json'], object_pairs_hook=OrderedDict)
+    except:
+        raise Response(400)
+
+    # We want a single list of (source, name, package, project) tuples. Source
+    # is 'dependencies', 'devDependencies', or 'optionalDependencies'. We want
+    # name in the tuple in case there is no package. Package and team should be
+    # None if we don't have one.
+
+    package_json_groups = [package_json.get(g, OrderedDict()) for g in GROUPS]
+    assert all(d.__class__ is OrderedDict for d in package_json_groups)
+
+    # Load package and project (team) objects (in a single database call).
+    alldeps = set()
+    [map(alldeps.add, d) for d in package_json_groups]
+    known = website.db.all('''
+        SELECT p.name
+             , p.*::packages    package
+             , t.*::teams       project
+          FROM packages p
+     LEFT JOIN teams_to_packages t2p
+            ON p.id = t2p.package_id
+     LEFT JOIN teams t
+            ON t2p.team_id = t.id
+         WHERE package_manager='npm'
+           AND p.name = ANY(%s)
+    ''', (list(alldeps),))
+    known = {n:(p,t) for n,p,t in known}
+
+    # Replace ranges with tuples.
+    for source, deps in zip(GROUPS, package_json_groups):
+        for name in deps:
+            package, project = known.get(name, (None, None))
+            deps[name] = (source, name, package, project)
+
+    # Regroup.
+    yes, no = [], []
+    for group in package_json_groups:
+        for rec in group.values():
+            project = rec[3]
+            (yes if project and project.is_approved else no).append(rec)
+    discovered = [(_("Ready to accept payments"), yes), (_("Not available to pay"), no)]
+
 [---]
+{% from "templates/nav-tabs.html" import nav_tabs with context %}
 {% extends "templates/base.html" %}
 
 {% block banner %}
@@ -33,20 +99,100 @@ if user.participant:
 
 {% block content %}
 
-<p class="description important-thing-at-the-top">
-    {{ _('Free as in money.') }}
-</p>
+<p class="description important-thing-at-the-top">{{ _('Free as in money.') }}</p>
+{{ nav_tabs(tabs) }}
 
-<p class="instructions">
-    {{ _('Apply to accept payments for your npm packages:') }}
-</p>
+{% if flow == None %}
+{% if discovered %}
+<div class="discovery">
+{% for heading, group in discovered %}
+<h2>{{ heading }}</h2>
+{% if group %}
+<table class="listing">
+    {% for i, (source, name, package, project) in enumerate(group, start=1) %}
+    <tr>
+        <td class="item i{{i}}{% if not package %} disabled{% endif %}">
+            {% if project %}
+            <img class="avatar" src="{{ project.get_image_url('small') }}">
+            {% else %}
+            <img class="avatar" src="{{ website.asset('package-default-small.png') }}">
+            {% endif %}
+            <div class="package-manager"><img src="{{ website.asset('npm-n.png') }}"></div>
 
-{% if user.ANON %}
+            {% if project and project.name != package.name %}
+            <a class="listing-name" href="{{ project.url_path }}" target="_blank">
+                {{ _( "{project} ({package} on npm)"
+                    , project=project.name
+                    , package=package.name
+                     ) }}
+            </a>
+            {% elif project %}
+            <a class="listing-name" href="{{ project.url_path }}" target="_blank">
+                {{ package.name }}
+            </a>
+            {% elif package %}
+            <a class="listing-name" href="{{ package.url_path }}" target="_blank">
+                {{ package.name }}
+            </a>
+            {% else %}
+            <span class="listing-name">{{ name }}</span>
+            {% endif %}
+
+            <div class="listing-details">
+                <span class="i">{{ i }}</span>
+                <span>&middot; <code>{{ source }}</code></span>
+                {% if project %}
+                <span class="status">&middot;
+                    <a href="{{ project.review_url }}"><span
+                        class="status-icon {{ icons.REVIEW_MAP[project.status] }}"
+                        >{{ icons.STATUS_ICONS[icons.REVIEW_MAP[project.status]]|safe }}</span
+                        >{{ i18ned_statuses[project.status] }}</a>
+                </span>
+                {% elif package %}
+                <span class="status">&middot;
+                    <span class="status-icon {{ icons.REVIEW_MAP['rejected'] }}"
+                        >{{ icons.STATUS_ICONS[icons.REVIEW_MAP['rejected']]|safe }}</span
+                    >{{ _("Unclaimed") }}
+                </span>
+                {% endif %}
+
+                <span class="description">&middot;
+                    {{ package.description or _("Unknown package") }}
+                </span>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p class="sorry">{{ _("No packages discovered.") }}</p>
+{% endif %}
+{% endfor %}
+</div>
+{% endif %}
+
+<form action="./" method="POST" class="package-json">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <p class="instructions">
+        {{ _('Paste a package.json to find packages to pay for:') }}
+    </p>
+
+    <textarea name="package.json"{% if not discovered %} autofocus{% endif %} wrap="off"
+        >{{ request.body.get('package.json', ghost.PACKAGE_JSON) }}</textarea>
+
     <div class="important-button">
-        {{ sign_in_using(button_class='large') }}
+        <button type="submit" class="selected large">
+            {{ _('Find packages') }}
+        </button>
     </div>
+</form>
+
 {% else %}
 
+<p class="instructions">{{ _('Apply to accept payments for your npm packages:') }}</p>
+{% if user.ANON %}
+    <div class="important-button">{{ sign_in_using(button_class='large') }}</div>
+{% else %}
     {% if not packages_for_claiming %}
     <p class="sorry">{{ _("No packages found.") }}</p>
     {% else %}
@@ -120,6 +266,7 @@ if user.participant:
             , _a='</a>'|safe
              ) }}
     </p>
+    {% endif %}
 {% endif %}
 <p class="fine-print">
     {{ _( "{n} out of all {N} npm packages are on Gratipay."

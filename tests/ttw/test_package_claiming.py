@@ -162,10 +162,10 @@ class BulkClaiming(BrowserHarness):
     def visit_as(self, username):
         self.visit('/')
         self.sign_in(username)
-        self.visit('/on/npm/')
+        self.visit('/on/npm/?flow=receive')
 
     def test_anon_gets_sign_in_prompt(self):
-        self.visit('/on/npm/')
+        self.visit('/on/npm/?flow=receive')
         assert self.css('.important-button button').text == 'Sign in / Sign up'
 
     def test_auth_without_email_gets_highlighted_link_to_email(self):

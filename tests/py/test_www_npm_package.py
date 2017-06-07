@@ -12,7 +12,7 @@ class Tests(Harness):
 
     def test_anon_gets_signin_page_from_unclaimed(self):
         body = self.client.GET('/on/npm/foo/').body
-        assert 'foo</a> npm package:' in body
+        assert 'foo</a> npm package on Gratipay:' in body
 
     def test_auth_gets_send_confirmation_page_from_unclaimed(self):
         self.make_participant('bob', claimed_time='now')
@@ -60,6 +60,7 @@ class Bulk(Harness):
     def setUp(self):
         self.make_package()
 
-    def test_anon_gets_signin_page(self):
+    def test_anon_gets_payment_flow(self):
         body = self.client.GET('/on/npm/').body
+        assert 'Paste a package.json' in body
         assert '0 out of all 1 npm package' in body
