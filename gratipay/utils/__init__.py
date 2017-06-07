@@ -205,7 +205,7 @@ def is_card_expiring(expiration_year, expiration_month):
     return delta < EXPIRING_DELTA
 
 
-def set_cookie(cookies, key, value, expires=None, httponly=True, path=b'/'):
+def set_cookie(cookies, key, value, expires=None, httponly=True, path=b'/', samesite=b'Lax'):
     cookies[key] = value
     cookie = cookies[key]
     if expires:
@@ -218,6 +218,8 @@ def set_cookie(cookies, key, value, expires=None, httponly=True, path=b'/'):
         cookie[b'httponly'] = True
     if path:
         cookie[b'path'] = path
+    if samesite:
+        cookie[b'samesite'] = samesite
     if gratipay.use_secure_cookies:
         cookie[b'secure'] = True
 

@@ -58,7 +58,7 @@ class User(object):
         token = uuid.uuid4().hex
         expires = utcnow() + SESSION_TIMEOUT
         self.participant.update_session(token, expires)
-        set_cookie(cookies, SESSION, token, expires)
+        set_cookie(cookies, SESSION, token, expires, samesite)
 
     def keep_signed_in(self, cookies):
         """Extend the user's current session.
@@ -67,7 +67,7 @@ class User(object):
         if new_expires - self.participant.session_expires > SESSION_REFRESH:
             self.participant.set_session_expires(new_expires)
             token = self.participant.session_token
-            set_cookie(cookies, SESSION, token, expires=new_expires)
+            set_cookie(cookies, SESSION, token, samesite, expires=new_expires)
 
     def sign_out(self, cookies):
         """End the user's current session.
