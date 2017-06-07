@@ -1,0 +1,24 @@
+body {
+    font-family: monospace;
+    font-size: large;
+}
+table {
+    border-collapse: collapse;
+    font: normal 16pt/20pt monospace;
+}
+tbody tr:hover {
+    background: #FFC;
+}
+th {
+    text-align: left;
+    vertical-align: bottom;
+    font-weight: bold;
+    padding-right: 30px;
+}
+td {
+    text-align: left;
+    padding-right: 20px;
+}
+.amount {
+    text-align: right;
+}

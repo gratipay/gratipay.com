@@ -1,0 +1,67 @@
+import calendar
+import datetime
+import re
+from aspen import Response
+from decimal import Decimal as D
+
+[---]
+if not user.ADMIN:
+    raise Response(401 if user.ANON else 403)
+
+year_month = request.path['year_month']
+if not re.match(r'20\d\d-\d\d', year_month):
+    raise Response(400)
+year, month = map(int, year_month.split('-'))
+if year not in range(2012, datetime.datetime.now().year+1) or month not in range(1, 13):
+    raise Response(400)
+
+def wrap(exchanges):
+    for e in exchanges:
+        yield ( e.timestamp.strftime('%Y-%m-%d')
+              , e.participant
+              , e.amount
+              , e.fee
+              , e.network
+               )
+
+exchanges = wrap(website.db.all("""
+    SELECT e.*, er.network
+      FROM exchanges e
+      JOIN exchange_routes er
+        ON e.route = er.id
+     WHERE date_trunc('month', "timestamp") = %s::timestamp
+  ORDER BY "timestamp" ASC;
+""", (year_month+'-01',)))
+
+fmt = lambda x: "{:,.2f}".format(x)
+[---] text/html
+<html>
+    <head>
+        <title>Exchanges Report for {{ year_month }}</title>
+        <style>@import url("style.css");</style>
+    </head>
+    <body>
+        <h1>Exchanges Report for {{ year_month }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Participant</th>
+                    <th>Amount</th>
+                    <th>Fee</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for date, participant, amount, fee, network in exchanges %}
+                <tr>
+                    <td>{{ date }}</td>
+                    <td><a href="/~{{ participant }}/">{{ participant }}</a></td>
+                    <td class="amount">{{ amount }}</td>
+                    <td class="amount">{{ fee }}</td>
+                    <td>{{ network }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
