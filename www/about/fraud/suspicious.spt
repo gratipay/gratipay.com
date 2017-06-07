@@ -1,0 +1,70 @@
+from aspen import Response
+
+[---]
+suspicious = website.db.all("""
+
+    SELECT username
+         , balance
+         , (SELECT SUM(amount) FROM current_payment_instructions WHERE participant_id = p.id) AS giving
+         , (SELECT COUNT(*) FROM current_payment_instructions WHERE participant_id = p.id AND amount > 0) AS ngiving_to
+      FROM participants p
+     WHERE is_suspicious IS true
+       AND NOT is_closed
+  ORDER BY claimed_time
+
+""")
+
+title = _("Suspicious Accounts")
+[---] text/html
+{% extends "templates/about-fraud.html" %}
+{% block content %}
+
+<p>If your account is listed and you don't think you're suspicious, please contact <a href="mailto:support@gratipay.com">support@gratipay.com</a></p>
+
+<script src="{{ website.asset('jquery.min.js') }}"></script>
+<script src="{{ website.asset('gratipay.js') }}"></script>
+<style>
+    table {
+        width: auto;
+    }
+    td, th {
+        text-align: left;
+        vertical-align: top;
+    }
+    iframe {
+        width: 70%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        background: white;
+    }
+</style>
+
+<table class="table">
+<thead>
+            <tr>
+                <th>{{ _("~User") }}</th>
+                <th>{{ _("Giving") }}</th>
+                <th>{{ _("nGiving") }}</th>
+            </tr>
+        </thead>
+{% for account in suspicious %}
+    <tr data-username="{{ account.username }}">
+        <td>
+            <a href="/~{{ account.username }}/" target="drill-down">{{ account.username }}</a>
+        </td>
+        <td>${{ account.giving }}</td>
+        <td>{{ account.ngiving_to }}</td>
+    </tr>
+{% endfor %}
+        <tfoot>
+            <tr>
+                <td>N = {{ len(suspicious) }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+</table>
+
+{% endblock %}
