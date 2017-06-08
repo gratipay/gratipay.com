@@ -17,7 +17,7 @@ unreviewed = website.db.all("""
 
 title = _("1.0 Payout Review")
 [---] text/html
-<script src="{{ website.asset('jquery.min.js') }}"></script>
+<script src="{{ website.asset('vendors.js') }}"></script>
 <script src="{{ website.asset('gratipay.js') }}"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
