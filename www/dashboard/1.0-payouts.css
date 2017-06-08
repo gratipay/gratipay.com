@@ -1,0 +1,31 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+h3 { padding: 0 0 10px; }
+div { height: 24px; }
+button {
+    background: white;
+    padding: 2px 4px;
+}
+.good {
+    background: #CCFFCC;
+}
+.bad {
+    background: #FFCCCC;
+}
+.listing {
+    padding: 10px;
+    width: 30%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: auto;
+}
+iframe {
+    width: 70%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: white;
+}
+
