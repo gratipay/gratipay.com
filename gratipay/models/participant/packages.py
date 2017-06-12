@@ -112,7 +112,7 @@ class Packages(object):
             team = package.get_or_create_linked_team(cursor, self)
             teams.append(team)
             team_ids.append(team.id)
-        review_url = self.app.project_review_repo.create_issue(*teams)
+        review_url = self.app.project_review_process.start(*teams)
 
         cursor.run('DELETE FROM claims WHERE nonce=%s', (nonce,))
         cursor.run('UPDATE teams SET review_url=%s WHERE id=ANY(%s)', (review_url, team_ids,))

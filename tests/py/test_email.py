@@ -776,7 +776,7 @@ class PackageLinking(VerificationBase):
         self.alice.start_email_verification(address, *packages)
         return self.alice.get_email(address).nonce
 
-    @mock.patch('gratipay.project_review_repo.ConsolePoster.post')
+    @mock.patch('gratipay.project_review_process.ConsolePoster.post')
     def check(self, *package_names):
         package_names, post = package_names[:-1], package_names[-1]
         post.return_value = 'some-github-url'

@@ -7,7 +7,7 @@ from . import email, sync_npm, utils
 from .cron import Cron
 from .models import GratipayDB
 from .payday_runner import PaydayRunner
-from .project_review_repo import ProjectReviewRepo
+from .project_review_process import ProjectReviewProcess
 from .website import Website
 
 
@@ -46,7 +46,7 @@ class Application(object):
         self.install_periodic_jobs(website, env, db)
         self.website = website
         self.payday_runner = PaydayRunner(self)
-        self.project_review_repo = ProjectReviewRepo(env)
+        self.project_review_process = ProjectReviewProcess(env, db, self.email_queue)
 
 
     def install_periodic_jobs(self, website, env, db):

@@ -85,22 +85,8 @@ if request.method == 'POST':
 
     team.save_image(image, large, small, image_type)
 
-    review_url = website.app.project_review_repo.create_issue(team)
-    team.set_review_url(review_url)
-
-    team_url = website.env.base_url + '/{}/'.format(team.slug)
-
-    owner = Participant.from_username(team.owner)
-    website.app.email_queue.put( owner
-                                       , 'project-review'
-                                       , team_name=team.name
-                                       , team_url=team_url
-                                       , review_url=team.review_url
-                                       , email=user.participant.email_address
-                                       , include_unsubscribe=False
-                                       , _user_initiated=False
-                                        )
-
+    review_url = website.app.project_review_process.start(team)
+    team_url = website.env.base_url + team.url_path
 
 [---] application/json via json_dump
 {'review_url': review_url, 'team_url': team_url}

@@ -245,7 +245,7 @@ class TestTeams(QueuedEmailHarness):
         last_email = self.get_last_email()
         self.app.email_queue.flush()
         assert last_email['to'] == 'alice <alice@example.com>'
-        expected = "Thanks for your project application for"
+        expected = "Thanks for applying to use Gratipay!"
         assert expected in last_email['body_text']
 
     def test_401_for_anon_creating_new_team(self):

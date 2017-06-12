@@ -249,11 +249,6 @@ class Team(Model, Available, Closing, Membership, Package, ReviewStatus, Takes, 
         """, {'team_id': self.id, 'mcharge': MINIMUM_CHARGE})
 
 
-    def set_review_url(self, review_url):
-        self.db.run("UPDATE teams SET review_url=%s WHERE id=%s", (review_url, self.id))
-        self.set_attributes(review_url=review_url)
-
-
     def get_og_title(self):
         out = self.name
         receiving = self.receiving
