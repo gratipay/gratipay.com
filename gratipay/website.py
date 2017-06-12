@@ -36,6 +36,7 @@ class Website(BaseWebsite):
     def init_even_more(self):
         self.modify_algorithm(self.tell_sentry)
         self.monkey_patch_response()
+        self.update_cta()
 
 
     def configure_typecasters(self):
@@ -134,3 +135,25 @@ class Website(BaseWebsite):
         def _erase_cookie(response, *args, **kw):
             erase_cookie(response.headers.cookie, *args, **kw)
         aspen.Response.erase_cookie = _erase_cookie
+
+
+    def update_cta(self):
+        nusers = self.db.one("""
+            SELECT nusers FROM paydays
+            ORDER BY ts_end DESC LIMIT 1
+        """, default=0)
+        nreceiving_from = self.db.one("""
+            SELECT nreceiving_from
+              FROM teams
+             WHERE slug = 'Gratipay'
+        """, default=0)
+        self.support_current = cur = int(round(nreceiving_from / nusers * 100)) if nusers else 0
+        if cur < 10:    goal = 20
+        elif cur < 15:  goal = 30
+        elif cur < 25:  goal = 40
+        elif cur < 35:  goal = 50
+        elif cur < 45:  goal = 60
+        elif cur < 55:  goal = 70
+        elif cur < 65:  goal = 80
+        elif cur > 70:  goal = None
+        self.support_goal = goal

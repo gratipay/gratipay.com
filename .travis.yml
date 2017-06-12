@@ -35,6 +35,14 @@ install:
  - make env -j2
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
+
+ # Turn off all cron threads.
+ - echo "UPDATE_CTA_EVERY=0" >> local.env
+ - echo "CHECK_DB_EVERY=0" >> local.env
+ - echo "CHECK_NPM_SYNC_EVERY=0" >> local.env
+ - echo "EMAIL_QUEUE_FLUSH_EVERY=0" >> local.env
+ - echo "EMAIL_QUEUE_LOG_METRICS_EVERY=0" >> local.env
+
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
 script: LD_LIBRARY_PATH=/usr/local/lib xvfb-run make bgrun test doc

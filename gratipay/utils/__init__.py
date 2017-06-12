@@ -143,28 +143,6 @@ def decode_from_querystring(s, **kw):
         raise Response(400, "invalid input")
 
 
-def update_cta(website):
-    nusers = website.db.one("""
-        SELECT nusers FROM paydays
-        ORDER BY ts_end DESC LIMIT 1
-    """, default=0)
-    nreceiving_from = website.db.one("""
-        SELECT nreceiving_from
-          FROM teams
-         WHERE slug = 'Gratipay'
-    """, default=0)
-    website.support_current = cur = int(round(nreceiving_from / nusers * 100)) if nusers else 0
-    if cur < 10:    goal = 20
-    elif cur < 15:  goal = 30
-    elif cur < 25:  goal = 40
-    elif cur < 35:  goal = 50
-    elif cur < 45:  goal = 60
-    elif cur < 55:  goal = 70
-    elif cur < 65:  goal = 80
-    elif cur > 70:  goal = None
-    website.support_goal = goal
-
-
 def _execute(this, sql, params=[]):
     print(sql.strip(), params)
     super(SimpleCursorBase, this).execute(sql, params)
