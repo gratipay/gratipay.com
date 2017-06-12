@@ -17,8 +17,6 @@ before_install:
  - sudo apt-get update
  - sudo apt-get install postgresql-9.6
 
- - npm install marky-markdown
-
  # For ttw tests
  - wget https://github.com/mozilla/geckodriver/releases/download/v0.15.0/geckodriver-v0.15.0-linux64.tar.gz
  - mkdir -p geckodriver
@@ -30,7 +28,6 @@ cache:
   directories:
     - env/bin
     - env/lib/python2.7/site-packages
-    - node_modules
     - geckodriver
 install:
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rf env; fi
