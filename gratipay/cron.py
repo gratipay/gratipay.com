@@ -2,7 +2,7 @@ import threading
 from time import sleep
 import traceback
 
-from aspen import log_dammit
+from aspen import log, log_dammit
 
 
 class Cron(object):
@@ -15,7 +15,10 @@ class Cron(object):
 
     def __call__(self, period, func, exclusive=False):
         if period <= 0:
+            log('Cron: not installing {}.'.format(func.__name__))
             return
+        log('Cron: installing {} to run every {} seconds{}.'.format(
+            func.__name__, period, ' with a lock' if exclusive else ''))
         if exclusive and not self.has_lock:
             self.exclusive_jobs.append((period, func))
             self._wait_for_lock()
