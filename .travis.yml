@@ -17,8 +17,6 @@ before_install:
  - sudo apt-get update
  - sudo apt-get install postgresql-9.6
 
- - npm install marky-markdown
-
  # For ttw tests
  - wget https://github.com/mozilla/geckodriver/releases/download/v0.15.0/geckodriver-v0.15.0-linux64.tar.gz
  - mkdir -p geckodriver
@@ -30,7 +28,6 @@ cache:
   directories:
     - env/bin
     - env/lib/python2.7/site-packages
-    - node_modules
     - geckodriver
 install:
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rf env; fi
@@ -38,6 +35,14 @@ install:
  - make env -j2
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
+
+ # Turn off all cron threads.
+ - echo "UPDATE_CTA_EVERY=0" >> local.env
+ - echo "CHECK_DB_EVERY=0" >> local.env
+ - echo "CHECK_NPM_SYNC_EVERY=0" >> local.env
+ - echo "EMAIL_QUEUE_FLUSH_EVERY=0" >> local.env
+ - echo "EMAIL_QUEUE_LOG_METRICS_EVERY=0" >> local.env
+
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
 script: LD_LIBRARY_PATH=/usr/local/lib xvfb-run make bgrun test doc

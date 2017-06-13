@@ -8,7 +8,7 @@ from collections import defaultdict
 from os.path import dirname, join, realpath
 from decimal import Decimal
 
-from aspen import resources
+from aspen import log, resources
 from aspen.utils import utcnow
 from aspen.testing.client import Client
 from gratipay.application import Application
@@ -40,6 +40,7 @@ def _get_app():
 
     global _app
     if not _app:
+        log('Instantiating Application from gratipay.testing.harness')
         _app = Application()
     return _app
 

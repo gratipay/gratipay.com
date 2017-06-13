@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import sys
 
+from aspen import log
 from gratipay.application import Application
 
 
@@ -15,4 +16,5 @@ def main(_argv=sys.argv, _input=raw_input):
     process/dyno we can start with this.
 
     """
+    log('Instantiating Application from gratipay.cli.dequeue_emails')
     Application().email_queue.flush()

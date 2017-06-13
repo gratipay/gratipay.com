@@ -246,13 +246,16 @@ def random_country_id(db):
 
 
 def fake_package(db):
-    insert_fake_data( db
-                    , 'packages'
-                    , package_manager='npm'
-                    , name=faker.word()
-                    , description=fake_sentence(stop=50)
-                    , emails=[faker.email() for i in range(random.choice(range(10)))]
-                     )
+    try:
+        insert_fake_data( db
+                        , 'packages'
+                        , package_manager='npm'
+                        , name=faker.word()
+                        , description=fake_sentence(stop=50)
+                        , emails=[faker.email() for i in range(random.choice(range(10)))]
+                         )
+    except IntegrityError:
+        return fake_package(db)
 
 
 def prep_db(db):

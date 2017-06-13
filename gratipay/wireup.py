@@ -53,6 +53,7 @@ def db(env):
     # rewritten to instantiate Application directly.
 
     sys.stdout = sys.stderr
+    aspen.log('Instantiating Application from gratipay.wireup')
     app = Application()
     sys.stdout = sys.__stdout__
     return app.db
