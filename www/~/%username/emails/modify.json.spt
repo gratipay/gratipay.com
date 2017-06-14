@@ -4,7 +4,6 @@ Manages the authenticated user's email addresses.
 import re
 
 from aspen import Response
-from gratipay.exceptions import EmailTaken, EmailAlreadyVerified, Throttled
 from gratipay.utils import get_participant
 from gratipay.models.package import Package
 
@@ -37,6 +36,9 @@ if action in ('add-email', 'resend', 'start-verification'):
             try:
                 package = Package.from_id(package_id)
                 assert address in package.emails
+                team = package.team
+                owner = team.owner if team else None
+                assert owner == user.participant.username if owner else True
             except:
                 raise Response(400)
             packages.append(package)

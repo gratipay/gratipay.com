@@ -427,7 +427,19 @@ class Harness(unittest.TestCase):
     def add_and_verify_email(self, participant, *emails):
         """Given a participant and some email addresses, add and verify them.
         """
+        if participant.__class__ is not Participant:
+            participant = P(participant)
         for email in emails:
             participant.start_email_verification(email)
             nonce = participant.get_email(email).nonce
             participant.finish_email_verification(email, nonce)
+
+
+    def claim_package(self, participant, package):
+        """Given a participant and a package, claim the package for the participant.
+        """
+        if participant.__class__ is not Participant:
+            participant = P(participant)
+        if package.__class__ is not Package:
+            package = Package.from_names(NPM, package)
+        package.get_or_create_linked_team(self.db, participant)
