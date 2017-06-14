@@ -5,11 +5,13 @@
 Gratipay.notification = function(text, type, timeout, closeCallback) {
     var type = type || 'notice';
     var timeout = timeout || (type == 'error' ? 10000 : 5000);
-
-    var dialog = ['div', { 'class': 'notification notification-' + type }, [ 'div', text ]];
+    var id = Math.random().toString(36).substring(2, 100);
+    var placeholder = ['div', {'class': 'notification notification-' + type}, ['div', text]];
+    var dialog = ['div', {'class': 'notification notification-' + type, 'id': 'notification-'+id},
+                                                                                    ['div', text]];
     var $dialog = $([
-        Gratipay.jsonml(dialog),
-        Gratipay.jsonml(dialog)
+        Gratipay.jsonml(placeholder),   // pushes the whole page down, but not directly seen
+        Gratipay.jsonml(dialog)         // parked at the top even while scrolling
     ]);
 
     // Close if we're on the page the notification links to.
