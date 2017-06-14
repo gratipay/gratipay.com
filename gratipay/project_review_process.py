@@ -9,18 +9,29 @@ import sys
 from aspen import log
 
 from gratipay.exceptions import NoTeams
+from gratipay.models.participant import Participant
 
 
-class ProjectReviewRepo(object):
+class ProjectReviewProcess(object):
 
-    def __init__(self, env):
+    def __init__(self, env, db, email_queue):
         repo = env.project_review_repo
         auth = (env.project_review_username, env.project_review_token)
+        self.db = db
+        self.email_queue = email_queue
         self._poster = GitHubPoster(repo, auth) if repo else ConsolePoster()
 
 
-    def create_issue(self, *teams):
-        """Given team objects, POST to GitHub, and return the URL of the new issue.
+    def start(self, *teams):
+        """Given team objects, kick off a review process by:
+
+        1. creating an issue in our project review repo on GitHub, and
+        2. sending an email notification to the owner of the team(s).
+
+        It's a bug to pass in teams that don't all have the same owner.
+
+        :return: the URL of the new review issue
+
         """
         if not teams:
             raise NoTeams()
@@ -31,12 +42,31 @@ class ProjectReviewRepo(object):
             title = "{} and {}".format(*[t.name for t in teams])
         else:
             title = "{} and {} other projects".format(teams[0].name, nteams-1)
+
         body = []
+        team_ids = []
+        owner_usernames = set()
         for team in teams:
+            team_ids.append(team.id)
+            owner_usernames.add(team.owner)
             body.append('https://gratipay.com{}'.format(team.url_path))
+        assert len(owner_usernames) == 1, owner_usernames
         body.extend(['', '(This application will remain open for at least a week.)'])
         data = json.dumps({'title': title, 'body': '\n'.join(body)})
-        return self._poster.post(data)
+        review_url = self._poster.post(data)
+
+        self.db.run("UPDATE teams SET review_url=%s WHERE id = ANY(%s)", (review_url, team_ids))
+        [team.set_attributes(review_url=review_url) for team in teams]
+
+        owner = Participant.from_username(owner_usernames.pop())
+        self.email_queue.put( owner
+                            , 'project-review'
+                            , review_url=team.review_url
+                            , include_unsubscribe=False
+                            , _user_initiated=False
+                             )
+
+        return review_url
 
 
 class GitHubPoster(object):
@@ -49,6 +79,8 @@ class GitHubPoster(object):
         self.auth = auth
 
     def post(self, data):
+        """POST data to GitHub and return the issue URL.
+        """
         out = ''
         try:
             r = requests.post(self.api_url, auth=self.auth, data=data)
@@ -73,6 +105,8 @@ class ConsolePoster(object):
         self.fp = fp
 
     def post(self, data):
+        """POST data to nowhere and return a URL of lies.
+        """
         p = lambda *a, **kw: print(*a, file=self.fp)
         p('-'*78,)
         p(pprint.pformat(json.loads(data)))

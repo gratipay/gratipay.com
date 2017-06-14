@@ -190,3 +190,53 @@ class GroupEmailsForParticipant(Harness):
                          , ('email', UNLINKED)
                          , ('bmail', OTHER)
                           ]
+
+
+class GetPackagesForClaiming(Harness):
+
+    def test_gets_packages_for_claiming(self):
+        foo = self.make_package()
+        alice = self.make_participant('alice', email_address='alice@example.com')
+        assert alice.get_packages_for_claiming(NPM) == [(foo, None, True, 'alice@example.com')]
+
+    def test_excludes_packages_for_half_verified_emails(self):
+        foo = self.make_package()
+        alice = self.make_participant('alice', email_address='alice@example.com')
+        self.make_package(name='bar', emails=['bob@example.com'])
+        alice.start_email_verification('bob@example.com')
+        assert alice.get_packages_for_claiming(NPM) == [(foo, None, True, 'alice@example.com')]
+
+    def test_includes_packages_for_verified_but_non_primary_emails(self):
+        foo = self.make_package()
+        alice = self.make_participant('alice', email_address='alice@example.com')
+        bar = self.make_package(name='bar', emails=['bob@example.com'])
+        self.add_and_verify_email(alice, 'bob@example.com')
+        assert alice.get_packages_for_claiming(NPM) == \
+                    [(foo, None, True, 'alice@example.com'), (bar, None, False, 'bob@example.com')]
+
+    def test_matches_primary_email(self):
+        foo = self.make_package(emails=['alice@example.com', 'bob@example.com', 'cat@example.com'])
+        alice = self.make_participant('alice', email_address='cat@example.com')
+        self.add_and_verify_email(alice, 'bob@example.com')
+        self.add_and_verify_email(alice, 'alice@example.com')
+        assert alice.get_packages_for_claiming(NPM) == [(foo, None, True, 'cat@example.com')]
+
+    def test_matches_non_primary_verified_email(self):
+        foo = self.make_package(emails=['bob@example.com', 'cat@example.com'])
+        alice = self.make_participant('alice', email_address='alice@example.com')
+        self.add_and_verify_email(alice, 'cat@example.com')
+        self.add_and_verify_email(alice, 'bob@example.com')
+        assert alice.get_packages_for_claiming(NPM) == [(foo, None, False, 'bob@example.com')]
+
+    def test_includes_packages_already_claimed_by_self(self):
+        foo = self.make_package()
+        alice = self.make_participant('alice', email_address='alice@example.com')
+        foo.get_or_create_linked_team(self.db, alice)
+        assert alice.get_packages_for_claiming(NPM) == [(foo, alice, True, 'alice@example.com')]
+
+    def test_includes_packages_already_claimed_by_other(self):
+        foo = self.make_package(emails=['alice@example.com', 'bob@example.com'])
+        alice = self.make_participant('alice', email_address='alice@example.com')
+        foo.get_or_create_linked_team(self.db, alice)
+        bob = self.make_participant('bob', email_address='bob@example.com')
+        assert bob.get_packages_for_claiming(NPM) == [(foo, alice, True, 'bob@example.com')]

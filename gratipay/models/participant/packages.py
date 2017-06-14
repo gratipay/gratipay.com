@@ -6,6 +6,61 @@ from gratipay.exceptions import NoPackages
 
 class Packages(object):
 
+    def get_packages_for_claiming(self, manager):
+
+        """Return a list of packages on the named ``manager`` for which the
+        participant has verified an email address on Gratipay, along with the
+        current package owner on Gratipay (if any).
+
+        :param string manager: the name of the package manager on which to look
+            for potential packages
+
+        :return: a list of (:py:class:`~gratipay.models.package.Package`,
+            :py:class:`Participant`, is_primary, email_address) tuples, where the
+            participant is the one who has already claimed the package (or ``None``),
+            and the email address is the single best match (primary, then
+            alphabetically first from among non-primary verified addresses)
+
+        """
+        return self.db.all('''
+
+            WITH verified_emails AS (
+                SELECT e.address
+                     , e.address = p.email_address is_primary
+                  FROM emails e
+             LEFT JOIN participants p
+                    ON p.id = e.participant_id
+                 WHERE e.participant_id=%s
+                   AND e.verified is true
+            )
+            SELECT pkg.*::packages                  package
+                 , p.*::participants                claimed_by
+                 , (SELECT is_primary
+                      FROM verified_emails
+                     WHERE address = ANY(emails)
+                  ORDER BY is_primary DESC, address
+                     LIMIT 1)                       email_address_is_primary
+                 , (SELECT address
+                      FROM verified_emails
+                     WHERE address = ANY(emails)
+                  ORDER BY is_primary DESC, address
+                     LIMIT 1)                       email_address
+              FROM packages pkg
+         LEFT JOIN teams_to_packages tp
+                ON pkg.id = tp.package_id
+         LEFT JOIN teams t
+                ON t.id = tp.team_id
+         LEFT JOIN participants p
+                ON t.owner = p.username
+             WHERE package_manager=%s
+               AND pkg.emails && array(SELECT address FROM verified_emails)
+          ORDER BY email_address_is_primary DESC
+                 , email_address ASC
+                 , pkg.name ASC
+
+        ''', (self.id, manager))
+
+
     def start_package_claims(self, c, nonce, *packages):
         """Takes a cursor, nonce and list of packages, inserts into ``claims``
         and returns ``None`` (or raise :py:exc:`NoPackages`).
@@ -57,7 +112,7 @@ class Packages(object):
             team = package.get_or_create_linked_team(cursor, self)
             teams.append(team)
             team_ids.append(team.id)
-        review_url = self.app.project_review_repo.create_issue(*teams)
+        review_url = self.app.project_review_process.start(*teams)
 
         cursor.run('DELETE FROM claims WHERE nonce=%s', (nonce,))
         cursor.run('UPDATE teams SET review_url=%s WHERE id=ANY(%s)', (review_url, team_ids,))
