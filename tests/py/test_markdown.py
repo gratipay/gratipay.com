@@ -71,7 +71,6 @@ class TestRenderAndScrub(Harness):
     def test_scrubs_tricky_scripts(self):
         # http://stackoverflow.com/q/753052#comment24080274_4869782
         assert markdown.render_and_scrub('<script<script>>alert("Hi!")<</script>/script>') == \
-             
                                                         '&gt;alert(\u201cHi!\u201d)&lt;/script&gt;'
     
     def test_scrubs_comments(self):
