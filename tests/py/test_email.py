@@ -295,7 +295,7 @@ class TestEndpoints(Alice):
         assert response.code == 400
         assert self.db.all('select package_id from claims order by package_id') == []
 
-    def test_package_verification_fails_package_id_is_garbage(self):
+    def test_package_verification_fails_if_package_id_is_garbage(self):
         response = self.hit_email_spt( 'start-verification'
                                      , 'bob@gratipay.com'
                                      , package_ids=['cheese monkey']
@@ -303,6 +303,26 @@ class TestEndpoints(Alice):
                                       )
         assert response.code == 400
         assert self.db.all('select package_id from claims order by package_id') == []
+
+    def test_package_reverification_succeeds_if_package_is_already_claimed_by_self(self):
+        foo = self.make_package()
+        self.claim_package('alice', foo)
+        response = self.hit_email_spt( 'start-verification'
+                                     , 'alice@example.com'
+                                     , package_ids=[foo.id]
+                                      )
+        assert response.code == 200
+
+    def test_package_verification_fails_if_package_is_already_claimed_by_other(self):
+        self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
+        foo = self.make_package(emails=['alice@example.com', 'bob@example.com'])
+        self.claim_package('bob', foo)
+        response = self.hit_email_spt( 'start-verification'
+                                     , 'alice@example.com'
+                                     , package_ids=[foo.id]
+                                     , should_fail=True
+                                      )
+        assert response.code == 400
 
 
 class TestFunctions(Alice):
