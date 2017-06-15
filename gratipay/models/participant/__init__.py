@@ -209,7 +209,7 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
             self.db.run("DELETE FROM statements WHERE participant=%s AND lang=%s",
                         (self.id, lang))
             return
-        scrubbed = markdown.render_and_scrub(statement)
+        scrubbed = markdown.rtlo_scrub(markdown.render_and_scrub(statement))
         r = self.db.one("""
             UPDATE statements
                SET content=%s
