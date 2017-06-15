@@ -39,7 +39,7 @@
 ./vendor/Faker-0.7.3.tar.gz
 
 ./vendor/six-1.8.0.tar.gz
-./vendor/libsass-0.3.0.tar.gz
+./vendor/libsass-0.12.3.tar.gz
 ./vendor/honcho-cfcc7ebb.tar.gz
 
 ./vendor/environment-1.0.0.tar.gz
