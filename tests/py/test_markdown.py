@@ -82,7 +82,7 @@ class TestRenderAndScrub(Harness):
         assert markdown.render_and_scrub('&trade;') == '\u2122'
 
     def test_scrubs_rtlo(self):
-        assert markdown.rtlo_scrub('ed.io/about&#8238;3p\u202Em.exe') == 'ed.io/about3pm.exe'
+        assert markdown.render_and_scrub('ed.io/about&#8238;3p\u202Em.exe') == 'ed.io/about3pm.exe'
 
     def test_render_does_not_render_entity_references_it_really_is_striptags(self):
         assert markdown.render('&trade;') == '<p>&trade;</p>\n'

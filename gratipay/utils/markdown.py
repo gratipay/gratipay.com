@@ -19,15 +19,12 @@ def render(markdown):
     ))
 
 
-def rtlo_scrub(markdown):
-    u_right_to_left_override = "\u202E"
-    right_to_left_override = "&#8238;"
-    rep = (right_to_left_override, ''), (u_right_to_left_override, '')
-    return reduce(lambda a, kv: a.replace(*kv), rep, markdown)
-
-
 def render_and_scrub(markdown):
     """Given markdown, return a Markup with tags stripped and everything else
     escaped.
     """
-    return Markup.escape(render(markdown).striptags())
+    u_right_to_left_override = "\u202E"
+    right_to_left_override = "&#8238;"
+    rep = (right_to_left_override, ''), (u_right_to_left_override, '')
+    rtlo_gone = reduce(lambda a, kv: a.replace(*kv), rep, markdown)
+    return Markup.escape(render(rtlo_gone).striptags())
