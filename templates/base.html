@@ -1,3 +1,4 @@
+{% from "templates/sign-in-using.html" import sign_in_using with context %}
 <!DOCTYPE html>
 <html lang="{{ locale.language }}">
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
@@ -41,7 +42,7 @@
             {% set current_page = request.path.raw.split('/')[1] %}
             {% include "templates/nav.html" %}
             {% if user.ANON %}
-                {% include "templates/sign-in-using.html" %}
+                {{ sign_in_using() }}
             {% else %}
             <ul class="nav you-are">
                 <li>
@@ -73,11 +74,10 @@
         <table id="notice">
             <tr>
                 <td>&#x2605;</td>
-                <td>{{ _( "{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier to get funded on Gratipay{_a}{_nowrap}."
+                <td>{{ _( "{nowrap}We have {a}integrated npm{_a} into Gratipay.{_nowrap}{_nowrap}"
                         , nowrap='<span class="nowrap">'|safe
                         , _nowrap='</span>'|safe
-                        , a='<a href="/about/policies/terms-of-service">'|safe
-                        , a2='<a href="https://gratipay.news/from-teams-to-projects-45c46718507b">'|safe
+                        , a='<a href="https://gratipay.news/integrating-npm-39333109419d">'|safe
                         , _a='</a>'|safe
                          ) }}</td>
                 <td>&#x2605;</td>
@@ -131,10 +131,7 @@
         history.pushState('', document.title, window.location.pathname); // nice and clean
     }
 </script>
-<script src="{{ website.asset('jquery.min.js') }}"></script>
-<script src="{{ website.asset('chosen.jquery.min.js') }}"></script>
-<script src="{{ website.asset('tipr.min.js') }}"></script>
-<script src="{{ website.asset('bootstrap-dropdown.js') }}"></script>
+<script src="{{ website.asset('vendors.js') }}"></script>
 <script src="{{ website.asset('gratipay.js') }}"></script>
 
 <script>

@@ -5,11 +5,13 @@
 # Translators:
 # Ben Holden-Crowther <benhc@live.co.uk>, 2014
 # Changaco <changaco@changaco.oy.lc>, 2014-2015
-# Ed Overflow <dioptera@ghostmail.com>, 2016
+# EdOverflow <dioptera@ghostmail.com>, 2016
+# EdOverflow <dioptera@ghostmail.com>, 2017
 # goofy_babelzilla <goofyfr@gmail.com>, 2014
 # finki boy, 2014-2015
 # Loris Reiff <loris.reiff@hotmail.com>, 2014
 # Thomas Chauchefoin <thomas@chauchefoin.fr>, 2016
+# xap teste <xapteste@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Gratipay\n"
@@ -92,6 +94,16 @@ msgstr "Ce courriel automatique a pour but de vous faire savoir que {viewer} a c
 msgid "Connect to {0} on Gratipay?"
 msgstr "Lier à {0} sur Gratipay ?"
 
+msgid "We have your application!"
+msgstr ""
+
+msgid ""
+"Thanks for your project application for {0}! Your public project page is: "
+"{1} and your public review ticket is: {2}. You can watch and participate in "
+"our review process there. We will send a notification to {3} when we finish "
+"our review. Thanks for applying!"
+msgstr ""
+
 msgid "1.0 Payout: Rejected"
 msgstr "Paiement issu de la 1.0 : refusé"
 
@@ -101,6 +113,20 @@ msgid ""
 "which people were paying you on Gratipay. Please reply if you would like to "
 "discuss this further."
 msgstr "Nous avons rejeté votre demande de paiement du solde issu de votre compte Gratipay 1.0 car nous n'avons pu déterminer quel produit ou service vous offriez pour les personnes qui vous finançaient. Merci de répondre à ce message si vous souhaitez en discuter d'avantage."
+
+msgid "Your account has been reactivated"
+msgstr "Votre compte a été réactivé"
+
+msgid ""
+"We've reactivated your account. Sorry for the trouble, and thanks for using "
+"Gratipay!"
+msgstr ""
+
+msgid "Your account has been suspended"
+msgstr "Votre compte a été suspendu"
+
+msgid "We have suspended your account."
+msgstr "Nous avons suspendu votre compte."
 
 msgid "Project Application Approved!"
 msgstr "Application du projet approuvé!"
@@ -128,24 +154,88 @@ msgid ""
 "details, please refer to our review ticket:"
 msgstr ""
 
+msgid "New activity on your account"
+msgstr ""
+
 msgid ""
-"We've received a request to connect {0} to the {1} account on Gratipay. "
-"Sound familiar?"
-msgstr "Nous avons reçu une demande d'association de l'adresse courriel {0} au compte {1} sur Gratipay. Êtes-vous bien le propriétaire de ce compte ?"
+"We are connecting the {package_name} npm package to the {username} account "
+"on Gratipay. This is a notification sent to {email_address} because that is "
+"the primary email address we have on file."
+msgid_plural ""
+"We are connecting {n} npm packages to the {username} account on Gratipay. "
+"This is a notification sent to {email_address} because that is the primary "
+"email address we have on file."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"We are connecting {email_address} and the {package_name} npm package to the "
+"{username} account on Gratipay. This is a notification sent to "
+"{email_address_2} because that is the primary email address we have on file."
+msgid_plural ""
+"We are connecting {email_address} and {n} npm packages to the {username} "
+"account on Gratipay. This is a notification sent to {email_address_2} "
+"because that is the primary email address we have on file."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"We are connecting {email_address} to the {username} account on Gratipay. "
+"This is a notification sent to {email_address_2} because that is the primary"
+" email address we have on file."
+msgstr ""
+
+msgid ""
+"We've received a request to connect the {package_name} npm package to the "
+"{username} account on Gratipay. Sound familiar?"
+msgid_plural ""
+"We've received a request to connect {n} npm packages to the {username} "
+"account on Gratipay. Sound familiar?"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"We've received a request to connect {email_address} and the {package_name} "
+"npm package to the {username} account on Gratipay. Sound familiar?"
+msgid_plural ""
+"We've received a request to connect {email_address} and {n} npm packages to "
+"the {username} account on Gratipay. Sound familiar?"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"We've received a request to connect {email_address} to the {username} "
+"account on Gratipay. Sound familiar?"
+msgstr ""
 
 msgid "Yes, proceed!"
 msgstr "Oui, je confirme."
 
-msgid "Follow this link to finish connecting your email:"
-msgstr "Suivez ce lien pour terminer la vérification de votre adresse courriel :"
+msgid "Follow this link to finish connecting:"
+msgstr ""
 
-msgid "Connecting {0} to {1} on Gratipay."
-msgstr "Ajout de l'adresse {0} au compte {1} sur Gratipay"
+msgid "You have already added and verified that address."
+msgstr ""
+
+msgid "That address is already linked to a different Gratipay account."
+msgstr ""
+
+msgid "You cannot remove your primary email address."
+msgstr ""
+
+msgid "That email address is not on file for this package."
+msgstr ""
+
+msgid "That email address is not verified."
+msgstr ""
+
+msgid "You've reached the maximum number of email addresses we allow."
+msgstr ""
 
 msgid ""
-"We are connecting {0} to the {1} account on Gratipay. This is a notification"
-" sent to {2} because that is the primary email address we have on file."
-msgstr "Nous avons reçu une demande d'ajout de l'adresse courriel {0} au compte {1} sur Gratipay. Ce message est notification envoyée à {2}, l'adresse courriel principale associée à ce compte."
+"You've initiated too many emails too quickly. Please try again in a minute "
+"or two."
+msgstr ""
 
 msgid "You've consumed your quota of requests, you can try again in {0}."
 msgstr "Vous avez épuisé votre quota de requêtes, vous pourrez réessayer dans {0}."
@@ -264,9 +354,7 @@ msgstr "semaine"
 msgid "Sign out"
 msgstr "Déconnexion"
 
-msgid ""
-"{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
-"to get funded on Gratipay{_a}{_nowrap}."
+msgid "{nowrap}We have {a}integrated npm{_a} into Gratipay.{_nowrap}{_nowrap}"
 msgstr ""
 
 msgid "Blog"
@@ -288,7 +376,7 @@ msgid "Social Profiles"
 msgstr "Profils sur les réseaux sociaux"
 
 msgid "Project"
-msgstr ""
+msgstr "Projet"
 
 msgid "Amount ($)"
 msgstr "Montant ($)"
@@ -303,7 +391,7 @@ msgid "{0} ago"
 msgstr "{0} plus tôt"
 
 msgid "joined {ago}"
-msgstr ""
+msgstr "rejoint {ago}"
 
 msgid "Previous"
 msgstr "Précédent"
@@ -396,11 +484,20 @@ msgstr[1] ""
 msgid "no givers yet"
 msgstr ""
 
+msgid "has not joined"
+msgstr ""
+
 msgid "owned by {a}{owner}{_a}"
 msgstr "géré par {a}{owner}{_a}"
 
-msgid "Sign in / Sign up"
+msgid "Back"
 msgstr ""
+
+msgid "Page {0} of {1}"
+msgstr ""
+
+msgid "Sign in / Sign up"
+msgstr "Connexion / Inscription"
 
 #, python-format
 msgid "Only {0}% of active users also {1}support Gratipay{2}."
@@ -535,7 +632,7 @@ msgid "Apply"
 msgstr "Candidater"
 
 msgid "Thanks! Your public project page is:"
-msgstr ""
+msgstr "Merci! Votre page publique du projet est:"
 
 msgid "And your public review ticket is:"
 msgstr "Et votre ticket public d'examen est :"
@@ -549,7 +646,7 @@ msgid "Thanks for applying!"
 msgstr "Merci pour votre candidature !"
 
 msgid "Project Name"
-msgstr ""
+msgstr "Nom Du Projet"
 
 msgid ""
 "At least one letter A through Z, plus numbers, dashes (-), underscores (_), "
@@ -595,24 +692,24 @@ msgid "Rejected"
 msgstr "Rejetées"
 
 msgid "Featured"
-msgstr ""
+msgstr "En vedette"
 
 msgid "Projects"
-msgstr ""
+msgstr "Projets"
 
 msgid "Pay for open source."
-msgstr ""
+msgstr "Payer pour open source."
 
 msgid "Fund Your Project"
-msgstr ""
+msgstr "Soutenez Votre Projet"
 
 msgid "Search Gratipay"
 msgstr "Chercher dans Gratipay"
 
 msgid "Found a matching project"
 msgid_plural "Found matching projects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Trouvé un projet correspondant"
+msgstr[1] "Trouvé des projets correspondants"
 
 msgid "Found a matching username"
 msgid_plural "Found matching usernames"
@@ -648,7 +745,7 @@ msgid "owned by {a}~{owner}{_a}"
 msgstr "géré par {a}~{owner}{_a}"
 
 msgid "Project Closed"
-msgstr ""
+msgstr "Projet Fermé"
 
 msgid "Please {a}email support{_a} to reopen."
 msgstr ""
@@ -726,13 +823,13 @@ msgid "No"
 msgstr "Non"
 
 msgid "Already closed."
-msgstr ""
+msgstr "Déjà fermé."
 
 msgid "You can't edit a closed project."
-msgstr ""
+msgstr "Vous ne pouvez pas modifier un projet fermé."
 
 msgid "You can't edit a rejected project."
-msgstr ""
+msgstr "Vous ne pouvez pas modifier un projet rejeté."
 
 msgid "Please upload a PNG or JPG image."
 msgstr "Merci d'uploader une image au format PNG ou JPG."
@@ -750,7 +847,7 @@ msgid "Sorry, there was a problem saving your image. Please try again."
 msgstr "Désolé, il y a eu un problème au moment de l'enregistrement de votre image. Merci d'essayer à nouveau."
 
 msgid "Edit Your Project"
-msgstr ""
+msgstr "Modifier Votre Projet"
 
 msgid "Modify"
 msgstr "Modifier"
@@ -759,7 +856,22 @@ msgid "Danger Zone"
 msgstr "Zone de danger"
 
 msgid "Close Project"
+msgstr "Fermer Le Projet"
+
+msgid "Total Received : {0}"
+msgstr "Total reçu: {0}"
+
+msgid "Total Distributed : {0}"
+msgstr "Total distribué: {0}"
+
+msgid "Giver"
 msgstr ""
+
+msgid "Taker"
+msgstr ""
+
+msgid "Amount"
+msgstr "Somme"
 
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr "{0} reçoit {1} par semaine de la part de {2} ~utilisateurs."
@@ -949,6 +1061,39 @@ msgstr "accepte les dons"
 msgid "hasn't joined Gratipay yet"
 msgstr "n'est pas encore inscrit sur Gratipay"
 
+msgid "No description available."
+msgstr ""
+
+msgid "Apply to accept payments for the {package_link} npm package:"
+msgstr ""
+
+msgid "No email addresses on file."
+msgstr ""
+
+msgid "Linked to a different account"
+msgstr ""
+
+msgid "Ready to use"
+msgstr ""
+
+msgid "Your primary email address"
+msgstr ""
+
+msgid "Linked to your account"
+msgstr ""
+
+msgid "Half-linked to your account"
+msgstr ""
+
+msgid "Apply to accept payments"
+msgstr ""
+
+msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
+msgstr ""
+
+msgid "Out of date? Update {a}at npm{_a} and refresh."
+msgstr ""
+
 msgid "You must sign in to apply for a new team."
 msgstr "Vous devez être connecté pour candidater à la création d'une nouvelle équipe."
 
@@ -1032,18 +1177,7 @@ msgstr "si le débit réussit"
 msgid "Invalid email address."
 msgstr "Cette adresse courriel est invalide."
 
-msgid "{email_address} is already linked to a different Gratipay account."
-msgstr ""
-
-msgid "You have already added and verified {email_address}."
-msgstr ""
-
-msgid ""
-"You've initiated too many emails too quickly. Please try again in a minute "
-"or two."
-msgstr ""
-
-msgid "A verification email has been sent to {email_address}."
+msgid "Check your inbox for a verification link."
 msgstr ""
 
 msgid "Please Sign In"
@@ -1066,13 +1200,13 @@ msgid "Success!"
 msgstr "Succès !"
 
 msgid "{email_address} is now connected to your Gratipay account."
-msgstr ""
+msgstr "{email_address} est maintenant connecté à votre compte Gratipay."
 
 msgid "Address Taken"
 msgstr "Adresse déjà prise"
 
 msgid "{email_address} is already connected to a different Gratipay account."
-msgstr ""
+msgstr "{email_address} est déjà connecté à un autre compte Gratipay."
 
 msgid "Already Verified"
 msgstr "Déjà vérifiée"
@@ -1081,13 +1215,22 @@ msgid "{email_address} is already connected to your Gratipay account."
 msgstr ""
 
 msgid "Bad Info"
-msgstr ""
+msgstr "Mauvaise Information"
 
 msgid "Sorry, that's a bad or expired link. You'll need to start over."
 msgstr ""
 
 msgid "View your email addresses"
 msgstr "Gérer vos adresses courriel"
+
+msgid "Withdrawals"
+msgstr ""
+
+msgid "We will send your money via PayPal to {email_address} ({a}update{_a})."
+msgstr ""
+
+msgid "New Projects"
+msgstr ""
 
 msgid "Active"
 msgstr "Actifs"
@@ -1232,9 +1375,6 @@ msgstr "Seules les adresses des courriel vérifiées sont autorisées."
 
 msgid "This is not a valid Bitcoin address."
 msgstr "Ce n'est pas une adresse Bitcoin valide."
-
-msgid "and then you'll be able to add or change your credit card."
-msgstr "pour pouvoir connecter votre carte de crédit."
 
 msgid "Required"
 msgstr "Requis"

@@ -1,10 +1,8 @@
 """Endpoint to list team members.
 """
-from gratipay.utils import get_team
-
 [--------------------]
 request.allow('GET')
-team = get_team(state)
+team = request.path['team']
 if team.available == 0:
     website.redirect('..', base_url='')
 

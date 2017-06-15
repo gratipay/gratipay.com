@@ -6,7 +6,7 @@
 ./vendor/filesystem_tree-1.0.0.tar.gz
 ./vendor/aspen-0.42.tar.bz2
 
-./vendor/gunicorn-18.0.tar.gz
+./vendor/gunicorn-19.7.1.tar.gz
 
 ./vendor/MarkupSafe-0.23.tar.gz
 ./vendor/Jinja2-2.7.3.tar.gz
@@ -31,7 +31,7 @@
 ./vendor/balanced-1.1.1.tar.gz
 
 ./vendor/contextlib2-0.5.4.tar.gz
-./vendor/raven-5.32.0.tar.gz
+./vendor/raven-6.0.0.tar.gz
 
     ./vendor/six-1.8.0.tar.gz
   ./vendor/python-dateutil-2.5.3.tar.gz
@@ -68,6 +68,6 @@
   ./vendor/ipaddress-1.0.16.tar.gz
 ./vendor/cryptography-1.5.3.tar.gz
 
-./vendor/ijson-2.3.tar.gz
+./vendor/CouchDB-1.1.tar.gz
 
 -e .

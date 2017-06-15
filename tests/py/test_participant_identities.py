@@ -33,8 +33,10 @@ class Tests(Harness):
 
     def assert_events(self, crusher_id, identity_ids, country_ids, actions):
         events = self.db.all("SELECT * FROM events ORDER BY ts ASC")
-        nevents = len(events)
+        assert events.pop(0).payload['values']['email'] == 'foo@example.com'
+        assert events.pop(0).payload['values']['primary_email'] == 'foo@example.com'
 
+        nevents = len(events)
         assert [e.type for e in events] == ['participant'] * nevents
         assert [e.payload['id'] for e in events] == [crusher_id] * nevents
         assert [e.payload['identity_id'] for e in events] == identity_ids

@@ -1,0 +1,15 @@
+table {
+    width: auto;
+}
+td, th {
+    text-align: left;
+    vertical-align: top;
+}
+iframe {
+    width: 70%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: white;
+}

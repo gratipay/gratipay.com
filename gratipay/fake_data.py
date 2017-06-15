@@ -136,8 +136,8 @@ def fake_participant_identity(participant, verification=None):
 def fake_team(db, teamowner, teamname=None):
     """Create a fake team
     """
-    isapproved = [True, False]
-    productorservice = ['Product','Service']
+    is_approved = [True, False, None]
+    product_or_service = ['Product','Service']
 
     if teamname is None:
         teamname = faker.first_name() + fake_text_id(3)
@@ -154,12 +154,12 @@ def fake_team(db, teamowner, teamname=None):
                         , name=teamname
                         , homepage=homepage
                         , ctime=ctime
-                        , product_or_service=random.sample(productorservice,1)[0]
+                        , product_or_service=random.choice(product_or_service)
                         , onboarding_url=homepage + '/contributing'
                         , owner=teamowner.username
-                        , is_approved=random.sample(isapproved,1)[0]
-                        , receiving=0.1
-                        , nreceiving_from=3
+                        , is_approved=random.choice(is_approved)
+                        , receiving=6
+                        , nreceiving_from=9
                          )
     except (IntegrityError, InvalidTeamName):
         return fake_team(db, teamowner)
@@ -245,6 +245,18 @@ def random_country_id(db):
     return db.one("SELECT id FROM countries ORDER BY random() LIMIT 1")
 
 
+def fake_package(db):
+    try:
+        insert_fake_data( db
+                        , 'packages'
+                        , package_manager='npm'
+                        , name=faker.word()
+                        , description=fake_sentence(stop=50)
+                        , emails=[faker.email() for i in range(random.choice(range(10)))]
+                         )
+    except IntegrityError:
+        return fake_package(db)
+
 
 def prep_db(db):
     db.run("""
@@ -312,61 +324,29 @@ def clean_db(db):
         DROP FUNCTION IF EXISTS process_payment() CASCADE;
         """)
 
-def populate_db(db, num_participants=100, ntips=200, num_teams=5):
+def populate_db(db, nparticipants=100, ntips=200, nteams=100, npackages=5):
     """Populate DB with fake data.
     """
     print("Making Participants")
-    make_flag_tester = num_participants > 1
-
-    participants = []
-    for i in xrange(num_participants - 1 if make_flag_tester else num_participants):
-        participants.append(fake_participant(db))
-
-    if make_flag_tester:
-        # make a participant for testing weird flags
-        flag_tester = fake_participant(db, random_identities=False)
-        participants.append(flag_tester)
-
-        nepal = db.one("SELECT id FROM countries WHERE code='NP'")
-        flag_tester.store_identity_info(nepal, 'nothing-enforced', {})
-        flag_tester.set_identity_verification(nepal, True)
-
-        vatican = db.one("SELECT id FROM countries WHERE code='VA'")
-        flag_tester.store_identity_info(vatican, 'nothing-enforced', {})
-        flag_tester.set_identity_verification(vatican, True)
+    participants = _populate_participants(db, nparticipants)
 
     print("Making Teams")
-    teams = []
-    teamowners = random.sample(participants, num_teams)
-    for teamowner in teamowners:
-        teams.append(fake_team(db, teamowner))
+    teams = _populate_teams(db, nteams, participants)
 
-    # Creating a fake Gratipay Team
-    teamowner = random.choice(participants)
-    teams.append(fake_team(db, teamowner, "Gratipay"))
+    print("Making Packages")
+    packages = []
+    for i in xrange(npackages):
+        packages.append(fake_package(db))
 
     print("Making Payment Instructions")
-    npayment_instructions = 0
-    payment_instructions = []
-    for participant in participants:
-        for team in teams:
-            #eliminate self-payment
-            if participant.username != team.owner:
-                npayment_instructions += 1
-                if npayment_instructions > ntips:
-                    break
-                payment_instructions.append(fake_payment_instruction(db, participant, team))
-        if npayment_instructions > ntips:
-            break
+    payment_instructions = _populate_payment_instructions(db, ntips, participants, teams)
 
     print("Making Elsewheres")
-    for p in participants:
+    for p in participants.itervalues():
         #All participants get between 1 and 3 elsewheres
         num_elsewheres = random.randint(1, 3)
         for platform_name in random.sample(PLATFORMS, num_elsewheres):
             fake_elsewhere(db, p, platform_name)
-
-
 
     # Paydays
     # First determine the boundaries - min and max date
@@ -390,14 +370,14 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
                          VALUES (%(ts_start)s, %(ts_end)s)
                       RETURNING id
                     """, params)
-        sys.stdout.write("\rMaking Paydays (%i/%i)" % (payday_id, paydays_total))
+        sys.stdout.write("\rMaking Paydays (%i/%i)" % (payday_counter, paydays_total))
         sys.stdout.flush()
 
 
         week_payments = []
         for payment_instruction in week_payment_instructions:
-            participant = Participant.from_id(payment_instruction['participant_id'])
-            team = Team.from_id(payment_instruction['team_id'])
+            participant = participants[payment_instruction['participant_id']]
+            team = teams[payment_instruction['team_id']]
             amount = payment_instruction['amount']
             assert participant.username != team.owner
             week_payments.append(fake_payment(
@@ -422,7 +402,7 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
                     timestamp=date + datetime.timedelta(seconds=1)
                  )
 
-        for team in teams:
+        for team in teams.values():
             week_payments_to_team = filter(lambda x: x['team'] == team.slug, week_payments)
             pay_out = sum(t['amount'] for t in week_payments_to_team)
 
@@ -456,3 +436,64 @@ def populate_db(db, num_participants=100, ntips=200, num_teams=5):
 
         date = end_date
     print("")
+
+def _populate_participants(db, nparticipants):
+    make_flag_tester = nparticipants > 1
+
+    participants = {}
+
+    if make_flag_tester:
+        flag_tester = _make_flag_tester(db)
+        participants[flag_tester.id] = flag_tester
+        nparticipants -= 1
+
+    for i in xrange(nparticipants):
+        participant = fake_participant(db)
+        participants[participant.id] = participant
+
+    return participants
+
+def _make_flag_tester(db):
+    """Make a participant for testing weird flags"""
+
+    flag_tester = fake_participant(db, random_identities=False)
+
+    nepal = db.one("SELECT id FROM countries WHERE code='NP'")
+    flag_tester.store_identity_info(nepal, 'nothing-enforced', {})
+    flag_tester.set_identity_verification(nepal, True)
+
+    vatican = db.one("SELECT id FROM countries WHERE code='VA'")
+    flag_tester.store_identity_info(vatican, 'nothing-enforced', {})
+    flag_tester.set_identity_verification(vatican, True)
+
+    return flag_tester
+
+def _populate_teams(db, nteams, participants):
+    teams = {}
+    teamowners = random.sample(participants.values(), nteams)
+    for teamowner in teamowners:
+        team = fake_team(db, teamowner)
+        teams[team.id] = team
+
+    # Creating a fake Gratipay Team
+    team_owner = random.choice(participants.values())
+    team = fake_team(db, team_owner, "Gratipay")
+    teams[team.id] = team
+
+    return teams
+
+def _populate_payment_instructions(db, ntips, participants, teams):
+    npayment_instructions = 0
+    payment_instructions = []
+    for participant in participants.itervalues():
+        for team in teams.itervalues():
+            #eliminate self-payment
+            if participant.username != team.owner:
+                npayment_instructions += 1
+                if npayment_instructions > ntips:
+                    break
+                payment_instructions.append(fake_payment_instruction(db, participant, team))
+        if npayment_instructions > ntips:
+            break
+
+    return payment_instructions

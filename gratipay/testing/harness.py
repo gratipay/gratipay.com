@@ -8,7 +8,7 @@ from collections import defaultdict
 from os.path import dirname, join, realpath
 from decimal import Decimal
 
-from aspen import resources
+from aspen import log, resources
 from aspen.utils import utcnow
 from aspen.testing.client import Client
 from gratipay.application import Application
@@ -17,8 +17,11 @@ from gratipay.elsewhere import UserInfo
 from gratipay.exceptions import NoSelfTipping, NoTippee, BadAmount
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
+from gratipay.models.package import NPM, Package
 from gratipay.models.participant import Participant, MAX_TIP, MIN_TIP
+from gratipay.models.team import Team
 from gratipay.security import user
+from gratipay.testing import P
 from gratipay.testing.vcr import use_cassette
 from psycopg2 import IntegrityError, InternalError
 
@@ -37,6 +40,7 @@ def _get_app():
 
     global _app
     if not _app:
+        log('Instantiating Application from gratipay.testing.harness')
         _app = Application()
     return _app
 
@@ -133,6 +137,7 @@ class Harness(unittest.TestCase):
             except (IntegrityError, InternalError):
                 tablenames.insert(0, tablename)
         self.db.run("ALTER SEQUENCE participants_id_seq RESTART WITH 1")
+        self.db.run("INSERT INTO worker_coordination DEFAULT VALUES")
 
 
     def make_elsewhere(self, platform, user_id, user_name, **kw):
@@ -173,26 +178,57 @@ class Harness(unittest.TestCase):
             _kw['is_closed'] = False
         if 'available' not in _kw:
             _kw['available'] = 0
+        if 'ctime' not in _kw:
+            _kw['ctime'] = utcnow()
 
-        if Participant.from_username(_kw['owner']) is None:
-            self.make_participant( _kw['owner']
-                                 , claimed_time='now'
-                                 , last_paypal_result=''
-                                 , email_address=_kw['owner']+'@example.com'
-                                 , verified_in='TT'
-                                  )
+        self.make_owner(_kw['owner'])
 
         team = self.db.one("""
             INSERT INTO teams
-                        (slug, slug_lower, name, homepage, product_or_service,
+                        (slug, ctime, slug_lower, name, homepage, product_or_service,
                          onboarding_url, owner, is_approved, is_closed, available)
-                 VALUES (%(slug)s, %(slug_lower)s, %(name)s, %(homepage)s, %(product_or_service)s,
+                 VALUES (%(slug)s, %(ctime)s, %(slug_lower)s, %(name)s, %(homepage)s, %(product_or_service)s,
                          %(onboarding_url)s, %(owner)s, %(is_approved)s, %(is_closed)s,
                          %(available)s)
               RETURNING teams.*::teams
         """, _kw)
 
         return team
+
+
+    def make_owner(self, username='picard'):
+        owner = Participant.from_username(username)
+        if owner is None:
+            owner = self.make_participant( username
+                                         , claimed_time='now'
+                                         , last_paypal_result=''
+                                         , email_address=username+'@example.com'
+                                         , verified_in='TT'
+                                          )
+        return owner
+
+
+    def make_admin(self, username='admin'):
+        return self.make_participant(username, claimed_time='now', is_admin=True)
+
+
+    def make_package(self, package_manager=NPM, name='foo', description='Foo fooingly.',
+                                                    emails=['alice@example.com'], claimed_by=None):
+        """Factory for packages.
+        """
+        self.db.run( 'INSERT INTO packages (package_manager, name, description, emails) '
+                     'VALUES (%s, %s, %s, %s) RETURNING *'
+                   , (package_manager, name, description, emails)
+                    )
+        package = Package.from_names(NPM, name)
+        if claimed_by:  # either a username (existing or not) or a Participant object
+            if type(claimed_by) is unicode:
+                maybe = P(claimed_by)
+                claimed_by = maybe if maybe is not None else self.make_owner(claimed_by)
+            admin = self.make_admin()
+            team = package.get_or_create_linked_team(self.db, claimed_by)
+            team.update_review_status('approved', admin)
+        return package
 
 
     def make_participant(self, username, **kw):
@@ -204,6 +240,13 @@ class Harness(unittest.TestCase):
                  VALUES (%s, %s)
               RETURNING participants.*::participants
         """, (username, username.lower()))
+
+        if 'id' in kw:
+            new_id = kw.pop('id')
+            self.db.run( 'UPDATE participants SET id=%s WHERE id=%s'
+                       , (new_id, participant.id)
+                        )
+            participant.set_attributes(id=new_id)
 
         if 'elsewhere' in kw or 'claimed_time' in kw:
             platform = kw.pop('elsewhere', 'github')
@@ -220,6 +263,13 @@ class Harness(unittest.TestCase):
         if 'last_paypal_result' in kw:
             route = ExchangeRoute.insert(participant, 'paypal', 'abcd@gmail.com')
             route.update_error(kw.pop('last_paypal_result'))
+
+        # Handle email address
+        if 'email_address' in kw:
+            address = kw.pop('email_address')
+            if address:
+                self.add_and_verify_email(participant, address)
+                self.app.email_queue.purge()
 
         # Update participant
         verified_in = kw.pop('verified_in', [])
@@ -265,6 +315,30 @@ class Harness(unittest.TestCase):
         e_id = record_exchange(self.db, route, amount, fee, participant, 'pre', ref)
         record_exchange_result(self.db, e_id, status, error, participant)
         return e_id
+
+    def make_payment(self, participant, team, amount, direction, payday, timestamp=utcnow()):
+        """Factory for payment"""
+
+        if isinstance(participant, Participant):
+            participant = participant.username
+
+        if isinstance(team, Team):
+            team = team.slug
+
+        payment_id = self.db.one("""
+            INSERT INTO payments
+                        (timestamp, participant, team, amount, direction, payday)
+                 VALUES (%(timestamp)s, %(participant)s, %(team)s, %(amount)s, %(direction)s, %(payday)s)
+              RETURNING id
+            """, dict(timestamp=timestamp,
+                      participant=participant,
+                      team=team,
+                      amount=amount,
+                      direction=direction,
+                      payday=payday
+                    )
+                )
+        return payment_id
 
 
     def make_participant_with_exchange(self, name):
@@ -348,3 +422,12 @@ class Harness(unittest.TestCase):
              LIMIT 1
 
         """, (tipper, tippee), back_as=dict, default=default)['amount']
+
+
+    def add_and_verify_email(self, participant, *emails):
+        """Given a participant and some email addresses, add and verify them.
+        """
+        for email in emails:
+            participant.start_email_verification(email)
+            nonce = participant.get_email(email).nonce
+            participant.finish_email_verification(email, nonce)

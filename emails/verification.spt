@@ -1,17 +1,64 @@
 {{ _("Connect to {0} on Gratipay?", username) }}
 
 [---] text/html
-{{ _("We've received a request to connect {0} to the {1} account on Gratipay. Sound familiar?",
-     ('<b>%s</b>'|safe) % email,
-     ('<b><a href="https://gratipay.com/~{0}/">{0}</a></b>'|safe).format(username)) }}
+{% if new_email_verified %}
+{{ ngettext( "We've received a request to connect the {package_name} npm package to the "
+             "{username} account on Gratipay. Sound familiar?"
+           , "We've received a request to connect {n} npm packages to the {username} account "
+             "on Gratipay. Sound familiar?"
+           , n=npackages
+           , package_name=('<b>{}</b>'|safe).format(package_name)
+           , username=('<b><a href="https://gratipay.com/~{0}/">{0}</a></b>'|safe).format(username)
+            ) }}
+{% elif npackages > 0 %}
+{{ ngettext( "We've received a request to connect {email_address} and the {package_name} npm "
+             "package to the {username} account on Gratipay. Sound familiar?"
+           , "We've received a request to connect {email_address} and {n} npm packages to the "
+             "{username} account on Gratipay. Sound familiar?"
+           , n=npackages
+           , package_name=('<b>{}</b>'|safe).format(package_name)
+           , email_address=('<b>{}</b>'|safe).format(new_email)
+           , username=('<b><a href="https://gratipay.com/~{0}/">{0}</a></b>'|safe).format(username)
+            ) }}
+{% else %}
+{{ _( "We've received a request to connect {email_address} to the {username} account on Gratipay. "
+      "Sound familiar?"
+    , email_address=('<b>{}</b>'|safe).format(new_email)
+    , username=('<b><a href="https://gratipay.com/~{0}/">{0}</a></b>'|safe).format(username)
+     ) }}
+{% endif %}
 <br>
 <br>
 <a href="{{ link }}" style="{{ button_style }}">{{ _("Yes, proceed!") }}</a>
 
 [---] text/plain
-{{ _("We've received a request to connect {0} to the {1} account on Gratipay. Sound familiar?",
-     email, username) }}
+{% if new_email_verified %}
+{{ ngettext( "We've received a request to connect the {package_name} npm package to the "
+             "{username} account on Gratipay. Sound familiar?"
+           , "We've received a request to connect {n} npm packages to the {username} account "
+             "on Gratipay. Sound familiar?"
+           , n=npackages
+           , package_name=package_name
+           , username=username
+            ) }}
+{% elif npackages > 0 %}
+{{ ngettext( "We've received a request to connect {email_address} and the {package_name} npm "
+             "package to the {username} account on Gratipay. Sound familiar?"
+           , "We've received a request to connect {email_address} and {n} npm packages to the "
+             "{username} account on Gratipay. Sound familiar?"
+           , n=npackages
+           , package_name=package_name
+           , email_address=new_email
+           , username=username
+            ) }}
+{% else %}
+{{ _( "We've received a request to connect {email_address} to the {username} account on Gratipay. "
+      "Sound familiar?"
+    , email_address=new_email
+    , username=username
+     ) }}
+{% endif %}
 
-{{ _("Follow this link to finish connecting your email:") }}
+{{ _("Follow this link to finish connecting:") }}
 
 {{ link }}

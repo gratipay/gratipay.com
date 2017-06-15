@@ -1,0 +1,6 @@
+{{ _("Your account has been reactivated") }}
+
+[---] text/html
+{{ _("We've reactivated your account. Sorry for the trouble, and thanks for using Gratipay!") }}
+[---] text/plain
+{{ _("We've reactivated your account. Sorry for the trouble, and thanks for using Gratipay!") }}

@@ -1,0 +1,32 @@
+#package #content {
+    text-align: center;
+
+    .instructions {
+        text-align: center;
+        margin: 0 0 30px;
+        font-family: $Ideal;
+    }
+
+    .selected .icon { display: block; }
+    .icon {
+        display: none;
+        position: absolute;
+        top: 12px;
+        left: 16px;
+        font-size: 24px;
+        line-height: 24px;
+    }
+    .disabled .icon {
+        color: $medium-gray;
+    }
+
+    .status-icon {
+        font-size: 12px;
+        line-height: 12px;
+        width: auto;
+        margin: 0;
+    }
+    ul:not(.open) .status-icon {
+        color: $medium-gray;
+    }
+}

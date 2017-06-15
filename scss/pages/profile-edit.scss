@@ -12,23 +12,7 @@
             font: normal 12px/12px $Ideal;
         }
     }
-    .cryptocoin {
-        .address {
-            font-size: 13px;
-        }
-        .edit > .not-empty, .delete {
-            display: none;
-        }
-        &.not-empty {
-            .empty {
-                display: none;
-            }
-            .edit > .not-empty, .delete {
-                display: inline-block;
-            }
-        }
-        .buttons {
-            margin-top: 3px;
-        }
+    .projects {
+        position: relative;
     }
 }

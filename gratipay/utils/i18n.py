@@ -6,6 +6,7 @@ import re
 from io import BytesIO
 from unicodedata import combining, normalize
 
+from aspen import Response
 from aspen.simplates.pagination import parse_specline, split_and_escape
 from aspen.utils import utcnow
 from babel.core import LOCALE_ALIASES, Locale
@@ -17,6 +18,7 @@ from babel.numbers import (
     get_decimal_symbol, parse_decimal
 )
 from collections import OrderedDict
+from dependency_injection import resolve_dependencies
 import jinja2.ext
 
 
@@ -257,3 +259,18 @@ def set_locale():
                 locale.setlocale(locale.LC_ALL, b"en_US.UTF-8") # Mac OS
             except locale.Error:
                 locale.setlocale(locale.LC_ALL, b"C.UTF-8")     # Read the Docs
+
+
+class LocalizedErrorResponse(Response):
+
+    def __repr__(self):
+        return "<{}: {}>".format(self.__class__.__name__, self)
+
+    def __init__(self, code=400, lazy_body=None, **kw):
+        Response.__init__(self, code, '', **kw)
+        if lazy_body:
+            self.lazy_body = lazy_body
+
+    def render_body(self, state):
+        f = self.lazy_body
+        self.body = f(*resolve_dependencies(f, state).as_args)

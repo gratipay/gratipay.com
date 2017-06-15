@@ -1,4 +1,4 @@
-{{ _("1.0 Payout: Approved!") }}
+{{ _("1.0 payout approved!") }}
 [---] text/html
 {{ _("We've approved your application for a payout of your Gratipay 1.0 balance. Watch for that during our next weekly payment cycle.") }}
 <br>

@@ -2,8 +2,8 @@
     display: inline-block;
     width: 14px;
     font: normal 14px/14px icomoon;
-    &.approved { color: $green; }
-    &.unreviewed { color: $gold; }
-    &.rejected { color: $red; }
-    &.featured { color: $blue; }
+    &.success { color: $green; }
+    &.warning { color: $gold; }
+    &.failure { color: $red; }
+    &.feature { color: $blue; }
 }

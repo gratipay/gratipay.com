@@ -1,0 +1,19 @@
+{{ _("We have your application!") }}
+
+[---] text/html
+{{ _( "Thanks for applying to use Gratipay! The next step is for us to review your application, "
+      "which happens on {a}this public GitHub issue{_a}. You can watch and participate in our "
+      "review there, and we will email you again when we finish (usually in about a week). "
+      "Thanks again!"
+    , a='<a href="{}">'.format(review_url)|safe
+    , _a='</a>'|safe
+     ) }}
+
+[---] text/plain
+{{ _( "Thanks for applying to use Gratipay! The next step is for us to review your application, "
+      "which happens on this public GitHub issue:") }}
+
+{{ review_url }}
+
+{{ _( "You can watch and participate in our review there, and we will email you again when we "
+      "finish (usually in about a week). Thanks again!") }}

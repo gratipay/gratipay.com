@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 
 from aspen import Response, json
 from aspen.utils import to_rfc822, utcnow
-from dependency_injection import resolve_dependencies
 from postgres.cursors import SimpleCursorBase
 
 import gratipay
@@ -35,6 +34,15 @@ def dict_to_querystring(mapping):
 
 
 def _munge(website, request, url_prefix, fs_prefix):
+    """Given website and requests objects along with URL and filesystem
+    prefixes, redirect or modify the request. The idea here is that sometimes
+    for various reasons the dispatcher can't handle a mapping, so this is a
+    hack to rewrite the URL to help the dispatcher map to the filesystem.
+
+    If you access the filesystem version directly through the web, we redirect
+    you to the URL version. If you access the URL version as desired, then we
+    rewrite so we can find it on the filesystem.
+    """
     if request.path.raw.startswith(fs_prefix):
         to = url_prefix + request.path.raw[len(fs_prefix):]
         if request.qs.raw:
@@ -42,10 +50,6 @@ def _munge(website, request, url_prefix, fs_prefix):
         website.redirect(to)
     elif request.path.raw.startswith(url_prefix):
         request.path.__init__(fs_prefix + request.path.raw[len(url_prefix):])
-
-def help_aspen_find_well_known(website, request):
-    _munge(website, request, '/.well-known/', '/_well-known/')
-    _munge(website, request, '/assets/.well-known/', '/assets/_well-known/')
 
 def use_tildes_for_participants(website, request):
     return _munge(website, request, '/~', '/~/')
@@ -113,35 +117,6 @@ def get_participant(state, restrict=True, resolve_unclaimed=True):
     return participant
 
 
-def get_team(state):
-    """Given a Request, raise Response or return Team.
-    """
-    redirect = state['website'].redirect
-    request = state['request']
-    user = state['user']
-    slug = request.line.uri.path['team']
-    qs = request.line.uri.querystring
-
-    from gratipay.models.team import Team  # avoid circular import
-    team = Team.from_slug(slug)
-
-    if team is None:
-        # Try to redirect to a Participant.
-        from gratipay.models.participant import Participant # avoid circular import
-        participant = Participant.from_username(slug)
-        if participant is not None:
-            qs = '?' + request.qs.raw if request.qs.raw else ''
-            redirect('/~' + request.path.raw[1:] + qs)
-        raise Response(404)
-
-    canonicalize(redirect, request.line.uri.path.raw, '/', team.slug, slug, qs)
-
-    if team.is_closed and not user.ADMIN:
-        raise Response(410)
-
-    return team
-
-
 def encode_for_querystring(s):
     """Given a unicode, return a unicode that's safe for transport across a querystring.
     """
@@ -166,28 +141,6 @@ def decode_from_querystring(s, **kw):
             # Enable callers to handle errors without using try/except.
             return kw['default']
         raise Response(400, "invalid input")
-
-
-def update_cta(website):
-    nusers = website.db.one("""
-        SELECT nusers FROM paydays
-        ORDER BY ts_end DESC LIMIT 1
-    """, default=0)
-    nreceiving_from = website.db.one("""
-        SELECT nreceiving_from
-          FROM teams
-         WHERE slug = 'Gratipay'
-    """, default=0)
-    website.support_current = cur = int(round(nreceiving_from / nusers * 100)) if nusers else 0
-    if cur < 10:    goal = 20
-    elif cur < 15:  goal = 30
-    elif cur < 25:  goal = 40
-    elif cur < 35:  goal = 50
-    elif cur < 45:  goal = 60
-    elif cur < 55:  goal = 70
-    elif cur < 65:  goal = 80
-    elif cur > 70:  goal = None
-    website.support_goal = goal
 
 
 def _execute(this, sql, params=[]):
@@ -267,30 +220,60 @@ def to_javascript(obj):
     return json.dumps(obj).replace('</', '<\\/')
 
 
-class LazyResponse(Response):
+def get_featured_projects(db):
+    npopular, nunpopular = db.one("""
 
-    def __init__(self, code, lazy_body, **kw):
-        Response.__init__(self, code, '', **kw)
-        self.lazy_body = lazy_body
+        WITH eligible_teams AS (
+            SELECT *
+              FROM teams
+             WHERE not is_closed
+               AND is_approved
+        )
 
-    def render_body(self, state):
-        f = self.lazy_body
-        self.body = f(*resolve_dependencies(f, state).as_args)
+        SELECT (SELECT COUNT(1)
+                  FROM eligible_teams
+                 WHERE nreceiving_from > 5) AS npopular,
 
+               (SELECT COUNT(1)
+                  FROM eligible_teams
+                 WHERE nreceiving_from <= 5) AS nunpopular
 
-def get_featured_projects(popular, unpopular):
-    np, nu = len(popular), len(unpopular)
+    """, back_as=tuple)
 
-    # surely optimizable & clarifiable, but it passes the tests
-    if np < 7 and nu < 3:     p, u = np, nu
-    elif np < 7 and nu >= 3:  p, u = np, 10 - np
-    elif np >= 7 and nu < 3:  p, u = 10 - nu, nu
-    else:                     p, u = 7, 3
+    # Attempt to maintain a 70-30 ratio
+    if npopular >= 7:
+        npopular = max(7, 10-nunpopular)
 
-    featured_projects = random.sample(popular, p) + random.sample(unpopular, u)
+    # Fill in the rest with unpopular
+    nunpopular = min(nunpopular, 10-npopular)
+
+    featured_projects = db.all("""
+
+        WITH eligible_teams AS (
+            SELECT *
+              FROM teams
+             WHERE not is_closed
+               AND is_approved
+        )
+
+        (SELECT t.*::teams
+          FROM eligible_teams t
+         WHERE nreceiving_from > 5
+      ORDER BY random()
+         LIMIT %(npopular)s)
+
+         UNION
+
+        (SELECT t.*::teams
+          FROM eligible_teams t
+         WHERE nreceiving_from <= 5
+      ORDER BY random()
+         LIMIT %(nunpopular)s)
+
+    """, locals())
+
     random.shuffle(featured_projects)
     return featured_projects
-
 
 def set_version_header(response, website):
     response.headers['X-Gratipay-Version'] = website.version

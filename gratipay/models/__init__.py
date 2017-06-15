@@ -14,8 +14,12 @@ from .account_elsewhere import AccountElsewhere
 from .community import Community
 from .country import Country
 from .exchange_route import ExchangeRoute
+from .package import Package
 from .participant import Participant
 from .team import Team
+
+
+MODELS = (AccountElsewhere, Community, Country, ExchangeRoute, Package, Participant, Team)
 
 
 @contextmanager
@@ -32,7 +36,7 @@ class GratipayDB(Postgres):
         ``.app``.
         """
         Postgres.__init__(self, *a, **kw)
-        for model in (AccountElsewhere, Community, Country, ExchangeRoute, Participant, Team):
+        for model in MODELS:
             self.register_model(model)
             model.app = app
 

@@ -5,6 +5,7 @@ import requests
 from aspen import Response
 
 from gratipay.exceptions import InvalidTeamName
+from gratipay.models.participant import Participant
 from gratipay.models.team import slugize, Team
 from gratipay.utils.images import (
     imgize,
@@ -84,10 +85,8 @@ if request.method == 'POST':
 
     team.save_image(image, large, small, image_type)
 
-    review_url = team.create_github_review_issue()
-    team.set_review_url(review_url)
-
-    team_url = website.env.base_url + '/{}/'.format(team.slug)
+    review_url = website.app.project_review_process.start(team)
+    team_url = website.env.base_url + team.url_path
 
 [---] application/json via json_dump
 {'review_url': review_url, 'team_url': team_url}

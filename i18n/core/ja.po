@@ -86,6 +86,16 @@ msgstr "これは、Gratipay で {country_name} の {viewer} が、あなたの 
 msgid "Connect to {0} on Gratipay?"
 msgstr "Gratipay で {0} に接続しますか?"
 
+msgid "We have your application!"
+msgstr ""
+
+msgid ""
+"Thanks for your project application for {0}! Your public project page is: "
+"{1} and your public review ticket is: {2}. You can watch and participate in "
+"our review process there. We will send a notification to {3} when we finish "
+"our review. Thanks for applying!"
+msgstr ""
+
 msgid "1.0 Payout: Rejected"
 msgstr "1.0 支払い: 否認されました!"
 
@@ -95,6 +105,20 @@ msgid ""
 "which people were paying you on Gratipay. Please reply if you would like to "
 "discuss this further."
 msgstr "Gratipay 1.0 の残高の支払いについて、Gratipay で支払われた製品やサービスを特定できなかったため、申請を否認しました。 これについてさらに検討したい場合は、ご返信ください。"
+
+msgid "Your account has been reactivated"
+msgstr ""
+
+msgid ""
+"We've reactivated your account. Sorry for the trouble, and thanks for using "
+"Gratipay!"
+msgstr ""
+
+msgid "Your account has been suspended"
+msgstr ""
+
+msgid "We have suspended your account."
+msgstr ""
 
 msgid "Project Application Approved!"
 msgstr "プロジェクト申請を承認しました!"
@@ -122,24 +146,84 @@ msgid ""
 "details, please refer to our review ticket:"
 msgstr "Gratipay の '{team}' プロジェクトの申請を否認しました。 詳細は、レビューチケットをご覧ください。"
 
+msgid "New activity on your account"
+msgstr ""
+
 msgid ""
-"We've received a request to connect {0} to the {1} account on Gratipay. "
-"Sound familiar?"
-msgstr "Gratipay の {1} アカウントに {0} を接続するリクエストを受け取りました。 聞いたことがありますか?"
+"We are connecting the {package_name} npm package to the {username} account "
+"on Gratipay. This is a notification sent to {email_address} because that is "
+"the primary email address we have on file."
+msgid_plural ""
+"We are connecting {n} npm packages to the {username} account on Gratipay. "
+"This is a notification sent to {email_address} because that is the primary "
+"email address we have on file."
+msgstr[0] ""
+
+msgid ""
+"We are connecting {email_address} and the {package_name} npm package to the "
+"{username} account on Gratipay. This is a notification sent to "
+"{email_address_2} because that is the primary email address we have on file."
+msgid_plural ""
+"We are connecting {email_address} and {n} npm packages to the {username} "
+"account on Gratipay. This is a notification sent to {email_address_2} "
+"because that is the primary email address we have on file."
+msgstr[0] ""
+
+msgid ""
+"We are connecting {email_address} to the {username} account on Gratipay. "
+"This is a notification sent to {email_address_2} because that is the primary"
+" email address we have on file."
+msgstr ""
+
+msgid ""
+"We've received a request to connect the {package_name} npm package to the "
+"{username} account on Gratipay. Sound familiar?"
+msgid_plural ""
+"We've received a request to connect {n} npm packages to the {username} "
+"account on Gratipay. Sound familiar?"
+msgstr[0] ""
+
+msgid ""
+"We've received a request to connect {email_address} and the {package_name} "
+"npm package to the {username} account on Gratipay. Sound familiar?"
+msgid_plural ""
+"We've received a request to connect {email_address} and {n} npm packages to "
+"the {username} account on Gratipay. Sound familiar?"
+msgstr[0] ""
+
+msgid ""
+"We've received a request to connect {email_address} to the {username} "
+"account on Gratipay. Sound familiar?"
+msgstr ""
 
 msgid "Yes, proceed!"
 msgstr "はい、続行します!"
 
-msgid "Follow this link to finish connecting your email:"
-msgstr "お使いのメールに接続するには、このリンクをクリックしてください:"
+msgid "Follow this link to finish connecting:"
+msgstr ""
 
-msgid "Connecting {0} to {1} on Gratipay."
-msgstr "Gratipay で {1} に {0} を接続しています。"
+msgid "You have already added and verified that address."
+msgstr ""
+
+msgid "That address is already linked to a different Gratipay account."
+msgstr ""
+
+msgid "You cannot remove your primary email address."
+msgstr ""
+
+msgid "That email address is not on file for this package."
+msgstr ""
+
+msgid "That email address is not verified."
+msgstr ""
+
+msgid "You've reached the maximum number of email addresses we allow."
+msgstr ""
 
 msgid ""
-"We are connecting {0} to the {1} account on Gratipay. This is a notification"
-" sent to {2} because that is the primary email address we have on file."
-msgstr "Gratipay の {1} アカウントに {0} を接続しています。 これは、私たちがファイルに保存しているプライマリのメールアドレスのため、{2} に送信された通知です。"
+"You've initiated too many emails too quickly. Please try again in a minute "
+"or two."
+msgstr ""
 
 msgid "You've consumed your quota of requests, you can try again in {0}."
 msgstr "要求のクォータを消費しました。{0} で再試行できます。"
@@ -258,10 +342,8 @@ msgstr "週"
 msgid "Sign out"
 msgstr "サインアウト"
 
-msgid ""
-"{nowrap}Our new {a}Terms of Service{_a}{_nowrap} {nowrap}make it {a2}easier "
-"to get funded on Gratipay{_a}{_nowrap}."
-msgstr "{nowrap}新しい {a}利用規約{_a}{_nowrap} {nowrap}は {a2}Gratipayで簡単に資金を調達することができるようになりました{_a}{_nowrap}."
+msgid "{nowrap}We have {a}integrated npm{_a} into Gratipay.{_nowrap}{_nowrap}"
+msgstr ""
 
 msgid "Blog"
 msgstr "ブログ"
@@ -389,8 +471,17 @@ msgstr[0] ""
 msgid "no givers yet"
 msgstr ""
 
+msgid "has not joined"
+msgstr ""
+
 msgid "owned by {a}{owner}{_a}"
 msgstr "オーナー {a}{owner}{_a}"
+
+msgid "Back"
+msgstr ""
+
+msgid "Page {0} of {1}"
+msgstr ""
 
 msgid "Sign in / Sign up"
 msgstr "サインイン / サインアップ"
@@ -750,6 +841,21 @@ msgstr "危険区域"
 msgid "Close Project"
 msgstr "プロジェクトを閉じる"
 
+msgid "Total Received : {0}"
+msgstr ""
+
+msgid "Total Distributed : {0}"
+msgstr ""
+
+msgid "Giver"
+msgstr ""
+
+msgid "Taker"
+msgstr ""
+
+msgid "Amount"
+msgstr ""
+
 msgid "{0} receives {1} per week from {2} ~users."
 msgstr "{0} は毎週 {1} {2} ~ユーザーから受け取ります。"
 
@@ -935,6 +1041,39 @@ msgstr "寄付を受け取る"
 msgid "hasn't joined Gratipay yet"
 msgstr "まだ Gratipay に参加していません"
 
+msgid "No description available."
+msgstr ""
+
+msgid "Apply to accept payments for the {package_link} npm package:"
+msgstr ""
+
+msgid "No email addresses on file."
+msgstr ""
+
+msgid "Linked to a different account"
+msgstr ""
+
+msgid "Ready to use"
+msgstr ""
+
+msgid "Your primary email address"
+msgstr ""
+
+msgid "Linked to your account"
+msgstr ""
+
+msgid "Half-linked to your account"
+msgstr ""
+
+msgid "Apply to accept payments"
+msgstr ""
+
+msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
+msgstr ""
+
+msgid "Out of date? Update {a}at npm{_a} and refresh."
+msgstr ""
+
 msgid "You must sign in to apply for a new team."
 msgstr "新しいチームに申請するには、サインインする必要があります。"
 
@@ -1017,18 +1156,7 @@ msgstr "チャージが成功した場合"
 msgid "Invalid email address."
 msgstr "メールアドレスが正しくありません。"
 
-msgid "{email_address} is already linked to a different Gratipay account."
-msgstr ""
-
-msgid "You have already added and verified {email_address}."
-msgstr ""
-
-msgid ""
-"You've initiated too many emails too quickly. Please try again in a minute "
-"or two."
-msgstr ""
-
-msgid "A verification email has been sent to {email_address}."
+msgid "Check your inbox for a verification link."
 msgstr ""
 
 msgid "Please Sign In"
@@ -1073,6 +1201,15 @@ msgstr ""
 
 msgid "View your email addresses"
 msgstr "メールアドレスを参照"
+
+msgid "Withdrawals"
+msgstr ""
+
+msgid "We will send your money via PayPal to {email_address} ({a}update{_a})."
+msgstr ""
+
+msgid "New Projects"
+msgstr ""
 
 msgid "Active"
 msgstr "アクティブ"
@@ -1217,9 +1354,6 @@ msgstr "確認済みのメールアドレスのみが許可されます。"
 
 msgid "This is not a valid Bitcoin address."
 msgstr "これは有効な Bitcoin アドレスではありません。"
-
-msgid "and then you'll be able to add or change your credit card."
-msgstr "後でクレジットカードを追加または変更することができます。"
 
 msgid "Required"
 msgstr "必要です"

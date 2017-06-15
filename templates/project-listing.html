@@ -1,18 +1,26 @@
 {% set current_page = request.path.raw.split('/')[1] %}
-{% for i, project in enumerate(project_list, start=1) %}
+{% if start_index is not defined %}
+    {% set start_index = 1 %}
+{% endif %}
+{% for i, project in enumerate(project_list, start=start_index) %}
     <tr>
         <td class="item">
-            <img src="{{ project.get_image_url('small') }}">
-            <a class="name" href="/{{ project.slug }}/">{{ project.name }}</a>
+            <img class="avatar" src="{{ project.get_image_url('small') }}">
+            {% if project.package %}
+            <div class="package-manager"><img src="{{ website.asset('npm-n.png') }}"></div>
+            {% endif %}
+            <a class="listing-name" href="{{ project.url_path }}">{{ project.name }}</a>
 
-            <div class="details{% if current_page == '~' %} profile{% endif %}">
+            <div class="listing-details{% if current_page == '~' %} profile{% endif %}">
                 <span class="i">{{ i }}</span>
+                {% if project.review_url %}
                 <span class="status">&middot;
                     <a href="{{ project.review_url }}"><span
-                        class="status-icon {{ project.status }}"
-                        >{{ icons.STATUS_ICONS[project.status]|safe }}</span
+                        class="status-icon {{ icons.REVIEW_MAP[project.status] }}"
+                        >{{ icons.STATUS_ICONS[icons.REVIEW_MAP[project.status]]|safe }}</span
                         >{{ i18ned_statuses[project.status] }}</a>
                 </span>
+                {% endif %}
                 {% if project.status == 'approved' %}
                 <span class="receiving">&middot;
                 {% if project.nreceiving_from %}
@@ -27,8 +35,14 @@
                 {% endif %}
                 </span>
                 {% endif %}
-                <span class="ctime">&middot; {{ _("joined {ago}",
-                    ago=to_age(project.ctime, add_direction=True)) }}</span>
+                <span class="ctime">&middot;
+                {% if project.ctime %}
+                    {{ _("joined {ago}", ago=to_age(project.ctime, add_direction=True)) }}
+                {% else %}
+                    {{ _("has not joined") }}
+                {% endif %}
+                </span>
+                {% if project.owner %}
                 <span class="owner">&middot;
                     {{ _( "owned by {a}{owner}{_a}"
                         , owner='~'+project.owner
@@ -36,6 +50,7 @@
                         , _a='</a>'|safe
                          ) }}
                 </span>
+                {% endif %}
             </div>
         </td>
     </tr>
