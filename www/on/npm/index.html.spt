@@ -2,8 +2,9 @@ from gratipay.utils import icons
 [---]
 banner = manager = "npm"
 suppress_sidebar = True
-npackages, Npackages = website.db.one('''
-    select (select count(*) from teams_to_packages) as n, (select count(*) from packages) as t
+npm_stats = website.db.one('''
+    select (select count(*) from teams_to_packages) as claimed_packages
+         , (select count(*) from packages) as total_packages
 ''')
 if user.participant:
     packages_for_claiming = user.participant.get_packages_for_claiming(manager)
@@ -122,8 +123,8 @@ if user.participant:
 {% endif %}
 <p class="fine-print">
     {{ _( "{n} out of all {N} npm packages are on Gratipay."
-        , n=format_number(npackages)
-        , N=format_number(Npackages)
+        , n=format_number(npm_stats.claimed_packages)
+        , N=format_number(npm_stats.total_packages)
          ) }}
 </p>
 {% endblock %}
