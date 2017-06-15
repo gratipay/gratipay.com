@@ -113,27 +113,34 @@ class BrowserHarness(Harness):
                     return element
         raise NeverShowedUp(selector)
 
-    def wait_for_notification(self, type='notice'):
-        """Wait for a certain ``type`` of notification. Dismiss the
-        notification and return the message.
+    def wait_for_notification(self, type='notice', message=None, timeout=2):
+        """Wait for a certain ``type`` of notification, with a certain message
+        (if specified). Dismiss the notification and return the message.
         """
-        n_selector = '.notifications-fixed .notification-{}'.format(type)
-        m_selector = 'span.btn-close'
-        notification = self.wait_for(n_selector).first
-        message = notification.find_by_css('div').html
-        notification.find_by_css(m_selector).first.click()
-        self.wait_to_disappear(n_selector + ' ' + m_selector)
+        notification_selector = '.notifications-fixed .notification-{}'.format(type)
+        close_button_selector = 'span.btn-close'
+        end_time = time.time() + timeout
+        while time.time() < end_time:
+            notification = self.wait_for(notification_selector, timeout).first
+            candidate = notification.find_by_css('div').html
+            if message is None or message == candidate:
+                message = candidate
+                break
+        notification.find_by_css(close_button_selector).first.click()
+        self.wait_to_disappear('#{} {}'.format(notification['id'], close_button_selector))
         return message
 
-    def wait_for_success(self):
-        """Wait for a success notification. Dismiss it and return the message.
+    def wait_for_success(self, message=None):
+        """Wait for a success notification, with a certain message (if
+        specified). Dismiss it and return the message.
         """
-        return self.wait_for_notification('success')
+        return self.wait_for_notification('success', message)
 
-    def wait_for_error(self):
-        """Wait for an error notification. Dismiss it and return the message.
+    def wait_for_error(self, message=None):
+        """Wait for an error notification, with a certain message (if
+        specified). Dismiss it and return the message.
         """
-        return self.wait_for_notification('error')
+        return self.wait_for_notification('error', message)
 
     def __getattr__(self, name):
         try:
