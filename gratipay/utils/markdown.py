@@ -23,7 +23,7 @@ def rtlo_scrub(markdown):
     u_right_to_left_override = "\u202E"
     right_to_left_override = "&#8238;"
     rep = (right_to_left_override, ''), (u_right_to_left_override, '')
-    reduce(lambda a, kv: a.replace(*kv), rep, markdown)
+    return reduce(lambda a, kv: a.replace(*kv), rep, markdown)
 
 
 def render_and_scrub(markdown):
