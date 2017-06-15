@@ -19,6 +19,7 @@ class TestNMassPays(BillingHarness):
                               , 'fee': '0'
                               , 'note': 'Exchange!'
                               , 'status': 'succeeded'
+                              , 'ref': 'transactionidref'
                               , 'route_id': unicode(self.homer_route.id)
                                }
                             , auth_as='admin'

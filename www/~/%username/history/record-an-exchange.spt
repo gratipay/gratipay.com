@@ -46,9 +46,9 @@ if request.method == 'POST':
     if not route or route.participant.id != participant.id:
         raise Response(400, "Route doesn't exist")
     
-    ref = request.body['ref']
+    ref = request.body['ref'].strip()
     if not ref:
-        ref = ""
+        raise Response(400, "Invalid Reference")
 
     with website.db.get_cursor() as cursor:
         cursor.run("""
