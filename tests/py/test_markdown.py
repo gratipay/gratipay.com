@@ -72,14 +72,15 @@ class TestRenderAndScrub(Harness):
         # http://stackoverflow.com/q/753052#comment24080274_4869782
         assert markdown.render_and_scrub('<script<script>>alert("Hi!")<</script>/script>') == \
                                                         '&gt;alert(\u201cHi!\u201d)&lt;/script&gt;'
-
     def test_scrubs_comments(self):
         # http://stackoverflow.com/a/19730306
         assert markdown.render_and_scrub('<img<!-- --> src=x onerror=alert(1);//><!-- -->') == \
                                               'src=x onerror=alert(1);//&gt;&lt;!\u2013 \u2013&gt;'
-
     def test_renders_entity_references(self):
         assert markdown.render_and_scrub('&trade;') == '\u2122'
+
+    def test_scrubs_rtlo(self):
+        assert markdown.rtlo_scrub('ed.io/about&#8238;3p\u202Em.exe') == 'ed.io/about3pm.exe'
 
     def test_render_does_not_render_entity_references_it_really_is_striptags(self):
         assert markdown.render('&trade;') == '<p>&trade;</p>\n'
