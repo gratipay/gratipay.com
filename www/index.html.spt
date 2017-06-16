@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from gratipay.utils import get_featured_projects, icons
+from gratipay.utils import get_featured_projects, icons, tabs
 import random
 
 [---]
@@ -17,9 +17,9 @@ status_filter_active = (status_filter and status_filter in ['unreviewed', 'rejec
 
 page = request.qs.get('page', 1)
 try:
-  page = int(page)
+    page = int(page)
 except ValueError:
-  page = 1
+    page = 1
 
 if status_filter_active:
     status_value = {
@@ -54,30 +54,21 @@ if status_filter_active:
 else:
     projects = get_featured_projects(website.db)
 
-
-tabs = OrderedDict()
-tabs['featured'] = {}
-tabs['approved'] = {'status_filter': 'approved'}
-tabs['unreviewed'] = {'status_filter': 'unreviewed'}
-tabs['rejected'] = {'status_filter': 'rejected'}
-
-for key, tab in tabs.iteritems():
-    if tab.get('status_filter'):
-        tab['link'] = '?status=%s' % tab['status_filter']
-    else:
-        tab['link'] = '.'
-    tab['is_selected'] = (tab.get('status_filter') == status_filter)
-    tab['title'] = i18ned_statuses[key]
+def tab_html(key, tab):
     status = icons.REVIEW_MAP[key]
-    tab['html'] = '<span class="status-icon {}">{}</span> {}'.format( status
-                                                                    , icons.STATUS_ICONS[status]
-                                                                    , tab['title']
-                                                                     )
+    return '<span class="status-icon {}">{}</span> {}'.format( status
+                                                             , icons.STATUS_ICONS[status]
+                                                             , i18ned_statuses[key]
+                                                              )
+
+tabs = tabs.make(tab_html, 'status', status_filter,
+                 'featured', 'approved', 'unreviewed', 'rejected')
 
 title = _("Projects")
 suppress_sidebar = True
 page_id = "homepage"
 [---]
+{% from "templates/nav-tabs.html" import nav_tabs with context %}
 {% extends "templates/base.html" %}
 {% block head_early %}
     {% if website.optimizely_id and request.headers.get('DNT') != '1' %}
@@ -104,16 +95,7 @@ page_id = "homepage"
     <button type="submit">{{ _("Fund Your Project") }}</button>
 </form>
 
-<ul class="nav">
-    {% for tab in tabs %}
-    <li>
-        <a href="{{tabs[tab]['link']}}"
-           class="{{ 'selected' if tabs[tab]['is_selected'] }}">
-            {{ tabs[tab]['html']|safe }}
-        </a>
-    </li>
-    {% endfor %}
-</ul>
+{{ nav_tabs(tabs) }}
 
 <table class="listing">
     {% set project_list = projects %}
