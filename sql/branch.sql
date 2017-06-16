@@ -1,0 +1,1 @@
+ALTER TABLE participants ADD COLUMN is_owner bool NOT NULL DEFAULT FALSE;
