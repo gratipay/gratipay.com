@@ -52,3 +52,5 @@ class Tests(BrowserHarness):
 
         enabled = [not x.has_class('disabled') for x in self.css('td.item')]
         assert enabled == [True, True, True, True, False]
+
+        assert [x.text for x in self.css('.listing-details .i')] == ['1', '2', '3', '4', '5']
