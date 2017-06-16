@@ -1071,7 +1071,64 @@ msgstr "accepte les dons"
 msgid "hasn't joined Gratipay yet"
 msgstr "n'est pas encore inscrit sur Gratipay"
 
+msgid "Give"
+msgstr ""
+
+msgid "Receive"
+msgstr ""
+
+msgid "Ready to accept payments"
+msgstr ""
+
+msgid "Not available to pay"
+msgstr ""
+
+msgid "Free as in money."
+msgstr ""
+
+msgid "{project} ({package} on npm)"
+msgstr ""
+
+msgid "Unclaimed"
+msgstr ""
+
+msgid "Unknown package"
+msgstr ""
+
+msgid "No packages discovered."
+msgstr ""
+
+msgid "Paste a package.json to find packages to pay for:"
+msgstr ""
+
+msgid "Find packages"
+msgstr ""
+
+msgid "Apply to accept payments for your npm packages:"
+msgstr ""
+
+msgid "No packages found."
+msgstr ""
+
+msgid "already claimed by {a}you{_a}"
+msgstr ""
+
+msgid "already claimed by {a}{owner}{_a}"
+msgstr ""
+
+msgid "Apply to accept payments"
+msgstr ""
+
+msgid "{a}Link an email{_a} from npm to see related packages."
+msgstr ""
+
+msgid "{n} out of all {N} npm packages are on Gratipay."
+msgstr ""
+
 msgid "No description available."
+msgstr ""
+
+msgid "Claim the {package_link} npm package on Gratipay:"
 msgstr ""
 
 msgid "Apply to accept payments for the {package_link} npm package:"
@@ -1093,9 +1150,6 @@ msgid "Linked to your account"
 msgstr ""
 
 msgid "Half-linked to your account"
-msgstr ""
-
-msgid "Apply to accept payments"
 msgstr ""
 
 msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
@@ -1186,6 +1240,9 @@ msgstr "si le débit réussit"
 
 msgid "Invalid email address."
 msgstr "Cette adresse courriel est invalide."
+
+msgid "Check {email_address} for a verification link."
+msgstr ""
 
 msgid "Check your inbox for a verification link."
 msgstr ""
