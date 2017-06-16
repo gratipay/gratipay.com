@@ -15,12 +15,13 @@
         }
     }
 
-    .sorry {
+    .instructions {
         text-align: center;
-        font: normal 12px/15px $Ideal;
-        color: $medium-gray;
+        margin: 0 0 30px;
+        font-family: $Ideal;
     }
-    .note {
+
+    .note, .sorry, .fine-print {
         font: normal 12px/15px $Ideal;
         color: $medium-gray;
         a {
@@ -28,6 +29,9 @@
             text-decoration: underline;
             color: $medium-gray;
         }
+    }
+    .sorry, .fine-print {
+        text-align: center;
     }
     .listing-name {
         color: $black;

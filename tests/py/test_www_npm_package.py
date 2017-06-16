@@ -53,3 +53,13 @@ class Tests(Harness):
     def test_package_served_as_project_if_claimed(self):
         self.claim_package()
         assert 'owned by' in self.client.GET('/foo/').body
+
+
+class Bulk(Harness):
+
+    def setUp(self):
+        self.make_package()
+
+    def test_anon_gets_signin_page(self):
+        body = self.client.GET('/on/npm/').body
+        assert '0 out of all 1 npm package' in body

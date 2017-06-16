@@ -17,6 +17,7 @@ participant = get_participant(state, restrict=True)
 
 action = request.body['action']
 address = request.body['address']
+show_address_in_message = bool(request.body.get('show_address_in_message', ''))
 
 # Basic checks. The real validation will happen when we send the email.
 if (len(address) > 254) or not email_re.match(address):
@@ -46,7 +47,17 @@ if action in ('add-email', 'resend', 'start-verification'):
         raise Response(400)
 
     participant.start_email_verification(address, *packages)
-    msg = _("Check your inbox for a verification link.")
+    if show_address_in_message:
+
+        # When reverifying an already-verified email (package claiming is a
+        # special case of this), then don't worry about content spoofing,
+
+        msg = _("Check {email_address} for a verification link.", email_address=address)
+    else:
+
+        # ... but otherwise, do: https://hackerone.com/reports/117187.
+
+        msg = _("Check your inbox for a verification link.")
 elif action == 'set-primary':
     participant.set_primary_email(address)
 elif action == 'remove':

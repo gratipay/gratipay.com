@@ -37,7 +37,7 @@ if user.participant:
 {% block scripts %}
 <script>
     $(document).ready(function() {
-        Gratipay.packages.init();
+        Gratipay.packages.initSingle();
     });
 </script>
 {{ super() }}
@@ -48,14 +48,14 @@ if user.participant:
 {% if package.description %}
 <p class="description important-thing-at-the-top{% if len(package.description) > 256 %} long{% endif %}">{{ package.description }}</p>
 {% else %}
-<p class="note important-thing-at-the-top">{{ _("No description available.") }}</p>
+<p class="sorry important-thing-at-the-top">{{ _("No description available.") }}</p>
 {% endif %}
 
 <p class="instructions">
     {{ _( 'Apply to accept payments for the {package_link} npm package:'
         , package_link=('<a href="' + package.remote_human_url + '">' + package_name + '</a>')|safe
          ) }}
- </p>
+</p>
 
 {% if user.ANON %}
     <div class="important-button">
@@ -63,7 +63,7 @@ if user.participant:
     </div>
 {% else %}
     {% if len(emails) == 0 %}
-    <p class="note">{{ _("No email addresses on file.") }}</p>
+    <p class="sorry">{{ _("No email addresses on file.") }}</p>
     {% else %}
     <input type="hidden" name="package_id" value="{{ package.id }}">
     <div class="gratipay-select">
@@ -115,15 +115,19 @@ if user.participant:
         </button>
     </div>
     {% endif %}
-    <p class="note">{{ _( 'Addresses are from {a}{code}maintainers{_code}{_a}.'
-                        , a=('<a href="' + package.remote_api_url + '">')|safe
-                        , _a='</a>'|safe
-                        , code='<code>'|safe
-                        , _code='</code>'|safe
-                         ) }}</p>
-    <p class="note">{{ _( 'Out of date? Update {a}at npm{_a} and refresh.'
-                        , a=('<a href="' + package.remote_human_url + '">')|safe
-                        , _a='</a>'|safe
-                         ) }}</p>
+    <p class="fine-print">
+        {{ _( 'Addresses are from {a}{code}maintainers{_code}{_a}.'
+            , a=('<a href="' + package.remote_api_url + '">')|safe
+            , _a='</a>'|safe
+            , code='<code>'|safe
+            , _code='</code>'|safe
+             ) }}
+    </p>
+    <p class="fine-print">
+        {{ _( 'Out of date? Update {a}at npm{_a} and refresh.'
+            , a=('<a href="' + package.remote_human_url + '">')|safe
+            , _a='</a>'|safe
+             ) }}
+    </p>
 {% endif %}
 {% endblock %}

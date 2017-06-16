@@ -16,7 +16,8 @@ class Test(BrowserHarness):
         self.css('label')[0].click() # activate select
         self.css('label')[choice].click()
         self.css('button')[0].click()
-        assert self.wait_for_success() == 'Check your inbox for a verification link.'
+        address = ('alice' if choice == 0 else 'bob') + '@example.com'
+        assert self.wait_for_success() == 'Check {} for a verification link.'.format(address)
         return self.db.one('select address from claims c join emails e on c.nonce = e.nonce')
 
     def finish_claiming(self):
@@ -143,3 +144,92 @@ class Test(BrowserHarness):
         payload = eval(self.css('table#events td.payload').text)
         assert payload['action'] == 'take-over'
         assert payload['values']['exchange_routes'] == [r.id for r in jdorfman.get_payout_routes()]
+
+
+class BulkClaiming(BrowserHarness):
+
+    def setUp(self):
+        self.make_package()
+        self.make_package( name='bar'
+                         , description='Bar barringly'
+                         , emails=['alice@example.com', 'bob@example.com']
+                          )
+        self.make_package( name='baz'
+                         , description='Baz bazzingly'
+                         , emails=['alice@example.com', 'bob@example.com', 'cat@example.com']
+                          )
+
+    def visit_as(self, username):
+        self.visit('/')
+        self.sign_in(username)
+        self.visit('/on/npm/')
+
+    def test_anon_gets_sign_in_prompt(self):
+        self.visit('/on/npm/')
+        assert self.css('.important-button button').text == 'Sign in / Sign up'
+
+    def test_auth_without_email_gets_highlighted_link_to_email(self):
+        self.make_participant('alice', claimed_time='now')
+        self.visit_as('alice')
+        assert self.css('.highlight').text == 'Link an email'
+
+    def test_auth_without_claimable_packages_gets_disabled_apply_button(self):
+        self.make_participant('doug', claimed_time='now', email_address='doug@example.com')
+        self.visit_as('doug')
+        button = self.css('.important-button button')
+        assert button.text == 'Apply to accept payments'
+        assert button['disabled'] == 'true'
+
+    def test_auth_with_claimable_packages_gets_apply_button(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
+        self.add_and_verify_email('alice', 'bob@example.com')
+        self.visit_as('alice')
+        button = self.css('.important-button button')
+        assert button.text == 'Apply to accept payments'
+        assert button['disabled'] is None
+
+    def test_differentiates_claimed_packages(self):
+        self.make_participant('bob', claimed_time='now', email_address='bob@example.com')
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
+        self.claim_package('alice', 'foo')
+        self.claim_package('bob', 'bar')
+        self.visit_as('alice')
+        assert self.css('.i1').has_class('disabled')
+        assert self.css('.i1 .owner a').text == '~bob'
+        assert not self.css('.i2').has_class('disabled')
+        assert self.css('.i3').has_class('disabled')
+        assert self.css('.i3 .owner a').text == 'you'
+
+    def test_sends_mail(self):
+        self.make_participant('cat', claimed_time='now', email_address='cat@example.com')
+        self.visit_as('cat')
+        self.css('.important-button button').click()
+        assert self.wait_for_success() == 'Check cat@example.com for a verification link.'
+
+    def test_sends_one_mail_per_address(self):
+        cat = self.make_participant('cat', claimed_time='now', email_address='cat@example.com')
+        self.add_and_verify_email(cat, 'bob@example.com')
+        self.visit_as('cat')
+        self.css('.important-button button').click()
+        assert self.wait_for_success('Check bob@example.com for a verification link.')
+        assert self.wait_for_success('Check cat@example.com for a verification link.')
+
+    def test_sends_one_mail_for_multiple_packages(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
+        self.visit_as('alice')
+        self.css('.important-button button').click()
+        assert len(self.css('table.listing td.item')) == 3
+        assert self.wait_for_success() == 'Check alice@example.com for a verification link.'
+        assert self.db.one('select count(*) from claims') == 3
+        assert self.db.one('select count(*) from email_queue') == 1
+
+    def test_doesnt_send_for_unclaimable_packages(self):
+        self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
+        self.make_participant('cat', claimed_time='now', email_address='cat@example.com')
+        self.claim_package('cat', 'baz')
+        self.visit_as('alice')
+        self.css('.important-button button').click()
+        assert len(self.css('table.listing td.item')) == 3
+        assert self.wait_for_success() == 'Check alice@example.com for a verification link.'
+        assert self.db.one('select count(*) from claims') == 2
+        assert self.db.one('select count(*) from email_queue') == 1

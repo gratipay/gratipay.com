@@ -1,9 +1,130 @@
+from gratipay.utils import icons
 [---]
-title = "Search npm"
+banner = manager = "npm"
 suppress_sidebar = True
-website.redirect('/')  # nothing here yet
+npm_stats = website.db.one('''
+    select (select count(*) from teams_to_packages) as claimed_packages
+         , (select count(*) from packages) as total_packages
+''')
+if user.participant:
+    packages_for_claiming = user.participant.get_packages_for_claiming(manager)
+    any_claimable = any([rec.claimed_by is None for rec in packages_for_claiming])
 [---]
 {% extends "templates/base.html" %}
+
+{% block banner %}
+<a class="elsewhere" href="https://www.npmjs.com/">
+    <div class="avatar">
+        <img class="avatar" src="{{ website.asset('package-default-large.png') }}" />
+        <img class="platform" src="{{ website.asset('npm-n.png') }}" />
+    </div>
+    {{ super() }}
+</a>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        Gratipay.packages.initBulk();
+    });
+</script>
+{{ super() }}
+{% endblock %}
+
 {% block content %}
-<input type="text" name="q"> <button class="selected">Search</button>
+
+<p class="description important-thing-at-the-top">
+    {{ _('Free as in money.') }}
+</p>
+
+<p class="instructions">
+    {{ _('Apply to accept payments for your npm packages:') }}
+</p>
+
+{% if user.ANON %}
+    <div class="important-button">
+        {{ sign_in_using(button_class='large') }}
+    </div>
+{% else %}
+
+    {% if not packages_for_claiming %}
+    <p class="sorry">{{ _("No packages found.") }}</p>
+    {% else %}
+    <table class="listing">
+        {% for i, rec in enumerate(packages_for_claiming, start=1) %}
+        <tr>
+            <td class="item i{{i}}{% if rec.claimed_by %} disabled{% endif %}"
+                data-email="{{ rec.email_address }}" data-package-id="{{ rec.package.id }}">
+                <img class="avatar" src="{{ website.asset('package-default-small.png') }}">
+                <div class="package-manager"><img src="{{ website.asset('npm-n.png') }}"></div>
+                <a class="listing-name" href="{{ rec.package.url_path }}">
+                    {{ rec.package.name }}
+                </a>
+
+                <div class="listing-details">
+                    <span class="i">{{ i }}</span>
+                    {% if rec.claimed_by %}
+                    <span class="owner">&middot;
+                    <span class="status-icon failure">
+                        {{ icons.STATUS_ICONS['failure']|safe }}</span>
+                        {% if rec.claimed_by == user.participant %}
+                        {{ _( "already claimed by {a}you{_a}"
+                            , a=('<a class="owner" href="{}">'|safe
+                                 ).format(rec.claimed_by.url_path)
+                            , _a='</a>'|safe
+                             ) }}
+                        {% else %}
+                        {{ _( "already claimed by {a}{owner}{_a}"
+                            , owner='~'+rec.claimed_by.username
+                            , a=('<a class="owner" href="{}">'|safe
+                                 ).format(rec.claimed_by.url_path)
+                            , _a='</a>'|safe
+                             ) }}
+                        {% endif %}
+                    </span>
+                    {% else %}
+                    <span class="owner">
+                        &middot;
+                        {% if rec.email_address_is_primary %}
+                        <span class="status-icon feature">
+                            {{ icons.STATUS_ICONS['feature']|safe }}</span>
+                        {% else %}
+                        <span class="status-icon success">
+                            {{ icons.STATUS_ICONS['success']|safe }}</span>
+                        {% endif %}
+                        {{ rec.email_address }}
+                    </span>
+                    {% endif %}
+                    <span class="description">&middot;
+                        {{ rec.package.description }}
+                    </span>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <div class="important-button">
+        <button type="submit" class="apply selected large"
+            {% if not any_claimable %}disabled{% endif %}>
+            {{ _('Apply to accept payments') }}
+        </button>
+    </div>
+
+    <p class="fine-print">
+        {{ _( "{a}Link an email{_a} from npm to see related packages."
+            , a=('<a href="/about/me/emails/">'|safe
+                 if packages_for_claiming else
+                 '<a href="/about/me/emails/" class="highlight">'|safe)
+            , _a='</a>'|safe
+             ) }}
+    </p>
+{% endif %}
+<p class="fine-print">
+    {{ _( "{n} out of all {N} npm packages are on Gratipay."
+        , n=format_number(npm_stats.claimed_packages)
+        , N=format_number(npm_stats.total_packages)
+         ) }}
+</p>
 {% endblock %}

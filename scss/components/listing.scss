@@ -94,6 +94,24 @@ table.listing {
                 border-bottom: 1px solid $light-brown;
             }
         }
+
+        &.disabled {
+            img.avatar {
+                filter: grayscale(100%) brightness(110%);
+            }
+            .package-manager img {
+                filter: grayscale(100%) brightness(120%);
+            }
+            .listing-name {
+                color: $light-gray ! important;
+            }
+            .status a {
+                color: $medium-gray! important;
+            }
+            .owner a {
+                color: $medium-gray! important;
+            }
+        }
     }
 }
 .with-sidebar table.listing td.item .listing-details {
