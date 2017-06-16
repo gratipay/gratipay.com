@@ -71,18 +71,20 @@
             {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
         </div>
 
+        {% if page_id != 'npm' %}
         <table id="notice">
             <tr>
                 <td>&#x2605;</td>
                 <td>{{ _( "{nowrap}We have {a}integrated npm{_a} into Gratipay.{_nowrap}{_nowrap}"
                         , nowrap='<span class="nowrap">'|safe
                         , _nowrap='</span>'|safe
-                        , a='<a href="https://gratipay.news/integrating-npm-39333109419d">'|safe
+                        , a='<a href="/on/npm/">'|safe
                         , _a='</a>'|safe
                          ) }}</td>
                 <td>&#x2605;</td>
             </tr>
         </table>
+        {% endif %}
 
         <div id="main">
             {% block main %}

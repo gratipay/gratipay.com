@@ -1,0 +1,66 @@
+#npm {
+
+    #content {
+        .important-thing-at-the-top {
+            margin-bottom: 40px;
+        }
+        .nav {
+            margin: 0 20% 60px;
+
+            li {
+                width: 50%;
+                text-align: center;
+                display: block;
+                float: left;
+                margin: 0;
+                padding: 0;
+                a {
+                    font: normal 24px/28px $Ideal;
+                    display: block;
+                    height: 64px;
+                    padding: 18px 0 0;
+                    margin: 0;
+                    border-bottom: 0;
+
+                    .textwrap {
+                        color: $black;
+                        display: inline-block;
+                        border-bottom: 4px solid transparent;
+                    }
+
+                    &:hover {
+                        background: none;
+                    }
+
+                    &.selected {
+                        .textwrap {
+                            border-bottom-color: $green;
+                            font-weight: bold;
+                        }
+                    }
+                }
+                &:nth-child(1) a {
+                    padding-left: 33%;
+                    text-align: left;
+                }
+                &:nth-child(2) a {
+                    padding-right: 33%;
+                    text-align: right;
+                }
+            }
+        }
+        .discovery .sorry {
+            margin: 40px 0;
+        }
+
+        form.package-json {
+            margin-top: 30px;
+        }
+
+        textarea {
+            height: 192px;
+            width: 100%;
+            font: 10px/12px $Mono;
+        }
+    }
+}

@@ -68,6 +68,7 @@
 @import "scss/pages/history";
 @import "scss/pages/identities";
 @import "scss/pages/team";
+@import "scss/pages/npm";
 @import "scss/pages/package";
 @import "scss/pages/profile-edit";
 @import "scss/pages/giving";
