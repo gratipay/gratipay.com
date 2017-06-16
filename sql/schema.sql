@@ -1026,3 +1026,8 @@ END;
 -- https://github.com/gratipay/gratipay.com/pull/4501
 
 ALTER TABLE email_queue ADD COLUMN ctime timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4522
+
+ALTER TABLE participants ADD COLUMN is_owner bool NOT NULL DEFAULT FALSE;
