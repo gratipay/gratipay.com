@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "1.0 payout approved!"
-msgstr ""
+msgstr "Pagamento 1.0 approvato!"
 
 msgid ""
 "We've approved your application for a payout of your Gratipay 1.0 balance. "
@@ -71,7 +71,7 @@ msgid "Follow this link if you want to view or modify your payments:"
 msgstr "Segui questo link se vuoi vedere o modificare i tuoi pagamenti:"
 
 msgid "Identity viewed"
-msgstr ""
+msgstr "Identità visualizzata"
 
 msgid ""
 "This is a transactional email to let you know that {a_viewer}{viewer}{_a} "
@@ -95,20 +95,20 @@ msgid ""
 "application, which happens on {a}this public GitHub issue{_a}. You can watch"
 " and participate in our review there, and we will email you again when we "
 "finish (usually in about a week). Thanks again!"
-msgstr ""
+msgstr "Grazie per aver chiesto di usare Gratipay! Il prossimo passo è la nostra revisione della tua candidatura, che avviene in {a}questa issue pubblica di GitHub{_a}. Lì puoi guardare e partecipare al nostro processo di revisione, e ti invieremo un'email quando sarà concluso (di solito, circa in una settimana). Grazie ancora!"
 
 msgid ""
 "Thanks for applying to use Gratipay! The next step is for us to review your "
 "application, which happens on this public GitHub issue:"
-msgstr ""
+msgstr "Grazie per aver chiesto di usare Gratipay! Il prossimo passo è la nostra revisione della tua candidatura, che avviene in questa issue pubblica di GitHub:"
 
 msgid ""
 "You can watch and participate in our review there, and we will email you "
 "again when we finish (usually in about a week). Thanks again!"
-msgstr ""
+msgstr "Lì puoi guardare e partecipare al nostro processo di revisione, e ti invieremo un'email quando sarà concluso (di solito, circa in una settimana). Grazie di nuovo!"
 
 msgid "1.0 payout rejected"
-msgstr ""
+msgstr "Pagamento 1.0 rifiutato"
 
 msgid ""
 "We've rejected your application for a payout of your Gratipay 1.0 balance, "
@@ -132,7 +132,7 @@ msgid "We have suspended your account."
 msgstr "Abbiamo sospeso il tuo account."
 
 msgid "Project application approved!"
-msgstr ""
+msgstr "Candidatura progetto approvata!"
 
 msgid ""
 "We've approved your application for the '{team}' project on Gratipay. For "
@@ -145,7 +145,7 @@ msgid ""
 msgstr "Abbiamo approvato la candidatura per il progetto '{team}' su Gratipay. Per i dettagli, per favore fai riferimento al nostro ticket di verifica:"
 
 msgid "Project application rejected"
-msgstr ""
+msgstr "Candidatura progetto rifiutata"
 
 msgid ""
 "We've rejected your application for the '{team}' project on Gratipay. For "
@@ -1064,8 +1064,65 @@ msgstr "accetta le donazioni"
 msgid "hasn't joined Gratipay yet"
 msgstr "non si è ancora iscritto a Gratipay"
 
+msgid "Give"
+msgstr ""
+
+msgid "Receive"
+msgstr ""
+
+msgid "Ready to accept payments"
+msgstr ""
+
+msgid "Not available to pay"
+msgstr ""
+
+msgid "Free as in money."
+msgstr ""
+
+msgid "{project} ({package} on npm)"
+msgstr ""
+
+msgid "Unclaimed"
+msgstr ""
+
+msgid "Unknown package"
+msgstr ""
+
+msgid "No packages discovered."
+msgstr ""
+
+msgid "Paste a package.json to find packages to pay for:"
+msgstr ""
+
+msgid "Find packages"
+msgstr ""
+
+msgid "Apply to accept payments for your npm packages:"
+msgstr ""
+
+msgid "No packages found."
+msgstr ""
+
+msgid "already claimed by {a}you{_a}"
+msgstr ""
+
+msgid "already claimed by {a}{owner}{_a}"
+msgstr ""
+
+msgid "Apply to accept payments"
+msgstr "Richiedi di poter accettare pagamenti"
+
+msgid "{a}Link an email{_a} from npm to see related packages."
+msgstr ""
+
+msgid "{n} out of all {N} npm packages are on Gratipay."
+msgstr ""
+
 msgid "No description available."
 msgstr "Nessuna descrizione disponibile."
+
+msgid "Claim the {package_link} npm package on Gratipay:"
+msgstr ""
 
 msgid "Apply to accept payments for the {package_link} npm package:"
 msgstr "Richiedi di poter accettare pagamenti per il pacchetto npm {package_link}:"
@@ -1087,9 +1144,6 @@ msgstr "Collegato col tuo account"
 
 msgid "Half-linked to your account"
 msgstr "Semi-collegato col tuo account"
-
-msgid "Apply to accept payments"
-msgstr "Richiedi di poter accettare pagamenti"
 
 msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
 msgstr "Gli indirizzi sono da {a}{code}maintainers{_code}{_a}."
@@ -1179,6 +1233,9 @@ msgstr "Se l'addebito ha successo"
 
 msgid "Invalid email address."
 msgstr "Indirizzo email non valido."
+
+msgid "Check {email_address} for a verification link."
+msgstr ""
 
 msgid "Check your inbox for a verification link."
 msgstr "Controlla la tua casella posta per un link di verifica."
