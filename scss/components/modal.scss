@@ -11,48 +11,61 @@
 
 .modal {
     $border-radius: 5px;
-    $header-height: 36px;
+    $header-height: 55px;
 
     display: inline-block;
     position: relative;
-    background: white;
     @include border-radius($border-radius);
-    @include box-shadow(0, 0, 10px, $black);
+    @include box-shadow(0, 0, 50px, $black);
 
     margin-top: 15vh;
 
     header {
-        position: absolute;
-        top: 0;
-        left: 0;
+        text-align: left;
         width: 100%;
         height: $header-height;
+        border: 1px solid $darker-black;
         background: white;
-        border-bottom: 1px solid $black;
         @include border-radius($border-radius $border-radius 0 0);
-        @include box-shadow(0, 0, 10px, $black);
 
         h2 {
             margin: 0;
-            padding: 12px 20px 0;
+            font-size: 20px;
+            padding: 0px 20px 0px 20px;
+            line-height: $header-height;
+            vertical-align: middle;
+            text-transform: none;
         }
 
         button {
+            border-top: 1px solid $darker-black;
+            border-right: 1px solid $darker-black;
+            border-bottom: 1px solid $darker-black;
+            color: $darker-black;
+            vertical-align: middle;
             position: absolute;
-            top: 5px;
-            right: 20px;
+            top: 0px;
+            right: 0px;
+            height: $header-height;
+            width: $header-height;
+            background: none;
+            @include border-radius(0 $border-radius 0 0);
+
+            &:hover {
+                background-color: $light-brown;
+            }
         }
     }
 
     section {
+        border-right: 1px solid $darker-black;
+        border-left: 1px solid $darker-black;
+        border-bottom: 1px solid $darker-black;
         text-align: left;
-
         overflow: auto;
         max-height: 70vh;
         z-index: 0;
-        margin-top: $header-height;
         background: $lightest-gray;
         @include border-radius(0 0 $border-radius $border-radius);
-        @include box-shadow(0, 0, 10px, $black);
     }
 }
