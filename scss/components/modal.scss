@@ -1,3 +1,42 @@
+/*
+ * ======= MARKUP =======
+ *
+ * <div class="modal-wrapper">
+ *     <div class="modal">
+ *         <header>
+ *             <h2>Title!</h2>
+ *             <button class="close-modal">
+ *               X
+ *             </button>
+ *         </header>
+ *         <section>
+ *             Your content here.
+ *         </section>
+ *     </div>
+ * </div>
+ *
+ * ======= VISUAL EXPLANATION =======
+ *
+ * div.modal-wrapper (full-screen)
+ *
+ *             div.modal (horizontally centered)
+ *              ----------------------------
+ *             |  header       (button) [x] |
+ *             |____________________________|
+ *             |  section                   |
+ *             |                            |
+ *             |                            |
+ *             |                            |
+ *             |                            |
+ *              ----------------------------
+ *
+ * ======= NOTES =======
+ *
+ * - The modal width is not fixed. Set width on .modal directly, or it'll
+ *   be decided by child content
+ * - To open/close, show/hide the .modal-wrapper div. Hidden by default.
+ */
+
 .modal-wrapper {
     width: 100vw;
     height: 100vh;
