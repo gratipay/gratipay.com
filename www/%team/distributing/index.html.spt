@@ -59,7 +59,7 @@ banner = team.name
     <tbody class="team-members"></tbody>
 </table>
 
-<div class="modal">
+<div class="confirmation-modal">
     <p><b>{{ _("Are you sure?") }}</b></p>
     <p class="confirmation-message"></p>
     <div class="continue">

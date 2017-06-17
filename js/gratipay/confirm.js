@@ -1,5 +1,5 @@
 Gratipay.confirm = function(message, yes, no) {
-    var $m = $('.modal');
+    var $m = $('.confirmation-modal');
     $m.show();
     $('.confirmation-message', $m).html(message);
     $('.yes', $m).off('click').click(function() { yes(); Gratipay.confirm.close(); });
@@ -7,5 +7,5 @@ Gratipay.confirm = function(message, yes, no) {
 };
 
 Gratipay.confirm.close = function() {
-    $('.modal').hide();
+    $('.confirmation-modal').hide();
 };

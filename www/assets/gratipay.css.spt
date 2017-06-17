@@ -29,6 +29,7 @@
 @import "scss/components/chart";
 @import "scss/components/chosen";
 @import "scss/components/communities";
+@import "scss/components/confirmation-modal";
 @import "scss/components/cta";
 @import "scss/components/danger-zone";
 @import "scss/components/dropdown";
@@ -40,7 +41,6 @@
 @import "scss/components/loading-indicators";
 @import "scss/components/long-form";
 @import "scss/components/memberships";
-@import "scss/components/modal";
 @import "scss/components/nav";
 @import "scss/components/pagination";
 @import "scss/components/payments-by";
