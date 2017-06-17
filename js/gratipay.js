@@ -109,30 +109,8 @@ Gratipay.jsonml = function(jsonml) {
 };
 
 Gratipay.signIn = function() {
-    $('.sign-in > .dropdown').mouseenter(function(e) {
-        clearTimeout($(this).data('timeoutId'));
-        $(this).addClass('open');
-    }).mouseleave(function(e) {
-        var $this = $(this),
-            timeoutId = setTimeout(function() {
-                $this.removeClass('open');
-            }, 100);
-        $this.data('timeoutId', timeoutId);
-    });
-
-    $('.dropdown-toggle').click(function(e) {
-        if ($('.sign-in > .dropdown').hasClass('open')) {
-            e.preventDefault();
-            return false;
-        }
-        else {
-            $(this).addClass('open');
-        }
-    });
-
-    // disable the tip-changed prompt when trying to sign in
-    $('form.auth-button').submit(function() {
-        $(window).off('beforeunload.tips');
+    $('.sign-in button').click(function(e) {
+        Gratipay.modal.open('#sign-in-modal');
     });
 };
 

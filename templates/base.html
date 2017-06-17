@@ -29,6 +29,7 @@
     {% endif %}
 </head>
 <body{% if page_id %} id="{{ page_id }}"{% endif %}>
+    {% include "templates/sign-in-modal.html" %}
 
     <div id="wrapper">
         <a class="github-ribbon" href="https://github.com/gratipay/gratipay.com">

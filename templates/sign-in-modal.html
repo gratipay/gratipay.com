@@ -1,0 +1,25 @@
+{% from 'templates/auth.html' import auth_button with context %}
+
+<div id="sign-in-modal" class="modal-wrapper">
+    <div class="modal">
+        <header>
+            <h2>Sign In / Sign Up</h2>
+            <button class="close-modal icon">
+                &#xe010;
+            </button>
+        </header>
+        <section>
+            <p>Use a third-party provider to sign in or create an account on Gratipay:</p>
+            <ul class="auth-links">
+                {% for platform in website.signin_platforms %}
+                <li>
+                    {% call auth_button(platform.name, 'opt-in') %}
+                        <span class="text">{{ platform.display_name }}</span>
+                        <span class="icon {{platform.name}}"></span>
+                    {% endcall %}
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+</div>

@@ -46,6 +46,7 @@
     text-align: center;
     display: none;
     background: transparentize($black, 0.3);
+    z-index: 1000;
 }
 
 .modal {
@@ -103,7 +104,6 @@
         text-align: left;
         overflow: auto;
         max-height: 70vh;
-        z-index: 0;
         background: $lightest-gray;
         @include border-radius(0 0 $border-radius $border-radius);
     }
