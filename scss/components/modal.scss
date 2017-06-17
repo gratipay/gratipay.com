@@ -6,7 +6,7 @@
     left: 0;
     text-align: center;
     display: none;
-    z-index: 1001;
+    background: transparentize($black, 0.3);
 }
 
 .modal {
@@ -56,14 +56,3 @@
         @include box-shadow(0, 0, 10px, $black);
     }
 }
-
-#modal-grayout {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: transparentize($black, 0.3);
-    z-index: 1000;
-}
-
