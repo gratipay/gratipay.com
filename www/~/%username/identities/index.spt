@@ -49,6 +49,5 @@ nidentities = len(identities)
             {% endfor %}
         </section>
     </div>
-    <div id="grayout"></div>
 </div>
 {% endblock %}
