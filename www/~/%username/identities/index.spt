@@ -38,7 +38,7 @@ nidentities = len(identities)
         <div class="modal">
             <header>
                 <h2>{{ _("Which Country?") }}</h2>
-                <button class="close-country-chooser">&times;</button>
+                <button class="close-modal">&times;</button>
             </header>
             <section>
                 {% for name, code in countries %}
