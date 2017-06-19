@@ -72,7 +72,9 @@ if request.method == 'POST':
         for rec in group.values():
             project = rec[3]
             (yes if project and project.is_approved else no).append(rec)
-    discovered = [(_("Ready to accept payments"), yes), (_("Not available to pay"), no)]
+    discovered = [ (1, _("Ready to accept payments"), yes)
+                 , (len(yes)+1, _("Not available to pay"), no)
+                  ]
 
 [---]
 {% from "templates/nav-tabs.html" import nav_tabs with context %}
@@ -105,11 +107,11 @@ if request.method == 'POST':
 {% if flow == None %}
 {% if discovered %}
 <div class="discovery">
-{% for heading, group in discovered %}
+{% for I, heading, group in discovered %}
 <h2>{{ heading }}</h2>
 {% if group %}
 <table class="listing">
-    {% for i, (source, name, package, project) in enumerate(group, start=1) %}
+    {% for i, (source, name, package, project) in enumerate(group, start=I) %}
     <tr>
         <td class="item i{{i}}{% if not package %} disabled{% endif %}">
             {% if project %}
