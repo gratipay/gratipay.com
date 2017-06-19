@@ -45,7 +45,7 @@
     left: 0;
     text-align: center;
     display: none;
-    background: transparentize($light-brown, 0.7);
+    background: transparentize($light-brown, 0.3);
     z-index: 1000;
 }
 
@@ -56,8 +56,6 @@
     display: inline-block;
     position: relative;
     @include border-radius($border-radius);
-    @include box-shadow(0, 20px, 100px, $gray);
-
     margin-top: 15vh;
 
     header {
