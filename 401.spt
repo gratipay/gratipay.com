@@ -14,7 +14,7 @@ suppress_sidebar = True
 {% block scripts %}
 <script>
 $(document).ready(function() {
-	Gratipay.modal.open('#sign-in-modal');
+	Gratipay.signIn.openSignInToContinueModal();
 });
 </script>
 {{ super() }}

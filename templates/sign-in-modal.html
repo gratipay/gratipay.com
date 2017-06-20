@@ -1,15 +1,36 @@
 {% from 'templates/auth.html' import auth_button with context %}
 
+{#
+ # This modal has content that can be toggled based on context.
+ #
+ # - The two contexts currently available are 'sign-in-to-continue' and
+ #   'sign-in-or-signup'.
+ # - Every element with togglable text is marked with .sign-in-togglable.
+ # - The versions of text are present in the data-sign-in-to-continue and
+ #   data-sign-in-or-signup attributes for each togglable element.
+ # - We also place default text so that JS failures don't render the modal
+ #   completely useless.
+ #
+ #}
+
 <div id="sign-in-modal" class="modal-wrapper">
     <div class="modal">
         <header>
-            <h2>Sign In / Sign Up</h2>
+            <h2 class="sign-in-togglable"
+                data-sign-in-to-continue="{{ _('Sign In') }}"
+                data-sign-in-or-sign-up="{{ _('Sign In / Sign Up') }}">
+                {{ _('Sign In / Sign Up') }}
+            </h2>
             <button class="close-modal icon">
                 &#xe010;
             </button>
         </header>
         <section>
-            <p>Use a third-party provider to sign in or create an account on Gratipay:</p>
+            <p class="sign-in-togglable"
+               data-sign-in-to-continue="{{ _('Please sign in to continue') }}"
+               data-sign-in-or-sign-up="{{ _('Use a third-party provider to sign in or create an account on Gratipay:') }}">
+                {{ _('Use a third-party provider to sign in or create an account on Gratipay:') }}
+            </p>
             <ul class="auth-links">
                 {% for platform in website.signin_platforms %}
                 <li>

@@ -14,7 +14,7 @@ Gratipay.init = function() {
     Gratipay.warnOffUsersFromDeveloperConsole();
     Gratipay.adaptToLongUsernames();
     Gratipay.forms.initCSRF();
-    Gratipay.signIn();
+    Gratipay.signIn.wireUpButton();
     Gratipay.signOut();
     Gratipay.payments.initSupportGratipay();
     Gratipay.tabs.init();
@@ -106,12 +106,6 @@ Gratipay.jsonml = function(jsonml) {
     });
 
     return node;
-};
-
-Gratipay.signIn = function() {
-    $('.sign-in button').click(function(e) {
-        Gratipay.modal.open('#sign-in-modal');
-    });
 };
 
 Gratipay.signOut = function() {
