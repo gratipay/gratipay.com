@@ -6,8 +6,6 @@ from decimal import Decimal
 import uuid
 
 from aspen.utils import utcnow
-import balanced
-import braintree
 from dependency_injection import resolve_dependencies
 from postgres.orm import Model
 from psycopg2 import IntegrityError
@@ -23,22 +21,21 @@ from gratipay.exceptions import (
     BadAmount,
 )
 
-from gratipay.billing.instruments import CreditCard
 from gratipay.models.account_elsewhere import AccountElsewhere
-from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.team import Team
 from gratipay.models.team.takes import ZERO
 from gratipay.utils import (
     i18n,
-    is_card_expiring,
     markdown,
     notifications,
     pricing,
 )
 from gratipay.utils.username import safely_reserve_a_username
 
-from .identity import Identity
 from .email import Email
+from .exchange_routes import ExchangeRoutes
+from .identity import Identity
+from .packages import Packages
 
 MAX_TIP = MAX_PAYMENT = Decimal('1000.00')
 MIN_TIP = MIN_PAYMENT = Decimal('0.00')
@@ -52,7 +49,7 @@ ASCII_ALLOWED_IN_USERNAME = set("0123456789"
 USERNAME_MAX_SIZE = 32
 
 
-class Participant(Model, Email, Identity):
+class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
     """Represent a Gratipay participant.
     """
 
@@ -115,6 +112,16 @@ class Participant(Model, Email, Identity):
              WHERE {}=%s
 
         """.format(thing), (value,))
+
+
+    # URLs
+    # ====
+
+    @property
+    def url_path(self):
+        """The path part of the URL for this participant on Gratipay.
+        """
+        return '/~{}/'.format(self.username)
 
 
     # Session Management
@@ -335,7 +342,12 @@ class Participant(Model, Email, Identity):
         """Leave all teams by zeroing all takes.
         """
         for team in self.get_teams():
-            team.set_take_for(self, ZERO, recorder=self, cursor=cursor)
+            # `get_teams` returns teams that a participant is either a member or owner of.
+            #
+            # Owners don't necessarily have takes, so we filter out those cases before setting
+            # their take to zero.
+            if self.member_of(team):
+                team.set_take_for(self, ZERO, recorder=self, cursor=cursor)
 
 
     def clear_personal_information(self, cursor):
@@ -397,16 +409,6 @@ class Participant(Model, Email, Identity):
         elif self.credit_card_expiring():
             self.add_notification('credit_card_expires')
 
-    def credit_card_expiring(self):
-        route = ExchangeRoute.from_network(self, 'braintree-cc')
-        if not route:
-            return
-        card = CreditCard.from_route(route)
-        year, month = card.expiration_year, card.expiration_month
-        if not (year and month):
-            return False
-        return is_card_expiring(int(year), int(month))
-
     def remove_notification(self, name):
         id = self.id
         r = self.db.one("""
@@ -430,73 +432,6 @@ class Participant(Model, Email, Identity):
                 self._tell_sentry(e, state)
         state['escape'] = escape
         return r
-
-
-    # Exchange-related stuff
-    # ======================
-
-    def get_paypal_error(self):
-        return getattr(ExchangeRoute.from_network(self, 'paypal'), 'error', None)
-
-    def get_credit_card_error(self):
-        return getattr(ExchangeRoute.from_network(self, 'braintree-cc'), 'error', None)
-
-    @property
-    def has_payout_route(self):
-        for network in ('paypal',):
-            route = ExchangeRoute.from_network(self, network)
-            if route and not route.error:
-                return True
-        return False
-
-    def get_balanced_account(self):
-        """Fetch or create the balanced account for this participant.
-        """
-        if not self.balanced_customer_href:
-            customer = balanced.Customer(meta={
-                'username': self.username,
-                'participant_id': self.id,
-            }).save()
-            r = self.db.one("""
-                UPDATE participants
-                   SET balanced_customer_href=%s
-                 WHERE id=%s
-                   AND balanced_customer_href IS NULL
-             RETURNING id
-            """, (customer.href, self.id))
-            if not r:
-                return self.get_balanced_account()
-        else:
-            customer = balanced.Customer.fetch(self.balanced_customer_href)
-        return customer
-
-    def get_braintree_account(self):
-        """Fetch or create a braintree account for this participant.
-        """
-        if not self.braintree_customer_id:
-            customer = braintree.Customer.create({
-                'custom_fields': {'participant_id': self.id}
-            }).customer
-
-            r = self.db.one("""
-                UPDATE participants
-                   SET braintree_customer_id=%s
-                 WHERE id=%s
-                   AND braintree_customer_id IS NULL
-             RETURNING id
-            """, (customer.id, self.id))
-
-            if not r:
-                return self.get_braintree_account()
-        else:
-            customer = braintree.Customer.find(self.braintree_customer_id)
-        return customer
-
-    def get_braintree_token(self):
-        account = self.get_braintree_account()
-
-        token = braintree.ClientToken.generate({'customer_id': account.id})
-        return token
 
 
     # Elsewhere-related stuff
@@ -1325,6 +1260,22 @@ class Participant(Model, Email, Identity):
 
                 cursor.run(MERGE_EMAIL_ADDRESSES, dict(live=self.id, dead=other.id))
 
+                # Take over payment routes.
+                # =========================
+                # Route ids logged in add_event call below, to keep the thread alive.
+
+                route_ids = cursor.all( "UPDATE exchange_routes SET participant=%s "
+                                        "WHERE participant=%s RETURNING id"
+                                      , (self.id, other.id)
+                                       )
+
+                # Take over team ownership.
+                # =========================
+
+                cursor.run( "UPDATE teams SET owner=%s WHERE owner=%s"
+                          , (self.username, other.username)
+                           )
+
                 # Disconnect any remaining elsewhere account.
                 # ===========================================
 
@@ -1350,6 +1301,17 @@ class Participant(Model, Email, Identity):
                             , archive_username
                              )
                            )
+
+                self.app.add_event( cursor
+                                  , 'participant'
+                                  , dict( action='take-over'
+                                        , id=self.id
+                                        , values=dict( other_id=other.id
+                                                     , exchange_routes=route_ids
+                                                      )
+                                         )
+                                   )
+
 
         if new_balance is not None:
             self.set_attributes(balance=new_balance)

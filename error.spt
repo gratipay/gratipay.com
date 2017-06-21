@@ -2,8 +2,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from aspen.http import status_strings
 
-from gratipay.utils import LazyResponse
-from gratipay.utils.i18n import HTTP_ERRORS
+from gratipay.utils.i18n import HTTP_ERRORS, LocalizedErrorResponse
 
 [----------------------------------------]
 
@@ -19,7 +18,7 @@ try:
 except Exception as e:
     website.tell_sentry(e, state)
 
-if isinstance(response, LazyResponse):
+if isinstance(response, LocalizedErrorResponse):
     response.render_body(state)
 err = response.body
 if code == 500 and not err:

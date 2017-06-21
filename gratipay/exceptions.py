@@ -4,7 +4,7 @@ This module contains exceptions shared across application code.
 
 from __future__ import print_function, unicode_literals
 
-from aspen import Response
+from gratipay.utils.i18n import LocalizedErrorResponse
 
 
 class ProblemChangingUsername(Exception):
@@ -27,28 +27,37 @@ class UsernameAlreadyTaken(ProblemChangingUsername):
     msg = "The username '{}' is already taken."
 
 
-class ProblemChangingEmail(Response):
-    def __init__(self, *args):
-        Response.__init__(self, 400, self.msg.format(*args))
+class ProblemChangingEmail(LocalizedErrorResponse):
+    pass
 
 class EmailAlreadyVerified(ProblemChangingEmail):
-    msg = "{} is already verified for this Gratipay account."
+    def lazy_body(self, _):
+        return _("You have already added and verified that address.")
 
 class EmailTaken(ProblemChangingEmail):
-    msg = "{} is already connected to a different Gratipay account."
+    def lazy_body(self, _):
+        return _("That address is already linked to a different Gratipay account.")
 
 class CannotRemovePrimaryEmail(ProblemChangingEmail):
-    msg = "You cannot remove your primary email address."
+    def lazy_body(self, _):
+        return _("You cannot remove your primary email address.")
+
+class EmailNotOnFile(ProblemChangingEmail):
+    def lazy_body(self, _):
+         return _("That email address is not on file for this package.")
 
 class EmailNotVerified(ProblemChangingEmail):
-    msg = "The email address '{}' is not verified."
+    def lazy_body(self, _):
+         return _("That email address is not verified.")
 
 class TooManyEmailAddresses(ProblemChangingEmail):
-    msg = "You've reached the maximum number of email addresses we allow."
+    def lazy_body(self, _):
+         return _("You've reached the maximum number of email addresses we allow.")
 
 
-class Throttled(Exception):
-    msg = "You've initiated too many emails too quickly. Please try again in a minute or two."
+class Throttled(LocalizedErrorResponse):
+    def lazy_body(self, _):
+         return _("You've initiated too many emails too quickly. Please try again in a minute or two.")
 
 
 class ProblemChangingNumber(Exception):
@@ -78,3 +87,5 @@ class NegativeBalance(Exception):
         return "Negative balance not allowed in this context."
 
 class NotWhitelisted(Exception): pass
+class NoPackages(Exception): pass
+class NoTeams(Exception): pass

@@ -5,10 +5,10 @@ from gratipay.testing import Harness
 
 class Tests(Harness):
 
-    def test_receiving_returns_404_for_unapproved_teams(self):
+    def test_receiving_returns_302_for_unapproved_teams(self):
         self.make_team(is_approved=False)
 
-        assert self.client.GxT('/TheEnterprise/receiving/').code == 404
+        assert self.client.GxT('/TheEnterprise/receiving/').code == 302
 
     def test_receiving_is_not_visible_to_anon(self):
         self.make_team(is_approved=True)

@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from aspen import Response
 from aspen.utils import utcnow
-from gratipay.utils import get_participant, decode_from_querystring
+from gratipay.utils import get_participant, decode_from_querystring, icons
 from gratipay.models.participant import email
 
 [-----------------------------------------------------------------------------]
@@ -22,9 +22,17 @@ if participant == user.participant:
     else:
         email_address = decode_from_querystring(request.qs.get('email2', ''), default='')
     nonce = request.qs.get('nonce', '')
-    result = participant.verify_email(email_address, nonce)
+    result, packages, paypal_updated = participant.finish_email_verification(email_address, nonce)
+    project_list = None if packages is None else [p.team for p in packages]
     if not participant.email_lang:
         participant.set_email_lang(request.headers.get("Accept-Language"))
+
+# Hard to factor out because of translations
+i18ned_statuses = { "approved": _("Approved")
+                  , "unreviewed" : _("Unreviewed")
+                  , "rejected": _("Rejected")
+                  , "featured": _("Featured")
+                   }
 
 suppress_sidebar = True
 [-----------------------------------------------------------------------------]
@@ -35,7 +43,7 @@ suppress_sidebar = True
 
         <p>{{ _("Sign in to finish connecting your email.") }}</p>
 
-        <p>{% include "templates/sign-in-using.html" %}</p>
+        <p>{{ sign_in_using() }}</p>
     {% elif user.participant != participant %}
         <h1>{{ _("Wrong Account") }}</h1>
 
@@ -65,6 +73,27 @@ suppress_sidebar = True
             <h1>{{ _("Bad Info") }}</h1>
             <p>{{ _("Sorry, that's a bad or expired link. You'll need to start over.") }}</p>
         {% endif %}
-        <a href="/{{ participant.username }}/emails/">{{ _("View your email addresses") }}.</a>
+
+        <p><a href="/{{ participant.username }}/emails/">
+            {{ _("View your email addresses") }}.</a>
+        </p>
+
+        {% if paypal_updated %}
+        <h2>{{ _("Withdrawals") }}</h2>
+        <p class="withdrawal-notice">
+            {{ _( "We will send your money via PayPal to {email_address} ({a}update{_a})."
+                , email_address=("<b>%s</b>"|safe) % email_address
+                , a='<a href="../routes/paypal">'|safe
+                , _a='</a>'|safe
+                 ) }}
+        </p>
+        {% endif %}
+
+        {% if project_list %}
+        <h2>{{ _("New Projects") }}</h2>
+        <table class="listing">
+        {% include "templates/project-listing.html"  %}
+        </table>
+        {% endif %}
     {% endif %}
 {% endblock %}

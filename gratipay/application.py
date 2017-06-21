@@ -3,10 +3,11 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import psycopg2.extras
 
-from . import email, utils
+from . import email, sync_npm, utils
 from .cron import Cron
 from .models import GratipayDB
 from .payday_runner import PaydayRunner
+from .project_review_process import ProjectReviewProcess
 from .website import Website
 
 
@@ -35,7 +36,6 @@ class Application(object):
         wireup.base_url(website, env)
         wireup.secure_cookies(env)
         wireup.billing(env)
-        wireup.team_review(env)
         wireup.username_restrictions(website)
         wireup.load_i18n(website.project_root, tell_sentry)
         wireup.other_stuff(website, env)
@@ -46,13 +46,16 @@ class Application(object):
         self.install_periodic_jobs(website, env, db)
         self.website = website
         self.payday_runner = PaydayRunner(self)
+        self.project_review_process = ProjectReviewProcess(env, db, self.email_queue)
 
 
     def install_periodic_jobs(self, website, env, db):
         cron = Cron(website)
-        cron(env.update_cta_every, lambda: utils.update_cta(website))
+        cron(env.update_cta_every, website.update_cta)
         cron(env.check_db_every, db.self_check, True)
+        cron(env.check_npm_sync_every, lambda: sync_npm.check(db))
         cron(env.email_queue_flush_every, self.email_queue.flush, True)
+        cron(env.email_queue_log_metrics_every, self.email_queue.log_metrics)
 
 
     def add_event(self, c, type, payload):
@@ -61,7 +64,7 @@ class Application(object):
         This is the function we use to capture interesting events that happen
         across the system in one place, the ``events`` table.
 
-        :param c: a :py:class:`Postres` or :py:class:`Cursor` instance
+        :param c: a :py:class:`Postgres` or :py:class:`Cursor` instance
         :param unicode type: an indicator of what type of event it is--either ``participant``,
           ``team`` or ``payday``
         :param payload: an arbitrary JSON-serializable data structure; for ``participant`` type,

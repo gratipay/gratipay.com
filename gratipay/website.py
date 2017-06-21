@@ -2,14 +2,16 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import base64
+from math import ceil
 
 import aspen
 from aspen.website import Website as BaseWebsite
 
-from . import utils, security, version
+from . import utils, security, typecasting, version
 from .security import authentication, csrf
 from .utils import erase_cookie, http_caching, i18n, set_cookie, set_version_header, timer
 from .renderers import csv_dump, jinja2_htmlescaped, eval_, scss
+from .models import team
 
 
 class Website(BaseWebsite):
@@ -20,6 +22,7 @@ class Website(BaseWebsite):
         BaseWebsite.__init__(self)
         self.app = app
         self.version = version.get_version()
+        self.configure_typecasters()
         self.configure_renderers()
 
         # TODO Can't do remaining config here because of lingering wireup
@@ -33,6 +36,11 @@ class Website(BaseWebsite):
     def init_even_more(self):
         self.modify_algorithm(self.tell_sentry)
         self.monkey_patch_response()
+        self.update_cta()
+
+
+    def configure_typecasters(self):
+        self.typecasters['team'] = team.cast
 
 
     def configure_renderers(self):
@@ -61,6 +69,9 @@ class Website(BaseWebsite):
             'to_javascript': utils.to_javascript,
             'type': type,
             'unicode': unicode,
+            'min': min,
+            'max': max,
+            'ceil': ceil
         }
 
 
@@ -72,7 +83,6 @@ class Website(BaseWebsite):
             algorithm['parse_environ_into_request'],
             algorithm['parse_body_into_request'],
 
-            utils.help_aspen_find_well_known,
             utils.use_tildes_for_participants,
             algorithm['redirect_to_base_url'],
             i18n.set_up_i18n,
@@ -87,7 +97,7 @@ class Website(BaseWebsite):
             http_caching.get_etag_for_file if self.cache_static else noop,
             http_caching.try_to_serve_304 if self.cache_static else noop,
 
-            algorithm['apply_typecasters_to_path'],
+            typecasting.cast,
             algorithm['get_resource_for_request'],
             algorithm['extract_accept_from_request'],
             algorithm['get_response_for_resource'],
@@ -125,3 +135,25 @@ class Website(BaseWebsite):
         def _erase_cookie(response, *args, **kw):
             erase_cookie(response.headers.cookie, *args, **kw)
         aspen.Response.erase_cookie = _erase_cookie
+
+
+    def update_cta(self):
+        nusers = self.db.one("""
+            SELECT nusers FROM paydays
+            ORDER BY ts_end DESC LIMIT 1
+        """, default=0)
+        nreceiving_from = self.db.one("""
+            SELECT nreceiving_from
+              FROM teams
+             WHERE slug = 'Gratipay'
+        """, default=0)
+        self.support_current = cur = int(round(nreceiving_from / nusers * 100)) if nusers else 0
+        if cur < 10:    goal = 20
+        elif cur < 15:  goal = 30
+        elif cur < 25:  goal = 40
+        elif cur < 35:  goal = 50
+        elif cur < 45:  goal = 60
+        elif cur < 55:  goal = 70
+        elif cur < 65:  goal = 80
+        elif cur > 70:  goal = None
+        self.support_goal = goal

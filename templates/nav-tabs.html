@@ -1,0 +1,11 @@
+{% macro nav_tabs(tabs) %}
+<ul class="nav">
+    {% for tab in tabs %}
+    <li>
+        <a href="{{ tab.link }}"{% if tab.is_selected %} class="selected"{% endif %}>
+            <span class="textwrap">{{ tab.html|safe }}</span>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endmacro %}

@@ -1,6 +1,5 @@
 from aspen import Response
 
-from gratipay.utils import get_team
 from gratipay.utils.images import (
     imgize,
     ImageTooLarge,
@@ -25,7 +24,7 @@ field_names = {
 if user.ANON:
     raise Response(401, _("You need to log in to access this page."))
 
-team = get_team(state)
+team = request.path['team']
 
 if not user.ADMIN and user.participant.username != team.owner:
     raise Response(403, _("You are not authorized to access this page."))

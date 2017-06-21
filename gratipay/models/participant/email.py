@@ -9,20 +9,33 @@ from psycopg2 import IntegrityError
 
 import gratipay
 from gratipay.exceptions import EmailAlreadyVerified, EmailTaken, CannotRemovePrimaryEmail
-from gratipay.exceptions import EmailNotVerified, TooManyEmailAddresses
+from gratipay.exceptions import EmailNotVerified, TooManyEmailAddresses, EmailNotOnFile
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import encode_for_querystring
 
 
 EMAIL_HASH_TIMEOUT = timedelta(hours=24)
 
-( VERIFICATION_MISSING
-, VERIFICATION_FAILED
-, VERIFICATION_EXPIRED
-, VERIFICATION_REDUNDANT
-, VERIFICATION_STYMIED
-, VERIFICATION_SUCCEEDED
- ) = range(6)
+
+class VerificationResult(object):
+    def __init__(self, name):
+        self.name = name
+    def __repr__(self):
+        return "<VerificationResult: %r>" % self.name
+    __str__ = __repr__
+
+
+#: Signal that verifying an email address failed.
+VERIFICATION_FAILED = VerificationResult('Failed')
+
+#: Signal that verifying an email address was redundant.
+VERIFICATION_REDUNDANT = VerificationResult('Redundant')
+
+#: Signal that an email address is already verified for a different :py:class:`Participant`.
+VERIFICATION_STYMIED = VerificationResult('Stymied')
+
+#: Signal that email verification succeeded.
+VERIFICATION_SUCCEEDED = VerificationResult('Succeeded')
 
 
 class Email(object):
@@ -41,146 +54,249 @@ class Email(object):
 
     """
 
-    def add_email(self, email):
+    def start_email_verification(self, email, *packages):
         """Add an email address for a participant.
 
         This is called when adding a new email address, and when resending the
         verification email for an unverified email address.
 
         :param unicode email: the email address to add
+        :param gratipay.models.package.Package packages: packages to optionally
+            also verify ownership of
 
         :returns: ``None``
 
         :raises EmailAlreadyVerified: if the email is already verified for
-            this participant
+            this participant (unless they're claiming packages)
         :raises EmailTaken: if the email is verified for a different participant
+        :raises EmailNotOnFile: if the email address is not on file for any of
+            the packages
         :raises TooManyEmailAddresses: if the participant already has 10 emails
         :raises Throttled: if the participant adds too many emails too quickly
 
         """
+        with self.db.get_cursor() as c:
+            self.validate_email_verification_request(c, email, *packages)
+            link = self.get_email_verification_link(c, email, *packages)
 
-        # Check that this address isn't already verified
-        owner = self.db.one("""
-            SELECT p.username
-              FROM emails e INNER JOIN participants p
-                ON e.participant_id = p.id
-             WHERE e.address = %(email)s
-               AND e.verified IS true
-        """, locals())
-        if owner:
-            if owner == self.username:
-                raise EmailAlreadyVerified(email)
-            else:
-                raise EmailTaken(email)
-
-        if len(self.get_emails()) > 9:
-            raise TooManyEmailAddresses(email)
-
-        nonce = str(uuid.uuid4())
-        verification_start = utcnow()
-
-        try:
-            with self.db.get_cursor() as c:
-                self.app.add_event(c, 'participant', dict(id=self.id, action='add', values=dict(email=email)))
-                c.run("""
-                    INSERT INTO emails
-                                (address, nonce, verification_start, participant_id)
-                         VALUES (%s, %s, %s, %s)
-                """, (email, nonce, verification_start, self.id))
-        except IntegrityError:
-            nonce = self.db.one("""
-                UPDATE emails
-                   SET verification_start=%s
-                 WHERE participant_id=%s
-                   AND address=%s
-                   AND verified IS NULL
-             RETURNING nonce
-            """, (verification_start, self.id, email))
-            if not nonce:
-                return self.add_email(email)
-
-        base_url = gratipay.base_url
-        username = self.username_lower
-        encoded_email = encode_for_querystring(email)
-        link = "{base_url}/~{username}/emails/verify.html?email2={encoded_email}&nonce={nonce}"
-        self.app.email_queue.put( self
-                                , 'verification'
-                                , email=email
-                                , link=link.format(**locals())
-                                , include_unsubscribe=False
-                                 )
-        if self.email_address:
+        verified_emails = self.get_verified_email_addresses()
+        kwargs = dict( npackages=len(packages)
+                     , package_name=packages[0].name if packages else ''
+                     , new_email=email
+                     , new_email_verified=email in verified_emails
+                     , link=link
+                     , include_unsubscribe=False
+                      )
+        self.app.email_queue.put(self, 'verification', email=email, **kwargs)
+        if self.email_address and self.email_address != email:
             self.app.email_queue.put( self
-                                    , 'verification_notice'
-                                    , new_email=email
-                                    , include_unsubscribe=False
+                                    , 'verification-notice'
 
                                     # Don't count this one against their sending quota.
                                     # It's going to their own verified address, anyway.
                                     , _user_initiated=False
+
+                                    , **kwargs
                                      )
 
 
-    def update_email(self, email):
-        """Set the email address for the participant.
+    def validate_email_verification_request(self, c, email, *packages):
+        """Given a cursor, email, and packages, return ``None`` or raise.
         """
-        if not getattr(self.get_email(email), 'verified', False):
-            raise EmailNotVerified(email)
-        username = self.username
-        with self.db.get_cursor() as c:
-            self.app.add_event(c, 'participant', dict(id=self.id, action='set', values=dict(primary_email=email)))
+        if not all(email in p.emails for p in packages):
+            raise EmailNotOnFile()
+
+        owner_id = c.one("""
+            SELECT participant_id
+              FROM emails
+             WHERE address = %(email)s
+               AND verified IS true
+        """, dict(email=email))
+
+        if owner_id:
+            if owner_id != self.id:
+                raise EmailTaken()
+            elif packages:
+                pass  # allow reverify if claiming packages
+            else:
+                raise EmailAlreadyVerified()
+
+        if len(self.get_emails()) > 9:
+            if owner_id and owner_id == self.id and packages:
+                pass  # they're using an already-verified email to verify packages
+            else:
+                raise TooManyEmailAddresses()
+
+
+    def get_email_verification_link(self, c, email, *packages):
+        """Get a link to complete an email verification workflow.
+
+        :param Cursor c: the cursor to use
+        :param unicode email: the email address to be verified
+
+        :param packages: :py:class:`~gratipay.models.package.Package` objects
+            for which a successful verification will also entail verification of
+            ownership of the package
+
+        :returns: a URL by which to complete the verification process
+
+        """
+        self.app.add_event( c
+                          , 'participant'
+                          , dict(id=self.id, action='add', values=dict(email=email))
+                           )
+        nonce = self.get_email_verification_nonce(c, email)
+        if packages:
+            self.start_package_claims(c, nonce, *packages)
+        link = "{base_url}/~{username}/emails/verify.html?email2={encoded_email}&nonce={nonce}"
+        return link.format( base_url=gratipay.base_url
+                          , username=self.username_lower
+                          , encoded_email=encode_for_querystring(email)
+                          , nonce=nonce
+                           )
+
+
+    def get_email_verification_nonce(self, c, email):
+        """Given a cursor and email address, return a verification nonce.
+        """
+        nonce = str(uuid.uuid4())
+        existing = c.one( 'SELECT * FROM emails WHERE address=%s AND participant_id=%s'
+                        , (email, self.id)
+                         )  # can't use eafp here because of cursor error handling
+
+        if existing is None:
+
+            # Not in the table yet. This should throw an IntegrityError if the
+            # address is verified for a different participant.
+
+            c.run( "INSERT INTO emails (participant_id, address, nonce) VALUES (%s, %s, %s)"
+                 , (self.id, email, nonce)
+                  )
+        else:
+
+            # Already in the table. Restart verification. Henceforth, old links
+            # will fail.
+
+            if existing.nonce:
+                c.run('DELETE FROM claims WHERE nonce=%s', (existing.nonce,))
             c.run("""
-                UPDATE participants
-                   SET email_address=%(email)s
-                 WHERE username=%(username)s
-            """, locals())
+                UPDATE emails
+                   SET nonce=%s
+                     , verification_start=now()
+                 WHERE participant_id=%s
+                   AND address=%s
+            """, (nonce, self.id, email))
+
+        return nonce
+
+
+    def set_primary_email(self, email, cursor=None):
+        """Set the primary email address for the participant.
+        """
+        if cursor:
+            self._set_primary_email(email, cursor)
+        else:
+            with self.db.get_cursor() as cursor:
+                self._set_primary_email(email, cursor)
         self.set_attributes(email_address=email)
 
 
-    def verify_email(self, email, nonce):
-        if '' in (email, nonce):
-            return VERIFICATION_MISSING
-        r = self.get_email(email)
-        if r is None:
-            return VERIFICATION_FAILED
-        if r.verified:
-            assert r.nonce is None  # and therefore, order of conditions matters
-            return VERIFICATION_REDUNDANT
-        if not constant_time_compare(r.nonce, nonce):
-            return VERIFICATION_FAILED
-        if (utcnow() - r.verification_start) > EMAIL_HASH_TIMEOUT:
-            return VERIFICATION_EXPIRED
-        try:
-            self.db.run("""
-                UPDATE emails
-                   SET verified=true, verification_end=now(), nonce=NULL
-                 WHERE participant_id=%s
-                   AND address=%s
-                   AND verified IS NULL
-            """, (self.id, email))
-        except IntegrityError:
-            return VERIFICATION_STYMIED
-
-        if not self.email_address:
-            self.update_email(email)
-        return VERIFICATION_SUCCEEDED
+    def _set_primary_email(self, email, cursor):
+        if not getattr(self.get_email(email, cursor), 'verified', False):
+            raise EmailNotVerified()
+        self.app.add_event( cursor
+                          , 'participant'
+                          , dict(id=self.id, action='set', values=dict(primary_email=email))
+                           )
+        cursor.run("""
+            UPDATE participants
+               SET email_address=%(email)s
+             WHERE username=%(username)s
+        """, dict(email=email, username=self.username))
 
 
-    def get_email(self, email):
-        """Return a record for a single email address on file for this participant.
+    def finish_email_verification(self, email, nonce):
+        """Given an email address and a nonce as strings, return a three-tuple:
+
+        - a ``VERIFICATION_*`` constant;
+        - a list of packages if ``VERIFICATION_SUCCEEDED`` (``None``
+          otherwise), and
+        - a boolean indicating whether the participant's PayPal address was
+          updated if applicable (``None`` if not).
+
         """
-        return self.db.one("""
-            SELECT *
-              FROM emails
+        if '' in (email.strip(), nonce.strip()):
+            return VERIFICATION_FAILED, None, None
+        with self.db.get_cursor() as cursor:
+            record = self.get_email(email, cursor, and_lock=True)
+            if record is None:
+                return VERIFICATION_FAILED, None, None
+            packages = self.get_packages_claiming(cursor, nonce)
+            if record.verified and not packages:
+                assert record.nonce is None  # and therefore, order of conditions matters
+                return VERIFICATION_REDUNDANT, None, None
+            if not constant_time_compare(record.nonce, nonce):
+                return VERIFICATION_FAILED, None, None
+            if (utcnow() - record.verification_start) > EMAIL_HASH_TIMEOUT:
+                return VERIFICATION_FAILED, None, None
+            try:
+                paypal_updated = None
+                if packages:
+                    paypal_updated = False
+                    self.finish_package_claims(cursor, nonce, *packages)
+                self.save_email_address(cursor, email)
+                has_no_paypal = not self.get_payout_routes(good_only=True)
+                if packages and has_no_paypal:
+                    self.set_paypal_address(email, cursor)
+                    paypal_updated = True
+            except IntegrityError:
+                return VERIFICATION_STYMIED, None, None
+            return VERIFICATION_SUCCEEDED, packages, paypal_updated
+
+
+    def save_email_address(self, cursor, address):
+        """Given an email address, modify the database.
+
+        This is where we actually mark the email address as verified.
+        Additionally, we clear out any competing claims to the same address.
+
+        """
+        cursor.run("""
+            UPDATE emails
+               SET verified=true, verification_end=now(), nonce=NULL
              WHERE participant_id=%s
                AND address=%s
-        """, (self.id, email))
+               AND verified IS NULL
+        """, (self.id, address))
+        cursor.run("""
+            DELETE
+              FROM emails
+             WHERE participant_id != %s
+               AND address=%s
+        """, (self.id, address))
+        if not self.email_address:
+            self.set_primary_email(address, cursor)
 
 
-    def get_emails(self):
+    def get_email(self, address, cursor=None, and_lock=False):
+        """Return a record for a single email address on file for this participant.
+
+        :param unicode address: the email address for which to get a record
+        :param Cursor cursor: a database cursor; if ``None``, we'll use ``self.db``
+        :param and_lock: if True, we will acquire a write-lock on the email record before returning
+        :returns: a database record (a named tuple)
+
+        """
+        sql = 'SELECT * FROM emails WHERE participant_id=%s AND address=%s'
+        if and_lock:
+            sql += ' FOR UPDATE'
+        return (cursor or self.db).one(sql, (self.id, address))
+
+
+    def get_emails(self, cursor=None):
         """Return a list of all email addresses on file for this participant.
         """
-        return self.db.all("""
+        return (cursor or self.db).all("""
             SELECT *
               FROM emails
              WHERE participant_id=%s
@@ -188,10 +304,10 @@ class Email(object):
         """, (self.id,))
 
 
-    def get_verified_email_addresses(self):
+    def get_verified_email_addresses(self, cursor=None):
         """Return a list of verified email addresses on file for this participant.
         """
-        return [email.address for email in self.get_emails() if email.verified]
+        return [email.address for email in self.get_emails(cursor) if email.verified]
 
 
     def remove_email(self, address):
@@ -202,7 +318,10 @@ class Email(object):
         if address == self.email_address:
             raise CannotRemovePrimaryEmail()
         with self.db.get_cursor() as c:
-            self.app.add_event(c, 'participant', dict(id=self.id, action='remove', values=dict(email=address)))
+            self.app.add_event( c
+                              , 'participant'
+                              , dict(id=self.id, action='remove', values=dict(email=address))
+                               )
             c.run("DELETE FROM emails WHERE participant_id=%s AND address=%s",
                   (self.id, address))
 

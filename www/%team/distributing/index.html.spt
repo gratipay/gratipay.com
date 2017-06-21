@@ -1,8 +1,7 @@
 # encoding: utf8
-from gratipay.utils import get_team
 
 [-----------------------------------------------------------------------------]
-team = get_team(state)
+team = request.path['team']
 if team.available == 0:
     website.redirect('..', base_url='')
 title = _("Team Members")

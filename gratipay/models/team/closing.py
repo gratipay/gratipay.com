@@ -21,3 +21,5 @@ class Closing(object):
                               , dict(id=self.id, action='set', values=dict(is_closed=True))
                                )
             self.set_attributes(is_closed=True)
+            if self.package:
+                self.package.unlink_team(cursor)

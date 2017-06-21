@@ -32,6 +32,9 @@ class TestRecordAnExchange(Harness):
         if data['route_id'] is None:
             del(data['route_id'])
 
+        if 'ref' not in data:
+            data['ref'] = 'N/A'
+
         return self.client.PxST('/~bob/history/record-an-exchange', data, auth_as='alice')
 
 
@@ -93,21 +96,32 @@ class TestRecordAnExchange(Harness):
         assert response.code == 400
         assert response.body == "Route doesn't exist"
 
+    def test_no_ref_is_400(self):
+        response = self.record_an_exchange({'amount': '10', 'fee': '0', 'ref': ''})
+        assert response.code == 400
+        assert response.body == "Invalid Reference"
+
+    def test_whitespace_ref_is_400(self):
+        response = self.record_an_exchange({'amount': '10', 'fee': '0', 'ref': '   '})
+        assert response.code == 400
+        assert response.body == "Invalid Reference"
+
     def test_dropping_balance_below_zero_is_allowed_in_this_context(self):
         self.record_an_exchange({'amount': '-10', 'fee': '0'})
         actual = self.db.one("SELECT balance FROM participants WHERE username='bob'")
         assert actual == D('-10.00')
 
     def test_success_records_exchange(self):
-        self.record_an_exchange({'amount': '10', 'fee': '0.50'})
+        self.record_an_exchange({'amount': '10', 'fee': '0.50', 'ref':"605BSOC6G855L15OO"})
         expected = { "amount": D('10.00')
                    , "fee": D('0.50')
                    , "participant": "bob"
                    , "recorder": "alice"
                    , "note": "noted"
+                   , "ref" : "605BSOC6G855L15OO"
                    , "route": ExchangeRoute.from_network(self.bob, 'paypal').id
                     }
-        SQL = "SELECT amount, fee, participant, recorder, note, route " \
+        SQL = "SELECT amount, fee, participant, recorder, note, route, ref " \
               "FROM exchanges"
         actual = self.db.one(SQL, back_as=dict)
         assert actual == expected

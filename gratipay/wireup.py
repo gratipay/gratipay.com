@@ -31,7 +31,6 @@ from gratipay.elsewhere.twitter import Twitter
 from gratipay.elsewhere.venmo import Venmo
 from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.participant import Participant, Identity
-from gratipay.models.team import Team
 from gratipay.security.crypto import EncryptingPacker
 from gratipay.utils import find_files
 from gratipay.utils.http_caching import asset_etag
@@ -54,6 +53,7 @@ def db(env):
     # rewritten to instantiate Application directly.
 
     sys.stdout = sys.stderr
+    aspen.log('Instantiating Application from gratipay.wireup')
     app = Application()
     sys.stdout = sys.__stdout__
     return app.db
@@ -77,11 +77,6 @@ def billing(env):
         env.braintree_public_key,
         env.braintree_private_key
     )
-
-
-def team_review(env):
-    Team.review_repo = env.team_review_repo
-    Team.review_auth = (env.team_review_username, env.team_review_token)
 
 
 def username_restrictions(website):
@@ -248,9 +243,6 @@ def compile_assets(website):
     for spt in find_files(website.www_root+'/assets/', '*.spt'):
         filepath = spt[:-4]                         # /path/to/www/assets/foo.css
         urlpath = spt[spt.rfind('/assets/'):-4]     # /assets/foo.css
-        if urlpath == '/assets/_well-known/acme-challenge/%token':
-            # This *should* be dynamic.
-            continue
         try:
             # Remove any existing compiled asset, so we can access the dynamic
             # one instead (Aspen prefers foo.css over foo.css.spt).
@@ -386,18 +378,19 @@ def env():
         OPENSTREETMAP_AUTH_URL          = unicode,
         UPDATE_CTA_EVERY                = int,
         CHECK_DB_EVERY                  = int,
+        CHECK_NPM_SYNC_EVERY            = int,
         EMAIL_QUEUE_FLUSH_EVERY         = int,
         EMAIL_QUEUE_SLEEP_FOR           = int,
         EMAIL_QUEUE_ALLOW_UP_TO         = int,
+        EMAIL_QUEUE_LOG_METRICS_EVERY   = int,
         OPTIMIZELY_ID                   = unicode,
         SENTRY_DSN                      = unicode,
         LOG_METRICS                     = is_yesish,
         INCLUDE_PIWIK                   = is_yesish,
-        TEAM_REVIEW_REPO                = unicode,
-        TEAM_REVIEW_USERNAME            = unicode,
-        TEAM_REVIEW_TOKEN               = unicode,
+        PROJECT_REVIEW_REPO             = unicode,
+        PROJECT_REVIEW_USERNAME         = unicode,
+        PROJECT_REVIEW_TOKEN            = unicode,
         RAISE_SIGNIN_NOTIFICATIONS      = is_yesish,
-        REQUIRE_YAJL                    = is_yesish,
         GUNICORN_OPTS                   = unicode,
     )
 
@@ -419,7 +412,7 @@ def env():
         aspen.log_dammit("See ./default_local.env for hints.")
 
         aspen.log_dammit("=" * 42)
-        keys = ', '.join([key for key in env.malformed])
+        keys = ', '.join([key for key, value in env.malformed])
         raise BadEnvironment("Malformed envvar{}: {}.".format(plural, keys))
 
     if env.missing:
@@ -449,6 +442,6 @@ def env():
     return env
 
 
-def __main__():
+if __name__ == '__main__':
     # deploy.sh uses this to validate production env config
     env()

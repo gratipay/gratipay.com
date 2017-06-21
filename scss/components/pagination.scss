@@ -1,0 +1,67 @@
+.pagination {
+    text-align: center;
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.pagination .show-on-mobile {
+    display: none;
+}
+
+.pagination li {
+    list-style: none;
+    display: inline-block;
+    margin: 0px;
+    & a, & span {
+        color: #333;
+        font-weight: normal;
+        font: normal 15px/15px $Ideal;
+        line-height: 35px;
+    }
+
+    & span.filler {
+        color: $light-brown;
+    }
+}
+
+.pagination .arrow-button {
+    min-width: 15%;
+
+    &.arrow-left { margin-right: 15px; }
+    &.arrow-right { margin-left: 15px; }
+
+    a {
+        padding: 10px;
+        width: 100%;
+    }
+
+    .arrow {
+        font-weight: bold;
+        color: #396;
+    }
+}
+
+.pagination .numbered-list {
+    min-width: 20%;
+
+    a {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    a.selected {
+        font-weight: bold;
+        color: #396;
+        border-bottom: 2px solid #396;
+    }
+}
+
+@media (max-width: 600px) {
+    .pagination .show-on-mobile {
+        display: initial;
+    }
+
+    .pagination .hide-on-mobile {
+        display: none;
+    }
+}

@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import sys
 import random
 
+from aspen import log
 from gratipay.application import Application
 
 
@@ -42,7 +43,10 @@ def main(_argv=sys.argv, _input=raw_input, _print=print, _app=None):
             - push to GitHub
 
     """
-    app = _app or Application()
+    if _app is None:
+        log('Instantiating Application from gratipay.cli.dequeue_emails')
+        _app = Application()
+    app = _app
 
     def prompt(msg):
         answer = _input(msg + " [y/N]")

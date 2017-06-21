@@ -92,6 +92,7 @@ class Queue(object):
         fetch_messages = lambda: self.db.all("""
             SELECT *
               FROM email_queue
+             WHERE not dead
           ORDER BY id ASC
              LIMIT 60
         """)
@@ -101,7 +102,11 @@ class Queue(object):
             if not messages:
                 break
             for rec in messages:
-                r = self._flush_one(rec)
+                try:
+                    r = self._flush_one(rec)
+                except:
+                    self.db.run("UPDATE email_queue SET dead=true WHERE id = %s", (rec.id,))
+                    raise
                 self.db.run("DELETE FROM email_queue WHERE id = %s", (rec.id,))
                 if r == 1:
                     sleep(self.sleep_for)
@@ -180,6 +185,18 @@ class Queue(object):
             }
         }
         return message
+
+
+    def log_metrics(self, _print=print):
+        ndead = self.db.one('SELECT COUNT(*) FROM email_queue WHERE dead')
+        ntotal = self.db.one('SELECT COUNT(*) FROM email_queue')
+        _print('count#email_queue_dead=%d count#email_queue_total=%d' % (ndead, ntotal))
+
+
+    def purge(self):
+        """Remove all messages from the queue.
+        """
+        self.db.run('DELETE FROM email_queue')
 
 
 jinja_env = Environment()

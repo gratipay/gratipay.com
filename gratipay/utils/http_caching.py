@@ -3,6 +3,7 @@ Handles HTTP caching.
 """
 from base64 import b64encode
 from hashlib import md5
+import os
 
 from aspen import Response
 
@@ -19,6 +20,27 @@ def asset_etag(path):
         with open(path) as f:
             h = ETAGS[path] = b64encode(md5(f.read()).digest(), '-_').replace('=', '~')
     return h
+
+
+def concat_files(files, root):
+    """Concatenate a list of files.
+
+    :param list files: a list of relative file paths
+    :param string root: the root relative to which the files are
+
+    :return: the concatenated files as a string, with files demarcated by
+        JavaScript block-style comments
+
+    """
+    catted = []
+    for filepath in files:
+        catted.append('/' + ('*'*70) + '/\n')
+        catted.append('/*' + filepath.center(68) + '*/\n')
+        catted.append('/' + ('*'*70) + '/' + '\n\n')
+        content = open(os.path.join(root, filepath)).read()
+        content = content.decode('ascii')
+        catted.append(content + '\n')
+    return "".join(catted)
 
 
 # algorithm functions

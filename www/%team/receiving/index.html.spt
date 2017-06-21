@@ -1,11 +1,10 @@
 from aspen import Response
-from gratipay.utils import get_team
 
 [-----------------------------------------------------------------------------]
 
-team = get_team(state)
+team = request.path['team']
 if team.is_approved in (None, False):
-    raise Response(404)
+    raise website.redirect('..')
 elif user.ANON:
     raise Response(401)
 elif not (user.ADMIN or user.participant.username == team.owner):

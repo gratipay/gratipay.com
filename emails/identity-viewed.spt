@@ -1,4 +1,4 @@
-{{ _("Identity Viewed") }}
+{{ _("Identity viewed") }}
 [---] text/html
 {{ _( "This is a transactional email to let you know that {a_viewer}{viewer}{_a} viewed your identity information for {a_country}{country_name}{_a} on Gratipay."
     , viewer=viewer

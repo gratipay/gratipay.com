@@ -29,7 +29,7 @@
         border: 0;
         box-shadow: none;
         background: $green;
-        min-width: 140px;
+        min-width: 140px; /* centering on unclaimed package page is based on this */
         li {
             margin: 0;
             list-style: none;
@@ -86,10 +86,10 @@
             line-height: 16px;
 
             .caret {
-                border-top: 5px solid $black;
+                border-top: 8px solid $black;
                 border-right: 5px solid transparent;
                 border-left: 5px solid transparent;
-                margin-top: 6px;
+                margin-top: 4px;
             }
         }
         .dropdown-menu {

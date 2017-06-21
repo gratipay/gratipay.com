@@ -3,6 +3,9 @@
 {% block banner %}
 <div class="avatar">
     <img class="avatar" src="{{ team.get_image_url('large') }}">
+    {% if team.package %}
+    <img class="platform" src="{{ website.asset('npm-n.png') }}" />
+    {% endif %}
 </div>
 
 <div class="details mono{% if not team.is_approved %} luxury{% endif %}">
@@ -57,6 +60,7 @@
     {% set current_page = request.path.raw.split('/')[2] %}
     {% set nav_base = '/' + team.slug %}
     {% set pages = [ ('/',              _('Profile'))
+                   , ('/history/',      _('History'))
                    , ('/receiving/',    _('Receiving'))
                     ] + ([('/distributing/', _('Distributing'))] if team.available else [])%}
     {% if pages %}

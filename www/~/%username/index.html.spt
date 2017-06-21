@@ -63,14 +63,16 @@ i18ned_statuses = { "approved": _("Approved")
 {% if user.participant == participant %}
     <div id="profile-edit">
         {% include "templates/profile-edit.html" %}
+        <div class="projects">
+            <h2>{{ _("Projects") }}</h2>
+            <form action="/apply" class="apply-button">
+                <button type="submit">{{ _("Fund Your Project") }}</button>
+            </form>
+            <table class="listing">
+                {% include "templates/project-listing.html" %}
+            </table>
+        </div>
     </div>
-    <h2>{{ _("Projects") }}</h2>
-    <form action="/new" class="apply">
-        <button type="submit">{{ _("Fund Your Project") }}</button>
-    </form>
-    <table class="listing">
-        {% include "templates/project-listing.html" %}
-    </table>
     {% include "templates/connected-accounts.html" %}
 {% else %}
     {% if statement %}

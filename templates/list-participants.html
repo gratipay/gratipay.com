@@ -5,9 +5,11 @@
         <tr>
             <td class="item">
                 {{ avatar_img(participant) }}
-                <a class="name" href="/~{{ participant.username }}/">{{ participant.username }}</a>
+                <a class="listing-name" href="/~{{ participant.username }}/">
+                    {{ participant.username }}
+                </a>
 
-                <div class="details">
+                <div class="listing-details">
                     <span class="i">{{ i }}</span>
                     <span class="ctime">&middot; {{ _("joined {ago}",
                         ago=to_age(participant.claimed_time, add_direction=True)) }}</span>

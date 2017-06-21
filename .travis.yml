@@ -3,17 +3,19 @@ language: python
 git:
   depth: 5
 addons:
-  postgresql: 9.3
-  firefox: latest
+  postgresql: 9.6
+  firefox: latest-esr
 before_install:
  - git branch -vv | grep '^*'
  - pwd
  - find . -name "*.sh" -exec bash -n {} \;
 
- # Sometimes ya just halfta ...
- - git clone -b "2.1.0" --depth 1 https://github.com/lloyd/yajl.git && cd yajl && ./configure && sudo make install && cd ..
+ # Temporarily install 9.6.2 manually, remove once 9.6.2 is default on Travis
 
- - npm install marky-markdown
+ - sudo add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
+ - wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+ - sudo apt-get update
+ - sudo apt-get install postgresql-9.6
 
  # For ttw tests
  - wget https://github.com/mozilla/geckodriver/releases/download/v0.15.0/geckodriver-v0.15.0-linux64.tar.gz
@@ -26,19 +28,24 @@ cache:
   directories:
     - env/bin
     - env/lib/python2.7/site-packages
-    - node_modules
     - geckodriver
 install:
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rf env; fi
  - touch requirements.txt package.json
  - make env -j2
- - env/bin/pip install --upgrade ijson==2.3.0
 before_script:
  - echo "DATABASE_URL=dbname=gratipay" | tee -a tests/local.env local.env
- - echo "REQUIRE_YAJL=true" | tee -a tests/local.env local.env
+
+ # Turn off all cron threads.
+ - echo "UPDATE_CTA_EVERY=0" >> local.env
+ - echo "CHECK_DB_EVERY=0" >> local.env
+ - echo "CHECK_NPM_SYNC_EVERY=0" >> local.env
+ - echo "EMAIL_QUEUE_FLUSH_EVERY=0" >> local.env
+ - echo "EMAIL_QUEUE_LOG_METRICS_EVERY=0" >> local.env
+
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
-script: LD_LIBRARY_PATH=/usr/local/lib xvfb-run make bgrun test doc -j2
+script: LD_LIBRARY_PATH=/usr/local/lib xvfb-run make bgrun test doc
 notifications:
   email: false
   irc: false

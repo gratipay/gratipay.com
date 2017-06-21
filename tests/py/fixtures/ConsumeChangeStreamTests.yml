@@ -1,0 +1,42 @@
+interactions:
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://replicate.npmjs.com:443/
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA22RzW7DIBCE732MPfsAGPPjl0EE1imqjVPAUdso79516kpR1SOz7MzwcYN4ctkv
+        CCMUPKfayid0ENfgwrrlBqPUPZP8R4o4/8pGyL6D7RJ9Q1fxHUZuFBc96+CylfOh0Smsy8WH5sqW
+        c8pnGCc/VyS/VN9cTV+ULJiQdlCc6w7W9ooFxhuQsT/m3DBllRgMv9Pek26lpBqMUczuVPe9Kc1/
+        LCk9XUnjT9fxo2HJft5rP5mnXJvPgdo3X5pr6QGGS2MtU1xbbW0/mB3Q3n5ay+Kbu2Kpac0wqsdr
+        l9QaRvcvmgMGjQ9kg7HKEsctRfqBXjMUSg1KY7CRCyl8CIKwmt5G5TXcX74Bo/OKf7EBAAA=
+    headers:
+      cache-control: [must-revalidate]
+      content-encoding: [gzip]
+      content-type: [application/json]
+      strict-transport-security: [max-age=2592000000; includeSubDomains; preload;]
+      transfer-encoding: [chunked]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://replicate.npmjs.com:443/
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA22RzW7DIBCE732MPfsAGPPjl0EE1imqjVPAUdso79516kpR1SOz7MzwcYN4ctkv
+        CCMUPKfayid0ENfgwrrlBqPUPZP8R4o4/8pGyL6D7RJ9Q1fxHUZuFBc96+CylfOh0Smsy8WH5sqW
+        c8pnGCc/VyS/VN9cTV+ULJiQdlCc6w7W9ooFxhuQsT/m3DBllRgMv9Pek26lpBqMUczuVPe9Kc1/
+        LCk9XUnjT9fxo2HJft5rP5mnXJvPgdo3X5pr6QGGS2MtU1xbbW0/mB3Q3n5ay+Kbu2Kpac0wqsdr
+        l9QaRvcvmgMGjQ9kg7HKEsctRfqBXjMUSg1KY7CRCyl8CIKwmt5G5TXcX74Bo/OKf7EBAAA=
+    headers:
+      cache-control: [must-revalidate]
+      content-encoding: [gzip]
+      content-type: [application/json]
+      strict-transport-security: [max-age=2592000000; includeSubDomains; preload;]
+      transfer-encoding: [chunked]
+    status: {code: 200, message: OK}
+version: 1

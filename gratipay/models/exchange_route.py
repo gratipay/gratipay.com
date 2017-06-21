@@ -8,50 +8,67 @@ class ExchangeRoute(Model):
 
     typname = "exchange_routes"
 
+    def __eq__(self, other):
+        if not isinstance(other, ExchangeRoute):
+            return False
+        return self.id == other.id
+
+    def __ne__(self, other):
+        if not isinstance(other, ExchangeRoute):
+            return True
+        return self.id != other.id
+
+    def __repr__(self):
+        return '<ExchangeRoute: %s on %s>' % (repr(self.address), repr(self.network))
+
+
+    # Constructors
+    # ============
+
     @classmethod
-    def from_id(cls, id):
-        r = cls.db.one("""
+    def from_id(cls, id, cursor=None):
+        route = (cursor or cls.db).one("""
             SELECT r.*::exchange_routes
               FROM exchange_routes r
              WHERE id = %(id)s
         """, locals())
-        if r:
+        if route:
             from gratipay.models.participant import Participant  # XXX Red hot hack!
-            r.set_attributes(participant=Participant.from_id(r.participant))
-        return r
+            route.set_attributes(participant=Participant.from_id(route.participant))
+        return route
 
     @classmethod
-    def from_network(cls, participant, network):
+    def from_network(cls, participant, network, cursor=None):
         participant_id = participant.id
-        r = cls.db.one("""
+        route = (cursor or cls.db).one("""
             SELECT r.*::exchange_routes
               FROM current_exchange_routes r
              WHERE participant = %(participant_id)s
                AND network = %(network)s
         """, locals())
-        if r:
-            r.set_attributes(participant=participant)
-        return r
+        if route:
+            route.set_attributes(participant=participant)
+        return route
 
     @classmethod
-    def from_address(cls, participant, network, address):
+    def from_address(cls, participant, network, address, cursor=None):
         participant_id = participant.id
-        r = cls.db.one("""
+        route = (cursor or cls.db).one("""
             SELECT r.*::exchange_routes
               FROM exchange_routes r
              WHERE participant = %(participant_id)s
                AND network = %(network)s
                AND address = %(address)s
         """, locals())
-        if r:
-            r.set_attributes(participant=participant)
-        return r
+        if route:
+            route.set_attributes(participant=participant)
+        return route
 
     @classmethod
     def insert(cls, participant, network, address, fee_cap=None, cursor=None):
         participant_id = participant.id
         error = ''
-        r = (cursor or cls.db).one("""
+        route = (cursor or cls.db).one("""
             INSERT INTO exchange_routes
                         (participant, network, address, error, fee_cap)
                  VALUES (%(participant_id)s, %(network)s, %(address)s, %(error)s, %(fee_cap)s)
@@ -59,8 +76,8 @@ class ExchangeRoute(Model):
         """, locals())
         if network == 'braintree-cc':
             participant.update_giving_and_teams()
-        r.set_attributes(participant=participant)
-        return r
+        route.set_attributes(participant=participant)
+        return route
 
     def invalidate(self):
         if self.network == 'braintree-cc':

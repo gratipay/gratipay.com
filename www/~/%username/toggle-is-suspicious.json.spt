@@ -36,5 +36,14 @@ with website.db.get_cursor() as c:
         action='set', values=dict(is_suspicious=is_suspicious)
     ))
 
+    # send an email
+    participant = get_participant(state, restrict=True)
+    status = 'true' if is_suspicious else 'false'
+    website.app.email_queue.put( participant
+                               , 'suspicious-'+status
+                               , include_unsubscribe=False
+                               , _user_initiated=False
+                                )
+
 [---] application/json via json_dump
 {"is_suspicious": is_suspicious}

@@ -1,13 +1,16 @@
 import mimetypes
-from gratipay.utils import get_team
 from aspen import Response
 from os.path import join
 
 load = lambda s: open(join(website.www_root, 'assets', 'team-default-{}.png'.format(s))).read()
-defaults = {size: load(size) for size in ('large', 'small')}
-defaults['original'] = defaults['large']
+DEFAULTS = {size: load(size) for size in ('large', 'small')}
+DEFAULTS['original'] = DEFAULTS['large']
+
+load = lambda s: open(join(website.www_root, 'assets', 'package-default-{}.png'.format(s))).read()
+DEFAULTS_NPM = {size: load(size) for size in ('large', 'small')}
+DEFAULTS_NPM['original'] = DEFAULTS_NPM['large']
 [----]
-team = get_team(state)
+team = request.path['team']
 
 size = request.qs.get('size', 'large')
 if size not in team.IMAGE_SIZES:
@@ -16,6 +19,7 @@ if size not in team.IMAGE_SIZES:
 
 image, media_type = team.load_image(size), team.image_type
 if image is None:
+    defaults = DEFAULTS_NPM if team.package else DEFAULTS
     image, media_type = defaults[size], "image/png"
 
 parts = request.path.raw.split('/')
