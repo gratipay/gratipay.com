@@ -13,9 +13,9 @@ class Test(BrowserHarness):
         self.make_participant('alice', claimed_time='now')
         self.sign_in('alice')
         self.visit('/on/npm/foo/')
-        self.css('label')[0].click() # activate select
-        self.css('label')[choice].click()
-        self.css('button')[0].click()
+        self.css('#content label')[0].click() # activate select
+        self.css('#content label')[choice].click()
+        self.css('#content button')[0].click()
         address = ('alice' if choice == 0 else 'bob') + '@example.com'
         assert self.wait_for_success() == 'Check {} for a verification link.'.format(address)
         return self.db.one('select address from claims c join emails e on c.nonce = e.nonce')
@@ -44,11 +44,11 @@ class Test(BrowserHarness):
         self.add_and_verify_email(alice, 'alice@example.com', 'bob@example.com')
         self.sign_in('alice')
         self.visit('/on/npm/foo/')
-        self.css('label')[0].click()            # activate select
-        self.css('label')[1].click()            # click second item
-        self.css('li')[0].has_class('selected') # first item is still selected
-        self.css('ul')[0].has_class('open')     # still open
-        self.css('button').has_class('disabled')
+        self.css('#content label')[0].click()            # activate select
+        self.css('#content label')[1].click()            # click second item
+        self.css('#content li')[0].has_class('selected') # first item is still selected
+        self.css('#content ul')[0].has_class('open')     # still open
+        self.css('#content button').has_class('disabled')
         assert self.db.all('select * from claims') == []
 
 
