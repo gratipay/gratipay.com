@@ -79,7 +79,6 @@ Gratipay.routes.cc.init = function() {
 
     $('form#credit-card').submit(Gratipay.routes.cc.submit);
     Gratipay.routes.cc.formatInputs(
-        $('#card_number'),
         $('#expiration_month'),
         $('#expiration_year'),
         $('#cvv')
@@ -89,7 +88,7 @@ Gratipay.routes.cc.init = function() {
 
 /* Most of the following code is taken from https://github.com/wangjohn/creditly */
 
-Gratipay.routes.cc.formatInputs = function (cardNumberInput, expirationMonthInput, expirationYearInput, cvvInput) {
+Gratipay.routes.cc.formatInputs = function (expirationMonthInput, expirationYearInput, cvvInput) {
     function getInputValue(e, element) {
         var inputValue = element.val().trim();
         inputValue = inputValue + String.fromCharCode(e.which);
