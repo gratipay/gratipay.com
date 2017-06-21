@@ -8,7 +8,10 @@ if user.ANON:
     raise Response(403)
 
 account_id = request.qs['id']
-account = AccountElsewhere.from_id(account_id)
+try:
+    account = AccountElsewhere.from_id(account_id)
+except:
+    raise Response(400)
 token = request.headers.cookie.get('connect_%s' % account_id)
 if not token or not account.check_connect_token(token.value):
     raise Response(400, 'bad connect token "%s"' % token)

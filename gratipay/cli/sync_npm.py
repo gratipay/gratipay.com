@@ -3,40 +3,38 @@
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import sys
-import argparse
+import time
+
+from aspen import log
 
 from gratipay import wireup
-from gratipay.sync_npm import serialize, upsert
+from gratipay.sync_npm import consume_change_stream, get_last_seq, production_change_stream
+from gratipay.utils import sentry
 
 
-def parse_args(argv):
-    p = argparse.ArgumentParser()
-    p.add_argument('command', choices=['serialize', 'upsert'])
-    p.add_argument('path', help='the path to the input file', nargs='?', default='/dev/stdin')
-    return p.parse_args(argv)
-
-
-subcommands = { 'serialize': serialize.main
-              , 'upsert': upsert.main
-               }
-
-
-def main(argv=sys.argv):
+def main():
     """This function is installed via an entrypoint in ``setup.py`` as
     ``sync-npm``.
 
     Usage::
 
-      sync-npm {serialize,upsert} {<filepath>}
-
-    ``<filepath>`` defaults to stdin.
-
-    .. note:: Sphinx is expanding ``sys.argv`` in the parameter list. Sorry. :-/
+      sync-npm
 
     """
     env = wireup.env()
-    args = parse_args(argv[1:])
     db = wireup.db(env)
-
-    subcommands[args.command](env, args, db)
+    while 1:
+        with sentry.teller(env):
+            last_seq = get_last_seq(db)
+            log("Picking up with npm sync at {}.".format(last_seq))
+            stream = production_change_stream(last_seq)
+            consume_change_stream(stream, db)
+        try:
+            last_seq = get_last_seq(db)
+            sleep_for = 60
+            log( 'Encountered an error, will pick up with %s in %s seconds (Ctrl-C to exit) ...'
+               % (last_seq, sleep_for)
+                )
+            time.sleep(sleep_for)  # avoid a busy loop if thrashing
+        except KeyboardInterrupt:
+            return

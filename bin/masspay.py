@@ -21,12 +21,13 @@ from gratipay.billing.exchanges import get_ready_payout_routes_by_network
 from httplib import IncompleteRead
 
 
-os.chdir('../logs/masspay')
+base_dir = '../logs/masspay'
 ts = datetime.datetime.now().strftime('%Y-%m-%d')
-INPUT_CSV = '{}.input.csv'.format(ts)
-PAYPAL_CSV = '{}.output.paypal.csv'.format(ts)
-GRATIPAY_CSV = '{}.output.gratipay.csv'.format(ts)
-REPORT_CSV = '{}.report.paypal.csv'.format(ts)
+logpath = lambda t: os.path.join(base_dir, t.format(ts))
+INPUT_CSV = logpath('{}.input.csv')
+PAYPAL_CSV = logpath('{}.output.paypal.csv')
+GRATIPAY_CSV = logpath('{}.output.gratipay.csv')
+REPORT_CSV = logpath('{}.report.paypal.csv')
 
 
 def round_(d):
@@ -166,19 +167,21 @@ def compute_output_csvs():
     print("{:>64} {:>7} {:>7}".format(total_gross, total_fees, total_net))
 
 
-def load_statuses():
+def load_statuses_and_refs():
     _status_map = { 'Completed': 'succeeded'
                   , 'Unclaimed': 'pending'
                   , 'Denied': 'failed'
                    } # PayPal -> Gratipay
     statuses = {}
+    refs = {}
     fp = open(REPORT_CSV)
     for line in fp:
         if line.startswith('Transaction ID,Recipient'):
             break
     for rec in csv.reader(fp):
         statuses[rec[1]] = _status_map[rec[5]]
-    return statuses
+        refs[rec[1]] = rec[0]
+    return statuses, refs
 
 
 def post_back_to_gratipay(force=False):
@@ -199,7 +202,7 @@ def post_back_to_gratipay(force=False):
               "did, then rerun with -f.")
         return
 
-    statuses = load_statuses()
+    statuses, refs = load_statuses_and_refs()
 
     nposts = 0
     for username, route_id, email, gross, fee, net, additional_note in csv.reader(open(GRATIPAY_CSV)):
@@ -209,8 +212,15 @@ def post_back_to_gratipay(force=False):
             note += " " + additional_note
         print(note)
         status = statuses[email]
+        ref = refs[email]
 
-        data = {'amount': '-' + net, 'fee': fee, 'note': note, 'status': status, 'route_id': route_id}
+        data = {'amount': '-' + net
+                , 'fee': fee
+                , 'note': note
+                , 'status': status
+                , 'ref': ref
+                , 'route_id': route_id
+                }
         try:
             response = requests.post(url, auth=(gratipay_api_key, ''), data=data)
         except IncompleteRead:

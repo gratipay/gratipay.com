@@ -1,16 +1,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
-import mock
 import pytest
 import base64
 
 from aspen.testing.client import FileUpload
 from gratipay.testing import Harness, D,T
+from gratipay.testing.email import QueuedEmailHarness
 from gratipay.models.team import Team, slugize, InvalidTeamName
-
-
-REVIEW_URL = "https://github.com/gratipay/test-gremlin/issues/9"
 
 IMAGE = base64.b64decode(b"""\
 iVBORw0KGgoAAAANSUhEUgAAAEQAAAAdCAYAAAATksqNAAAYKGlDQ1BJQ0MgUHJvZmlsZQAAWIWV
@@ -163,7 +160,7 @@ V/QOGXuO+D9JGq8fAYOv8ZztsRXeEIhrIOSGsP+6G3ENR+a623JDKJwgxLQM/wKlv4aNE1ZNyAAA
 AABJRU5ErkJggg==""")
 
 
-class TestTeams(Harness):
+class TestTeams(QueuedEmailHarness):
 
     valid_data = {
         'name': 'Gratiteam',
@@ -201,10 +198,15 @@ class TestTeams(Harness):
         assert team.name == 'The Enterprise'
         assert team.owner == 'picard'
 
-    @mock.patch('gratipay.models.team.Team.create_github_review_issue')
-    def test_can_create_new_team(self, cgri):
-        cgri.return_value = REVIEW_URL
-        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
+    def make_alice(self):
+        self.make_participant( 'alice'
+                             , claimed_time='now'
+                             , email_address='alice@example.com'
+                             , last_paypal_result=''
+                              )
+
+    def test_can_create_new_team(self):
+        self.make_alice()
         r = self.post_new(dict(self.valid_data))
         team = self.db.one("SELECT * FROM teams")
         assert team
@@ -212,17 +214,16 @@ class TestTeams(Harness):
         assert json.loads(r.body)['review_url'] == team.review_url
 
     def test_all_fields_persist(self):
-        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
+        self.make_alice()
         self.post_new(dict(self.valid_data))
         team = T('gratiteam')
         assert team.name == 'Gratiteam'
         assert team.homepage == 'http://gratipay.com/'
         assert team.product_or_service == 'We make widgets.'
-        fallback = 'https://github.com/gratipay/team-review/issues#error-401'
-        assert team.review_url in (REVIEW_URL, fallback)
+        assert team.review_url == 'some-github-issue'
 
     def test_casing_of_urls_survives(self):
-        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
+        self.make_alice()
         self.post_new(dict( self.valid_data
                           , homepage='Http://gratipay.com/'
                            ))
@@ -230,13 +231,22 @@ class TestTeams(Harness):
         assert team.homepage == 'Http://gratipay.com/'
 
     def test_casing_of_slug_survives(self):
-        self.make_participant('alice', claimed_time='now', email_address='', last_paypal_result='')
+        self.make_alice()
         data = dict(self.valid_data)
         data['name'] = 'GratiTeam'
         self.post_new(dict(data))
         team = T('GratiTeam')
         assert team is not None
         assert team.slug_lower == 'gratiteam'
+
+    def test_application_email_sent_to_owner(self):
+        self.make_alice()
+        self.post_new(dict(self.valid_data))
+        last_email = self.get_last_email()
+        self.app.email_queue.flush()
+        assert last_email['to'] == 'alice <alice@example.com>'
+        expected = "Thanks for applying to use Gratipay!"
+        assert expected in last_email['body_text']
 
     def test_401_for_anon_creating_new_team(self):
         self.post_new(self.valid_data, auth_as=None, expected=401)
@@ -255,7 +265,7 @@ class TestTeams(Harness):
         assert "You must attach a PayPal account to apply for a new team." in r.body
 
     def test_error_message_for_public_review(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        self.make_alice()
         data = dict(self.valid_data)
         del data['agree_public']
         r = self.post_new(data, expected=400)
@@ -263,7 +273,7 @@ class TestTeams(Harness):
         assert "Sorry, you must agree to have your application publicly reviewed." in r.body
 
     def test_error_message_for_terms(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        self.make_alice()
         data = dict(self.valid_data)
         del data['agree_terms']
         r = self.post_new(data, expected=400)
@@ -271,7 +281,7 @@ class TestTeams(Harness):
         assert "Sorry, you must agree to the terms of service." in r.body
 
     def test_error_message_for_missing_fields(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        self.make_alice()
         data = dict(self.valid_data)
         del data['name']
         r = self.post_new(data, expected=400)
@@ -279,14 +289,13 @@ class TestTeams(Harness):
         assert "Please fill out the 'Team Name' field." in r.body
 
     def test_error_message_for_bad_url(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
-
+        self.make_alice()
         r = self.post_new(dict(self.valid_data, homepage='foo'), expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 0
         assert "Please enter an http[s]:// URL for the 'Homepage' field." in r.body
 
     def test_error_message_for_invalid_team_name(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        self.make_alice()
         data = dict(self.valid_data)
         data['name'] = '~Invalid:Name;'
         r = self.post_new(data, expected=400)
@@ -294,26 +303,14 @@ class TestTeams(Harness):
         assert "Sorry, your team name is invalid." in r.body
 
     def test_error_message_for_slug_collision(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        self.make_alice()
         self.post_new(dict(self.valid_data))
         r = self.post_new(dict(self.valid_data), expected=400)
         assert self.db.one("SELECT COUNT(*) FROM teams") == 1
         assert "Sorry, there is already a team using 'Gratiteam'." in r.body
 
-    def test_approved_team_shows_up_on_homepage(self):
-        self.make_team(is_approved=True)
-        assert 'The Enterprise' in self.client.GET("/").body
-
-    def test_unreviewed_team_shows_up_on_homepage(self):
-        self.make_team(is_approved=None)
-        assert 'The Enterprise' in self.client.GET("/").body
-
-    def test_rejected_team_shows_up_on_homepage(self):
-        self.make_team(is_approved=False)
-        assert 'The Enterprise' in self.client.GET("/").body
-
     def test_stripping_required_inputs(self):
-        self.make_participant('alice', claimed_time='now', email_address='alice@example.com', last_paypal_result='')
+        self.make_alice()
         data = dict(self.valid_data)
         data['name'] = "     "
         r = self.post_new(data, expected=400)
@@ -450,6 +447,13 @@ class TestTeams(Harness):
                 with pytest.raises(AssertionError):
                     team.update(field='foo')
 
+    def test_homepage_not_allowed_for_package(self):
+        alice = self.make_participant('alice', claimed_time='now')
+        package = self.make_package(name='enterprise')
+        with self.db.get_cursor() as c:
+            team = package.get_or_create_linked_team(c, alice)
+        pytest.raises(AssertionError, team.update, homepage='foo')
+
     def test_update_records_the_old_values_as_events(self):
         team = self.make_team(slug='enterprise', product_or_service='Product')
         team.update(name='Enterprise', product_or_service='We save galaxies.')
@@ -510,3 +514,17 @@ class TestTeams(Harness):
 
     def test_slugize_disallows_backslashes(self):
         self.assertRaises(InvalidTeamName, slugize, 'abc\def')
+
+
+class Cast(Harness):
+
+    def test_casts_team(self):
+        team = self.make_team()
+        state = self.client.GET('/TheEnterprise/', return_after='cast', want='state')
+        assert state['request'].path['team'] == team
+
+    def test_canonicalizes(self):
+        self.make_team()
+        response = self.client.GxT('/theenterprise/', return_after='cast')
+        assert response.code == 302
+        assert response.headers['Location'] == '/TheEnterprise/'

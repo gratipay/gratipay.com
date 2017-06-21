@@ -18,10 +18,9 @@ except ValueError:
     raise Response(400, "bad year")
 
 key = request.qs.get('key')
-mode = request.qs.get('mode')
 
 [---] text/csv via csv_dump
-export_history(participant, year, mode, key, require_key=True)
+export_history(participant, year, key, require_key=True)
 
 [---] application/json via json_dump
-export_history(participant, year, mode, key, back_as=dict)
+export_history(participant, year, key, back_as=dict)

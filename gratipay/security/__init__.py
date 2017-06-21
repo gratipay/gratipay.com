@@ -43,7 +43,8 @@ def add_headers_to_response(response):
 
     # https://www.w3.org/TR/referrer-policy/
     if 'Referrer-Policy' not in response.headers:
-        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        response.headers['Referrer-Policy'] = \
+                                      'no-referrer-when-downgrade, strict-origin-when-cross-origin'
 
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
     if 'content-security-policy-report-only' not in response.headers:
@@ -53,8 +54,6 @@ def add_headers_to_response(response):
             "style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com;"
             "img-src *;"
             "font-src 'self' assets.gratipay.com cloud.typography.com data:;"
-            "upgrade-insecure-requests;"
             "block-all-mixed-content;"
-            "reflected-xss block;"
             "report-uri https://gratipay.report-uri.io/r/default/csp/reportOnly;"
         )

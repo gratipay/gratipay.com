@@ -3,11 +3,11 @@
 from collections import OrderedDict
 
 from aspen import Response
-from gratipay.utils import get_team, markdown, truncate
+from gratipay.utils import markdown, truncate
 
 [-----------------------------------------------------------------------------]
 
-team = get_team(state)
+team = request.path['team']
 banner = name = team.name
 suppress_sidebar = not(team.is_approved or user.ADMIN)
 is_team_owner = not user.ANON and team.owner == user.participant.username
@@ -31,11 +31,11 @@ is_team_owner = not user.ANON and team.owner == user.participant.username
 
     <a href="{{ team.review_url }}">
         {% if team.status == 'approved' %}
-        <span class="status-icon approved">&#xe008;</span> {{ _("Approved") }}
+        <span class="status-icon success">&#xe008;</span> {{ _("Approved") }}
         {% elif team.status == 'unreviewed' %}
-        <span class="status-icon unreviewed">&#xe009;</span> {{ _("Unreviewed") }}
+        <span class="status-icon warning">&#xe009;</span> {{ _("Unreviewed") }}
         {% elif team.status == 'rejected' %}
-        <span class="status-icon rejected">&#xe010;</span> {{ _("Rejected") }}
+        <span class="status-icon failure">&#xe010;</span> {{ _("Rejected") }}
         {% endif %}
     </a> |
 

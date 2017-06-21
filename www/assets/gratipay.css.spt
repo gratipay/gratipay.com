@@ -33,6 +33,7 @@
 @import "scss/components/danger-zone";
 @import "scss/components/dropdown";
 @import "scss/components/emails";
+@import "scss/components/github-ribbon";
 @import "scss/components/js-edit";
 @import "scss/components/linear_gradient";
 @import "scss/components/listing";
@@ -41,13 +42,16 @@
 @import "scss/components/memberships";
 @import "scss/components/modal";
 @import "scss/components/nav";
+@import "scss/components/pagination";
 @import "scss/components/payments-by";
 @import "scss/components/profile-statement";
+@import "scss/components/select";
 @import "scss/components/sidebar";
 @import "scss/components/sign_in";
 @import "scss/components/status-icon";
 @import "scss/components/support_gratipay";
 @import "scss/components/table";
+@import "scss/components/text-treatments";
 @import "scss/components/payment-distribution";
 @import "scss/components/tipr";
 @import "scss/components/upgrade";
@@ -64,10 +68,11 @@
 @import "scss/pages/history";
 @import "scss/pages/identities";
 @import "scss/pages/team";
+@import "scss/pages/npm";
+@import "scss/pages/package";
 @import "scss/pages/profile-edit";
 @import "scss/pages/giving";
 @import "scss/pages/settings";
 @import "scss/pages/on-confirm";
-@import "scss/pages/on-npm-foo";
 @import "scss/pages/search";
 @import "scss/pages/hall-of-fame";

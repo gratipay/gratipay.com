@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import time
 from gratipay.testing import BrowserHarness, D,P
+from selenium.webdriver.common.keys import Keys
 
 
 class Tests(BrowserHarness):
@@ -20,25 +20,30 @@ class Tests(BrowserHarness):
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
         self.css('.lookup-container .query').first.fill('alice')
-        time.sleep(0.3)
         self.css('.lookup-container button').first.click()
-        time.sleep(0.3)
+        self.wait_for('table.team a')
         assert [a.text for a in self.css('table.team a')] == ['alice']
+
+
+    def set_take(self, amount):
+        el = self.css('table.team form.edit input').first
+        el.fill(amount)
+        el.type(Keys.ENTER)
 
 
     def test_member_can_set_their_take(self):
         self.enterprise.add_member(self.alice, P('picard'))
         self.sign_in('alice')
         self.visit('/TheEnterprise/distributing/')
-        self.css('table.team form.edit input').first.fill('5.37\n')
-        time.sleep(0.1)
+        self.set_take('5.37')
+        assert self.wait_for_success() == 'Your take is now $5.37.'
         assert self.enterprise.get_take_for(self.alice) == D('5.37')
 
 
     def test_member_can_set_their_take_again(self):
         self.test_member_can_set_their_take()
-        self.css('table.team form.edit input').first.fill('100.00\n')
-        time.sleep(0.1)
+        self.set_take('100')
+        assert self.wait_for_success() == 'Your take is now $100.00.'
         assert self.enterprise.get_take_for(self.alice) == D('100.00')
 
 
@@ -46,12 +51,9 @@ class Tests(BrowserHarness):
         self.enterprise.add_member(self.alice, P('picard'))
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
-
         self.css('table.team span.remove').first.click()
-        time.sleep(0.1)
-        self.css('.modal .yes').first.click()
-        time.sleep(0.1)
-
+        self.wait_for('.modal .yes').first.click()
+        assert self.wait_for_success() == 'alice has been removed from the team.'
         assert self.enterprise.get_memberships() == []
 
 

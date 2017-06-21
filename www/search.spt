@@ -1,4 +1,4 @@
-from gratipay.utils import markdown, truncate, icons
+from gratipay.utils import markdown, truncate, icons, listings
 from gratipay.utils.i18n import LANGUAGES_2, SEARCH_CONFS, strip_accents
 from markupsafe import Markup
 [---]
@@ -48,16 +48,33 @@ if query:
              ) _""", locals())
         if action in (None, 'search_projects'):
             results['projects'] = website.db.all("""
-            SELECT project FROM (
-                SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
+            SELECT project, package FROM (
+
+                SELECT t.name                       AS name
+                     , t.*::teams                   AS project
+                     , null                         AS package
+                     , similarity(t.name, %(q)s)    AS rank
                   FROM teams t
-                 WHERE name %% %(q)s
-                   AND NOT is_closed
-                   AND is_approved
+                 WHERE t.name %% %(q)s
+                   AND NOT t.is_closed
+                   AND t.is_approved
+
+                 UNION
+
+                SELECT pkg.name                     AS name
+                     , null                         AS project
+                     , pkg.*::packages              AS package
+                     , similarity(pkg.name, %(q)s)  AS rank
+                  FROM packages pkg
+             LEFT JOIN teams_to_packages tp
+                    ON tp.package_id = pkg.id
+                 WHERE pkg.name %% %(q)s
+                   AND tp.package_id IS NULL
+
               ORDER BY rank DESC, name
                  LIMIT 10
-            ) _""", locals())
 
+            ) _""", locals())
     else:
         if action in (None, 'search_usernames'):
             results['usernames'] = website.db.all("""
@@ -82,13 +99,31 @@ if query:
             ) _""", locals())
         if action in (None, 'search_projects'):
             results['projects'] = website.db.all("""
-            SELECT project FROM (
-                SELECT t.*::teams AS project, similarity(name, %(q)s) AS rank
+            SELECT project, package FROM (
+
+                SELECT t.name                       AS name
+                     , t.*::teams                   AS project
+                     , null                         AS package
+                     , similarity(t.name, %(q)s)    AS rank
                   FROM teams t
-                 WHERE name %% %(q)s
-                   AND NOT is_closed
+                 WHERE t.name %% %(q)s
+                   AND NOT t.is_closed
+
+                 UNION
+
+                SELECT pkg.name                     AS name
+                     , null                         AS project
+                     , pkg.*::packages              AS package
+                     , similarity(pkg.name, %(q)s)  AS rank
+                  FROM packages pkg
+             LEFT JOIN teams_to_packages tp
+                    ON tp.package_id = pkg.id
+                 WHERE pkg.name %% %(q)s
+                   AND tp.package_id IS NULL
+
               ORDER BY rank DESC, name
                  LIMIT 10
+
             ) _""", locals())
 
     if action in (None, 'search_statements'):
@@ -149,7 +184,7 @@ zip = zip
 {% from 'templates/list-participants.html' import list_participants with context %}
 {% block content %}
 
-    <form action="/search" method="get">
+    <form action="/search" method="get" class="important-thing-at-the-top">
         <input type="text" name="q" placeholder="{{ _('Search Gratipay') }}"
                value="{{ query or '' }}" autofocus />
         <button type="submit">{{ _("Search") }}</button>
@@ -158,7 +193,7 @@ zip = zip
     {% set usernames = zip(results.get('usernames', []), empty_excerpts()) %}
     {% set statements = results.get('statements') %}
     {% set emails = zip(results.get('emails', []), empty_excerpts()) %}
-    {% set projects = results.get('projects') %}
+    {% set projects = listings.with_unclaimed_packages_wrapped(website, results.get('projects', [])) %}
 
     {% if projects %}
     <h2>{{ ngettext("Found a matching project",

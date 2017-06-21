@@ -1,0 +1,5 @@
+{{ _("Your account has been suspended") }}
+[---] text/html
+{{ _("We have suspended your account.") }}
+[---] text/plain
+{{ _("We have suspended your account.") }}
