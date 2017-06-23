@@ -42,7 +42,6 @@ with website.db.get_cursor() as c:
     # send an email if the prior is_suspicious was not None
     participant = get_participant(state, restrict=True)
     status = 'true' if is_suspicious else 'false'
-    print(was)
     if was is not None:
         website.app.email_queue.put( participant
                                    , 'suspicious-'+status
