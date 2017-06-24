@@ -1065,64 +1065,64 @@ msgid "hasn't joined Gratipay yet"
 msgstr "non si è ancora iscritto a Gratipay"
 
 msgid "Give"
-msgstr ""
+msgstr "Dona"
 
 msgid "Receive"
-msgstr ""
+msgstr "Ricevi"
 
 msgid "Ready to accept payments"
-msgstr ""
+msgstr "Pronto ad accettare i pagamenti"
 
 msgid "Not available to pay"
-msgstr ""
+msgstr "Non disponibile a pagare"
 
 msgid "Free as in money."
-msgstr ""
+msgstr "Libero come nel denaro."
 
 msgid "{project} ({package} on npm)"
-msgstr ""
+msgstr "{project} ({package} sugli npm)"
 
 msgid "Unclaimed"
-msgstr ""
+msgstr "Non riscossi"
 
 msgid "Unknown package"
-msgstr ""
+msgstr "Pacchetto sconosciuto"
 
 msgid "No packages discovered."
-msgstr ""
+msgstr "Nessun pacchetto scoeprto."
 
 msgid "Paste a package.json to find packages to pay for:"
-msgstr ""
+msgstr "Incolla un pacchetto.json per trovare i pacchetti per cui pagare:"
 
 msgid "Find packages"
-msgstr ""
+msgstr "Trova pacchetti"
 
 msgid "Apply to accept payments for your npm packages:"
-msgstr ""
+msgstr "Richiedi di poter accettare pagamenti per i tuoi pacchetti npm:"
 
 msgid "No packages found."
-msgstr ""
+msgstr "Nessun pacchetto trovato."
 
 msgid "already claimed by {a}you{_a}"
-msgstr ""
+msgstr "Già riscosso da {a}te{_a}"
 
 msgid "already claimed by {a}{owner}{_a}"
-msgstr ""
+msgstr "Già riscosso da {a}{owner}{_a}"
 
 msgid "Apply to accept payments"
 msgstr "Richiedi di poter accettare pagamenti"
 
 msgid "{a}Link an email{_a} from npm to see related packages."
-msgstr ""
+msgstr "{a}Linka un'email{_a} da npm per vedere i relativi pacchetti."
 
 msgid "{n} out of all {N} npm packages are on Gratipay."
-msgstr ""
+msgstr "{n} su un totale di {N} pacchetti npm sono su Gratipay."
 
 msgid "No description available."
 msgstr "Nessuna descrizione disponibile."
 
 msgid "Claim the {package_link} npm package on Gratipay:"
-msgstr ""
+msgstr "Riscuoti il pacchetto npm {package_link} su Gratipay:"
 
 msgid "Apply to accept payments for the {package_link} npm package:"
 msgstr "Richiedi di poter accettare pagamenti per il pacchetto npm {package_link}:"
@@ -1235,7 +1235,7 @@ msgid "Invalid email address."
 msgstr "Indirizzo email non valido."
 
 msgid "Check {email_address} for a verification link."
-msgstr ""
+msgstr "Controlla {email_address} per un link di verifica."
 
 msgid "Check your inbox for a verification link."
 msgstr "Controlla la tua casella posta per un link di verifica."
