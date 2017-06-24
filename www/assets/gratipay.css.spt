@@ -29,6 +29,7 @@
 @import "scss/components/chart";
 @import "scss/components/chosen";
 @import "scss/components/communities";
+@import "scss/components/confirmation-modal";
 @import "scss/components/cta";
 @import "scss/components/danger-zone";
 @import "scss/components/dropdown";

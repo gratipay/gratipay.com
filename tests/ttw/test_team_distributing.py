@@ -52,7 +52,7 @@ class Tests(BrowserHarness):
         self.sign_in('picard')
         self.visit('/TheEnterprise/distributing/')
         self.css('table.team span.remove').first.click()
-        self.wait_for('.modal .yes').first.click()
+        self.wait_for('.confirmation-modal .yes').first.click()
         assert self.wait_for_success() == 'alice has been removed from the team.'
         assert self.enterprise.get_memberships() == []
 

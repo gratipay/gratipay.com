@@ -34,21 +34,22 @@ nidentities = len(identities)
 
     <div class="clear"></div>
 
-    <div id="country-chooser">
-        <header>
-            <h2>{{ _("Which Country?") }}</h2>
-            <button class="close-country-chooser">&times;</button>
-        </header>
-        <section>
-            {% for name, code in countries %}
-            <a href="{{ code }}">
-                <img class="flag {{ code }}"
-                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
-                <span>{{ name }}</span>
-            </a>
-            {% endfor %}
-        </section>
+    <div class="modal-wrapper" id="country-chooser">
+        <div class="modal">
+            <header>
+                <h2>{{ _("Which Country?") }}</h2>
+                <button class="close-modal icon">&#xe010;</button>
+            </header>
+            <section>
+                {% for name, code in countries %}
+                <a href="{{ code }}" class="country">
+                    <img class="flag {{ code }}"
+                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
+                    <span>{{ name }}</span>
+                </a>
+                {% endfor %}
+            </section>
+        </div>
     </div>
-    <div id="grayout"></div>
 </div>
 {% endblock %}
