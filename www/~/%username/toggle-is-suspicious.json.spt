@@ -10,6 +10,9 @@ to = request.body.get('to')
 if not to in ('true', 'false', None):
     raise Response(400)
 
+participant = get_participant(state, restrict=True)
+was = participant.is_suspicious
+
 with website.db.get_cursor() as c:
     if to is None:
         is_suspicious = website.db.one("""
@@ -36,14 +39,15 @@ with website.db.get_cursor() as c:
         action='set', values=dict(is_suspicious=is_suspicious)
     ))
 
-    # send an email
+    # send an email if the prior is_suspicious was not None
     participant = get_participant(state, restrict=True)
     status = 'true' if is_suspicious else 'false'
-    website.app.email_queue.put( participant
-                               , 'suspicious-'+status
-                               , include_unsubscribe=False
-                               , _user_initiated=False
-                                )
+    if was is not None:
+        website.app.email_queue.put( participant
+                                   , 'suspicious-'+status
+                                   , include_unsubscribe=False
+                                   , _user_initiated=False
+                                    )
 
 [---] application/json via json_dump
 {"is_suspicious": is_suspicious}
