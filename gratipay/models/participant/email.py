@@ -163,6 +163,7 @@ class Email(object):
         existing = c.one( 'SELECT * FROM emails WHERE address=%s AND participant_id=%s'
                         , (email, self.id)
                          )  # can't use eafp here because of cursor error handling
+                            # XXX I forget what eafp is. :(
 
         if existing is None:
 
@@ -233,7 +234,13 @@ class Email(object):
                 return VERIFICATION_FAILED, None, None
             packages = self.get_packages_claiming(cursor, nonce)
             if record.verified and not packages:
-                assert record.nonce is None  # and therefore, order of conditions matters
+
+                # If an email address is already verified, then we should only
+                # be going through this flow if they are verifying ownership of
+                # some packages.
+
+                assert record.nonce is None  # do this before constant_time_compare
+
                 return VERIFICATION_REDUNDANT, None, None
             if not constant_time_compare(record.nonce, nonce):
                 return VERIFICATION_FAILED, None, None
