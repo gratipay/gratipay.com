@@ -506,6 +506,19 @@ msgstr ""
 msgid "Page {0} of {1}"
 msgstr ""
 
+msgid "Sign In"
+msgstr "Iniciar sesión"
+
+msgid "Sign In / Sign Up"
+msgstr ""
+
+msgid "Please sign in to continue"
+msgstr ""
+
+msgid ""
+"Use a third-party provider to sign in or create an account on Gratipay:"
+msgstr ""
+
 msgid "Sign in / Sign up"
 msgstr "Entrar / Registro"
 
@@ -925,9 +938,6 @@ msgstr "{b}{escrow}{_b} está depositado dentro de Gratipay."
 
 msgid "The Delpan Incident"
 msgstr "El incidente Delpan"
-
-msgid "Sign In"
-msgstr "Iniciar sesión"
 
 msgid "1.0 Payout Review"
 msgstr "Revisión Pago 1.0"

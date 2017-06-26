@@ -510,6 +510,19 @@ msgstr ""
 msgid "Page {0} of {1}"
 msgstr ""
 
+msgid "Sign In"
+msgstr "Anmelden"
+
+msgid "Sign In / Sign Up"
+msgstr ""
+
+msgid "Please sign in to continue"
+msgstr ""
+
+msgid ""
+"Use a third-party provider to sign in or create an account on Gratipay:"
+msgstr ""
+
 msgid "Sign in / Sign up"
 msgstr "Anmelden / Registrieren"
 
@@ -929,9 +942,6 @@ msgstr ""
 
 msgid "The Delpan Incident"
 msgstr "Der Delpan-Vorfall"
-
-msgid "Sign In"
-msgstr "Anmelden"
 
 msgid "1.0 Payout Review"
 msgstr ""
