@@ -9,13 +9,11 @@
     font-style: normal;
 }
 
-@mixin icon($name: "", $font-size: 16px, $margin-right: 4px) {
+@mixin icon($name: "") {
   font-family: 'icomoon';
   speak: none;
   font-weight: normal;
   font-variant: normal;
-  font-size: $font-size;
-  margin-right: $margin-right;
   text-transform: none;
   -webkit-font-smoothing: antialiased;
 
@@ -27,8 +25,8 @@
   @else if $name == "bitbucket"     { content: "\e005"; }
 }
 
-@mixin has-icon($name: "", $font-size: 16px, $margin-right: 4px) {
+@mixin has-icon($name: "") {
   &:before {
-    @include icon($name, $font-size, $margin-right);
+    @include icon($name);
   }
 }

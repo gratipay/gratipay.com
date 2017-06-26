@@ -1,7 +1,8 @@
 .sign-in {
     display: inline-block;
     vertical-align: middle;
-    .dropdown-toggle {
+
+    button {
         background: $green;
         @include border-radius(3px);
         color: #fff;
@@ -9,73 +10,16 @@
         display: block;
         font-size: 13px;
         line-height: 25px;
-        .caret {
-            border-top: 4px solid #fff;
-            border-right: 4px solid transparent;
-            border-left: 4px solid transparent;
-            margin-top: 11px;
-        }
-        &.highlight {
-            @include box-shadow(0, 0, 8px, $green);
+
+        &:hover {
             background: $darker-green;
         }
     }
-    .open .dropdown-toggle, .dropdown-toggle:hover {
-        background: $darker-green;
-    }
-    .dropdown-menu {
-        top: 24px;
-        @include border-radius(3px);
-        border: 0;
-        box-shadow: none;
-        background: $green;
-        min-width: 140px; /* centering on unclaimed package page is based on this */
-        li {
-            margin: 0;
-            list-style: none;
-            &.facebook      button { @include has-icon("facebook"); }
-            &.google        button { @include has-icon("google"); }
-            &.twitter       button { @include has-icon("twitter"); }
-            &.github        button { @include has-icon("github"); }
-            &.bitbucket     button { @include has-icon("bitbucket"); }
-            &.openstreetmap button { @include has-icon("openstreetmap"); }
-            &:hover button {
-                background: $darker-green;
-            }
-        }
-        button {
-            color: #fff;
-            display: block;
-            width: 100%;
-            padding: 3px 8px;
-            margin: 0;
-            text-align: left;
-            position: relative;
-            font-size: 13px;
-            border: none;
-            @include border-radius(0);
-            background: none;
-        }
-        button:before {
-            position: absolute;
-            top: 4px;
-            right: 5px;
-        }
-        form {
-            display: block;
-            margin: 0;
-            padding: 0;
-        }
-    }
+
     #header & {
         float: right;
-        &:hover {
-            .dropdown-toggle {
-                background: transparentize($gold, 0.8);
-                border-color: $gold;
-            }
-        }
-        .dropdown-toggle {
+
+        button {
             @include border-radius(0);
             border-top: 4px solid transparent;
             background: none;
@@ -92,19 +36,78 @@
                 margin-top: 4px;
             }
         }
-        .dropdown-menu {
-            left: auto;
-            top: auto;
-            right: 0;
-            margin-top: 0;
-            @include border-radius(0);
-            background: $gold;
+
+        &:hover {
             button {
-                color: $black;
-                &:hover {
-                    background: transparentize($brown, 0.8);
-                }
+                background: transparentize($gold, 0.8);
+                border-color: $gold;
             }
+        }
+    }
+}
+
+#sign-in-modal .modal {
+    max-width: 400px;
+    width: 90%;
+    section {
+        padding: 20px;
+        text-align: center;
+
+        p {
+            font-size: 14px;
+        }
+    }
+
+    .auth-links {
+        margin-top: 5px;
+    }
+
+    .auth-links li {
+        display: inline-block;
+        margin: 5px 0px 0px 0px;
+
+        & > * {
+            display: inline;
+        }
+    }
+
+    .auth-links button {
+        text-align: left;
+        background: $green;
+        color: white;
+        padding: 15px 45px 15px 15px;
+        position: relative;
+        font: normal 14px $Ideal;
+
+        span {
+            vertical-align: middle;
+        }
+
+        span.icon {
+            position: absolute;
+            right: 9px;
+            font-size: 16px;
+        }
+
+        span.icon.facebook      { @include has-icon("facebook"); }
+        span.icon.twitter       { @include has-icon("twitter"); }
+        span.icon.google        { @include has-icon("google"); }
+        span.icon.github        { @include has-icon("github"); }
+        span.icon.openstreetmap { @include has-icon("openstreetmap"); }
+        span.icon.bitbucket     { @include has-icon("bitbucket"); }
+
+        &:hover {
+            background: $darker-green;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    #sign-in-modal .modal .auth-links li {
+        display: block;
+
+        button {
+            width: 100%;
         }
     }
 }

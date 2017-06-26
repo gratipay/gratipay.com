@@ -1,20 +1,7 @@
-{% from 'templates/auth.html' import auth_button with context %}
-
 {% macro sign_in_using(button_class='') %}
 <div class="sign-in">
-  <div class="dropdown">
-    <button class="dropdown-toggle {{ button_class }}" data-toggle="dropdown">
-        {{ _('Sign in / Sign up') }} <b class="caret"></b>
+    <button class="{{ button_class }}">
+        {{ _('Sign in / Sign up') }}
     </button>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-    {% for platform in website.signin_platforms %}
-      <li class="{{ platform.name }}">
-        {% call auth_button(platform.name, 'opt-in') %}
-            {{ platform.display_name }}
-        {% endcall %}
-      </li>
-    {% endfor %}
-    </ul>
-  </div>
 </div>
 {% endmacro %}

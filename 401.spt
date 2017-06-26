@@ -10,6 +10,15 @@ suppress_sidebar = True
     {{ sign_in_using(button_class='large') }}
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+	Gratipay.signIn.openSignInToContinueModal();
+});
+</script>
+{{ super() }}
+{% endblock %}
 [---] application/json via stdlib_percent
 { "error_code": 401
 , "error_message_short": "Unauthenticated"
