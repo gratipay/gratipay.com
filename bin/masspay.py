@@ -175,14 +175,17 @@ def load_statuses_and_refs(masspay_id):
     statuses = {}
     refs = {}
     fp = open(REPORT_CSV)
-    for line in fp:
-        # Skip the crap at the top.
-        if line.startswith('Transaction ID,Recipient'):
-            # This is the header row for the actual CSV data.
+    for line in fp:                                      # skip the crap at the top
+        if line.startswith('Transaction ID,Recipient'):  # header for the actual CSV data
             break
     for i, rec in enumerate(csv.reader(fp)):
         ref = rec[0]
         if not ref:
+
+            # We don't get a unique ref for denied (at least?) payouts. Compute
+            # one using the ID for the MassPay overall so that we have *some*
+            # hope of backtracking if needed.
+
             ref = '{}-{:>04}'.format(masspay_id, i)
         email = rec[1]
         status = rec[5]
