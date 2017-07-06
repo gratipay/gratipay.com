@@ -127,10 +127,10 @@ def compute_input_csv():
             continue
         total_gross += amount
         print("{:<24}{:<32} {:>7} {:>7}".format( route.participant.username
-                                                           , route.address
-                                                           , route.fee_cap
-                                                           , amount
-                                                            ))
+                                               , route.address
+                                               , route.fee_cap
+                                               , amount
+                                                ))
         row = (route.participant.username, route.id, route.address, route.fee_cap, amount)
         writer.writerow(row)
     print(" "*64, "-"*7)
@@ -154,20 +154,20 @@ def compute_output_csvs():
     for payee in payees:
         paypal_csv.writerow((payee.email, payee.net, "usd"))
         gratipay_csv.writerow(( payee.username
-                            , payee.route_id
-                            , payee.email
-                            , payee.gross
-                            , payee.fee
-                            , payee.net
-                            , payee.additional_note
-                             ))
+                              , payee.route_id
+                              , payee.email
+                              , payee.gross
+                              , payee.fee
+                              , payee.net
+                              , payee.additional_note
+                               ))
         print("{username:<24}{email:<32} {gross:>7} {fee:>7} {net:>7}".format(**payee.__dict__))
 
     print(" "*56, "-"*23)
     print("{:>64} {:>7} {:>7}".format(total_gross, total_fees, total_net))
 
 
-def load_statuses_and_refs():
+def load_statuses_and_refs(masspay_id):
     _status_map = { 'Completed': 'succeeded'
                   , 'Unclaimed': 'pending'
                   , 'Denied': 'failed'
@@ -175,16 +175,29 @@ def load_statuses_and_refs():
     statuses = {}
     refs = {}
     fp = open(REPORT_CSV)
-    for line in fp:
-        if line.startswith('Transaction ID,Recipient'):
+    for line in fp:                                      # skip the crap at the top
+        if line.startswith('Transaction ID,Recipient'):  # header for the actual CSV data
             break
-    for rec in csv.reader(fp):
-        statuses[rec[1]] = _status_map[rec[5]]
-        refs[rec[1]] = rec[0]
+    for i, rec in enumerate(csv.reader(fp)):
+        ref = rec[0]
+        if not ref:
+
+            # We don't get a unique ref for denied (at least?) payouts. Compute
+            # one using the ID for the MassPay overall so that we have *some*
+            # hope of backtracking if needed.
+
+            ref = '{}-{:>04}'.format(masspay_id, i)
+        email = rec[1]
+        status = rec[5]
+        statuses[email] = _status_map[status]
+        refs[email] = ref
     return statuses, refs
 
 
 def post_back_to_gratipay(force=False):
+
+    masspay_id = raw_input("Unique Transaction ID for this MassPay: ")
+    assert masspay_id.isdigit() and len(masspay_id) > 10  # some minimal validation
 
     try:
         gratipay_api_key = os.environ['GRATIPAY_API_KEY']
@@ -202,7 +215,7 @@ def post_back_to_gratipay(force=False):
               "did, then rerun with -f.")
         return
 
-    statuses, refs = load_statuses_and_refs()
+    statuses, refs = load_statuses_and_refs(masspay_id)
 
     nposts = 0
     for username, route_id, email, gross, fee, net, additional_note in csv.reader(open(GRATIPAY_CSV)):
@@ -214,12 +227,12 @@ def post_back_to_gratipay(force=False):
         status = statuses[email]
         ref = refs[email]
 
-        data = {'amount': '-' + net
-                , 'fee': fee
-                , 'note': note
-                , 'status': status
-                , 'ref': ref
-                , 'route_id': route_id
+        data = { 'amount': '-' + net
+               , 'fee': fee
+               , 'note': note
+               , 'status': status
+               , 'ref': ref
+               , 'route_id': route_id
                 }
         try:
             response = requests.post(url, auth=(gratipay_api_key, ''), data=data)
