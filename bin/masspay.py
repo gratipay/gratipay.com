@@ -167,7 +167,7 @@ def compute_output_csvs():
     print("{:>64} {:>7} {:>7}".format(total_gross, total_fees, total_net))
 
 
-def load_statuses_and_refs():
+def load_statuses_and_refs(masspay_id):
     _status_map = { 'Completed': 'succeeded'
                   , 'Unclaimed': 'pending'
                   , 'Denied': 'failed'
@@ -176,15 +176,25 @@ def load_statuses_and_refs():
     refs = {}
     fp = open(REPORT_CSV)
     for line in fp:
+        # Skip the crap at the top.
         if line.startswith('Transaction ID,Recipient'):
+            # This is the header row for the actual CSV data.
             break
-    for rec in csv.reader(fp):
-        statuses[rec[1]] = _status_map[rec[5]]
-        refs[rec[1]] = rec[0]
+    for i, rec in enumerate(csv.reader(fp)):
+        ref = rec[0]
+        if not ref:
+            ref = '{}-{:>04}'.format(masspay_id, i)
+        email = rec[1]
+        status = rec[5]
+        statuses[email] = _status_map[status]
+        refs[email] = ref
     return statuses, refs
 
 
 def post_back_to_gratipay(force=False):
+
+    masspay_id = raw_input("Unique Transaction ID for this MassPay: ")
+    assert masspay_id.isdigit() and len(masspay_id) > 10  # some minimal validation
 
     try:
         gratipay_api_key = os.environ['GRATIPAY_API_KEY']
@@ -202,7 +212,7 @@ def post_back_to_gratipay(force=False):
               "did, then rerun with -f.")
         return
 
-    statuses, refs = load_statuses_and_refs()
+    statuses, refs = load_statuses_and_refs(masspay_id)
 
     nposts = 0
     for username, route_id, email, gross, fee, net, additional_note in csv.reader(open(GRATIPAY_CSV)):
