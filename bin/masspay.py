@@ -127,10 +127,10 @@ def compute_input_csv():
             continue
         total_gross += amount
         print("{:<24}{:<32} {:>7} {:>7}".format( route.participant.username
-                                                           , route.address
-                                                           , route.fee_cap
-                                                           , amount
-                                                            ))
+                                               , route.address
+                                               , route.fee_cap
+                                               , amount
+                                                ))
         row = (route.participant.username, route.id, route.address, route.fee_cap, amount)
         writer.writerow(row)
     print(" "*64, "-"*7)
@@ -154,13 +154,13 @@ def compute_output_csvs():
     for payee in payees:
         paypal_csv.writerow((payee.email, payee.net, "usd"))
         gratipay_csv.writerow(( payee.username
-                            , payee.route_id
-                            , payee.email
-                            , payee.gross
-                            , payee.fee
-                            , payee.net
-                            , payee.additional_note
-                             ))
+                              , payee.route_id
+                              , payee.email
+                              , payee.gross
+                              , payee.fee
+                              , payee.net
+                              , payee.additional_note
+                               ))
         print("{username:<24}{email:<32} {gross:>7} {fee:>7} {net:>7}".format(**payee.__dict__))
 
     print(" "*56, "-"*23)
@@ -214,12 +214,12 @@ def post_back_to_gratipay(force=False):
         status = statuses[email]
         ref = refs[email]
 
-        data = {'amount': '-' + net
-                , 'fee': fee
-                , 'note': note
-                , 'status': status
-                , 'ref': ref
-                , 'route_id': route_id
+        data = { 'amount': '-' + net
+               , 'fee': fee
+               , 'note': note
+               , 'status': status
+               , 'ref': ref
+               , 'route_id': route_id
                 }
         try:
             response = requests.post(url, auth=(gratipay_api_key, ''), data=data)
