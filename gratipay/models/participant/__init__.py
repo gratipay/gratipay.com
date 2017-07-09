@@ -103,6 +103,20 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
         return participant
 
     @classmethod
+    def from_email(cls, email_address):
+        """Return an existing participant based on email.
+        """
+        return cls.db.one("""
+
+            SELECT participants.*::participants
+              FROM participants
+              JOIN emails ON emails.participant_id = participants.id
+             WHERE emails.address=%s
+               AND emails.verified IS true
+
+        """, (email_address, ))
+
+    @classmethod
     def _from_thing(cls, thing, value):
         assert thing in ("id", "username_lower", "session_token", "api_key")
         return cls.db.one("""
