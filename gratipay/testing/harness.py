@@ -2,6 +2,7 @@
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import contextlib
 import itertools
 import unittest
 from collections import defaultdict
@@ -11,6 +12,7 @@ from decimal import Decimal
 from aspen import log, resources
 from aspen.utils import utcnow
 from aspen.testing.client import Client
+from environment import Environment
 from gratipay.application import Application
 from gratipay.billing.exchanges import record_exchange, record_exchange_result
 from gratipay.elsewhere import UserInfo
@@ -443,3 +445,13 @@ class Harness(unittest.TestCase):
         if package.__class__ is not Package:
             package = Package.from_names(NPM, package)
         package.get_or_create_linked_team(self.db, participant)
+
+
+    @contextlib.contextmanager
+    def setenv(self, **kw):
+        _old = self.client.website.env
+        _new = self.client.website.env.environ
+        _new.update(kw)
+        self.client.website.env = Environment(spec=_old.spec, environ=_new)
+        yield
+        self.client.website.env = _old
