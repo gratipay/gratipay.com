@@ -226,28 +226,51 @@ class Email(object):
           updated if applicable (``None`` if not).
 
         """
+        _fail = VERIFICATION_FAILED, None, None
         if '' in (email.strip(), nonce.strip()):
-            return VERIFICATION_FAILED, None, None
+            return _fail
         with self.db.get_cursor() as cursor:
+
+            # Load an email record. Check for an address match, but don't check
+            # the nonce at this point. We want to compare in constant time to
+            # avoid timing attacks, and we'll do that below.
+
             record = self.get_email(email, cursor, and_lock=True)
             if record is None:
-                return VERIFICATION_FAILED, None, None
-            packages = self.get_packages_claiming(cursor, nonce)
-            if record.verified and not packages:
 
-                # If an email address is already verified, then we should only
-                # be going through this flow if they are verifying ownership of
-                # some packages.
+                # We don't have that email address on file. Maybe it used to be
+                # on file but was explicitly removed (they followed an old link
+                # after removing in the UI?), or maybe it was never on file in
+                # the first place (they munged the querystring?).
 
-                assert record.nonce is None  # do this before constant_time_compare
+                return _fail
+
+            if record.nonce is None:
+
+                # Nulling out the nonce only happens when marking an email
+                # address as verified (when we insert we always provide a
+                # nonce), so let's make sure that obtains.
+
+                assert record.verified
 
                 return VERIFICATION_REDUNDANT, None, None
+
+
+            # *Now* verify that the nonce given matches the one expected, along
+            # with the time window for verification.
+
             if not constant_time_compare(record.nonce, nonce):
-                return VERIFICATION_FAILED, None, None
+                return _fail
             if (utcnow() - record.verification_start) > EMAIL_HASH_TIMEOUT:
-                return VERIFICATION_FAILED, None, None
+                return _fail
+
+
+            # And now we can load any packages associated with the nonce, and
+            # save the address.
+
+            packages = self.get_packages_claiming(cursor, nonce)
+            paypal_updated = None
             try:
-                paypal_updated = None
                 if packages:
                     paypal_updated = False
                     self.finish_package_claims(cursor, nonce, *packages)
