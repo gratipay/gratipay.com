@@ -1,0 +1,15 @@
+{{ _("Finish creating your account on Gratipay") }}
+
+[---] text/html
+{{ _( "Click the button below to create an account on Gratipay. "
+      "This link will expire in 1 hour and can only be used once.") }}
+<br>
+<br>
+<a href="{{ signup_link }}" style="{{ button_style }}">{{ _("Create an account on Gratipay") }}</a>
+
+[---] text/plain
+
+{{ _( "Click the link below to create an account on Gratipay. "
+      "This link will expire in 1 hour and can only be used once.") }}
+
+{{ signup_link }}
