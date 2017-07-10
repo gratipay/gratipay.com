@@ -56,18 +56,22 @@ class AddHeadersToResponseTests(Harness):
         assert headers['Referrer-Policy'] == \
                                       'no-referrer-when-downgrade, strict-origin-when-cross-origin'
 
+    def test_doesnt_set_content_security_policy_by_default(self):
+        assert 'content-security-policy-report-only' not in self.client.GET('/about/').headers
+
     def test_sets_content_security_policy(self):
-        headers = self.client.GET('/about/').headers
-        policy = (
-            "default-src 'self';"
-            "script-src 'self' assets.gratipay.com 'unsafe-inline';"
-            "style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com;"
-            "img-src *;"
-            "font-src 'self' assets.gratipay.com cloud.typography.com data:;"
-            "block-all-mixed-content;"
-            "report-uri https://gratipay.report-uri.io/r/default/csp/reportOnly;"
-        )
-        assert headers['content-security-policy-report-only'] == policy
+        with self.setenv(CSP_REPORT_URI='http://cheese/'):
+            headers = self.client.GET('/about/').headers
+            policy = (
+                "default-src 'self';"
+                "script-src 'self' assets.gratipay.com 'unsafe-inline';"
+                "style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com;"
+                "img-src *;"
+                "font-src 'self' assets.gratipay.com cloud.typography.com data:;"
+                "block-all-mixed-content;"
+                "report-uri http://cheese/;"
+            )
+            assert headers['content-security-policy-report-only'] == policy
 
 
 class EncryptingPackerTests(Harness):

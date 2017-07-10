@@ -385,6 +385,7 @@ def env():
         EMAIL_QUEUE_LOG_METRICS_EVERY   = int,
         OPTIMIZELY_ID                   = unicode,
         SENTRY_DSN                      = unicode,
+        CSP_REPORT_URI                  = unicode,
         LOG_METRICS                     = is_yesish,
         INCLUDE_PIWIK                   = is_yesish,
         PROJECT_REVIEW_REPO             = unicode,
