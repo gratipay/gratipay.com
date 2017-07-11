@@ -14,7 +14,7 @@ Gratipay.init = function() {
     Gratipay.warnOffUsersFromDeveloperConsole();
     Gratipay.adaptToLongUsernames();
     Gratipay.forms.initCSRF();
-    Gratipay.signIn.wireUpButton();
+    Gratipay.signIn.wireUp();
     Gratipay.signOut();
     Gratipay.payments.initSupportGratipay();
     Gratipay.tabs.init();

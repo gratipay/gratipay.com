@@ -58,8 +58,15 @@
         }
     }
 
+    .email-form input {
+        color: $black;
+        height: auto;
+        padding: 10px;
+    }
+
     .auth-links {
         margin-top: 5px;
+        margin-bottom: 10px;
     }
 
     .auth-links li {
@@ -71,13 +78,26 @@
         }
     }
 
-    .auth-links button {
+    .auth-links button, .email-form button {
         text-align: left;
         background: $green;
         color: white;
-        padding: 15px 45px 15px 15px;
         position: relative;
         font: normal 14px $Ideal;
+
+        &:hover {
+            background: $darker-green;
+        }
+    }
+
+    .email-form button {
+        padding: 15px 15px 15px 15px;
+        margin: 15px 0px 20px 0px;
+        text-align: center;
+    }
+
+    .auth-links button {
+        padding: 15px 45px 15px 15px; // 30px for icon on the right
 
         span {
             vertical-align: middle;
@@ -95,10 +115,6 @@
         span.icon.github        { @include has-icon("github"); }
         span.icon.openstreetmap { @include has-icon("openstreetmap"); }
         span.icon.bitbucket     { @include has-icon("bitbucket"); }
-
-        &:hover {
-            background: $darker-green;
-        }
     }
 }
 

@@ -27,9 +27,21 @@
         </header>
         <section>
             <p class="sign-in-togglable"
-               data-sign-in-to-continue="{{ _('Please sign in to continue') }}"
-               data-sign-in-or-sign-up="{{ _('Use a third-party provider to sign in or create an account on Gratipay:') }}">
-                {{ _('Use a third-party provider to sign in or create an account on Gratipay:') }}
+               data-sign-in-to-continue="{{ _('Enter your email to sign-in to Gratipay') }}"
+               data-sign-in-or-sign-up="{{ _('Enter your email to sign-in or create an account on Gratipay') }}">
+                {{ _('Enter your email to sign-in or create an account on Gratipay') }}
+            </p>
+
+            <form class="email-form">
+                <input type="email" placeholder="sam@example.net" required/>
+
+                <button class="button" type="submit">
+                    {{ _("Email me a link") }}
+                </button>
+            </form>
+
+            <p>
+                {{ _('Alternatively, use a third-party provider:') }}
             </p>
             <ul class="auth-links">
                 {% for platform in website.signin_platforms %}
