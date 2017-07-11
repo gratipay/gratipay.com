@@ -247,9 +247,16 @@ class Email(object):
 
             if record.nonce is None:
 
-                # Nulling out the nonce only happens when marking an email
-                # address as verified (when we insert we always provide a
-                # nonce), so let's make sure that obtains.
+                # Nonces are nulled out only when updating to mark an email
+                # address as verified; we always set a nonce when inserting.
+                # Therefore, the main way to get a null nonce is to issue a
+                # link, follow it, and follow it again.
+
+                # All records with a null nonce should be verified, though not
+                # all verified records will have a null nonce. That is, it's
+                # possible to land here with an already-verified address, and
+                # this is in fact expected when verifying package ownership via
+                # an already-verified address.
 
                 assert record.verified
 
