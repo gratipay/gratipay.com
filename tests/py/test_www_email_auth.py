@@ -3,9 +3,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import json
 
+from gratipay.security.authentication.email import create_nonce, verify_nonce, NONCE_INVALID
 from gratipay.testing import Harness
 from gratipay.testing.email import QueuedEmailHarness
-
+from gratipay.utils import encode_for_querystring
 
 class TestSendLink(Harness):
     def test_returns_json(self):
@@ -46,3 +47,55 @@ class TestSendLinkEmail(QueuedEmailHarness):
         assert self.get_last_email()['to'] == 'new@gratipay.com'
         assert 'Click the link below to create an account on Gratipay' in self.get_last_email()['body_text']
         assert 'Click the button below to create an account on Gratipay' in self.get_last_email()['body_html']
+
+
+class TestVerify(Harness):
+    def setUp(self):
+        self.make_participant('alice', email_address='alice@gratipay.com')
+        self.nonce = create_nonce(self.db, 'alice@gratipay.com')
+
+    def test_400_if_nonce_not_provided(self):
+        response = self.client.GxT('/auth/verify.html?email=abcd')
+        assert response.code == 400
+        assert response.body == '`nonce` parameter must be provided'
+
+    def test_400_if_email_not_provided(self):
+        response = self.client.GxT('/auth/verify.html?nonce=abcd')
+        assert response.code == 400
+        assert response.body == '`email` parameter must be provided'
+
+    def test_redirects_on_success(self):
+        link = self._get_link('alice@gratipay.com', self.nonce)
+        response = self.client.GET(link, raise_immediately=False)
+
+        assert response.code == 302
+        assert response.headers['Location'] == '/'
+        assert response.headers.cookie.get('session')
+
+    def test_logs_in_on_success(self):
+        link = self._get_link('alice@gratipay.com', self.nonce)
+        response = self.client.GET(link, raise_immediately=False)
+
+        assert response.headers.cookie.get('session')
+
+    def test_invalidates_nonce_on_success(self):
+        link = self._get_link('alice@gratipay.com', self.nonce)
+        self.client.GET(link, raise_immediately=False)
+
+        assert verify_nonce(self.db, 'alice@gratipay.com', self.nonce) == NONCE_INVALID
+
+    def test_invalid_nonce(self):
+        response = self.client.GET(self._get_link('alice@gratipay.com', 'dummy_nonce'))
+
+        assert "Sorry, that's a bad link." in response.body
+
+    def test_expired_nonce(self):
+        self.db.run("UPDATE email_auth_nonces SET ctime = ctime - interval '1 day'")
+        response = self.client.GET(self._get_link('alice@gratipay.com', self.nonce))
+
+        assert "This link has expired. Please generate a new one." in response.body
+
+    def _get_link(self, email, nonce):
+        encoded_email = encode_for_querystring(email)
+
+        return '/auth/verify.html?nonce=%s&email=%s' % (nonce, encoded_email)

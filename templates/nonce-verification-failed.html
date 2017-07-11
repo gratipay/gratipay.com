@@ -1,0 +1,16 @@
+{% if result == NONCE_EXPIRED %}
+        <h1>{{ _("Link expired") }}</h1>
+        <p>{{ _( "This link has expired. Please generate a new one.") }}</p>
+        {# TODO: Add form for email right here? #}
+{% else %} {# NONCE_INVALID #}
+    <h1>{{ _("Bad Info") }}</h1>
+    <p>
+        {{ _( "Sorry, that's a bad link.") }}
+
+        <br/><br/>
+
+        {{ _("If you think this is a mistake, please contact {a}support@gratipay.com.{_a}"
+            , a=('<a href="mailto:support@gratipay.com">'|safe)
+            , _a='</a>'|safe) }}
+    </p>
+{% endif %}

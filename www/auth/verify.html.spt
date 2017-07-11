@@ -1,0 +1,74 @@
+"""
+This is the route that users hit when clicking email sign-in/signup links. We
+validate the nonce & email provided, and do one of the following:
+
+(a) Sign them in successfully, if the participant exists and nonce is valid
+(b) Show a page with a failure message, if the nonce is not valid
+(c) Ask them to choose a username, if the nonce is valid but a participant does
+    not already exist by the email provided. A form on this page then hits
+    another endpoint to create a participant with the provided email & username.
+    On success, we reload the page so that path (a) is triggered (sign them
+    in successfully)
+"""
+from aspen import Response
+
+from gratipay.models import Participant
+from gratipay.security.authentication.email import verify_nonce, invalidate_nonce
+from gratipay.security.authentication.email import NONCE_VALID, NONCE_INVALID, NONCE_EXPIRED
+from gratipay.utils import decode_from_querystring
+from gratipay.security.user import User
+
+[---]
+
+if 'nonce' not in request.qs:
+    raise Response(400, '`nonce` parameter must be provided')
+
+if 'email' not in request.qs:
+    raise Response(400, '`email` parameter must be provided')
+
+email = decode_from_querystring(request.qs['email'])
+nonce = request.qs['nonce']
+
+result = verify_nonce(website.db, email, nonce)
+
+if result == NONCE_VALID:
+    participant = Participant.from_email(email)
+
+    if participant: # sign in
+        User(participant).sign_in(response.headers.cookie)
+        invalidate_nonce(website.db, email, nonce)
+        website.redirect("/", response=response)
+    else: # sign up
+        suggested_username = email.split("@")[0]
+        banner = _("Sign Up")
+        pass
+
+suppress_sidebar = True
+
+[---] text/html via jinja2
+{% extends "templates/base.html" %}
+{% block content %}
+    {% if result != NONCE_VALID %}
+        {% include "templates/nonce-verification-failed.html" %}
+    {% else %}
+        <form class="signup-form">
+            <input type="hidden" name="email" value="{{ email }}"/>
+            <input type="hidden" name="nonce" value="{{ nonce }}"/>
+
+            <p>{{ _("Almost done!") }}</p>
+
+            <p>
+                {{ _("Choose a username for your Gratipay account:") }}
+            </p>
+
+            <input type="text" name="username" class="large" value="{{ suggested_username }}">
+
+            <div class="important-button">
+                <button type="submit" class="large">
+                    {{ _("Create my Gratipay account") }}
+                </button>
+            </div>
+        </form>
+        </p>
+    {% endif %}
+{% endblock %}

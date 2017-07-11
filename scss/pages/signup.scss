@@ -1,0 +1,16 @@
+.signup-form {
+    text-align: center;
+
+    p {
+        margin-bottom: 2em;
+    }
+
+    button {
+        background: $green;
+        color: white;
+
+        &:hover {
+            background: $darker-green;
+        }
+    }
+}
