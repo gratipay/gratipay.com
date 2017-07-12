@@ -12,7 +12,7 @@ def only_allow_certain_methods(request):
         raise Response(405)
 
 
-def add_headers_to_response(response):
+def add_headers_to_response(website, response):
     """Add security headers.
     """
 
@@ -47,7 +47,8 @@ def add_headers_to_response(response):
                                       'no-referrer-when-downgrade, strict-origin-when-cross-origin'
 
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-    if 'content-security-policy-report-only' not in response.headers:
+    report_uri = website.env.csp_report_uri
+    if report_uri and 'content-security-policy-report-only' not in response.headers:
         response.headers['content-security-policy-report-only'] = (
             "default-src 'self';"
             "script-src 'self' assets.gratipay.com 'unsafe-inline';"
@@ -55,5 +56,5 @@ def add_headers_to_response(response):
             "img-src *;"
             "font-src 'self' assets.gratipay.com cloud.typography.com data:;"
             "block-all-mixed-content;"
-            "report-uri https://gratipay.report-uri.io/r/default/csp/reportOnly;"
+            "report-uri {};".format(report_uri)
         )
