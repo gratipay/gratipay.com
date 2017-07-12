@@ -592,12 +592,26 @@ class StartEmailVerification(Alice):
 
     def test_restarting_verification_clears_old_claims(self):
         foo = self.make_package()
-        start = lambda: self.alice.start_email_verification('alice@example.com', foo)
-        nonce = lambda: self.db.one('select nonce from claims')
-        start()
-        nonce1 = nonce()
-        start()
-        assert nonce1 != nonce()
+        _start = lambda: self.alice.start_email_verification('alice@example.com', foo)
+        _nonce = lambda: self.db.one('select nonce from claims')
+        _start()
+        nonce = _nonce()
+        _start()
+        result = self.alice.finish_email_verification('alice@example.com', nonce)
+        assert result == (_email.VERIFICATION_FAILED, None, None)
+        assert nonce != _nonce()
+
+    def test_restarting_verification_also_clears_old_claims_when_address_preverified(self):
+        foo = self.make_package()
+        self.add_and_verify_email(self.alice, 'alice@example.com')
+        _start = lambda: self.alice.start_email_verification('alice@example.com', foo)
+        _nonce = lambda: self.db.one('select nonce from claims')
+        _start()
+        nonce = _nonce()
+        _start()
+        result = self.alice.finish_email_verification('alice@example.com', nonce)
+        assert result == (_email.VERIFICATION_FAILED, None, None)
+        assert nonce != _nonce()
 
     def test_finishing_verification_clears_competing_claims_and_emails(self):
         bob = self.make_participant('bob', claimed_time='now')
@@ -609,17 +623,17 @@ class StartEmailVerification(Alice):
         bob.start_email_verification('alice@example.com', foo)
         bnonce = bob.get_emails()[0].nonce
 
-        emails = lambda: self.db.all('select participant_id as i from emails order by i')
-        claims = lambda: dict(self.db.all('select nonce, package_id from claims'))
+        _emails = lambda: self.db.all('select participant_id as i from emails order by i')
+        _claims = lambda: dict(self.db.all('select nonce, package_id from claims'))
 
-        assert claims() == {anonce: foo.id, bnonce: foo.id}
-        assert emails() == [self.alice.id, bob.id]
+        assert _claims() == {anonce: foo.id, bnonce: foo.id}
+        assert _emails() == [self.alice.id, bob.id]
 
         result = self.alice.finish_email_verification('alice@example.com', anonce)
         assert result == (_email.VERIFICATION_SUCCEEDED, [foo], True)
 
-        assert claims() == {}
-        assert emails() == [self.alice.id]
+        assert _claims() == {}
+        assert _emails() == [self.alice.id]
 
         result = bob.finish_email_verification('alice@example.com', bnonce)
         assert result == (_email.VERIFICATION_FAILED, None, None)
@@ -630,10 +644,10 @@ class RemoveEmail(Alice):
     def test_removing_email_clears_claims(self):
         foo = self.make_package()
         self.alice.start_email_verification('alice@example.com', foo)
-        claims = lambda: self.db.all('select package_id from claims')
-        assert claims() == [foo.id]
+        _claims = lambda: self.db.all('select package_id from claims')
+        assert _claims() == [foo.id]
         self.alice.remove_email('alice@example.com')
-        assert claims() == []
+        assert _claims() == []
 
 
 class GetEmailVerificationLink(Harness):
@@ -902,10 +916,10 @@ class PackageLinking(VerificationBase):
         self.add_and_verify_email(self.alice, self.address)
         self.alice.set_paypal_address(self.address)
         self.start(self.address, 'foo')
-        load = lambda: self.db.one('select * from claims')
-        assert load() is not None
+        _load = lambda: self.db.one('select * from claims')
+        assert _load() is not None
         Package.from_names('npm', 'foo').delete()
-        assert load() is None
+        assert _load() is None
 
 
     def test_finishing_email_verification_is_thread_safe(self):

@@ -163,6 +163,7 @@ class Email(object):
         existing = c.one( 'SELECT * FROM emails WHERE address=%s AND participant_id=%s'
                         , (email, self.id)
                          )  # can't use eafp here because of cursor error handling
+                            # XXX I forget what eafp is. :(
 
         if existing is None:
 
@@ -225,22 +226,58 @@ class Email(object):
           updated if applicable (``None`` if not).
 
         """
+        _fail = VERIFICATION_FAILED, None, None
         if '' in (email.strip(), nonce.strip()):
-            return VERIFICATION_FAILED, None, None
+            return _fail
         with self.db.get_cursor() as cursor:
+
+            # Load an email record. Check for an address match, but don't check
+            # the nonce at this point. We want to compare in constant time to
+            # avoid timing attacks, and we'll do that below.
+
             record = self.get_email(email, cursor, and_lock=True)
             if record is None:
-                return VERIFICATION_FAILED, None, None
-            packages = self.get_packages_claiming(cursor, nonce)
-            if record.verified and not packages:
-                assert record.nonce is None  # and therefore, order of conditions matters
+
+                # We don't have that email address on file. Maybe it used to be
+                # on file but was explicitly removed (they followed an old link
+                # after removing in the UI?), or maybe it was never on file in
+                # the first place (they munged the querystring?).
+
+                return _fail
+
+            if record.nonce is None:
+
+                # Nonces are nulled out only when updating to mark an email
+                # address as verified; we always set a nonce when inserting.
+                # Therefore, the main way to get a null nonce is to issue a
+                # link, follow it, and follow it again.
+
+                # All records with a null nonce should be verified, though not
+                # all verified records will have a null nonce. That is, it's
+                # possible to land here with an already-verified address, and
+                # this is in fact expected when verifying package ownership via
+                # an already-verified address.
+
+                assert record.verified
+
                 return VERIFICATION_REDUNDANT, None, None
+
+
+            # *Now* verify that the nonce given matches the one expected, along
+            # with the time window for verification.
+
             if not constant_time_compare(record.nonce, nonce):
-                return VERIFICATION_FAILED, None, None
+                return _fail
             if (utcnow() - record.verification_start) > EMAIL_HASH_TIMEOUT:
-                return VERIFICATION_FAILED, None, None
+                return _fail
+
+
+            # And now we can load any packages associated with the nonce, and
+            # save the address.
+
+            packages = self.get_packages_claiming(cursor, nonce)
+            paypal_updated = None
             try:
-                paypal_updated = None
                 if packages:
                     paypal_updated = False
                     self.finish_package_claims(cursor, nonce, *packages)
