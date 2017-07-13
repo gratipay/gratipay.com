@@ -503,14 +503,14 @@ msgid "Sign In"
 msgstr "Accedi"
 
 msgid "Sign In / Sign Up"
-msgstr ""
+msgstr "Accedi / Registrati"
 
 msgid "Please sign in to continue"
-msgstr ""
+msgstr "Per favore, accedi per poter continuare"
 
 msgid ""
 "Use a third-party provider to sign in or create an account on Gratipay:"
-msgstr ""
+msgstr "Accedi tramite terzi o crea un account su Gratipay:"
 
 msgid "Sign in / Sign up"
 msgstr "Accedi / Registrati"
