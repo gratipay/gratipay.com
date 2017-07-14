@@ -365,20 +365,6 @@ CREATE VIEW current_payment_instructions AS
       FROM payment_instructions
   ORDER BY participant, team, mtime DESC;
 
--- Allow updating is_funded via the current_payment_instructions view for convenience
-CREATE FUNCTION update_payment_instruction() RETURNS trigger AS $$
-    BEGIN
-        UPDATE payment_instructions
-           SET is_funded = NEW.is_funded
-         WHERE id = NEW.id;
-        RETURN NULL;
-    END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_current_payment_instruction INSTEAD OF UPDATE ON current_payment_instructions
-    FOR EACH ROW EXECUTE PROCEDURE update_payment_instruction();
-
-
 -- payments - movements of money back and forth between participants and teams
 
 CREATE TYPE payment_direction AS ENUM
@@ -464,7 +450,6 @@ BEGIN;
       ORDER BY participant, team, mtime DESC;
 
     -- Allow updating is_funded and due via the current_payment_instructions view for convenience.
-    DROP FUNCTION update_payment_instruction();
     CREATE FUNCTION update_payment_instruction() RETURNS trigger AS $$
         BEGIN
             UPDATE payment_instructions
