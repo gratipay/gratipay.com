@@ -28,7 +28,6 @@ CREATE TABLE participants
 , is_admin              boolean                     NOT NULL DEFAULT FALSE
 , balance               numeric(35,2)               NOT NULL DEFAULT 0.0
 , anonymous_giving      boolean                     NOT NULL DEFAULT FALSE
-, goal                  numeric(35,2)               DEFAULT NULL
 , balanced_customer_href  text                      DEFAULT NULL
 , is_suspicious         boolean                     DEFAULT NULL
 , id                    bigserial                   NOT NULL UNIQUE
@@ -382,9 +381,6 @@ ALTER TYPE payment_net ADD VALUE 'braintree-cc';
 
 -- https://github.com/gratipay/gratipay.com/pull/3389
 ALTER TABLE participants ADD COLUMN braintree_customer_id text DEFAULT NULL;
-
--- https://github.com/gratipay/gratipay.com/pull/3405
-ALTER TABLE participants DROP COLUMN goal;
 
 -- https://github.com/gratipay/gratipay.com/issues/3409
 -- teams - the entity that can receive and distribute payments
