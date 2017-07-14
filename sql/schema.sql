@@ -45,7 +45,6 @@ CREATE TABLE participants
 , email_lang            text
 , is_searchable         bool                        NOT NULL DEFAULT TRUE
 , old_auth_usage        date
-, notify_on_opt_in      boolean                     NOT NULL DEFAULT TRUE
 , notifications         text[]                      NOT NULL DEFAULT '{}'
  );
 
@@ -379,17 +378,10 @@ CREATE TABLE balances_at
 
 -- https://github.com/gratipay/gratipay.com/pull/3301
 ALTER TABLE participants ADD COLUMN notify_charge int DEFAULT 3;
-ALTER TABLE participants
-    ALTER COLUMN notify_on_opt_in DROP DEFAULT,
-    ALTER COLUMN notify_on_opt_in TYPE int USING notify_on_opt_in::int,
-    ALTER COLUMN notify_on_opt_in SET DEFAULT 1;
 ALTER TYPE payment_net ADD VALUE 'braintree-cc';
 
 -- https://github.com/gratipay/gratipay.com/pull/3389
 ALTER TABLE participants ADD COLUMN braintree_customer_id text DEFAULT NULL;
-
--- https://github.com/gratipay/gratipay.com/pull/3403
-ALTER TABLE participants DROP COLUMN notify_on_opt_in;
 
 -- https://github.com/gratipay/gratipay.com/pull/3405
 ALTER TABLE participants DROP COLUMN goal;
