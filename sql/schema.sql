@@ -139,7 +139,7 @@ CREATE TABLE paydays
 , ts_start              timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
 , ts_end                timestamp with time zone    UNIQUE NOT NULL DEFAULT '1970-01-01T00:00:00+00'::timestamptz
 , volume                numeric(35,2)               NOT NULL DEFAULT 0.00
-, nactive               bigint                      NOT NULL DEFAULT 0
+, nusers                bigint                      NOT NULL DEFAULT 0
 , stage                 integer                     DEFAULT 0
  );
 
@@ -542,7 +542,6 @@ END;
 -- https://github.com/gratipay/gratipay.com/pull/3733
 BEGIN;
 
-    ALTER TABLE paydays RENAME COLUMN nactive TO nusers;
     ALTER TABLE paydays ADD COLUMN nteams integer NOT NULL DEFAULT 0;
 
 END;
