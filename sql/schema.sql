@@ -328,6 +328,7 @@ CREATE TABLE balances_at
 
 -- https://github.com/gratipay/gratipay.com/issues/3409
 -- teams - the entity that can receive and distribute payments
+CREATE TYPE supported_image_types AS ENUM ('image/png', 'image/jpeg');
 CREATE TABLE teams
 ( slug                  text                        PRIMARY KEY
 , id                    bigserial                   NOT NULL UNIQUE
@@ -336,8 +337,8 @@ CREATE TABLE teams
 , name                  text                        NOT NULL
 , homepage              text                        NOT NULL
 , product_or_service    text                        NOT NULL
-, getting_involved      text                        NOT NULL
-, getting_paid          text                        NOT NULL
+, getting_involved      text
+, getting_paid          text
 , owner                 text                        NOT NULL REFERENCES participants
                                                         ON UPDATE CASCADE ON DELETE RESTRICT
 , is_closed             boolean                     NOT NULL DEFAULT FALSE
@@ -346,6 +347,15 @@ CREATE TABLE teams
 , nreceiving_from       integer                     NOT NULL DEFAULT 0
 , distributing          numeric(35,2)               NOT NULL DEFAULT 0
 , ndistributing_to      integer                     NOT NULL DEFAULT 0
+, revenue_model         text                        DEFAULT ''
+, onboarding_url        text                        NOT NULL DEFAULT ''
+, review_url            text                        DEFAULT NULL
+, image_oid_original    oid                         NOT NULL DEFAULT 0
+, image_oid_large       oid                         NOT NULL DEFAULT 0
+, image_oid_small       oid                         NOT NULL DEFAULT 0
+, image_type            supported_image_types
+, available             numeric(35,2)               NOT NULL DEFAULT 0
+, CONSTRAINT            available_not_negative CHECK ((available >= (0)::numeric))
  );
 
 
@@ -406,24 +416,9 @@ CREATE TABLE payments
  );
 
 
--- https://github.com/gratipay/gratipay.com/pull/3469
-ALTER TABLE teams ADD COLUMN revenue_model text NOT NULL DEFAULT '';
-
-
 -- https://github.com/gratipay/gratipay.com/pull/3535
 CREATE TYPE status_of_1_0_balance AS ENUM
     ('unresolved', 'pending-payout', 'resolved');
-
--- https://github.com/gratipay/gratipay.com/pull/3694
-BEGIN;
-
-    ALTER TABLE teams ALTER COLUMN revenue_model DROP NOT NULL;
-    ALTER TABLE teams ALTER COLUMN getting_involved DROP NOT NULL;
-    ALTER TABLE teams ALTER COLUMN getting_paid DROP NOT NULL;
-
-    ALTER TABLE teams ADD COLUMN onboarding_url text NOT NULL DEFAULT '';
-
-END;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3730
@@ -470,22 +465,6 @@ BEGIN;
         FOR EACH ROW
         WHEN (OLD.balance > 0 AND NEW.balance = 0)
         EXECUTE PROCEDURE complete_1_0_payout();
-END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/3568
-BEGIN;
-    ALTER TABLE teams ADD COLUMN review_url text DEFAULT NULL;
-END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/3750
-BEGIN;
-    CREATE TYPE supported_image_types AS ENUM ('image/png', 'image/jpeg');
-    ALTER TABLE teams ADD COLUMN image_oid_original oid NOT NULL DEFAULT 0;
-    ALTER TABLE teams ADD COLUMN image_oid_large oid NOT NULL DEFAULT 0;
-    ALTER TABLE teams ADD COLUMN image_oid_small oid NOT NULL DEFAULT 0;
-    ALTER TABLE teams ADD COLUMN image_type supported_image_types;
 END;
 
 
@@ -557,14 +536,6 @@ CREATE TRIGGER enforce_email_for_participant_identity
 -- https://github.com/gratipay/gratipay.com/pull/4033
 
 ALTER TABLE participants ADD COLUMN has_verified_identity bool NOT NULL DEFAULT false;
-
--- https://github.com/gratipay/gratipay.com/pull/4072
-
-BEGIN;
-    ALTER TABLE teams ADD COLUMN available numeric(35,2) NOT NULL DEFAULT 0;
-    ALTER TABLE teams ADD CONSTRAINT available_not_negative CHECK ((available >= (0)::numeric));
-END;
-
 
 -- https://github.com/gratipay/gratipay.com/pull/4074
 
