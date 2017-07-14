@@ -34,7 +34,6 @@ CREATE TABLE participants
 , id                    bigserial                   NOT NULL UNIQUE
 , username_lower        text                        NOT NULL UNIQUE
 , api_key               text                        DEFAULT NULL
-, number                participant_number          NOT NULL DEFAULT 'singular'
 , anonymous_receiving   boolean                     NOT NULL DEFAULT FALSE
 , avatar_url            text
 , is_closed             boolean                     NOT NULL DEFAULT FALSE
@@ -50,7 +49,6 @@ CREATE TABLE participants
 , old_auth_usage        date
 , notify_on_opt_in      boolean                     NOT NULL DEFAULT TRUE
 , notifications         text[]                      NOT NULL DEFAULT '{}'
-, CONSTRAINT team_not_anonymous CHECK (NOT (number='plural' AND anonymous_receiving))
  );
 
 -- https://github.com/gratipay/gratipay.com/pull/1610
@@ -708,10 +706,6 @@ END;
 BEGIN;
     ALTER TABLE exchanges ADD COLUMN ref text DEFAULT NULL;
 END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/3814
-ALTER TABLE participants DROP COLUMN number;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3829
