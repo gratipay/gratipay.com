@@ -34,7 +34,6 @@ CREATE TABLE participants
 , id                    bigserial                   NOT NULL UNIQUE
 , username_lower        text                        NOT NULL UNIQUE
 , api_key               text                        DEFAULT NULL
-, anonymous_receiving   boolean                     NOT NULL DEFAULT FALSE
 , avatar_url            text
 , is_closed             boolean                     NOT NULL DEFAULT FALSE
 , giving                numeric(35,2)               NOT NULL DEFAULT 0
@@ -550,7 +549,6 @@ END;
 -- https://github.com/gratipay/gratipay.com/pull/3721
 BEGIN;
 
-    ALTER TABLE participants DROP COLUMN anonymous_receiving;
     ALTER TABLE participants DROP COLUMN npatrons;
     ALTER TABLE participants DROP COLUMN receiving;
 
