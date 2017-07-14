@@ -233,43 +233,6 @@ CREATE VIEW current_community_members AS
   ORDER BY participant, slug, mtime DESC;
 
 
--- https://github.com/gratipay/gratipay.com/issues/1100
-CREATE TABLE takes
-( id                serial                      PRIMARY KEY
-, ctime             timestamp with time zone    NOT NULL
-, mtime             timestamp with time zone    NOT NULL
-                                                DEFAULT CURRENT_TIMESTAMP
-, member            text                        NOT NULL
-                                                REFERENCES participants
-                                                ON UPDATE CASCADE
-                                                ON DELETE RESTRICT
-, team              text                        NOT NULL
-                                                REFERENCES participants
-                                                ON UPDATE CASCADE
-                                                ON DELETE RESTRICT
-, amount            numeric(35,2)               NOT NULL DEFAULT 0.0
-, recorder          text                        NOT NULL
-                                                REFERENCES participants
-                                                ON UPDATE CASCADE
-                                                ON DELETE RESTRICT
-, CONSTRAINT no_team_recursion CHECK (team != member)
-, CONSTRAINT not_negative CHECK ((amount >= (0)::numeric))
- );
-
-CREATE VIEW current_takes AS
-    SELECT * FROM (
-         SELECT DISTINCT ON (member, team) t.*
-           FROM takes t
-           JOIN participants p1 ON p1.username = member
-           JOIN participants p2 ON p2.username = team
-          WHERE p1.is_suspicious IS NOT TRUE
-            AND p2.is_suspicious IS NOT TRUE
-       ORDER BY member
-              , team
-              , mtime DESC
-    ) AS anon WHERE amount > 0;
-
-
 -- https://github.com/gratipay/gratipay.com/pull/2006
 CREATE TABLE events
 ( id        serial      PRIMARY KEY
@@ -726,9 +689,6 @@ END;
 -- https://github.com/gratipay/gratipay.com/pull/4074
 
 BEGIN;
-    DROP VIEW current_takes;
-    DROP TABLE takes;
-
     -- takes - how participants express membership in teams
     CREATE TABLE takes
     ( id                bigserial                   PRIMARY KEY
