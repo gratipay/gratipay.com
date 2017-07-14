@@ -138,22 +138,7 @@ CREATE TABLE paydays
 ( id                    serial                      PRIMARY KEY
 , ts_start              timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
 , ts_end                timestamp with time zone    UNIQUE NOT NULL DEFAULT '1970-01-01T00:00:00+00'::timestamptz
-, nparticipants         bigint                      NOT NULL DEFAULT 0
-, ntippers              bigint                      NOT NULL DEFAULT 0
-, ntips                 bigint                      NOT NULL DEFAULT 0
-, ntransfers            bigint                      NOT NULL DEFAULT 0
 , transfer_volume       numeric(35,2)               NOT NULL DEFAULT 0.00
-, ncc_failing           bigint                      NOT NULL DEFAULT 0
-, ncc_missing           bigint                      NOT NULL DEFAULT 0
-, ncharges              bigint                      NOT NULL DEFAULT 0
-, charge_volume         numeric(35,2)               NOT NULL DEFAULT 0.00
-, charge_fees_volume    numeric(35,2)               NOT NULL DEFAULT 0.00
-, nachs                 bigint                      NOT NULL DEFAULT 0
-, ach_volume            numeric(35,2)               NOT NULL DEFAULT 0.00
-, ach_fees_volume       numeric(35,2)               NOT NULL DEFAULT 0.00
-, nach_failing          bigint                      NOT NULL DEFAULT 0
-, npachinko             bigint                      NOT NULL DEFAULT 0
-, pachinko_volume       numeric(35,2)               NOT NULL DEFAULT 0.00
 , nactive               bigint                      NOT NULL DEFAULT 0
 , stage                 integer                     DEFAULT 0
  );
@@ -547,22 +532,6 @@ END;
 
 -- https://github.com/gratipay/gratipay.com/pull/3730
 BEGIN;
-
-    ALTER TABLE paydays DROP COLUMN nparticipants;
-    ALTER TABLE paydays DROP COLUMN ntippers;
-    ALTER TABLE paydays DROP COLUMN ntips;
-    ALTER TABLE paydays DROP COLUMN ntransfers;
-    ALTER TABLE paydays DROP COLUMN ncc_failing;
-    ALTER TABLE paydays DROP COLUMN ncc_missing;
-    ALTER TABLE paydays DROP COLUMN ncharges;
-    ALTER TABLE paydays DROP COLUMN charge_volume;
-    ALTER TABLE paydays DROP COLUMN charge_fees_volume;
-    ALTER TABLE paydays DROP COLUMN nachs;
-    ALTER TABLE paydays DROP COLUMN ach_volume;
-    ALTER TABLE paydays DROP COLUMN ach_fees_volume;
-    ALTER TABLE paydays DROP COLUMN nach_failing;
-    ALTER TABLE paydays DROP COLUMN npachinko;
-    ALTER TABLE paydays DROP COLUMN pachinko_volume;
 
     ALTER TABLE paydays RENAME COLUMN transfer_volume TO volume;
     ALTER TABLE transfers ADD COLUMN payday integer DEFAULT NULL
