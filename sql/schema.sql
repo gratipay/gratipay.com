@@ -260,9 +260,9 @@ CREATE TABLE emails
 , verification_start    timestamp with time zone    NOT NULL
                                                       DEFAULT CURRENT_TIMESTAMP
 , verification_end      timestamp with time zone
-, participant           text                        NOT NULL
-                                                      REFERENCES participants
-                                                      ON UPDATE CASCADE
+, participant_id        bigint                      NOT NULL
+                                                      REFERENCES participants(id)
+                                                      ON UPDATE RESTRICT
                                                       ON DELETE RESTRICT
 
 , UNIQUE (address, verified) -- A verified email address can't be linked to multiple
@@ -270,7 +270,7 @@ CREATE TABLE emails
                              -- be linked to multiple participants. We implement this
                              -- by using NULL instead of FALSE for the unverified
                              -- state, hence the check constraint on verified.
-, UNIQUE (participant, address)
+, UNIQUE (participant_id, address)
 , CONSTRAINT emails_nonce_key UNIQUE (nonce)
  );
 
@@ -505,18 +505,6 @@ BEGIN;
     ALTER TABLE exchanges ADD COLUMN ref text DEFAULT NULL;
 END;
 
-
--- https://github.com/gratipay/gratipay.com/pull/3893
-ALTER TABLE emails ADD COLUMN participant_id bigint DEFAULT NULL
-	REFERENCES participants(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-ALTER TABLE emails ADD UNIQUE (participant_id, address);
-
--- https://github.com/gratipay/gratipay.com/pull/3896
-ALTER TABLE emails ALTER COLUMN participant_id SET NOT NULL;
-
--- https://github.com/gratipay/gratipay.com/pull/3898
-ALTER TABLE emails DROP COLUMN participant;
 
 -- https://github.com/gratipay/gratipay.com/pull/4027
 CREATE TABLE countries -- http://www.iso.org/iso/country_codes
