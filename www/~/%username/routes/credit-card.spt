@@ -38,13 +38,13 @@ else:
     {% endif %}</div>
 
     <div class="long-form">
-        <form id="credit-card" autocomplete="off">
+        <form id="credit-card">
 
             <h2>{{ _("Required") }}</h2>
 
             <label>
                 <span>{{ _("Credit Card Number") }}</span>
-                <input id="card_number" required />
+                <input id="card_number" required autocomplete="cc-number" />
                 <span class="invalid-msg">{{ _("This card number is invalid.") }}</span>
                 {% if card.number %}<span>{{
                     _("Current: {0}", card.number)
@@ -54,22 +54,22 @@ else:
             <div class="half">
                 <label for="expiration_month">{{ _("Expiration") }}</label>
                 <input id="expiration_month" placeholder="{{ _('MM') }}" title="{{ _('Expiration Month') }}"
-                       value="{{ card.expiration_month }}" required />
+                       value="{{ card.expiration_month }}" required autocomplete="cc-exp-month"/>
                 <span class="invalid-msg">{{ _("This expiration date is invalid.") }}</span>
                 <span class="date_slash">/</span>
                 <input id="expiration_year" placeholder="{{ _('YY') }}" title="{{ _('Expiration Year') }}"
-                       value="{{ (card.expiration_year|int) - 2000 if card.expiration_year }}" required />
+                       value="{{ (card.expiration_year|int) - 2000 if card.expiration_year }}" required autocomplete="cc-exp-year" />
             </div>
 
             <label class="half right">
                 <span>{{ _("CVV") }}</span>
-                <input id="cvv" required />
+                <input id="cvv" required autocomplete="cc-csc" />
                 <span class="invalid-msg">{{ _("This verification code is invalid.") }}</span>
             </label>
 
             <label class="half">
                 <span>{{ _("ZIP or Postal Code") }}</span>
-                <input id="zip" value="{{ card.address_postal_code }}" />
+                <input id="zip" value="{{ card.address_postal_code }}" autocomplete="shipping postal-code" />
             </label>
 
             <div class="info">
@@ -82,7 +82,7 @@ else:
 
             <label>
                 <span>{{ _("Full Name on Card") }}</span>
-                <input id="name" value="{{ card.cardholder_name }}" />
+                <input id="name" value="{{ card.cardholder_name }}" autocomplete="cc-name"/>
             </label>
 
             <input type="hidden" id="braintree_token" value="{{ participant.get_braintree_token() }}">
