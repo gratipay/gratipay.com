@@ -354,6 +354,7 @@ CREATE TABLE payment_instructions
                                                         ON UPDATE CASCADE ON DELETE RESTRICT
 , amount                numeric(35,2)               NOT NULL
 , is_funded             boolean                     NOT NULL DEFAULT false
+, due                   numeric(35,2)               DEFAULT 0
  );
 
 CREATE INDEX payment_instructions_all ON payment_instructions
@@ -454,8 +455,6 @@ END;
 
 -- https://github.com/gratipay/gratipay.com/pull/3675
 BEGIN;
-
-    ALTER TABLE payment_instructions ADD COLUMN due numeric(35,2) DEFAULT 0;
 
     -- Recreate the current_payment_instructions view to pick up due.
     DROP VIEW current_payment_instructions;
