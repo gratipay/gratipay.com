@@ -311,6 +311,7 @@ CREATE TABLE email_queue
 , spt_name       text     NOT NULL
 , context        bytea    NOT NULL
 , user_initiated boolean  NOT NULL DEFAULT TRUE
+, dead           boolean  NOT NULL DEFAULT FALSE
  );
 
 -- https://github.com/gratipay/gratipay.com/pull/3239
@@ -769,10 +770,6 @@ BEGIN;
     UPDATE exchange_routes SET is_deleted = true, error = '' WHERE error = 'invalidated';
 END;
 
-
--- https://github.com/gratipay/gratipay.com/pull/4395
-
-ALTER TABLE email_queue ADD COLUMN dead bool NOT NULL DEFAULT FALSE;
 
 -- https://github.com/gratipay/gratipay.com/pull/4438
 BEGIN;
