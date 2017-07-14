@@ -502,74 +502,63 @@ CREATE TRIGGER enforce_email_for_participant_identity
 
 
 -- https://github.com/gratipay/gratipay.com/pull/4074
+-- takes - how participants express membership in teams
 
-BEGIN;
-    -- takes - how participants express membership in teams
-    CREATE TABLE takes
-    ( id                bigserial                   PRIMARY KEY
-    , ctime             timestamp with time zone    NOT NULL
-    , mtime             timestamp with time zone    NOT NULL DEFAULT now()
-    , participant_id    bigint                      NOT NULL REFERENCES participants(id)
-    , team_id           bigint                      NOT NULL REFERENCES teams(id)
-    , amount            numeric(35,2)               NOT NULL
-    , recorder_id       bigint                      NOT NULL REFERENCES participants(id)
-    , CONSTRAINT not_negative CHECK (amount >= 0)
-     );
+CREATE TABLE takes
+( id                bigserial                   PRIMARY KEY
+, ctime             timestamp with time zone    NOT NULL
+, mtime             timestamp with time zone    NOT NULL DEFAULT now()
+, participant_id    bigint                      NOT NULL REFERENCES participants(id)
+, team_id           bigint                      NOT NULL REFERENCES teams(id)
+, amount            numeric(35,2)               NOT NULL
+, recorder_id       bigint                      NOT NULL REFERENCES participants(id)
+, CONSTRAINT not_negative CHECK (amount >= 0)
+    );
 
-    CREATE VIEW current_takes AS
-        SELECT * FROM (
-             SELECT DISTINCT ON (participant_id, team_id) t.*
-               FROM takes t
-               JOIN participants p ON p.id = t.participant_id
-              WHERE p.is_suspicious IS NOT TRUE
-           ORDER BY participant_id
-                  , team_id
-                  , mtime DESC
-        ) AS anon WHERE amount > 0;
-
-END;
+CREATE VIEW current_takes AS
+    SELECT * FROM (
+            SELECT DISTINCT ON (participant_id, team_id) t.*
+            FROM takes t
+            JOIN participants p ON p.id = t.participant_id
+            WHERE p.is_suspicious IS NOT TRUE
+        ORDER BY participant_id
+                , team_id
+                , mtime DESC
+    ) AS anon WHERE amount > 0;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/4153
-BEGIN;
 
-    CREATE TABLE packages
-    ( id                bigserial   PRIMARY KEY
-    , package_manager   text        NOT NULL
-    , name              text        NOT NULL
-    , description       text        NOT NULL
-    , emails            text[]      NOT NULL
-    , UNIQUE (package_manager, name)
-     );
-
-END;
+CREATE TABLE packages
+( id                bigserial   PRIMARY KEY
+, package_manager   text        NOT NULL
+, name              text        NOT NULL
+, description       text        NOT NULL
+, emails            text[]      NOT NULL
+, UNIQUE (package_manager, name)
+    );
 
 
 -- https://github.com/gratipay/gratipay.com/pull/4438
-BEGIN;
-    CREATE TABLE worker_coordination (npm_last_seq bigint not null default -1);
-    INSERT INTO worker_coordination DEFAULT VALUES;
-END;
+
+CREATE TABLE worker_coordination (npm_last_seq bigint not null default -1);
+INSERT INTO worker_coordination DEFAULT VALUES;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/4305
 
-BEGIN;
+CREATE TABLE claims
+( nonce         text    NOT NULL REFERENCES emails(nonce)   ON DELETE CASCADE
+                                                            ON UPDATE RESTRICT
+, package_id    bigint  NOT NULL REFERENCES packages(id)    ON DELETE RESTRICT
+                                                            ON UPDATE RESTRICT
+, UNIQUE(nonce, package_id)
+    );
 
-    CREATE TABLE claims
-    ( nonce         text    NOT NULL REFERENCES emails(nonce)   ON DELETE CASCADE
-                                                                ON UPDATE RESTRICT
-    , package_id    bigint  NOT NULL REFERENCES packages(id)    ON DELETE RESTRICT
-                                                                ON UPDATE RESTRICT
-    , UNIQUE(nonce, package_id)
-     );
-
-    CREATE TABLE teams_to_packages
-    ( team_id       bigint UNIQUE REFERENCES teams(id) ON DELETE RESTRICT
-    , package_id    bigint UNIQUE REFERENCES packages(id) ON DELETE RESTRICT
-     );
-
-END;
+CREATE TABLE teams_to_packages
+( team_id       bigint UNIQUE REFERENCES teams(id) ON DELETE RESTRICT
+, package_id    bigint UNIQUE REFERENCES packages(id) ON DELETE RESTRICT
+    );
 
 
 -- https://github.com/gratipay/gratipay.com/pull/4522
