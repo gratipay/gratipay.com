@@ -271,6 +271,7 @@ CREATE TABLE emails
                              -- by using NULL instead of FALSE for the unverified
                              -- state, hence the check constraint on verified.
 , UNIQUE (participant, address)
+, CONSTRAINT emails_nonce_key UNIQUE (nonce)
  );
 
 
@@ -782,7 +783,6 @@ END;
 
 BEGIN;
 
-    ALTER TABLE emails ADD CONSTRAINT emails_nonce_key UNIQUE (nonce);
     CREATE TABLE claims
     ( nonce         text    NOT NULL REFERENCES emails(nonce)   ON DELETE CASCADE
                                                                 ON UPDATE RESTRICT
