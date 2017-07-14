@@ -18,7 +18,6 @@ COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQ
 -- https://github.com/gratipay/gratipay.com/pull/1274
 CREATE TYPE participant_number AS ENUM ('singular', 'plural');
 
-
 CREATE TABLE participants
 ( username              text                        PRIMARY KEY
 , session_token         text                        UNIQUE DEFAULT NULL
@@ -45,6 +44,8 @@ CREATE TABLE participants
 , notifications         text[]                      NOT NULL DEFAULT '{}'
 , notify_charge         int                         DEFAULT 3
 , braintree_customer_id text                        DEFAULT NULL
+, ngiving_to            int                         NOT NULL DEFAULT 0
+, ntaking_from          int                         NOT NULL DEFAULT 0
  );
 
 -- https://github.com/gratipay/gratipay.com/pull/1610
@@ -408,9 +409,6 @@ END;
 
 -- https://github.com/gratipay/gratipay.com/pull/3721
 BEGIN;
-
-    ALTER TABLE participants ADD COLUMN ngiving_to INTEGER NOT NULL DEFAULT 0;
-    ALTER TABLE participants ADD COLUMN ntaking_from INTEGER NOT NULL DEFAULT 0;
 
     ALTER TABLE teams RENAME COLUMN nsupporters TO nreceiving_from;
     ALTER TABLE teams RENAME COLUMN nmembers TO ndistributing_to;
