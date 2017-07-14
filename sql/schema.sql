@@ -275,11 +275,20 @@ CREATE TABLE emails
 
 -- https://github.com/gratipay/gratipay.com/pull/3010
 CREATE TABLE statements
-( participant  bigint  NOT NULL REFERENCES participants(id)
-, lang         text    NOT NULL
-, content      text    NOT NULL CHECK (content <> '')
+( participant   bigint    NOT NULL REFERENCES participants(id)
+, lang          text      NOT NULL
+, content       text      NOT NULL CHECK (content <> '')
+, search_vector tsvector
+, search_conf   regconfig NOT NULL
 , UNIQUE (participant, lang)
  );
+
+CREATE INDEX statements_fts_idx ON statements USING gist(search_vector);
+
+CREATE TRIGGER search_vector_update
+    BEFORE INSERT OR UPDATE ON statements
+    FOR EACH ROW EXECUTE PROCEDURE
+    tsvector_update_trigger_column(search_vector, search_conf, content);
 
 \i sql/enumerate.sql
 
@@ -293,19 +302,6 @@ CREATE INDEX username_trgm_idx ON participants
 
 CREATE INDEX community_trgm_idx ON communities
     USING gist(name gist_trgm_ops);
-
--- Index statements
-
-ALTER TABLE statements ADD COLUMN search_vector tsvector;
-ALTER TABLE statements ADD COLUMN search_conf regconfig NOT NULL;
-
-CREATE INDEX statements_fts_idx ON statements USING gist(search_vector);
-
-CREATE TRIGGER search_vector_update
-    BEFORE INSERT OR UPDATE ON statements
-    FOR EACH ROW EXECUTE PROCEDURE
-    tsvector_update_trigger_column(search_vector, search_conf, content);
-
 
 -- https://github.com/gratipay/gratipay.com/pull/3136
 CREATE TABLE email_queue
