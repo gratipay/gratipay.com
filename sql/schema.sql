@@ -44,6 +44,7 @@ CREATE TABLE participants
 , old_auth_usage        date
 , notifications         text[]                      NOT NULL DEFAULT '{}'
 , notify_charge         int                         DEFAULT 3
+, braintree_customer_id text                        DEFAULT NULL
  );
 
 -- https://github.com/gratipay/gratipay.com/pull/1610
@@ -148,7 +149,7 @@ CREATE TABLE paydays
 -- https://github.com/gratipay/gratipay.com/pull/3282
 
 CREATE TYPE payment_net AS ENUM (
-    'balanced-ba', 'balanced-cc', 'paypal', 'bitcoin'
+    'balanced-ba', 'balanced-cc', 'paypal', 'bitcoin', 'braintree-cc', 'cash', 'transferwise', 'dwolla', 'unknown'
 );
 
 CREATE TABLE exchange_routes
@@ -358,12 +359,6 @@ CREATE TABLE balances_at
 , balance      numeric(35,2)  NOT NULL
 , UNIQUE (participant, at)
  );
-
--- https://github.com/gratipay/gratipay.com/pull/3301
-ALTER TYPE payment_net ADD VALUE 'braintree-cc';
-
--- https://github.com/gratipay/gratipay.com/pull/3389
-ALTER TABLE participants ADD COLUMN braintree_customer_id text DEFAULT NULL;
 
 -- https://github.com/gratipay/gratipay.com/issues/3409
 -- teams - the entity that can receive and distribute payments
@@ -654,14 +649,6 @@ BEGIN;
 END;
 
 
--- https://github.com/gratipay/gratipay.com/pull/3829
-ALTER TYPE payment_net ADD VALUE 'cash';
-ALTER TYPE payment_net ADD VALUE 'transferwise';
-
-
--- https://github.com/gratipay/gratipay.com/pull/3861
-ALTER TYPE payment_net ADD VALUE 'dwolla';
-
 -- https://github.com/gratipay/gratipay.com/pull/3893
 ALTER TABLE emails ADD COLUMN participant_id bigint DEFAULT NULL
 	REFERENCES participants(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
@@ -837,7 +824,6 @@ ALTER TABLE packages ADD COLUMN readme_needs_to_be_processed bool NOT NULL DEFAU
 -- https://github.com/gratipay/gratipay.com/pull/3975
 
 -- Alter the enums to cater for missing data.
-ALTER TYPE payment_net ADD VALUE 'unknown';
 ALTER TYPE exchange_status ADD VALUE 'unknown';
 
 -- Update the field status in the exchanges table from NULL to 'unknown'
