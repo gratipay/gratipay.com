@@ -415,9 +415,6 @@ CREATE TABLE payment_instructions
                                                         ON UPDATE RESTRICT ON DELETE RESTRICT
  );
 
-CREATE INDEX payment_instructions_all ON payment_instructions
-       USING btree (participant, team, mtime DESC);
-
 CREATE VIEW current_payment_instructions AS
     SELECT DISTINCT ON (participant_id, team_id) *
       FROM payment_instructions
