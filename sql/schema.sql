@@ -847,10 +847,6 @@ BEGIN;
         tsvector_update_trigger_column(search_vector, search_conf, content_scrubbed);
 
 END;
-BEGIN;
-    CREATE TABLE acme_challenges (token text, "authorization" text);
-END;
-
 
 -- https://github.com/gratipay/gratipay.com/pull/4170
 BEGIN;
@@ -885,11 +881,6 @@ BEGIN;
     CREATE TABLE worker_coordination (npm_last_seq bigint not null default -1);
     INSERT INTO worker_coordination DEFAULT VALUES;
 END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/4452
-
-DROP TABLE acme_challenges;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/4305
