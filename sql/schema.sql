@@ -36,7 +36,6 @@ CREATE TABLE participants
 , avatar_url            text
 , is_closed             boolean                     NOT NULL DEFAULT FALSE
 , giving                numeric(35,2)               NOT NULL DEFAULT 0
-, receiving             numeric(35,2)               NOT NULL DEFAULT 0
 , taking                numeric(35,2)               NOT NULL DEFAULT 0
 , is_free_rider         boolean                     DEFAULT NULL
 , email_address         text                        UNIQUE
@@ -535,8 +534,6 @@ END;
 
 -- https://github.com/gratipay/gratipay.com/pull/3721
 BEGIN;
-
-    ALTER TABLE participants DROP COLUMN receiving;
 
     ALTER TABLE participants ADD COLUMN ngiving_to INTEGER NOT NULL DEFAULT 0;
     ALTER TABLE participants ADD COLUMN ntaking_from INTEGER NOT NULL DEFAULT 0;
