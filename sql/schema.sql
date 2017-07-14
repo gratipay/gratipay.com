@@ -306,10 +306,11 @@ CREATE INDEX community_trgm_idx ON communities
 
 -- https://github.com/gratipay/gratipay.com/pull/3136
 CREATE TABLE email_queue
-( id            serial   PRIMARY KEY
-, participant   bigint   NOT NULL REFERENCES participants(id)
-, spt_name      text     NOT NULL
-, context       bytea    NOT NULL
+( id             serial   PRIMARY KEY
+, participant    bigint   NOT NULL REFERENCES participants(id)
+, spt_name       text     NOT NULL
+, context        bytea    NOT NULL
+, user_initiated boolean  NOT NULL DEFAULT TRUE
  );
 
 -- https://github.com/gratipay/gratipay.com/pull/3239
@@ -767,11 +768,6 @@ BEGIN;
 
     UPDATE exchange_routes SET is_deleted = true, error = '' WHERE error = 'invalidated';
 END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/4349
-
-ALTER TABLE email_queue ADD COLUMN user_initiated bool NOT NULL DEFAULT TRUE;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/4395
