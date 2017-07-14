@@ -43,6 +43,7 @@ CREATE TABLE participants
 , is_searchable         bool                        NOT NULL DEFAULT TRUE
 , old_auth_usage        date
 , notifications         text[]                      NOT NULL DEFAULT '{}'
+, notify_charge         int                         DEFAULT 3
  );
 
 -- https://github.com/gratipay/gratipay.com/pull/1610
@@ -359,7 +360,6 @@ CREATE TABLE balances_at
  );
 
 -- https://github.com/gratipay/gratipay.com/pull/3301
-ALTER TABLE participants ADD COLUMN notify_charge int DEFAULT 3;
 ALTER TYPE payment_net ADD VALUE 'braintree-cc';
 
 -- https://github.com/gratipay/gratipay.com/pull/3389
