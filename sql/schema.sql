@@ -422,7 +422,6 @@ BEGIN;
     ALTER TABLE teams ALTER COLUMN getting_paid DROP NOT NULL;
 
     ALTER TABLE teams ADD COLUMN onboarding_url text NOT NULL DEFAULT '';
-    ALTER TABLE teams ADD COLUMN todo_url text NOT NULL DEFAULT '';
 
 END;
 
@@ -652,12 +651,6 @@ AND participants.username = exchanges.participant;
 
 -- Alter exchanges table and set route to not null
 ALTER TABLE exchanges ALTER COLUMN route SET NOT NULL;
-
-
---https://github.com/gratipay/gratipay.com/pull/4214
-BEGIN;
-  ALTER TABLE teams DROP COLUMN todo_url;
-END;
 
 
 --https://github.com/gratipay/gratipay.com/pull/4266
