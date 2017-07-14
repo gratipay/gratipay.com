@@ -37,6 +37,18 @@ VERIFICATION_STYMIED = VerificationResult('Stymied')
 #: Signal that email verification succeeded.
 VERIFICATION_SUCCEEDED = VerificationResult('Succeeded')
 
+#: Signal that the nonce doesn't exist in our database
+AUTH_INVALID = VerificationResult('Invalid')
+
+#: Signal that the nonce exists, but has expired
+AUTH_EXPIRED = VerificationResult('Expired')
+
+#: Signal that the nonce exists, and is valid
+AUTH_VALID   = VerificationResult('Valid')
+
+#: Time for nonce to expire
+AUTH_EXPIRY_MINUTES = 60
+
 
 class Email(object):
     """Participants may associate email addresses with their account.
@@ -372,3 +384,42 @@ class Email(object):
         self.db.run("UPDATE participants SET email_lang=%s WHERE id=%s",
                     (accept_lang, self.id))
         self.set_attributes(email_lang=accept_lang)
+
+
+    def create_signin_nonce(self, email_address):
+        nonce = str(uuid.uuid4())
+        self.db.run("""
+            INSERT INTO email_auth_nonces (email_address, intent, nonce)
+                 VALUES (
+                            %(email_address)s,
+                            'sign-in',
+                            %(nonce)s
+                        )
+        """, locals())
+
+        return nonce
+
+
+    def verify_nonce(self, email_address, nonce):
+        record = self.db.one("""
+            SELECT email_address, ctime, intent
+              FROM email_auth_nonces
+             WHERE nonce = %(nonce)s
+               AND email_address = %(email_address)s
+        """, locals(), back_as=dict)
+
+        if not record:
+            return AUTH_INVALID
+
+        if utcnow() - record['ctime'] > timedelta(minutes=AUTH_EXPIRY_MINUTES):
+            return AUTH_EXPIRED
+
+        return AUTH_VALID
+
+
+    def invalidate_nonce(self, email_address, nonce):
+        self.db.run("""
+            DELETE FROM email_auth_nonces
+             WHERE nonce = %(nonce)s
+               AND email_address = %(email_address)s
+        """, locals())

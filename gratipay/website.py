@@ -8,7 +8,8 @@ import aspen
 from aspen.website import Website as BaseWebsite
 
 from . import utils, security, typecasting, version
-from .security import authentication, csrf
+from .security import csrf
+from .security.authentication import website_helpers as auth_helpers
 from .utils import erase_cookie, http_caching, i18n, set_cookie, set_version_header, timer
 from .renderers import csv_dump, jinja2_htmlescaped, eval_, scss
 from .models import team
@@ -86,8 +87,8 @@ class Website(BaseWebsite):
             utils.use_tildes_for_participants,
             algorithm['redirect_to_base_url'],
             i18n.set_up_i18n,
-            authentication.start_user_as_anon,
-            authentication.authenticate_user_if_possible,
+            auth_helpers.start_user_as_anon,
+            auth_helpers.authenticate_user_if_possible,
             security.only_allow_certain_methods,
             csrf.extract_token_from_cookie,
             csrf.reject_forgeries,
@@ -106,7 +107,7 @@ class Website(BaseWebsite):
             algorithm['get_response_for_exception'],
 
             set_version_header,
-            authentication.add_auth_to_response,
+            auth_helpers.add_auth_to_response,
             csrf.add_token_to_response,
             http_caching.add_caching_to_response,
             security.add_headers_to_response,
