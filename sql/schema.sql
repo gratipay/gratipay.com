@@ -381,11 +381,8 @@ CREATE TABLE payments
 , direction             payment_direction           NOT NULL
 , payday                int                         DEFAULT NULL REFERENCES paydays
                                                         ON UPDATE RESTRICT ON DELETE RESTRICT
+, CONSTRAINT positive CHECK (amount > 0)
  );
-
-
--- https://github.com/gratipay/gratipay.com/pull/3434
-ALTER TABLE payments ADD CONSTRAINT positive CHECK (amount > 0);
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3469
