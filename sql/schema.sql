@@ -353,21 +353,36 @@ CREATE TABLE payment_instructions
 ( id                    serial                      PRIMARY KEY
 , ctime                 timestamp with time zone    NOT NULL
 , mtime                 timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
-, participant           text                        NOT NULL REFERENCES participants
-                                                        ON UPDATE CASCADE ON DELETE RESTRICT
-, team                  text                        NOT NULL REFERENCES teams
-                                                        ON UPDATE CASCADE ON DELETE RESTRICT
 , amount                numeric(35,2)               NOT NULL
 , is_funded             boolean                     NOT NULL DEFAULT false
 , due                   numeric(35,2)               DEFAULT 0
-, participant_id        bigint                      DEFAULT NULL REFERENCES participants(id)
+, participant_id        bigint                      NOT NULL REFERENCES participants(id)
                                                         ON UPDATE RESTRICT ON DELETE RESTRICT
-, team_id               bigint                      DEFAULT NULL REFERENCES teams(id)
+, team_id               bigint                      NOT NULL REFERENCES teams(id)
                                                         ON UPDATE RESTRICT ON DELETE RESTRICT
  );
 
 CREATE INDEX payment_instructions_all ON payment_instructions
        USING btree (participant, team, mtime DESC);
+
+CREATE VIEW current_payment_instructions AS
+    SELECT DISTINCT ON (participant_id, team_id) *
+      FROM payment_instructions
+  ORDER BY participant_id, team_id, mtime DESC;
+
+CREATE FUNCTION update_payment_instruction() RETURNS trigger AS $$
+    BEGIN
+        UPDATE payment_instructions
+            SET is_funded = NEW.is_funded
+                , due = NEW.due
+            WHERE id = NEW.id;
+        RETURN NULL;
+    END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_current_payment_instruction
+    INSTEAD OF UPDATE ON current_payment_instructions
+    FOR EACH ROW EXECUTE PROCEDURE update_payment_instruction();
 
 -- payments - movements of money back and forth between participants and teams
 
@@ -552,37 +567,6 @@ CREATE TRIGGER enforce_email_for_participant_identity
 
 ALTER TABLE participants ADD COLUMN has_verified_identity bool NOT NULL DEFAULT false;
 
--- https://github.com/gratipay/gratipay.com/pull/4061
--- https://github.com/gratipay/gratipay.com/pull/4062
-
-UPDATE payment_instructions AS pi
-   SET participant_id = (SELECT id FROM participants p WHERE p.username = pi.participant)
-     , team_id = (SELECT id FROM teams t WHERE t.slug = pi.team);
-
-ALTER TABLE payment_instructions ALTER COLUMN participant_id SET NOT NULL;
-ALTER TABLE payment_instructions ALTER COLUMN team_id SET NOT NULL;
-
-ALTER TABLE payment_instructions DROP COLUMN participant;
-ALTER TABLE payment_instructions DROP COLUMN team;
-
-CREATE VIEW current_payment_instructions AS
-    SELECT DISTINCT ON (participant_id, team_id) *
-      FROM payment_instructions
-  ORDER BY participant_id, team_id, mtime DESC;
-
-CREATE FUNCTION update_payment_instruction() RETURNS trigger AS $$
-    BEGIN
-        UPDATE payment_instructions
-            SET is_funded = NEW.is_funded
-                , due = NEW.due
-            WHERE id = NEW.id;
-        RETURN NULL;
-    END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_current_payment_instruction
-    INSTEAD OF UPDATE ON current_payment_instructions
-    FOR EACH ROW EXECUTE PROCEDURE update_payment_instruction();
 
 
 -- https://github.com/gratipay/gratipay.com/pull/4072
