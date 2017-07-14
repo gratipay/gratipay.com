@@ -117,25 +117,6 @@ CREATE TYPE context_type AS ENUM
     ('tip', 'take', 'final-gift', 'take-over', 'one-off');
 
 
--- transfers -- balance transfers from one user to another
-CREATE TABLE transfers
-( id                    serial                      PRIMARY KEY
-, timestamp             timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
-, tipper                text                        NOT NULL REFERENCES participants ON UPDATE CASCADE ON DELETE RESTRICT
-, tippee                text                        NOT NULL REFERENCES participants ON UPDATE CASCADE ON DELETE RESTRICT
-, amount                numeric(35,2)               NOT NULL
-, context               context_type                NOT NULL
- );
-
--- https://github.com/gratipay/gratipay.com/pull/2723
-ALTER TABLE transfers ADD CONSTRAINT positive CHECK (amount > 0) NOT VALID;
-
--- https://github.com/gratipay/gratipay.com/pull/3040
-CREATE INDEX transfers_timestamp_idx ON transfers (timestamp);
-CREATE INDEX transfers_tipper_idx ON transfers (tipper);
-CREATE INDEX transfers_tippee_idx ON transfers (tippee);
-
-
 -- paydays -- payday events, stats about them
 CREATE TABLE paydays
 ( id                    serial                      PRIMARY KEY
@@ -145,6 +126,28 @@ CREATE TABLE paydays
 , nusers                bigint                      NOT NULL DEFAULT 0
 , stage                 integer                     DEFAULT 0
  );
+
+
+-- transfers -- balance transfers from one user to another
+CREATE TABLE transfers
+( id                    serial                      PRIMARY KEY
+, timestamp             timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
+, tipper                text                        NOT NULL REFERENCES participants ON UPDATE CASCADE ON DELETE RESTRICT
+, tippee                text                        NOT NULL REFERENCES participants ON UPDATE CASCADE ON DELETE RESTRICT
+, amount                numeric(35,2)               NOT NULL
+, context               context_type                NOT NULL
+, payday                integer                     DEFAULT NULL REFERENCES paydays
+                                                        ON UPDATE RESTRICT
+                                                        ON DELETE RESTRICT
+ );
+
+-- https://github.com/gratipay/gratipay.com/pull/2723
+ALTER TABLE transfers ADD CONSTRAINT positive CHECK (amount > 0) NOT VALID;
+
+-- https://github.com/gratipay/gratipay.com/pull/3040
+CREATE INDEX transfers_timestamp_idx ON transfers (timestamp);
+CREATE INDEX transfers_tipper_idx ON transfers (tipper);
+CREATE INDEX transfers_tippee_idx ON transfers (tippee);
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3282
@@ -419,15 +422,6 @@ CREATE TABLE payments
 -- https://github.com/gratipay/gratipay.com/pull/3535
 CREATE TYPE status_of_1_0_balance AS ENUM
     ('unresolved', 'pending-payout', 'resolved');
-
-
--- https://github.com/gratipay/gratipay.com/pull/3730
-BEGIN;
-
-    ALTER TABLE transfers ADD COLUMN payday integer DEFAULT NULL
-        REFERENCES paydays ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-END;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3733
