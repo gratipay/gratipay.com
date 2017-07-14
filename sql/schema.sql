@@ -160,12 +160,14 @@ CREATE TABLE exchange_routes
 , address       text           NOT NULL CHECK (address <> '')
 , error         text           NOT NULL
 , fee_cap       numeric(35,2)
+, is_deleted    boolean        NOT NULL DEFAULT FALSE
 , UNIQUE (participant, network, address)
  );
 
 CREATE VIEW current_exchange_routes AS
     SELECT DISTINCT ON (participant, network) *
       FROM exchange_routes
+     WHERE NOT is_deleted
   ORDER BY participant, network, id DESC;
 
 CREATE CAST (current_exchange_routes AS exchange_routes) WITH INOUT;
@@ -567,8 +569,6 @@ CREATE TRIGGER enforce_email_for_participant_identity
 
 ALTER TABLE participants ADD COLUMN has_verified_identity bool NOT NULL DEFAULT false;
 
-
-
 -- https://github.com/gratipay/gratipay.com/pull/4072
 
 BEGIN;
@@ -697,24 +697,6 @@ BEGIN;
         FOR EACH ROW EXECUTE PROCEDURE
         tsvector_update_trigger_column(search_vector, search_conf, content_scrubbed);
 
-END;
-
--- https://github.com/gratipay/gratipay.com/pull/4170
-BEGIN;
-    ALTER TABLE exchange_routes ADD COLUMN is_deleted bool NOT NULL DEFAULT FALSE;
-
-    DROP CAST (current_exchange_routes AS exchange_routes);
-    DROP VIEW current_exchange_routes;
-
-    CREATE VIEW current_exchange_routes AS
-        SELECT DISTINCT ON (participant, network) *
-          FROM exchange_routes
-         WHERE NOT is_deleted
-      ORDER BY participant, network, id DESC;
-
-    CREATE CAST (current_exchange_routes AS exchange_routes) WITH INOUT;
-
-    UPDATE exchange_routes SET is_deleted = true, error = '' WHERE error = 'invalidated';
 END;
 
 
