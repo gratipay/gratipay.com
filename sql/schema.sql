@@ -614,26 +614,11 @@ BEGIN;
     , package_manager   text        NOT NULL
     , name              text        NOT NULL
     , description       text        NOT NULL
-    , readme            text        NOT NULL DEFAULT ''
-    , readme_raw        text        NOT NULL DEFAULT ''
-    , readme_type       text        NOT NULL DEFAULT ''
     , emails            text[]      NOT NULL
     , UNIQUE (package_manager, name)
      );
 
 END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/4159
-BEGIN;
-    ALTER TABLE packages ALTER COLUMN readme_raw DROP NOT NULL;
-    ALTER TABLE packages ALTER COLUMN readme_raw SET DEFAULT NULL;
-    UPDATE packages SET readme_raw=NULL;
-END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/4164
-ALTER TABLE packages ADD COLUMN readme_needs_to_be_processed bool NOT NULL DEFAULT true;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3975
@@ -667,15 +652,6 @@ AND participants.username = exchanges.participant;
 
 -- Alter exchanges table and set route to not null
 ALTER TABLE exchanges ALTER COLUMN route SET NOT NULL;
-
-
--- https://github.com/gratipay/gratipay.com/pull/4211
-BEGIN;
-    ALTER TABLE packages DROP COLUMN readme;
-    ALTER TABLE packages DROP COLUMN readme_raw;
-    ALTER TABLE packages DROP COLUMN readme_type;
-    ALTER TABLE packages DROP COLUMN readme_needs_to_be_processed;
-END;
 
 
 --https://github.com/gratipay/gratipay.com/pull/4214
