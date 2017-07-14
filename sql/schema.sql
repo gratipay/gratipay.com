@@ -138,7 +138,7 @@ CREATE TABLE paydays
 ( id                    serial                      PRIMARY KEY
 , ts_start              timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
 , ts_end                timestamp with time zone    UNIQUE NOT NULL DEFAULT '1970-01-01T00:00:00+00'::timestamptz
-, transfer_volume       numeric(35,2)               NOT NULL DEFAULT 0.00
+, volume                numeric(35,2)               NOT NULL DEFAULT 0.00
 , nactive               bigint                      NOT NULL DEFAULT 0
 , stage                 integer                     DEFAULT 0
  );
@@ -533,7 +533,6 @@ END;
 -- https://github.com/gratipay/gratipay.com/pull/3730
 BEGIN;
 
-    ALTER TABLE paydays RENAME COLUMN transfer_volume TO volume;
     ALTER TABLE transfers ADD COLUMN payday integer DEFAULT NULL
         REFERENCES paydays ON UPDATE RESTRICT ON DELETE RESTRICT;
 
