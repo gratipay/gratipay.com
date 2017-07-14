@@ -17,7 +17,14 @@ COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQ
 
 -- https://github.com/gratipay/gratipay.com/pull/1274
 CREATE TYPE participant_number AS ENUM ('singular', 'plural');
-
+CREATE TYPE status_of_1_0_payout AS ENUM
+    ( 'too-little'
+    , 'pending-application'
+    , 'pending-review'
+    , 'rejected'
+    , 'pending-payout'
+    , 'completed'
+        );
 CREATE TABLE participants
 ( username              text                        PRIMARY KEY
 , session_token         text                        UNIQUE DEFAULT NULL
@@ -46,7 +53,24 @@ CREATE TABLE participants
 , braintree_customer_id text                        DEFAULT NULL
 , ngiving_to            int                         NOT NULL DEFAULT 0
 , ntaking_from          int                         NOT NULL DEFAULT 0
+, status_of_1_0_payout  status_of_1_0_payout        NOT NULL DEFAULT 'completed'
+, has_verified_identity boolean                     NOT NULL DEFAULT false
  );
+
+CREATE FUNCTION complete_1_0_payout() RETURNS trigger AS $$
+    BEGIN
+        UPDATE participants
+        SET status_of_1_0_payout='completed'
+        WHERE id = NEW.id;
+        RETURN NULL;
+    END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_status_of_1_0_payout
+    AFTER UPDATE OF balance ON participants
+    FOR EACH ROW
+    WHEN (OLD.balance > 0 AND NEW.balance = 0)
+    EXECUTE PROCEDURE complete_1_0_payout();
 
 -- https://github.com/gratipay/gratipay.com/pull/1610
 CREATE INDEX participants_claimed_time ON participants (claimed_time DESC)
@@ -436,36 +460,6 @@ CREATE TYPE status_of_1_0_balance AS ENUM
     ('unresolved', 'pending-payout', 'resolved');
 
 
--- https://github.com/gratipay/gratipay.com/pull/3744
-BEGIN;
-    CREATE TYPE status_of_1_0_payout AS ENUM
-        ( 'too-little'
-        , 'pending-application'
-        , 'pending-review'
-        , 'rejected'
-        , 'pending-payout'
-        , 'completed'
-         );
-    ALTER TABLE participants ADD COLUMN status_of_1_0_payout status_of_1_0_payout
-        NOT NULL DEFAULT 'completed';
-
-    CREATE FUNCTION complete_1_0_payout() RETURNS trigger AS $$
-        BEGIN
-            UPDATE participants
-               SET status_of_1_0_payout='completed'
-             WHERE id = NEW.id;
-            RETURN NULL;
-        END;
-    $$ LANGUAGE plpgsql;
-
-    CREATE TRIGGER update_status_of_1_0_payout
-        AFTER UPDATE OF balance ON participants
-        FOR EACH ROW
-        WHEN (OLD.balance > 0 AND NEW.balance = 0)
-        EXECUTE PROCEDURE complete_1_0_payout();
-END;
-
-
 -- https://github.com/gratipay/gratipay.com/pull/3807
 BEGIN;
     ALTER TABLE exchanges ADD COLUMN ref text DEFAULT NULL;
@@ -513,10 +507,6 @@ CREATE TRIGGER enforce_email_for_participant_identity
     FOR EACH ROW
     EXECUTE PROCEDURE fail_if_no_email();
 
-
--- https://github.com/gratipay/gratipay.com/pull/4033
-
-ALTER TABLE participants ADD COLUMN has_verified_identity bool NOT NULL DEFAULT false;
 
 -- https://github.com/gratipay/gratipay.com/pull/4074
 
