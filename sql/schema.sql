@@ -128,6 +128,17 @@ CREATE TABLE paydays
 , nteams                integer                     NOT NULL DEFAULT 0
  );
 
+CREATE FUNCTION current_payday() RETURNS paydays AS $$
+    SELECT *
+      FROM paydays
+     WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz;
+$$ LANGUAGE sql;
+
+CREATE FUNCTION current_payday_id() RETURNS int AS $$
+    -- This is a function so we can use it in DEFAULTS for a column.
+    SELECT id FROM current_payday();
+$$ LANGUAGE sql;
+
 
 -- transfers -- balance transfers from one user to another
 CREATE TABLE transfers
@@ -452,23 +463,6 @@ BEGIN;
         FOR EACH ROW
         WHEN (OLD.balance > 0 AND NEW.balance = 0)
         EXECUTE PROCEDURE complete_1_0_payout();
-END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/3785
-BEGIN;
-
-    CREATE FUNCTION current_payday() RETURNS paydays AS $$
-        SELECT *
-          FROM paydays
-         WHERE ts_end='1970-01-01T00:00:00+00'::timestamptz;
-    $$ LANGUAGE sql;
-
-    CREATE FUNCTION current_payday_id() RETURNS int AS $$
-        -- This is a function so we can use it in DEFAULTS for a column.
-        SELECT id FROM current_payday();
-    $$ LANGUAGE sql;
-
 END;
 
 
