@@ -125,6 +125,7 @@ CREATE TABLE paydays
 , volume                numeric(35,2)               NOT NULL DEFAULT 0.00
 , nusers                bigint                      NOT NULL DEFAULT 0
 , stage                 integer                     DEFAULT 0
+, nteams                integer                     NOT NULL DEFAULT 0
  );
 
 
@@ -422,14 +423,6 @@ CREATE TABLE payments
 -- https://github.com/gratipay/gratipay.com/pull/3535
 CREATE TYPE status_of_1_0_balance AS ENUM
     ('unresolved', 'pending-payout', 'resolved');
-
-
--- https://github.com/gratipay/gratipay.com/pull/3733
-BEGIN;
-
-    ALTER TABLE paydays ADD COLUMN nteams integer NOT NULL DEFAULT 0;
-
-END;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/3744
