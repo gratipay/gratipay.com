@@ -307,12 +307,13 @@ CREATE INDEX community_trgm_idx ON communities
 
 -- https://github.com/gratipay/gratipay.com/pull/3136
 CREATE TABLE email_queue
-( id             serial   PRIMARY KEY
-, participant    bigint   NOT NULL REFERENCES participants(id)
-, spt_name       text     NOT NULL
-, context        bytea    NOT NULL
-, user_initiated boolean  NOT NULL DEFAULT TRUE
-, dead           boolean  NOT NULL DEFAULT FALSE
+( id             serial      PRIMARY KEY
+, participant    bigint      NOT NULL REFERENCES participants(id)
+, spt_name       text        NOT NULL
+, context        bytea       NOT NULL
+, user_initiated boolean     NOT NULL DEFAULT TRUE
+, dead           boolean     NOT NULL DEFAULT FALSE
+, ctime          timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
  );
 
 -- https://github.com/gratipay/gratipay.com/pull/3239
@@ -797,11 +798,6 @@ BEGIN;
      );
 
 END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/4501
-
-ALTER TABLE email_queue ADD COLUMN ctime timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/4522
