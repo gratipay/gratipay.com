@@ -343,9 +343,9 @@ CREATE TABLE teams
 , is_closed             boolean                     NOT NULL DEFAULT FALSE
 , is_approved           boolean                     DEFAULT NULL
 , receiving             numeric(35,2)               NOT NULL DEFAULT 0
-, nsupporters           integer                     NOT NULL DEFAULT 0
-, payroll               numeric(35,2)               NOT NULL DEFAULT 0
-, nmembers              integer                     NOT NULL DEFAULT 0
+, nreceiving_from       integer                     NOT NULL DEFAULT 0
+, distributing          numeric(35,2)               NOT NULL DEFAULT 0
+, ndistributing_to      integer                     NOT NULL DEFAULT 0
  );
 
 
@@ -422,16 +422,6 @@ BEGIN;
     ALTER TABLE teams ALTER COLUMN getting_paid DROP NOT NULL;
 
     ALTER TABLE teams ADD COLUMN onboarding_url text NOT NULL DEFAULT '';
-
-END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/3721
-BEGIN;
-
-    ALTER TABLE teams RENAME COLUMN nsupporters TO nreceiving_from;
-    ALTER TABLE teams RENAME COLUMN nmembers TO ndistributing_to;
-    ALTER TABLE teams RENAME COLUMN payroll TO distributing;
 
 END;
 
