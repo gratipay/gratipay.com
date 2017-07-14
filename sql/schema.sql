@@ -319,11 +319,12 @@ CREATE TABLE emails
 
 -- https://github.com/gratipay/gratipay.com/pull/3010
 CREATE TABLE statements
-( participant   bigint    NOT NULL REFERENCES participants(id)
-, lang          text      NOT NULL
-, content       text      NOT NULL CHECK (content <> '')
-, search_vector tsvector
-, search_conf   regconfig NOT NULL
+( participant      bigint    NOT NULL REFERENCES participants(id)
+, lang             text      NOT NULL
+, content          text      NOT NULL CHECK (content <> '')
+, search_vector    tsvector
+, search_conf      regconfig NOT NULL
+, content_scrubbed text      NOT NULL DEFAULT ''
 , UNIQUE (participant, lang)
  );
 
@@ -332,7 +333,7 @@ CREATE INDEX statements_fts_idx ON statements USING gist(search_vector);
 CREATE TRIGGER search_vector_update
     BEFORE INSERT OR UPDATE ON statements
     FOR EACH ROW EXECUTE PROCEDURE
-    tsvector_update_trigger_column(search_vector, search_conf, content);
+    tsvector_update_trigger_column(search_vector, search_conf, content_scrubbed);
 
 \i sql/enumerate.sql
 
@@ -543,22 +544,6 @@ BEGIN;
     , emails            text[]      NOT NULL
     , UNIQUE (package_manager, name)
      );
-
-END;
-
-
---https://github.com/gratipay/gratipay.com/pull/4266
-BEGIN;
-
-    /* Add a new column to hold the scrubbed content. */
-    ALTER TABLE statements ADD COLUMN content_scrubbed text NOT NULL DEFAULT '';
-
-    /* Modify the existing search_vector_update trigger to operate on the new column. */
-    DROP TRIGGER search_vector_update ON statements;
-    CREATE TRIGGER search_vector_update
-        BEFORE INSERT OR UPDATE ON statements
-        FOR EACH ROW EXECUTE PROCEDURE
-        tsvector_update_trigger_column(search_vector, search_conf, content_scrubbed);
 
 END;
 
