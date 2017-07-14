@@ -369,11 +369,6 @@ CREATE TABLE payment_instructions
 CREATE INDEX payment_instructions_all ON payment_instructions
        USING btree (participant, team, mtime DESC);
 
-CREATE VIEW current_payment_instructions AS
-    SELECT DISTINCT ON (participant, team) *
-      FROM payment_instructions
-  ORDER BY participant, team, mtime DESC;
-
 -- payments - movements of money back and forth between participants and teams
 
 CREATE TYPE payment_direction AS ENUM
@@ -439,33 +434,6 @@ BEGIN;
 
     ALTER TABLE paydays ADD COLUMN nteams integer NOT NULL DEFAULT 0;
 
-END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/3675
-BEGIN;
-
-    -- Recreate the current_payment_instructions view to pick up due.
-    DROP VIEW current_payment_instructions;
-    CREATE VIEW current_payment_instructions AS
-        SELECT DISTINCT ON (participant, team) *
-          FROM payment_instructions
-      ORDER BY participant, team, mtime DESC;
-
-    -- Allow updating is_funded and due via the current_payment_instructions view for convenience.
-    CREATE FUNCTION update_payment_instruction() RETURNS trigger AS $$
-        BEGIN
-            UPDATE payment_instructions
-               SET is_funded = NEW.is_funded
-                 , due = NEW.due
-             WHERE id = NEW.id;
-            RETURN NULL;
-        END;
-    $$ LANGUAGE plpgsql;
-
-    CREATE TRIGGER update_current_payment_instruction
-        INSTEAD OF UPDATE ON current_payment_instructions
-        FOR EACH ROW EXECUTE PROCEDURE update_payment_instruction();
 END;
 
 
@@ -599,8 +567,6 @@ ALTER TABLE participants ADD COLUMN has_verified_identity bool NOT NULL DEFAULT 
 -- https://github.com/gratipay/gratipay.com/pull/4061
 -- https://github.com/gratipay/gratipay.com/pull/4062
 
-DROP VIEW current_payment_instructions;
-
 UPDATE payment_instructions AS pi
    SET participant_id = (SELECT id FROM participants p WHERE p.username = pi.participant)
      , team_id = (SELECT id FROM teams t WHERE t.slug = pi.team);
@@ -615,6 +581,16 @@ CREATE VIEW current_payment_instructions AS
     SELECT DISTINCT ON (participant_id, team_id) *
       FROM payment_instructions
   ORDER BY participant_id, team_id, mtime DESC;
+
+CREATE FUNCTION update_payment_instruction() RETURNS trigger AS $$
+    BEGIN
+        UPDATE payment_instructions
+            SET is_funded = NEW.is_funded
+                , due = NEW.due
+            WHERE id = NEW.id;
+        RETURN NULL;
+    END;
+$$ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_current_payment_instruction
     INSTEAD OF UPDATE ON current_payment_instructions
