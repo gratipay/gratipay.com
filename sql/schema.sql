@@ -360,6 +360,10 @@ CREATE TABLE payment_instructions
 , amount                numeric(35,2)               NOT NULL
 , is_funded             boolean                     NOT NULL DEFAULT false
 , due                   numeric(35,2)               DEFAULT 0
+, participant_id        bigint                      DEFAULT NULL REFERENCES participants(id)
+                                                        ON UPDATE RESTRICT ON DELETE RESTRICT
+, team_id               bigint                      DEFAULT NULL REFERENCES teams(id)
+                                                        ON UPDATE RESTRICT ON DELETE RESTRICT
  );
 
 CREATE INDEX payment_instructions_all ON payment_instructions
@@ -591,13 +595,6 @@ CREATE TRIGGER enforce_email_for_participant_identity
 -- https://github.com/gratipay/gratipay.com/pull/4033
 
 ALTER TABLE participants ADD COLUMN has_verified_identity bool NOT NULL DEFAULT false;
-
--- https://github.com/gratipay/gratipay.com/pull/4058
-
-ALTER TABLE payment_instructions ADD COLUMN participant_id bigint DEFAULT NULL
-   REFERENCES participants(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE payment_instructions ADD COLUMN team_id bigint DEFAULT NULL
-   REFERENCES teams(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 -- https://github.com/gratipay/gratipay.com/pull/4061
 -- https://github.com/gratipay/gratipay.com/pull/4062
