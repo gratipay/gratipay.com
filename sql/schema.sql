@@ -213,7 +213,7 @@ CREATE CAST (current_exchange_routes AS exchange_routes) WITH INOUT;
 
 
 -- https://github.com/gratipay/gratipay.com/pull/2579
-CREATE TYPE exchange_status AS ENUM ('pre', 'pending', 'failed', 'succeeded');
+CREATE TYPE exchange_status AS ENUM ('pre', 'pending', 'failed', 'succeeded', 'unknown');
 
 
 -- exchanges -- when a participant moves cash between Gratipay and their bank
@@ -225,8 +225,9 @@ CREATE TABLE exchanges
 , participant           text                        NOT NULL REFERENCES participants ON UPDATE CASCADE ON DELETE RESTRICT
 , recorder              text                        DEFAULT NULL REFERENCES participants ON UPDATE CASCADE ON DELETE RESTRICT
 , note                  text                        DEFAULT NULL
-, status                exchange_status
-, route                 bigint                      REFERENCES exchange_routes
+, status                exchange_status             NOT NULL
+, route                 bigint                      NOT NULL REFERENCES exchange_routes
+, ref                   text                        DEFAULT NULL
  );
 
 
@@ -460,12 +461,6 @@ CREATE TYPE status_of_1_0_balance AS ENUM
     ('unresolved', 'pending-payout', 'resolved');
 
 
--- https://github.com/gratipay/gratipay.com/pull/3807
-BEGIN;
-    ALTER TABLE exchanges ADD COLUMN ref text DEFAULT NULL;
-END;
-
-
 -- https://github.com/gratipay/gratipay.com/pull/4027
 CREATE TABLE countries -- http://www.iso.org/iso/country_codes
 ( id    bigserial   primary key
@@ -550,39 +545,6 @@ BEGIN;
      );
 
 END;
-
-
--- https://github.com/gratipay/gratipay.com/pull/3975
-
--- Alter the enums to cater for missing data.
-ALTER TYPE exchange_status ADD VALUE 'unknown';
-
--- Update the field status in the exchanges table from NULL to 'unknown'
-UPDATE exchanges SET status = 'unknown' WHERE status IS NULL;
-
--- Alter the exchanges table to ensure that no more NULL values are entered
-ALTER TABLE exchanges ALTER COLUMN status SET NOT NULL;
-
--- Insert records for 'unknown' (previously NULL) in exchanges table
--- network in exchange_route table
-INSERT INTO exchange_routes (participant, network, address, error)
-     (
-       SELECT DISTINCT participants.id, 'unknown'::payment_net, 'n/a', ''
-       FROM exchanges, participants
-       WHERE exchanges.participant = participants.username
-       AND route IS NULL
-     );
-
--- Update exchanges records with exchange_route ids pointing to 'unknown'
--- network records for that participants
-UPDATE exchanges
-SET route = exchange_routes.id
-FROM exchange_routes, participants
-WHERE exchange_routes.participant = participants.id
-AND participants.username = exchanges.participant;
-
--- Alter exchanges table and set route to not null
-ALTER TABLE exchanges ALTER COLUMN route SET NOT NULL;
 
 
 --https://github.com/gratipay/gratipay.com/pull/4266
