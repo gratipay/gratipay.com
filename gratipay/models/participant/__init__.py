@@ -81,6 +81,28 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
         return cls.from_username(username)
 
     @classmethod
+    def with_email_and_username(cls, email, username):
+        """Return a new participant with given email and username
+        """
+        username = username and username.strip()
+
+        cls._validate_username(username)
+
+        with cls.db.get_cursor() as cursor:
+            try:
+                participant = cursor.one("""
+                    INSERT INTO participants (username, username_lower, claimed_time)
+                         VALUES (%s, %s, CURRENT_TIMESTAMP)
+                      RETURNING participants.*::participants
+                """, (username, username.lower()))
+            except IntegrityError:
+                raise UsernameAlreadyTaken(username)
+
+            participant.add_verified_email(email, cursor)
+
+            return participant
+
+    @classmethod
     def from_id(cls, id):
         """Return an existing participant based on id.
         """
@@ -840,6 +862,28 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
         """, locals())
 
 
+    @classmethod
+    def _validate_username(cls, username):
+        """Raises a ``ProblemWithUsername`` exception if the username is not valid"""
+
+        if not username:
+            raise UsernameIsEmpty(username)
+
+        if len(username) > USERNAME_MAX_SIZE:
+            raise UsernameTooLong(username)
+
+        if set(username) - ASCII_ALLOWED_IN_USERNAME:
+            raise UsernameContainsInvalidCharacters(username)
+
+        lowercased = username.lower()
+
+        # Don't allow any username which is the name of a
+        # file existing on the web_root folder.
+        for name in (lowercased, lowercased + '.spt'):
+            if name in gratipay.RESTRICTED_USERNAMES:
+                raise UsernameIsRestricted(username)
+
+
     def change_username(self, suggested):
         """Raise Response or return None.
 
@@ -850,22 +894,9 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
         # TODO: reconsider allowing unicode usernames
         suggested = suggested and suggested.strip()
 
-        if not suggested:
-            raise UsernameIsEmpty(suggested)
-
-        if len(suggested) > USERNAME_MAX_SIZE:
-            raise UsernameTooLong(suggested)
-
-        if set(suggested) - ASCII_ALLOWED_IN_USERNAME:
-            raise UsernameContainsInvalidCharacters(suggested)
+        self._validate_username(suggested)
 
         lowercased = suggested.lower()
-
-        # Don't allow any username which is the name of a
-        # file existing on the web_root folder.
-        for name in (lowercased, lowercased + '.spt'):
-            if name in gratipay.RESTRICTED_USERNAMES:
-                raise UsernameIsRestricted(suggested)
 
         if suggested != self.username:
             try:
@@ -878,12 +909,12 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
                                             , values=dict(username=suggested)
                                              )
                                        )
-                    actual = c.one( "UPDATE participants "
-                                    "SET username=%s, username_lower=%s "
-                                    "WHERE username=%s "
-                                    "RETURNING username, username_lower"
-                                   , (suggested, lowercased, self.username)
-                                   )
+                    actual = c.one("""
+                        UPDATE participants
+                           SET username=%s, username_lower=%s
+                         WHERE username=%s
+                     RETURNING username, username_lower
+                    """, (suggested, lowercased, self.username))
             except IntegrityError:
                 raise UsernameAlreadyTaken(suggested)
 

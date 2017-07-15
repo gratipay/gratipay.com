@@ -119,6 +119,30 @@ class Tests(Harness):
         Harness.setUp(self)
         self.participant = self.make_participant('user1')  # Our protagonist
 
+    # with_email_and_username
+
+    def test_with_email_and_username_creates_participant(self):
+        p = Participant.with_email_and_username('alice@gratipay.com', 'alice')
+
+        assert isinstance(p, Participant)
+        assert Participant.from_username('alice')
+
+    def test_with_email_and_username_sets_primary_email(self):
+        p = Participant.with_email_and_username('alice@gratipay.com', 'alice')
+
+        assert p.email_address == 'alice@gratipay.com'
+
+    def test_with_email_and_username_throws_username_errors(self):
+        with pytest.raises(UsernameIsEmpty):
+            Participant.with_email_and_username('alice@gratipay.com', '')
+
+        Participant.with_email_and_username('alice@gratipay.com', 'alice')
+
+        with pytest.raises(UsernameAlreadyTaken):
+            Participant.with_email_and_username('bob@gratipay.com', 'alice')
+
+
+    # set_as_claimed
 
     def test_claiming_participant(self):
         now = utcnow()
@@ -126,6 +150,9 @@ class Tests(Harness):
         actual = self.participant.claimed_time - now
         expected = datetime.timedelta(seconds=0.1)
         assert actual < expected
+
+
+    # change_username
 
     def test_changing_username_successfully(self):
         self.participant.change_username('user2')

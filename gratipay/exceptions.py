@@ -7,23 +7,23 @@ from __future__ import print_function, unicode_literals
 from gratipay.utils.i18n import LocalizedErrorResponse
 
 
-class ProblemChangingUsername(Exception):
+class ProblemWithUsername(Exception):
     def __str__(self):
         return self.msg.format(self.args[0])
 
-class UsernameIsEmpty(ProblemChangingUsername):
+class UsernameIsEmpty(ProblemWithUsername):
     msg = "You need to provide a username!"
 
-class UsernameTooLong(ProblemChangingUsername):
+class UsernameTooLong(ProblemWithUsername):
     msg = "The username '{}' is too long."
 
-class UsernameContainsInvalidCharacters(ProblemChangingUsername):
+class UsernameContainsInvalidCharacters(ProblemWithUsername):
     msg = "The username '{}' contains invalid characters."
 
-class UsernameIsRestricted(ProblemChangingUsername):
+class UsernameIsRestricted(ProblemWithUsername):
     msg = "The username '{}' is restricted."
 
-class UsernameAlreadyTaken(ProblemChangingUsername):
+class UsernameAlreadyTaken(ProblemWithUsername):
     msg = "The username '{}' is already taken."
 
 

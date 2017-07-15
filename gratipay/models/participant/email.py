@@ -190,6 +190,15 @@ class Email(object):
 
         return nonce
 
+    def add_verified_email(self, email, cursor):
+        cursor.run("""
+            INSERT INTO emails (participant_id, address, verified)
+            VALUES (%s, %s, true)
+        """, (self.id, email))
+
+        if not self.email_address:
+            self.set_primary_email(email, cursor)
+
 
     def set_primary_email(self, email, cursor=None):
         """Set the primary email address for the participant.

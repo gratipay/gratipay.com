@@ -15,7 +15,7 @@ from psycopg2 import IntegrityError
 import xmltodict
 
 import gratipay
-from gratipay.exceptions import ProblemChangingUsername
+from gratipay.exceptions import ProblemWithUsername
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils.username import safely_reserve_a_username
 
@@ -232,7 +232,7 @@ class AccountElsewhere(Model):
             user.participant.set_as_claimed()
             try:
                 user.participant.change_username(desired_username)
-            except ProblemChangingUsername:
+            except ProblemWithUsername:
                 pass
         if user.participant.is_closed:
             user.participant.update_is_closed(False)
