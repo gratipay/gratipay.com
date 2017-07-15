@@ -8,7 +8,7 @@ the email in question.
 
 from aspen import Response
 
-from gratipay.exceptions import ProblemChangingUsername
+from gratipay.exceptions import ProblemWithUsername
 from gratipay.models.participant import Participant
 from gratipay.security.authentication.email import verify_nonce, invalidate_nonce
 from gratipay.security.authentication.email import NONCE_VALID, NONCE_INVALID, NONCE_EXPIRED
@@ -36,7 +36,7 @@ result = verify_nonce(website.db, email, nonce)
 if result == NONCE_VALID:
     try:
         Participant.with_email_and_username(email, username)
-    except ProblemChangingUsername, e:
+    except ProblemWithUsername, e:
         raise Response(400, unicode(e))
 elif result == NONCE_EXPIRED:
     raise Response(400, _('This link has expired. Please generate a new one'))

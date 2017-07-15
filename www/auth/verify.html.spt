@@ -72,3 +72,10 @@ suppress_sidebar = True
         </p>
     {% endif %}
 {% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(Gratipay.signUp.wireUp);
+    </script>
+    {{ super() }}
+{% endblock %}
