@@ -7,22 +7,57 @@ from pytest import raises
 
 from gratipay.exceptions import Throttled
 from gratipay.testing import Harness
-from gratipay.testing.email import SentEmailHarness
+from gratipay.testing.email import SentEmailHarness, QueuedEmailHarness
 
 
-class TestPut(SentEmailHarness):
+class TestPut(QueuedEmailHarness):
 
     def setUp(self):
-        SentEmailHarness.setUp(self)
+        QueuedEmailHarness.setUp(self)
         self.alice = self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
 
-    def test_queueing_email_is_throttled(self):
+    def test_put_with_only_email(self):
+        self.app.email_queue.put(None, 'base', email='dummy@example.com')
+        last_email = self.get_last_email()
+        assert last_email['to'] == 'dummy@example.com'
+
+    def test_put_with_only_participant(self):
+        self.app.email_queue.put(self.alice, 'base')
+
+        # Should pickup primary email
+        assert self.get_last_email()['to'] == 'alice <alice@example.com>'
+
+    def test_put_with_participant_and_email(self):
+        self.app.email_queue.put(self.alice, 'base', email='alice2@example.com')
+
+        # Should prefer given email over primary
+        assert self.get_last_email()['to'] == 'alice <alice2@example.com>'
+
+    def test_put_complains_if_participant_and_email_not_provided(self):
+        with raises(AssertionError):
+            self.app.email_queue.put(None, "base")
+
+    def test_put_throttles_on_participant(self):
         self.app.email_queue.put(self.alice, "base")
         self.app.email_queue.put(self.alice, "base")
         self.app.email_queue.put(self.alice, "base")
         raises(Throttled, self.app.email_queue.put, self.alice, "base")
 
-    def test_queueing_email_writes_timestamp(self):
+    def test_put_throttles_on_email(self):
+        self.app.email_queue.put(None, "base", email="alice@gratipay.com")
+        self.app.email_queue.put(None, "base", email="alice@gratipay.com")
+        self.app.email_queue.put(None, "base", email="alice@gratipay.com")
+        with raises(Throttled):
+            self.app.email_queue.put(None, "base", email="alice@gratipay.com")
+
+    def test_put_throttles_on_participant_across_different_emails(self):
+        self.app.email_queue.put(self.alice, "base", email="a@b.com")
+        self.app.email_queue.put(self.alice, "base", email="b@c.com")
+        self.app.email_queue.put(self.alice, "base", email="c@d.com")
+        with raises(Throttled):
+            self.app.email_queue.put(self.alice, "base", email="d@e.com")
+
+    def test_timestamp_is_written(self):
         self.app.email_queue.put(self.alice, "base")
 
         ctime = self.db.one("SELECT EXTRACT(epoch FROM ctime) FROM email_queue")

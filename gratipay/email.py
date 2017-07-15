@@ -55,13 +55,17 @@ class Queue(object):
            and env.aws_ses_default_region
 
 
-    def put(self, to, template, _user_initiated=True, **context):
+    def put(self, to, template, _user_initiated=True, email=None, **context):
         """Put an email message on the queue.
 
-        :param Participant to: the participant to send the email message to
+        :param Participant to: the participant to send the email message to.
+            In cases where an email is not linked to a participant, this can be
+            ``None``.
         :param unicode template: the name of the template to use when rendering
             the email, corresponding to a filename in ``emails/`` without the
             file extension
+        :param unicode email: The email address to send this message to. If not
+            provided, the ``to`` participant's primary email is used.
         :param bool _user_initiated: user-initiated emails are throttled;
             system-initiated messages don't count against throttling
         :param dict context: the values to use when rendering the template
@@ -73,17 +77,55 @@ class Queue(object):
         :returns: ``None``
 
         """
+
+        assert to or email # Either participant or email address required.
+
         with self.db.get_cursor() as cursor:
+            participant_id = to.id if to else None
             cursor.run("""
                 INSERT INTO email_queue
-                            (participant, spt_name, context, user_initiated)
-                     VALUES (%s, %s, %s, %s)
-            """, (to.id, template, pickle.dumps(context), _user_initiated))
+                            (participant,
+                             email_address,
+                             spt_name,
+                             context,
+                             user_initiated)
+                     VALUES (%s, %s, %s, %s, %s)
+            """, (participant_id, email, template, pickle.dumps(context), _user_initiated))
+
             if _user_initiated:
-                n = cursor.one('SELECT count(*) FROM email_queue '
-                               'WHERE participant=%s AND user_initiated', (to.id,))
-                if n > self.allow_up_to:
+                nqueued = self._get_nqueued(cursor, to, email)
+                if nqueued > self.allow_up_to:
                     raise Throttled()
+
+
+    def _get_nqueued(self, cursor, participant, email_address):
+        """Returns the number of messages already queued for the given
+        participant or email address. Prefers participant if provided, falls
+        back to email_address otherwise.
+
+        :param Participant participant: The participant to check queued messages
+            for.
+
+        :param unicode email_address: The email address to check queued messages
+            for.
+
+        :returns number of queued messages
+        """
+
+        if participant:
+            return cursor.one("""
+                SELECT COUNT(*)
+                  FROM email_queue
+                 WHERE user_initiated
+                   AND participant=%s
+            """, (participant.id, ))
+        else:
+            return cursor.one("""
+                SELECT COUNT(*)
+                  FROM email_queue
+                 WHERE user_initiated
+                   AND email_address=%s
+            """, (email_address, ))
 
 
     def flush(self):
@@ -142,22 +184,35 @@ class Queue(object):
         #. ``participant.email_address``.
 
         """
-        to = Participant.from_id(rec.participant)
+        participant = Participant.from_id(rec.participant)
         spt = self._email_templates[rec.spt_name]
         context = pickle.loads(rec.context)
 
-        context['participant'] = to
-        context['username'] = to.username
+        email = rec.email_address or participant.email_address
+
+        # Previously, email_address was stored in the 'email' key on `context`
+        # and not in the `email_address` field. Let's handle that case so that
+        # old emails don't suffer
+        #
+        # TODO: Remove this once we're sure old emails have gone out.
+        email = context.get('email', email)
+
+        if not email:
+            return None
+
+        context['email'] = email
+        if participant:
+            context['participant'] = participant
+            context['username'] = participant.username
         context['button_style'] = (
             "color: #fff; text-decoration:none; display:inline-block; "
             "padding: 0 15px; background: #396; white-space: nowrap; "
             "font: normal 14px/40px Arial, sans-serif; border-radius: 3px"
         )
         context.setdefault('include_unsubscribe', True)
-        email = context.setdefault('email', to.email_address)
-        if not email:
-            return None
-        langs = i18n.parse_accept_lang(to.email_lang or 'en')
+
+        accept_lang = (participant and participant.email_lang) or 'en'
+        langs = i18n.parse_accept_lang(accept_lang)
         locale = i18n.match_lang(langs)
         i18n.add_helpers_to_context(self.tell_sentry, context, locale)
         context['escape'] = lambda s: s
@@ -172,7 +227,12 @@ class Queue(object):
         message = {}
         message['Source'] = 'Gratipay Support <support@gratipay.com>'
         message['Destination'] = {}
-        message['Destination']['ToAddresses'] = ["%s <%s>" % (to.username, email)] # "Name <email@domain.com>"
+        if participant:
+            # "username <email@domain.com>"
+            destination = "%s <%s>" % (participant.username, email)
+        else:
+            destination = email
+        message['Destination']['ToAddresses'] = [destination]
         message['Message'] = {}
         message['Message']['Subject'] = {}
         message['Message']['Subject']['Data'] = spt['subject'].render(context).strip()
