@@ -1,0 +1,47 @@
+"""
+This endpoint is used when a user chooses to signup via email. After they click
+the link sent to their email, they are presented with a form to choose a
+username. This is the endpoint that handles submission of that form. This is an
+unauthed endpoint, we rely on the email & nonce to validate that the user owns
+the email in question.
+"""
+
+from aspen import Response
+
+from gratipay.exceptions import ProblemChangingUsername
+from gratipay.models.participant import Participant
+from gratipay.security.authentication.email import verify_nonce, invalidate_nonce
+from gratipay.security.authentication.email import NONCE_VALID, NONCE_INVALID, NONCE_EXPIRED
+from gratipay.security.user import User
+
+[---]
+
+request.allow('POST')
+
+if 'nonce' not in request.body:
+    raise Response(400, '`nonce` parameter must be provided')
+
+if 'email' not in request.body:
+    raise Response(400, '`email` parameter must be provided')
+
+if 'username' not in request.body:
+    raise Response(400, '`username` parameter must be provided')
+
+email = request.body['email']
+nonce = request.body['nonce']
+username = request.body['username']
+
+result = verify_nonce(website.db, email, nonce)
+
+if result == NONCE_VALID:
+    try:
+        Participant.with_email_and_username(email, username)
+    except ProblemChangingUsername, e:
+        raise Response(400, unicode(e))
+elif result == NONCE_EXPIRED:
+    raise Response(400, _('This link has expired. Please generate a new one'))
+else:
+    raise Response(400, _('This link is invalid.'))
+
+[---] application/json
+{'message': _('Account created! Signing you in...')}

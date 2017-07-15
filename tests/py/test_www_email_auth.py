@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import json
 
 from gratipay.security.authentication.email import create_nonce, verify_nonce, NONCE_INVALID
-from gratipay.testing import Harness
+from gratipay.testing import Harness, P
 from gratipay.testing.email import QueuedEmailHarness
 from gratipay.utils import encode_for_querystring
 
@@ -99,3 +99,47 @@ class TestVerify(Harness):
         encoded_email = encode_for_querystring(email)
 
         return '/auth/verify.html?nonce=%s&email=%s' % (nonce, encoded_email)
+
+class TestSignup(Harness):
+
+    def test_400_if_nonce_not_provided(self):
+        response = self.client.PxST('/auth/signup.json', {'email': 'abcd', 'username': 'abcd'})
+        assert response.code == 400
+        assert response.body == '`nonce` parameter must be provided'
+
+    def test_400_if_username_not_provided(self):
+        response = self.client.PxST('/auth/signup.json', {'email': 'abcd', 'nonce': 'abcd'})
+        assert response.code == 400
+        assert response.body == '`username` parameter must be provided'
+
+    def test_400_if_email_not_provided(self):
+        response = self.client.PxST('/auth/signup.json', {'username': 'abcd', 'nonce': 'abcd'})
+        assert response.code == 400
+        assert response.body == '`email` parameter must be provided'
+
+    def test_creates_participant(self):
+        nonce = create_nonce(self.db, 'alice@gratipay.com')
+        response = self.client.POST('/auth/signup.json', {'username': 'alice',
+                                                          'nonce': nonce,
+                                                          'email': 'alice@gratipay.com'})
+
+        assert response.code == 200
+        assert P('alice')
+
+    def test_returns_errors_with_username(self):
+        self.make_participant('alice') # Username collission
+        nonce = create_nonce(self.db, 'alice@gratipay.com')
+        response = self.client.PxST('/auth/signup.json', {'username': 'alice',
+                                                          'nonce': nonce,
+                                                          'email': 'alice@gratipay.com'})
+
+        assert response.code == 400
+        assert response.body == "The username 'alice' is already taken."
+
+    def test_returns_errors_with_nonce(self):
+        response = self.client.PxST('/auth/signup.json', {'username': 'alice',
+                                                          'nonce': 'invalid',
+                                                          'email': 'alice@gratipay.com'})
+
+        assert response.code == 400
+        assert response.body == "This link is invalid."
