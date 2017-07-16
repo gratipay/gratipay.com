@@ -519,9 +519,16 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
         user_id = unicode(user_id)
         with self.db.get_cursor() as c:
             accounts = self.get_elsewhere_logins(c)
-            assert len(accounts) > 0
-            if len(accounts) == 1 and accounts[0] == (platform, user_id):
-                raise LastElsewhere()
+
+            # A user who signed up via a third-party provider might not have
+            # and email attached. They must maintain at least one elsewhere
+            # account until they provide an email.
+            assert self.email_address or (len(accounts) > 0)
+
+            is_last = len(accounts) == 1 and accounts[0] == (platform, user_id)
+            if is_last and not self.email_address:
+                raise LastElsewhereAndNoEmail()
+
             c.one("""
                 DELETE FROM elsewhere
                 WHERE participant=%s
@@ -1432,7 +1439,7 @@ class NeedConfirmation(Exception):
         A, B, C = self._all
         return A or C
 
-class LastElsewhere(Exception): pass
+class LastElsewhereAndNoEmail(Exception): pass
 
 class NonexistingElsewhere(Exception): pass
 

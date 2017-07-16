@@ -19,7 +19,7 @@ from gratipay.exceptions import (
 )
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.participant import (
-    LastElsewhere, NeedConfirmation, NonexistingElsewhere, Participant
+    LastElsewhereAndNoEmail, NeedConfirmation, NonexistingElsewhere, Participant
 )
 from gratipay.testing import Harness, D,P,T
 
@@ -69,12 +69,16 @@ class TestParticipant(Harness):
         assert not (self.alice == None)
 
     def test_delete_elsewhere_last(self):
-        with pytest.raises(LastElsewhere):
+        with pytest.raises(LastElsewhereAndNoEmail):
             self.alice.delete_elsewhere('twitter', self.alice.id)
+
+    def test_delete_elsewhere_last_works_if_email_present(self):
+        self.add_and_verify_email(self.alice, 'alice@gratipay.com')
+        self.alice.delete_elsewhere('twitter', self.alice.id)
 
     def test_delete_elsewhere_last_signin(self):
         self.make_elsewhere('bountysource', self.alice.id, 'alice')
-        with pytest.raises(LastElsewhere):
+        with pytest.raises(LastElsewhereAndNoEmail):
             self.alice.delete_elsewhere('twitter', self.alice.id)
 
     def test_delete_elsewhere_nonsignin(self):
