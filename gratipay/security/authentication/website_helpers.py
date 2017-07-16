@@ -9,7 +9,6 @@ from gratipay.security import csrf
 from gratipay.security.crypto import constant_time_compare
 from gratipay.security.user import User, SESSION
 
-
 ANON = User()
 
 def _get_user_via_api_key(api_key):
@@ -56,11 +55,6 @@ def _turn_off_csrf(request):
     request.headers.cookie['csrf_token'] = csrf_token
     request.headers['X-CSRF-TOKEN'] = csrf_token
 
-def start_user_as_anon():
-    """Make sure we always have a user object, regardless of exceptions during authentication.
-    """
-    return {'user': ANON}
-
 def authenticate_user_if_possible(request, user):
     """This signs the user in.
     """
@@ -86,3 +80,8 @@ def add_auth_to_response(response, request=None, user=ANON):
     if SESSION in request.headers.cookie:
         if not user.ANON:
             user.keep_signed_in(response.headers.cookie)
+
+def start_user_as_anon():
+    """Make sure we always have a user object, regardless of exceptions during authentication.
+    """
+    return {'user': ANON}

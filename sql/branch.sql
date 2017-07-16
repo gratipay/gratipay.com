@@ -8,3 +8,13 @@ BEGIN;
     ALTER TABLE email_queue ADD CONSTRAINT email_or_participant_required
           CHECK ((participant IS NOT NULL) OR (email_address IS NOT NULL));
 END;
+
+BEGIN;
+    CREATE TABLE email_auth_nonces
+    ( id                    serial                      PRIMARY KEY
+    , email_address         text                        NOT NULL
+    , nonce                 text                        NOT NULL
+    , ctime                 timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    , UNIQUE (nonce)
+     );
+END;

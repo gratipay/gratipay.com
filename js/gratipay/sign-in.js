@@ -1,17 +1,39 @@
 Gratipay.signIn = {};
 
+Gratipay.signIn.wireUp = function() {
+    Gratipay.signIn.wireUpButton();
+    Gratipay.signIn.wireUpEmailInput();
+}
+
 Gratipay.signIn.wireUpButton = function() {
     $('.sign-in button').click(Gratipay.signIn.openSignInOrSignUpModal);
 }
 
-Gratipay.signIn.openSignInToContinueModal = function () {
-    Gratipay.signIn.replaceTextInModal('sign-in-to-continue');
-    Gratipay.modal.open('#sign-in-modal');
+Gratipay.signIn.wireUpEmailInput = function() {
+    $('#sign-in-modal form.email-form').submit(function(e) {
+        e.preventDefault();
+        jQuery.ajax({
+            url: '/auth/send_link.json',
+            type: 'POST',
+            data: {
+                'email_address': $(this).find('input').val()
+            },
+            success: function(data) {
+                Gratipay.notification(data.message, 'success');
+            },
+            error: Gratipay.error
+        });
+    });
 }
 
-Gratipay.signIn.openSignInOrSignUpModal = function () {
+Gratipay.signIn.openSignInToContinueModal = function() {
+    Gratipay.signIn.replaceTextInModal('sign-in-to-continue');
+    Gratipay.signIn.openModalAndFocusInput();
+}
+
+Gratipay.signIn.openSignInOrSignUpModal = function() {
     Gratipay.signIn.replaceTextInModal('sign-in-or-sign-up');
-    Gratipay.modal.open('#sign-in-modal');
+    Gratipay.signIn.openModalAndFocusInput();
 }
 
 Gratipay.signIn.replaceTextInModal = function(dataKey) {
@@ -19,4 +41,9 @@ Gratipay.signIn.replaceTextInModal = function(dataKey) {
         var textToReplace = $(this).data(dataKey);
         $(this).text(textToReplace);
     });
+}
+
+Gratipay.signIn.openModalAndFocusInput = function() {
+    Gratipay.modal.open('#sign-in-modal');
+    $('#sign-in-modal input').focus();
 }

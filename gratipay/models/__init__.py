@@ -172,12 +172,14 @@ def _check_no_team_balances(cursor):
 def _check_orphans(cursor):
     """
     Finds participants that
-        * does not have corresponding elsewhere account
+        * do not have a verified email address (i.e. did not signup via email)
+        * do not have corresponding elsewhere account
         * have not been absorbed by other participant
 
-    These are broken because new participants arise from elsewhere
-    and elsewhere is detached only by take over which makes a note
-    in absorptions if it removes the last elsewhere account.
+    These are broken because participants without an email attached arise from
+    elsewhere (signup via third-party providers), and elsewhere is detached
+    only by take over which makes a note in absorptions if it removes the last
+    elsewhere account.
 
     Especially bad case is when also claimed_time is set because
     there must have been elsewhere account attached and used to sign in.
@@ -185,10 +187,11 @@ def _check_orphans(cursor):
     https://github.com/gratipay/gratipay.com/issues/617
     """
     orphans = cursor.all("""
-        select username
-           from participants
-          where not exists (select * from elsewhere where elsewhere.participant=username)
-            and not exists (select * from absorptions where archived_as=username)
+        SELECT username
+          FROM participants
+         WHERE participants.email_address IS NULL
+           AND NOT EXISTS (SELECT * FROM elsewhere WHERE participant=username)
+           AND NOT EXISTS (SELECT * FROM absorptions WHERE archived_as=username)
     """)
     assert len(orphans) == 0, "missing elsewheres: {}".format(list(orphans))
 
