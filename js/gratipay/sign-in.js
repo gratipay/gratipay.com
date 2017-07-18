@@ -13,7 +13,7 @@ Gratipay.signIn.wireUpEmailInput = function() {
     $('#sign-in-modal form.email-form').submit(function(e) {
         e.preventDefault();
         jQuery.ajax({
-            url: '/auth/send_link.json',
+            url: '/auth/send-link.json',
             type: 'POST',
             data: {
                 'email_address': $(this).find('input').val()
