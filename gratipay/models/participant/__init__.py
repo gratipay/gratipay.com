@@ -520,9 +520,9 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
         with self.db.get_cursor() as c:
             accounts = self.get_elsewhere_logins(c)
 
-            # A user who signed up via a third-party provider might not have
-            # and email attached. They must maintain at least one elsewhere
-            # account until they provide an email.
+            # A user who signed up via a third-party provider might not have an
+            # email attached. They must maintain at least one elsewhere account
+            # until they provide an email.
             assert self.email_address or (len(accounts) > 0)
 
             is_last = len(accounts) == 1 and accounts[0] == (platform, user_id)

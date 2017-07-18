@@ -28,4 +28,4 @@ class Tests(BrowserHarness):
         self.visit('/about/me/emails.json')
 
         assert self.css('#sign-in-modal').visible
-        assert self.css('#sign-in-modal p')[0].text == 'Enter your email to sign-in to Gratipay'
+        assert self.css('#sign-in-modal p')[0].text == 'Enter your email to sign in to Gratipay'

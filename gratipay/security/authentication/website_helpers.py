@@ -9,7 +9,9 @@ from gratipay.security import csrf
 from gratipay.security.crypto import constant_time_compare
 from gratipay.security.user import User, SESSION
 
+
 ANON = User()
+
 
 def _get_user_via_api_key(api_key):
     """Given an api_key, return a User. This auth method is deprecated.
@@ -25,6 +27,7 @@ def _get_user_via_api_key(api_key):
                  WHERE id = %s
             """, (today, p.id))
     return user
+
 
 def _get_user_via_basic_auth(auth_header):
     """Given a basic auth header, return a User object.
@@ -48,12 +51,20 @@ def _get_user_via_basic_auth(auth_header):
             raise Response(401)
     return user
 
+
 def _turn_off_csrf(request):
     """Given a request, short-circuit CSRF.
     """
     csrf_token = csrf._get_new_token()
     request.headers.cookie['csrf_token'] = csrf_token
     request.headers['X-CSRF-TOKEN'] = csrf_token
+
+
+def start_user_as_anon():
+    """Make sure we always have a user object, regardless of exceptions during authentication.
+    """
+    return {'user': ANON}
+
 
 def authenticate_user_if_possible(request, user):
     """This signs the user in.
@@ -71,6 +82,7 @@ def authenticate_user_if_possible(request, user):
         user = User.from_session_token(token)
     return {'user': user}
 
+
 def add_auth_to_response(response, request=None, user=ANON):
     if request is None:
         return  # early parsing must've failed
@@ -80,8 +92,3 @@ def add_auth_to_response(response, request=None, user=ANON):
     if SESSION in request.headers.cookie:
         if not user.ANON:
             user.keep_signed_in(response.headers.cookie)
-
-def start_user_as_anon():
-    """Make sure we always have a user object, regardless of exceptions during authentication.
-    """
-    return {'user': ANON}

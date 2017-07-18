@@ -44,4 +44,4 @@ else:
     raise Response(400, _('This link is invalid.'))
 
 [---] application/json
-{'message': _('Account created! Signing you in...')}
+{'message': _('Account created! Signing you in ...')}
