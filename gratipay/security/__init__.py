@@ -52,7 +52,8 @@ def add_headers_to_response(website, response):
         response.headers['content-security-policy-report-only'] = (
             "default-src 'self';"
             "script-src 'self' assets.gratipay.com 'unsafe-inline';"
-            "style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com;"
+            "style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com"
+            "          'sha256-WLocK7HeCKzQLS0M+PGS++5IhyfFsOA5N4ZCeTcltoo=';"
             "img-src *;"
             "font-src 'self' assets.gratipay.com cloud.typography.com data:;"
             "block-all-mixed-content;"
