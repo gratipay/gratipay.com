@@ -53,7 +53,7 @@ def add_headers_to_response(website, response):
             "default-src 'self';"
             "script-src 'self' assets.gratipay.com 'unsafe-inline';"
             "style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com"
-            "          'sha256-WLocK7HeCKzQLS0M+PGS++5IhyfFsOA5N4ZCeTcltoo=';"
+            "          'sha256-WLocK7HeCKzQLS0M+PGS++5IhyfFsOA5N4ZCeTcltoo=';" # CSS on widget.html
             "img-src *;"
             "font-src 'self' assets.gratipay.com cloud.typography.com data:;"
             "block-all-mixed-content;"
