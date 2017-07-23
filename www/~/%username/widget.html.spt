@@ -9,6 +9,10 @@ response.headers['X-Frame-Options'] = "ALLOWALL"
 <!doctype html>
 <html>
     <head>
+
+        <!-- Changing CSS? Also update the style-src hash in the CSP header in
+             gratipay/security/__init__.py -->
+
         <style>
             body {
                 margin: 0;
