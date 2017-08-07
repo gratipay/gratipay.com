@@ -15,7 +15,6 @@ COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQ
 \i sql/enforce-utc.sql
 
 
--- https://github.com/gratipay/gratipay.com/pull/1274
 CREATE TYPE participant_number AS ENUM ('singular', 'plural');
 CREATE TYPE status_of_1_0_payout AS ENUM
     ( 'too-little'
@@ -72,7 +71,6 @@ CREATE TRIGGER update_status_of_1_0_payout
     WHEN (OLD.balance > 0 AND NEW.balance = 0)
     EXECUTE PROCEDURE complete_1_0_payout();
 
--- https://github.com/gratipay/gratipay.com/pull/1610
 CREATE INDEX participants_claimed_time ON participants (claimed_time DESC)
   WHERE is_suspicious IS NOT TRUE
     AND claimed_time IS NOT null;
@@ -100,7 +98,6 @@ CREATE TABLE elsewhere
 
 \i sql/elsewhere_with_participant.sql
 
--- https://github.com/gratipay/gratipay.com/issues/951
 CREATE INDEX elsewhere_participant ON elsewhere(participant);
 
 
@@ -136,7 +133,6 @@ CREATE TRIGGER update_current_tip INSTEAD OF UPDATE ON current_tips
     FOR EACH ROW EXECUTE PROCEDURE update_tip();
 
 
--- https://github.com/gratipay/gratipay.com/pull/2501
 CREATE TYPE context_type AS ENUM
     ('tip', 'take', 'final-gift', 'take-over', 'one-off');
 
@@ -177,16 +173,12 @@ CREATE TABLE transfers
                                                         ON DELETE RESTRICT
  );
 
--- https://github.com/gratipay/gratipay.com/pull/2723
 ALTER TABLE transfers ADD CONSTRAINT positive CHECK (amount > 0) NOT VALID;
 
--- https://github.com/gratipay/gratipay.com/pull/3040
 CREATE INDEX transfers_timestamp_idx ON transfers (timestamp);
 CREATE INDEX transfers_tipper_idx ON transfers (tipper);
 CREATE INDEX transfers_tippee_idx ON transfers (tippee);
 
-
--- https://github.com/gratipay/gratipay.com/pull/3282
 
 CREATE TYPE payment_net AS ENUM (
     'balanced-ba', 'balanced-cc', 'paypal', 'bitcoin', 'braintree-cc', 'cash', 'transferwise', 'dwolla', 'unknown'
@@ -212,7 +204,6 @@ CREATE VIEW current_exchange_routes AS
 CREATE CAST (current_exchange_routes AS exchange_routes) WITH INOUT;
 
 
--- https://github.com/gratipay/gratipay.com/pull/2579
 CREATE TYPE exchange_status AS ENUM ('pre', 'pending', 'failed', 'succeeded', 'unknown');
 
 
@@ -231,7 +222,6 @@ CREATE TABLE exchanges
  );
 
 
--- https://github.com/gratipay/gratipay.com/issues/406
 CREATE TABLE absorptions
 ( id                    serial                      PRIMARY KEY
 , timestamp             timestamp with time zone    NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -243,7 +233,6 @@ CREATE TABLE absorptions
  );
 
 
--- https://github.com/gratipay/gratipay.com/pull/2701
 CREATE TABLE community_members
 ( slug          text           NOT NULL
 , participant   bigint         NOT NULL REFERENCES participants(id)
@@ -276,7 +265,6 @@ CREATE VIEW current_community_members AS
   ORDER BY participant, slug, mtime DESC;
 
 
--- https://github.com/gratipay/gratipay.com/pull/2006
 CREATE TABLE events
 ( id        serial      PRIMARY KEY
 , ts        timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -288,7 +276,6 @@ CREATE INDEX events_ts ON events(ts ASC);
 CREATE INDEX events_type ON events(type);
 
 
--- https://github.com/gratipay/gratipay.com/pull/2752
 CREATE TABLE emails
 ( id                    serial                      PRIMARY KEY
 , address               text                        NOT NULL
@@ -317,7 +304,6 @@ CREATE TABLE emails
  );
 
 
--- https://github.com/gratipay/gratipay.com/pull/3010
 CREATE TABLE statements
 ( participant      bigint    NOT NULL REFERENCES participants(id)
 , lang             text      NOT NULL
@@ -348,7 +334,6 @@ CREATE INDEX username_trgm_idx ON participants
 CREATE INDEX community_trgm_idx ON communities
     USING gist(name gist_trgm_ops);
 
--- https://github.com/gratipay/gratipay.com/pull/3136
 CREATE TABLE email_queue
 ( id             serial      PRIMARY KEY
 , participant    bigint      NOT NULL REFERENCES participants(id)
@@ -359,7 +344,6 @@ CREATE TABLE email_queue
 , ctime          timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
  );
 
--- https://github.com/gratipay/gratipay.com/pull/3239
 CREATE TABLE balances_at
 ( participant  bigint         NOT NULL REFERENCES participants(id)
 , at           timestamptz    NOT NULL
@@ -367,7 +351,6 @@ CREATE TABLE balances_at
 , UNIQUE (participant, at)
  );
 
--- https://github.com/gratipay/gratipay.com/issues/3409
 -- teams - the entity that can receive and distribute payments
 CREATE TYPE supported_image_types AS ENUM ('image/png', 'image/jpeg');
 CREATE TABLE teams
@@ -400,7 +383,6 @@ CREATE TABLE teams
  );
 
 
--- https://github.com/gratipay/gratipay.com/pull/3414
 -- payment_instructions - A ~user instructs Gratipay to make voluntary payments to a Team.
 CREATE TABLE payment_instructions
 ( id                    serial                      PRIMARY KEY
@@ -454,12 +436,10 @@ CREATE TABLE payments
  );
 
 
--- https://github.com/gratipay/gratipay.com/pull/3535
 CREATE TYPE status_of_1_0_balance AS ENUM
     ('unresolved', 'pending-payout', 'resolved');
 
 
--- https://github.com/gratipay/gratipay.com/pull/4027
 CREATE TABLE countries -- http://www.iso.org/iso/country_codes
 ( id    bigserial   primary key
 , code  text        NOT NULL UNIQUE
@@ -467,8 +447,6 @@ CREATE TABLE countries -- http://www.iso.org/iso/country_codes
 
 \i sql/countries.sql
 
-
--- https://github.com/gratipay/gratipay.com/pull/4028
 
 CREATE TABLE participant_identities
 ( id                bigserial       primary key
@@ -501,7 +479,6 @@ CREATE TRIGGER enforce_email_for_participant_identity
     EXECUTE PROCEDURE fail_if_no_email();
 
 
--- https://github.com/gratipay/gratipay.com/pull/4074
 -- takes - how participants express membership in teams
 
 CREATE TABLE takes
@@ -527,8 +504,6 @@ CREATE VIEW current_takes AS
     ) AS anon WHERE amount > 0;
 
 
--- https://github.com/gratipay/gratipay.com/pull/4153
-
 CREATE TABLE packages
 ( id                bigserial   PRIMARY KEY
 , package_manager   text        NOT NULL
@@ -539,13 +514,9 @@ CREATE TABLE packages
     );
 
 
--- https://github.com/gratipay/gratipay.com/pull/4438
-
 CREATE TABLE worker_coordination (npm_last_seq bigint not null default -1);
 INSERT INTO worker_coordination DEFAULT VALUES;
 
-
--- https://github.com/gratipay/gratipay.com/pull/4305
 
 CREATE TABLE claims
 ( nonce         text    NOT NULL REFERENCES emails(nonce)   ON DELETE CASCADE
