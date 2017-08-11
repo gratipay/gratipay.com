@@ -40,9 +40,12 @@ class Team(object):
             return team
 
         def slug_options():
-            yield self.name
+            # Having analyzed existing names, we should never get `@` without
+            # `/`. Be conservative in what we accept! Oh, wait ...
+            base_name = self.name.split('/')[1] if self.name.startswith('@') else self.name
+            yield base_name
             for i in range(1, 10):
-                yield '{}-{}'.format(self.name, i)
+                yield '{}-{}'.format(base_name, i)
             yield uuid.uuid4().hex
 
         for slug in slug_options():

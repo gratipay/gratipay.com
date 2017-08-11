@@ -64,9 +64,9 @@ class Basics(Harness):
 
 class Linking(Harness):
 
-    def link(self):
+    def link(self, package_name='foo'):
         alice = self.make_participant('alice')
-        package = self.make_package()
+        package = self.make_package(name=package_name)
         with self.db.get_cursor() as c:
             team = package.get_or_create_linked_team(c, alice)
         return alice, package, team
@@ -123,6 +123,10 @@ class Linking(Harness):
             self.make_team(name='foo-{}'.format(i)) # take `foo-{1-9}`
         _, _, team = self.link()
         assert team.slug == 'deadbeef-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
+
+    def test_linking_team_ignores_scope(self):
+        _, _, team = self.link(package_name='@foo/bar')
+        assert team.slug == 'bar'
 
     def test_linked_team_takes_package_description(self):
         _, _, team = self.link()
