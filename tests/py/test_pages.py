@@ -34,8 +34,12 @@ class TestPages(Harness):
         exchange_id = self.make_exchange('braintree-cc', 19, 0, alice, address=address)
 
         # for npm page
-        self.db.run("INSERT INTO packages (package_manager, name, description, emails) "
-                    "VALUES ('npm', 'foo-package', 'A package', ARRAY[]::text[])")
+        self.db.run("""
+            INSERT
+              INTO packages (package_manager, name, description, emails)
+            VALUES ('npm', 'foo-package', 'A package', ARRAY[]::text[])
+                 , ('npm', '@foo/package', 'A scoped package', ARRAY[]::text[])
+        """)
 
         if setup:
             setup(alice)
@@ -47,7 +51,7 @@ class TestPages(Harness):
                            .replace('/~/%username/', '/~alice/') \
                            .replace('/for/%slug/', '/for/wonderland/') \
                            .replace('/%platform/', '/github/') \
-                           .replace('/%package/', '/foo-package/') \
+                           .replace('/%package', '/foo-package') \
                            .replace('/%user_name/', '/gratipay/') \
                            .replace('/%to', '/1') \
                            .replace('/%country', '/TT') \
@@ -63,6 +67,7 @@ class TestPages(Harness):
            /about/me
            /about/me/
            /about/me/history
+           /on/npm/@foo/package
         """.split())
         for url in urls:
             try:

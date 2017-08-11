@@ -10,27 +10,32 @@ class Tests(Harness):
     def setUp(self):
         self.make_package()
 
+    def test_trailing_slash_redirects(self):
+        response = self.client.GxT('/on/npm/foo/')
+        assert response.code == 302
+        assert response.headers['Location'] == '/on/npm/foo'
+
     def test_anon_gets_signin_page_from_unclaimed(self):
-        body = self.client.GET('/on/npm/foo/').body
+        body = self.client.GET('/on/npm/foo').body
         assert 'foo</a> npm package on Gratipay:' in body
 
     def test_auth_gets_send_confirmation_page_from_unclaimed(self):
         self.make_participant('bob', claimed_time='now')
-        body = self.client.GET('/on/npm/foo/', auth_as='bob').body
+        body = self.client.GET('/on/npm/foo', auth_as='bob').body
         assert 'foo</a> npm package:' in body
         assert 'alice@example.com' in body
 
     def test_auth_gets_multiple_options_if_present(self):
         self.make_package(NPM, 'bar', 'Bar', ['alice@example.com', 'alice@example.net'])
         self.make_participant('bob', claimed_time='now')
-        body = self.client.GET('/on/npm/bar/', auth_as='bob').body
+        body = self.client.GET('/on/npm/bar', auth_as='bob').body
         assert 'alice@example.com' in body
         assert 'alice@example.net' in body
 
     def test_auth_gets_something_if_no_emails(self):
         self.make_package(NPM, 'bar', 'Bar', [])
         self.make_participant('bob', claimed_time='now')
-        body = self.client.GET('/on/npm/bar/', auth_as='bob').body
+        body = self.client.GET('/on/npm/bar', auth_as='bob').body
         assert "No email addresses on file" in body
 
 
@@ -46,7 +51,7 @@ class Tests(Harness):
 
     def test_package_redirects_to_project_if_claimed(self):
         self.claim_package()
-        response = self.client.GxT('/on/npm/foo/')
+        response = self.client.GxT('/on/npm/foo')
         assert response.code == 302
         assert response.headers['Location'] == '/foo/'
 

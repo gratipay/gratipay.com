@@ -16,7 +16,7 @@ class Package(Model, Emails, Team):
 
     Packages are entities on open source package managers; `npm
     <https://www.npmjs.com/>`_ is the only one we support so far. Each package
-    on npm has a page on Gratipay with an URL of the form ``/on/npm/foo/``.
+    on npm has a page on Gratipay with an URL of the form ``/on/npm/foo``.
     Packages can be claimed by Gratipay participants, at which point we create
     a :py:class:`~gratipay.models.team.Team` for them under the hood so they
     can start accepting payments.
@@ -40,7 +40,7 @@ class Package(Model, Emails, Team):
     def url_path(self):
         """The path part of the URL for this package on Gratipay.
         """
-        return '/on/{}/{}/'.format(self.package_manager, self.name)
+        return '/on/{}/{}'.format(self.package_manager, self.name)
 
 
     @property
