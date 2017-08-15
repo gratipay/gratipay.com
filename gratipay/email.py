@@ -13,7 +13,7 @@ from aspen_jinja2_renderer import SimplateLoader
 from jinja2 import Environment
 from markupsafe import escape as htmlescape
 
-from gratipay.exceptions import Throttled
+from gratipay.exceptions import NoEmailAddress, Throttled
 from gratipay.models.participant import Participant
 from gratipay.utils import find_files, i18n
 
@@ -38,6 +38,7 @@ class Queue(object):
         self.tell_sentry = tell_sentry
         self.sleep_for = env.email_queue_sleep_for
         self.allow_up_to = env.email_queue_allow_up_to
+        self.log_every = env.email_queue_log_metrics_every
 
         templates = {}
         templates_dir = os.path.join(root, 'emails')
@@ -75,13 +76,18 @@ class Queue(object):
         """
         with self.db.get_cursor() as cursor:
             cursor.run("""
-                INSERT INTO email_queue
+                INSERT INTO email_messages
                             (participant, spt_name, context, user_initiated)
                      VALUES (%s, %s, %s, %s)
             """, (to.id, template, pickle.dumps(context), _user_initiated))
             if _user_initiated:
-                n = cursor.one('SELECT count(*) FROM email_queue '
-                               'WHERE participant=%s AND user_initiated', (to.id,))
+                n = cursor.one("""
+                    SELECT count(*)
+                      FROM email_messages
+                     WHERE participant=%s
+                       AND result is null
+                       AND user_initiated
+                """, (to.id,))
                 if n > self.allow_up_to:
                     raise Throttled()
 
@@ -91,9 +97,9 @@ class Queue(object):
         """
         fetch_messages = lambda: self.db.all("""
             SELECT *
-              FROM email_queue
-             WHERE not dead
-          ORDER BY id ASC
+              FROM email_messages
+             WHERE result is null
+          ORDER BY ctime ASC
              LIMIT 60
         """)
         nsent = 0
@@ -103,38 +109,28 @@ class Queue(object):
                 break
             for rec in messages:
                 try:
-                    r = self._flush_one(rec)
-                except:
-                    self.db.run("UPDATE email_queue SET dead=true WHERE id = %s", (rec.id,))
-                    raise
-                self.db.run("DELETE FROM email_queue WHERE id = %s", (rec.id,))
-                if r == 1:
-                    sleep(self.sleep_for)
-                nsent += r
+                    message = self._prepare_email_message_for_ses(rec)
+                    self._mailer.send_email(**message)
+                except Exception as exc:
+                    self._store_result(rec.id, repr(exc))
+                    raise  # we want to see this in Sentry
+                self._store_result(rec.id, '')
+                nsent += 1
+                sleep(self.sleep_for)
         return nsent
 
 
-    def _flush_one(self, rec):
-        """Send an email message using the underlying ``_mailer``.
-
-        :param Record rec: a database record from the ``email_queue`` table
-        :return int: the number of emails sent (0 or 1)
-
-        """
-        message = self._prepare_email_message_for_ses(rec)
-        if message is None:
-            return 0 # Not sent
-        self._mailer.send_email(**message)
-        return 1 # Sent
+    def _store_result(self, message_id, result):
+        self.db.run("UPDATE email_messages SET result=%s WHERE id=%s", (result, message_id))
 
 
     def _prepare_email_message_for_ses(self, rec):
         """Prepare an email message for delivery via Amazon SES.
 
-        :param Record rec: a database record from the ``email_queue`` table
+        :param Record rec: a database record from the ``email_messages`` table
 
-        :returns: ``None`` if we can't find an email address to send to
         :returns: ``dict`` if we can find an email address to send to
+        :raises: ``NoEmailAddress`` if we can't find an email address to send to
 
         We look for an email address to send to in two places:
 
@@ -156,7 +152,7 @@ class Queue(object):
         context.setdefault('include_unsubscribe', True)
         email = context.setdefault('email', to.email_address)
         if not email:
-            return None
+            raise NoEmailAddress()
         langs = i18n.parse_accept_lang(to.email_lang or 'en')
         locale = i18n.match_lang(langs)
         i18n.add_helpers_to_context(self.tell_sentry, context, locale)
@@ -188,15 +184,16 @@ class Queue(object):
 
 
     def log_metrics(self, _print=print):
-        ndead = self.db.one('SELECT COUNT(*) FROM email_queue WHERE dead')
-        ntotal = self.db.one('SELECT COUNT(*) FROM email_queue')
-        _print('count#email_queue_dead=%d count#email_queue_total=%d' % (ndead, ntotal))
-
-
-    def purge(self):
-        """Remove all messages from the queue.
-        """
-        self.db.run('DELETE FROM email_queue')
+        stats = self.db.one("""
+            SELECT count(CASE WHEN result = '' THEN 1 END)      AS sent
+                 , count(CASE WHEN result > '' THEN 1 END)      AS failed
+                 , count(CASE WHEN result is null THEN 1 END)   AS pending
+              FROM email_messages
+             WHERE ctime > now() - %s::interval
+        """, ('{} seconds'.format(self.log_every),), back_as=dict)
+        prefix = 'count#email_queue'
+        variables = ('sent', 'failed', 'pending')
+        _print(' '.join('{}_{}={}'.format(prefix, v, stats[v]) for v in variables))
 
 
 jinja_env = Environment()

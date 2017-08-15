@@ -37,15 +37,15 @@ class _AbstractEmailHarness(Harness):
 
 
 class QueuedEmailHarness(_AbstractEmailHarness):
-    """An email harness that pulls from the ``email_queue`` table.
+    """An email harness that pulls from the ``email_messages`` table.
     """
 
     def _get_last_email(self):
-        rec = self.db.one('SELECT * FROM email_queue ORDER BY id DESC LIMIT 1')
+        rec = self.db.one('SELECT * FROM email_messages ORDER BY ctime DESC LIMIT 1')
         return self.app.email_queue._prepare_email_message_for_ses(rec)
 
     def count_email_messages(self):
-        return self.db.one('SELECT count(*) FROM email_queue')
+        return self.db.one('SELECT count(*) FROM email_messages WHERE result is null')
 
 
 class SentEmailHarness(_AbstractEmailHarness):

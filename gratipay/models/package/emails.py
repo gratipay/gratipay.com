@@ -48,7 +48,7 @@ class Emails(object):
         other_verified = self.db.all('''
 
             SELECT address
-              FROM emails
+              FROM email_addresses
              WHERE verified is true
                AND participant_id != %s
                AND address = ANY((SELECT emails FROM packages WHERE id=%s)::text[])

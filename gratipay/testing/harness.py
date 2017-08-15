@@ -271,7 +271,7 @@ class Harness(unittest.TestCase):
             address = kw.pop('email_address')
             if address:
                 self.add_and_verify_email(participant, address)
-                self.app.email_queue.purge()
+                self.db.run('DELETE FROM email_messages')  # don't confuse email tests
 
         # Update participant
         verified_in = kw.pop('verified_in', [])

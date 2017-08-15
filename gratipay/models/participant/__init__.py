@@ -362,7 +362,7 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
                    AND is_member IS true
             );
 
-            DELETE FROM emails WHERE participant_id = %(participant_id)s;
+            DELETE FROM email_addresses WHERE participant_id = %(participant_id)s;
             DELETE FROM statements WHERE participant=%(participant_id)s;
             DELETE FROM participant_identities WHERE participant_id=%(participant_id)s;
 
@@ -1104,17 +1104,17 @@ class Participant(Model, Email, ExchangeRoutes, Identity, Packages):
 
         MERGE_EMAIL_ADDRESSES = """
 
-            WITH emails_to_keep AS (
+            WITH email_addresses_to_keep AS (
                      SELECT DISTINCT ON (address) id
-                       FROM emails
+                       FROM email_addresses
                       WHERE participant_id IN (%(dead)s, %(live)s)
                    ORDER BY address, verification_end, verification_start DESC
                  )
-            DELETE FROM emails
+            DELETE FROM email_addresses
              WHERE participant_id IN (%(dead)s, %(live)s)
-               AND id NOT IN (SELECT id FROM emails_to_keep);
+               AND id NOT IN (SELECT id FROM email_addresses_to_keep);
 
-            UPDATE emails
+            UPDATE email_addresses
                SET participant_id = %(live)s
              WHERE participant_id = %(dead)s;
 

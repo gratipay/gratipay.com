@@ -18,7 +18,8 @@ class Test(BrowserHarness):
         self.css('#content button')[0].click()
         address = ('alice' if choice == 0 else 'bob') + '@example.com'
         assert self.wait_for_success() == 'Check {} for a verification link.'.format(address)
-        return self.db.one('select address from claims c join emails e on c.nonce = e.nonce')
+        return self.db.one('select address from claims c '
+                           'join email_addresses e on c.nonce = e.nonce')
 
     def finish_claiming(self):
         alice = P('alice')
@@ -78,7 +79,7 @@ class Test(BrowserHarness):
         self.make_package()
         self.check()
 
-        link = pickle.loads(self.db.one('select context from email_queue'))['link']
+        link = pickle.loads(self.db.one('select context from email_messages'))['link']
         link = link[len(self.base_url):]  # strip because visit will add it back
 
         self.visit(link)
@@ -221,7 +222,7 @@ class BulkClaiming(BrowserHarness):
         assert len(self.css('table.listing td.item')) == 3
         assert self.wait_for_success() == 'Check alice@example.com for a verification link.'
         assert self.db.one('select count(*) from claims') == 3
-        assert self.db.one('select count(*) from email_queue') == 1
+        assert self.db.one('select count(*) from email_messages') == 1
 
     def test_doesnt_send_for_unclaimable_packages(self):
         self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
@@ -232,4 +233,4 @@ class BulkClaiming(BrowserHarness):
         assert len(self.css('table.listing td.item')) == 3
         assert self.wait_for_success() == 'Check alice@example.com for a verification link.'
         assert self.db.one('select count(*) from claims') == 2
-        assert self.db.one('select count(*) from email_queue') == 1
+        assert self.db.one('select count(*) from email_messages') == 1
