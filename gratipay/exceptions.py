@@ -44,15 +44,15 @@ class CannotRemovePrimaryEmail(ProblemChangingEmail):
 
 class EmailNotOnFile(ProblemChangingEmail):
     def lazy_body(self, _):
-         return _("That email address is not on file for this package.")
+        return _("That email address is not on file for this package.")
 
 class EmailNotVerified(ProblemChangingEmail):
     def lazy_body(self, _):
-         return _("That email address is not verified.")
+        return _("That email address is not verified.")
 
 class TooManyEmailAddresses(ProblemChangingEmail):
     def lazy_body(self, _):
-         return _("You've reached the maximum number of email addresses we allow.")
+        return _("You've reached the maximum number of email addresses we allow.")
 
 
 class NoEmailAddress(Exception):
@@ -60,7 +60,7 @@ class NoEmailAddress(Exception):
 
 class Throttled(LocalizedErrorResponse):
     def lazy_body(self, _):
-         return _("You've initiated too many emails too quickly. Please try again in a minute or two.")
+        return _("You've initiated too many emails too quickly. Please try again in a minute or two.")
 
 
 class ProblemChangingNumber(Exception):
