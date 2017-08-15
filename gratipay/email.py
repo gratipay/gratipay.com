@@ -110,18 +110,20 @@ class Queue(object):
             for rec in messages:
                 try:
                     message = self._prepare_email_message_for_ses(rec)
-                    self._mailer.send_email(**message)
+                    result = self._mailer.send_email(**message)
+                    remote_message_id = result['MessageId']  # let KeyErrors go to Sentry
                 except Exception as exc:
-                    self._store_result(rec.id, repr(exc))
+                    self._store_result(rec.id, repr(exc), None)
                     raise  # we want to see this in Sentry
-                self._store_result(rec.id, '')
+                self._store_result(rec.id, '', remote_message_id)
                 nsent += 1
                 sleep(self.sleep_for)
         return nsent
 
 
-    def _store_result(self, message_id, result):
-        self.db.run("UPDATE email_messages SET result=%s WHERE id=%s", (result, message_id))
+    def _store_result(self, message_id, result, remote_message_id):
+        self.db.run("UPDATE email_messages SET result=%s, remote_message_id=%s "
+                    "WHERE id=%s", (result, remote_message_id, message_id))
 
 
     def _prepare_email_message_for_ses(self, rec):
@@ -239,3 +241,5 @@ class ConsoleMailer(object):
             p('   ', line)
         p()
         p('-'*78)
+
+        return {'MessageId': 'deadbeef'}  # simulate a remote message id

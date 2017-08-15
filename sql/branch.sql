@@ -1,7 +1,8 @@
 BEGIN;
     ALTER TABLE emails RENAME TO email_addresses;
     ALTER TABLE email_queue RENAME TO email_messages;
-    ALTER TABLE email_messages ADD COLUMN result text DEFAULT NULL;
+    ALTER TABLE email_messages ADD COLUMN result text;
+    ALTER TABLE email_messages ADD COLUMN remote_message_id text;
 
     -- transfer dead to result
     UPDATE email_messages SET result='unknown failure' WHERE dead;

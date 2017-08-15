@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import mock
-
 from gratipay.testing import Harness
 
 
@@ -49,21 +47,27 @@ class QueuedEmailHarness(_AbstractEmailHarness):
 
 
 class SentEmailHarness(_AbstractEmailHarness):
-    """An email harness that mocks ``_mailer.send_email`` to ``get_last_email``
-    post-queue.
+    """An email harness that patches ``_mailer.send_email`` to ``get_last_email``
+    after running through the email queue machinery.
     """
 
     def setUp(self):
         _AbstractEmailHarness.setUp(self)
-        self.mailer_patcher = mock.patch.object(self.app.email_queue._mailer, 'send_email')
-        self.mailer = self.mailer_patcher.start()
-        self.addCleanup(self.mailer_patcher.stop)
-        sleep_patcher = mock.patch('gratipay.application.email.sleep')
-        sleep_patcher.start()
-        self.addCleanup(sleep_patcher.stop)
+        self.__messages = []
+
+        def send_email(**message):
+            self.__messages.append(message)
+            return {'MessageId': 'deadbeef'}
+
+        self.__send_email = self.app.email_queue._mailer.send_email
+        self.app.email_queue._mailer.send_email = send_email
+
+    def tearDown(self):
+        self.app.email_queue._mailer.send_email = self.__send_email
+        _AbstractEmailHarness.tearDown(self)
 
     def _get_last_email(self):
-        return self.mailer.call_args[1]
+        return self.__messages[-1]
 
     def count_email_messages(self):
-        return self.mailer.call_count
+        return len(self.__messages)
