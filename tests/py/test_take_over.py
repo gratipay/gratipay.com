@@ -184,41 +184,37 @@ class TestTakeOver(Harness):
         self.db.self_check()
 
     def test_email_addresses_merging(self):
-        # person starts a bunch of email verifications as alice
+        # person verifies an email as alice
         alice = self.make_participant('alice')
         alice.start_email_verification('alice@example.com')
-        alice.start_email_verification('alice@example.net')
-        alice.start_email_verification('alice@example.org')
+        nonce = alice.get_email('alice@example.com').nonce
+        alice.finish_email_verification('alice@example.com', nonce)
 
-        # person finishes one of them, as alice
-        nonce = alice.get_email('alice@example.org').nonce
-        alice.finish_email_verification('alice@example.org', nonce)
+        # person starts another verification as alice
+        alice.start_email_verification('alice@example.org')
 
         # person signs up as bob
         bob_github = self.make_elsewhere('github', 2, 'bob')
         bob = bob_github.opt_in('bob')[0].participant
 
-        # person verifies one of the same emails as alice, using bob
-        bob.start_email_verification('alice@example.com')
-        nonce = bob.get_email('alice@example.com').nonce
-        bob.finish_email_verification('alice@example.com', nonce)
-
-        # ... starts verification for another of the same
-        bob.start_email_verification('alice@example.net')
-
-        # ... and for a new email
+        # verifies an email
         bob.start_email_verification('bob@example.net')
+        nonce = bob.get_email('bob@example.net').nonce
+        bob.finish_email_verification('bob@example.net', nonce)
+
+        # and starts verification for alice's unverified email
+        bob.start_email_verification('alice@example.org')
 
         # Now: alice takes over bob!
         alice.take_over(bob_github, have_confirmation=True)
 
         # alice gets all the addresses, verified or not
         alice_emails = {e.address: e for e in alice.get_emails()}
-        assert len(alice_emails) == 4
+        assert len(alice_emails) == 3
         assert alice_emails['alice@example.com'].verified
-        assert alice_emails['alice@example.org'].verified
-        assert not alice_emails['alice@example.net'].verified
-        assert not alice_emails['bob@example.net'].verified
+        assert alice_emails['bob@example.net'].verified
+        assert not alice_emails['alice@example.org'].verified
+        assert alice.email_address == 'alice@example.com'
 
         # bob has no email addresses
         assert not Participant.from_id(bob.id).get_emails()
