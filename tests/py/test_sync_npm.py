@@ -57,6 +57,19 @@ class ConsumeChangeStreamTests(Harness):
         assert package.emails == []
 
 
+    def test_consumes_change_stream_with_missing_doc(self):
+        docs = [ {'doc': {'name': 'foo', 'description': 'Foo.'}}
+               , {'doc': {'name': 'foo', 'description': 'Foo?'}}
+               , {'': {'name': 'foo', 'description': 'Foo!'}}
+                ]
+        sync_npm.consume_change_stream(self.change_stream(docs), self.db)
+        package = self.db.one('select * from packages')
+        assert package.package_manager == 'npm'
+        assert package.name == 'foo'
+        assert package.description == 'Foo?'
+        assert package.emails == []
+
+
     def test_not_afraid_to_delete_docs(self):
         docs = [ {'doc': {'name': 'foo', 'description': 'Foo.'}}
                , {'doc': {'name': 'foo', 'description': 'Foo?'}}
