@@ -354,7 +354,7 @@ class Email(object):
         return [email.address for email in self.get_emails(cursor) if email.verified]
 
 
-    def remove_email(self, address):
+    def unlink_email_address(self, address):
         """Remove the given email address from the participant's account.
         Raises ``CannotRemovePrimaryEmail`` if the address is primary. It's a
         noop if the email address is not on file.
