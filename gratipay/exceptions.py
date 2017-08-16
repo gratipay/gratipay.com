@@ -54,6 +54,10 @@ class TooManyEmailAddresses(ProblemChangingEmail):
     def lazy_body(self, _):
         return _("You've reached the maximum number of email addresses we allow.")
 
+class TooManyPendingEmailVerifications(ProblemChangingEmail):
+    def lazy_body(self, _):
+        return _("You have one or more pending email verifications that must be completed before you can verify a different email address.")
+
 
 class NoEmailAddress(Exception):
     pass
