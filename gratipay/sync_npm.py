@@ -60,7 +60,10 @@ def consume_change_stream(stream, db):
                 op, kw = package.delete, {}
             else:
                 op = Package.upsert
-                kw = process_doc(change['doc'])
+                doc = change.get('doc')
+                if not doc:
+                    continue    # We've seen this in the wild.
+                kw = process_doc(doc)
                 if not kw:
                     continue
                 kw['package_manager'] = NPM

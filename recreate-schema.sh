@@ -24,6 +24,11 @@ echo "Applying sql/schema.sql ..."
 echo
 
 psql "$DATABASE_URL" < sql/schema.sql
+
+
+echo "=============================================================================="
+echo "Applying sql/payday.sql ..."
+echo
 psql "$DATABASE_URL" < sql/payday.sql
 
 
