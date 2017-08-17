@@ -5,7 +5,6 @@ import os
 import braintree
 import mock
 import pytest
-import pdb
 
 from gratipay.billing.exchanges import create_card_hold, MINIMUM_CHARGE
 from gratipay.billing.payday import NoPayday, Payday
@@ -13,7 +12,7 @@ from gratipay.exceptions import NegativeBalance
 from gratipay.models.participant import Participant
 from gratipay.testing import Foobar, D,P
 from gratipay.testing.billing import BillingHarness, PaydayMixin
-from gratipay.testing.email import SentEmailHarness, QueuedEmailHarness
+from gratipay.testing.email import QueuedEmailHarness
 
 
 class TestPayday(BillingHarness):
