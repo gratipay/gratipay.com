@@ -241,7 +241,7 @@ class TestEndpoints(Alice):
         with self.assertRaises(EmailNotVerified):
             self.hit_email_spt('set-primary', 'alice@example.com')
 
-    def test_remove_email(self):
+    def test_unlink_email_address(self):
         # Can remove unverified
         self.hit_email_spt('add-email', 'alice@example.com')
         self.hit_email_spt('remove', 'alice@example.com')
@@ -547,14 +547,14 @@ class StartEmailVerification(Alice):
         assert result == (_email.VERIFICATION_FAILED, None, None)
 
 
-class RemoveEmail(Alice):
+class UnlinkEmailAddress(Alice):
 
-    def test_removing_email_clears_claims(self):
+    def test_unlinking_email_address_clears_claims(self):
         foo = self.make_package()
         self.alice.start_email_verification('alice@example.com', foo)
         _claims = lambda: self.db.all('select package_id from claims')
         assert _claims() == [foo.id]
-        self.alice.remove_email('alice@example.com')
+        self.alice.unlink_email_address('alice@example.com')
         assert _claims() == []
 
 
