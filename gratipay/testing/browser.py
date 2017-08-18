@@ -55,9 +55,10 @@ class BrowserHarness(Harness):
         self.cookies.delete()
 
     def visit(self, url):
-        """Extend to prefix our base URL.
+        """Extend to prefix our base URL if necessary.
         """
-        return self._browser.visit(self.base_url + url)
+        base_url =  '' if url.startswith('http') else self.base_url
+        return self._browser.visit(base_url + url)
 
     def sign_in(self, username):
         """Given a username, sign in the user.

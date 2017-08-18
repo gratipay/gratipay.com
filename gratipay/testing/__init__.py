@@ -14,8 +14,11 @@ T = Team.from_slug              #:
 from .harness import Harness
 from .billing import BillingHarness
 from .browser import BrowserHarness
+from .email import SentEmailHarness, QueuedEmailHarness
 
-__all__ = ['Harness', 'BillingHarness', 'BrowserHarness', 'D','P','T']
+__all__ = [ 'Harness', 'BillingHarness', 'BrowserHarness', 'SentEmailHarness', 'QueuedEmailHarness'
+          , 'D','P','T'
+           ]
 
 
 class Foobar(Exception): pass
