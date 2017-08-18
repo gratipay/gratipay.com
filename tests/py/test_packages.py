@@ -169,13 +169,13 @@ class GroupEmailsForParticipant(Harness):
         nonce = alice.get_email('primary').nonce
         alice.finish_email_verification('primary', nonce)
 
-        # linked to self but unverified
-        alice.start_email_verification('lumail')
-
         # verified for self
         alice.start_email_verification('amail')
         nonce = alice.get_email('amail').nonce
         alice.finish_email_verification('amail', nonce)
+
+        # linked to self but unverified
+        alice.start_email_verification('lumail')
 
         # unlinked
         pass  # cmail, email -- tests alphabetization within grouping

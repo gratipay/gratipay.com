@@ -12,6 +12,7 @@ from pytest import raises
 from gratipay.exceptions import CannotRemovePrimaryEmail, EmailTaken, EmailNotVerified
 from gratipay.exceptions import TooManyEmailAddresses, Throttled, EmailAlreadyVerified
 from gratipay.exceptions import EmailNotOnFile, ProblemChangingEmail
+from gratipay.exceptions import TooManyPendingEmailVerifications
 from gratipay.testing import P, Harness
 from gratipay.testing.email import QueuedEmailHarness
 from gratipay.models.package import NPM, Package
@@ -108,6 +109,19 @@ class TestEndpoints(Alice):
         assert last_email['to'] == 'alice <alice1@example.com>'
         expected = "We are connecting alice2@example.com to the alice account on Gratipay"
         assert expected in last_email['body_text']
+
+    def test_can_only_have_one_verification_outstanding_at_a_time(self):
+        assert self.hit_email_spt('add-email', 'alice@example.com').code == 200
+        response = self.hit_email_spt('add-email', 'alice@example.net', should_fail=True)
+        assert response.code == 400
+        assert response.__class__ is TooManyPendingEmailVerifications
+        assert response.body == 'You have an outstanding verification request that must be ' \
+                                'completed before you can verify a different email address.'
+
+    def test_can_resend_verification_message_for_same_email(self):
+        assert self.hit_email_spt('add-email', 'alice@example.com').code == 200
+        assert self.hit_email_spt('add-email', 'alice@example.com').code == 200
+        assert self.hit_email_spt('add-email', 'alice@example.com').code == 200
 
     def test_post_anon_returns_401(self):
         response = self.hit_email_spt('add-email', 'anon@example.com', user=None, should_fail=True)

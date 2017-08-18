@@ -10,6 +10,7 @@ from psycopg2 import IntegrityError
 import gratipay
 from gratipay.exceptions import EmailAlreadyVerified, EmailTaken, CannotRemovePrimaryEmail
 from gratipay.exceptions import EmailNotVerified, TooManyEmailAddresses, EmailNotOnFile
+from gratipay.exceptions import TooManyPendingEmailVerifications
 from gratipay.security.crypto import constant_time_compare
 from gratipay.utils import encode_for_querystring
 
@@ -72,6 +73,8 @@ class Email(object):
         :raises EmailNotOnFile: if the email address is not on file for any of
             the packages
         :raises TooManyEmailAddresses: if the participant already has 10 emails
+        :raises TooManyPendingEmailVerifications: if the participant already
+            has one or more email verifications pending
         :raises Throttled: if the participant adds too many emails too quickly
 
         """
@@ -105,6 +108,9 @@ class Email(object):
         """
         if not all(email in p.emails for p in packages):
             raise EmailNotOnFile()
+
+        if self.npending_email_verifications > 0:
+            raise TooManyPendingEmailVerifications()
 
         owner_id = c.one("""
             SELECT participant_id

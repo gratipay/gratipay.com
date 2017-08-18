@@ -13,13 +13,17 @@ class TestPut(SentEmailHarness):
 
     def setUp(self):
         SentEmailHarness.setUp(self)
-        self.alice = self.make_participant('alice', claimed_time='now', email_address='alice@example.com')
+        self.alice = self.make_participant( 'alice'
+                                          , claimed_time='now'
+                                          , email_address='alice@example.com'
+                                           )
 
-    def test_queueing_email_is_throttled(self):
+    def test_put_puts(self):
+        assert self.app.email_queue.flush() == 0
         self.app.email_queue.put(self.alice, "base")
         self.app.email_queue.put(self.alice, "base")
         self.app.email_queue.put(self.alice, "base")
-        raises(Throttled, self.app.email_queue.put, self.alice, "base")
+        assert self.app.email_queue.flush() == 3
 
     def test_queueing_email_writes_timestamp(self):
         self.app.email_queue.put(self.alice, "base")
