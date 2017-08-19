@@ -535,3 +535,14 @@ CREATE TABLE teams_to_packages
 -- https://github.com/gratipay/gratipay.com/pull/4522
 
 ALTER TABLE participants ADD COLUMN is_owner bool NOT NULL DEFAULT FALSE;
+
+
+-- https://github.com/gratipay/gratipay.com/pull/4572
+
+BEGIN;
+    ALTER TABLE emails RENAME TO email_addresses;
+    ALTER TABLE email_queue RENAME TO email_messages;
+    ALTER TABLE email_messages ADD COLUMN result text;
+    ALTER TABLE email_messages ADD COLUMN remote_message_id text;
+    ALTER TABLE email_messages DROP COLUMN dead;
+END;
