@@ -630,8 +630,8 @@ class TestNotifyParticipants(QueuedEmailHarness, PaydayMixin):
             payday.end()
             payday.notify_participants()
 
-            emails = self.db.one('SELECT * FROM email_queue')
-            assert emails.spt_name == 'charge_'+status
+            outbound = self.db.one("SELECT * FROM email_messages WHERE result is null")
+            outbound.spt_name == 'charge_'+status
 
             assert self.get_last_email()['to'] == 'kalel <kalel@example.net>'
             assert 'Gratiteam' in self.get_last_email()['body_text']

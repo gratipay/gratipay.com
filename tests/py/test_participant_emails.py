@@ -163,7 +163,7 @@ class TestEndpoints(Alice):
         address = 'alice@example.com'
         self.hit_email_spt('add-email', address)
         self.db.run("""
-            UPDATE emails
+            UPDATE email_addresses
                SET verification_start = (now() - INTERVAL '25 hours')
              WHERE participant_id = %s;
         """, (self.alice.id,))
@@ -531,7 +531,7 @@ class StartEmailVerification(Alice):
         bob.start_email_verification('alice@example.com', foo)
         bnonce = bob.get_emails()[0].nonce
 
-        _emails = lambda: self.db.all('select participant_id as i from emails order by i')
+        _emails = lambda: self.db.all('select participant_id as i from email_addresses order by i')
         _claims = lambda: dict(self.db.all('select nonce, package_id from claims'))
 
         assert _claims() == {anonce: foo.id, bnonce: foo.id}

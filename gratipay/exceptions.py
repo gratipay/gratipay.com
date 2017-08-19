@@ -55,6 +55,9 @@ class TooManyEmailAddresses(ProblemChangingEmail):
          return _("You've reached the maximum number of email addresses we allow.")
 
 
+class NoEmailAddress(Exception):
+    pass
+
 class Throttled(LocalizedErrorResponse):
     def lazy_body(self, _):
          return _("You've initiated too many emails too quickly. Please try again in a minute or two.")

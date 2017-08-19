@@ -24,10 +24,10 @@ class Packages(object):
         """
         return self.db.all('''
 
-            WITH verified_emails AS (
+            WITH verified_email_addresses AS (
                 SELECT e.address
                      , e.address = p.email_address is_primary
-                  FROM emails e
+                  FROM email_addresses e
              LEFT JOIN participants p
                     ON p.id = e.participant_id
                  WHERE e.participant_id=%s
@@ -36,12 +36,12 @@ class Packages(object):
             SELECT pkg.*::packages                  package
                  , p.*::participants                claimed_by
                  , (SELECT is_primary
-                      FROM verified_emails
+                      FROM verified_email_addresses
                      WHERE address = ANY(emails)
                   ORDER BY is_primary DESC, address
                      LIMIT 1)                       email_address_is_primary
                  , (SELECT address
-                      FROM verified_emails
+                      FROM verified_email_addresses
                      WHERE address = ANY(emails)
                   ORDER BY is_primary DESC, address
                      LIMIT 1)                       email_address
@@ -53,7 +53,7 @@ class Packages(object):
          LEFT JOIN participants p
                 ON t.owner = p.username
              WHERE package_manager=%s
-               AND pkg.emails && array(SELECT address FROM verified_emails)
+               AND pkg.emails && array(SELECT address FROM verified_email_addresses)
           ORDER BY email_address_is_primary DESC
                  , email_address ASC
                  , pkg.name ASC

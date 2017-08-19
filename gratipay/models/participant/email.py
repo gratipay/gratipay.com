@@ -41,13 +41,13 @@ VERIFICATION_SUCCEEDED = VerificationResult('Succeeded')
 class Email(object):
     """Participants may associate email addresses with their account.
 
-    Email addresses are stored in an ``emails`` table in the database, which
-    holds the addresses themselves as well as info related to address
+    Email addresses are stored in an ``email_addresses`` table in the database,
+    which holds the addresses themselves as well as info related to address
     verification. While a participant may have multiple email addresses on
     file, verified or not, only one will be the *primary* email address: the
     one also recorded in ``participants.email_address``. It's a bug for the
     primary address not to be verified, or for an address to be in
-    ``participants.email_address`` but not also in ``emails``.
+    ``participants.email_address`` but not also in ``email_addresses``.
 
     Having a verified email is a prerequisite for certain other features on
     Gratipay, such as linking a PayPal account, or filing a national identity.
@@ -108,7 +108,7 @@ class Email(object):
 
         owner_id = c.one("""
             SELECT participant_id
-              FROM emails
+              FROM email_addresses
              WHERE address = %(email)s
                AND verified IS true
         """, dict(email=email))
@@ -160,7 +160,7 @@ class Email(object):
         """Given a cursor and email address, return a verification nonce.
         """
         nonce = str(uuid.uuid4())
-        existing = c.one( 'SELECT * FROM emails WHERE address=%s AND participant_id=%s'
+        existing = c.one( 'SELECT * FROM email_addresses WHERE address=%s AND participant_id=%s'
                         , (email, self.id)
                          )  # can't use eafp here because of cursor error handling
                             # XXX I forget what eafp is. :(
@@ -170,7 +170,8 @@ class Email(object):
             # Not in the table yet. This should throw an IntegrityError if the
             # address is verified for a different participant.
 
-            c.run( "INSERT INTO emails (participant_id, address, nonce) VALUES (%s, %s, %s)"
+            c.run( "INSERT INTO email_addresses (participant_id, address, nonce) "
+                   "VALUES (%s, %s, %s)"
                  , (self.id, email, nonce)
                   )
         else:
@@ -181,7 +182,7 @@ class Email(object):
             if existing.nonce:
                 c.run('DELETE FROM claims WHERE nonce=%s', (existing.nonce,))
             c.run("""
-                UPDATE emails
+                UPDATE email_addresses
                    SET nonce=%s
                      , verification_start=now()
                  WHERE participant_id=%s
@@ -299,7 +300,7 @@ class Email(object):
 
         """
         cursor.run("""
-            UPDATE emails
+            UPDATE email_addresses
                SET verified=true, verification_end=now(), nonce=NULL
              WHERE participant_id=%s
                AND address=%s
@@ -307,7 +308,7 @@ class Email(object):
         """, (self.id, address))
         cursor.run("""
             DELETE
-              FROM emails
+              FROM email_addresses
              WHERE participant_id != %s
                AND address=%s
         """, (self.id, address))
@@ -324,7 +325,7 @@ class Email(object):
         :returns: a database record (a named tuple)
 
         """
-        sql = 'SELECT * FROM emails WHERE participant_id=%s AND address=%s'
+        sql = 'SELECT * FROM email_addresses WHERE participant_id=%s AND address=%s'
         if and_lock:
             sql += ' FOR UPDATE'
         return (cursor or self.db).one(sql, (self.id, address))
@@ -335,7 +336,7 @@ class Email(object):
         """
         return (cursor or self.db).all("""
             SELECT *
-              FROM emails
+              FROM email_addresses
              WHERE participant_id=%s
           ORDER BY id
         """, (self.id,))
@@ -359,7 +360,7 @@ class Email(object):
                               , 'participant'
                               , dict(id=self.id, action='remove', values=dict(email=address))
                                )
-            c.run("DELETE FROM emails WHERE participant_id=%s AND address=%s",
+            c.run("DELETE FROM email_addresses WHERE participant_id=%s AND address=%s",
                   (self.id, address))
 
 
