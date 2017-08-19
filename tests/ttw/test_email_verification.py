@@ -23,3 +23,23 @@ class Tests(BrowserHarness, QueuedEmailHarness):
 
         self.visit(verification_link)
         assert self.css('#content h1').text == 'Success!'
+
+
+    def test_can_resend_verification(self):
+        raise NotImplementedError
+
+
+    def test_cannot_start_a_second_verification_while_one_open(self):
+        raise NotImplementedError
+
+
+    def test_can_start_a_second_verification_when_first_completed(self):
+        raise NotImplementedError
+
+
+    def test_verification_constraint_survives_remove_and_readd(self):
+        raise NotImplementedError
+
+
+    def test_verification_constraint_survives_close_and_reopen(self):
+        raise NotImplementedError
