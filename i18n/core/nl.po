@@ -1076,6 +1076,42 @@ msgstr "donaties accepteren"
 msgid "hasn't joined Gratipay yet"
 msgstr "is nog geen lid geworden van Gratipay"
 
+msgid "No description available."
+msgstr ""
+
+msgid "Claim the {package_link} npm package on Gratipay:"
+msgstr ""
+
+msgid "Apply to accept payments for the {package_link} npm package:"
+msgstr ""
+
+msgid "No email addresses on file."
+msgstr ""
+
+msgid "Linked to a different account"
+msgstr ""
+
+msgid "Ready to use"
+msgstr ""
+
+msgid "Your primary email address"
+msgstr ""
+
+msgid "Linked to your account"
+msgstr ""
+
+msgid "Half-linked to your account"
+msgstr ""
+
+msgid "Apply to accept payments"
+msgstr ""
+
+msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
+msgstr ""
+
+msgid "Out of date? Update {a}at npm{_a} and refresh."
+msgstr ""
+
 msgid "Give"
 msgstr ""
 
@@ -1121,46 +1157,10 @@ msgstr ""
 msgid "already claimed by {a}{owner}{_a}"
 msgstr ""
 
-msgid "Apply to accept payments"
-msgstr ""
-
 msgid "{a}Link an email{_a} from npm to see related packages."
 msgstr ""
 
 msgid "{n} out of all {N} npm packages are on Gratipay."
-msgstr ""
-
-msgid "No description available."
-msgstr ""
-
-msgid "Claim the {package_link} npm package on Gratipay:"
-msgstr ""
-
-msgid "Apply to accept payments for the {package_link} npm package:"
-msgstr ""
-
-msgid "No email addresses on file."
-msgstr ""
-
-msgid "Linked to a different account"
-msgstr ""
-
-msgid "Ready to use"
-msgstr ""
-
-msgid "Your primary email address"
-msgstr ""
-
-msgid "Linked to your account"
-msgstr ""
-
-msgid "Half-linked to your account"
-msgstr ""
-
-msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
-msgstr ""
-
-msgid "Out of date? Update {a}at npm{_a} and refresh."
 msgstr ""
 
 msgid "You must sign in to apply for a new team."

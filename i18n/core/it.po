@@ -1074,6 +1074,42 @@ msgstr "accetta le donazioni"
 msgid "hasn't joined Gratipay yet"
 msgstr "non si è ancora iscritto a Gratipay"
 
+msgid "No description available."
+msgstr "Nessuna descrizione disponibile."
+
+msgid "Claim the {package_link} npm package on Gratipay:"
+msgstr "Riscuoti il pacchetto npm {package_link} su Gratipay:"
+
+msgid "Apply to accept payments for the {package_link} npm package:"
+msgstr "Richiedi di poter accettare pagamenti per il pacchetto npm {package_link}:"
+
+msgid "No email addresses on file."
+msgstr "Nessun indirizzo email registrato."
+
+msgid "Linked to a different account"
+msgstr "Collegato con un account differente"
+
+msgid "Ready to use"
+msgstr "Pronto all'uso"
+
+msgid "Your primary email address"
+msgstr "Il tuo indirizzo email primario"
+
+msgid "Linked to your account"
+msgstr "Collegato col tuo account"
+
+msgid "Half-linked to your account"
+msgstr "Semi-collegato col tuo account"
+
+msgid "Apply to accept payments"
+msgstr "Richiedi di poter accettare pagamenti"
+
+msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
+msgstr "Gli indirizzi sono da {a}{code}maintainers{_code}{_a}."
+
+msgid "Out of date? Update {a}at npm{_a} and refresh."
+msgstr "Scaduto? Aggiorna {a}all'npm{_a} e ricarica."
+
 msgid "Give"
 msgstr "Dona"
 
@@ -1119,47 +1155,11 @@ msgstr "Già riscosso da {a}te{_a}"
 msgid "already claimed by {a}{owner}{_a}"
 msgstr "Già riscosso da {a}{owner}{_a}"
 
-msgid "Apply to accept payments"
-msgstr "Richiedi di poter accettare pagamenti"
-
 msgid "{a}Link an email{_a} from npm to see related packages."
 msgstr "{a}Linka un'email{_a} da npm per vedere i relativi pacchetti."
 
 msgid "{n} out of all {N} npm packages are on Gratipay."
 msgstr "{n} su un totale di {N} pacchetti npm sono su Gratipay."
-
-msgid "No description available."
-msgstr "Nessuna descrizione disponibile."
-
-msgid "Claim the {package_link} npm package on Gratipay:"
-msgstr "Riscuoti il pacchetto npm {package_link} su Gratipay:"
-
-msgid "Apply to accept payments for the {package_link} npm package:"
-msgstr "Richiedi di poter accettare pagamenti per il pacchetto npm {package_link}:"
-
-msgid "No email addresses on file."
-msgstr "Nessun indirizzo email registrato."
-
-msgid "Linked to a different account"
-msgstr "Collegato con un account differente"
-
-msgid "Ready to use"
-msgstr "Pronto all'uso"
-
-msgid "Your primary email address"
-msgstr "Il tuo indirizzo email primario"
-
-msgid "Linked to your account"
-msgstr "Collegato col tuo account"
-
-msgid "Half-linked to your account"
-msgstr "Semi-collegato col tuo account"
-
-msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
-msgstr "Gli indirizzi sono da {a}{code}maintainers{_code}{_a}."
-
-msgid "Out of date? Update {a}at npm{_a} and refresh."
-msgstr "Scaduto? Aggiorna {a}all'npm{_a} e ricarica."
 
 msgid "You must sign in to apply for a new team."
 msgstr "Devi registrarti per poterti proporre in un nuovo team."
