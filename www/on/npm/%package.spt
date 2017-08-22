@@ -8,6 +8,8 @@ from gratipay.models.package.emails import PRIMARY, VERIFIED, UNVERIFIED, UNLINK
 [---]
 
 package_name = request.path['package']
+if package_name.endswith('/'):
+    website.redirect(request.path.raw[:-1])  # no trailing slash
 package = Package.from_names('npm', package_name)
 if package is None:
     raise Response(404)
@@ -21,7 +23,7 @@ banner = package_name
 if user.participant:
     emails = package.classify_emails_for_participant(user.participant)
     has_email_options = bool([x for x in emails if x[1] != OTHER])
-[---]
+[---] text/html
 {% extends "templates/base.html" %}
 
 {% block banner %}

@@ -12,7 +12,7 @@ class Test(BrowserHarness):
     def check(self, choice=0):
         self.make_participant('alice', claimed_time='now')
         self.sign_in('alice')
-        self.visit('/on/npm/foo/')
+        self.visit('/on/npm/foo')
         self.css('#content label')[0].click() # activate select
         self.css('#content label')[choice].click()
         self.css('#content button')[0].click()
@@ -44,7 +44,7 @@ class Test(BrowserHarness):
         alice = self.make_participant('alice', claimed_time='now')
         self.add_and_verify_email(alice, 'alice@example.com', 'bob@example.com')
         self.sign_in('alice')
-        self.visit('/on/npm/foo/')
+        self.visit('/on/npm/foo')
         self.css('#content label')[0].click()            # activate select
         self.css('#content label')[1].click()            # click second item
         self.css('#content li')[0].has_class('selected') # first item is still selected
@@ -66,7 +66,7 @@ class Test(BrowserHarness):
 
         self.make_participant('bob', claimed_time='now')
         self.sign_in('bob')
-        self.visit('/on/npm/foo/')
+        self.visit('/on/npm/foo')
 
         self.css('.your-payment button.edit').click()
         self.wait_for('.your-payment input.amount').fill('10')
@@ -91,7 +91,7 @@ class Test(BrowserHarness):
     def test_deleted_packages_are_404(self):
         self.make_package()
         Package.from_names(NPM, 'foo').delete()
-        self.visit('/on/npm/foo/')
+        self.visit('/on/npm/foo')
         assert self.css('#content h1').text == '404'
 
 
