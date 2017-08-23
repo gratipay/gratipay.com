@@ -33,7 +33,6 @@
 @import "scss/components/cta";
 @import "scss/components/danger-zone";
 @import "scss/components/dropdown";
-@import "scss/components/emails";
 @import "scss/components/github-ribbon";
 @import "scss/components/js-edit";
 @import "scss/components/linear_gradient";
@@ -66,6 +65,7 @@
 @import "scss/layouts/responsiveness";
 
 @import "scss/pages/browse-projects";
+@import "scss/pages/emails";
 @import "scss/pages/homepage";
 @import "scss/pages/history";
 @import "scss/pages/identities";

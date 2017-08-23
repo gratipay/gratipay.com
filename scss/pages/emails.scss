@@ -1,0 +1,40 @@
+#emails #content {
+    .icon {
+        color: $black;
+        position: absolute;
+        top: 12px;
+        left: 16px;
+        font-size: 24px;
+        line-height: 24px;
+    }
+    button {
+        color: $medium-gray;
+        font: normal 12px/14px $Ideal;
+        background: $light-gray;
+        padding: 3px 6px;
+        position: relative;
+        z-index: 2;
+        &:hover { color: $white; }
+        &.set-primary:hover { background: $blue; }
+        &.remove:hover { background: $red; }
+        &.add:hover { background: $green; }
+        &.resend:hover { background: $green; }
+    }
+    .add {
+        form {
+            display: none; /* off to start, turn on via javascript */
+
+            input {
+                outline: none;
+                border: none;
+                border-bottom: 1px solid $black;
+                padding: 0;
+            }
+
+            button {
+                color: $white;
+                background: $green;
+            }
+        }
+    }
+}
