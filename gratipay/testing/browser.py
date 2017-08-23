@@ -7,6 +7,7 @@ import os
 import time
 
 from splinter.browser import _DRIVERS
+from selenium.common.exceptions import StaleElementReferenceException
 
 from gratipay.security import user
 
@@ -55,9 +56,10 @@ class BrowserHarness(Harness):
         self.cookies.delete()
 
     def visit(self, url):
-        """Extend to prefix our base URL.
+        """Extend to prefix our base URL if necessary.
         """
-        return self._browser.visit(self.base_url + url)
+        base_url =  '' if url.startswith('http') else self.base_url
+        return self._browser.visit(base_url + url)
 
     def sign_in(self, username):
         """Given a username, sign in the user.
@@ -71,10 +73,10 @@ class BrowserHarness(Harness):
         P(username).update_session(token, expires)
         self.cookies.add({user.SESSION: token})
 
-    def css(self, selector):
+    def css(self, selector, element=None):
         """Shortcut for find_by_css.
         """
-        return self.find_by_css(selector)
+        return (element or self).find_by_css(selector)
 
     def js(self, code):
         """Shortcut for evaluate_script.
@@ -109,8 +111,12 @@ class BrowserHarness(Harness):
         while time.time() < end_time:
             if self.has_element(selector):
                 element = self.find_by_css(selector)
-                if element.visible:
-                    return element
+                try:
+                    if element.visible:
+                        return element
+                except StaleElementReferenceException:
+                    # May need to wait across page reload.
+                    pass
         raise NeverShowedUp(selector)
 
     def wait_for_notification(self, type='notice', message=None, timeout=2):
