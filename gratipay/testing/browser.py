@@ -5,9 +5,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import atexit
 import os
 import time
+from contextlib import contextmanager
 
 from splinter.browser import _DRIVERS
 from selenium.common.exceptions import StaleElementReferenceException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.expected_conditions import staleness_of
 
 from gratipay.security import user
 
@@ -147,6 +150,13 @@ class BrowserHarness(Harness):
         specified). Dismiss it and return the message.
         """
         return self.wait_for_notification('error', message)
+
+    @contextmanager
+    def page_reload_afterwards(self, timeout=2):
+        # www.obeythetestinggoat.com/how-to-get-selenium-to-wait-for-page-load-after-a-click.html
+        old_page = self._browser.driver.find_element_by_tag_name('html')
+        yield
+        WebDriverWait(self._browser, timeout).until(staleness_of(old_page))
 
     def __getattr__(self, name):
         try:

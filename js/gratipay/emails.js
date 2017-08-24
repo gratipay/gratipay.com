@@ -19,9 +19,6 @@ Gratipay.emails.post = function() {
                 case 'resend':
                     Gratipay.notification(msg, 'success');
                     break;
-                case 'remove':
-                    $row.slideUp(function() { $row.remove() });
-                    break;
                 default:
                     window.location.reload();
             };

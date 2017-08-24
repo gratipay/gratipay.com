@@ -41,15 +41,16 @@ page_id = 'emails'
                   {% else %}
                     <span class="status-icon success">
                         {{ icons.STATUS_ICONS['success']|safe }}</span>
-                        {{ _('Linked') }}
-                    &middot; <button class="set-primary">{{ _('Set as primary') }}</button>
-                    &middot; <button class="remove">{{ _('Remove') }}</button>
+                        {{ _('Linked') }} &middot;
+                    <button class="set-primary">{{ _('Set as primary') }}</button> &middot;
+                    <button class="remove">{{ _('Remove') }}</button>
                   {% endif %}
                 {% else %}
                     <span class="status-icon warning">
                             {{ icons.STATUS_ICONS['warning']|safe }}</span>
                     {{ _('Check your inbox') }} &middot;
-                    <button class="resend">{{ _('Resend verification') }}</button>
+                    <button class="resend">{{ _('Resend') }}</button> &middot;
+                    <button class="remove">{{ _('Remove') }}</button>
                 {% endif %}
             </div>
         </td>
