@@ -18,7 +18,7 @@ elif package.team:
 
 page_id = "package"
 suppress_sidebar = True
-banner = package_name
+banner = package.name
 
 if user.participant:
     emails = package.classify_emails_for_participant(user.participant)
@@ -56,7 +56,7 @@ if user.participant:
 {% if user.ANON %}
     <p class="instructions">
         {{ _( 'Claim the {package_link} npm package on Gratipay:'
-            , package_link=('<a href="' + package.remote_human_url + '">' + package_name + '</a>')|safe
+            , package_link=('<a href="' + package.remote_human_url + '">' + package.name + '</a>')|safe
              ) }}
     </p>
     <div class="important-button">
@@ -65,7 +65,7 @@ if user.participant:
 {% else %}
     <p class="instructions">
         {{ _( 'Apply to accept payments for the {package_link} npm package:'
-            , package_link=('<a href="' + package.remote_human_url + '">' + package_name + '</a>')|safe
+            , package_link=('<a href="' + package.remote_human_url + '">' + package.name + '</a>')|safe
              ) }}
     </p>
 
