@@ -80,6 +80,7 @@ class Website(BaseWebsite):
         algorithm = self.algorithm
         algorithm.functions = [
             timer.start,
+            security.reject_null_bytes_in_uri,
             algorithm['parse_environ_into_request'],
             algorithm['parse_body_into_request'],
 
