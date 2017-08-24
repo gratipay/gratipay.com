@@ -4,6 +4,12 @@ from aspen import Response
 _requesting_asset = lambda r: r.path.raw.startswith('/assets/')
 
 
+def reject_null_bytes_in_uri(environ):
+    # https://hackerone.com/reports/262852
+    if '%00' in environ['PATH_INFO'] + environ.get('QUERY_STRING', ''):
+        raise Response(400)
+
+
 def only_allow_certain_methods(request):
     method = request.method.upper()
     whitelist = ('GET', 'HEAD') if _requesting_asset(request) else ('GET', 'HEAD', 'POST')

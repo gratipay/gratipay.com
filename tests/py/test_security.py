@@ -14,6 +14,21 @@ from gratipay.testing import Harness
 from pytest import raises
 
 
+class RejectNullBytesInURI(Harness):
+
+    def test_filters_path(self):
+        assert self.client.GxT('/f%00/').code == 400
+
+    def test_filters_querystring(self):
+        assert self.client.GxT('/', QUERY_STRING='f%00=bar').code == 400
+
+    def test_protects_against_reflected_xss(self):
+        self.make_package()
+        assert self.client.GET('/on/npm/foo').code == 200
+        assert self.client.GxT('/on/npm/foo%00<svg onload=alert(1)>').code == 400
+        assert self.client.GxT('/on/npm/foo%01<svg onload=alert(1)>').code == 404 # fyi
+
+
 class OnlyAllowCertainMethodsTests(Harness):
 
     def test_is_installed_properly(self):
