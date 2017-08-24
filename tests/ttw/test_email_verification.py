@@ -37,6 +37,7 @@ class Row(object):
     def remove(self):
         with self.harness.page_reload_afterwards():
             self.click('Remove')
+            import pdb; pdb.set_trace()
 
 
 class Page(object):

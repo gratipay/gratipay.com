@@ -1,0 +1,24 @@
+{% macro confirm(modal_id, prompt) %}
+
+{#
+ # This macro duplicates the behavior of the builting JavaScript confirm function
+ #
+ #}
+
+<div id="{{ modal_id }}" class="modal-wrapper">
+    <div class="modal">
+        <header>
+            <h2>Proceed?</h2>
+            <button class="close-modal icon">
+                &#xe010;
+            </button>
+        </header>
+        <section>
+            {{ prompt }}
+            <br><br>
+            <button>{{ _('Yes') }}</button>
+            <button>{{ _('No') }}</button>
+        </section>
+    </div>
+</div>
+{% endmacro %}

@@ -16,6 +16,7 @@ page_id = 'emails'
 
 [-----------------------------------------------------------------------------] text/html
 {% extends "templates/profile.html" %}
+{% from 'templates/confirmation-modal.html' import confirm with context %}
 
 {% block scripts %}
 <script>$(document).ready(Gratipay.emails.init);</script>
@@ -78,6 +79,8 @@ page_id = 'emails'
     </tr>
    {% endif %}
 </table>
+
+{{ confirm('confirm-remove-modal', _('Proceed?')) }}
 
 <h2 id="notifications">{{ _("Notifications") }}</h2>
 <div class="email-notifications">

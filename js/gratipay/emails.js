@@ -49,6 +49,10 @@ Gratipay.emails.handleAddForm = function(e) {
         Gratipay.emails.hideAddForm();
 }
 
+Gratipay.emails.confirmRemove = function() {
+    Gratipay.modal.open('');
+}
+
 Gratipay.emails.init = function() {
 
     // Wire up email addresses list.
