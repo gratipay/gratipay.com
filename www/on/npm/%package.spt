@@ -56,7 +56,7 @@ if user.participant:
 {% if user.ANON %}
     <p class="instructions">
         {{ _( 'Claim the {package_link} npm package on Gratipay:'
-            , package_link=('<a href="' + package.remote_human_url + '">' + package.name + '</a>')|safe
+            , package_link='<a href="%s">%s</a>'|safe % (package.remote_human_url, package.name)
              ) }}
     </p>
     <div class="important-button">
@@ -65,7 +65,7 @@ if user.participant:
 {% else %}
     <p class="instructions">
         {{ _( 'Apply to accept payments for the {package_link} npm package:'
-            , package_link=('<a href="' + package.remote_human_url + '">' + package.name + '</a>')|safe
+            , package_link='<a href="%s">%s</a>'|safe % (package.remote_human_url, package.name)
              ) }}
     </p>
 
