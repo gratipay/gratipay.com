@@ -1,8 +1,8 @@
-#Contributing to Gratipay
+# Contributing to Gratipay
 
 If you are opening a new issue or submitting a pull request, **go for it!** Don't be afraid that it's a dumb idea or a duplicate of another issue or an unwanted change or whatever. Maybe it is! We're still glad to have you! &#x1f483;
 
-##How you can contribute
+## How you can contribute
 Whether you are a programmer or not, you can contribute to Gratipay. Below are some ideas we've modified from [this great blog post](http://blog.smartbear.com/programming/14-ways-to-contribute-to-open-source-without-being-a-programming-genius-or-a-rock-star/) (more details at the link). You can check out a similar list [here](http://24pullrequests.com/contributing). If you see anything below that doesn't make sense, _relax_&mdash;find something you understand and start from there.
 
 1. Follow along on GitHub. Looks like you're in the right place already! See all project repositories at http://github.com/gratipay.
@@ -19,8 +19,8 @@ Whether you are a programmer or not, you can contribute to Gratipay. Below are s
 1. Write a blog post.
 1. Improve the website (either [gratipay.com](http://gratipay.com) or [inside.gratipay.com](http://inside.gratipay.com)).
 
-###More info
+### More info
 If you want to really get involved, then check out our [full documentation for contributors](http://inside.gratipay.com/).
 
-##License
+## License
 Gratipay is [licensed under CC0](https://github.com/gratipay/gratipay.com/tree/master/COPYING).
