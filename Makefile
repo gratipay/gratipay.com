@@ -6,18 +6,21 @@ bin_dir := $(shell $(python) -c 'import sys; bin = "Scripts" if sys.platform == 
 env_bin := env/$(bin_dir)
 venv := "./vendor/virtualenv-15.1.0.py"
 doc_env_files := defaults.env,docs/doc.env,docs/local.env
-test_env_files := defaults.env,tests/test.env,tests/local.env
+test_env_files := defaults.env,tests/defaults.env,tests/local.env
 pip := $(env_bin)/pip
 honcho := $(env_bin)/honcho
 honcho_run := $(honcho) run -e defaults.env,local.env
 py_test := $(honcho) run -e $(test_env_files) $(env_bin)/py.test
 pg_dump := pg_dump --schema-only --no-owner --no-privileges
 
-ifdef PYTEST
-	pytest = ./tests/py/$(PYTEST)
+ifdef ARGS
+	test_args = $(ARGS)
 else
-	pytest = ./tests/py/
+	test_args = -vv --tb=native --cov gratipay ./tests/
 endif
+
+
+# Basic building and cleaning.
 
 env: requirements.txt requirements.dev.txt setup.py
 	$(python) $(venv) \
@@ -33,6 +36,12 @@ clean:
 	rm -rf env *.egg *.egg-info
 	find . -name \*.pyc -delete
 
+
+# Schema-related
+
+test-schema: env
+	$(honcho) run -e $(test_env_files) ./recreate-schema.sh
+
 schema: env
 	$(honcho_run) ./recreate-schema.sh
 
@@ -45,6 +54,9 @@ schema-diff: test-schema
 fake:
 	$(honcho_run) $(env_bin)/fake-data
 
+
+# Launching a server
+
 run: env
 	PATH=$(env_bin):$(PATH) $(honcho_run) web
 
@@ -54,37 +66,22 @@ bgrun: env
 stop:
 	pkill gunicorn
 
-py: env
-	$(honcho_run) $(env_bin)/python -i gratipay/main.py
 
-test-schema: env
-	$(honcho) run -e $(test_env_files) ./recreate-schema.sh
-
-pyflakes: env
-	$(env_bin)/pyflakes *.py bin gratipay tests
+# Testing and linting
 
 test: test-schema
-	$(py_test) -vv --cov gratipay ./tests/
-	@$(MAKE) --no-print-directory pyflakes
-
-pytest: env
-	$(py_test) --cov gratipay $(pytest)
-	@$(MAKE) --no-print-directory pyflakes
+	@$(MAKE) --no-print-directory flake
+	$(py_test) $(test_args)
 
 retest: env
-	$(py_test) ./tests/py/ --lf
-	@$(MAKE) --no-print-directory pyflakes
+	@$(MAKE) --no-print-directory flake
+	$(py_test) --lf $(test_args)
 
-test-cov: env
-	$(py_test) --cov-report html --cov gratipay ./tests/py/
+flake: env
+	$(env_bin)/pyflakes *.py bin gratipay tests
 
-envtest: env
-	$(py_test) --cov gratipay $(pytest) $(tests)
 
-tests: test
-
-ttwtest: bgrun
-	$(py_test) ./tests/ttw/
+# Internationalization
 
 transifexrc:
 	@echo '[https://www.transifex.com]' >.transifexrc
@@ -111,6 +108,9 @@ i18n_download: env tx
 	           -e '/^#: /d' "$$f" >"$$f.new"; \
 	    mv "$$f.new" "$$f"; \
 	done
+
+
+# Docs
 
 doc: env
 	$(honcho) run -e $(doc_env_files) make -C docs rst html
