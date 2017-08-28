@@ -17,7 +17,7 @@ participant = get_participant(state, restrict=True)
 
 action = request.body['action']
 address = request.body['address']
-show_address_in_message = bool(request.body.get('show_address_in_message', ''))
+show_address_in_message = request.body.get('show_address_in_message', '') == 'yes'
 
 # Basic checks. The real validation will happen when we send the email.
 if (len(address) > 254) or not email_re.match(address):

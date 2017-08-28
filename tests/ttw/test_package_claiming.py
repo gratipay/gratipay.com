@@ -9,13 +9,25 @@ from gratipay.models.participant import email
 
 class Test(BrowserHarness):
 
-    def check(self, choice=0):
-        self.make_participant('alice', claimed_time='now')
+    def setUp(self):
+        BrowserHarness.setUp(self)
+        self.alice = self.make_participant( 'alice'
+                                          , claimed_time='now'
+                                          , email_address='alice@example.com'
+                                           )
+        self.add_and_verify_email(self.alice, 'bob@example.com')
         self.sign_in('alice')
+
+    def choose(self, choice=0):
+        self.css('#content li.selected label').click() # activate select
+        want = self.css('#content label')[choice]
+        want.click()
+        return want.text
+
+    def check(self, choice=0):
         self.visit('/on/npm/foo')
-        self.css('#content label')[0].click() # activate select
-        self.css('#content label')[choice].click()
-        self.css('#content button')[0].click()
+        self.choose(choice)
+        self.css('#content .important-button button').click()
         address = ('alice' if choice == 0 else 'bob') + '@example.com'
         assert self.wait_for_success() == 'Check {} for a verification link.'.format(address)
         return self.db.one('select address from claims c '
@@ -39,18 +51,42 @@ class Test(BrowserHarness):
         self.make_package(emails=['alice@example.com', 'bob@example.com'])
         assert self.check(choice=1) == 'bob@example.com'
 
-    def test_disabled_items_are_disabled(self):
-        self.make_package(emails=['alice@example.com', 'bob@example.com'])
-        alice = self.make_participant('alice', claimed_time='now')
-        self.add_and_verify_email(alice, 'alice@example.com', 'bob@example.com')
-        self.sign_in('alice')
+    def test_button_varies_with_email_state(self):
+        self.make_package(emails=['alice@example.com', 'bob@example.com', 'cat@example.com',
+                                  'doug@example.com', 'edna@example.com'])
+        self.make_participant('doug', claimed_time='now', email_address='doug@example.com')
+        self.alice.start_email_verification('cat@example.com')
         self.visit('/on/npm/foo')
-        self.css('#content label')[0].click()            # activate select
-        self.css('#content label')[1].click()            # click second item
-        self.css('#content li')[0].has_class('selected') # first item is still selected
-        self.css('#content ul')[0].has_class('open')     # still open
-        self.css('#content button').has_class('disabled')
-        assert self.db.all('select * from claims') == []
+
+        self.choose(0) == 'alice@example.com'
+        self.css('li.selected').text.endswith('Your primary email address')
+        self.css('button').text == 'Apply to accept payments'
+
+        self.choose(1) == 'bob@example.com'
+        self.css('li.selected').text.endswith('Linked to your account')
+        self.css('button').text == 'Apply to accept payments'
+
+        self.choose(2) == 'cat@example.com'
+        self.css('li.selected').text.endswith('Verification pending')
+        self.css('button').text == 'Resend verification'
+
+        self.choose(3) == 'edna@example.com'
+        self.css('li.selected').text.endswith('Unverified')
+        self.css('button').text == 'Verify email address'
+
+        # doug is last, can't even be selected
+        self.choose(4) == 'doug@example.com'
+        self.css('li.selected label') == 'edna@example.com'
+        self.css('#content li')[4].text.endswith('Linked to a different account')
+
+    def test_sending_to_unverified_doesnt_start_a_claim(self):
+        self.make_package(emails=['alice@example.com', 'cat@example.com'])
+        self.visit('/on/npm/foo')
+        self.choose(1)
+        self.css('#content .important-button button').click()
+        assert self.wait_for_success() == 'Check your inbox for a verification link.'
+        assert self.db.one('select address from claims c '
+                           'join email_addresses e on c.nonce = e.nonce') is None
 
 
     def test_claimed_packages_can_be_given_to(self):
@@ -79,7 +115,7 @@ class Test(BrowserHarness):
         self.make_package()
         self.check()
 
-        link = pickle.loads(self.db.one('select context from email_messages'))['link']
+        link = pickle.loads(self.db.all('select context from email_messages')[-1])['link']
         link = link[len(self.base_url):]  # strip because visit will add it back
 
         self.visit(link)
