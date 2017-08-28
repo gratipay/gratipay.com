@@ -22,7 +22,6 @@ banner = package.name
 
 if user.participant:
     emails = package.classify_emails_for_participant(user.participant)
-    has_email_options = bool([x for x in emails if x[1] != OTHER])
 [---] text/html
 {% extends "templates/base.html" %}
 
@@ -77,7 +76,11 @@ if user.participant:
         <ul>
         {% for i, (email, group) in enumerate(emails, start=1) %}
             <li class="{% if group == OTHER %}disabled{% endif %}
-                       {% if i == 1 %}selected{% endif %}">
+                       {% if i == 1 %}selected{% endif %}"
+                data-action="{{ 'apply' if group in (PRIMARY, VERIFIED) else
+                                'resend' if group == UNVERIFIED else
+                                'verify' if group == UNLINKED else
+                                'none' }}">
                 <input type="radio" name="email" value="{{ email }}" id="email-{{i}}"
                        {% if i == 1 %}checked{% endif %}>
                 <span class="icon">&#xe007;</span>
@@ -91,19 +94,22 @@ if user.participant:
                                 {{ icons.STATUS_ICONS['failure']|safe }}</span>
                             {{ _('Linked to a different account') }}
                         {% else %}
-                            {{ _('Ready to use') }}
                             {% if group == PRIMARY %}
-                                &middot; <span class="status-icon feature">
+                                <span class="status-icon feature">
                                     {{ icons.STATUS_ICONS['feature']|safe }}</span>
                                 {{ _('Your primary email address') }}
                             {% elif group == VERIFIED %}
-                                &middot; <span class="status-icon success">
+                                <span class="status-icon success">
                                     {{ icons.STATUS_ICONS['success']|safe }}</span>
                                 {{ _('Linked to your account') }}
                             {% elif group == UNVERIFIED %}
-                                &middot; <span class="status-icon warning">
+                                <span class="status-icon warning">
                                     {{ icons.STATUS_ICONS['warning']|safe }}</span>
-                                {{ _('Half-linked to your account') }}
+                                {{ _('Verification pending') }}
+                            {% elif group == UNLINKED %}
+                                <span class="status-icon warning">
+                                    {{ icons.STATUS_ICONS['warning']|safe }}</span>
+                                {{ _('Unverified') }}
                             {% endif %}
                         {% endif %}
                     </div>
@@ -116,9 +122,11 @@ if user.participant:
     </div>
 
     <div class="important-button">
-        <button type="submit" class="apply selected large"
-                {% if not has_email_options %} disabled{% endif %}>
-            {{ _('Apply to accept payments') }}
+        <button type="submit" class="selected large disabled">
+            <span class="apply">{{ _('Apply to accept payments') }}</span>
+            <span class="resend">{{ _('Resend verification') }}</span>
+            <span class="verify">{{ _('Verify email address') }}</span>
+            <span class="dead-end">{{ _('Dead-end, sorry') }}</span>
         </button>
     </div>
     {% endif %}
