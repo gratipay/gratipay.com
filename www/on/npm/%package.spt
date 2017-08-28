@@ -124,7 +124,7 @@ if user.participant:
     {% endif %}
     <p class="fine-print">
         {{ _( 'Addresses are from {a}{code}maintainers{_code}{_a}.'
-            , a=('<a href="' + package.remote_api_url + '">')|safe
+            , a='<a href="%s">'|safe % package.remote_api_url
             , _a='</a>'|safe
             , code='<code>'|safe
             , _code='</code>'|safe
@@ -132,7 +132,7 @@ if user.participant:
     </p>
     <p class="fine-print">
         {{ _( 'Out of date? Update {a}at npm{_a} and refresh.'
-            , a=('<a href="' + package.remote_human_url + '">')|safe
+            , a='<a href="%s">'|safe % package.remote_human_url
             , _a='</a>'|safe
              ) }}
     </p>
