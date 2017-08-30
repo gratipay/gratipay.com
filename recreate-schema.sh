@@ -20,6 +20,13 @@ echo "CREATE SCHEMA public" | psql "$DATABASE_URL"
 
 
 echo "=============================================================================="
+echo "Enforcing UTC ..."
+echo
+
+psql "$DATABASE_URL" < sql/enforce-utc.sql
+
+
+echo "=============================================================================="
 echo "Applying sql/schema.sql ..."
 echo
 
@@ -27,21 +34,32 @@ psql "$DATABASE_URL" < sql/schema.sql
 
 
 echo "=============================================================================="
-echo "Applying sql/payday.sql ..."
+echo "Loading sql/countries.sql ..."
 echo
-psql "$DATABASE_URL" < sql/payday.sql
+
+psql "$DATABASE_URL" < sql/countries.sql
 
 
 echo "=============================================================================="
-echo "Looking for sql/branch.sql ..."
+echo "Applying deploy hooks ..."
 echo
 
-if [ -f sql/branch.sql ]
-then psql "$DATABASE_URL" < sql/branch.sql
+cd deploy 
+if [ -e before.sql -o -e after.py -o -e after.sql ]
+then
+    [ -e before.sql ] && echo 'Found before.sql ...' && psql "$DATABASE_URL" < before.sql 
+    [ -e after.py ] && echo 'Found after.py ...' && env/bin/python after.py 
+    [ -e after.sql ] && echo 'Found after.sql ...' && psql "$DATABASE_URL" < after.sql
 else
-    echo "None found. That's cool. You only need a sql/branch.sql file if you want to "
-    echo "include schema changes with your pull request."
+    echo "None found. That's cool. See deploy/README.md if you want to modify the "
+    echo "database as part of your pull request."
 fi
+cd ..
+echo
 
+
+echo "=============================================================================="
+echo
+echo "Okay! Initialized \"$DATABASE_URL\"."
 echo
 echo "=============================================================================="

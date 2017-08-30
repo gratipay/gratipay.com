@@ -56,8 +56,8 @@ createdb gratipay
 make schema fake
 ```
 
-Now `make run` to [boot the app](#launching) or `make pytest` to [run
-some tests](#testing).
+Now `make run` to [boot the app](#launching) or `make test` to [run the
+tests](#testing).
 
 [Read more](#installing).
 
@@ -449,12 +449,9 @@ Modifying the Database
 ----------------------
 
 We write SQL, specifically the [PostgreSQL
-variant](https://www.postgresql.org/docs/9.6/static/). We keep our database
-schema in
-[`schema.sql`](https://github.com/gratipay/gratipay.com/blob/master/sql/schema.sql),
-and we write schema changes for each PR branch in a `sql/branch.sql` file, which
-then gets run against production and merged into `sql/schema.sql` during
-[deployment](https://github.com/gratipay/gratipay.com/blob/master/deploy.sh).
+variant](https://www.postgresql.org/docs/9.6/static/). To make schema or data
+changes, use [deploy
+hooks](https://github.com/gratipay/gratipay.com/blob/master/deploy/#readme).
 
 
 Testing [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)

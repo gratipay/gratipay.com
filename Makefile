@@ -10,13 +10,12 @@ test_env_files := defaults.env,tests/defaults.env,tests/local.env
 pip := $(env_bin)/pip
 honcho := $(env_bin)/honcho
 honcho_run := $(honcho) run -e defaults.env,local.env
-py_test := $(honcho) run -e $(test_env_files) $(env_bin)/py.test
-pg_dump := pg_dump --schema-only --no-owner --no-privileges
+py_test := $(honcho) run -e $(test_env_files) $(env_bin)/py.test --tb=native --capture=sys
 
 ifdef ARGS
-	test_args = $(ARGS)
+	py_test_args = $(ARGS)
 else
-	test_args = -vv --tb=native --cov gratipay ./tests/
+	py_test_args = tests deploy
 endif
 
 
@@ -39,17 +38,13 @@ clean:
 
 # Schema-related
 
-test-schema: env
-	$(honcho) run -e $(test_env_files) ./recreate-schema.sh
-
 schema: env
-	$(honcho_run) ./recreate-schema.sh
+	$(honcho_run) ./recreate-schema.sh 2>&1 | tee make-schema.log
+	@echo 'P.S. Log is in make-schema.log'
 
-schema-diff: test-schema
-	$(pg_dump) `heroku config:get DATABASE_URL -a gratipay` >prod.sql
-	$(honcho) run -e $(test_env_files) sh -c '$(pg_dump) "$$DATABASE_URL"' >local.sql
-	diff -uw prod.sql local.sql
-	rm prod.sql local.sql
+test-schema: env
+	$(honcho) run -e $(test_env_files) ./recreate-schema.sh 2>&1 | tee make-test-schema.log
+	@echo 'P.S. Log is in make-test-schema.log'
 
 fake:
 	$(honcho_run) $(env_bin)/fake-data
@@ -61,7 +56,7 @@ run: env
 	PATH=$(env_bin):$(PATH) $(honcho_run) web
 
 bgrun: env
-	PATH=$(env_bin):$(PATH) $(honcho_run) web &
+	PATH=$(env_bin):$(PATH) $(honcho_run) web > /dev/null 2>&1 &
 
 stop:
 	pkill gunicorn
@@ -69,26 +64,26 @@ stop:
 
 # Testing and linting
 
-test: test-schema
+test:
 	@$(MAKE) --no-print-directory flake
-	$(py_test) $(test_args)
+	$(py_test) $(py_test_args)
 
 retest: env
 	@$(MAKE) --no-print-directory flake
-	$(py_test) --lf $(test_args)
+	$(py_test) --lf $(py_test_args)
 
 flake: env
-	$(env_bin)/pyflakes *.py bin gratipay tests
+	$(env_bin)/pyflakes *.py bin gratipay tests deploy
 
 
 # Internationalization
 
 transifexrc:
-	@echo '[https://www.transifex.com]' >.transifexrc
-	@echo 'hostname = https://www.transifex.com' >>.transifexrc
-	@echo "password = $$TRANSIFEX_PASS" >>.transifexrc
-	@echo 'token = ' >>.transifexrc
-	@echo "username = $$TRANSIFEX_USER" >>.transifexrc
+	@echo '[https://www.transifex.com]' > .transifexrc
+	@echo 'hostname = https://www.transifex.com' >> .transifexrc
+	@echo "password = $$TRANSIFEX_PASS" >> .transifexrc
+	@echo 'token = ' >> .transifexrc
+	@echo "username = $$TRANSIFEX_USER" >> .transifexrc
 
 tx:
 	@if [ ! -x $(env_bin)/tx ]; then $(env_bin)/pip install transifex-client; fi

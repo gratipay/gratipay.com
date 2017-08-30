@@ -14,8 +14,9 @@ T = Team.from_slug              #:
 from .harness import Harness
 from .billing import BillingHarness
 from .browser import BrowserHarness
+from .deploy_hooks import DeployHooksHarness
 
-__all__ = ['Harness', 'BillingHarness', 'BrowserHarness', 'D','P','T']
+__all__ = ['Harness', 'BillingHarness', 'BrowserHarness', 'DeployHooksHarness', 'D','P','T']
 
 
 class Foobar(Exception): pass

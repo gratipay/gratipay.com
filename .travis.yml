@@ -45,7 +45,7 @@ before_script:
 
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
  - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
-script: LD_LIBRARY_PATH=/usr/local/lib xvfb-run make bgrun test doc
+script: LD_LIBRARY_PATH=/usr/local/lib xvfb-run make test-schema bgrun test doc
 notifications:
   email: false
   irc: false
