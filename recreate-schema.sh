@@ -48,7 +48,7 @@ cd deploy
 if [ -e before.sql -o -e after.py -o -e after.sql ]
 then
     [ -e before.sql ] && echo 'Found before.sql ...' && psql "$DATABASE_URL" < before.sql 
-    [ -e after.py ] && echo 'Found after.py ...' && env/bin/python after.py 
+    [ -e after.py] && echo 'Found after.py ...' && env/bin/python after.py 
     [ -e after.sql ] && echo 'Found after.sql ...' && psql "$DATABASE_URL" < after.sql
 else
     echo "None found. That's cool. See deploy/README.md if you want to modify the "
