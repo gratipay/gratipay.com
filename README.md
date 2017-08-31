@@ -1,52 +1,65 @@
-# Welcome to Gratipay [<img height="26px" src="https://raw.githubusercontent.com/gratipay/gratipay.com/master/www/assets/gratipay.opengraph.png"/>](https://gratipay.com/)
+# <img alt="Welcome to Gratipay" src="https://raw.githubusercontent.com/gratipay/gratipay.com/master/img-src/readme-banner.png"/>
 
-[![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
-[![Open Bounties](https://api.bountysource.com/badge/team?team_id=423&style=bounties_received)](https://www.bountysource.com/teams/gratipay/issues)
-
-[Gratipay](https://gratipay.com) helps companies fund open source,
-in order to cultivate an economy of gratitude, generosity, and love.
+[Gratipay](https://gratipay.com) helps companies pay for open source, in order to
+[cultivate](http://inside.gratipay.com/big-picture/mission) an economy of
+gratitude, generosity, and love.
 
 
-# Documentation
-
-| Scope  | Location |
+| Scope  | Documentation |
 |:-------|:------|
-| **product**<br>*customer-facing pages* | https://gratipay.com/about |
 | **company**<br>*policies, procedures, etc.* | http://inside.gratipay.com |
-| **software** | https://gratipay.readthedocs.io/ |
-| **installation** | You're there! Read on ... |
+| **product**<br>*customer-facing pages* | https://gratipay.com/about |
+| **software installation** | &larr; You are here! |
+| **python library** | https://gratipay.readthedocs.io/ |
+
+
+Table of Contents
+=================
+
+- [Quick Start](#quick-start)
+- [Installing](#installing)
+  - [Satisfying Dependencies](#satisfying-dependencies)
+  - [Setting up a Database](#setting-up-a-database)
+  - [Building](#building)
+  - [Launching](#launching)
+  - [Help!](#help)
+- [Installing with Vagrant](#installing-with-vagrant)
+- [Installing with Docker](#installing-with-docker)
+- [Configuring](#configuring)
+- [Developing](#developing)
+  - [Codebase Overview](#codebase-overview)
+  - [Modifying CSS and JavaScript](#modifying-css-and-javascript)
+  - [Modifying the Database](#modifying-the-database)
+- [Testing](#testing-)
+- [API](#api)
+  - [Implementations](#api-implementations)
+- [Glossary](#glossary)
+- [License](#license)
 
 
 Quick Start
 ===========
 
-Local
------
+Thanks for hacking on Gratipay! Be sure to review
+[CONTRIBUTING](https://github.com/gratipay/gratipay.com/blob/master/CONTRIBUTING.md#readme)
+as well if that's what you're planning to do.
+
+Unix-like
+---------
 
 Given Python 2.7, Postgres 9.6, and a C/make toolchain:
 
 ```shell
 git clone https://github.com/gratipay/gratipay.com.git
 cd gratipay.com
-scripts/bootstrap-debian.sh
-make -j$(nproc) schema fake
+createdb gratipay
+make schema fake
 ```
 
-And then run
+Now `make run` to [boot the app](#launching) or `make pytest` to [run
+some tests](#testing).
 
-```shell
-make run
-```
-
-to boot the app and/or:
-
-```shell
-make test
-```
-
-to run the tests.
-
-[Read more](#table-of-contents).
+[Read more](#installing).
 
 
 Vagrant
@@ -58,11 +71,11 @@ Given VirtualBox 4.3 and Vagrant 1.7.x:
 vagrant up
 ```
 
-[Read more](#vagrant-1).
+[Read more](#installing-with-vagrant).
 
 
 Docker
--------
+------
 
 Given some version(?) of Docker:
 
@@ -71,71 +84,52 @@ docker build -t gratipay .
 docker run -p 8537:8537 gratipay
 ```
 
-[Read more](#docker-1).
-
-
-Table of Contents
-=================
-
- - [Installing](#installing)
-  - [Dependencies](#dependencies)
-  - [Building](#building)
-  - [Launching](#launching)
-  - [Configuring](#configuring)
-  - [Vagrant](#vagrant)
-  - [Docker](#docker)
-  - [Help!](#help)
- - [Modifying CSS and Javascript](#modifying-css-and-javascript)
- - [Modifying the Database](#modifying-the-database)
- - [Testing](#testing-)
- - [Setting up a Database](#local-database-setup)
- - [API](#api)
-  - [Implementations](#api-implementations)
- - [Glossary](#glossary)
+[Read more](#installing-with-docker).
 
 
 Installing
 ==========
 
-Thanks for hacking on Gratipay! Be sure to review
-[CONTRIBUTING](https://github.com/gratipay/gratipay.com/blob/master/CONTRIBUTING.md#readme)
-as well if that's what you're planning to do.
+Satisfying Dependencies
+-----------------------
+
+Building, launching, developing and testing `gratipay.com` requires several pieces of software:
+
+- a C/make toolchain,
+- [Python](https://www.python.org/) version 2.7,
+- [Postgres](https://www.postgresql.org/) version 9.6, and
+- [Firefox](https://www.mozilla.org/en-US/firefox/new/) and
+  [geckodriver](https://github.com/mozilla/geckodriver/releases/) for
+[testing](#testing-).
 
 
-Dependencies
-------------
+Unix-like operating systems (Ubuntu, macOS, etc.) generally include a C/make
+toolchain. If you're on Windows, your best bet is to use
+[Vagrant](#installing-with-vagrant) or [Docker](#installing-with-docker).
 
-Building `gratipay.com` requires [Python
-2.7](http://python.org/download/releases/2.7.4/), and a gcc/make toolchain.
+All Python dependencies are bundled in our repo (under
+[`vendor/`](https://github.com/gratipay/gratipay.com/tree/master/vendor)), but
+some include C extensions with additional operating-system level dependencies
+that need to be met. Here are [notes for
+`psycopg2`](http://initd.org/psycopg/docs/faq.html#problems-compiling-and-deploying-psycopg2).
+Other candidates for trouble are `libsass` and `cryptography`. Good luck!
 
-All Python library dependencies are bundled in the repo (under `vendor/`). If
-you are receiving issues from `psycopg2`, please [ensure that its needs are
-met](http://initd.org/psycopg/docs/faq.html#problems-compiling-and-deploying-psycopg2).
+### Debian/Ubuntu
 
-On Debian or Ubuntu you will need the following packages:
+Maybe try [`scripts/bootstrap-debian.sh`](https://github.com/gratipay/gratipay.com/tree/master/scripts/bootstrap-debian.sh)?
+
+### macOS
+
+If `make env` gives you an `Operation not permitted` error from
+`shutil.copytree` then you're probably using the system Python and you should
+try [Homebrew](https://brew.sh/) instead:
 
 ```shell
-sudo apt-get install \
-    postgresql-9.6 \
-    postgresql-contrib \
-    libpq-dev \
-    python-dev \
-    libffi-dev \
-    libssl-dev
+brew install python
 ```
 
-On macOS you can [download Postgres directly](https://www.postgresql.org/download/macosx/) or install through [Homebrew](https://brew.sh/):
-
-```shell
-brew install postgresql
-```
-
-To configure local Postgres create default role (if it hasn’t been created already) and database.
-
-```shell
-sudo -u postgres createuser --superuser $USER
-createdb gratipay
-```
+Here are the [installation options for
+Postgres](https://www.postgresql.org/download/macosx/).
 
 If you are getting an error about `unknown argument: '-mno-fused-madd'` when
 running `make`, then add
@@ -148,19 +142,56 @@ ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future make clea
 ```
 
 
+Setting up a Database
+---------------------
+
+The best version of Postgres to use is 9.6.2, because that's what we're using
+in production at Heroku. You need at least 9.5 to support the features we
+depend on, along with the `pg_stat_statements` and `pg_trgm` extensions.
+
+To setup Postgres for Gratipay's needs run:
+
+```shell
+sudo -u postgres createuser --superuser $USER
+createdb gratipay
+createdb gratipay-test
+```
+
+You can speed up the test suite when using a regular HDD by running:
+
+```shell
+psql -q gratipay-test -c 'alter database "gratipay-test" set synchronous_commit to off'
+```
+
+### Schema
+
+Once Postgres is set up, run:
+
+```shell
+make schema
+```
+
+Which populates the database [named](#configuring) by `DATABASE_URL` with the
+schema from `sql/schema.sql`.
+
+### Example data
+
+The `gratipay` database created in the last step is empty. To populate it with
+some fake data, so that more of the site is functional, run this command:
+
+```shell
+make fake
+```
+
+
 Building
 --------
 
 All Python dependencies (including virtualenv) are bundled with Gratipay in the
-vendor/ directory. Gratipay is designed so that you don't manage its
-virtualenv directly and you don't download its dependencies at build
-time.
-
-The included `Makefile` contains several targets. Configuration options
-are stored in default_local.env file while overrides are in local.env.
-
-To create virtualenv enviroment with all python dependencies installed
-in a sandbox:
+`vendor/` directory. Gratipay is designed so that you don't manage its
+virtualenv (a Python-specific sandboxing mechanism) directly and you don't
+download its dependencies at build time but rather at clone time.  To create a
+virtualenv with all Python dependencies installed:
 
 ```shell
 make env
@@ -196,41 +227,50 @@ straightforward.
 
 If Gratipay launches successfully it will look like this:
 
-```shell
+```
 $ make run
 PATH=env/bin:{lots-more-of-your-own-PATH} env/bin/honcho run -e defaults.env,local.env web
-2014-07-22 14:53:09 [1258] [INFO] Starting gunicorn 18.0
-2014-07-22 14:53:09 [1258] [INFO] Listening at: http://0.0.0.0:8537 (1258)
-2014-07-22 14:53:09 [1258] [INFO] Using worker: sync
-2014-07-22 14:53:09 [1261] [INFO] Booting worker with pid: 1261
-pid-1261 thread-140735191843600 (MainThread) Reading configuration from defaults, environment, and command line.
-pid-1261 thread-140735191843600 (MainThread)   changes_reload         False                          default
-pid-1261 thread-140735191843600 (MainThread)   changes_reload         True                           environment variable ASPEN_CHANGES_RELOAD=yes
-pid-1261 thread-140735191843600 (MainThread)   charset_dynamic        UTF-8                          default
-pid-1261 thread-140735191843600 (MainThread)   charset_static         None                           default
-pid-1261 thread-140735191843600 (MainThread)   configuration_scripts  []                             default
-pid-1261 thread-140735191843600 (MainThread)   indices                [u'index.html', u'index.json', u'index', u'index.html.spt', u'index.json.spt', u'index.spt'] default
-pid-1261 thread-140735191843600 (MainThread)   list_directories       False                          default
-pid-1261 thread-140735191843600 (MainThread)   logging_threshold      0                              default
-pid-1261 thread-140735191843600 (MainThread)   media_type_default     text/plain                     default
-pid-1261 thread-140735191843600 (MainThread)   media_type_json        application/json               default
-pid-1261 thread-140735191843600 (MainThread)   project_root           None                           default
-pid-1261 thread-140735191843600 (MainThread)   project_root           .                              environment variable ASPEN_PROJECT_ROOT=.
-pid-1261 thread-140735191843600 (MainThread)   renderer_default       stdlib_percent                 default
-pid-1261 thread-140735191843600 (MainThread)   show_tracebacks        False                          default
-pid-1261 thread-140735191843600 (MainThread)   show_tracebacks        True                           environment variable ASPEN_SHOW_TRACEBACKS=yes
-pid-1261 thread-140735191843600 (MainThread)   www_root               None                           default
-pid-1261 thread-140735191843600 (MainThread)   www_root               www/                           environment variable ASPEN_WWW_ROOT=www/
-pid-1261 thread-140735191843600 (MainThread) project_root is relative to CWD: '.'.
-pid-1261 thread-140735191843600 (MainThread) project_root set to /Users/whit537/personal/gratipay/gratipay.com.
-pid-1261 thread-140735191843600 (MainThread) Found plugin for renderer 'jinja2'
-pid-1261 thread-140735191843600 (MainThread) Won't log to Sentry (SENTRY_DSN is empty).
-pid-1261 thread-140735191843600 (MainThread) Renderers (*ed are unavailable, CAPS is default):
-pid-1261 thread-140735191843600 (MainThread)   stdlib_percent
-pid-1261 thread-140735191843600 (MainThread)   json_dump
-pid-1261 thread-140735191843600 (MainThread)   stdlib_format
-pid-1261 thread-140735191843600 (MainThread)   JINJA2
-pid-1261 thread-140735191843600 (MainThread)   stdlib_template
+[2017-08-25 15:05:18 -0400] [18093] [INFO] Starting gunicorn 19.7.1
+[2017-08-25 15:05:18 -0400] [18093] [INFO] Listening at: http://0.0.0.0:8537 (18093)
+[2017-08-25 15:05:18 -0400] [18093] [INFO] Using worker: sync
+[2017-08-25 15:05:18 -0400] [18096] [INFO] Booting worker with pid: 18096
+pid-18096 thread-140736833041344 (MainThread) Instantiating Application from gunicorn_entrypoint
+pid-18096 thread-140736833041344 (MainThread) Reading configuration from defaults, environment, and kwargs.
+pid-18096 thread-140736833041344 (MainThread)   base_url                                              default                 
+pid-18096 thread-140736833041344 (MainThread)   changes_reload         False                          default                 
+pid-18096 thread-140736833041344 (MainThread)   changes_reload         True                           environment variable ASPEN_CHANGES_RELOAD=yes
+pid-18096 thread-140736833041344 (MainThread)   charset_dynamic        UTF-8                          default                 
+pid-18096 thread-140736833041344 (MainThread)   charset_static         None                           default                 
+pid-18096 thread-140736833041344 (MainThread)   colorize_tracebacks    True                           default                 
+pid-18096 thread-140736833041344 (MainThread)   indices                [u'index.html', u'index.json', u'index', u'index.html.spt', u'index.json.spt', u'index.spt'] default                 
+pid-18096 thread-140736833041344 (MainThread)   list_directories       False                          default                 
+pid-18096 thread-140736833041344 (MainThread)   logging_threshold      0                              default                 
+pid-18096 thread-140736833041344 (MainThread)   media_type_default     text/plain                     default                 
+pid-18096 thread-140736833041344 (MainThread)   media_type_json        application/json               default                 
+pid-18096 thread-140736833041344 (MainThread)   project_root           None                           default                 
+pid-18096 thread-140736833041344 (MainThread)   project_root           .                              environment variable ASPEN_PROJECT_ROOT=.
+pid-18096 thread-140736833041344 (MainThread)   renderer_default       stdlib_percent                 default                 
+pid-18096 thread-140736833041344 (MainThread)   show_tracebacks        False                          default                 
+pid-18096 thread-140736833041344 (MainThread)   show_tracebacks        True                           environment variable ASPEN_SHOW_TRACEBACKS=yes
+pid-18096 thread-140736833041344 (MainThread)   www_root               None                           default                 
+pid-18096 thread-140736833041344 (MainThread)   www_root               www/                           environment variable ASPEN_WWW_ROOT=www/
+pid-18096 thread-140736833041344 (MainThread) project_root is relative to CWD: '.'.
+pid-18096 thread-140736833041344 (MainThread) project_root set to /Users/whit537/personal/gratipay/gratipay.com.
+pid-18096 thread-140736833041344 (MainThread) Found plugin for renderer 'jinja2'
+pid-18096 thread-140736833041344 (MainThread) Renderers (*ed are unavailable, CAPS is default):
+pid-18096 thread-140736833041344 (MainThread)   json_dump        
+pid-18096 thread-140736833041344 (MainThread)   jsonp_dump       
+pid-18096 thread-140736833041344 (MainThread)   stdlib_template  
+pid-18096 thread-140736833041344 (MainThread)   stdlib_format    
+pid-18096 thread-140736833041344 (MainThread)   jinja2           
+pid-18096 thread-140736833041344 (MainThread)   STDLIB_PERCENT   
+pid-18096 thread-140736833041344 (MainThread) Won't log to Sentry (SENTRY_DSN is empty).
+pid-18096 thread-140736833041344 (MainThread) AWS SES is not configured! Mail will be dumped to the console here.
+pid-18096 thread-140736833041344 (MainThread) Cron: not installing update_cta.
+pid-18096 thread-140736833041344 (MainThread) Cron: not installing self_check.
+pid-18096 thread-140736833041344 (MainThread) Cron: not installing <lambda>.
+pid-18096 thread-140736833041344 (MainThread) Cron: not installing flush.
+pid-18096 thread-140736833041344 (MainThread) Cron: not installing log_metrics.
 ```
 
 You should then find this in your browser at
@@ -241,49 +281,19 @@ You should then find this in your browser at
 Congratulations! Sign in using Twitter or GitHub and you're off and
 running. At some point, try [running the test suite](#testing-).
 
-Configuring
------------
 
-Gratipay's default configuration lives in [`defaults.env`](https://github.com/gratipay/gratipay.com/blob/master/defaults.env).
-If you'd like to override some settings, create a file named `local.env` to store them.
+Help!
+-----
 
-The following explains some of the content of that file:
+If you get stuck somewhere along the way, [make an
+issue](https://github.com/gratipay/gratipay.com/issues/new) here on GitHub.
 
-The `GITHUB_*` keys are for a gratipay-dev application in the Gratipay
-organization on Github. It points back to localhost:8537, which is where
-Gratipay will be running if you start it locally with `make run`. Similarly
-with the `TWITTER_*` keys, but there they required us to spell it `127.0.0.1`.
-
-If you are running Gratipay somewhere other than `localhost:8537`, then you'll
-need to set `BASE_URL`, but your options are limited because we use proprietary
-fonts from [Typography.com](https://www.typography.com/), and they filter by
-`Referer`. You won't get the right fonts unless you use an approved domain.
-We've configured `gratipay.dev` as well as `localhost`, so if you don't want to
-run on `localhost` then configure `gratipay.dev` in your
-[`/etc/hosts`](https://en.wikipedia.org/wiki/Hosts_(file)) file and set this in
-`local.env`:
-
-    BASE_URL=http://gratipay.dev:8537
-    GITHUB_CLIENT_ID=ca4a9a35c161af1d024d
-    GITHUB_CLIENT_SECRET=8744f6333d51b5f4af38d46cf035ecfcf34c671e
-    GITHUB_CALLBACK=http://gratipay.dev:8537/on/github/associate
-
-If you wish to use a different username or database name for the database, you
-should override the `DATABASE_URL` in `local.env` using the following format:
-
-    DATABASE_URL=postgres://<username>@localhost/<database name>
-
-We use Amazon Web Services' Simple Email Service (AWS SES) for sending emails.
-In development, we dump outbound mail to the console by default. This is fine
-if all you need to do is, e.g., copy/paste verification links. If you need to
-receive emails within a proper mail client during development, then sign up for
-[AWS's free tier](https://aws.amazon.com/free) and override the `AWS_*`
-credentials from `defaults.env` in your `local.env`. You'll have to verify the
-email addresses you want to receive email with on SES.
+Thanks for installing Gratipay! :smiley:
 
 
-Vagrant
--------
+Installing with Vagrant
+=======================
+
 Vagrant provides a convenient interface to VirtualBox to run and test
 Gratipay in virtual machine. This may be handy if you're on Windows.
 
@@ -310,8 +320,9 @@ issue](https://github.com/gratipay/gratipay.com/pull/2321#issuecomment-41455169)
 As mentioned there, you will also need to be wary of projects that are nested
 in encrypted directories.
 
-Docker
-------------
+
+Installing with Docker
+======================
 
 You can also install/run Gratipay with Docker.
 
@@ -360,30 +371,82 @@ Once you're done, kill the running container:
 $ docker kill [container_id]
 ```
 
-Help!
------
 
-If you get stuck somewhere along the way, [make an
-issue](https://github.com/gratipay/gratipay.com/issues/new) here on GitHub.
+Configuring
+===========
 
-Thanks for installing Gratipay! :smiley:
+Gratipay's default configuration lives in [`defaults.env`](https://github.com/gratipay/gratipay.com/blob/master/defaults.env).
+If you'd like to override some settings, create a file named `local.env` to store them.
+
+The following explains some of the content of that file:
+
+The `GITHUB_*` keys are for a gratipay-dev application in the Gratipay
+organization on Github. It points back to localhost:8537, which is where
+Gratipay will be running if you start it locally with `make run`. Similarly
+with the `TWITTER_*` keys, but there they required us to spell it `127.0.0.1`.
+
+If you are running Gratipay somewhere other than `localhost:8537`, then you'll
+need to set `BASE_URL`, but your options are limited because we use proprietary
+fonts from [Typography.com](https://www.typography.com/), and they filter by
+`Referer`. You won't get the right fonts unless you use an approved domain.
+We've configured `gratipay.dev` as well as `localhost`, so if you don't want to
+run on `localhost` then configure `gratipay.dev` in your
+[`/etc/hosts`](https://en.wikipedia.org/wiki/Hosts_(file)) file and set this in
+`local.env`:
+
+    BASE_URL=http://gratipay.dev:8537
+    GITHUB_CLIENT_ID=ca4a9a35c161af1d024d
+    GITHUB_CLIENT_SECRET=8744f6333d51b5f4af38d46cf035ecfcf34c671e
+    GITHUB_CALLBACK=http://gratipay.dev:8537/on/github/associate
+
+If you wish to use a different username or database name for the database, you
+should override the `DATABASE_URL` in `local.env` using the following format:
+
+    DATABASE_URL=postgres://<username>@localhost/<database name>
+
+We use Amazon Web Services' Simple Email Service (AWS SES) for sending emails.
+In development, we dump outbound mail to the console by default. This is fine
+if all you need to do is, e.g., copy/paste verification links. If you need to
+receive emails within a proper mail client during development, then sign up for
+[AWS's free tier](https://aws.amazon.com/free) and override the `AWS_*`
+credentials from `defaults.env` in your `local.env`. You'll have to verify the
+email addresses you want to receive email with on SES.
+
+
+Developing
+==========
+
+Codebase Overview
+-----------------
+
+| Directory               | Frontend | Backend  | Description |
+|:------------------------|:--------:|:--------:|:------------|
+| `www`                   | &#x2705; |          | web requests land here, e.g., https://gratipay.com/on/npm/express hits [`www/on/npm/%platform.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/on/npm/%25package.spt) (a [simplate](http://simplates.org/)) |
+| `js`<br>`scss`          | &#x2705; |          | JavaScript (w/ jQuery) and [SCSS](http://sass-lang.com/documentation/file.SCSS_FOR_SASS_USERS.html) files, dynamically pipelined via endpoints at [`www/assets/gratipay.js.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.js.spt) and [`.css.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.css.spt) |
+| `templates`<br>`emails` | &#x2705; |          | templating files for web and email, respectively, using [Jinja](http://jinja.pocoo.org/) |
+| `gratipay`              |          | &#x2705; | a Python library with app wiring, models, and business logic |
+| `sql`                   |          | &#x2705; | SQL files, the main one is `schema.sql`, changes go in a `branch.sql`, but there's also lots of raw SQL in Python strings throughout `gratipay` and even `www` |
+| `tests`                 | &#x2705; | &#x2705; | test scripts, `tests/ttw` run "through the web" on a real browser, `tests/py` simulate HTTP calls and exercise Python APIs |
+| `gratipay/testing`     | &#x2705; | &#x2705; | submodule for infrastructure used by test scripts |
 
 
 Modifying CSS and JavaScript
-============================
+----------------------------
 
-We use SCSS, with files stored in `scss/`. All of the individual files are
-combined in `scss/gratipay.scss` which itself is compiled by `libsass` in
+We use
+[SCSS](http://sass-lang.com/documentation/file.SCSS_FOR_SASS_USERS.html), with
+files stored in `scss/`. All of the individual files are combined in
+`scss/gratipay.scss` which itself is compiled by `libsass` in
 [`www/assets/gratipay.css.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.css.spt)
 on each request (it's behind a CDN in production).
 
 We use a similar pattern for JavaScript. Individual files are in `js/`, and
 they're concatenated on the fly (and put behind a CDN in production) in
-[`www/assets/gratipay.js.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.js.spt)
+[`www/assets/gratipay.js.spt`](https://github.com/gratipay/gratipay.com/blob/master/www/assets/gratipay.js.spt).
 
 
 Modifying the Database
-======================
+----------------------
 
 We write SQL, specifically the [PostgreSQL
 variant](https://www.postgresql.org/docs/9.6/static/). We keep our database
@@ -391,94 +454,36 @@ schema in
 [`schema.sql`](https://github.com/gratipay/gratipay.com/blob/master/sql/schema.sql),
 and we write schema changes for each PR branch in a `sql/branch.sql` file, which
 then gets run against production and merged into `sql/schema.sql` during
-deployment.
+[deployment](https://github.com/gratipay/gratipay.com/blob/master/deploy.sh).
 
 
 Testing [![Build Status](http://img.shields.io/travis/gratipay/gratipay.com/master.svg)](https://travis-ci.org/gratipay/gratipay.com)
 =======
 
-Our test suite is divided into through-the-web (TTW) tests and Python tests.
-You need to install [Firefox](https://www.mozilla.org/en-US/firefox/new/) and
-[geckodriver](https://github.com/mozilla/geckodriver/releases/) separately in
-order to run the TTW tests. For both suites we use the
-[pytest](http://pytest.org/) test runner; it's installed automatically as part
-of `make env`.
-
-The easiest way to run the whole test suite is:
+Run Gratipay's test suite with:
 
 ```shell
 make test
 ```
 
-You can also do:
+This invokes the [pyflakes](https://pypi.python.org/pypi/pyflakes) linter and
+then the [pytest](http://pytest.org/) test runner with four layers of
+[configuration](#configuring) (last wins): `defaults.env`, `local.env`,
+`tests/defaults.env`, `tests/local.env`. To run a subset of the test suite or
+otherwise influence the test run, pass arguments to `py.test` using an `ARGS`
+environment variable like so:
 
 ```shell
-make ttwtest
+ARGS="tests/py/test_billing_payday.py -k notify -vvv" make test
 ```
 
-and/or:
-
-```shell
-make pytest
-```
-
-To invoke `py.test` directly you should use the `honcho` utility that comes
-with the install. First `make tests/env`, then activate the virtualenv by
-running `source env/bin/activate`, and then:
-
-    [gratipay] $ cd tests/
-    [gratipay] $ honcho run -e defaults.env,local.env py.test
-    
-Type `deactivate` to exit the virtualenv.
+The tests in `tests/ttw` ("through the web") require
+[Firefox](https://www.mozilla.org/en-US/firefox/new/) and
+[geckodriver](https://github.com/mozilla/geckodriver/releases/). The tests in
+`tests/py` do not.
 
 Be careful! The test suite deletes data in all tables in the public schema of the
 database configured in your testing environment.
-
-
-Local Database Setup
---------------------
-
-For the best development experience, you need a local installation of
-[Postgres](https://www.postgresql.org/download/). The best version of Postgres
-to use is 9.6.2, because that's what we're using in production at Heroku. You
-need at least 9.5 to support the features we depend on, along with the
-`pg_stat_statments` and `pg_trgm` extensions.
-
-+ Mac: use Homebrew: `brew install postgres`
-+ Ubuntu: use Apt: `apt-get install postgresql postgresql-contrib libpq-dev`
-
-To setup the instance for gratipay's needs run:
-
-```shell
-sudo -u postgres createuser --superuser $USER
-createdb gratipay
-createdb gratipay-test
-```
-
-You can speed up the test suite when using a regular HDD by running:
-
-```shell
-psql -q gratipay-test -c 'alter database "gratipay-test" set synchronous_commit to off'
-```
-
-### Schema
-
-Once Postgres is set up, run:
-
-```shell
-make schema
-```
-
-Which populates the database named by `DATABASE_URL` with the schema from `sql/schema.sql`.
-
-### Example data
-
-The gratipay database created in the last step is empty. To populate it with
-some fake data, so that more of the site is functional, run this command:
-
-```shell
-make fake
-```
 
 
 API
@@ -613,7 +618,8 @@ Gratipay (e.g., Twitter).
 **User** - A person using the Gratipay website. Can be authenticated or
 anonymous. If authenticated, the user is guaranteed to also be a participant.
 
+
 License
-========
+=======
 
 Gratipay is dedicated to public domain. See the text of [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) dedication in [COPYING](COPYING) here.
