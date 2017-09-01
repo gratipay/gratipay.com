@@ -78,9 +78,8 @@ git tag $version
 # Deploy to Heroku, with hooks
 cd deploy
 [ -e before.sql ] && heroku pg:psql -a gratipay < before.sql
-[ -e before.py ] && heroku run -a gratipay python < before.py
 git push --force heroku master
-[ -e after.py ] && heroku run -a gratipay python < after.py
+[ -e after.py ] && heroku run -a gratipay python deploy/after.py
 [ -e after.sql ] && heroku pg:psql -a gratipay < after.sql
 cd ..
 
