@@ -263,6 +263,8 @@ def compile_assets(website):
 
 
 def clean_assets(www_root):
+    if '__HACK_SUPPRESS_ASSET_CLEANING' in os.environ:
+        return
     for spt in find_files(www_root+'/assets/', '*.spt'):
         try:
             os.unlink(spt[:-4])

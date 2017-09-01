@@ -20,6 +20,8 @@ docs/gratipay.rst
 _vimrc_local.vim
 .transifexrc
 npm-debug.log
+make-schema.log
+make-test-schema.log
 
 # ttw tests
 phantomjsdriver.log

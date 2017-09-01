@@ -27,11 +27,16 @@ require () {
     fi
 }
 
+maybe_commit () {
+    if git commit --dry-run &> /dev/null; then git commit -m "$1"; fi
+}
+
 
 # Check that we have the required tools
 require heroku
 require git
 require curl
+require pg_dump
 
 
 # Make sure we have the latest master
@@ -60,59 +65,39 @@ fi
 make i18n_upload
 make i18n_download
 git add i18n
-if git commit --dry-run &>/dev/null; then git commit -m "update i18n files"; fi
-
-
-# Check for a branch.sql
-if [ -e sql/branch.sql ]; then
-    # Merge branch.sql into schema.sql
-    git rm --cached sql/branch.sql
-    echo | cat sql/branch.sql >>sql/schema.sql
-    echo "sql/branch.sql has been appended to sql/schema.sql"
-    read -p "Please make the necessary manual modifications to schema.sql now, then press Enter to continue... " enter
-    git add sql/schema.sql
-    git commit -m "merge branch.sql into schema.sql"
-
-    # Deployment options
-    if yesno "Should branch.sql be applied before deploying to Heroku instead of after?"; then
-        run_sql="before"
-        if yesno "Should the maintenance mode be turned on during deployment?"; then
-            maintenance="yes"
-        fi
-    else
-        run_sql="after"
-    fi
-fi
+maybe_commit("Update i18n files")
 
 
 # Ask confirmation and bump the version
 yesno "Tag and deploy version $version?" || exit
-echo $version >www/version.txt
+echo $version > www/version.txt
 git commit www/version.txt -m "Bump version to $version"
 git tag $version
 
 
-# Deploy to Heroku
-[ "$maintenance" = "yes" ] && heroku maintenance:on -a gratipay
-[ "$run_sql" = "before" ] && heroku pg:psql -a gratipay <sql/branch.sql
+# Deploy to Heroku, with hooks
+cd deploy
+[ -e before.sql ] && heroku pg:psql -a gratipay < before.sql
 git push --force heroku master
-[ "$maintenance" = "yes" ] && heroku maintenance:off -a gratipay
-[ "$run_sql" = "after" ] && heroku pg:psql -a gratipay <sql/branch.sql
-rm -f sql/branch.sql
+[ -e after.py ] && heroku run -a gratipay python deploy/after.py
+[ -e after.sql ] && heroku pg:psql -a gratipay < after.sql
+cd ..
+
+
+# Clear deploy hooks and dump production schema back to schema.sql
+rm -rf deploy/{before,after}.{sql,py} deploy/test*
+pg_dump --schema-only \
+        --no-owner \
+        --no-privileges \
+        "`heroku config:get DATABASE_URL -a gratipay`" \
+        > sql/schema.sql
+git add deploy sql/schema.sql
+maybe_commit("Clear deploy hooks and update schema.sql")
 
 
 # Push to GitHub
 git push
 git push --tags
-
-
-# Check for schema drift
-if [[ $run_sql ]]; then
-    if ! make schema-diff; then
-        echo "schema.sql doesn't match the production DB, please fix it"
-        exit 1
-    fi
-fi
 
 
 # Provide visual confirmation of deployment.
