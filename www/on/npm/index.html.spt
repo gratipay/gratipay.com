@@ -176,7 +176,7 @@ if request.method == 'POST':
 <form action="./" method="POST" class="package-json">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <p class="instructions">
-        {{ _('Paste a package.json to find packages to pay for:') }}
+        {{ _('Paste your own package.json:') }}
     </p>
 
     <textarea name="package.json"{% if not discovered %} autofocus{% endif %} wrap="off"
@@ -184,7 +184,7 @@ if request.method == 'POST':
 
     <div class="important-button">
         <button type="submit" class="selected large">
-            {{ _('Find packages') }}
+            {{ _('Continue') }}
         </button>
     </div>
 </form>

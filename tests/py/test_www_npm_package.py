@@ -67,5 +67,5 @@ class Bulk(Harness):
 
     def test_anon_gets_payment_flow(self):
         body = self.client.GET('/on/npm/').body
-        assert 'Paste a package.json' in body
+        assert 'Paste your own package.json' in body
         assert '0 out of all 1 npm package' in body

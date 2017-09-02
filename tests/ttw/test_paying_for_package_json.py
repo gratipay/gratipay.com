@@ -8,7 +8,7 @@ class Tests(BrowserHarness):
 
     def assertDiscovery(self):
         instructions = self.css('.instructions').text
-        assert instructions == 'Paste a package.json to find packages to pay for:'
+        assert instructions == 'Paste your own package.json:'
 
     def test_anon_gets_discovery_page_by_default(self):
         self.visit('/on/npm/')
@@ -20,7 +20,7 @@ class Tests(BrowserHarness):
         self.visit('/on/npm/')
         self.assertDiscovery()
 
-    def test_pasting_a_package_json_works(self):
+    def test_paying_for_package_json_works(self):
         self.make_package(name='amperize', description='Amperize!')
         mysql = self.make_package(name='mysql', description='MySQL!', emails=['bob@example.com'])
         self.make_package(name='netjet', description='Netjet!', emails=['cat@example.com'])
