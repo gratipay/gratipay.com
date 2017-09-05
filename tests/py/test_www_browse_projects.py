@@ -10,15 +10,15 @@ class Tests(Harness):
 
     def test_filter_by_approved(self):
         self.make_team(is_approved=True)
-        assert 'The Enterprise' in self.client.GET("/?status=approved").body
+        assert 'The Enterprise' in self.client.GET("/browse/projects?status=approved").body
 
     def test_filter_by_unreviewed(self):
         self.make_team(is_approved=None)
-        assert 'The Enterprise' in self.client.GET("/?status=unreviewed").body
+        assert 'The Enterprise' in self.client.GET("/browse/projects?status=unreviewed").body
 
     def test_filter_by_rejected(self):
         self.make_team(is_approved=False)
-        assert 'The Enterprise' in self.client.GET("/?status=rejected").body
+        assert 'The Enterprise' in self.client.GET("/browse/projects?status=rejected").body
 
     # Pagination
 
@@ -26,7 +26,7 @@ class Tests(Harness):
         for i in xrange(1, 21):
             self.make_team(is_approved=True, name='Gratiteam ' + str(i))
 
-        homepage = self.client.GET("/?status=approved").body
+        homepage = self.client.GET("/browse/projects?status=approved").body
 
         assert 'Gratiteam 20' in homepage
         assert 'Gratiteam 11' in homepage
@@ -37,7 +37,7 @@ class Tests(Harness):
         for i in xrange(1, 21):
             self.make_team(is_approved=True, name='Gratiteam ' + str(i))
 
-        homepage = self.client.GET("/?status=approved&page=2").body
+        homepage = self.client.GET("/browse/projects?status=approved&page=2").body
 
         assert 'Gratiteam 20' not in homepage
         assert 'Gratiteam 11' not in homepage
@@ -45,13 +45,13 @@ class Tests(Harness):
         assert 'Gratiteam 9'  in homepage
 
     def test_invalid_page_filter_does_not_blow_up(self):
-        self.client.GET("/?status=approved&page=abcd") # Should not throw an exception
+        self.client.GET("/browse/projects?status=approved&page=abcd") # Should not throw an exception
 
     def test_out_of_bounds_page_filter_renders_zero_projects(self):
         for i in xrange(1, 5):
             self.make_team(is_approved=True, name='Gratiteam ' + str(i))
 
-        homepage = self.client.GET("/?status=approved&page=500").body
+        homepage = self.client.GET("/browse/projects?status=approved&page=500").body
 
         assert 'Gratiteam' not in homepage
 

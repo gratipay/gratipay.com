@@ -65,6 +65,7 @@
 @import "scss/layouts/layout";
 @import "scss/layouts/responsiveness";
 
+@import "scss/pages/browse-projects";
 @import "scss/pages/homepage";
 @import "scss/pages/history";
 @import "scss/pages/identities";

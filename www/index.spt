@@ -1,0 +1,25 @@
+[---]
+title = _("Pay for Open Source")
+suppress_sidebar = True
+page_id = "homepage"
+[---] text/html
+{% from "templates/nav-tabs.html" import nav_tabs with context %}
+{% extends "templates/base.html" %}
+{% block head %}
+    <link rel="publisher" href="https://plus.google.com/104524895706770139568">
+    <link type="application/opensearchdescription+xml" rel="search" href="/opensearch.osdd" />
+    <meta name="description" content="Pay for open source on Gratipay." />
+    <meta name="fb:app_id" content="229465400522758" />
+    <meta name="og:type" content="website" />
+    <meta name="og:url" content="https://gratipay.com/" />
+    <meta name="og:title" content="Gratipay" />
+    <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
+{% endblock %}
+
+{% block banner %}
+    <a href="/about/"><h1>{{ _("Pay for open source.") }}</h1></a>
+{% endblock %}
+
+{% block content %}
+Foo.
+{% endblock %}
