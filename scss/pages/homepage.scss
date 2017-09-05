@@ -10,4 +10,26 @@
             line-height: 33px;
         }
     }
+
+    #content {
+        text-align: center;
+
+        fieldset {
+            margin: 3em 0 0.5em;
+            border: 1px solid $light-brown;
+            border-style: solid none none;
+            position: relative;
+            padding: 10px;
+
+            legend {
+                position: relative;
+                top: 0px;
+                font: italic 14px/18px $Chronicle;
+                color: $light-brown;
+                background: white;
+                padding: 0 7px;
+                text-align: center;
+            }
+        }
+    }
 }

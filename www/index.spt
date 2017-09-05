@@ -1,5 +1,4 @@
 [---]
-title = _("Pay for Open Source")
 suppress_sidebar = True
 page_id = "homepage"
 [---] text/html
@@ -20,6 +19,87 @@ page_id = "homepage"
     <a href="/about/"><h1>{{ _("Pay for open source.") }}</h1></a>
 {% endblock %}
 
+{% block scripts %}
+<script src="https://js.braintreegateway.com/web/dropin/1.7.0/js/dropin.min.js"></script>
+<script>$(document).ready(Gratipay.homepage.initForm);</script>
+{{ super() }}
+{% endblock %}
+
 {% block content %}
-Foo.
+<form action="/companies/create.json" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+    <fieldset>
+        <legend>{{ _('Step 1 of 3') }}</legend>
+        <h2>{{ _('Which projects?') }}</h2>
+        <input type="file">
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ _('Step 2 of 3') }}</legend>
+        <h2>{{ _('How much?') }}</h2>
+
+        <p class="instructions">We recommend between $1,000 and $3,000 per
+        technical employee per year.</p>
+
+        $ <input type="text" name="amount" required>
+        <div id="braintree-container"></div>
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ _('Step 3 of 3') }}</legend>
+        <h2>{{ _('Who are you?') }}</h2>
+
+        <label for="email">Email</label>
+        <input name="email" required>
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ _('Optional') }}</legend>
+
+        <h2>May we promote you?</h2>
+
+        <label label="company">{{ _("Name") }}</label>
+        <input type="text" name="promote-name">
+
+        <label label="company">{{ _("Twitter Handle") }}</label>
+        <input type="text" name="promote-twitter">
+
+        <label label="company">{{ _("Short message") }}</label>
+        <input type="text" name="promote-message">
+
+        <label label="company">{{ _("URL") }}</label>
+        <input type="text" name="promot-url">
+
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ _('Review & Submit') }}</legend>
+
+        <div class="important-button">
+            <button type="submit" class="apply selected large">
+                {{ _("Pay for Open Source") }}
+            </button>
+        </div>
+        <p class="fine-print">
+            {{ _( "By submitting this form you agree to our {0}terms of service{1}."
+                , '<a href="/about/policies/terms-of-service">'|safe
+                , '</a>'|safe
+                 ) }}
+        </p>
+    </fieldset>
+
+</form>
+
+<div class="application-complete" style="display: none;">
+    <p>{{ _("Thanks! Your public project page is:") }}</p>
+    <p><a href="" class="team_url"></a></p>
+    <p>{{ _("And your public review ticket is:") }}</p>
+    <p><a href="" class="review_url"></a></p>
+    <p>{{ _( "You can watch and participate in our review process there. We will send a notification to {email} when we finish our review."
+           , email=user.participant.email_address
+            ) }}</p>
+    <p>{{ _("Thanks for applying!") }}</p>
+</div>
+
 {% endblock %}
