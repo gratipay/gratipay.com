@@ -1,13 +1,22 @@
 #homepage {
 
-    #banner a {
-        display: block;
-        height: 100%;
-        width: 100%;
-        h1 {
-            // override .really-long
-            font-size: 28px;
-            line-height: 33px;
+    #banner {
+        height: 128px;
+        background-size: 40%;
+
+        a {
+            display: block;
+            height: 100%;
+            width: 100%;
+            h1 { // override
+                font-size: 28px;
+                line-height: 128px;
+                position: static;
+                text-align: center;
+                max-width: none;
+                right: 0;
+                bottom: 0;
+            }
         }
     }
 
@@ -29,6 +38,149 @@
                 background: white;
                 padding: 0 7px;
                 text-align: center;
+            }
+
+            &:nth-of-type(1) {
+                border: 0;
+                margin-top: 0;
+                padding-top: 0;
+            }
+
+            h2:nth-of-type(2) {
+                margin-top: 4em;
+            }
+
+            .field {
+                label, fieldset legend {
+                    display: block;
+                    text-align: left;
+                    font: normal 10px/12px $Ideal;
+                    text-transform: uppercase;
+                    margin: 2em 0 0;
+                }
+                fieldset {
+                    border: none;
+                    position: static;
+                    margin: 0;
+                    padding: 0;
+                    legend {
+                        color: $black;
+                        position: static;
+                        padding: 2em 0 0;
+                    }
+                }
+                input, select {
+                    width: 100%;
+                    padding: 10px;
+                    font: normal 24px/36px $Ideal;
+                    height: auto;
+                }
+                select {
+                    height: 36px;
+                }
+                .fine-print{
+                    padding: 0.5em 0 0;
+                    margin: 0;
+                }
+                &.amount {
+                    margin-top: 1em;
+
+                    label {
+                        display: inline;
+                        margin: 0 0 0 -24px;
+                        font: bold 32px/36px $Ideal;
+                    }
+                    input {
+                        max-width: 256px;
+                        width: 50%;
+                        text-align: center;
+                    }
+                }
+                &.email-address, &.follow-up {
+                    .fine-print {
+                        text-align: left;
+                    }
+                }
+                &.follow-up {
+                    .fancy-radio {
+                        position: relative;
+                        display: inline-block;
+                        padding-right: 20px;
+
+                        input {
+                            position: absolute;
+                            left: -99999px;
+
+                            &:checked + label,
+                            &:not(:checked) + label {
+                                text-transform: none;
+                                font: normal 24px/36px $Ideal;
+                                margin: 0.5em 0 0;
+
+                                position: relative;
+                                padding-left: 28px;
+                                cursor: pointer;
+                                line-height: 20px;
+                                display: inline-block;
+                            }
+                            &:not(:checked) + label {
+                                color: $medium-gray;
+                            }
+
+                            &:checked + label:before,
+                            &:not(:checked) + label:before {
+                                content: '';
+                                position: absolute;
+                                left: 0;
+                                top: 0;
+                                width: 18px;
+                                height: 18px;
+                                border: 1px solid $brown;
+                                border-radius: 100%;
+                                background: $white;
+                            }
+                            &:not(:checked) + label:after,
+                            &:checked + label:after {
+                                content: '';
+                                width: 12px;
+                                height: 12px;
+                                background: $green;
+                                position: absolute;
+                                top: 4px;
+                                left: 4px;
+                                border-radius: 100%;
+                                transition: all 0.1s ease;
+                            }
+
+                            &:not(:checked) + label:after {
+                                opacity: 0;
+                                transform: scale(0);
+                            }
+                            &:checked + label:after {
+                                opacity: 1;
+                                transform: scale(1);
+                            }
+                        }
+                    }
+                }
+            }
+            &.optional {
+                button {
+                    background: $light-gray;
+                    color: $medium-gray;
+                }
+            }
+            .promotion-gate {
+                p {
+                    margin-bottom: 0;
+                }
+                margin: 0;
+                button {
+                    margin-top: 30px;
+                }
+            }
+            .promotion-fields {
+                display: none;
             }
         }
     }

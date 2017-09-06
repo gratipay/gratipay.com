@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 [---]
 suppress_sidebar = True
 page_id = "homepage"
+banner = "Pay for Open Source"
 [---] text/html
 {% from "templates/nav-tabs.html" import nav_tabs with context %}
 {% extends "templates/base.html" %}
@@ -30,51 +32,124 @@ page_id = "homepage"
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
     <fieldset>
-        <legend>{{ _('Step 1 of 3') }}</legend>
-        <h2>{{ _('Which projects?') }}</h2>
-        <input type="file">
-    </fieldset>
-
-    <fieldset>
-        <legend>{{ _('Step 2 of 3') }}</legend>
         <h2>{{ _('How much?') }}</h2>
 
-        <p class="instructions">We recommend between $1,000 and $3,000 per
-        technical employee per year.</p>
+        <div class="field amount">
+            <label for="amount">$</label>
+            <input type="text" name="amount" id="amount"
+                   placeholder="{{ _("2,000 per person") }}"
+                   required autofocus>
+            
+            <p class="fine-print">
+            {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}of your company.'
+                , br='<br>'|safe
+                , a='<a href="https://gratipay.news/">'|safe
+                , _a='</a>'|safe
+                 ) }}
+            </p>
 
-        $ <input type="text" name="amount" required>
+        </div>
+        
         <div id="braintree-container"></div>
     </fieldset>
 
     <fieldset>
-        <legend>{{ _('Step 3 of 3') }}</legend>
+        <legend>{{ _('Step 2 of 3') }}</legend>
         <h2>{{ _('Who are you?') }}</h2>
 
-        <label for="email">Email</label>
-        <input name="email" required>
+        <div class="field">
+            <label for="name">{{ _('Your Name') }}</label>
+            <input name="name" id="name" type="text" required>
+        </div>
+
+        <div class="field email-address">
+            <label for="email-address">{{ _('Your Email Address') }}</label>
+            <input name="email-address" id="email-address" type="text" required>
+            <p class="fine-print">
+                {{ _('You will get a verification link before we finalize your payment.') }}
+            </p>
+        </div>
+
+        <div class="field follow-up">
+            <fieldset>
+                <legend>{{ _('Follow-up') }}</legend>
+
+                <div class="fancy-radio">
+                    <input type="radio" name="follow-up" id="follow-up-monthly" value="monthly">
+                    <label for="follow-up-monthly">{{ _('Monthly') }}</label>
+                </div>
+
+                <div class="fancy-radio">
+                    <input type="radio" name="follow-up" id="follow-up-quarterly" 
+                           value="quarterly" checked>
+                    <label for="follow-up-quarterly">{{ _('Quarterly') }}</label>
+                </div>
+
+                <div class="fancy-radio">
+                    <input type="radio" name="follow-up" id="follow-up-yearly" value="yearly">
+                    <label for="follow-up-yearly">{{ _('Yearly') }}</label>
+                </div>
+
+                <div class="fancy-radio">
+                    <input type="radio" name="follow-up" id="follow-up-never" value="never">
+                    <label for="follow-up-never">{{ _('Never') }}</label>
+                </div>
+
+                <p class="fine-print">
+                    {{ _('You will get a progress report, with a reminder to pay again.') }}
+                </p>
+            </fieldset>
+        </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="optional">
         <legend>{{ _('Optional') }}</legend>
+        <h2>{{ _('Ecosystems') }}</h2>
+        <p class="fine-print">
+        {{ _('Which are most valuable to you?{br}(JavaScript, Python, etc.)', br='<br>'|safe) }}
+        </p>
 
-        <h2>May we promote you?</h2>
+        <div class="important-button">
+            <button class="large">{{ _('Choose an Ecosystem') }}</button>
+        </div>
+        <div class="preferences"></div>
 
-        <label label="company">{{ _("Name") }}</label>
-        <input type="text" name="promote-name">
 
-        <label label="company">{{ _("Twitter Handle") }}</label>
-        <input type="text" name="promote-twitter">
+        <h2>{{ _('Promotion') }}</h2>
 
-        <label label="company">{{ _("Short message") }}</label>
-        <input type="text" name="promote-message">
+        <div class="promotion-fields">
+            <p class="fine-print">{{  _('Thanks! We are excited to brag about you!') }}</p>
 
-        <label label="company">{{ _("URL") }}</label>
-        <input type="text" name="promot-url">
+            <div class="field">
+                <label label="company">{{ _("Your Company Name") }}</label>
+                <input type="text" name="promote-name" id="promote-name">
+            </div>
+
+            <div class="field">
+                <label label="company">{{ _("Your Landing Page URL") }}</label>
+                <input type="text" name="promote-url" id="promote-url">
+            </div>
+
+            <div class="field">
+                <label label="company">{{ _("Your Company Twitter Handle") }}</label>
+                <input type="text" name="promote-twitter" id="promote-twitter">
+            </div>
+
+            <div class="field">
+                <label label="company">{{ _("Your Message to the Open Source Community") }}</label>
+                <input type="text" name="promote-message" id="promote-message">
+            </div>
+        </div>
+
+        <div class="important-button promotion-gate">
+            <p class="fine-print">{{  _('We want to brag about you! May we?') }}</p>
+            <button class="large">{{ _('Provide Promotion Details') }}</button>
+        </div>
 
     </fieldset>
 
     <fieldset>
-        <legend>{{ _('Review & Submit') }}</legend>
+        <legend>{{ _('Submit Form') }}</legend>
 
         <div class="important-button">
             <button type="submit" class="apply selected large">

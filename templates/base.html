@@ -75,7 +75,7 @@
             {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
         </div>
 
-        {% if page_id != 'npm' %}
+        {% if page_id not in ('homepage', 'npm') %}
         <table id="notice">
             <tr>
                 <td>&#x2605;</td>

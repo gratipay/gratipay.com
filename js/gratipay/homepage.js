@@ -2,14 +2,17 @@ Gratipay.homepage = {}
 
 Gratipay.homepage.initForm = function () {
     $form = $('#homepage #content form');
-    $button = $form.find('button');
-    $button.on('click', Gratipay.homepage.submitForm);
+    $submit= $form.find('button[type=submit]');
+    $submit.click(Gratipay.homepage.submitForm);
+
+    $promote = $form.find('.promotion-gate button');
+    $promote.click(Gratipay.homepage.openPromote);
 
     braintree.dropin.create({
       authorization: 'sandbox_cr9dyy9c_bk8h97tqzyqjhtfn',
       container: '#braintree-container'
     }, function (createErr, instance) {
-      $button.click(function () {
+      $submit.click(function () {
         instance.requestPaymentMethod(function (requestPaymentMethodErr, payload) {
           // Submit payload.nonce to your server
         });
@@ -17,7 +20,7 @@ Gratipay.homepage.initForm = function () {
     });
 }
 
-Gratipay.homepage.submitForm = function (e) {
+Gratipay.homepage.submitForm = function(e) {
     e.preventDefault();
 
     $input = $(this)
@@ -40,6 +43,14 @@ Gratipay.homepage.submitForm = function (e) {
                 $('.application-complete').slideDown(250);
             });
         },
-        error: [Gratipay.error, function () { $input.prop('disable', false); }]
+        error: [Gratipay.error, function() { $input.prop('disable', false); }]
+    });
+}
+
+Gratipay.homepage.openPromote = function(e) {
+    e.preventDefault();
+    $('.promotion-gate').fadeOut();
+    $('.promotion-fields').slideDown(function() {
+        $('.promotion-fields input:first').focus();
     });
 }
