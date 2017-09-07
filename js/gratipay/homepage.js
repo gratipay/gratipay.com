@@ -2,8 +2,15 @@ Gratipay.homepage = {}
 
 Gratipay.homepage.initForm = function(clientAuthorization) {
     $form = $('#homepage #content form');
+
     $submit= $form.find('button[type=submit]');
     $submit.click(Gratipay.homepage.submitForm);
+
+    $chooseEcosystem = $form.find('.ecosystem-chooser button');
+    $chooseEcosystem.click(function(e) {
+        e.preventDefault();
+        Gratipay.notification('Not implemented.', 'error');
+    });
 
     $promote = $form.find('.promotion-gate button');
     $promote.click(Gratipay.homepage.openPromote);

@@ -115,10 +115,10 @@ $(document).ready(function() {
             {{ _('Which do you value most?{br}(JavaScript, Python, etc.)', br='<br>'|safe) }}
         </p>
 
-        <div class="important-button">
+        <div class="important-button ecosystem-chooser">
             <button class="large">{{ _('Choose an Ecosystem') }}</button>
         </div>
-        <div class="preferences"></div>
+        <div class="ecosystems"></div>
 
 
         <h2>{{ _('Promotion') }}</h2>
