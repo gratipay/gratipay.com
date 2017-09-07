@@ -37,11 +37,11 @@ banner = "Pay for Open Source"
         <div class="field amount">
             <label for="amount">$</label>
             <input type="text" name="amount" id="amount"
-                   placeholder="{{ _("2,000 per person") }}"
+                   placeholder="{{ _("2,000 / person") }}"
                    required autofocus>
             
             <p class="fine-print">
-            {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}of your company.'
+            {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}at your company.'
                 , br='<br>'|safe
                 , a='<a href="https://gratipay.news/9205443e209d">'|safe
                 , _a='</a>'|safe
@@ -106,7 +106,7 @@ banner = "Pay for Open Source"
         <legend>{{ _('Optional') }}</legend>
         <h2>{{ _('Ecosystems') }}</h2>
         <p class="fine-print">
-        {{ _('Which are most valuable to you?{br}(JavaScript, Python, etc.)', br='<br>'|safe) }}
+            {{ _('Which do you value most?{br}(JavaScript, Python, etc.)', br='<br>'|safe) }}
         </p>
 
         <div class="important-button">
