@@ -43,7 +43,7 @@ banner = "Pay for Open Source"
             <p class="fine-print">
             {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}of your company.'
                 , br='<br>'|safe
-                , a='<a href="https://gratipay.news/">'|safe
+                , a='<a href="https://gratipay.news/9205443e209d">'|safe
                 , _a='</a>'|safe
                  ) }}
             </p>
