@@ -3,6 +3,7 @@
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import braintree
 from gratipay import utils
 from gratipay.models.payment_for_open_source import PaymentForOpenSource
 
@@ -16,11 +17,15 @@ def _parse(raw):
 
     # amount
     amount = x('amount') or '0'
-    if (not amount.isdigit()) or (int(amount) < 50):
+    if (not amount.isdigit()) or (int(amount) < 10):
         errors.append('amount')
         amount = ''.join(x for x in amount.split('.')[0] if x.isdigit())
 
-    # TODO credit card token?
+    # credit card nonce
+    payment_method_nonce = x('payment_method_nonce')
+    if len(payment_method_nonce) > 36:
+        errors.append('payment_method_nonce')
+        payment_method_nonce = ''
 
     # name
     name = x('name')
@@ -63,6 +68,7 @@ def _parse(raw):
         errors.append('promotion_message')
 
     parsed = { 'amount': amount
+             , 'payment_method_nonce': payment_method_nonce
              , 'name': name
              , 'email_address': email_address
              , 'follow_up': follow_up
@@ -74,34 +80,36 @@ def _parse(raw):
     return parsed, errors
 
 
-def _charge(app, parsed):
-    raise NotImplementedError
+def _store(parsed):
+    return PaymentForOpenSource.insert(**parsed)
 
 
-def _store(parsed, transaction_id):
-    return PaymentForOpenSource.insert(transaction_id=transaction_id, **parsed)
+def _charge(amount, payment_method_nonce, _sale=braintree.Transaction.sale):
+    return _sale({ 'amount': amount
+                 , 'payment_method_nonce': payment_method_nonce
+                 , 'options': {'submit_for_settlement': True}
+                  })
 
 
-def _send(app, parsed, payment_for_open_source):
+def _send(app, email_address, payment_for_open_source):
     app.email_queue.put( to=None
                        , template='paid-for-open-source'
-                       , email=parsed['email_address']
+                       , email=email_address
                        , amount=payment_for_open_source.amount
                        , receipt_url=payment_for_open_source.receipt_url
                         )
 
 
-def pay_for_open_source(app, raw, _parse=_parse, _charge=_charge, _send=_send, _store=_store):
+def pay_for_open_source(app, raw):
     parsed, errors = _parse(raw)
+    payment_method_nonce = parsed.pop('payment_method_nonce')
+    payment_for_open_source = _store(parsed)
     if not errors:
-        transaction_id = _charge(app, parsed)
-        if not transaction_id:
+        result = _charge(parsed['amount'], payment_method_nonce)
+        payment_for_open_source.process_result(result)
+        if not payment_for_open_source.succeeded:
             errors.append('charging')
-    if not errors:
-        payment_for_open_source = _store(parsed, transaction_id)
-        if parsed['email_address']:
-            sent = _send(app, parsed['email_address'], payment_for_open_source)
-            if not sent:
-                errors.append('sending')
-        parsed= {}
+    if not errors and parsed['email_address']:
+        _send(app, parsed['email_address'], payment_for_open_source)
+        parsed = {}  # no need to populate form anymore
     return {'parsed': parsed, 'errors': errors}

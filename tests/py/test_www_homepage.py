@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import json
 import urllib
 
 import aspen.body_parsers
-from gratipay.homepage import pay_for_open_source, _parse, _store, _send
+from gratipay.homepage import pay_for_open_source, _parse, _store, _charge, _send
 from gratipay.testing import Harness
 from gratipay.testing.email import QueuedEmailHarness
-from pytest import raises
 
 
 _oh_yeah = lambda *a: 'oh yeah'
@@ -15,6 +15,7 @@ _none = lambda *a: None
 
 
 GOOD = { 'amount': '1000'
+       , 'payment_method_nonce': 'fake-valid-nonce'
        , 'name': 'Alice Liddell'
        , 'email_address': 'alice@example.com'
        , 'follow_up': 'monthly'
@@ -24,6 +25,7 @@ GOOD = { 'amount': '1000'
        , 'promotion_message': 'Love me! Love me! Say that you love me!'
         }
 BAD = { 'amount': '1,000'
+      , 'payment_method_nonce': 'deadbeef' * 5
       , 'name': 'Alice Liddell' * 20
       , 'email_address': 'alice' * 100 + '@example.com'
       , 'follow_up': 'cheese'
@@ -33,6 +35,7 @@ BAD = { 'amount': '1,000'
       , 'promotion_message': 'Love me!' * 50
        }
 SCRUBBED = { 'amount': '1000'
+           , 'payment_method_nonce': ''
            , 'name': 'Alice Liddell' * 19 + 'Alice Lid'
            , 'email_address': 'alice' * 51
            , 'follow_up': 'monthly'
@@ -41,8 +44,14 @@ SCRUBBED = { 'amount': '1000'
            , 'promotion_twitter': 'thebestbutterthebestbutterthebes'
            , 'promotion_message': 'Love me!' * 16
             }
-ALL = ['amount', 'name', 'email_address', 'follow_up',
+ALL = ['amount', 'payment_method_nonce', 'name', 'email_address', 'follow_up',
        'promotion_name', 'promotion_url', 'promotion_twitter', 'promotion_message']
+
+
+class PayForOpenSourceHarness(Harness):
+
+    def fetch(self):
+        return self.db.one('SELECT * FROM payments_for_open_source')
 
 
 class Parse(Harness):
@@ -57,29 +66,59 @@ class Parse(Harness):
         assert parsed == SCRUBBED
         assert errors == ALL
 
+    def test_10_dollar_minimum(self):
+        bad = GOOD.copy()
+        bad['amount'] = '9'
+        assert _parse(bad)[1] == ['amount']
 
-class Store(Harness):
+        good = GOOD.copy()
+        good['amount'] = '10'
+        assert _parse(good)[1] == []
+
+
+# Valid nonces for testing:
+# https://developers.braintreepayments.com/reference/general/testing/python#valid-nonces
+#
+# Separate classes to force separate fixtures to avoid conflation. #2588
+# suggests we don't want to match on body for some reason? Hacking here vs.
+# getting to the bottom of that.
+
+class GoodCharge(Harness):
+
+    def test_bad_nonce_fails(self):
+        result = _charge('10', 'deadbeef')
+        assert not result.is_success
+
+class BadCharge(Harness):
+
+    def test_good_nonce_succeeds(self):
+        result = _charge('10', 'fake-valid-nonce')
+        assert result.is_success
+
+
+class Store(PayForOpenSourceHarness):
 
     def test_stores_info(self):
         parsed, errors = _parse(GOOD)
-        fetch = lambda: self.db.one('SELECT * FROM payments_for_open_source')
-        assert fetch() is None
-        _store(parsed, 'deadbeef')
-        assert fetch().follow_up == 'monthly'
+        parsed.pop('payment_method_nonce')
+        assert self.fetch() is None
+        _store(parsed)
+        assert self.fetch().follow_up == 'monthly'
 
 
 class Send(QueuedEmailHarness):
 
     def test_sends_receipt_link(self):
         parsed, errors = _parse(GOOD)
-        payment_for_open_source = _store(parsed, 'deadbeef')
-        _send(self.app, parsed, payment_for_open_source)
+        parsed.pop('payment_method_nonce')
+        payment_for_open_source = _store(parsed)
+        _send(self.app, parsed['email_address'], payment_for_open_source)
         msg = self.get_last_email()
         assert msg['to'] == 'alice@example.com'
         assert msg['subject'] == 'Payment for open source'
 
 
-class PayForOpenSource(Harness):
+class PayForOpenSource(PayForOpenSourceHarness):
 
     def as_body(self, **raw):
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -95,20 +134,40 @@ class PayForOpenSource(Harness):
         return self.as_body(**BAD)
 
     def test_pays_for_open_source(self):
-        fetch = lambda: self.db.one('SELECT * FROM payments_for_open_source')
-        assert fetch() is None
-        result = pay_for_open_source(self.app, self.good, _charge=_oh_yeah, _send=_none)
-        assert result == {'parsed': {}, 'errors': ['sending']}  # TODO revisit once we have _send
-        assert fetch().transaction_id == 'oh yeah'
+        assert self.fetch() is None
+        result = pay_for_open_source(self.app, self.good)
+        assert result == {'parsed': {}, 'errors': []}
+        assert self.fetch().succeeded
 
-    def test_scrubs_and_flags_errors_and_doesnt_store(self):
-        fetch = lambda: self.db.one('SELECT * FROM payments_for_open_source')
-        assert fetch() is None
-        result = pay_for_open_source(self.app, self.bad, _charge=_oh_yeah, _send=_none)
-        assert result == {'parsed': SCRUBBED, 'errors': ALL}
-        assert fetch() is None
+    def test_scrubs_and_flags_errors_and_also_stores(self):
+        assert self.fetch() is None
+        result = pay_for_open_source(self.app, self.bad)
+        scrubbed = SCRUBBED.copy()
+        scrubbed.pop('payment_method_nonce')  # consumed
+        assert result == {'parsed': scrubbed, 'errors': ALL}
+        assert self.fetch().name.endswith('Alice Lid')
+
+    def test_flags_errors_with_no_transaction_id(self):
+        error = GOOD.copy()
+        error['payment_method_nonce'] = 'deadbeef'
+        result = pay_for_open_source(self.app, error)
+        assert result['errors'] == ['charging']
+        pfos = self.fetch()
+        assert not pfos.succeeded
+        assert pfos.transaction_id is None
+
+    def test_flags_failures_with_transaction_id(self):
+        failure = GOOD.copy()
+        failure['amount'] = '2000'
+        result = pay_for_open_source(self.app, failure)
+        assert result['errors'] == ['charging']
+        pfos = self.fetch()
+        assert not pfos.succeeded
+        assert pfos.transaction_id is not None
 
 
     def test_post_gets_json(self):
-        with raises(NotImplementedError):
-            self.client.POST('/', data=GOOD)
+        response = self.client.POST('/', data=GOOD)
+        assert response.code == 200
+        assert response.headers['Content-Type'] == 'application/json'
+        assert json.loads(response.body) == {'parsed': {}, 'errors': []}

@@ -1,0 +1,25 @@
+interactions:
+- request:
+    body: !!python/unicode <transaction><amount>10</amount><type>sale</type><options><submit_for_settlement
+      type="boolean">true</submit_for_settlement></options><payment_method_nonce>deadbeef</payment_method_nonce></transaction>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/bk8h97tqzyqjhtfn/transactions
+  response:
+    body:
+      string: !!binary |
+        H4sIAGAItVkAA6RSu27DMAzc8xWCdkfJkKIFFGXLFzRzQMdMatR6gKLb+O8rP/OA26UbyaNOdyfp
+        3dVW4gsplt5t5Xq5kgLdyRelu2zl4X2fvcqdWWgIZYZEnjLCGLyLaBZC6G4U23JqBDcBtxKIoJFq
+        gJjARThxuqSfzK+P2Ije+jRJotC8rTcvG626+h4EZirzmnHgi43NfSVNgMai46NF/vDF0Xl3Qq2m
+        7QcOizHCBc3BfTr/7YQngddQEhZijmap1XjiJls96B7aMSD1FMM9rAMQ2PhHXmB97disV0l/X45I
+        a9lEqJKzrhznPrQE8U5erHNbcnZO7xiRucLWlWGq09F5bHLyRKaHSLI+kqyLxBQIRY541moW/i2G
+        m/f/PELKZeaX/gAAAP//AwB33+lL4gIAAA==
+    headers:
+      cache-control: [no-cache]
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 422, message: Unprocessable Entity}
+version: 1

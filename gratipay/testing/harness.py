@@ -146,7 +146,6 @@ class Harness(unittest.TestCase):
     def make_payment_for_open_source(self, **info):
         defaults = dict( amount='1000'
                        , name='Alice Liddell'
-                       , transaction_id='deadbeef'
                        , email_address='alice@example.com'
                        , follow_up='monthly'
                        , promotion_name='Wonderland'
