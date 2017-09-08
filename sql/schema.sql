@@ -916,13 +916,15 @@ CREATE TABLE email_addresses (
 
 CREATE TABLE email_messages (
     id integer NOT NULL,
-    participant bigint NOT NULL,
+    participant bigint,
     spt_name text NOT NULL,
     context bytea NOT NULL,
     user_initiated boolean DEFAULT true NOT NULL,
     ctime timestamp with time zone DEFAULT now() NOT NULL,
     result text,
-    remote_message_id text
+    remote_message_id text,
+    email_address text,
+    CONSTRAINT email_or_participant_required CHECK (((participant IS NOT NULL) OR (email_address IS NOT NULL)))
 );
 
 
