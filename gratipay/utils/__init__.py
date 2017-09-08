@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import fnmatch
 import random
 import os
+import re
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from datetime import datetime, timedelta
 
@@ -19,6 +20,11 @@ BEGINNING_OF_EPOCH = to_rfc822(datetime(1970, 1, 1)).encode('ascii')
 # Difference between current time and credit card expiring date when
 # card is considered as expiring
 EXPIRING_DELTA = timedelta(days = 30)
+
+_email_re = re.compile(r'^[^@]+@[^@]+\.[^@]+$')
+# exactly one @, and at least one . after @ -- simple validation, send to be sure
+def is_valid_email_address(email_address):
+    return len(email_address) < 255 and _email_re.match(email_address)
 
 
 def dict_to_querystring(mapping):
