@@ -25,7 +25,11 @@ if not user.ANON:
 {% endblock %}
 
 {% block scripts %}
-<script>$(document).ready(Gratipay.homepage.initForm);</script>
+<script>
+$(document).ready(function() {
+    Gratipay.homepage.initForm('{{ website.env.braintree_client_authorization }}');
+});
+</script>
 {{ super() }}
 {% endblock %}
 

@@ -1,6 +1,6 @@
 Gratipay.homepage = {}
 
-Gratipay.homepage.initForm = function () {
+Gratipay.homepage.initForm = function(clientAuthorization) {
     $form = $('#homepage #content form');
     $submit= $form.find('button[type=submit]');
     $submit.click(Gratipay.homepage.submitForm);
@@ -9,7 +9,7 @@ Gratipay.homepage.initForm = function () {
     $promote.click(Gratipay.homepage.openPromote);
 
     braintree.dropin.create({
-      authorization: 'sandbox_cr9dyy9c_bk8h97tqzyqjhtfn',
+      authorization: clientAuthorization,
       container: '#braintree-container'
     }, function (createErr, instance) {
       $submit.click(function () {

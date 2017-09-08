@@ -351,6 +351,7 @@ def env():
         BRAINTREE_MERCHANT_ID           = unicode,
         BRAINTREE_PUBLIC_KEY            = unicode,
         BRAINTREE_PRIVATE_KEY           = unicode,
+        BRAINTREE_CLIENT_AUTHORIZATION  = unicode,
         GITHUB_CLIENT_ID                = unicode,
         GITHUB_CLIENT_SECRET            = unicode,
         GITHUB_CALLBACK                 = unicode,
