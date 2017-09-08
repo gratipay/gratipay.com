@@ -25,7 +25,6 @@ if not user.ANON:
 {% endblock %}
 
 {% block scripts %}
-<script src="https://js.braintreegateway.com/web/dropin/1.7.0/js/dropin.min.js"></script>
 <script>$(document).ready(Gratipay.homepage.initForm);</script>
 {{ super() }}
 {% endblock %}
