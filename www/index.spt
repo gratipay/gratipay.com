@@ -3,6 +3,9 @@
 suppress_sidebar = True
 page_id = "homepage"
 banner = "Pay for Open Source"
+
+if not user.ANON:
+    website.redirect('/browse/projects')
 [---] text/html
 {% from "templates/nav-tabs.html" import nav_tabs with context %}
 {% extends "templates/base.html" %}
