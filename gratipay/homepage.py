@@ -4,23 +4,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from gratipay import utils
-
-
-def pay_for_open_source(app, raw):
-    parsed, errors = _parse(raw)
-    if not errors:
-        transaction_id = _charge_card(app, parsed)
-        if not transaction_id:
-            errors.append('charge_card')
-    if not errors:
-        message_id = None
-        if parsed['email_address']:
-            message_id = _send_receipt(app, parsed['email_address'])
-            if not message_id:
-                errors.append('send_receipt')
-        _store_info(parsed, transaction_id, message_id)
-        parsed = {}
-    return {'parsed': parsed, 'errors': errors}
+from gratipay.models.payment_for_open_source import PaymentForOpenSource
 
 
 def _parse(raw):
@@ -90,15 +74,31 @@ def _parse(raw):
     return parsed, errors
 
 
-def _charge_card(app, parsed):
+def _charge(app, parsed):
     raise NotImplementedError
 
 
-def _send_receipt(app, parsed):
+def _send(app, parsed):
     raise NotImplementedError
     app.email_queue.put()
 
 
-def _store_info(parsed, transaction_id, message_id):
-    raise NotImplementedError
+def _store(parsed, transaction_id, message_id):
+    PaymentForOpenSource.insert(transaction_id=transaction_id, message_id=message_id, **parsed)
 
+
+def pay_for_open_source(app, raw, _parse=_parse, _charge=_charge, _send=_send, _store=_store):
+    parsed, errors = _parse(raw)
+    if not errors:
+        transaction_id = _charge(app, parsed)
+        if not transaction_id:
+            errors.append('charging')
+    if not errors:
+        message_id = None
+        if parsed['email_address']:
+            message_id = _send(app, parsed['email_address'])
+            if not message_id:
+                errors.append('sending')
+        _store(parsed, transaction_id, message_id)
+        parsed= {}
+    return {'parsed': parsed, 'errors': errors}

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
+from gratipay.homepage import pay_for_open_source
 [---]
+if not user.ANON:
+    website.redirect('/browse/projects')
 suppress_sidebar = True
 page_id = "homepage"
 banner = "Pay for Open Source"
-
-if not user.ANON:
-    website.redirect('/browse/projects')
+result = pay_for_open_source(website.app, request.body) if request.method == 'POST' else {}
+[---] application/json via json_dump
+result
 [---] text/html
 {% from "templates/nav-tabs.html" import nav_tabs with context %}
 {% extends "templates/base.html" %}
@@ -45,7 +48,7 @@ $(document).ready(function() {
             <input type="text" name="amount" id="amount"
                    placeholder="{{ _("2,000 / person") }}"
                    required autofocus>
-            
+
             <p class="fine-print">
             {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}at your company.'
                 , br='<br>'|safe
@@ -55,7 +58,7 @@ $(document).ready(function() {
             </p>
 
         </div>
-        
+
         <div id="braintree-container"></div>
     </fieldset>
 
@@ -86,7 +89,7 @@ $(document).ready(function() {
                 </div>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow-up" id="follow-up-quarterly" 
+                    <input type="radio" name="follow-up" id="follow-up-quarterly"
                            value="quarterly" checked>
                     <label for="follow-up-quarterly">{{ _('Quarterly') }}</label>
                 </div>

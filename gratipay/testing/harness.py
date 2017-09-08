@@ -21,6 +21,7 @@ from gratipay.models.account_elsewhere import AccountElsewhere
 from gratipay.models.exchange_route import ExchangeRoute
 from gratipay.models.package import NPM, Package
 from gratipay.models.participant import Participant, MAX_TIP, MIN_TIP
+from gratipay.models.payment_for_open_source import PaymentForOpenSource
 from gratipay.models.team import Team
 from gratipay.security import user
 from gratipay.testing import P
@@ -140,6 +141,24 @@ class Harness(unittest.TestCase):
                 tablenames.insert(0, tablename)
         self.db.run("ALTER SEQUENCE participants_id_seq RESTART WITH 1")
         self.db.run("INSERT INTO worker_coordination DEFAULT VALUES")
+
+
+    def make_payment_for_open_source(self, **info):
+        defaults = dict( amount='1000'
+                       , name='Alice Liddell'
+                       , transaction_id='deadbeef'
+                       , email_address='alice@example.com'
+                       , follow_up='monthly'
+                       , message_id=None  # TODO call gratipay._send and grab id
+                       , promotion_name='Wonderland'
+                       , promotion_url='http://www.example.com/'
+                       , promotion_twitter='thebestbutter'
+                       , promotion_message='Love me! Love me! Say that you love me!'
+                        )
+        for key, value in defaults.items():
+            if key not in info:
+                info[key] = value
+        return PaymentForOpenSource.insert(**info)
 
 
     def make_elsewhere(self, platform, user_id, user_name, **kw):
@@ -317,6 +336,7 @@ class Harness(unittest.TestCase):
         e_id = record_exchange(self.db, route, amount, fee, participant, 'pre', ref)
         record_exchange_result(self.db, e_id, status, error, participant)
         return e_id
+
 
     def make_payment(self, participant, team, amount, direction, payday, timestamp=utcnow()):
         """Factory for payment"""
