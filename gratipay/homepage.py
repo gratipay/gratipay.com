@@ -78,13 +78,17 @@ def _charge(app, parsed):
     raise NotImplementedError
 
 
-def _send(app, parsed):
-    raise NotImplementedError
-    app.email_queue.put()
+def _store(parsed, transaction_id):
+    return PaymentForOpenSource.insert(transaction_id=transaction_id, **parsed)
 
 
-def _store(parsed, transaction_id, message_id):
-    PaymentForOpenSource.insert(transaction_id=transaction_id, message_id=message_id, **parsed)
+def _send(app, parsed, payment_for_open_source):
+    app.email_queue.put( to=None
+                       , template='paid-for-open-source'
+                       , email=parsed['email_address']
+                       , amount=payment_for_open_source.amount
+                       , receipt_url=payment_for_open_source.receipt_url
+                        )
 
 
 def pay_for_open_source(app, raw, _parse=_parse, _charge=_charge, _send=_send, _store=_store):
@@ -94,11 +98,10 @@ def pay_for_open_source(app, raw, _parse=_parse, _charge=_charge, _send=_send, _
         if not transaction_id:
             errors.append('charging')
     if not errors:
-        message_id = None
+        payment_for_open_source = _store(parsed, transaction_id)
         if parsed['email_address']:
-            message_id = _send(app, parsed['email_address'])
-            if not message_id:
+            sent = _send(app, parsed['email_address'], payment_for_open_source)
+            if not sent:
                 errors.append('sending')
-        _store(parsed, transaction_id, message_id)
         parsed= {}
     return {'parsed': parsed, 'errors': errors}

@@ -4,8 +4,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import urllib
 
 import aspen.body_parsers
-from gratipay.homepage import pay_for_open_source, _parse, _store
+from gratipay.homepage import pay_for_open_source, _parse, _store, _send
 from gratipay.testing import Harness
+from gratipay.testing.email import QueuedEmailHarness
 from pytest import raises
 
 
@@ -51,7 +52,6 @@ class Parse(Harness):
         assert parsed == GOOD
         assert errors == []
 
-
     def test_bad_values_get_scrubbed_and_flagged(self):
         parsed, errors = _parse(BAD)
         assert parsed == SCRUBBED
@@ -64,8 +64,19 @@ class Store(Harness):
         parsed, errors = _parse(GOOD)
         fetch = lambda: self.db.one('SELECT * FROM payments_for_open_source')
         assert fetch() is None
-        _store(parsed, 'deadbeef', None)
+        _store(parsed, 'deadbeef')
         assert fetch().follow_up == 'monthly'
+
+
+class Send(QueuedEmailHarness):
+
+    def test_sends_receipt_link(self):
+        parsed, errors = _parse(GOOD)
+        payment_for_open_source = _store(parsed, 'deadbeef')
+        _send(self.app, parsed, payment_for_open_source)
+        msg = self.get_last_email()
+        assert msg['to'] == 'alice@example.com'
+        assert msg['subject'] == 'Payment for open source'
 
 
 class PayForOpenSource(Harness):

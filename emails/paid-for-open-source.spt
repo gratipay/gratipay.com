@@ -1,0 +1,19 @@
+{{ _("Payment for open source") }}
+
+[---] text/html
+{{ _( "Congratulations! You now have a moral license to use community-built open source software, because you paid {amount} to the open source community through Gratipay. Thank you for your purchase!"
+    , amount=format_currency(amount, 'USD')
+     ) }}
+<br>
+<br>
+<a href="{{ receipt_url }}"
+   style="{{ button_style }}">{{ _("View Receipt") }}</a>
+
+[---] text/plain
+{{ _( "Congratulations! You now have a moral license to use community-built open source software, because you paid {amount} to the open source community through Gratipay. Thank you for your purchase!"
+    , amount=format_currency(amount, 'USD')
+     ) }}
+
+{{ _("Follow this link to view your receipt:") }}
+
+{{ receipt_url }}

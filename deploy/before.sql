@@ -12,7 +12,6 @@ BEGIN;
     , name              text NOT NULL
     , follow_up         follow_up NOT NULL
     , email_address     text NOT NULL
-    , message_id        bigint REFERENCES email_messages(id)
 
     -- promotion details
     , promotion_name    text NOT NULL DEFAULT ''

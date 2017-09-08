@@ -149,7 +149,6 @@ class Harness(unittest.TestCase):
                        , transaction_id='deadbeef'
                        , email_address='alice@example.com'
                        , follow_up='monthly'
-                       , message_id=None  # TODO call gratipay._send and grab id
                        , promotion_name='Wonderland'
                        , promotion_url='http://www.example.com/'
                        , promotion_twitter='thebestbutter'
