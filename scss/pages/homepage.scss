@@ -23,7 +23,7 @@
     #content {
         text-align: center;
 
-        fieldset {
+        fieldset, input#credit-card-number {
             margin: 3em 0 0.5em;
             border: 1px solid $light-brown;
             border-style: solid none none;
@@ -82,7 +82,7 @@
                     padding: 0.5em 0 0;
                     margin: 0;
                 }
-                &.amount {
+                &.amount, input#credit-card-number {
                     margin-top: 1em;
 
                     label {
@@ -166,8 +166,8 @@
             }
             &.optional {
                 button {
-                    background: $light-gray;
-                    color: $medium-gray;
+                    background: lighten($green, 40%);
+                    color: $gray;
                 }
             }
             .promotion-gate {

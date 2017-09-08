@@ -47,10 +47,22 @@ Gratipay.homepage.submitForm = function(e) {
     });
 }
 
+jQuery.fn.extend({
+    toggleText:function(a,b){
+        if(this.html()==a){
+            this.html(b)
+        } 
+        else {
+            this.html(a)
+            $('#promotion-fields :input').val('');
+        }
+    }
+});
+
 Gratipay.homepage.openPromote = function(e) {
     e.preventDefault();
-    $('.promotion-gate').fadeOut();
-    $('.promotion-fields').slideDown(function() {
+    $('.promotion-fields').slideToggle(function() {
         $('.promotion-fields input:first').focus();
+        $('#toggle').toggleText('Provide Promotion Details','Cancel');
     });
 }
