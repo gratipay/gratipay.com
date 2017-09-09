@@ -5,9 +5,9 @@ BEGIN;
     , ctime     timestamptz NOT NULL DEFAULT now()
 
     -- card charge
-    , amount            bigint  NOT NULL
-    , transaction_id    text    UNIQUE DEFAULT NULL
-    , succeeded         bool    NOT NULL DEFAULT FALSE
+    , amount                    bigint  NOT NULL
+    , braintree_transaction_id  text    UNIQUE DEFAULT NULL
+    , braintree_result_message  text    DEFAULT NULL
 
     -- contact info
     , name              text        NOT NULL

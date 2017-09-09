@@ -2,7 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import gratipay
-import uuid as uuidlib
+from uuid import uuid4
 from postgres.orm import Model
 
 
@@ -11,12 +11,19 @@ class PaymentForOpenSource(Model):
     typname = "payments_for_open_source"
 
     def __repr__(self):
-        return '<PaymentForOpenSource: %s>'.format(repr(self.amount))
+        return '<PaymentForOpenSource: {}>'.format(repr(self.amount))
+
+
+    @property
+    def succeeded(self):
+        return self.braintree_result_message == ''
 
 
     @property
     def receipt_url(self):
-        return '{}/browse/payments/{}.html'.format(gratipay.base_url, self.uuid)
+        if not self.succeeded:
+            return None
+        return '{}/browse/payments/{}/receipt.html'.format(gratipay.base_url, self.uuid)
 
 
     @classmethod
@@ -36,7 +43,7 @@ class PaymentForOpenSource(Model):
                cursor=None):
         """Take baseline info and insert into the database.
         """
-        uuid = uuidlib.uuid4().hex
+        uuid = uuid4().hex
         return (cursor or cls.db).one("""
             INSERT INTO payments_for_open_source
                         (uuid, amount, name, follow_up, email_address,
@@ -51,11 +58,23 @@ class PaymentForOpenSource(Model):
     def process_result(self, result):
         """Take a Braintree API result and update the database.
         """
-        transaction_id = result.transaction.id if result.transaction else None
+        result_message = '' if result.is_success else result.message
+        transaction_id = None
+        if result.transaction:
+            transaction_id = result.transaction.id
+
+            # Verify that Braintree is sending us the right payload.
+            # TODO This is hard to test and it should be a pretty tight guarantee,
+            # so I am commenting out for now. :(
+            #pfos_uuid = result.transaction.custom_fields['pfos_uuid']
+            #assert pfos_uuid == self.uuid, (pfos_uuid, transaction_id)
+
         self.db.run("""
             UPDATE payments_for_open_source
-               SET transaction_id=%s
-                 , succeeded=%s
+               SET braintree_result_message=%s
+                 , braintree_transaction_id=%s
              WHERE uuid=%s
-        """, (transaction_id, result.is_success, self.uuid))
-        self.set_attributes(transaction_id=transaction_id, succeeded=result.is_success)
+        """, (result_message, transaction_id, self.uuid))
+        self.set_attributes( braintree_result_message=result_message
+                           , braintree_transaction_id=transaction_id
+                            )

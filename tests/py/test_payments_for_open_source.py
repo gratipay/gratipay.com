@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from gratipay.testing import Harness
+from gratipay.homepage import _charge
 from gratipay.models.payment_for_open_source import PaymentForOpenSource
+from gratipay.testing import Harness
 
 
-class Tests(Harness):
+class TestPaymentForOpenSource(Harness):
 
     def test_can_insert(self):
         self.make_payment_for_open_source()
@@ -17,20 +18,18 @@ class Tests(Harness):
 
     def test_can_update(self):
         pfos = self.make_payment_for_open_source()
-        assert pfos.transaction_id is None
+        assert pfos.braintree_transaction_id is None
+        assert pfos.braintree_result_message is None
         assert not pfos.succeeded
 
-        class Transaction:
-            id = 'deadbeef'
-        class Result:
-            transaction = Transaction()
-            is_success = True
-        result = Result()
+        _charge(pfos, 'fake-valid-nonce')
 
-        pfos.process_result(result)
-        assert pfos.transaction_id == 'deadbeef'
+        assert pfos.braintree_transaction_id is not None
+        assert pfos.braintree_result_message == ''
         assert pfos.succeeded
 
-        fresh = self.db.one("SELECT * FROM payments_for_open_source")
-        assert fresh.transaction_id == 'deadbeef'
+        fresh = self.db.one("SELECT pfos.*::payments_for_open_source "
+                            "FROM payments_for_open_source pfos")
+        assert fresh.braintree_transaction_id is not None
+        assert fresh.braintree_result_message == ''
         assert fresh.succeeded
