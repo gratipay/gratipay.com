@@ -3,38 +3,33 @@ Gratipay.homepage = {}
 Gratipay.homepage.initForm = function(clientAuthorization) {
     $form = $('#homepage #content form');
 
-    $submit= $form.find('button[type=submit]');
-    $submit.click(Gratipay.homepage.submitForm);
-
-    $chooseEcosystem = $form.find('.ecosystem-chooser button');
-    $chooseEcosystem.click(function(e) {
-        e.preventDefault();
-        Gratipay.notification('Not implemented.', 'error');
-    });
-
     $promote = $form.find('.promotion-gate button');
     $promote.click(Gratipay.homepage.openPromote);
+
+    function callback(createErr, instance) {
+        $submit = $form.find('button[type=submit]');
+        $submit.click(function(e) {
+            e.preventDefault();
+            instance.requestPaymentMethod(function(requestPaymentMethodErr, payload) {
+                Gratipay.homepage.submitFormWithNonce(payload.nonce);
+            });
+        });
+    }
 
     braintree.dropin.create({
       authorization: clientAuthorization,
       container: '#braintree-container'
-    }, function (createErr, instance) {
-      $submit.click(function () {
-        instance.requestPaymentMethod(function (requestPaymentMethodErr, payload) {
-          // Submit payload.nonce to your server
-        });
-      });
-    });
-}
+    }, callback);
+};
 
-Gratipay.homepage.submitForm = function(e) {
-    e.preventDefault();
 
-    $input = $(this)
-    $form = $(this).parent('form');
+Gratipay.homepage.submitFormWithNonce = function(nonce) {
+    $submit = $form.find('button[type=submit]');
+    $form = $('#homepage #content form');
     var data = new FormData($form[0]);
+    data.set('payment_method_nonce', nonce);
 
-    $input.prop('disable', true);
+    $submit.prop('disable', true);
 
     $.ajax({
         url: $form.attr('action'),
@@ -43,16 +38,20 @@ Gratipay.homepage.submitForm = function(e) {
         processData: false,
         contentType: false,
         dataType: 'json',
-        success: function (d) {
-            $('a.team_url').attr('href', d.team_url).text(d.team_url);
-            $('a.review_url').attr('href', d.review_url).text(d.review_url);
-            $('form').slideUp(500, function() {
-                $('.application-complete').slideDown(250);
-            });
-        },
-        error: [Gratipay.error, function() { $input.prop('disable', false); }]
+        success: function(data) {
+            console.log(data);
+            // Due to Aspen limitations we use 200 for both success and failure. :/
+            if (data.errors.length > 0) {
+                $submit.prop('disable', false);
+                Gratipay.notification(data.msg, 'error');
+            } else {
+                $('.payment-complete a.receipt').attr('href', data.receipt_url);
+                $('.payment-complete').slideDown(200);
+                $('form').slideUp(500);
+            }
+        }
     });
-}
+};
 
 Gratipay.homepage.openPromote = function(e) {
     e.preventDefault();
@@ -60,4 +59,4 @@ Gratipay.homepage.openPromote = function(e) {
     $('.promotion-fields').slideDown(function() {
         $('.promotion-fields input:first').focus();
     });
-}
+};

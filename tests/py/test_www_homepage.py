@@ -146,8 +146,6 @@ class PayForOpenSource(PayForOpenSourceHarness):
     def test_flags_errors_and_doesnt_store(self):
         assert self.fetch() is None
         result = pay_for_open_source(self.app, self.bad)
-        scrubbed = SCRUBBED.copy()
-        scrubbed.pop('payment_method_nonce')  # consumed
         assert result == {'errors': ALL, 'receipt_url': None}
         assert self.fetch() is None
 
@@ -177,3 +175,15 @@ class PayForOpenSource(PayForOpenSourceHarness):
         result = json.loads(response.body)
         assert not result['errors']
         assert result['receipt_url'].endswith('receipt.html')
+
+    def test_bad_post_gets_400(self):
+        response = self.client.POST('/', data=BAD, HTTP_ACCEPT=b'application/json')
+        assert response.code == 200  # :(
+        assert response.headers['Content-Type'] == 'application/json'
+        assert json.loads(response.body)['errors'] == ALL
+
+    def test_really_bad_post_gets_plain_400(self):
+        response = self.client.PxST('/', data={}, HTTP_ACCEPT=b'application/json')
+        assert response.code == 400
+        assert response.headers == {}
+        assert response.body == "Missing key: u'amount'"
