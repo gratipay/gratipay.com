@@ -170,17 +170,13 @@
                     color: $medium-gray;
                 }
             }
-            .promotion-gate {
-                p {
-                    margin-bottom: 0;
-                }
-                margin: 0;
-                button {
-                    margin-top: 30px;
-                }
+        }
+        .payment-complete {
+            .fine-print {
+                padding: 0;
             }
-            .promotion-fields {
-                display: none;
+            .twitter-container {
+                padding-top: 20px;
             }
         }
     }

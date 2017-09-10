@@ -38,7 +38,7 @@ def concat_files(files, root):
         catted.append('/*' + filepath.center(68) + '*/\n')
         catted.append('/' + ('*'*70) + '/' + '\n\n')
         content = open(os.path.join(root, filepath)).read()
-        content = content.decode('ascii')
+        content = content.decode('utf8')
         catted.append(content + '\n')
     return "".join(catted)
 

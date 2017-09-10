@@ -10,6 +10,7 @@ files = [
     'tipr.min.js',
     'bootstrap-dropdown.js',
     'jquery.mousewheel.min.js',
+    'braintree.min.js',
 ]
 
 js = http_caching.concat_files(files, vendor_root)

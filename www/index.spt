@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
+import json
+from aspen import Response
+from gratipay.homepage import pay_for_open_source
 [---]
+if not user.ANON:
+    website.redirect('/browse/projects')
 suppress_sidebar = True
 page_id = "homepage"
 banner = "Pay for Open Source"
+result = pay_for_open_source(website.app, request.body) if request.method == 'POST' else {}
+if result and result['errors']:
+    # Hmmm ... bit of an Aspen rough spot ... interaction w/ error.spt, skip it
+    # by overriding 200 for both success and failure. :(
+    result['msg'] = _("Sorry, we could not process your payment.")
+[---] application/json via json_dump
+result
 [---] text/html
 {% from "templates/nav-tabs.html" import nav_tabs with context %}
 {% extends "templates/base.html" %}
@@ -22,13 +34,52 @@ banner = "Pay for Open Source"
 {% endblock %}
 
 {% block scripts %}
-<script src="https://js.braintreegateway.com/web/dropin/1.7.0/js/dropin.min.js"></script>
-<script>$(document).ready(Gratipay.homepage.initForm);</script>
+<script>
+$(document).ready(function() {
+    Gratipay.homepage.initForm('{{ website.env.braintree_client_authorization }}');
+});
+</script>
 {{ super() }}
 {% endblock %}
 
 {% block content %}
-<form action="/companies/create.json" method="POST">
+
+<div class="payment-complete" style="display: none;">
+    <div class="description important-thing-at-the-top">
+        {{ _("Payment complete.") }}
+    </div>
+    <p class="instructions">
+        {{ _("Thank you for your purchase!") }}
+    </p>
+    <div class="important-button" class="important-button">
+        <a class="button large selected receipt" href="">{{ _("View Receipt") }}</a>
+    </div>
+    <p class="fine-print">
+        {{ _( "Email {support} with{br}any questions or feedback."
+            , support='<a href="mailto:support@gratipay.com">support@gratipay.com</a>'|safe
+            , br='<br>'|safe
+             ) }}
+    </p>
+    <div class="twitter-container">
+        <a class="twitter-share-button"
+           href="https://twitter.com/intent/tweet?text=We%20just%20paid%20for%20#opensource%20on%20@Gratipay!"
+           data-size="large" data-url="https://gratipay.com/"></a>
+        <script>window.twttr = (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
+          if (d.getElementById(id)) return t;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "https://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js, fjs);
+
+          t._e = [];
+          t.ready = function(f) { t._e.push(f); };
+          return t;
+        }(document, "script", "twitter-wjs"));</script>
+    </div>
+</div>
+
+<form action="/" method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
     <fieldset>
@@ -39,7 +90,7 @@ banner = "Pay for Open Source"
             <input type="text" name="amount" id="amount"
                    placeholder="{{ _("2,000 / person") }}"
                    required autofocus>
-            
+
             <p class="fine-print">
             {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}at your company.'
                 , br='<br>'|safe
@@ -49,24 +100,26 @@ banner = "Pay for Open Source"
             </p>
 
         </div>
-        
+
         <div id="braintree-container"></div>
     </fieldset>
 
-    <fieldset>
-        <legend>{{ _('Step 2 of 3') }}</legend>
+    <fieldset class="optional">
+        <legend>{{ _('Optional') }}</legend>
+
         <h2>{{ _('Who are you?') }}</h2>
+        <p class="fine-print">{{  _('And do you wish to subscribe to our newsletter?') }}</p>
 
         <div class="field">
             <label for="name">{{ _('Your Name') }}</label>
-            <input name="name" id="name" type="text" required>
+            <input name="name" id="name" type="text">
         </div>
 
         <div class="field email-address">
             <label for="email-address">{{ _('Your Email Address') }}</label>
-            <input name="email-address" id="email-address" type="text" required>
+            <input name="email_address" id="email-address" type="text">
             <p class="fine-print">
-                {{ _('You will get a verification link before we finalize your payment.') }}
+                {{ _('You will get a receipt for your payment.') }}
             </p>
         </div>
 
@@ -75,23 +128,23 @@ banner = "Pay for Open Source"
                 <legend>{{ _('Follow-up') }}</legend>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow-up" id="follow-up-monthly" value="monthly">
+                    <input type="radio" name="follow_up" id="follow-up-monthly" value="monthly">
                     <label for="follow-up-monthly">{{ _('Monthly') }}</label>
                 </div>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow-up" id="follow-up-quarterly" 
+                    <input type="radio" name="follow_up" id="follow-up-quarterly"
                            value="quarterly" checked>
                     <label for="follow-up-quarterly">{{ _('Quarterly') }}</label>
                 </div>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow-up" id="follow-up-yearly" value="yearly">
+                    <input type="radio" name="follow_up" id="follow-up-yearly" value="yearly">
                     <label for="follow-up-yearly">{{ _('Yearly') }}</label>
                 </div>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow-up" id="follow-up-never" value="never">
+                    <input type="radio" name="follow_up" id="follow-up-never" value="never">
                     <label for="follow-up-never">{{ _('Never') }}</label>
                 </div>
 
@@ -100,81 +153,51 @@ banner = "Pay for Open Source"
                 </p>
             </fieldset>
         </div>
-    </fieldset>
-
-    <fieldset class="optional">
-        <legend>{{ _('Optional') }}</legend>
-        <h2>{{ _('Ecosystems') }}</h2>
-        <p class="fine-print">
-            {{ _('Which do you value most?{br}(JavaScript, Python, etc.)', br='<br>'|safe) }}
-        </p>
-
-        <div class="important-button">
-            <button class="large">{{ _('Choose an Ecosystem') }}</button>
-        </div>
-        <div class="preferences"></div>
 
 
         <h2>{{ _('Promotion') }}</h2>
+        <p class="fine-print">{{  _('We want to brag about you! May we?') }}</p>
 
         <div class="promotion-fields">
-            <p class="fine-print">{{  _('Thanks! We are excited to brag about you!') }}</p>
-
             <div class="field">
-                <label label="company">{{ _("Your Company Name") }}</label>
-                <input type="text" name="promote-name" id="promote-name">
+                <label for="promotion-name">{{ _("Your Company Name") }}</label>
+                <input type="text" name="promotion_name" id="promotion-name">
             </div>
 
             <div class="field">
-                <label label="company">{{ _("Your Landing Page URL") }}</label>
-                <input type="text" name="promote-url" id="promote-url">
+                <label for="promotion-url">{{ _("Your Landing Page URL") }}</label>
+                <input type="text" name="promotion_url" id="promotion-url">
             </div>
 
             <div class="field">
-                <label label="company">{{ _("Your Company Twitter Handle") }}</label>
-                <input type="text" name="promote-twitter" id="promote-twitter">
+                <label for="promotion-twitter">{{ _("Your Company Twitter Handle") }}</label>
+                <input type="text" name="promotion_twitter" id="promotion-twitter">
             </div>
 
             <div class="field">
-                <label label="company">{{ _("Your Message to the Open Source Community") }}</label>
-                <input type="text" name="promote-message" id="promote-message">
+                <label for="promotion-message">
+                    {{ _("Your Message to the Open Source Community") }}</label>
+                <input type="text" name="promotion_message" id="promotion-message">
             </div>
         </div>
-
-        <div class="important-button promotion-gate">
-            <p class="fine-print">{{  _('We want to brag about you! May we?') }}</p>
-            <button class="large">{{ _('Provide Promotion Details') }}</button>
-        </div>
-
     </fieldset>
 
-    <fieldset>
+    <fieldset class="submit">
         <legend>{{ _('Submit Form') }}</legend>
 
         <div class="important-button">
-            <button type="submit" class="apply selected large">
+            <button type="submit" class="selected large">
                 {{ _("Pay for Open Source") }}
             </button>
         </div>
         <p class="fine-print">
-            {{ _( "By submitting this form you agree to our {0}terms of service{1}."
-                , '<a href="/about/policies/terms-of-service">'|safe
-                , '</a>'|safe
+            {{ _( "By submitting this form you agree to our {a}terms of service{_a}."
+                , a='<a href="/about/policies/terms-of-service">'|safe
+                , _a='</a>'|safe
                  ) }}
         </p>
     </fieldset>
 
 </form>
-
-<div class="application-complete" style="display: none;">
-    <p>{{ _("Thanks! Your public project page is:") }}</p>
-    <p><a href="" class="team_url"></a></p>
-    <p>{{ _("And your public review ticket is:") }}</p>
-    <p><a href="" class="review_url"></a></p>
-    <p>{{ _( "You can watch and participate in our review process there. We will send a notification to {email} when we finish our review."
-           , email=user.participant.email_address
-            ) }}</p>
-    <p>{{ _("Thanks for applying!") }}</p>
-</div>
 
 {% endblock %}
