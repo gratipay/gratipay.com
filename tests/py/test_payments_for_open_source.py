@@ -22,7 +22,7 @@ class TestPaymentForOpenSource(Harness):
         assert pfos.braintree_result_message is None
         assert not pfos.succeeded
 
-        _charge(pfos, 'fake-valid-nonce')
+        _charge(self.app, pfos, 'fake-valid-nonce')
 
         assert pfos.braintree_transaction_id is not None
         assert pfos.braintree_result_message == ''

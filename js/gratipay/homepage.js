@@ -2,21 +2,44 @@ Gratipay.homepage = {}
 
 Gratipay.homepage.initForm = function(clientAuthorization) {
     $form = $('#homepage #content form');
+    $submit = $form.find('button[type=submit]');
 
-    function callback(createErr, instance) {
-        $submit = $form.find('button[type=submit]');
+    if (clientAuthorization === undefined) {    // Offline mode
+
+        $('#braintree-container').addClass('offline').html(Gratipay.jsonml(['div',
+            ['div', {'class': 'field amount'},
+                ['label', {'for': 'nonce'}, 'Nonce'],
+                ['input', {'id': 'nonce', 'value': 'fake-valid-nonce', 'required': true}, 'Nonce'],
+            ],
+            ['p', {'class': 'fine-print'}, "If you're seeing this on gratipay.com, we screwed up."]
+        ]));
+
         $submit.click(function(e) {
             e.preventDefault();
-            instance.requestPaymentMethod(function(requestPaymentMethodErr, payload) {
-                Gratipay.homepage.submitFormWithNonce(payload.nonce);
-            });
+            nonce = $('#braintree-container input').val();
+            Gratipay.homepage.submitFormWithNonce(nonce);
         });
-    }
 
-    braintree.dropin.create({
-      authorization: clientAuthorization,
-      container: '#braintree-container'
-    }, callback);
+    } else {                                    // Online mode (sandbox or production)
+
+        function braintreeInitCallback(createErr, instance) {
+            if (createErr) {
+                $('#braintree-container').addClass('failed').text('Failed to load Braintree.');
+            } else {
+                $submit.click(function(e) {
+                    e.preventDefault();
+                    instance.requestPaymentMethod(function(requestPaymentMethodErr, payload) {
+                        Gratipay.homepage.submitFormWithNonce(payload.nonce);
+                    });
+                });
+            }
+        }
+
+        braintree.dropin.create({
+            authorization: clientAuthorization,
+            container: '#braintree-container'
+        }, braintreeInitCallback);
+    }
 };
 
 
@@ -36,7 +59,6 @@ Gratipay.homepage.submitFormWithNonce = function(nonce) {
         contentType: false,
         dataType: 'json',
         success: function(data) {
-            console.log(data);
             // Due to Aspen limitations we use 200 for both success and failure. :/
             if (data.errors.length > 0) {
                 $submit.prop('disable', false);

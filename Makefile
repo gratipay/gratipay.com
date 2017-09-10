@@ -6,7 +6,7 @@ bin_dir := $(shell $(python) -c 'import sys; bin = "Scripts" if sys.platform == 
 env_bin := env/$(bin_dir)
 venv := "./vendor/virtualenv-15.1.0.py"
 doc_env_files := defaults.env,docs/doc.env,docs/local.env
-test_env_files := defaults.env,tests/defaults.env,tests/local.env
+test_env_files := defaults.env,local.env,tests/defaults.env,tests/local.env
 pip := $(env_bin)/pip
 honcho := $(env_bin)/honcho
 honcho_run := $(honcho) run -e defaults.env,local.env

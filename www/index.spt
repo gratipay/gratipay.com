@@ -36,7 +36,11 @@ result
 {% block scripts %}
 <script>
 $(document).ready(function() {
+    {% if website.env.load_braintree_form_on_homepage %}
     Gratipay.homepage.initForm('{{ website.env.braintree_client_authorization }}');
+    {% else %}
+    Gratipay.homepage.initForm();
+    {% endif %}
 });
 </script>
 {{ super() }}
@@ -46,10 +50,10 @@ $(document).ready(function() {
 
 <div class="payment-complete" style="display: none;">
     <div class="description important-thing-at-the-top">
-        {{ _("Payment complete.") }}
+        {{ _("Payment complete!") }} &#x1f483;
     </div>
     <p class="instructions">
-        {{ _("Thank you for your purchase!") }}
+        {{ _("Thank you for your payment!") }}
     </p>
     <div class="important-button" class="important-button">
         <a class="button large selected receipt" href="">{{ _("View Receipt") }}</a>

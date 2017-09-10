@@ -103,14 +103,14 @@ class GoodCharge(Harness):
 
     def test_bad_nonce_fails(self):
         pfos = self.make_payment_for_open_source()
-        _charge(pfos, 'deadbeef')
+        _charge(self.app, pfos, 'deadbeef')
         assert not pfos.succeeded
 
 class BadCharge(Harness):
 
     def test_good_nonce_succeeds(self):
         pfos = self.make_payment_for_open_source()
-        _charge(pfos, 'fake-valid-nonce')
+        _charge(self.app, pfos, 'fake-valid-nonce')
         assert pfos.succeeded
 
 

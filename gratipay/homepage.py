@@ -3,7 +3,6 @@
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import braintree
 from gratipay import utils
 from gratipay.models.payment_for_open_source import PaymentForOpenSource
 
@@ -84,13 +83,13 @@ def _store(parsed):
     return PaymentForOpenSource.insert(**parsed)
 
 
-def _charge(pfos, payment_method_nonce):
-    charge = braintree.Transaction.sale
-    result = charge({ 'amount': pfos.amount
-                    , 'payment_method_nonce': payment_method_nonce
-                    , 'options': {'submit_for_settlement': True}
-                    , 'custom_fields': {'pfos_uuid': pfos.uuid}
-                     })
+def _charge(app, pfos, nonce):
+    params = { 'amount': pfos.amount
+             , 'payment_method_nonce': nonce
+             , 'options': {'submit_for_settlement': True}
+             , 'custom_fields': {'pfos_uuid': pfos.uuid}
+              }
+    result = app.pfos_card_charger.charge(params)
     pfos.process_result(result)
 
 
@@ -109,7 +108,7 @@ def pay_for_open_source(app, raw):
     if not errors:
         payment_method_nonce = parsed.pop('payment_method_nonce')
         pfos = _store(parsed)
-        _charge(pfos, payment_method_nonce)
+        _charge(app, pfos, payment_method_nonce)
         if pfos.succeeded:
             out['receipt_url'] = pfos.receipt_url
             if pfos.email_address:

@@ -23,6 +23,34 @@
     #content {
         text-align: center;
 
+        .payment-complete {
+            .fine-print {
+                padding: 0;
+            }
+            .twitter-container {
+                padding-top: 20px;
+            }
+        }
+
+        #braintree-container {
+            min-height: 260px;
+            &.failed {
+                background: red;
+                color: white;
+                font: normal 24px/24px $Mono;
+                padding-top: 118px;
+            }
+            &.offline {
+                background: orange;
+                color: white;
+                padding-top: 78px;
+
+                .fine-print {
+                    color: blue;
+                }
+            }
+        }
+
         fieldset {
             margin: 3em 0 0.5em;
             border: 1px solid $light-brown;
@@ -169,14 +197,6 @@
                     background: $light-gray;
                     color: $medium-gray;
                 }
-            }
-        }
-        .payment-complete {
-            .fine-print {
-                padding: 0;
-            }
-            .twitter-container {
-                padding-top: 20px;
             }
         }
     }
