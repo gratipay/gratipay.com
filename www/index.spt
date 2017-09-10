@@ -12,7 +12,7 @@ result = pay_for_open_source(website.app, request.body) if request.method == 'PO
 if result and result['errors']:
     # Hmmm ... bit of an Aspen rough spot ... interaction w/ error.spt, skip it
     # by overriding 200 for both success and failure. :(
-    result['msg'] = _("Sorry, we could not process your payment.")
+    result['msg'] = _("Eep! Mind looking over your info for us?")
 [---] application/json via json_dump
 result
 [---] text/html
@@ -53,7 +53,7 @@ $(document).ready(function() {
         {{ _("Payment complete!") }} &#x1f483;
     </div>
     <p class="instructions">
-        {{ _("Thank you for your payment!") }}
+        {{ _("Thank you for paying for open source!") }}
     </p>
     <div class="important-button" class="important-button">
         <a class="button large selected receipt" href="">{{ _("View Receipt") }}</a>
@@ -95,6 +95,10 @@ $(document).ready(function() {
                    placeholder="{{ _("2,000 / person") }}"
                    required autofocus>
 
+            <p class="fine-print help">
+                {{ _("Please enter a whole dollar amount (minimum $10, no punctuation).") }}
+            </p>
+
             <p class="fine-print">
             {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}at your company.'
                 , br='<br>'|safe
@@ -105,7 +109,12 @@ $(document).ready(function() {
 
         </div>
 
-        <div id="braintree-container"></div>
+        <div class="field charging">
+            <div id="braintree-container"></div>
+            <p class="fine-print help">
+                {{ _("We weren't able to process your card.") }}
+            </p>
+        </div>
     </fieldset>
 
     <fieldset class="optional">
@@ -114,20 +123,26 @@ $(document).ready(function() {
         <h2>{{ _('Who are you?') }}</h2>
         <p class="fine-print">{{  _('And do you wish to subscribe to our newsletter?') }}</p>
 
-        <div class="field">
+        <div class="field name">
             <label for="name">{{ _('Your Name') }}</label>
             <input name="name" id="name" type="text">
-        </div>
-
-        <div class="field email-address">
-            <label for="email-address">{{ _('Your Email Address') }}</label>
-            <input name="email_address" id="email-address" type="text">
-            <p class="fine-print">
-                {{ _('You will get a receipt for your payment.') }}
+            <p class="fine-print help">
+                {{ _("Please enter a value shorter than 256 characters.") }}
             </p>
         </div>
 
-        <div class="field follow-up">
+        <div class="field email_address">
+            <label for="email-address">{{ _('Your Email Address') }}</label>
+            <input name="email_address" id="email-address" type="text">
+            <p class="fine-print help">
+                {{ _("Please enter a valid email address shorter than 255 characters.") }}
+            </p>
+            <p class="fine-print">
+                {{ _('You will get a link to a receipt for your payment.') }}
+            </p>
+        </div>
+
+        <div class="field follow_up">
             <fieldset>
                 <legend>{{ _('Follow-up') }}</legend>
 
@@ -152,6 +167,10 @@ $(document).ready(function() {
                     <label for="follow-up-never">{{ _('Never') }}</label>
                 </div>
 
+                <p class="fine-print help">
+                    {{ _("I am surprised that you are seeing this message.") }}
+                </p>
+
                 <p class="fine-print">
                     {{ _('You will get a progress report, with a reminder to pay again.') }}
                 </p>
@@ -160,28 +179,40 @@ $(document).ready(function() {
 
 
         <h2>{{ _('Promotion') }}</h2>
-        <p class="fine-print">{{  _('We want to brag about you! May we?') }}</p>
+        <p class="fine-print">{{  _('We (probably) want to brag about you! May we?') }}</p>
 
         <div class="promotion-fields">
-            <div class="field">
+            <div class="field promotion_name">
                 <label for="promotion-name">{{ _("Your Company Name") }}</label>
                 <input type="text" name="promotion_name" id="promotion-name">
+                <p class="fine-print help">
+                    {{ _("Please enter a value 32 characters or shorter.") }}
+                </p>
             </div>
 
-            <div class="field">
+            <div class="field promotion_url">
                 <label for="promotion-url">{{ _("Your Landing Page URL") }}</label>
                 <input type="text" name="promotion_url" id="promotion-url">
+                <p class="fine-print help">
+                    {{ _("Please enter a valid URL shorter than 256 characters.") }}
+                </p>
             </div>
 
-            <div class="field">
+            <div class="field promotion_twitter">
                 <label for="promotion-twitter">{{ _("Your Company Twitter Handle") }}</label>
                 <input type="text" name="promotion_twitter" id="promotion-twitter">
+                <p class="fine-print help">
+                    {{ _("Please enter a valid Twitter handle.") }}
+                </p>
             </div>
 
-            <div class="field">
+            <div class="field promotion_message">
                 <label for="promotion-message">
                     {{ _("Your Message to the Open Source Community") }}</label>
                 <input type="text" name="promotion_message" id="promotion-message">
+                <p class="fine-print help">
+                    {{ _("Please limit your message to 128 characters.") }}
+                </p>
             </div>
         </div>
     </fieldset>

@@ -46,11 +46,11 @@ PARTIAL = { 'amount': '1000'
            }
 SCRUBBED = { 'amount': '1000'
            , 'payment_method_nonce': ''
-           , 'name': 'Alice Liddell' * 19 + 'Alice Lid'
+           , 'name': 'Alice Liddell' * 19 + 'Alice Li'
            , 'email_address': 'alice' * 51
            , 'follow_up': 'monthly'
            , 'promotion_name': 'WonderlandWonderlandWonderlandWo'
-           , 'promotion_url': 'http://www.example.com/' + 'cheese' * 38 + 'chees'
+           , 'promotion_url': 'http://www.example.com/' + 'cheese' * 38 + 'chee'
            , 'promotion_twitter': 'thebestbutterthebestbutterthebes'
            , 'promotion_message': 'Love me!' * 16
             }

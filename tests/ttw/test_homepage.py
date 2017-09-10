@@ -60,6 +60,17 @@ class Tests(BrowserHarness):
                        'thebestbutter', 'Love me! Love me! Say that you love me!')
         assert self.submit_succeeds()
 
-    def test_optional_are_optional(self):
+    def test_options_are_optional(self):
         self.fill_form('537', '4242424242424242', '1020', '123')
         assert self.submit_succeeds()
+
+    def test_errors_are_handled(self):
+        self.fill_form('1,000', '4242424242424242', '1020', '123', 'Alice Liddell',
+                       'alice@example', 'Wonderland',
+                       'htp://www.example.com/', 'thebestbutter', 'Love me!')
+        self.css('fieldset.submit button').click()
+        assert self.wait_for_error() == 'Eep! Mind looking over your info for us?'
+        assert self.css('.field.email_address').has_class('error')
+        assert self.css('.field.promotion_url').has_class('error')
+        assert not self.css('.field.email_address').has_class('amount')
+        assert self.fetch() is None

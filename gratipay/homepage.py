@@ -28,8 +28,8 @@ def _parse(raw):
 
     # name
     name = x('name')
-    if len(name) > 256:
-        name = name[:256]
+    if len(name) > 255:
+        name = name[:255]
         errors.append('name')
 
     # email address
@@ -51,8 +51,8 @@ def _parse(raw):
 
     promotion_url = x('promotion_url')
     is_link = lambda x: (x.startswith('http://') or x.startswith('https://')) and '.' in x
-    if len(promotion_url) > 256 or (promotion_url and not is_link(promotion_url)):
-        promotion_url = promotion_url[:256]
+    if len(promotion_url) > 255 or (promotion_url and not is_link(promotion_url)):
+        promotion_url = promotion_url[:255]
         errors.append('promotion_url')
 
     promotion_twitter = x('promotion_twitter')

@@ -123,13 +123,16 @@
                         width: 50%;
                         text-align: center;
                     }
+                    .help {
+                        text-align: center;
+                    }
                 }
-                &.email-address, &.follow-up {
+                &.email_address, &.follow_up {
                     .fine-print {
                         text-align: left;
                     }
                 }
-                &.follow-up {
+                &.follow_up {
                     .fancy-radio {
                         position: relative;
                         display: inline-block;
@@ -189,6 +192,20 @@
                                 transform: scale(1);
                             }
                         }
+                    }
+                }
+                .help {
+                    display: none;
+                    color: red;
+                    text-align: left;
+                }
+                &.error {
+                    .help {
+                        display: block;
+                    }
+                    input {
+                        border-color: red;
+                        background: pink;
                     }
                 }
             }

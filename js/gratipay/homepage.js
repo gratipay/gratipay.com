@@ -1,8 +1,9 @@
 Gratipay.homepage = {}
 
 Gratipay.homepage.initForm = function(clientAuthorization) {
-    $form = $('#homepage #content form');
-    $submit = $form.find('button[type=submit]');
+    var self = this;
+    self.$form = $('#homepage #content form');
+    self.$submit = self.$form.find('button[type=submit]');
 
     if (clientAuthorization === undefined) {    // Offline mode
 
@@ -14,10 +15,10 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
             ['p', {'class': 'fine-print'}, "If you're seeing this on gratipay.com, we screwed up."]
         ]));
 
-        $submit.click(function(e) {
+        self.$submit.click(function(e) {
             e.preventDefault();
             nonce = $('#braintree-container input').val();
-            Gratipay.homepage.submitFormWithNonce(nonce);
+            self.submitFormWithNonce(nonce);
         });
 
     } else {                                    // Online mode (sandbox or production)
@@ -26,10 +27,10 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
             if (createErr) {
                 $('#braintree-container').addClass('failed').text('Failed to load Braintree.');
             } else {
-                $submit.click(function(e) {
+                self.$submit.click(function(e) {
                     e.preventDefault();
                     instance.requestPaymentMethod(function(requestPaymentMethodErr, payload) {
-                        Gratipay.homepage.submitFormWithNonce(payload.nonce);
+                        self.submitFormWithNonce(payload.nonce);
                     });
                 });
             }
@@ -44,15 +45,14 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
 
 
 Gratipay.homepage.submitFormWithNonce = function(nonce) {
-    $submit = $form.find('button[type=submit]');
-    $form = $('#homepage #content form');
-    var data = new FormData($form[0]);
+    var self = this;
+    var data = new FormData(self.$form[0]);
     data.set('payment_method_nonce', nonce);
 
-    $submit.prop('disable', true);
+    self.$submit.prop('disable', true);
 
     $.ajax({
-        url: $form.attr('action'),
+        url: self.$form.attr('action'),
         type: 'POST',
         data: data,
         processData: false,
@@ -61,12 +61,16 @@ Gratipay.homepage.submitFormWithNonce = function(nonce) {
         success: function(data) {
             // Due to Aspen limitations we use 200 for both success and failure. :/
             if (data.errors.length > 0) {
-                $submit.prop('disable', false);
+                self.$submit.prop('disable', false);
                 Gratipay.notification(data.msg, 'error');
+                for (var i=0, fieldName; fieldName=data.errors[i]; i++) {
+                    $('.'+fieldName, self.$form).addClass('error');
+                }
             } else {
                 $('.payment-complete a.receipt').attr('href', data.receipt_url);
-                $('.payment-complete').slideDown(200);
-                $('form').slideUp(500);
+                $('form').slideUp(500, function() {
+                    $('.payment-complete').fadeIn(500);
+                });
             }
         }
     });
