@@ -51,7 +51,8 @@ ALL = ['amount', 'payment_method_nonce', 'name', 'email_address', 'follow_up',
 class PayForOpenSourceHarness(Harness):
 
     def fetch(self):
-        return self.db.one('SELECT * FROM payments_for_open_source')
+        return self.db.one('SELECT pfos.*::payments_for_open_source '
+                           'FROM payments_for_open_source pfos')
 
 
 class Parse(Harness):
@@ -86,14 +87,16 @@ class Parse(Harness):
 class GoodCharge(Harness):
 
     def test_bad_nonce_fails(self):
-        result = _charge('10', 'deadbeef')
-        assert not result.is_success
+        pfos = self.make_payment_for_open_source()
+        _charge(pfos, 'deadbeef')
+        assert not pfos.succeeded
 
 class BadCharge(Harness):
 
     def test_good_nonce_succeeds(self):
-        result = _charge('10', 'fake-valid-nonce')
-        assert result.is_success
+        pfos = self.make_payment_for_open_source()
+        _charge(pfos, 'fake-valid-nonce')
+        assert pfos.succeeded
 
 
 class Store(PayForOpenSourceHarness):
@@ -112,7 +115,7 @@ class Send(QueuedEmailHarness):
         parsed, errors = _parse(GOOD)
         parsed.pop('payment_method_nonce')
         payment_for_open_source = _store(parsed)
-        _send(self.app, parsed['email_address'], payment_for_open_source)
+        _send(self.app, payment_for_open_source)
         msg = self.get_last_email()
         assert msg['to'] == 'alice@example.com'
         assert msg['subject'] == 'Payment for open source'
@@ -136,16 +139,17 @@ class PayForOpenSource(PayForOpenSourceHarness):
     def test_pays_for_open_source(self):
         assert self.fetch() is None
         result = pay_for_open_source(self.app, self.good)
-        assert result == {'parsed': {}, 'errors': []}
+        assert not result['errors']
+        assert result['receipt_url'].endswith('receipt.html')
         assert self.fetch().succeeded
 
-    def test_scrubs_and_flags_errors_and_also_stores(self):
+    def test_flags_errors_and_doesnt_store(self):
         assert self.fetch() is None
         result = pay_for_open_source(self.app, self.bad)
         scrubbed = SCRUBBED.copy()
         scrubbed.pop('payment_method_nonce')  # consumed
-        assert result == {'parsed': scrubbed, 'errors': ALL}
-        assert self.fetch().name.endswith('Alice Lid')
+        assert result == {'errors': ALL, 'receipt_url': None}
+        assert self.fetch() is None
 
     def test_flags_errors_with_no_transaction_id(self):
         error = GOOD.copy()
@@ -154,7 +158,7 @@ class PayForOpenSource(PayForOpenSourceHarness):
         assert result['errors'] == ['charging']
         pfos = self.fetch()
         assert not pfos.succeeded
-        assert pfos.transaction_id is None
+        assert pfos.braintree_transaction_id is None
 
     def test_flags_failures_with_transaction_id(self):
         failure = GOOD.copy()
@@ -163,11 +167,13 @@ class PayForOpenSource(PayForOpenSourceHarness):
         assert result['errors'] == ['charging']
         pfos = self.fetch()
         assert not pfos.succeeded
-        assert pfos.transaction_id is not None
+        assert pfos.braintree_transaction_id is not None
 
 
     def test_post_gets_json(self):
-        response = self.client.POST('/', data=GOOD)
+        response = self.client.POST('/', data=GOOD, HTTP_ACCEPT=b'application/json')
         assert response.code == 200
         assert response.headers['Content-Type'] == 'application/json'
-        assert json.loads(response.body) == {'parsed': {}, 'errors': []}
+        result = json.loads(response.body)
+        assert not result['errors']
+        assert result['receipt_url'].endswith('receipt.html')

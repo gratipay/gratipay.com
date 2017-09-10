@@ -13,10 +13,10 @@ def _parse(raw):
     """
 
     errors = []
-    x = lambda f: raw.get(f, '').strip()
+    x = lambda f: raw[f].strip()  # KeyError -> 400
 
     # amount
-    amount = x('amount') or '0'
+    amount = x('amount')
     if (not amount.isdigit()) or (int(amount) < 10):
         errors.append('amount')
         amount = ''.join(x for x in amount.split('.')[0] if x.isdigit())
@@ -84,32 +84,36 @@ def _store(parsed):
     return PaymentForOpenSource.insert(**parsed)
 
 
-def _charge(amount, payment_method_nonce, _sale=braintree.Transaction.sale):
-    return _sale({ 'amount': amount
-                 , 'payment_method_nonce': payment_method_nonce
-                 , 'options': {'submit_for_settlement': True}
-                  })
+def _charge(pfos, payment_method_nonce):
+    charge = braintree.Transaction.sale
+    result = charge({ 'amount': pfos.amount
+                    , 'payment_method_nonce': payment_method_nonce
+                    , 'options': {'submit_for_settlement': True}
+                    , 'custom_fields': {'pfos_uuid': pfos.uuid}
+                     })
+    pfos.process_result(result)
 
 
-def _send(app, email_address, payment_for_open_source):
+def _send(app, pfos):
     app.email_queue.put( to=None
                        , template='paid-for-open-source'
-                       , email=email_address
-                       , amount=payment_for_open_source.amount
-                       , receipt_url=payment_for_open_source.receipt_url
+                       , email=pfos.email_address
+                       , amount=pfos.amount
+                       , receipt_url=pfos.receipt_url
                         )
 
 
 def pay_for_open_source(app, raw):
     parsed, errors = _parse(raw)
-    payment_method_nonce = parsed.pop('payment_method_nonce')
-    payment_for_open_source = _store(parsed)
+    out = {'errors': errors, 'receipt_url': None}
     if not errors:
-        result = _charge(parsed['amount'], payment_method_nonce)
-        payment_for_open_source.process_result(result)
-        if not payment_for_open_source.succeeded:
-            errors.append('charging')
-    if not errors and parsed['email_address']:
-        _send(app, parsed['email_address'], payment_for_open_source)
-        parsed = {}  # no need to populate form anymore
-    return {'parsed': parsed, 'errors': errors}
+        payment_method_nonce = parsed.pop('payment_method_nonce')
+        pfos = _store(parsed)
+        _charge(pfos, payment_method_nonce)
+        if pfos.succeeded:
+            out['receipt_url'] = pfos.receipt_url
+            if pfos.email_address:
+                _send(app, pfos)
+        else:
+            out['errors'].append('charging')
+    return out
