@@ -52,7 +52,7 @@ def _parse(raw):
 
     promotion_url = x('promotion_url')
     is_link = lambda x: (x.startswith('http://') or x.startswith('https://')) and '.' in x
-    if len(promotion_url) > 256 or not is_link(promotion_url):
+    if len(promotion_url) > 256 or (promotion_url and not is_link(promotion_url)):
         promotion_url = promotion_url[:256]
         errors.append('promotion_url')
 

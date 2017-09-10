@@ -9,8 +9,9 @@ class Tests(BrowserHarness):
         return self.db.one('SELECT pfos.*::payments_for_open_source '
                            'FROM payments_for_open_source pfos')
 
-    def fill_form(self, amount, credit_card_number, expiration, cvv, name, email_address,
-                  follow_up, promotion_name, promotion_url, promotion_twitter, promotion_message):
+    def fill_form(self, amount, credit_card_number, expiration, cvv,
+                  name='', email_address='',
+                  promotion_name='', promotion_url='', promotion_twitter='', promotion_message=''):
         self.wait_for('.braintree-form-number')
         self.fill('amount', amount)
         with self.get_iframe('braintree-hosted-field-number') as iframe:
@@ -19,12 +20,12 @@ class Tests(BrowserHarness):
             iframe.fill('expiration', expiration)
         with self.get_iframe('braintree-hosted-field-cvv') as iframe:
             iframe.fill('cvv', cvv)
-        self.fill('name', name)
-        self.fill('email_address', email_address)
-        self.fill('promotion_name', promotion_name)
-        self.fill('promotion_url', promotion_url)
-        self.fill('promotion_twitter', promotion_twitter)
-        self.fill('promotion_message', promotion_message)
+        if name: self.fill('name', name)
+        if email_address: self.fill('email_address', email_address)
+        if promotion_name: self.fill('promotion_name', promotion_name)
+        if promotion_url: self.fill('promotion_url', promotion_url)
+        if promotion_twitter: self.fill('promotion_twitter', promotion_twitter)
+        if promotion_message: self.fill('promotion_message', promotion_message)
 
 
     def test_loads_for_anon(self):
@@ -38,11 +39,18 @@ class Tests(BrowserHarness):
         assert self.css('#banner h1').html == 'Browse'
         assert self.css('.you-are a').html.strip()[:6] == '~alice'
 
-    def test_anon_can_post(self):
-        self.fill_form('537', '4242424242424242', '1020', '123', 'Alice Liddell',
-                       'alice@example.com', 'monthly', 'Wonderland', 'http://www.example.com/',
-                       'thebestbutter', 'Love me! Love me! Say that you love me!')
+    def submit_succeeds(self):
         self.css('fieldset.submit button').click()
         self.wait_for('.payment-complete', 10)
-        assert self.css('.payment-complete .description').text == 'Payment complete.'
-        assert self.fetch().succeeded
+        told_them = self.css('.payment-complete .description').text == 'Payment complete.'
+        return self.fetch().succeeded and told_them
+
+    def test_anon_can_post(self):
+        self.fill_form('537', '4242424242424242', '1020', '123', 'Alice Liddell',
+                       'alice@example.com', 'Wonderland', 'http://www.example.com/',
+                       'thebestbutter', 'Love me! Love me! Say that you love me!')
+        assert self.submit_succeeds()
+
+    def test_optional_are_optional(self):
+        self.fill_form('537', '4242424242424242', '1020', '123')
+        assert self.submit_succeeds()

@@ -34,6 +34,16 @@ BAD = { 'amount': '1,000'
       , 'promotion_twitter': 'thebestbutter' * 10
       , 'promotion_message': 'Love me!' * 50
        }
+PARTIAL = { 'amount': '1000'
+          , 'payment_method_nonce': 'fake-valid-nonce'
+          , 'name': ''
+          , 'email_address': ''
+          , 'follow_up': 'quarterly'
+          , 'promotion_name': ''
+          , 'promotion_url': ''
+          , 'promotion_twitter': ''
+          , 'promotion_message': ''
+           }
 SCRUBBED = { 'amount': '1000'
            , 'payment_method_nonce': ''
            , 'name': 'Alice Liddell' * 19 + 'Alice Lid'
@@ -66,6 +76,11 @@ class Parse(Harness):
         parsed, errors = _parse(BAD)
         assert parsed == SCRUBBED
         assert errors == ALL
+
+    def test_partial_info_is_fine(self):
+        parsed, errors = _parse(PARTIAL)
+        assert parsed == PARTIAL
+        assert errors == []
 
     def test_10_dollar_minimum(self):
         bad = GOOD.copy()
@@ -175,6 +190,7 @@ class PayForOpenSource(PayForOpenSourceHarness):
         result = json.loads(response.body)
         assert not result['errors']
         assert result['receipt_url'].endswith('receipt.html')
+        assert self.fetch().succeeded
 
     def test_bad_post_gets_400(self):
         response = self.client.POST('/', data=BAD, HTTP_ACCEPT=b'application/json')
@@ -187,3 +203,15 @@ class PayForOpenSource(PayForOpenSourceHarness):
         assert response.code == 400
         assert response.headers == {}
         assert response.body == "Missing key: u'amount'"
+
+
+class PartialPost(PayForOpenSourceHarness):  # separate class to work around wiring issues
+
+    def test_partial_post_is_fine(self):
+        response = self.client.POST('/', data=PARTIAL, HTTP_ACCEPT=b'application/json')
+        assert response.code == 200
+        assert response.headers['Content-Type'] == 'application/json'
+        result = json.loads(response.body)
+        assert not result['errors']
+        assert result['receipt_url'].endswith('receipt.html')
+        assert self.fetch().succeeded
