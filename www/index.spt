@@ -108,6 +108,7 @@ $(document).ready(function() {
         <legend>{{ _('Optional') }}</legend>
 
         <h2>{{ _('Who are you?') }}</h2>
+        <p class="fine-print">{{  _('And do you wish to subscribe to our newsletter?') }}</p>
 
         <div class="field">
             <label for="name">{{ _('Your Name') }}</label>
@@ -155,10 +156,9 @@ $(document).ready(function() {
 
 
         <h2>{{ _('Promotion') }}</h2>
+        <p class="fine-print">{{  _('We want to brag about you! May we?') }}</p>
 
         <div class="promotion-fields">
-            <p class="fine-print">{{  _('Thanks! We are excited to brag about you!') }}</p>
-
             <div class="field">
                 <label for="promotion-name">{{ _("Your Company Name") }}</label>
                 <input type="text" name="promotion_name" id="promotion-name">
@@ -180,12 +180,6 @@ $(document).ready(function() {
                 <input type="text" name="promotion_message" id="promotion-message">
             </div>
         </div>
-
-        <div class="important-button promotion-gate">
-            <p class="fine-print">{{  _('We want to brag about you! May we?') }}</p>
-            <button class="large">{{ _('Provide Promotion Details') }}</button>
-        </div>
-
     </fieldset>
 
     <fieldset class="submit">

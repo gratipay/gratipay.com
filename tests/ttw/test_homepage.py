@@ -21,14 +21,10 @@ class Tests(BrowserHarness):
             iframe.fill('cvv', cvv)
         self.fill('name', name)
         self.fill('email_address', email_address)
-        if promotion_name:
-            self.css('.promotion-gate button').type('\n')
-                                                # stackoverflow.com/q/11908249#comment58577676_19763087
-            self.wait_for('#promotion-message')
-            self.fill('promotion_name', promotion_name)
-            self.fill('promotion_url', promotion_url)
-            self.fill('promotion_twitter', promotion_twitter)
-            self.fill('promotion_message', promotion_message)
+        self.fill('promotion_name', promotion_name)
+        self.fill('promotion_url', promotion_url)
+        self.fill('promotion_twitter', promotion_twitter)
+        self.fill('promotion_message', promotion_message)
 
 
     def test_loads_for_anon(self):

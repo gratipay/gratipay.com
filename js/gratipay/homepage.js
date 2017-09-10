@@ -3,9 +3,6 @@ Gratipay.homepage = {}
 Gratipay.homepage.initForm = function(clientAuthorization) {
     $form = $('#homepage #content form');
 
-    $promote = $form.find('.promotion-gate button');
-    $promote.click(Gratipay.homepage.openPromote);
-
     function callback(createErr, instance) {
         $submit = $form.find('button[type=submit]');
         $submit.click(function(e) {
@@ -50,13 +47,5 @@ Gratipay.homepage.submitFormWithNonce = function(nonce) {
                 $('form').slideUp(500);
             }
         }
-    });
-};
-
-Gratipay.homepage.openPromote = function(e) {
-    e.preventDefault();
-    $('.promotion-gate').fadeOut();
-    $('.promotion-fields').slideDown(function() {
-        $('.promotion-fields input:first').focus();
     });
 };
