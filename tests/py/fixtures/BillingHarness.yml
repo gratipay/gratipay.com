@@ -1,0 +1,76 @@
+interactions:
+- request:
+    body: <customer></customer>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/bk8h97tqzyqjhtfn/customers
+  response:
+    body:
+      string: !!binary |
+        H4sIAEyRtFkAA5SRwW6DMBBE7/kKy3cXm1QiRIbc+gXppbcNXopTbIi9tKFfX0KjpBLtoceZ59kd
+        rfXu7Fr2jiHazhdcPUjO0Fedsf614M/7J7Hhu3KlqyFS5zCUK8a0NWWarmW2VirXyaQu5gSrBjyJ
+        SR/eNk2e0elzPB0bqr1OftLL69qGSMKDQ+ZtW3AKA/JkRi38RarO9eDHhY8ObLtw+6bzyxk1nBfe
+        Bx6ipV/2BQRCI4AYjT0W3EySrENeplJlQuZCyb1UW6W2j/JFJ/fAnB9687/8PfC9fz66qC22Jt4q
+        GUuigmDidSiEAOO1MRgTMEZcsKnb7Qe/AAAA//8DAN3/yv70AQAA
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"c2b097734ba83d199aea08efcd67c9dc"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 201, message: Created}
+- request:
+    body: <customer></customer>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/bk8h97tqzyqjhtfn/customers
+  response:
+    body:
+      string: !!binary |
+        H4sIAE2RtFkAA5SRwW6DMBBE7/kKy3cX3EQCIkNu/YL00tsGL8WpbYi9tKFfX0KjpBLtoceZ59kd
+        rdXu7Cx7xxBN50suH1LO0NedNv615M/7J5HzXbVS9RCpcxiqFWPK6CqXm2xdrHOpkkldzAnWLXgS
+        kz685W2R0elzPB1barxKftLL68aESMKDQ+aNLTmFAXkyIwt/kbpzPfhx4aMDYxdu33Z+OaOB88L7
+        wEM09Mu+gECoBRCjsceS60mSccirx1RmIi2ETPep3Eq53cgXldwDc37o9f/y98D3/vnoojFodbxV
+        0oZEDUHH61AIAcZrY9A6YIy4YFO32w9+AQAA//8DADhOnQr0AQAA
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"c4fa11bc3a75b8b4c407bdd87c94cf21"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 201, message: Created}
+- request:
+    body: !!python/unicode <payment_method><customer_id>814739381</customer_id><payment_method_nonce>fake-valid-nonce</payment_method_nonce></payment_method>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/bk8h97tqzyqjhtfn/payment_methods
+  response:
+    body:
+      string: !!binary |
+        H4sIAE2RtFkAA6xVTXObMBC98ys83GU+4saQwcqtx16a9NBLR6DFaCwkKgkn/vddYWwcB6fttDfv
+        2yft7uOtXDy+tnKxB2OFVpswWcbhAlSluVDbTfj89Jlk4SMNisoAF45UzHAaLBZFKaRECmGcG7DW
+        Y4gKTu/LIhJ8jKveOt2CIYhkyWp9l99lSRFdwkdiLYx1RLEWFkrITehMD2E0JiW7nat02zF1mMlY
+        ZwDcqcEZArw6UBz4BxSpKyaFm7vewBYVm0l02jomCUoINF8l8bqILqFT271y5jBAhMmuYenscNes
+        u9+xVI+6iuoD2i0hDTDnxXALd+hgE3IMnWghpGmcrEmckyR+ipOHJHlYJd/xI54PjDf0Hf+7G6YD
+        g6WiGU+hzxRdxUmaZT6vBsybkPgS9JuwDDs5x6dsoyVHe82N6h2DElWCSfqsdkq/KLxhwoILqXRN
+        hLU9UxVQT3qPBv+u3B8uyUTzpnToPfr89YJ1Rj2XQyncNN4xPCZq1stTo6XWEpgKqZfH04bkkdgb
+        lJugy3vpm7247DoTDLvUCTPUJ61WrqFJWkTvwCvmAZhBidL4DXVAz0zg173WTFoYT4zVG2DSNfjh
+        YWrzAvMU0bItkN5I2jjX2YcoYtaCs8vSMKH8U7HFYV7YYYleiDp2aEG5Hy24RvMfUm91tEevLTu1
+        fQS1F0YrT9hYpnipX/HJO98/VEN/eCeXTO2mlt6gwelhW9Ek8997DDyO5Y2WF/48AUPSQMfQE180
+        4uPvI655Xzlvl+nchHmK7UtbGdF5ne2oKzOGHcbVcHoHipb5XlleRMfI470SP/vhbSkHP+LkohZg
+        aH5fx/E6r9fVpxziMr2Pk1XMK77iZVplGe7mzaPBf3gx9qBaTSzf3fDIOT+yDZY+bsm76YetnP7h
+        fgEAAP//AwAnjLXTFwcAAA==
+    headers:
+      cache-control: ['max-age=0, private, must-revalidate']
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      etag: [W/"9926814998aa0f36886c2cb5acff62cf"]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 201, message: Created}
+version: 1
