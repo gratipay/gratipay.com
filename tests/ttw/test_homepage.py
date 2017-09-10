@@ -42,7 +42,7 @@ class Tests(BrowserHarness):
         self.fill_form('537', '4242424242424242', '1020', '123', 'Alice Liddell',
                        'alice@example.com', 'monthly', 'Wonderland', 'http://www.example.com/',
                        'thebestbutter', 'Love me! Love me! Say that you love me!')
-        self.css('fieldset.submit button').type('\n')
+        self.css('fieldset.submit button').click()
         self.wait_for('.payment-complete', 10)
         assert self.css('.payment-complete .description').text == 'Payment complete.'
         assert self.fetch().succeeded
