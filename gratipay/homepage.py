@@ -98,19 +98,19 @@ def _send(app, pfos):
                        , template='paid-for-open-source'
                        , email=pfos.email_address
                        , amount=pfos.amount
-                       , receipt_url=pfos.receipt_url
+                       , invoice_url=pfos.invoice_url
                         )
 
 
 def pay_for_open_source(app, raw):
     parsed, errors = _parse(raw)
-    out = {'errors': errors, 'receipt_url': None}
+    out = {'errors': errors, 'invoice_url': None}
     if not errors:
         payment_method_nonce = parsed.pop('payment_method_nonce')
         pfos = _store(parsed)
         _charge(app, pfos, payment_method_nonce)
         if pfos.succeeded:
-            out['receipt_url'] = pfos.receipt_url
+            out['invoice_url'] = pfos.invoice_url
             if pfos.email_address:
                 _send(app, pfos)
         else:

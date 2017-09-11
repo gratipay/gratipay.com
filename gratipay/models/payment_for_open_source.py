@@ -20,10 +20,10 @@ class PaymentForOpenSource(Model):
 
 
     @property
-    def receipt_url(self):
+    def invoice_url(self):
         if not self.succeeded:
             return None
-        return '{}/browse/payments/{}/receipt.html'.format(gratipay.base_url, self.uuid)
+        return '{}/browse/payments/{}/invoice.html'.format(gratipay.base_url, self.uuid)
 
 
     @classmethod

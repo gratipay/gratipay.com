@@ -59,6 +59,9 @@ class Tests(BrowserHarness):
                        'alice@example.com', 'Wonderland', 'http://www.example.com/',
                        'thebestbutter', 'Love me! Love me! Say that you love me!')
         assert self.submit_succeeds()
+        self.wait_for('a.invoice').click()
+        self.wait_for('#txnid')
+        assert self.css('#items tbody tr').text == 'open source software $ 537.00'
 
     def test_options_are_optional(self):
         self.fill_form('537', '4242424242424242', '1020', '123')

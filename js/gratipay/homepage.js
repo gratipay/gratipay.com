@@ -67,7 +67,7 @@ Gratipay.homepage.submitFormWithNonce = function(nonce) {
                     $('.'+fieldName, self.$form).addClass('error');
                 }
             } else {
-                $('.payment-complete a.receipt').attr('href', data.receipt_url);
+                $('.payment-complete a.invoice').attr('href', data.invoice_url);
                 $('form').slideUp(500, function() {
                     $('.payment-complete').fadeIn(500);
                 });

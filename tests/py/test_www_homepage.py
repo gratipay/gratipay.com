@@ -126,14 +126,14 @@ class Store(PayForOpenSourceHarness):
 
 class Send(QueuedEmailHarness):
 
-    def test_sends_receipt_link(self):
+    def test_sends_invoice_link(self):
         parsed, errors = _parse(GOOD)
         parsed.pop('payment_method_nonce')
         payment_for_open_source = _store(parsed)
         _send(self.app, payment_for_open_source)
         msg = self.get_last_email()
         assert msg['to'] == 'alice@example.com'
-        assert msg['subject'] == 'Payment for open source'
+        assert msg['subject'] == 'Invoice from Gratipay'
 
 
 class PayForOpenSource(PayForOpenSourceHarness):
@@ -155,13 +155,13 @@ class PayForOpenSource(PayForOpenSourceHarness):
         assert self.fetch() is None
         result = pay_for_open_source(self.app, self.good)
         assert not result['errors']
-        assert result['receipt_url'].endswith('receipt.html')
+        assert result['invoice_url'].endswith('invoice.html')
         assert self.fetch().succeeded
 
     def test_flags_errors_and_doesnt_store(self):
         assert self.fetch() is None
         result = pay_for_open_source(self.app, self.bad)
-        assert result == {'errors': ALL, 'receipt_url': None}
+        assert result == {'errors': ALL, 'invoice_url': None}
         assert self.fetch() is None
 
     def test_flags_errors_with_no_transaction_id(self):
@@ -189,7 +189,7 @@ class PayForOpenSource(PayForOpenSourceHarness):
         assert response.headers['Content-Type'] == 'application/json'
         result = json.loads(response.body)
         assert not result['errors']
-        assert result['receipt_url'].endswith('receipt.html')
+        assert result['invoice_url'].endswith('invoice.html')
         assert self.fetch().succeeded
 
     def test_bad_post_gets_400(self):
@@ -213,5 +213,5 @@ class PartialPost(PayForOpenSourceHarness):  # separate class to work around wir
         assert response.headers['Content-Type'] == 'application/json'
         result = json.loads(response.body)
         assert not result['errors']
-        assert result['receipt_url'].endswith('receipt.html')
+        assert result['invoice_url'].endswith('invoice.html')
         assert self.fetch().succeeded
