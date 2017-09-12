@@ -61,7 +61,7 @@ button.selected:hover:not(:disabled), button.selected.drag,
     margin: 30px auto 30px;
     text-align: center;
 
-    button.large {
+    button.large, a.button.large {
         font: normal 16px/32px $Ideal;
         padding: 10px 16px;
         border-radius: 5px;

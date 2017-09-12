@@ -65,29 +65,16 @@ tabs = tabs.make(tab_html, 'status', status_filter,
                  'featured', 'approved', 'unreviewed', 'rejected')
 
 title = _("Projects")
+banner = _("Browse")
 suppress_sidebar = True
-page_id = "homepage"
-[---]
+page_id = "browse-projects"
+[---] text/html
 {% from "templates/nav-tabs.html" import nav_tabs with context %}
 {% extends "templates/base.html" %}
 {% block head_early %}
     {% if website.optimizely_id and request.headers.get('DNT') != '1' %}
     <script src="//cdn.optimizely.com/js/{{ website.optimizely_id }}.js"></script>
     {% endif %}
-{% endblock %}
-{% block head %}
-    <link rel="publisher" href="https://plus.google.com/104524895706770139568">
-    <link type="application/opensearchdescription+xml" rel="search" href="/opensearch.osdd" />
-    <meta name="description" content="Pay for open source on Gratipay." />
-    <meta name="fb:app_id" content="229465400522758" />
-    <meta name="og:type" content="website" />
-    <meta name="og:url" content="https://gratipay.com/" />
-    <meta name="og:title" content="Gratipay" />
-    <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
-{% endblock %}
-
-{% block banner %}
-    <a href="/about/"><h1>{{ _("Pay for open source.") }}</h1></a>
 {% endblock %}
 
 {% block content %}

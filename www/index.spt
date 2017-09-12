@@ -1,0 +1,239 @@
+# -*- coding: utf-8 -*-
+import json
+from aspen import Response
+from gratipay.homepage import pay_for_open_source
+[---]
+if not user.ANON:
+    website.redirect('/browse/projects')
+suppress_sidebar = True
+page_id = "homepage"
+banner = "Pay for Open Source"
+result = pay_for_open_source(website.app, request.body) if request.method == 'POST' else {}
+if result and result['errors']:
+    # Hmmm ... bit of an Aspen rough spot ... interaction w/ error.spt, skip it
+    # by overriding 200 for both success and failure. :(
+    result['msg'] = _("Eep! Mind looking over your info for us?")
+[---] application/json via json_dump
+result
+[---] text/html
+{% from "templates/nav-tabs.html" import nav_tabs with context %}
+{% extends "templates/base.html" %}
+{% block head %}
+    <link rel="publisher" href="https://plus.google.com/104524895706770139568">
+    <link type="application/opensearchdescription+xml" rel="search" href="/opensearch.osdd" />
+    <meta name="description" content="Pay for open source on Gratipay." />
+    <meta name="fb:app_id" content="229465400522758" />
+    <meta name="og:type" content="website" />
+    <meta name="og:url" content="https://gratipay.com/" />
+    <meta name="og:title" content="Gratipay" />
+    <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
+{% endblock %}
+
+{% block banner %}
+    <a href="/about/"><h1>{{ _("Pay for open source.") }}</h1></a>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    {% if website.env.load_braintree_form_on_homepage %}
+    Gratipay.homepage.initForm('{{ website.env.braintree_client_authorization }}');
+    {% else %}
+    Gratipay.homepage.initForm();
+    {% endif %}
+});
+</script>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<div class="payment-complete" style="display: none;">
+    <div class="description important-thing-at-the-top">
+        {{ _("Payment complete!") }} &#x1f483;
+    </div>
+    <p class="instructions">
+        {{ _("Thank you for paying for open source!") }}
+    </p>
+    <div class="important-button" class="important-button">
+        <a class="button large selected invoice" href="">{{ _("View Invoice") }}</a>
+    </div>
+    <p class="fine-print">
+        {{ _( "Email {support} with{br}any questions or feedback."
+            , support='<a href="mailto:support@gratipay.com">support@gratipay.com</a>'|safe
+            , br='<br>'|safe
+             ) }}
+    </p>
+    <div class="twitter-container">
+        <a class="twitter-share-button"
+           href="https://twitter.com/intent/tweet?text=We%20just%20paid%20for%20#opensource%20on%20@Gratipay!"
+           data-size="large" data-url="https://gratipay.com/"></a>
+        <script>window.twttr = (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
+          if (d.getElementById(id)) return t;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "https://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js, fjs);
+
+          t._e = [];
+          t.ready = function(f) { t._e.push(f); };
+          return t;
+        }(document, "script", "twitter-wjs"));</script>
+    </div>
+</div>
+
+<form action="/" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+    <fieldset>
+        <h2>{{ _('How much?') }}</h2>
+
+        <div class="field amount">
+            <label for="amount">$</label>
+            <input type="text" name="amount" id="amount"
+                   placeholder="{{ _("2000") }}"
+                   required autofocus>
+
+            <p class="fine-print help">
+                {{ _("Please enter a whole dollar amount (minimum $10, no punctuation).") }}
+            </p>
+
+            <p class="fine-print">
+            {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}at your company.'
+                , br='<br>'|safe
+                , a='<a href="https://gratipay.news/9205443e209d">'|safe
+                , _a='</a>'|safe
+                 ) }}
+            </p>
+
+        </div>
+
+        <div class="field charging">
+            <div id="braintree-container"></div>
+            <p class="fine-print help">
+                {{ _("We weren't able to process your card.") }}
+            </p>
+        </div>
+    </fieldset>
+
+    <fieldset class="optional">
+        <legend>{{ _('Optional') }}</legend>
+
+        <h2>{{ _('Who are you?') }}</h2>
+        <p class="fine-print">{{  _('And do you wish to subscribe to our newsletter?') }}</p>
+
+        <div class="field name">
+            <label for="name">{{ _('Your Name') }}</label>
+            <input name="name" id="name" type="text">
+            <p class="fine-print help">
+                {{ _("Please enter a value shorter than 256 characters.") }}
+            </p>
+        </div>
+
+        <div class="field email_address">
+            <label for="email-address">{{ _('Your Email Address') }}</label>
+            <input name="email_address" id="email-address" type="text">
+            <p class="fine-print help">
+                {{ _("Please enter a valid email address shorter than 255 characters.") }}
+            </p>
+            <p class="fine-print">
+                {{ _('You will get a link to an invoice for your payment.') }}
+            </p>
+        </div>
+
+        <div class="field follow_up">
+            <fieldset>
+                <legend>{{ _('Follow-up') }}</legend>
+
+                <div class="fancy-radio">
+                    <input type="radio" name="follow_up" id="follow-up-monthly" value="monthly">
+                    <label for="follow-up-monthly">{{ _('Monthly') }}</label>
+                </div>
+
+                <div class="fancy-radio">
+                    <input type="radio" name="follow_up" id="follow-up-quarterly"
+                           value="quarterly" checked>
+                    <label for="follow-up-quarterly">{{ _('Quarterly') }}</label>
+                </div>
+
+                <div class="fancy-radio">
+                    <input type="radio" name="follow_up" id="follow-up-yearly" value="yearly">
+                    <label for="follow-up-yearly">{{ _('Yearly') }}</label>
+                </div>
+
+                <div class="fancy-radio">
+                    <input type="radio" name="follow_up" id="follow-up-never" value="never">
+                    <label for="follow-up-never">{{ _('Never') }}</label>
+                </div>
+
+                <p class="fine-print help">
+                    {{ _("I am surprised that you are seeing this message.") }}
+                </p>
+
+                <p class="fine-print">
+                    {{ _('You will get a progress report, with a reminder to pay again.') }}
+                </p>
+            </fieldset>
+        </div>
+
+
+        <h2>{{ _('Promotion') }}</h2>
+        <p class="fine-print">{{  _('We (probably) want to brag about you! May we?') }}</p>
+
+        <div class="promotion-fields">
+            <div class="field promotion_name">
+                <label for="promotion-name">{{ _("Your Company Name") }}</label>
+                <input type="text" name="promotion_name" id="promotion-name">
+                <p class="fine-print help">
+                    {{ _("Please enter a value 32 characters or shorter.") }}
+                </p>
+            </div>
+
+            <div class="field promotion_url">
+                <label for="promotion-url">{{ _("Your Landing Page URL") }}</label>
+                <input type="text" name="promotion_url" id="promotion-url">
+                <p class="fine-print help">
+                    {{ _("Please enter a valid URL shorter than 256 characters.") }}
+                </p>
+            </div>
+
+            <div class="field promotion_twitter">
+                <label for="promotion-twitter">{{ _("Your Company Twitter Handle") }}</label>
+                <input type="text" name="promotion_twitter" id="promotion-twitter">
+                <p class="fine-print help">
+                    {{ _("Please enter a valid Twitter handle.") }}
+                </p>
+            </div>
+
+            <div class="field promotion_message">
+                <label for="promotion-message">
+                    {{ _("Your Message to the Open Source Community") }}</label>
+                <input type="text" name="promotion_message" id="promotion-message">
+                <p class="fine-print help">
+                    {{ _("Please limit your message to 128 characters.") }}
+                </p>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="submit">
+        <legend>{{ _('Submit Form') }}</legend>
+
+        <div class="important-button">
+            <button type="submit" class="selected large">
+                <span class="active">{{ _("Pay for Open Source") }}</span>
+                <span class="processing">{{ _("Processing ...") }}</span>
+            </button>
+        </div>
+        <p class="fine-print">
+            {{ _( "By submitting this form you agree to our {a}terms of service{_a}."
+                , a='<a href="/about/policies/terms-of-service">'|safe
+                , _a='</a>'|safe
+                 ) }}
+        </p>
+    </fieldset>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{{ _("Invoice from Gratipay") }}
+
+[---] text/html
+{{ _( "Thank you for your payment of {amount} for open source!"
+    , amount=format_currency(amount, 'USD')
+     ) }}
+<br>
+<br>
+<a href="{{ invoice_url }}" style="{{ button_style }}">{{ _("View Invoice") }}</a>
+
+[---] text/plain
+{{ _( "Thank you for your payment of {amount} for open source!"
+    , amount=format_currency(amount, 'USD')
+     ) }}
+
+{{ _("Follow this link to view your invoice:") }}
+
+{{ invoice_url }}
