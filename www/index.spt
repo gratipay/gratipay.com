@@ -92,7 +92,7 @@ $(document).ready(function() {
         <div class="field amount">
             <label for="amount">$</label>
             <input type="text" name="amount" id="amount"
-                   placeholder="{{ _("2,000 / person") }}"
+                   placeholder="{{ _("2000") }}"
                    required autofocus>
 
             <p class="fine-print help">

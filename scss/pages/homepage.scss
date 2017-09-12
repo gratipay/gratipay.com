@@ -23,6 +23,10 @@
     #content {
         text-align: center;
 
+        a:hover {
+            background: $darker-green;
+        }
+
         .payment-complete {
             .fine-print {
                 padding: 0;
