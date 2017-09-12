@@ -24,6 +24,9 @@ class TestPages(Harness):
         # for pricing page
         self.make_team('Gratipay')
 
+        # for the pfos invoice page
+        pfos_uuid = self.make_payment_for_open_source().uuid
+
         # for the receipt page
         result = braintree.PaymentMethod.create({
             "customer_id": alice.get_braintree_account().id,
@@ -58,6 +61,7 @@ class TestPages(Harness):
                            .replace('/%exchange_id', '/%s' % exchange_id) \
                            .replace('/%redirect_to', '/giving') \
                            .replace('/%endpoint', '/public') \
+                           .replace('/payments/%uuid', '/payments/'+pfos_uuid) \
                            .replace('/about/me/%sub', '/about/me')
             assert '/%' not in url
             if 'index' in url.split('/')[-1]:

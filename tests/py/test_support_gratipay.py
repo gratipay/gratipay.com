@@ -7,7 +7,7 @@ from gratipay.testing import Harness
 class TestSupportGratipay(Harness):
 
     def shown(self, to=None):
-        return 'of active users also' in self.client.GET('/', auth_as=to).body
+        return 'of active users also' in self.client.GET('/about/', auth_as=to).body
 
     def test_not_shown_to_anon(self):
         assert not self.shown()
@@ -37,7 +37,7 @@ class TestSupportGratipay(Harness):
 
     def check_button(self, lang, decimal, currency):
         self.test_shown_when_on_the_fence()
-        body = self.client.GET( '/'
+        body = self.client.GET( '/about/'
                               , auth_as='alice'
                               , HTTP_ACCEPT_LANGUAGE=str(lang)
                                ).body.decode('utf8')

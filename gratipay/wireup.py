@@ -256,7 +256,7 @@ def compile_assets(website):
             headers[b'HTTP_HOST'] = str(url.netloc)
         content = client.GET(urlpath, **headers).body
         tmpfd, tmpfpath = mkstemp(dir='.')
-        os.write(tmpfd, content)
+        os.write(tmpfd, content.encode('utf8'))
         os.close(tmpfd)
         os.rename(tmpfpath, filepath)
     atexit.register(lambda: clean_assets(website.www_root))
@@ -351,6 +351,7 @@ def env():
         BRAINTREE_MERCHANT_ID           = unicode,
         BRAINTREE_PUBLIC_KEY            = unicode,
         BRAINTREE_PRIVATE_KEY           = unicode,
+        BRAINTREE_CLIENT_AUTHORIZATION  = unicode,
         GITHUB_CLIENT_ID                = unicode,
         GITHUB_CLIENT_SECRET            = unicode,
         GITHUB_CALLBACK                 = unicode,
@@ -394,6 +395,7 @@ def env():
         PROJECT_REVIEW_USERNAME         = unicode,
         PROJECT_REVIEW_TOKEN            = unicode,
         RAISE_SIGNIN_NOTIFICATIONS      = is_yesish,
+        LOAD_BRAINTREE_FORM_ON_HOMEPAGE = is_yesish,
         GUNICORN_OPTS                   = unicode,
     )
 

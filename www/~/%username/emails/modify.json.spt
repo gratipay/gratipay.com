@@ -1,14 +1,9 @@
 """
 Manages the authenticated user's email addresses.
 """
-import re
-
 from aspen import Response
-from gratipay.utils import get_participant
+from gratipay.utils import get_participant, is_valid_email_address
 from gratipay.models.package import Package
-
-# exactly one @, and at least one . after @
-email_re = re.compile(r'^[^@]+@[^@]+\.[^@]+$')
 
 [-----------------------------------------]
 
@@ -20,7 +15,7 @@ address = request.body['address']
 show_address_in_message = bool(request.body.get('show_address_in_message', ''))
 
 # Basic checks. The real validation will happen when we send the email.
-if (len(address) > 254) or not email_re.match(address):
+if not is_valid_email_address(address):
     raise Response(400, _("Invalid email address."))
 
 if not participant.email_lang:

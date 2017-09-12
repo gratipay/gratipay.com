@@ -16,10 +16,12 @@ from .country import Country
 from .exchange_route import ExchangeRoute
 from .package import Package
 from .participant import Participant
+from .payment_for_open_source import PaymentForOpenSource
 from .team import Team
 
 
-MODELS = (AccountElsewhere, Community, Country, ExchangeRoute, Package, Participant, Team)
+MODELS = (AccountElsewhere, Community, Country, ExchangeRoute, Package, Participant,
+          PaymentForOpenSource, Team)
 
 
 @contextmanager

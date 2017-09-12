@@ -1,0 +1,27 @@
+interactions:
+- request:
+    body: !!python/unicode <transaction><custom_fields><pfos_uuid>32455e884fe343a3aa881f2004d3f433</pfos_uuid></custom_fields><amount
+      type="integer">1000</amount><type>sale</type><options><submit_for_settlement
+      type="boolean">true</submit_for_settlement></options><payment_method_nonce>deadbeef</payment_method_nonce></transaction>
+    headers: {}
+    method: POST
+    uri: https://api.sandbox.braintreegateway.com:443/merchants/bk8h97tqzyqjhtfn/transactions
+  response:
+    body:
+      string: !!binary |
+        H4sIAFULtVkAA6STy26DMBBF9/kKi70DBKio5Di7fkGzjgwMqVX8kG3a8Pc1hFci2k13M3PH4+sz
+        QE430aAvMJYreQzifRQgkKWquLweg/P7G86DE90RpjkGY5TBBqxW0gLdIUSGku3DOUGu03AMmDGs
+        C8JRcoZJy0rnL7lXttsnbVKX3Fe8KaCvcfaSkXCI1yJzzvCidTDOs50oVBNQzToB0l0EuA9VXaSS
+        JZBw7n6YIcBadgV6lp9SfUukDIKb5gYqtDVmT8LpxGI7fPA9phOg8AnDWiaaGSbsH7zK1jolcM2h
+        qezqSl0ri9uWVzQ5pFkGeZ7WkKQJSxjL87g+RFFaJXWaJCRcemeHm2MJE6qVjsZRFHlc92TSesLU
+        ssaDHMKprnTvd23NtoXgDtf+s7HgXAM9ROpM649ua7Otp2Fk3AC+bwAPG6AVsKoAqP3DtuTfqC+o
+        /7Nzz2Xjp/gBAAD//wMAiUFax1EDAAA=
+    headers:
+      cache-control: [no-cache]
+      content-encoding: [gzip]
+      content-type: [application/xml; charset=utf-8]
+      strict-transport-security: [max-age=31536000; includeSubDomains]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+    status: {code: 422, message: Unprocessable Entity}
+version: 1
