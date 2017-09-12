@@ -162,6 +162,18 @@ CREATE TYPE exchange_status AS ENUM (
 
 
 --
+-- Name: follow_up; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE follow_up AS ENUM (
+    'monthly',
+    'quarterly',
+    'yearly',
+    'never'
+);
+
+
+--
 -- Name: participant_number; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1279,6 +1291,26 @@ CREATE TABLE payments (
 
 
 --
+-- Name: payments_for_open_source; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE payments_for_open_source (
+    uuid text NOT NULL,
+    ctime timestamp with time zone DEFAULT now() NOT NULL,
+    amount bigint NOT NULL,
+    braintree_transaction_id text,
+    braintree_result_message text,
+    name text NOT NULL,
+    follow_up follow_up NOT NULL,
+    email_address text NOT NULL,
+    promotion_name text DEFAULT ''::text NOT NULL,
+    promotion_url text DEFAULT ''::text NOT NULL,
+    promotion_twitter text DEFAULT ''::text NOT NULL,
+    promotion_message text DEFAULT ''::text NOT NULL
+);
+
+
+--
 -- Name: payments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1827,6 +1859,22 @@ ALTER TABLE ONLY paydays
 
 ALTER TABLE ONLY payment_instructions
     ADD CONSTRAINT payment_instructions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payments_for_open_source payments_for_open_source_braintree_transaction_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY payments_for_open_source
+    ADD CONSTRAINT payments_for_open_source_braintree_transaction_id_key UNIQUE (braintree_transaction_id);
+
+
+--
+-- Name: payments_for_open_source payments_for_open_source_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY payments_for_open_source
+    ADD CONSTRAINT payments_for_open_source_pkey PRIMARY KEY (uuid);
 
 
 --
