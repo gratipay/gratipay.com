@@ -5,6 +5,12 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
     self.$form = $('#homepage #content form');
     self.$submit = self.$form.find('button[type=submit]');
 
+    function disable(e) {
+        e.preventDefault();
+        self.$submit.prop('disabled', true);
+        self.$submit.addClass('processing');
+    }
+
     if (clientAuthorization === undefined) {    // Offline mode
 
         $('#braintree-container').addClass('offline').html(Gratipay.jsonml(['div',
@@ -16,7 +22,7 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
         ]));
 
         self.$submit.click(function(e) {
-            e.preventDefault();
+            disable(e);
             nonce = $('#braintree-container input').val();
             self.submitFormWithNonce(nonce);
         });
@@ -28,9 +34,9 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
                 $('#braintree-container').addClass('failed').text('Failed to load Braintree.');
             } else {
                 self.$submit.click(function(e) {
-                    e.preventDefault();
+                    disable(e);
                     instance.requestPaymentMethod(function(requestPaymentMethodErr, payload) {
-                        self.submitFormWithNonce(payload.nonce);
+                        self.submitFormWithNonce(payload ? payload.nonce : '');
                     });
                 });
             }
@@ -49,8 +55,6 @@ Gratipay.homepage.submitFormWithNonce = function(nonce) {
     var data = new FormData(self.$form[0]);
     data.set('payment_method_nonce', nonce);
 
-    self.$submit.prop('disable', true);
-
     $.ajax({
         url: self.$form.attr('action'),
         type: 'POST',
@@ -61,7 +65,8 @@ Gratipay.homepage.submitFormWithNonce = function(nonce) {
         success: function(data) {
             // Due to Aspen limitations we use 200 for both success and failure. :/
             if (data.errors.length > 0) {
-                self.$submit.prop('disable', false);
+                self.$submit.prop('disabled', false);
+                self.$submit.removeClass('processing');
                 Gratipay.notification(data.msg, 'error');
                 for (var i=0, fieldName; fieldName=data.errors[i]; i++) {
                     $('.'+fieldName, self.$form).addClass('error');

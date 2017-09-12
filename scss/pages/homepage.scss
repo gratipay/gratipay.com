@@ -198,6 +198,7 @@
                         }
                     }
                 }
+
                 .help {
                     display: none;
                     color: red;
@@ -213,10 +214,14 @@
                     }
                 }
             }
-            &.optional {
-                button {
-                    background: $light-gray;
-                    color: $medium-gray;
+
+            button[type=submit] {
+                .processing {
+                    display: none;
+                }
+                &.processing {
+                    .active { display: none; }
+                    .processing { display: inline; }
                 }
             }
         }

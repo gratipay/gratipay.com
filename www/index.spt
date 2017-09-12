@@ -222,7 +222,8 @@ $(document).ready(function() {
 
         <div class="important-button">
             <button type="submit" class="selected large">
-                {{ _("Pay for Open Source") }}
+                <span class="active">{{ _("Pay for Open Source") }}</span>
+                <span class="processing">{{ _("Processing ...") }}</span>
             </button>
         </div>
         <p class="fine-print">
