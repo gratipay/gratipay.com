@@ -1,10 +1,9 @@
-_Last Updated: December 12, 2016_
+_Last Updated: September 11, 2017_
 
 These Terms of Service ("Terms") are an agreement between you, a user
 ("Participant") of the Gratipay service (the "Service"), and Gratipay, LLC
 ("Gratipay"). They govern your use of the Service and your relationship with
-Gratipay. When you register as a Gratipay Participant, you agree to be bound by
-these Terms.
+Gratipay. When you use the Service, you agree to be bound by these Terms.
 
 If you have any questions about these Terms, please contact us:
 
@@ -48,6 +47,9 @@ by Projects established on the Service.
 
     1. A Participant may make payments to a Project Owner via a Project. A
        Participant who makes payments via a Project is a Giver.
+
+    1. Payments made through the form on the homepage are payments to Gratipay
+       for open source software.
 
 1. Terms for Project Owners
 
