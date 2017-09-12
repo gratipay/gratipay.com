@@ -44,7 +44,10 @@ before_script:
  - echo "EMAIL_QUEUE_LOG_METRICS_EVERY=0" >> local.env
 
  - psql -U postgres -c 'CREATE DATABASE "gratipay";'
- - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then rm -rfv tests/py/fixtures; fi
+ - if [ "${TRAVIS_BRANCH}" = "master" -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+     rm -rfv tests/py/fixtures;
+     echo "LOAD_BRAINTREE_FORM_ON_HOMEPAGE=yes" >> local.env;
+   fi
 script: LD_LIBRARY_PATH=/usr/local/lib xvfb-run make test-schema bgrun test doc
 notifications:
   email: false

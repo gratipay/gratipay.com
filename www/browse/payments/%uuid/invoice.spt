@@ -1,0 +1,214 @@
+from aspen import Response
+from gratipay.models.payment_for_open_source import PaymentForOpenSource
+
+[-------------------]
+
+try:
+    uuid = request.path['uuid']
+except ValueError:
+    raise Response(400)
+
+# pfos - payment_for_open_source 
+pfos = PaymentForOpenSource.from_uuid(uuid)
+
+if pfos is None:
+    raise Response(404)
+
+
+[-------------------] text/html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Gratipay Invoice {{ pfos.uuid }}</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding 0;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background: #EEE;
+            }
+            body, table {
+                font: normal 12pt/14pt sans-serif;
+            }
+            table {
+                border-collapse: collapse;
+            }
+            #page {
+                width: 8.5in;
+                height: 11in;
+                border: 1px solid black;
+                background: white;
+                margin: 1pc auto;
+            }
+            #page-padding {
+                padding: 1in 1.25in;
+            }
+
+            h1 {
+                font: bold 24pt/24pt sans-serif;
+                margin: 0;
+                padding: 0;
+                border-bottom: 2px solid black;
+            }
+            h2 {
+                font: bold 18pt/24pt sans-serif;
+                margin: 0;
+                padding: 0;
+                border-bottom: 1px solid black;
+            }
+
+            #txnid {
+                border-top: 1px solid black;
+                font: normal 10pt/10pt sans-serif;
+                text-transform: uppercase;
+                width: 100%;
+                margin-bottom: 4em;
+            }
+            #txnid td {
+                padding: 3pt 0 0;
+                white-space: nowrap;
+            }
+            #txnid td.txnid { text-align: left; }
+            #txnid td.date { text-align: right; }
+
+            #addresses {
+                margin-bottom: 4em;
+            }
+            #addresses h2 {
+                width: 15%;
+                float: left;
+                border: none;
+            }
+            blockquote {
+                width: 35%;
+                float: left;
+                padding-top: 0.25em;
+            }
+            hr {
+                clear: both;
+                height: 0;
+                border: 0;
+            }
+
+            #items {
+                margin: 4em 0 4em;
+            }
+            #items h2 {
+            }
+            #items table {
+                width: 100%;
+            }
+            #items th {
+                text-align: left;
+                font-weight: normal;
+            }
+            #items td {
+                width: 15%;
+                text-align: right;
+            }
+            #items th, #items td {
+                padding-top: 0.5em;
+            }
+            #items tbody tr:last-of-type th,
+            #items tbody tr:last-of-type td {
+                padding-bottom: 3in;
+            }
+            #items tfoot tr:first-of-type th,
+            #items tfoot tr:first-of-type td {
+                border-top: 1px solid black;
+            }
+            #items tfoot th {
+                font-weight: bold;
+                padding-left: 50%;
+            }
+
+            #notes h3 {
+                font: bold 14pt/20pt sans-serif;
+                margin-bottom: 0.5em;
+            }
+        </style>
+    </head>
+    <body><div id="page"><div id="page-padding">
+
+        <h1>Invoice</h1>
+
+        <table id="txnid">
+            <tr>
+                <td class="txnid">
+                    <b>ID:</b> {{ pfos.uuid }}</td>
+                <td class="date">
+                    <b>Date:</b> {{ pfos.ctime.strftime("%B %d, %Y").replace(' 0', ' ') }}</td>
+            </tr>
+        </table>
+
+        <div id="addresses">
+            <h2>From:</h2>
+            <blockquote>
+                Gratipay, LLC<br>
+                716 Park Road<br>
+                Ambridge, PA 15003<br>
+                USA
+            </blockquote>
+
+            <h2>To:</h2>
+            <blockquote>
+                {{ pfos.name }}<br>
+                {{ pfos.promotion_name }}<br>
+                {{ pfos.email_address }}<br>
+            </blockquote>
+            <hr>
+        </div>
+
+        <div id="items">
+            <h2>Items</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>open source software</th>
+                        <td>$</td>
+                        <td>{{ pfos.amount }}.00</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Subtotal:</th>
+                        <td>$</td>
+                        <td class="amount">{{ pfos.amount }}.00</td>
+                    </tr>
+                    <tr>
+                        <th>Tax:</th>
+                        <td>$</td>
+                        <td class="amount">0.00</td>
+                    </tr>
+                    <tr>
+                        <th>Total:</th>
+                        <td>$</td>
+                        <td class="amount">{{ pfos.amount }}.00</td>
+                    </tr>
+                    <tr>
+                        <th>Amount Paid:</th>
+                        <td>$</td>
+                        <td class="amount">{{ pfos.amount }}.00</td>
+                    </tr>
+                    <tr>
+                        <th>Amount Due:</th>
+                        <td>$</td>
+                        <td class="amount">0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div id="notes">
+            <h3>Notes</h3>
+
+            <p>Please contact support@gratipay.com with any questions. Thank
+            you for your business!</p>
+
+        </div>
+
+</div></div></body>

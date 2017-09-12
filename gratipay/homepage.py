@@ -3,7 +3,6 @@
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import braintree
 from gratipay import utils
 from gratipay.models.payment_for_open_source import PaymentForOpenSource
 
@@ -29,8 +28,8 @@ def _parse(raw):
 
     # name
     name = x('name')
-    if len(name) > 256:
-        name = name[:256]
+    if len(name) > 255:
+        name = name[:255]
         errors.append('name')
 
     # email address
@@ -52,8 +51,8 @@ def _parse(raw):
 
     promotion_url = x('promotion_url')
     is_link = lambda x: (x.startswith('http://') or x.startswith('https://')) and '.' in x
-    if len(promotion_url) > 256 or (promotion_url and not is_link(promotion_url)):
-        promotion_url = promotion_url[:256]
+    if len(promotion_url) > 255 or (promotion_url and not is_link(promotion_url)):
+        promotion_url = promotion_url[:255]
         errors.append('promotion_url')
 
     promotion_twitter = x('promotion_twitter')
@@ -84,13 +83,13 @@ def _store(parsed):
     return PaymentForOpenSource.insert(**parsed)
 
 
-def _charge(pfos, payment_method_nonce):
-    charge = braintree.Transaction.sale
-    result = charge({ 'amount': pfos.amount
-                    , 'payment_method_nonce': payment_method_nonce
-                    , 'options': {'submit_for_settlement': True}
-                    , 'custom_fields': {'pfos_uuid': pfos.uuid}
-                     })
+def _charge(app, pfos, nonce):
+    params = { 'amount': pfos.amount
+             , 'payment_method_nonce': nonce
+             , 'options': {'submit_for_settlement': True}
+             , 'custom_fields': {'pfos_uuid': pfos.uuid}
+              }
+    result = app.pfos_card_charger.charge(params)
     pfos.process_result(result)
 
 
@@ -99,19 +98,19 @@ def _send(app, pfos):
                        , template='paid-for-open-source'
                        , email=pfos.email_address
                        , amount=pfos.amount
-                       , receipt_url=pfos.receipt_url
+                       , invoice_url=pfos.invoice_url
                         )
 
 
 def pay_for_open_source(app, raw):
     parsed, errors = _parse(raw)
-    out = {'errors': errors, 'receipt_url': None}
+    out = {'errors': errors, 'invoice_url': None}
     if not errors:
         payment_method_nonce = parsed.pop('payment_method_nonce')
         pfos = _store(parsed)
-        _charge(pfos, payment_method_nonce)
+        _charge(app, pfos, payment_method_nonce)
         if pfos.succeeded:
-            out['receipt_url'] = pfos.receipt_url
+            out['invoice_url'] = pfos.invoice_url
             if pfos.email_address:
                 _send(app, pfos)
         else:
