@@ -278,8 +278,13 @@ You should then find this in your browser at
 
 ![Success](https://raw.github.com/gratipay/gratipay.com/master/img-src/success.png)
 
-Congratulations! Sign in using Twitter or GitHub and you're off and
-running. At some point, try [running the test suite](#testing-).
+Congratulations! Now enter a dollar amount [less than
+2000](https://developers.braintreepayments.com/reference/general/testing/python#test-amounts)
+(ironically), and submit the form to complete the basic flow:
+
+![More Success](https://raw.github.com/gratipay/gratipay.com/master/img-src/more-success.png)
+
+You're off and running! At some point, try [running the test suite](#testing-).
 
 
 Help!
