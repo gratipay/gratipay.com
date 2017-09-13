@@ -85,16 +85,16 @@ msgid ""
 msgstr "Questa è una email di transazione per farti sapere che un {viewer} ha visualizzato le tue informazioni di identità per {country_name} su Gratipay."
 
 msgid "Invoice from Gratipay"
-msgstr ""
+msgstr "Fattura da Gratipay"
 
 msgid "Thank you for your payment of {amount} for open source!"
-msgstr ""
+msgstr "Grazie per il tuo pagamento di {amount} per l'open source!"
 
 msgid "View Invoice"
-msgstr ""
+msgstr "Vedi Fattura"
 
 msgid "Follow this link to view your invoice:"
-msgstr ""
+msgstr "Segui questo link per vedere la tua fattura:"
 
 msgid "We have your application!"
 msgstr "Abbiamo la tua candidatura!"
@@ -361,7 +361,7 @@ msgid "Search"
 msgstr "Cerca"
 
 msgid "Browse"
-msgstr ""
+msgstr "Naviga"
 
 msgid "About"
 msgstr "Chi siamo"
@@ -714,123 +714,123 @@ msgid "I agree to the other {0}terms of service{1} as well."
 msgstr "Acconsento anche agli altri {0}termini di servizio{1}."
 
 msgid "Eep! Mind looking over your info for us?"
-msgstr ""
+msgstr "Aah! Ti dispiacerebbe controllare le tue informazioni per noi?"
 
 msgid "Pay for open source."
 msgstr "Paga per open source."
 
 msgid "Payment complete!"
-msgstr ""
+msgstr "Pagamento completato!"
 
 msgid "Thank you for paying for open source!"
-msgstr ""
+msgstr "Grazie per pagare per l'open source!"
 
 msgid "Email {support} with{br}any questions or feedback."
-msgstr ""
+msgstr "Invia un'email a {support} con{br}qualunque domanda o suggerimento."
 
 msgid "How much?"
-msgstr ""
+msgstr "Quanto?"
 
 msgid "2000"
-msgstr ""
+msgstr "2000"
 
 msgid "Please enter a whole dollar amount (minimum $10, no punctuation)."
-msgstr ""
+msgstr "Per favore, inserisci un'ammontare di dollari in numeri interi (minimo $10, senza punteggiatura)."
 
 msgid ""
 "We {a}recommend{_a} $2,000 per year{br}per technical employee{br}at your "
 "company."
-msgstr ""
+msgstr "{a}Raccomandiamo{_a} $2000 all'anno{br}per ciascun impiegato tecnico{br}nella tua azienda."
 
 msgid "We weren't able to process your card."
-msgstr ""
+msgstr "Non siamo stati in grado di elaborare la tua carta."
 
 msgid "Optional"
-msgstr ""
+msgstr "Opzionale"
 
 msgid "Who are you?"
-msgstr ""
+msgstr "Chi sei?"
 
 msgid "And do you wish to subscribe to our newsletter?"
-msgstr ""
+msgstr "E desidere iscriverti alla nostra newsletter?"
 
 msgid "Your Name"
-msgstr ""
+msgstr "Il Tuo Nome"
 
 msgid "Please enter a value shorter than 256 characters."
-msgstr ""
+msgstr "Per favore inserisci un valore con meno di 256 caratteri."
 
 msgid "Your Email Address"
-msgstr ""
+msgstr "Il Tuo Indirizzo Email"
 
 msgid "Please enter a valid email address shorter than 255 characters."
-msgstr ""
+msgstr "Per favore inserisci un indirizzo email valido con meno di 255 caratteri."
 
 msgid "You will get a link to an invoice for your payment."
-msgstr ""
+msgstr "Riceverai un link alla fattura del tuo pagamento."
 
 msgid "Follow-up"
-msgstr ""
+msgstr "Seguito"
 
 msgid "Monthly"
-msgstr ""
+msgstr "Mensile"
 
 msgid "Quarterly"
-msgstr ""
+msgstr "Trimestrale"
 
 msgid "Yearly"
-msgstr ""
+msgstr "Annuale"
 
 msgid "Never"
-msgstr ""
+msgstr "Mai"
 
 msgid "I am surprised that you are seeing this message."
-msgstr ""
+msgstr "Sono sorpreso che tu stia vedendo questo messaggio."
 
 msgid "You will get a progress report, with a reminder to pay again."
-msgstr ""
+msgstr "Riceverai un aggiornamento sul progresso, con un promemoria di pagare nuovamente."
 
 msgid "Promotion"
-msgstr ""
+msgstr "Promozione"
 
 msgid "We (probably) want to brag about you! May we?"
-msgstr ""
+msgstr "(Probabilmente) vorremmo vantarci di te! Possiamo?"
 
 msgid "Your Company Name"
-msgstr ""
+msgstr "Nome Della Tua Azienda"
 
 msgid "Please enter a value 32 characters or shorter."
-msgstr ""
+msgstr "Per favore inserisci un valore con 32 caratteri o meno."
 
 msgid "Your Landing Page URL"
-msgstr ""
+msgstr "URL Della Tua Landing Page"
 
 msgid "Please enter a valid URL shorter than 256 characters."
-msgstr ""
+msgstr "Per favore inserisci un URL valido con meno di 256 caratteri."
 
 msgid "Your Company Twitter Handle"
-msgstr ""
+msgstr "Profilo Twitter Della Tua Azienda"
 
 msgid "Please enter a valid Twitter handle."
-msgstr ""
+msgstr "Per favore inserisci un profilo Twitter valido."
 
 msgid "Your Message to the Open Source Community"
-msgstr ""
+msgstr "Il tuo Messaggio alla Comunità Open Source"
 
 msgid "Please limit your message to 128 characters."
-msgstr ""
+msgstr "Per favore limita il tuo messaggio a 128 caratteri."
 
 msgid "Submit Form"
-msgstr ""
+msgstr "Invia Il Modulo"
 
 msgid "Pay for Open Source"
-msgstr ""
+msgstr "Paga per l'Open Source"
 
 msgid "Processing ..."
-msgstr ""
+msgstr "In elaborazione ..."
 
 msgid "By submitting this form you agree to our {a}terms of service{_a}."
-msgstr ""
+msgstr "Inviando questo modulo, accetti i nostri {a}termini di servizio{_a}."
 
 msgid "Approved"
 msgstr "Approvati"
