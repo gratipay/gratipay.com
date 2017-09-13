@@ -1,21 +1,49 @@
 #homepage {
 
-    #banner {
-        height: 128px;
-        background-size: 40%;
+    #main {
+        margin-top: 0;
+    }
 
-        a {
-            display: block;
-            height: 100%;
-            width: 100%;
-            h1 { // override
-                font-size: 28px;
-                line-height: 128px;
-                position: static;
-                text-align: center;
-                max-width: none;
-                right: 0;
-                bottom: 0;
+    #banner {
+        height: auto;
+        background-size: 40%;
+        padding: 128px 0 0 ! important;
+        margin: 0 ! important;
+        color: $black;
+
+        h1 {
+            color: $white;
+            font-size: 28px;
+            height: 128px;
+            line-height: 128px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            text-align: center;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+
+            .complete { display: none; }
+
+        }
+
+        .field {
+            padding: 0 0 1em;
+            input {
+                outline-color: $gold;
+            }
+            margin: 0 ! important;
+            p.fine-print {
+                color: $white;
+                a {
+                    color: $white;
+                }
+            }
+            p.help {
+                color: $gold ! important;
             }
         }
     }
@@ -28,6 +56,7 @@
         }
 
         .payment-complete {
+            padding-top: 60px;
             .fine-print {
                 padding: 0;
             }
@@ -48,18 +77,17 @@
         #braintree-container {
             min-height: 260px;
             &.failed {
-                background: red;
-                color: white;
+                color: red;
                 font: normal 24px/24px $Mono;
                 padding-top: 118px;
             }
             &.offline {
-                background: orange;
                 color: white;
                 padding-top: 78px;
-
+                label { display: none; }
                 .fine-print {
-                    color: blue;
+                    display: block;
+                    color: red;
                 }
             }
         }
@@ -72,6 +100,7 @@
             padding: 10px;
 
             legend {
+                display: block;
                 position: relative;
                 top: 0px;
                 font: italic 14px/18px $Chronicle;
@@ -89,6 +118,12 @@
 
             h2.down-more {
                 margin-top: 4em;
+            }
+
+            &.charging {
+                border: none;
+                margin: 0;
+                padding: 0;
             }
 
             .field {

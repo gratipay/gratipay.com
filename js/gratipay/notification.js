@@ -44,6 +44,10 @@ Gratipay.notification = function(text, type, timeout, closeCallback) {
     if (timeout > 0) setTimeout(close, timeout);
 };
 
+Gratipay.notification.clear = function() {
+    $('.notification').hide();
+};
+
 Gratipay.initNotifications = function(notifs) {
     jQuery.each(notifs, function(k, notif) {
         Gratipay.notification(notif.jsonml, notif.type, -1, function() {
