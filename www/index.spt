@@ -86,6 +86,35 @@ $(document).ready(function() {
 <form action="/" method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
+    <h2><a href="#what-why" class="what-why">{{ _('What? Why?') }}</a></h2>
+
+    <div id="what-why">
+
+        <p class="prose">
+            {{ _( 'Open source boosts the productivity of your developers {a}by 20%{_a}. Companies fund half of open source through developer time.'
+                , a='<a href="https://medium.com/@nayafia/open-source-was-worth-at-least-143m-of-instagram-s-1b-acquisition-808bb85e4681">'|safe
+                , _a='</a>'|safe
+                 ) }}
+        </p>
+
+        <p class="prose">
+        {{ _( 'Gratipay helps you fund {a}the other half{_a}. By paying for open source through Gratipay, you {b}strengthen the foundation{_b} your developers build on.'
+            , a='<a href="https://gratipay.news/open-source-captures-almost-none-of-the-value-it-creates-9015eb7e293e">'|safe
+            , _a='</a>'|safe
+            , b='<b>'|safe
+            , _b='</b>'|safe
+             ) }}
+        </p>
+
+        <p class="prose">
+            {{ _( 'Gratipay can {b}report back{_b} to you on the progress your payment enables, and we can {b}promote{_b} your contribution, increasing your visibility within the open source community.'
+                , b='<b>'|safe
+                , _b='</b>'|safe
+                 ) }}
+        </p>
+
+    </div>
+
     <fieldset>
         <h2>{{ _('How much?') }}</h2>
 
@@ -178,7 +207,7 @@ $(document).ready(function() {
         </div>
 
 
-        <h2>{{ _('Promotion') }}</h2>
+        <h2 class="down-more">{{ _('Promotion') }}</h2>
         <p class="fine-print">{{  _('We (probably) want to brag about you! May we?') }}</p>
 
         <div class="promotion-fields">
@@ -215,7 +244,19 @@ $(document).ready(function() {
                 </p>
             </div>
         </div>
+
+
+        <h2 class="down-more">{{ _('What do you use?') }}</h2>
+
+        <p class="prose">
+            {{ _( 'Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and libraries you value most, so we can take that into account when we allocate funds and report back to you.'
+                , a='<a href="mailto:support@gratipay.com">'|safe
+                , _a='</a>'|safe
+                 ) }}
+        </p>
+
     </fieldset>
+
 
     <fieldset class="submit">
         <legend>{{ _('Submit Form') }}</legend>

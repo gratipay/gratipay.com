@@ -23,7 +23,7 @@
     #content {
         text-align: center;
 
-        a:hover {
+        a.button:hover {
             background: $darker-green;
         }
 
@@ -34,6 +34,15 @@
             .twitter-container {
                 padding-top: 20px;
             }
+        }
+
+        #what-why {
+            display: none;
+        }
+        p.prose {
+            text-align: justify;
+            width: 55%;
+            margin: 0 auto 1em;
         }
 
         #braintree-container {
@@ -78,7 +87,7 @@
                 padding-top: 0;
             }
 
-            h2:nth-of-type(2) {
+            h2.down-more {
                 margin-top: 4em;
             }
 
