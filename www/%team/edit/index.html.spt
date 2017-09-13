@@ -53,7 +53,7 @@ suppress_sidebar = True
 
     <label><h2>{{ _("Homepage") }}</h2></label>
     {% if team.package %}
-    <a href="{{ team.homepage }}">{{ team.homepage }}</a>
+    <a href="{{ team.homepage }}" rel="noreferrer">{{ team.homepage }}</a>
     {% else %}
     <input type="text" name="homepage" value="{{team.homepage}}" required>
     {% endif %}
