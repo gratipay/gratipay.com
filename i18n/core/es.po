@@ -735,6 +735,26 @@ msgstr ""
 msgid "Email {support} with{br}any questions or feedback."
 msgstr ""
 
+msgid "What? Why?"
+msgstr ""
+
+msgid ""
+"Open source boosts the productivity of your developers {a}by 20%{_a}. "
+"Companies fund half of open source through developer time."
+msgstr ""
+
+msgid ""
+"Gratipay helps you fund {a}the other half{_a}. By paying for open source "
+"through Gratipay, you {b}strengthen the foundation{_b} your developers build"
+" on."
+msgstr ""
+
+msgid ""
+"Gratipay can {b}report back{_b} to you on the progress your payment enables,"
+" and we can {b}promote{_b} your contribution, increasing your visibility "
+"within the open source community."
+msgstr ""
+
 msgid "How much?"
 msgstr ""
 
@@ -825,6 +845,15 @@ msgid "Your Message to the Open Source Community"
 msgstr ""
 
 msgid "Please limit your message to 128 characters."
+msgstr ""
+
+msgid "What do you use?"
+msgstr ""
+
+msgid ""
+"Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and "
+"libraries you value most, so we can take that into account when we allocate "
+"funds and report back to you."
 msgstr ""
 
 msgid "Submit Form"
