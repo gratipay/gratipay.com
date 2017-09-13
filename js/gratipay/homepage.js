@@ -5,6 +5,11 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
     self.$form = $('#homepage #content form');
     self.$submit = self.$form.find('button[type=submit]');
 
+    $('a.what-why').click(function(e) {
+        e.preventDefault();
+        $('#what-why').toggle();
+    });
+
     function disable(e) {
         e.preventDefault();
         self.$submit.prop('disabled', true);
