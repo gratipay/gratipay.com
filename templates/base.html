@@ -71,9 +71,11 @@
             {% include "templates/support-gratipay.html" %}
         </div>
 
+        {% if not suppress_banner %}
         <div id="banner">
             {% block banner %}{% if banner %}<h1>{{ banner }}</h1>{% endif %}{% endblock %}
         </div>
+        {% endif %}
 
         {% if page_id not in ('homepage', 'npm') %}
         <table id="notice">

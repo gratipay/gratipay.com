@@ -5,9 +5,10 @@ from gratipay.homepage import pay_for_open_source
 [---]
 if not user.ANON:
     website.redirect('/browse/projects')
+suppress_banner = True
 suppress_sidebar = True
 page_id = "homepage"
-banner = "Pay for Open Source"
+banner = "Pay for Open Source"  # goofy w/ suppress_banner, it's for <title>
 result = pay_for_open_source(website.app, request.body) if request.method == 'POST' else {}
 if result and result['errors']:
     # Hmmm ... bit of an Aspen rough spot ... interaction w/ error.spt, skip it
@@ -29,10 +30,6 @@ result
     <meta name="og:image" content="{{ website.asset('gratipay.opengraph.png') }}" />
 {% endblock %}
 
-{% block banner %}
-    <a href="/about/"><h1>{{ _("Pay for open source.") }}</h1></a>
-{% endblock %}
-
 {% block scripts %}
 <script>
 $(document).ready(function() {
@@ -48,45 +45,79 @@ $(document).ready(function() {
 
 {% block content %}
 
-<div class="payment-complete" style="display: none;">
-    <div class="description important-thing-at-the-top">
-        {{ _("Payment complete!") }} &#x1f483;
-    </div>
-    <p class="instructions">
-        {{ _("Thank you for paying for open source!") }}
-    </p>
-    <div class="important-button" class="important-button">
-        <a class="button large selected invoice" href="">{{ _("View Invoice") }}</a>
-    </div>
-    <p class="fine-print">
-        {{ _( "Email {support} with{br}any questions or feedback."
-            , support='<a href="mailto:support@gratipay.com">support@gratipay.com</a>'|safe
-            , br='<br>'|safe
-             ) }}
-    </p>
-    <div class="twitter-container">
-        <a class="twitter-share-button"
-           href="https://twitter.com/intent/tweet?text=We%20just%20paid%20for%20#opensource%20on%20@Gratipay!"
-           data-size="large" data-url="https://gratipay.com/"></a>
-        <script>window.twttr = (function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
-          if (d.getElementById(id)) return t;
-          js = d.createElement(s);
-          js.id = id;
-          js.src = "https://platform.twitter.com/widgets.js";
-          fjs.parentNode.insertBefore(js, fjs);
-
-          t._e = [];
-          t.ready = function(f) { t._e.push(f); };
-          return t;
-        }(document, "script", "twitter-wjs"));</script>
-    </div>
-</div>
-
 <form action="/" method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-    <h2><a href="#what-why" class="what-why">{{ _('What? Why?') }}</a></h2>
+    <fieldset id="banner">
+        <h1>
+            <span class="pending">{{ _("Pay for open source.") }}</span>
+            <span class="complete">{{ _("Payment complete!") }}</span>
+        </h1>
+
+        <div class="field amount rollup">
+            <label for="amount">$</label>
+            <input type="text" name="amount" id="amount"
+                   placeholder="{{ _("2000") }}"
+                   required autofocus>
+
+            <p class="fine-print help">
+                {{ _("Please enter a whole dollar amount (minimum $10, no punctuation).") }}
+            </p>
+
+            <p class="fine-print">
+            {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}at your company.'
+                , br='<br>'|safe
+                , a='<a href="https://gratipay.news/9205443e209d">'|safe
+                , _a='</a>'|safe
+                 ) }}
+            </p>
+
+        </div>
+    </fieldset>
+
+    <div class="payment-complete" style="display: none;">
+        <p class="instructions">
+            {{ _("Thank you for paying for open source!") }} &#x1f483;
+        </p>
+        <div class="important-button" class="important-button">
+            <a class="button large selected invoice" href="">{{ _("View Invoice") }}</a>
+        </div>
+        <p class="fine-print">
+            {{ _( "Email {support}{br}with questions or feedback."
+                , support='<a href="mailto:support@gratipay.com">support@gratipay.com</a>'|safe
+                , br='<br>'|safe
+                 ) }}
+        </p>
+        <div class="twitter-container">
+            <a class="twitter-share-button"
+               href="https://twitter.com/intent/tweet?text=We%20just%20paid%20for%20#opensource%20on%20@Gratipay!"
+               data-size="large" data-url="https://gratipay.com/"></a>
+            <script>window.twttr = (function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
+              if (d.getElementById(id)) return t;
+              js = d.createElement(s);
+              js.id = id;
+              js.src = "https://platform.twitter.com/widgets.js";
+              fjs.parentNode.insertBefore(js, fjs);
+
+              t._e = [];
+              t.ready = function(f) { t._e.push(f); };
+              return t;
+            }(document, "script", "twitter-wjs"));</script>
+        </div>
+    </div>
+
+    <div class="rollup">
+    <fieldset class="charging">
+        <div class="field">
+            <div id="braintree-container"></div>
+            <p class="fine-print help">
+                {{ _("We weren't able to process your card.") }}
+            </p>
+        </div>
+    </fieldset>
+
+    <h2><a href="#what-why" class="what-why">{{ _('Wait ... What? Why?') }}</a></h2>
 
     <div id="what-why">
 
@@ -114,37 +145,6 @@ $(document).ready(function() {
         </p>
 
     </div>
-
-    <fieldset>
-        <h2>{{ _('How much?') }}</h2>
-
-        <div class="field amount">
-            <label for="amount">$</label>
-            <input type="text" name="amount" id="amount"
-                   placeholder="{{ _("2000") }}"
-                   required autofocus>
-
-            <p class="fine-print help">
-                {{ _("Please enter a whole dollar amount (minimum $10, no punctuation).") }}
-            </p>
-
-            <p class="fine-print">
-            {{ _( 'We {a}recommend{_a} $2,000 per year{br}per technical employee{br}at your company.'
-                , br='<br>'|safe
-                , a='<a href="https://gratipay.news/9205443e209d">'|safe
-                , _a='</a>'|safe
-                 ) }}
-            </p>
-
-        </div>
-
-        <div class="field charging">
-            <div id="braintree-container"></div>
-            <p class="fine-print help">
-                {{ _("We weren't able to process your card.") }}
-            </p>
-        </div>
-    </fieldset>
 
     <fieldset class="optional">
         <legend>{{ _('Optional') }}</legend>
@@ -249,7 +249,7 @@ $(document).ready(function() {
         <h2 class="down-more">{{ _('What do you use?') }}</h2>
 
         <p class="prose">
-            {{ _( 'Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and libraries you value most, so we can take that into account when we allocate funds and report back to you.'
+            {{ _( 'Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and libraries you value most, so we can take that into account when we allocate funds, promote, and report back to you.'
                 , a='<a href="mailto:support@gratipay.com">'|safe
                 , _a='</a>'|safe
                  ) }}
@@ -274,6 +274,7 @@ $(document).ready(function() {
                  ) }}
         </p>
     </fieldset>
+    </div>
 
 </form>
 

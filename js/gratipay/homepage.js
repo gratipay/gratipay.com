@@ -7,7 +7,7 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
 
     $('a.what-why').click(function(e) {
         e.preventDefault();
-        $('#what-why').toggle();
+        $('#what-why').slideToggle();
     });
 
     function disable(e) {
@@ -20,7 +20,6 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
 
         $('#braintree-container').addClass('offline').html(Gratipay.jsonml(['div',
             ['div', {'class': 'field amount'},
-                ['label', {'for': 'nonce'}, 'Nonce'],
                 ['input', {'id': 'nonce', 'value': 'fake-valid-nonce', 'required': true}, 'Nonce'],
             ],
             ['p', {'class': 'fine-print'}, "If you're seeing this on gratipay.com, we screwed up."]
@@ -58,7 +57,8 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
 Gratipay.homepage.submitFormWithNonce = function(nonce) {
     var self = this;
     var data = new FormData(self.$form[0]);
-    data.set('payment_method_nonce', nonce);
+    data[data.set ? 'set' : 'append']('payment_method_nonce', nonce);
+       // Chrome/FF || Safari
 
     $.ajax({
         url: self.$form.attr('action'),
@@ -77,8 +77,12 @@ Gratipay.homepage.submitFormWithNonce = function(nonce) {
                     $('.'+fieldName, self.$form).addClass('error');
                 }
             } else {
+                Gratipay.notification.clear();
                 $('.payment-complete a.invoice').attr('href', data.invoice_url);
-                $('form').slideUp(500, function() {
+                $('#banner h1 .pending').fadeOut(250, function() {
+                    $('#banner h1 .complete').fadeIn(250)
+                });
+                $('.rollup').slideUp(500, function() {
                     $('.payment-complete').fadeIn(500);
                 });
             }

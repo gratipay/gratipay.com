@@ -38,7 +38,7 @@ class Tests(BrowserHarness):
 
 
     def test_loads_for_anon(self):
-        assert self.css('#banner h1').html == 'Pay for open source.'
+        assert self.css('#banner h1').text == 'Pay for open source.'
         assert self.css('#header .sign-in button').html.strip()[:17] == 'Sign in / Sign up'
 
     def test_redirects_for_authed_exclamation_point(self):
@@ -51,7 +51,7 @@ class Tests(BrowserHarness):
     def submit_succeeds(self):
         self.css('fieldset.submit button').click()
         self.wait_for('.payment-complete', 4)
-        told_them = self.css('.payment-complete .description').text.startswith('Payment complete!')
+        told_them = self.css('#banner h1').text == 'Payment complete!'
         return self.fetch().succeeded and told_them
 
     def test_anon_can_post(self):
