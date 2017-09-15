@@ -105,6 +105,15 @@ $(document).ready(function() {
               return t;
             }(document, "script", "twitter-wjs"));</script>
         </div>
+
+        <h2 class="down-more">{{ _('What do you use?') }}</h2>
+
+        <p class="prose">
+            {{ _( 'Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and libraries you value most, so we can take that into account when we allocate funds, promote, and report back to you.'
+                , a='<a href="mailto:support@gratipay.com">'|safe
+                , _a='</a>'|safe
+                 ) }}
+        </p>
     </div>
 
     <div class="rollup">
@@ -244,16 +253,6 @@ $(document).ready(function() {
                 </p>
             </div>
         </div>
-
-
-        <h2 class="down-more">{{ _('What do you use?') }}</h2>
-
-        <p class="prose">
-            {{ _( 'Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and libraries you value most, so we can take that into account when we allocate funds, promote, and report back to you.'
-                , a='<a href="mailto:support@gratipay.com">'|safe
-                , _a='</a>'|safe
-                 ) }}
-        </p>
 
     </fieldset>
 
