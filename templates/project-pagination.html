@@ -5,7 +5,7 @@
 <ul class="pagination">
     <li class="arrow-button arrow-left">
     {% if current_page > 1 %}
-        <a href="/?status={{status_filter}}&page={{current_page - 1}}"><span class="arrow"><</span> {{ _("Back") }}</a>
+        <a href="/browse/projects?status={{status_filter}}&page={{current_page - 1}}"><span class="arrow"><</span> {{ _("Back") }}</a>
     {% endif %}
     </li>
 
@@ -13,24 +13,24 @@
         <span class="show-on-mobile">{{ _("Page {0} of {1}", current_page, last_page) }}</span>
 
         {% if start > 1 %}
-            <a class="hide-on-mobile" href="/?status={{status_filter}}&page=1">1</a>
+            <a class="hide-on-mobile" href="/browse/projects?status={{status_filter}}&page=1">1</a>
             <span class="filler hide-on-mobile">...</span>
         {% endif %}
 
         {% for i in range(start, end + 1) %}<a
             class="{{'selected' if current_page == i }} hide-on-mobile"
-            href="/?status={{status_filter}}&page={{i}}"
+            href="/browse/projects?status={{status_filter}}&page={{i}}"
             >{{i}}</a>{% endfor %}
 
         {% if end < last_page %}
             <span class="filler hide-on-mobile">...</span>
-            <a class="hide-on-mobile" href="/?status={{status_filter}}&page={{last_page}}">{{last_page}}</a>
+            <a class="hide-on-mobile" href="/browse/projects?status={{status_filter}}&page={{last_page}}">{{last_page}}</a>
         {% endif %}
     </li>
 
     <li class="arrow-button arrow-right">
     {% if current_page < last_page %}
-        <a href="/?status={{status_filter}}&page={{current_page + 1}}">{{ _("Next") }} <span class="arrow">></span></a>
+        <a href="/browse/projects?status={{status_filter}}&page={{current_page + 1}}">{{ _("Next") }} <span class="arrow">></span></a>
     {% endif %}
     </li>
 </ul>
