@@ -171,15 +171,16 @@ def _check_no_team_balances(cursor):
 
 def _check_orphans(cursor):
     """
-    Finds participants that
-        * do not have a verified email address (i.e. did not signup via email)
-        * do not have corresponding elsewhere account
-        * have not been absorbed by other participant
+    Finds participants that:
 
-    These are broken because participants without an email attached arise from
-    elsewhere (signup via third-party providers), and elsewhere is detached
-    only by take over which makes a note in absorptions if it removes the last
-    elsewhere account.
+        * do not have a verified email address (i.e. did not signup via email),
+        * do not have a corresponding elsewhere account, and
+        * have not been absorbed by another participant.
+
+    These are broken because new participants are only ever created with either
+    an email address or an account on another platform, and email/elsewhere is
+    detached only by take_over which makes a note in absorptions if it removes
+    the last email/elsewhere account.
 
     Especially bad case is when also claimed_time is set because
     there must have been elsewhere account attached and used to sign in.
