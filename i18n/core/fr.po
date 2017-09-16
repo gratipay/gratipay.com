@@ -746,6 +746,15 @@ msgstr ""
 msgid "Email {support}{br}with questions or feedback."
 msgstr ""
 
+msgid "What do you use?"
+msgstr ""
+
+msgid ""
+"Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and "
+"libraries you value most, so we can take that into account when we allocate "
+"funds, promote, and report back to you."
+msgstr ""
+
 msgid "We weren't able to process your card."
 msgstr ""
 
@@ -842,15 +851,6 @@ msgid "Your Message to the Open Source Community"
 msgstr ""
 
 msgid "Please limit your message to 128 characters."
-msgstr ""
-
-msgid "What do you use?"
-msgstr ""
-
-msgid ""
-"Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and "
-"libraries you value most, so we can take that into account when we allocate "
-"funds, promote, and report back to you."
 msgstr ""
 
 msgid "Submit Form"

@@ -739,6 +739,15 @@ msgstr "Grazie per pagare per l'open source!"
 msgid "Email {support}{br}with questions or feedback."
 msgstr "Invia un'email a {support} con{br}domande o suggerimenti."
 
+msgid "What do you use?"
+msgstr "Cosa usi?"
+
+msgid ""
+"Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and "
+"libraries you value most, so we can take that into account when we allocate "
+"funds, promote, and report back to you."
+msgstr "Scrivici a {a}support@gratipay.com{_a} per dirci a quali ecosistemi e a quali librerie dai più valore, così che possiamo tenerne conto quando allochiamo gli investimenti, promuoviamo e ti teniamo informato."
+
 msgid "We weren't able to process your card."
 msgstr "Non siamo stati in grado di elaborare la tua carta."
 
@@ -836,15 +845,6 @@ msgstr "Il tuo Messaggio alla Comunità Open Source"
 
 msgid "Please limit your message to 128 characters."
 msgstr "Per favore limita il tuo messaggio a 128 caratteri."
-
-msgid "What do you use?"
-msgstr "Cosa usi?"
-
-msgid ""
-"Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and "
-"libraries you value most, so we can take that into account when we allocate "
-"funds, promote, and report back to you."
-msgstr "Scrivici a {a}support@gratipay.com{_a} per dirci a quali ecosistemi e a quali librerie dai più valore, così che possiamo tenerne conto quando allochiamo gli investimenti, promuoviamo e ti teniamo informato."
 
 msgid "Submit Form"
 msgstr "Invia Il Modulo"
