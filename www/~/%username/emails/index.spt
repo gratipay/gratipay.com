@@ -6,12 +6,16 @@ participant = get_participant(state, restrict=True)
 banner = '~' + participant.username
 title = _("Email")
 
-emails = participant.get_emails()
-groups = [[], [], []]  # primary, verified, unverified
-for email in emails:
-    i = 0 if email.address == participant.email_address else 1 if email.verified else 2
-    groups[i].append(email)
-emails = sum(groups, [])
+def get_sort_key(email):
+    if email.address == participant.email_address:
+        return 0 # Verified, primary
+    elif email.verified:
+        return 1 # Verified, but not primary
+    else:
+        return 2 # Unverified
+
+emails = sorted(participant.get_emails(), key=get_sort_key)
+
 page_id = 'emails'
 
 [-----------------------------------------------------------------------------] text/html
