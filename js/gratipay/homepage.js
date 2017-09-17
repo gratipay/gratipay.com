@@ -73,6 +73,11 @@ Gratipay.homepage.submitFormWithNonce = function(nonce) {
                 self.$submit.prop('disabled', false);
                 self.$submit.removeClass('processing');
                 Gratipay.notification(data.msg, 'error');
+
+                // The user could be submitting the form after fixing an error.
+                // Let's first clear all errors, and then assign them again
+                // based on the response received.
+                self.$form.find('.error').removeClass('error');
                 for (var i=0, fieldName; fieldName=data.errors[i]; i++) {
                     $('.'+fieldName, self.$form).addClass('error');
                 }
