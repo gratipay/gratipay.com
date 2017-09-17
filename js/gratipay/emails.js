@@ -1,11 +1,11 @@
 Gratipay.emails = {};
 
-Gratipay.emails.post = function(e) {
-    e.preventDefault();
+Gratipay.emails.post = function() {
     var $this = $(this);
     var action = this.className;
     var $inputs = $('.emails button, .emails input');
-    var address = $this.parent().data('email') || $('input.add-email').val();
+    var $row = $this.closest('tr');
+    var address = $row.data('email') || $('.add input').val();
 
     $inputs.prop('disabled', true);
 
@@ -15,19 +15,13 @@ Gratipay.emails.post = function(e) {
         data: {action: action, address: address},
         dataType: 'json',
         success: function (msg) {
-            if (msg) {
-                Gratipay.notification(msg, 'success');
-            }
-            if (action == 'add-email') {
-                $('input.add-email').val('');
-                setTimeout(function(){ window.location.reload(); }, 3000);
-                return;
-            } else if (action == 'set-primary') {
-                $('.emails li').removeClass('primary');
-                $this.parent().addClass('primary');
-            } else if (action == 'remove') {
-                $this.parent().fadeOut();
-            }
+            switch(action) {
+                case 'resend':
+                    Gratipay.notification(msg, 'success');
+                    break;
+                default:
+                    window.location.reload();
+            };
             $inputs.prop('disabled', false);
         },
         error: [
@@ -37,15 +31,33 @@ Gratipay.emails.post = function(e) {
     });
 };
 
+Gratipay.emails.showAddForm = function() {
+    $('.add-form-knob').hide();
+    $('.add form').show();
+}
 
-Gratipay.emails.init = function () {
+Gratipay.emails.hideAddForm = function() {
+    $('.add form').hide();
+    $('.add-form-knob').show();
+}
+
+Gratipay.emails.handleAddForm = function(e) {
+    e.preventDefault();
+    if (e.type === 'submit')
+        Gratipay.emails.post.call(this);
+    else
+        Gratipay.emails.hideAddForm();
+}
+
+Gratipay.emails.init = function() {
 
     // Wire up email addresses list.
     // =============================
 
     $('.emails button, .emails input').prop('disabled', false);
-    $('.emails button[class]').on('click', Gratipay.emails.post);
-    $('form.add-email').on('submit', Gratipay.emails.post);
+    $('.emails tr.existing button').click(Gratipay.emails.post);
+    $('button.add').click(Gratipay.emails.showAddForm);
+    $('.add form').on('submit reset', Gratipay.emails.handleAddForm);
 
 
     // Wire up notification preferences

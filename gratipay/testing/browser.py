@@ -5,11 +5,15 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import atexit
 import os
 import time
+from contextlib import contextmanager
 
+from selenium.common.exceptions import (WebDriverException,
+                                        StaleElementReferenceException)
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.expected_conditions import staleness_of
+from selenium.webdriver.support.ui import WebDriverWait
 from splinter.browser import _DRIVERS
 from splinter.driver.webdriver import WebDriverElement
-from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.common.keys import Keys
 
 from gratipay.security import user
 
@@ -69,9 +73,10 @@ class BrowserHarness(Harness):
         self.cookies.delete()
 
     def visit(self, url):
-        """Extend to prefix our base URL.
+        """Extend to prefix our base URL if necessary.
         """
-        return self._browser.visit(self.base_url + url)
+        base_url =  '' if url.startswith('http') else self.base_url
+        return self._browser.visit(base_url + url)
 
     def sign_in(self, username):
         """Given a username, sign in the user.
@@ -85,10 +90,10 @@ class BrowserHarness(Harness):
         P(username).update_session(token, expires)
         self.cookies.add({user.SESSION: token})
 
-    def css(self, selector):
+    def css(self, selector, element=None):
         """Shortcut for find_by_css.
         """
-        return self.find_by_css(selector)
+        return (element or self).find_by_css(selector)
 
     def js(self, code):
         """Shortcut for evaluate_script.
@@ -123,8 +128,12 @@ class BrowserHarness(Harness):
         while time.time() < end_time:
             if self.has_element(selector):
                 element = self.find_by_css(selector)
-                if element.visible:
-                    return element
+                try:
+                    if element.visible:
+                        return element
+                except StaleElementReferenceException:
+                    # May need to wait across page reload.
+                    pass
         raise NeverShowedUp(selector)
 
     def wait_for_notification(self, type='notice', message=None, timeout=2):
@@ -155,6 +164,13 @@ class BrowserHarness(Harness):
         specified). Dismiss it and return the message.
         """
         return self.wait_for_notification('error', message)
+
+    @contextmanager
+    def page_reload_afterwards(self, timeout=2):
+        # www.obeythetestinggoat.com/how-to-get-selenium-to-wait-for-page-load-after-a-click.html
+        old_page = self._browser.driver.find_element_by_tag_name('html')
+        yield
+        WebDriverWait(self._browser, timeout).until(staleness_of(old_page))
 
     def __getattr__(self, name):
         try:

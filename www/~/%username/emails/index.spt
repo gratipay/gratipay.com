@@ -1,12 +1,22 @@
-from gratipay.utils import get_participant
+from gratipay.utils import get_participant, icons
 
 [-----------------------------------------------------------------------------]
 
 participant = get_participant(state, restrict=True)
 banner = '~' + participant.username
-title = _("Emails")
+title = _("Email")
 
-emails = participant.get_emails()
+def get_sort_key(email):
+    if email.address == participant.email_address:
+        return 0 # Verified, primary
+    elif email.verified:
+        return 1 # Verified, but not primary
+    else:
+        return 2 # Unverified
+
+emails = sorted(participant.get_emails(), key=get_sort_key)
+
+page_id = 'emails'
 
 [-----------------------------------------------------------------------------] text/html
 {% extends "templates/profile.html" %}
@@ -17,26 +27,61 @@ emails = participant.get_emails()
 {% endblock %}
 
 {% block content %}
-<div id="emails" class="emails">
-    <ul>
-    {% for email in emails %}
-        {% set is_primary = email.address == participant.email_address %}
-        <li class="{{ 'primary' if is_primary }} {{ 'verified' if email.verified }}"
-            data-email="{{ email.address }}">
-            {{ email.address }}
-            <span class="label-primary">{{ _("Primary") }}</span>
-            <span class="label-unverified">{{ _("Unverified") }}</span>
-            <button class="remove">{{ _("Remove") }}</button>
-            <button class="resend">{{ _("Resend") }}</button>
-            <button class="set-primary">{{ _("Set as primary") }}</button>
-        </li>
-    {% endfor %}
-    </ul>
-    <form class="add-email">
-        <input class="add-email" name="email" type="email" placeholder="sam@example.net" />
-        <button type="submit">{{ _("Add email address") }}</button>
-    </form>
-</div>
+<h2>{{ _('Addresses') }}</h2>
+{% set has_unverified = False %}
+<table class="emails listing">
+{% for i, email in enumerate(emails, start=1) %}
+    <tr class="existing" data-email="{{ email.address }}">
+        <td class="item">
+            <span class="icon">&#xe007;</span>
+            <div class="listing-details">
+                <span class="listing-name">{{ email.address }}</span>
+                <span class="i">{{ i }}</span> &middot;
+                {% if email.verified %}
+                  {% if email.address == participant.email_address %}
+                    <span class="status-icon feature">
+                        {{ icons.STATUS_ICONS['feature']|safe }}</span>
+                        {{ _('Your primary email address') }}
+                  {% else %}
+                    <span class="status-icon success">
+                        {{ icons.STATUS_ICONS['success']|safe }}</span>
+                        {{ _('Linked') }} &middot;
+                    <button class="set-primary">{{ _('Set as primary') }}</button> &middot;
+                    <button class="remove">{{ _('Remove') }}</button>
+                  {% endif %}
+                {% else %}
+                    <span class="status-icon warning">
+                            {{ icons.STATUS_ICONS['warning']|safe }}</span>
+                    {{ _('Check your inbox') }} &middot;
+                    <button class="resend">{{ _('Resend') }}</button> &middot;
+                    <button class="remove">{{ _('Remove') }}</button>
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+{% endfor %}
+    {% if not participant.has_pending_email_address_verifications %}
+    <tr class="add">
+        <td class="item">
+            <span class="icon">&#xe007;</span>
+            <div class="listing-details">
+                <span class="listing-name add-form-knob">
+                    <button class="add">{{ _('Add an email address') }}</button>
+                </span>
+                <form class="add-email">
+                    <span class="listing-name">
+                        <input class="add-email" name="email" type="email" placeholder="you@..."
+                               autofocus>
+                    </span>
+                    <span class="i">{{ len(emails) + 1 }}</span> &middot;
+                    <button type="submit">{{ _('Send verification') }}</button> &middot;
+                    <button type="reset">{{ _('Cancel') }}</button>
+                </form>
+            </div>
+        </td>
+    </tr>
+   {% endif %}
+</table>
 
 <h2 id="notifications">{{ _("Notifications") }}</h2>
 <div class="email-notifications">

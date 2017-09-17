@@ -54,6 +54,17 @@ class Email(object):
 
     """
 
+    @property
+    def has_pending_email_address_verifications(self):
+        """A boolean indicating whether there are email address verifications
+        outstanding for this participant. Makes a db call.
+        """
+        for email in self.get_emails():
+            if not email.verified:
+                return True
+        return False
+
+
     def start_email_verification(self, email, *packages):
         """Add an email address for a participant.
 

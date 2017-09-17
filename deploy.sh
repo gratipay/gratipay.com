@@ -65,7 +65,7 @@ fi
 make i18n_upload
 make i18n_download
 git add i18n
-maybe_commit "Update i18n files"
+maybe_commit("Update i18n files")
 
 
 # Ask confirmation and bump the version
@@ -92,7 +92,7 @@ pg_dump --schema-only \
         "`heroku config:get DATABASE_URL -a gratipay`" \
         > sql/schema.sql
 git add deploy sql/schema.sql
-maybe_commit "Clear deploy hooks and update schema.sql"
+maybe_commit("Clear deploy hooks and update schema.sql")
 
 
 # Push to GitHub
