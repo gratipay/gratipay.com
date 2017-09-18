@@ -62,7 +62,7 @@ class Tests(QueuedEmailHarness):
             'for at least a week.)\\n\\nExample [shield](http://shields.io)) '
             'for GitHub repositories:\\n'
             '[![Gratipay](https://img.shields.io/gratipay/project/foo/.svg)](https://gratipay.com/foo/)'
-            '\n> `[![Gratipay](https://img.shields.io/gratipay/project/foo/.svg)](https://gratipay.com/foo/)`", "title": "foo and 2 other projects"}')
+            '\\n> `[![Gratipay](https://img.shields.io/gratipay/project/foo/.svg)](https://gratipay.com/foo/)`", "title": "foo and 2 other projects"}')
         assert kwargs['auth'] == ('cheeseburger', 'di3tc0ke')
 
 
