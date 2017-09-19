@@ -1,0 +1,34 @@
+from aspen import Response
+
+[-----------------------------------------------------------------------------]
+
+team = request.path['team']
+if team.is_approved in (None, False):
+    raise website.redirect('..')
+elif user.ANON:
+    raise Response(401)
+elif not (user.ADMIN or user.participant.username == team.owner):
+    raise Response(403)
+
+banner = team.name
+title = _("Widgets")
+
+[-----------------------------------------------------------------------------]
+{% extends "templates/team-base.html" %}
+{% block content %}
+
+<h2>Shields</h2>
+
+<a href="https://gratipay.com/{{ team.slug }}/"><img src="https://img.shields.io/gratipay/project/{{ team.slug }}.svg"></a>
+
+<pre>[![Gratipay](https://img.shields.io/gratipay/project/{{ team.slug }}.svg)](https://gratipay.com/{{ team.slug }}/)</pre>
+
+<pre><xmp><a href="https://gratipay.com/{{ team.slug }}/"><img src="https://img.shields.io/gratipay/project/{{ team.slug }}.svg"></a></xmp></pre>
+
+
+
+
+
+
+{% endblock %}
+
