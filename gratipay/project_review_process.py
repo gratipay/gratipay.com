@@ -51,7 +51,7 @@ class ProjectReviewProcess(object):
             owner_usernames.add(team.owner)
             body.append('https://gratipay.com{}'.format(team.url_path))
         assert len(owner_usernames) == 1, owner_usernames
-        shield = "[![Gratipay](https://img.shields.io/gratipay/project{}.svg)](https://gratipay.com{})".format(teams[0].url_path,teams[0].url_path)
+        shield = "[![Gratipay](https://img.shields.io/gratipay/project/{}.svg)](https://gratipay.com{})".format(teams[0].slug,teams[0].url_path)
         shield_markdown = '> `'+shield+'`'
         body.extend(['', '(This application will remain open for at least a week.)', 'Example [shield](http://shields.io)) for GitHub repositories:', shield, shield_markdown])
         data = json.dumps({'title': title, 'body': '\n'.join(body)})
