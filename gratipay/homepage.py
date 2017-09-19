@@ -7,6 +7,9 @@ from gratipay import utils
 from gratipay.models.payment_for_open_source import PaymentForOpenSource
 
 
+kB = 2**10
+
+
 def _parse(raw):
     """Given a POST request.body, return (parsed<dict>, errors<list>).
     """
@@ -14,36 +17,40 @@ def _parse(raw):
     errors = []
     x = lambda f: raw[f].strip()  # KeyError -> 400
 
-    # amount
+    # payment info
     amount = x('amount')
     if (not amount.isdigit()) or (int(amount) < 10):
         errors.append('amount')
         amount = ''.join(x for x in amount.split('.')[0] if x.isdigit())
 
-    # credit card nonce
     payment_method_nonce = x('payment_method_nonce')
     if len(payment_method_nonce) > 36:
         errors.append('payment_method_nonce')
         payment_method_nonce = ''
 
-    # name
+    # ecosystems/packages
+    grateful_for = x('grateful_for')
+    if len(grateful_for) > 16*kB:
+        grateful_for = grateful_for[:16*kB]
+        errors.append('grateful_for')
+
+    # contact info
     name = x('name')
     if len(name) > 255:
         name = name[:255]
         errors.append('name')
 
-    # email address
     email_address = x('email_address')
     if email_address and not utils.is_valid_email_address(email_address):
         email_address = email_address[:255]
         errors.append('email_address')
 
-    # follow_up
     follow_up = x('follow_up')
     if follow_up not in ('monthly', 'quarterly', 'yearly', 'never'):
         follow_up = 'monthly'
         errors.append('follow_up')
 
+    # promo fields
     promotion_name = x('promotion_name')
     if len(promotion_name) > 32:
         promotion_name = promotion_name[:32]
@@ -68,6 +75,7 @@ def _parse(raw):
 
     parsed = { 'amount': amount
              , 'payment_method_nonce': payment_method_nonce
+             , 'grateful_for': grateful_for
              , 'name': name
              , 'email_address': email_address
              , 'follow_up': follow_up

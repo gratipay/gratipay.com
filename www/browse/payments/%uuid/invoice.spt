@@ -169,7 +169,7 @@ if pfos is None:
             <table>
                 <tbody>
                     <tr>
-                        <th>open source software sponsorship</th>
+                        <th>open source software</th>
                         <td>$</td>
                         <td>{{ pfos.amount }}.00</td>
                     </tr>

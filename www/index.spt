@@ -105,15 +105,6 @@ $(document).ready(function() {
               return t;
             }(document, "script", "twitter-wjs"));</script>
         </div>
-
-        <h2 class="down-more">{{ _('What do you use?') }}</h2>
-
-        <p class="prose">
-            {{ _( 'Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and libraries you value most, so we can take that into account when we allocate funds, promote, and report back to you.'
-                , a='<a href="mailto:support@gratipay.com">'|safe
-                , _a='</a>'|safe
-                 ) }}
-        </p>
     </div>
 
     <div class="rollup">
@@ -158,7 +149,20 @@ $(document).ready(function() {
     <fieldset class="optional">
         <legend>{{ _('Optional') }}</legend>
 
-        <h2>{{ _('Who are you?') }}</h2>
+        <h2>{{ _('What projects?') }}</h2>
+        <p class="fine-print">
+            {{  _('What ecosystems and/or projects are you most grateful for?') }}
+        </p>
+
+        <div class="field grateful_for">
+            <textarea name="grateful_for"></textarea>
+            <p class="fine-print help">
+                {{ _("Please enter less than 16 kB of data.") }}
+            </p>
+        </div>
+
+
+        <h2 class="down-more">{{ _('Who are you?') }}</h2>
         <p class="fine-print">{{  _('And do you wish to subscribe to our newsletter?') }}</p>
 
         <div class="field name">

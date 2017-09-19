@@ -25,10 +25,11 @@ class Tests(BrowserHarness):
 
 
     def fill_form(self, amount, credit_card_number, expiration, cvv,
-                  name='', email_address='',
+                  grateful_for='', name='', email_address='',
                   promotion_name='', promotion_url='', promotion_twitter='', promotion_message=''):
         self.fill('amount', amount)
         self.fill_cc(credit_card_number, expiration, cvv)
+        if grateful_for: self.fill('grateful_for', grateful_for)
         if name: self.fill('name', name)
         if email_address: self.fill('email_address', email_address)
         if promotion_name: self.fill('promotion_name', promotion_name)
@@ -55,22 +56,23 @@ class Tests(BrowserHarness):
         return self.fetch().succeeded and told_them
 
     def test_anon_can_post(self):
-        self.fill_form('537', '4242424242424242', '1020', '123', 'Alice Liddell',
-                       'alice@example.com', 'Wonderland', 'http://www.example.com/',
-                       'thebestbutter', 'Love me! Love me! Say that you love me!')
+        self.fill_form('537', '4242424242424242', '1020', '123',
+                       'open source!', 'Alice Liddell', 'alice@example.com',
+                       'Wonderland', 'http://www.example.com/', 'thebestbutter',
+                       'Love me! Love me! Say that you love me!')
         assert self.submit_succeeds()
         self.wait_for('a.invoice').click()
         self.wait_for('#txnid')
-        assert self.css('#items tbody tr').text == 'open source software sponsorship $ 537.00'
+        assert self.css('#items tbody tr').text == 'open source software $ 537.00'
 
     def test_options_are_optional(self):
         self.fill_form('537', '4242424242424242', '1020', '123')
         assert self.submit_succeeds()
 
     def test_errors_are_handled(self):
-        self.fill_form('1,000', '4242424242424242', '1020', '123', 'Alice Liddell',
-                       'alice@example', 'Wonderland',
-                       'htp://www.example.com/', 'thebestbutter', 'Love me!')
+        self.fill_form('1,000', '4242424242424242', '1020', '123',
+                       'open source!', 'Alice Liddell', 'alice@example',
+                       'Wonderland', 'htp://www.example.com/', 'thebestbutter', 'Love me!')
         self.css('fieldset.submit button').click()
         assert self.wait_for_error() == 'Eep! Mind looking over your info for us?'
         assert self.css('.field.email_address').has_class('error')
