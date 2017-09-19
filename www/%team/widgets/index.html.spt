@@ -19,9 +19,18 @@ title = _("Widgets")
 
 <h2>Shields</h2>
 
-<a href="https://gratipay.com/{{ team.slug }}/"><img src="https://img.shields.io/gratipay/project/{{ team.slug }}.svg"></a>
+<p><a href="https://shields.io">Shields.io</a> provides quality metadata badges for open source projects. 
+This shield shows how much your project receives weekly:</p>
+
+<p><a href="https://gratipay.com/{{ team.slug }}/"><img src="https://img.shields.io/gratipay/project/{{ team.slug }}.svg"></a></p>
+
+<p>Copy the code below to use on your repository or website.</p>
+
+<b>Markdown</b>
 
 <pre>[![Gratipay](https://img.shields.io/gratipay/project/{{ team.slug }}.svg)](https://gratipay.com/{{ team.slug }}/)</pre>
+
+<b>HTML</b>
 
 <pre><xmp><a href="https://gratipay.com/{{ team.slug }}/"><img src="https://img.shields.io/gratipay/project/{{ team.slug }}.svg"></a></xmp></pre>
 
