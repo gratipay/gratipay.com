@@ -151,7 +151,7 @@ $(document).ready(function() {
 
         <h2>{{ _('What projects?') }}</h2>
         <p class="fine-print">
-            {{  _('What ecosystems and/or projects are you most grateful for?') }}
+            {{  _('What ecosystems and/or projects are you grateful for?') }}
         </p>
 
         <div class="field grateful_for">
