@@ -38,7 +38,7 @@ class PaymentForOpenSource(Model):
 
 
     @classmethod
-    def insert(cls, amount, name, follow_up, email_address,
+    def insert(cls, amount, grateful_for, name, follow_up, email_address,
                promotion_name, promotion_url, promotion_twitter, promotion_message,
                cursor=None):
         """Take baseline info and insert into the database.
@@ -46,12 +46,12 @@ class PaymentForOpenSource(Model):
         uuid = uuid4().hex
         return (cursor or cls.db).one("""
             INSERT INTO payments_for_open_source
-                        (uuid, amount, name, follow_up, email_address,
+                        (uuid, amount, grateful_for, name, follow_up, email_address,
                          promotion_name, promotion_url, promotion_twitter, promotion_message)
-                 VALUES (%s, %s, %s, %s, %s,
+                 VALUES (%s, %s, %s, %s, %s, %s,
                          %s, %s, %s, %s)
               RETURNING payments_for_open_source.*::payments_for_open_source
-        """, (uuid, amount, name, follow_up, email_address,
+        """, (uuid, amount, grateful_for, name, follow_up, email_address,
               promotion_name, promotion_url, promotion_twitter, promotion_message))
 
 

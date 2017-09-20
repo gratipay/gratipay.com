@@ -145,14 +145,11 @@
                         padding: 2em 0 0;
                     }
                 }
-                input, select {
+                input {
                     width: 100%;
                     padding: 10px;
                     font: normal 24px/36px $Ideal;
                     height: auto;
-                }
-                select {
-                    height: 36px;
                 }
                 .fine-print{
                     padding: 0.5em 0 0;
@@ -241,6 +238,11 @@
                             }
                         }
                     }
+                }
+                textarea {
+                    width: 100%;
+                    height: 192px;
+                    padding: 10px;
                 }
 
                 .help {
