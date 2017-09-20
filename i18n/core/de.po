@@ -750,15 +750,6 @@ msgstr ""
 msgid "Email {support}{br}with questions or feedback."
 msgstr ""
 
-msgid "What do you use?"
-msgstr ""
-
-msgid ""
-"Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and "
-"libraries you value most, so we can take that into account when we allocate "
-"funds, promote, and report back to you."
-msgstr ""
-
 msgid "We weren't able to process your card."
 msgstr ""
 
@@ -783,6 +774,15 @@ msgid ""
 msgstr ""
 
 msgid "Optional"
+msgstr ""
+
+msgid "What projects?"
+msgstr ""
+
+msgid "What ecosystems and/or projects are you grateful for?"
+msgstr ""
+
+msgid "Please enter less than 16 kB of data."
 msgstr ""
 
 msgid "Who are you?"
@@ -1376,23 +1376,26 @@ msgstr "Ihre Privatsphäre-Einstellungen wurden geändert."
 msgid "Statement too big!"
 msgstr "Aussage zu gross!"
 
-msgid "Primary"
-msgstr "Primär"
+msgid "Addresses"
+msgstr ""
 
-msgid "Unverified"
-msgstr "Unverifiziert"
-
-msgid "Remove"
-msgstr "Löschen"
-
-msgid "Resend"
-msgstr "Erneut senden"
+msgid "Linked"
+msgstr ""
 
 msgid "Set as primary"
 msgstr "Als Standard festlegen"
 
-msgid "Add email address"
-msgstr "Eine E-Mail-Adresse hinzufügen"
+msgid "Remove"
+msgstr "Löschen"
+
+msgid "Check your inbox"
+msgstr ""
+
+msgid "Resend"
+msgstr "Erneut senden"
+
+msgid "Send verification"
+msgstr ""
 
 msgid "Notifications"
 msgstr "Benachrichtigungen"
@@ -1598,6 +1601,9 @@ msgstr "Identitäten"
 
 msgid "Verified"
 msgstr "Verifiziert"
+
+msgid "Unverified"
+msgstr "Unverifiziert"
 
 msgid "Add Identity"
 msgstr "Identität Hinzufügen"

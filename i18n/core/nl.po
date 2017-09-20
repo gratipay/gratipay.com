@@ -741,15 +741,6 @@ msgstr ""
 msgid "Email {support}{br}with questions or feedback."
 msgstr ""
 
-msgid "What do you use?"
-msgstr ""
-
-msgid ""
-"Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and "
-"libraries you value most, so we can take that into account when we allocate "
-"funds, promote, and report back to you."
-msgstr ""
-
 msgid "We weren't able to process your card."
 msgstr ""
 
@@ -774,6 +765,15 @@ msgid ""
 msgstr ""
 
 msgid "Optional"
+msgstr ""
+
+msgid "What projects?"
+msgstr ""
+
+msgid "What ecosystems and/or projects are you grateful for?"
+msgstr ""
+
+msgid "Please enter less than 16 kB of data."
 msgstr ""
 
 msgid "Who are you?"
@@ -1367,23 +1367,26 @@ msgstr "Uw privacy instellingen zijn gewijzigd."
 msgid "Statement too big!"
 msgstr ""
 
-msgid "Primary"
-msgstr "Primair"
+msgid "Addresses"
+msgstr ""
 
-msgid "Unverified"
-msgstr "Niet geverifieerd"
-
-msgid "Remove"
-msgstr "Verwijderen"
-
-msgid "Resend"
+msgid "Linked"
 msgstr ""
 
 msgid "Set as primary"
 msgstr "Stel in als primair"
 
-msgid "Add email address"
-msgstr "Voeg een e-mailadres toe"
+msgid "Remove"
+msgstr "Verwijderen"
+
+msgid "Check your inbox"
+msgstr ""
+
+msgid "Resend"
+msgstr ""
+
+msgid "Send verification"
+msgstr ""
 
 msgid "Notifications"
 msgstr "Notificaties"
@@ -1589,6 +1592,9 @@ msgstr ""
 
 msgid "Verified"
 msgstr ""
+
+msgid "Unverified"
+msgstr "Niet geverifieerd"
 
 msgid "Add Identity"
 msgstr ""

@@ -739,15 +739,6 @@ msgstr "Grazie per pagare per l'open source!"
 msgid "Email {support}{br}with questions or feedback."
 msgstr "Invia un'email a {support} con{br}domande o suggerimenti."
 
-msgid "What do you use?"
-msgstr "Cosa usi?"
-
-msgid ""
-"Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and "
-"libraries you value most, so we can take that into account when we allocate "
-"funds, promote, and report back to you."
-msgstr "Scrivici a {a}support@gratipay.com{_a} per dirci a quali ecosistemi e a quali librerie dai più valore, così che possiamo tenerne conto quando allochiamo gli investimenti, promuoviamo e ti teniamo informato."
-
 msgid "We weren't able to process your card."
 msgstr "Non siamo stati in grado di elaborare la tua carta."
 
@@ -773,6 +764,15 @@ msgstr "Gratipay può {b}informarti{_b} dei progressi messi in grado dal tuo fin
 
 msgid "Optional"
 msgstr "Opzionale"
+
+msgid "What projects?"
+msgstr ""
+
+msgid "What ecosystems and/or projects are you grateful for?"
+msgstr ""
+
+msgid "Please enter less than 16 kB of data."
+msgstr ""
 
 msgid "Who are you?"
 msgstr "Chi sei?"
@@ -1365,23 +1365,26 @@ msgstr "Le impostazioni della tua privacy sono state cambiate."
 msgid "Statement too big!"
 msgstr "Frase troppo lunga!"
 
-msgid "Primary"
-msgstr "Primario"
+msgid "Addresses"
+msgstr ""
 
-msgid "Unverified"
-msgstr "Non verificato"
-
-msgid "Remove"
-msgstr "Rimuovi"
-
-msgid "Resend"
-msgstr "Invia nuovamente"
+msgid "Linked"
+msgstr ""
 
 msgid "Set as primary"
 msgstr "Imposta come primario"
 
-msgid "Add email address"
-msgstr "Aggiungi un indirizzo email"
+msgid "Remove"
+msgstr "Rimuovi"
+
+msgid "Check your inbox"
+msgstr ""
+
+msgid "Resend"
+msgstr "Invia nuovamente"
+
+msgid "Send verification"
+msgstr ""
 
 msgid "Notifications"
 msgstr "Notifiche"
@@ -1587,6 +1590,9 @@ msgstr "Identità"
 
 msgid "Verified"
 msgstr "Verificato"
+
+msgid "Unverified"
+msgstr "Non verificato"
 
 msgid "Add Identity"
 msgstr "Aggiungi Identità"

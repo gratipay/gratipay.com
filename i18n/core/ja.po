@@ -733,15 +733,6 @@ msgstr ""
 msgid "Email {support}{br}with questions or feedback."
 msgstr ""
 
-msgid "What do you use?"
-msgstr ""
-
-msgid ""
-"Follow-up to {a}support@gratipay.com{_a} to tell us what ecosystems and "
-"libraries you value most, so we can take that into account when we allocate "
-"funds, promote, and report back to you."
-msgstr ""
-
 msgid "We weren't able to process your card."
 msgstr ""
 
@@ -766,6 +757,15 @@ msgid ""
 msgstr ""
 
 msgid "Optional"
+msgstr ""
+
+msgid "What projects?"
+msgstr ""
+
+msgid "What ecosystems and/or projects are you grateful for?"
+msgstr ""
+
+msgid "Please enter less than 16 kB of data."
 msgstr ""
 
 msgid "Who are you?"
@@ -1351,23 +1351,26 @@ msgstr "プライバシー設定が変更されました。"
 msgid "Statement too big!"
 msgstr "ステートメントが大きすぎます!"
 
-msgid "Primary"
-msgstr "プライマリー"
+msgid "Addresses"
+msgstr ""
 
-msgid "Unverified"
-msgstr "未確認"
-
-msgid "Remove"
-msgstr "削除"
-
-msgid "Resend"
-msgstr "再送信"
+msgid "Linked"
+msgstr ""
 
 msgid "Set as primary"
 msgstr "プライマリーとして設定"
 
-msgid "Add email address"
-msgstr "メールアドレスを追加"
+msgid "Remove"
+msgstr "削除"
+
+msgid "Check your inbox"
+msgstr ""
+
+msgid "Resend"
+msgstr "再送信"
+
+msgid "Send verification"
+msgstr ""
 
 msgid "Notifications"
 msgstr "通知"
@@ -1573,6 +1576,9 @@ msgstr "ID"
 
 msgid "Verified"
 msgstr "確認済"
+
+msgid "Unverified"
+msgstr "未確認"
 
 msgid "Add Identity"
 msgstr "ID を追加"
