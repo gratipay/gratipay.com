@@ -73,6 +73,12 @@ $(document).ready(function() {
             </p>
 
         </div>
+        <div class="campaign">
+            <h2>{{ _('#BackTheStack') }}</h2>
+            <h3>{{ _('October, 2017') }}</h3>
+            <span class="goal">$100,000</span>
+            <span class="raised">34,518</span>
+        </div>
     </fieldset>
 
     <div class="payment-complete" style="display: none;">

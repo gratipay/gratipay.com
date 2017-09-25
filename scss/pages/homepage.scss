@@ -46,6 +46,55 @@
                 color: $gold ! important;
             }
         }
+
+        .campaign {
+
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 128px;
+            height: 100%;
+            color: white;
+
+            h2 {
+                position: absolute;
+                font: bold 12px $Ideal;
+                margin: 0;
+                padding: 0;
+                text-transform: none;
+                top: 10px;
+                right: 10px;
+                color: white;
+            }
+            h3 {
+                position: absolute;
+                font: normal 12px $Ideal;
+                margin: 0;
+                padding: 0;
+                top: 24px;
+                right: 10px;
+            }
+            span {
+                display: block;
+                position: absolute;
+                font: normal 12px $Mono;
+
+                &.goal {
+                    top: 48px;
+                    right: 10px;
+                }
+                &.raised {
+                    background: $white;
+                    color: $green;
+                    height: 72px;
+                    width: 64px;
+                    right: 10px;
+                    bottom: 10px;
+                    text-align: right;
+                    padding: 0 2px 0 0;
+                }
+            }
+        }
     }
 
     #content {
