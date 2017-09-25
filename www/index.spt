@@ -146,6 +146,12 @@ $(document).ready(function() {
 
     </div>
 
+    <fieldset class="partners">
+        <legend>{{ _('Partners') }}</legend>
+        <a href="https://opensource.org/">
+            <img src="{{ website.asset('backthestack/osi.png') }}"></a>
+    </fieldset>
+
     <fieldset class="optional">
         <legend>{{ _('Optional') }}</legend>
 
