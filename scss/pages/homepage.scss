@@ -31,7 +31,7 @@
         }
 
         .field {
-            padding: 0 0 1em;
+            padding: 0;
             input {
                 outline-color: $gold;
             }
@@ -75,9 +75,16 @@
         }
 
         #braintree-container {
-            min-height: 260px;
+            margin-top: 20px;
+            .braintree-placeholder {
+                margin-bottom: 0;
+                height: 0;
+            }
+            .braintree-sheet__container {
+                margin-bottom: 0;
+            }
             &.failed {
-                color: red;
+                color: $gold;
                 font: normal 24px/24px $Mono;
                 padding-top: 118px;
             }
@@ -87,7 +94,7 @@
                 label { display: none; }
                 .fine-print {
                     display: block;
-                    color: red;
+                    color: $gold;
                 }
             }
         }
@@ -97,23 +104,19 @@
             border: 1px solid $light-brown;
             border-style: solid none none;
             position: relative;
-            padding: 10px;
+            padding: 0;
 
             legend {
                 display: block;
                 position: relative;
                 top: 0px;
                 font: italic 14px/18px $Chronicle;
+                border: 1px solid $light-brown;
+                border-style: none solid;
                 color: $light-brown;
                 background: white;
                 padding: 0 7px;
                 text-align: center;
-            }
-
-            &:nth-of-type(1) {
-                border: 0;
-                margin-top: 0;
-                padding-top: 0;
             }
 
             h2.down-more {
@@ -123,7 +126,67 @@
             &.charging {
                 border: none;
                 margin: 0;
-                padding: 0;
+                padding: 0 20px 20px;
+                min-height: 267px;
+                .loading {
+                    color: $darker-green;
+                    font: bold 14px/14px $Ideal;
+                    position: absolute;
+                    top: 100px;
+                    text-align: center;
+                    width: 100%;
+                }
+            }
+
+            &.campaign {
+                legend {
+                    border-color: $brown;
+                    color: $brown;
+                }
+                border-color: $brown;
+                border-style: solid;
+                h2 img {
+                    width: 256px;
+                }
+                .stats {
+                    padding: 20px 40px;
+                    .stat {
+                        width: 33%;
+                        float: left;
+                        strong { font: normal 24px/28px $Ideal; }
+                        &.main strong { font-weight: bold; font-size: 28px; }
+                        .note {
+                            margin: 2px 0 40px;
+                            padding: 0;
+                        }
+                    }
+                }
+                .partners {
+                    padding: 20px 0 40px;
+                    .note {
+                        padding: 0 0 20px;
+                    }
+                    a {
+                        display: inline-block;
+                        width: 80px;
+                        height: 48px;
+                        padding: 0 10px;
+                        img {
+                            height: 48px;
+                            vertical-align: text-top;
+                            filter: grayscale(100%);
+                        }
+                        &:hover {
+                            background: none;
+                            img {
+                                filter: grayscale(0);
+                            }
+                        }
+                        &.libraries-io img {
+                            height: 32px;
+                        }
+                    }
+                }
             }
 
             .field {
@@ -133,6 +196,7 @@
                     font: normal 10px/12px $Ideal;
                     text-transform: uppercase;
                     margin: 2em 0 0;
+                    border: none;
                 }
                 fieldset {
                     border: none;

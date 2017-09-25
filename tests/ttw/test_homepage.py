@@ -39,6 +39,7 @@ class Tests(BrowserHarness):
 
 
     def test_loads_for_anon(self):
+        import pdb; pdb.set_trace()
         assert self.css('#banner h1').text == 'Pay for open source.'
         assert self.css('#header .sign-in button').html.strip()[:17] == 'Sign in / Sign up'
 
