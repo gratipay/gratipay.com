@@ -733,17 +733,33 @@ msgid ""
 "company."
 msgstr "{a}Raccomandiamo{_a} $2000 all'anno{br}per ciascun impiegato tecnico{br}nella tua azienda."
 
+msgid "Loading credit card form ..."
+msgstr ""
+
+msgid "We weren't able to process your card."
+msgstr "Non siamo stati in grado di elaborare la tua carta."
+
 msgid "Thank you for paying for open source!"
 msgstr "Grazie per pagare per l'open source!"
 
 msgid "Email {support}{br}with questions or feedback."
 msgstr "Invia un'email a {support} con{br}domande o suggerimenti."
 
-msgid "We weren't able to process your card."
-msgstr "Non siamo stati in grado di elaborare la tua carta."
+msgid "Campaign"
+msgstr ""
 
-msgid "Wait ... What? Why?"
-msgstr "Aspetta ... Cosa? Perché?"
+msgid "payment"
+msgid_plural "payments"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "out of {goal} = {percent}"
+msgstr ""
+
+msgid "day left"
+msgid_plural "days left"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid ""
 "Open source boosts the productivity of your developers {a}by 20%{_a}. "
@@ -751,10 +767,10 @@ msgid ""
 msgstr "L'open source incrementa la produttività dei tuoi sviluppatori {a}del 20%{_a}. Le aziende finanziano metà dell'open source attraverso il lavoro degli sviluppatori."
 
 msgid ""
-"Gratipay helps you fund {a}the other half{_a}. By paying for open source "
-"through Gratipay, you {b}strengthen the foundation{_b} your developers build"
-" on."
-msgstr "Gratipay ti aiuta a finanziare {a}l'altra metà{_a}. Pagando per l'open source attraverso Gratipay, {b}rinforzi le fondamenta{_b} sopra le quali i tuoi sviluppatori costruiscono."
+"Gratipay is the easiest way to pay for {a}the other half{_a}. Pay for open "
+"source, and {b}strengthen the foundation{_b} that your developers build on. "
+"Increase innovation and {b}reduce risk{_b} for your company."
+msgstr ""
 
 msgid ""
 "Gratipay can {b}report back{_b} to you on the progress your payment enables,"
@@ -766,13 +782,13 @@ msgid "Optional"
 msgstr "Opzionale"
 
 msgid "What projects?"
-msgstr ""
+msgstr "Quali progetti?"
 
 msgid "What ecosystems and/or projects are you grateful for?"
-msgstr ""
+msgstr "A quali ecosistemi e/o progetti volgi la tua gratitudine?"
 
 msgid "Please enter less than 16 kB of data."
-msgstr ""
+msgstr "Per favore inserisci meno di 16 kB di dati."
 
 msgid "Who are you?"
 msgstr "Chi sei?"
@@ -797,9 +813,6 @@ msgstr "Riceverai un link alla fattura del tuo pagamento."
 
 msgid "Follow-up"
 msgstr "Seguito"
-
-msgid "Monthly"
-msgstr "Mensile"
 
 msgid "Quarterly"
 msgstr "Trimestrale"
@@ -1366,10 +1379,10 @@ msgid "Statement too big!"
 msgstr "Frase troppo lunga!"
 
 msgid "Addresses"
-msgstr ""
+msgstr "Indirizzi"
 
 msgid "Linked"
-msgstr ""
+msgstr "Collegato"
 
 msgid "Set as primary"
 msgstr "Imposta come primario"
@@ -1378,13 +1391,13 @@ msgid "Remove"
 msgstr "Rimuovi"
 
 msgid "Check your inbox"
-msgstr ""
+msgstr "Controlla la tua posta in arrivo"
 
 msgid "Resend"
 msgstr "Invia nuovamente"
 
 msgid "Send verification"
-msgstr ""
+msgstr "Invia la verifica"
 
 msgid "Notifications"
 msgstr "Notifiche"

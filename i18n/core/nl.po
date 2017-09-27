@@ -735,17 +735,33 @@ msgid ""
 "company."
 msgstr ""
 
+msgid "Loading credit card form ..."
+msgstr ""
+
+msgid "We weren't able to process your card."
+msgstr ""
+
 msgid "Thank you for paying for open source!"
 msgstr ""
 
 msgid "Email {support}{br}with questions or feedback."
 msgstr ""
 
-msgid "We weren't able to process your card."
+msgid "Campaign"
 msgstr ""
 
-msgid "Wait ... What? Why?"
+msgid "payment"
+msgid_plural "payments"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "out of {goal} = {percent}"
 msgstr ""
+
+msgid "day left"
+msgid_plural "days left"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid ""
 "Open source boosts the productivity of your developers {a}by 20%{_a}. "
@@ -753,9 +769,9 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Gratipay helps you fund {a}the other half{_a}. By paying for open source "
-"through Gratipay, you {b}strengthen the foundation{_b} your developers build"
-" on."
+"Gratipay is the easiest way to pay for {a}the other half{_a}. Pay for open "
+"source, and {b}strengthen the foundation{_b} that your developers build on. "
+"Increase innovation and {b}reduce risk{_b} for your company."
 msgstr ""
 
 msgid ""
@@ -798,9 +814,6 @@ msgid "You will get a link to an invoice for your payment."
 msgstr ""
 
 msgid "Follow-up"
-msgstr ""
-
-msgid "Monthly"
 msgstr ""
 
 msgid "Quarterly"
