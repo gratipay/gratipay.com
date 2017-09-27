@@ -148,7 +148,7 @@ class Harness(unittest.TestCase):
                        , grateful_for='open source!'
                        , name='Alice Liddell'
                        , email_address='alice@example.com'
-                       , follow_up='monthly'
+                       , follow_up='quarterly'
                        , promotion_name='Wonderland'
                        , promotion_url='http://www.example.com/'
                        , promotion_twitter='thebestbutter'

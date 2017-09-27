@@ -243,11 +243,6 @@ $(document).ready(function() {
                 <legend>{{ _('Follow-up') }}</legend>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow_up" id="follow-up-monthly" value="monthly">
-                    <label for="follow-up-monthly">{{ _('Monthly') }}</label>
-                </div>
-
-                <div class="fancy-radio">
                     <input type="radio" name="follow_up" id="follow-up-quarterly"
                            value="quarterly" checked>
                     <label for="follow-up-quarterly">{{ _('Quarterly') }}</label>
