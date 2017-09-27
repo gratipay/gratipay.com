@@ -90,7 +90,7 @@ $(document).ready(function() {
         <fieldset class="charging rollup">
             <div class="field">
                 <div id="braintree-container"></div>
-                <div class="loading">Loading credit card form ...</div>
+                <div class="loading">{{ _("Loading credit card form ...") }}</div>
                 <p class="fine-print help">
                     {{ _("We weren't able to process your card.") }}
                 </p>
