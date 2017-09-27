@@ -46,8 +46,8 @@ def _parse(raw):
         errors.append('email_address')
 
     follow_up = x('follow_up')
-    if follow_up not in ('monthly', 'quarterly', 'yearly', 'never'):
-        follow_up = 'monthly'
+    if follow_up not in ('quarterly', 'yearly', 'never'):
+        follow_up = 'quarterly'
         errors.append('follow_up')
 
     # promo fields
