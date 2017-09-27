@@ -158,3 +158,11 @@ class Website(BaseWebsite):
         elif cur < 65:  goal = 80
         elif cur > 70:  goal = None
         self.support_goal = goal
+
+        self.campaign_npayments, self.campaign_raised = self.db.one("""
+            SELECT count(amount), coalesce(sum(amount), 0)
+              FROM payments_for_open_source
+             WHERE braintree_result_message = ''
+               AND ctime < '2017-11-01'::timestamptz
+                  ;
+        """)

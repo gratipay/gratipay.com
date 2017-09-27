@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
+import datetime
 from aspen import Response
 from gratipay.homepage import pay_for_open_source
+from decimal import Decimal as D
+
+oct_1 = datetime.date(2017, 10, 01)
+nov_1 = datetime.date(2017, 11, 01)
 [---]
 if not user.ANON:
     website.redirect('/browse/projects')
@@ -9,6 +14,14 @@ suppress_banner = True
 suppress_sidebar = True
 page_id = "homepage"
 banner = "Pay for Open Source"  # goofy w/ suppress_banner, it's for <title>
+
+npayments = website.campaign_npayments
+raised = website.campaign_raised
+goal = D('100000')
+today = datetime.date.today()
+ndays = (nov_1 - today).days
+show_campaign = (today >= oct_1) or request.qs.get('i_am_fancy') == 'yes'
+
 result = pay_for_open_source(website.app, request.body) if request.method == 'POST' else {}
 if result and result['errors']:
     # Hmmm ... bit of an Aspen rough spot ... interaction w/ error.spt, skip it
@@ -73,6 +86,16 @@ $(document).ready(function() {
             </p>
 
         </div>
+
+        <fieldset class="charging rollup">
+            <div class="field">
+                <div id="braintree-container"></div>
+                <div class="loading">{{ _("Loading credit card form ...") }}</div>
+                <p class="fine-print help">
+                    {{ _("We weren't able to process your card.") }}
+                </p>
+            </div>
+        </fieldset>
     </fieldset>
 
     <div class="payment-complete" style="display: none;">
@@ -108,43 +131,74 @@ $(document).ready(function() {
     </div>
 
     <div class="rollup">
-    <fieldset class="charging">
-        <div class="field">
-            <div id="braintree-container"></div>
-            <p class="fine-print help">
-                {{ _("We weren't able to process your card.") }}
+    {% if show_campaign %}
+    <fieldset class="campaign">
+        <legend>{{ _('Campaign') }}</legend>
+        <h2><img src="{{ website.asset('backthestack/october-2017.svg') }}"
+                 alt="#BackTheStack, October 2017"></h2>
+
+        <section class="stats">
+            <div class="stat">
+                <strong>{{ _(format_number(npayments)) }}</strong>
+                <div class="note">
+                    {{ ngettext('payment', 'payments', npayments) }}
+                </div>
+            </div>
+
+            <div class="stat main">
+                <strong>{{ format_currency(raised, 'USD', trailing_zeroes=False) }}</strong>
+                <div class="note">
+                {{ _( "out of {goal} = {percent}"
+                    , goal = ('<span class="goal">{}</span>'|safe).format(
+                                                   format_currency(goal, 'USD', trailing_zeroes=False))
+                    , percent = ('<span class="percent">{}</span>'|safe).format(
+                                                                         format_percent(raised / goal))
+                     ) }}
+                </div>
+            </div>
+
+            <div class="stat">
+                <strong>{{ ndays }}</strong>
+                <div class="note">{{ ngettext("day left", "days left", ndays) }}</div>
+            </div>
+        </section>
+
+        <section class="materials">
+            <p class="prose">
+                {{ _( 'Open source boosts the productivity of your developers {a}by 20%{_a}. Companies fund half of open source through developer time.'
+                    , a='<a href="https://medium.com/@nayafia/open-source-was-worth-at-least-143m-of-instagram-s-1b-acquisition-808bb85e4681">'|safe
+                    , _a='</a>'|safe
+                     ) }}
             </p>
-        </div>
-    </fieldset>
 
-    <h2><a href="#what-why" class="what-why">{{ _('Wait ... What? Why?') }}</a></h2>
-
-    <div id="what-why">
-
-        <p class="prose">
-            {{ _( 'Open source boosts the productivity of your developers {a}by 20%{_a}. Companies fund half of open source through developer time.'
-                , a='<a href="https://medium.com/@nayafia/open-source-was-worth-at-least-143m-of-instagram-s-1b-acquisition-808bb85e4681">'|safe
+            <p class="prose">
+            {{ _( 'Gratipay is the easiest way to pay for {a}the other half{_a}. Pay for open source, and {b}strengthen the foundation{_b} that your developers build on. Increase innovation and {b}reduce risk{_b} for your company.'
+                , a='<a href="https://gratipay.news/open-source-captures-almost-none-of-the-value-it-creates-9015eb7e293e">'|safe
                 , _a='</a>'|safe
-                 ) }}
-        </p>
-
-        <p class="prose">
-        {{ _( 'Gratipay helps you fund {a}the other half{_a}. By paying for open source through Gratipay, you {b}strengthen the foundation{_b} your developers build on.'
-            , a='<a href="https://gratipay.news/open-source-captures-almost-none-of-the-value-it-creates-9015eb7e293e">'|safe
-            , _a='</a>'|safe
-            , b='<b>'|safe
-            , _b='</b>'|safe
-             ) }}
-        </p>
-
-        <p class="prose">
-            {{ _( 'Gratipay can {b}report back{_b} to you on the progress your payment enables, and we can {b}promote{_b} your contribution, increasing your visibility within the open source community.'
                 , b='<b>'|safe
                 , _b='</b>'|safe
                  ) }}
-        </p>
+            </p>
 
-    </div>
+            <p class="prose">
+                {{ _( 'Gratipay can {b}report back{_b} to you on the progress your payment enables, and we can {b}promote{_b} your contribution, increasing your visibility within the open source community.'
+                    , b='<b>'|safe
+                    , _b='</b>'|safe
+                     ) }}
+            </p>
+        </section>
+
+        <section class="partners">
+            <div class="note">In partnership with:</div>
+            <a href="https://opensource.org/" class="osi">
+                <img src="{{ website.asset('backthestack/osi.png') }}"></a>
+            <a href="https://libraries.io/" class="libraries-io">
+                <img src="{{ website.asset('backthestack/libraries.io.svg') }}"></a>
+            <a href="https://www.stickermule.com/" class="sticker-mule">
+                <img src="{{ website.asset('backthestack/sticker-mule.svg') }}"></a>
+        </section>
+    </fieldset>
+    {% endif %}
 
     <fieldset class="optional">
         <legend>{{ _('Optional') }}</legend>

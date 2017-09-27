@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1947px" height="794px" viewBox="0 0 1947 794" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12072) - http://www.bohemiancoding.com/sketch -->
+    <title>BackTheStack-Q4-2017</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <rect id="Rectangle-2" fill-opacity="0" fill="#E6E6E6" sketch:type="MSShapeGroup" x="0" y="0" width="1947" height="794"></rect>
+        <text id="OCTOBER" sketch:type="MSTextLayer" font-family="Courier" font-size="160" font-weight="bold" fill="#339966">
+            <tspan x="298" y="583">OCTOBER</tspan>
+        </text>
+        <text id="2017" sketch:type="MSTextLayer" font-family="Courier" font-size="160" font-weight="bold" fill="#339966">
+            <tspan x="1347" y="583">2017</tspan>
+        </text>
+        <g id="Heartcoin" sketch:type="MSLayerGroup" transform="translate(1043.000000, 407.000000)" fill="#663300">
+            <path d="M243.555362,122 C243.555362,189.032093 189.045794,243.358512 121.774787,243.358512 C54.5269312,243.358512 0,189.023442 0,122 C0,54.9765581 54.5269312,0.641488372 121.771894,0.641488372 C189.045794,0.641488372 243.555362,54.967907 243.555362,122 L243.555362,122 Z M171.304213,76.2555349 C157.599412,67.2496744 144.577538,74.0696744 137.756969,81.9768372 C135.207575,84.9211163 130.846694,88.3931163 122.616869,88.3931163 C114.387044,88.3931163 110.023269,84.9211163 107.482556,81.9768372 C100.661987,74.0725581 87.6401125,67.2612093 73.9353125,76.2555349 C57.8431687,86.8301395 62.5194687,105.949209 67.2131312,111.448465 L122.616869,186.206047 L178.026394,111.448465 C182.711375,105.954977 187.387675,86.8301395 171.304213,76.2555349 L171.304213,76.2555349 Z" id="Heart_Coin" sketch:type="MSShapeGroup"></path>
+        </g>
+        <text id="#BackTheStack" sketch:type="MSTextLayer" font-family="Courier" font-size="200" font-weight="bold" fill="#339966">
+            <tspan x="171" y="323">#BackTheStack</tspan>
+        </text>
+    </g>
+</svg>
