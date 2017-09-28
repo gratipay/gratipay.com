@@ -811,23 +811,20 @@ msgstr "Per favore inserisci un indirizzo email valido con meno di 255 caratteri
 msgid "You will get a link to an invoice for your payment."
 msgstr "Riceverai un link alla fattura del tuo pagamento."
 
-msgid "Follow-up"
-msgstr "Seguito"
+msgid "Join Mailing List"
+msgstr ""
 
-msgid "Quarterly"
-msgstr "Trimestrale"
+msgid "Yes"
+msgstr "Sì"
 
-msgid "Yearly"
-msgstr "Annuale"
-
-msgid "Never"
-msgstr "Mai"
+msgid "No"
+msgstr "No"
 
 msgid "I am surprised that you are seeing this message."
 msgstr "Sono sorpreso che tu stia vedendo questo messaggio."
 
-msgid "You will get a progress report, with a reminder to pay again."
-msgstr "Riceverai un aggiornamento sul progresso, con un promemoria di pagare nuovamente."
+msgid "We send updates related to #BackTheStack."
+msgstr ""
 
 msgid "Promotion"
 msgstr "Promozione"
@@ -995,12 +992,6 @@ msgstr "Aggiungi"
 
 msgid "Are you sure?"
 msgstr "Sei sicuro?"
-
-msgid "Yes"
-msgstr "Sì"
-
-msgid "No"
-msgstr "No"
 
 msgid "Already closed."
 msgstr "Già chiuso."
@@ -1259,20 +1250,29 @@ msgstr "Nessun indirizzo email registrato."
 msgid "Linked to a different account"
 msgstr "Collegato con un account differente"
 
-msgid "Ready to use"
-msgstr "Pronto all'uso"
-
 msgid "Your primary email address"
 msgstr "Il tuo indirizzo email primario"
 
 msgid "Linked to your account"
 msgstr "Collegato col tuo account"
 
-msgid "Half-linked to your account"
-msgstr "Semi-collegato col tuo account"
+msgid "Verification pending"
+msgstr ""
+
+msgid "Unverified"
+msgstr "Non verificato"
 
 msgid "Apply to accept payments"
 msgstr "Richiedi di poter accettare pagamenti"
+
+msgid "Resend verification"
+msgstr ""
+
+msgid "Verify email address"
+msgstr ""
+
+msgid "Dead-end, sorry"
+msgstr ""
 
 msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
 msgstr "Gli indirizzi sono da {a}{code}maintainers{_code}{_a}."
@@ -1603,9 +1603,6 @@ msgstr "Identità"
 
 msgid "Verified"
 msgstr "Verificato"
-
-msgid "Unverified"
-msgstr "Non verificato"
 
 msgid "Add Identity"
 msgstr "Aggiungi Identità"

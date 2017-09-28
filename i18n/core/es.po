@@ -818,22 +818,19 @@ msgstr ""
 msgid "You will get a link to an invoice for your payment."
 msgstr ""
 
-msgid "Follow-up"
+msgid "Join Mailing List"
 msgstr ""
 
-msgid "Quarterly"
-msgstr ""
+msgid "Yes"
+msgstr "Sí"
 
-msgid "Yearly"
-msgstr ""
-
-msgid "Never"
-msgstr ""
+msgid "No"
+msgstr "No"
 
 msgid "I am surprised that you are seeing this message."
 msgstr ""
 
-msgid "You will get a progress report, with a reminder to pay again."
+msgid "We send updates related to #BackTheStack."
 msgstr ""
 
 msgid "Promotion"
@@ -1002,12 +999,6 @@ msgstr "Añadir"
 
 msgid "Are you sure?"
 msgstr "¿Estás seguro?"
-
-msgid "Yes"
-msgstr "Sí"
-
-msgid "No"
-msgstr "No"
 
 msgid "Already closed."
 msgstr "Ya está cerrado."
@@ -1266,19 +1257,28 @@ msgstr ""
 msgid "Linked to a different account"
 msgstr ""
 
-msgid "Ready to use"
-msgstr ""
-
 msgid "Your primary email address"
 msgstr ""
 
 msgid "Linked to your account"
 msgstr ""
 
-msgid "Half-linked to your account"
+msgid "Verification pending"
 msgstr ""
 
+msgid "Unverified"
+msgstr "No verificado"
+
 msgid "Apply to accept payments"
+msgstr ""
+
+msgid "Resend verification"
+msgstr ""
+
+msgid "Verify email address"
+msgstr ""
+
+msgid "Dead-end, sorry"
 msgstr ""
 
 msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
@@ -1610,9 +1610,6 @@ msgstr "Identidades"
 
 msgid "Verified"
 msgstr "Verificado"
-
-msgid "Unverified"
-msgstr "No verificado"
 
 msgid "Add Identity"
 msgstr "Añadir Identidad"
