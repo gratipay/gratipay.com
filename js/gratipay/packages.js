@@ -1,14 +1,20 @@
 Gratipay.packages = {};
 
 Gratipay.packages.initBulk = function() {
-    $('button.apply').on('click', Gratipay.packages.postBulk);
+    $('.important-button button.apply').on('click', Gratipay.packages.postBulk);
 };
 
 Gratipay.packages.initSingle = function() {
-    Gratipay.Select('.gratipay-select');
-    $('button.apply').on('click', Gratipay.packages.postOne);
+    Gratipay.Select('.gratipay-select', Gratipay.packages.selectOne);
+    $('.important-button button').on('click', Gratipay.packages.postOne);
+    Gratipay.packages.selectOne($('.gratipay-select li.selected'));
 };
 
+Gratipay.packages.selectOne = function($li) {
+    var action = $li.data('action');
+    $('.important-button span').hide();
+    $('.important-button span.' + action).show();
+};
 
 Gratipay.packages.postBulk = function(e) {
     e.preventDefault();
@@ -20,20 +26,25 @@ Gratipay.packages.postBulk = function(e) {
         package_ids_by_email[pkg.email].push(pkg.packageId);
     });
     for (email in package_ids_by_email)
-        Gratipay.packages.post(email, package_ids_by_email[email], true);
+        Gratipay.packages.post(email, package_ids_by_email[email], 'yes');
 };
 
 Gratipay.packages.postOne = function(e) {
     e.preventDefault();
-    var email = $('input[name=email]:checked').val();
-    var package_id = $('input[name=package_id]').val();
-    Gratipay.packages.post(email, [package_id]);
+    var $input = $('input[name=email]:checked');
+    var email = $input.val();
+    var package_ids;
+    var show_address_in_message = 'no';
+    if ($input.closest('li').data('action') === 'apply') {
+        package_ids = [$('input[name=package_id]').val()];
+        show_address_in_message = 'yes';
+    }
+    Gratipay.packages.post(email, package_ids, show_address_in_message);
 }
 
-
-Gratipay.packages.post = function(email, package_ids, show_email) {
+Gratipay.packages.post = function(email, package_ids, show_address_in_message) {
     var action = 'start-verification';
-    var $button = $('button.apply')
+    var $button = $('.important-button button')
 
     $button.prop('disabled', true);
     function reenable() { $button.prop('disabled', false); }
@@ -43,7 +54,7 @@ Gratipay.packages.post = function(email, package_ids, show_email) {
         data: { action: action
               , address: email
               , package_id: package_ids
-              , show_address_in_message: true
+              , show_address_in_message: show_address_in_message
                },
         traditional: true,
         dataType: 'json',
