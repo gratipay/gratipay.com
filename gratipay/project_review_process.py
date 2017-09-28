@@ -12,6 +12,9 @@ from gratipay.exceptions import NoTeams
 from gratipay.models.participant import Participant
 
 
+SHIELD = "[![Gratipay](https://img.shields.io/gratipay/project/{}.svg)](https://gratipay.com{})"
+
+
 class ProjectReviewProcess(object):
 
     def __init__(self, env, db, email_queue):
@@ -43,7 +46,10 @@ class ProjectReviewProcess(object):
         else:
             title = "{} and {} other projects".format(teams[0].name, nteams-1)
 
-        body = []
+        body = [ '*This application will remain open for at least a week.*'
+               , ''
+               , '## Project' + ('s' if nteams > 1 else '')
+                ]
         team_ids = []
         owner_usernames = set()
         for team in teams:
@@ -51,9 +57,21 @@ class ProjectReviewProcess(object):
             owner_usernames.add(team.owner)
             body.append('https://gratipay.com{}'.format(team.url_path))
         assert len(owner_usernames) == 1, owner_usernames
-        shield = "[![Gratipay](https://img.shields.io/gratipay/project/{}.svg)](https://gratipay.com{})".format(teams[0].slug,teams[0].url_path)
-        shield_markdown = '> `'+shield+'`'
-        body.extend(['', '(This application will remain open for at least a week.)', 'Example [shield](http://shields.io)) for GitHub repositories:', shield, shield_markdown])
+
+        shield = SHIELD.format(teams[0].slug, teams[0].url_path)
+                               # let them discover how to adapt for additional projects
+        body += [ ''
+                , '## Badge'
+                , ''
+                , 'Add a [badge](http://shields.io/) to your README?'
+                , ''
+                , shield
+                , ''
+                , '```markdown'
+                , shield
+                , '```'
+                 ]
+
         data = json.dumps({'title': title, 'body': '\n'.join(body)})
         review_url = self._poster.post(data)
 
