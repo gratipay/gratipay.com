@@ -282,6 +282,18 @@ $(document).ready(function() {
         <p class="fine-print">{{  _('We (probably) want to brag about you! May we?') }}</p>
 
         <div class="promotion-fields">
+            <div class="field promotion_logo">
+                <label for="promotion-logo">{{ _("Your Company Logo") }}</label>
+                <label for="promotion-logo" class="button large">{{ _("Choose file ...") }}</label>
+                <input type="file" name="promotion_logo" id="promotion-logo">
+                <p class="fine-print help">
+                    {{ _("Please upload a PNG or JPG smaller than 256 kB.") }}
+                </p>
+                <p class="fine-print">
+                    {{ _('PNG or JPG, will be cropped square.') }}
+                </p>
+            </div>
+
             <div class="field promotion_name">
                 <label for="promotion-name">{{ _("Your Company Name") }}</label>
                 <input type="text" name="promotion_name" id="promotion-name">
@@ -291,7 +303,7 @@ $(document).ready(function() {
             </div>
 
             <div class="field promotion_url">
-                <label for="promotion-url">{{ _("Your Landing Page URL") }}</label>
+                <label for="promotion-url">{{ _("Your Homepage URL") }}</label>
                 <input type="text" name="promotion_url" id="promotion-url">
                 <p class="fine-print help">
                     {{ _("Please enter a valid URL shorter than 256 characters.") }}

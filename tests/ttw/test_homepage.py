@@ -1,5 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import os
+
 from gratipay.testing import BrowserHarness
 
 
@@ -79,3 +81,10 @@ class Tests(BrowserHarness):
         assert self.css('.field.promotion_url').has_class('error')
         assert not self.css('.field.email_address').has_class('amount')
         assert self.fetch() is None
+
+    def test_file_chooser_works(self):
+        path = '/path/to/file.txt' if os.sep == '/' else r'C:\path\to\file.txt'
+        val = lambda: self.css('.field.promotion_logo label.button').text
+        assert val() == 'Choose file ...'
+        self.attach_file('promotion_logo', path)
+        assert val() == 'file.txt'

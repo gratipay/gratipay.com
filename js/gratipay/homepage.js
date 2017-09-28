@@ -47,6 +47,18 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
             container: '#braintree-container'
         }, braintreeInitCallback);
     }
+
+
+    // Logo chooser.
+
+    var $logoLabel = $('.field.promotion_logo label.button');
+    var $logoInput = $('.field.promotion_logo input');
+    var logoLabelDefault = $logoLabel.text();
+    $logoInput.on('change', function() {
+        var newVal = $logoInput.val().replace(/([^\\]*\\)*/, '');
+        if (!newVal) newVal = logoLabelDefault;
+        $logoLabel.text(newVal);
+    });
 };
 
 

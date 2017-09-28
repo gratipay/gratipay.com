@@ -182,7 +182,7 @@
                         text-align: center;
                     }
                 }
-                &.email_address, &.on_mailing_list {
+                &.email_address, &.on_mailing_list, &.promotion_logo {
                     .fine-print {
                         text-align: left;
                     }
@@ -254,6 +254,28 @@
                     width: 100%;
                     height: 192px;
                     padding: 10px;
+                }
+                &.promotion_logo {
+                    text-align: left;
+                    line-height: 36px;
+                    input {
+                        width: 0.1px;
+                        height: 0.1px;
+                        opacity: 0;
+                        overflow: hidden;
+                        position: absolute;
+                        z-index: -1;
+                    }
+                    label.button {
+                        font: normal 16px/32px $Ideal;
+                        text-transform: none;
+                        background: $green;
+                        border: 0;
+                        border-radius: 5px;
+                        margin: 0;
+                        padding: 10px 16px;
+                        display: inline-block;
+                    }
                 }
 
                 .help {
