@@ -45,10 +45,10 @@ def _parse(raw):
         email_address = email_address[:255]
         errors.append('email_address')
 
-    follow_up = x('follow_up')
-    if follow_up not in ('quarterly', 'yearly', 'never'):
-        follow_up = 'quarterly'
-        errors.append('follow_up')
+    on_mailing_list = x('on_mailing_list')
+    if on_mailing_list not in ('yes', 'no'):
+        on_mailing_list = 'yes'
+        errors.append('on_mailing_list')
 
     # promo fields
     promotion_name = x('promotion_name')
@@ -78,7 +78,7 @@ def _parse(raw):
              , 'grateful_for': grateful_for
              , 'name': name
              , 'email_address': email_address
-             , 'follow_up': follow_up
+             , 'on_mailing_list': on_mailing_list
              , 'promotion_name': promotion_name
              , 'promotion_url': promotion_url
              , 'promotion_twitter': promotion_twitter
