@@ -49,6 +49,7 @@ class ProjectReviewProcess(object):
         body = [ '*This application will remain open for at least a week.*'
                , ''
                , '## Project' + ('s' if nteams > 1 else '')
+               , ''
                 ]
         team_ids = []
         owner_usernames = set()
