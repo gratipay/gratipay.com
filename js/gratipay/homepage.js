@@ -31,7 +31,7 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
 
         function braintreeInitCallback(createErr, instance) {
             if (createErr) {
-                $('#braintree-container').addClass('failed').text('Failed to load Braintree.');
+                $('#braintree-container').addClass('failed').text('Failed to load.');
             } else {
                 self.$submit.click(function(e) {
                     disable(e);
