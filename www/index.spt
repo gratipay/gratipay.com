@@ -238,24 +238,20 @@ $(document).ready(function() {
             </p>
         </div>
 
-        <div class="field follow_up">
+        <div class="field on_mailing_list">
             <fieldset>
-                <legend>{{ _('Follow-up') }}</legend>
+                <legend>{{ _('Join Mailing List') }}</legend>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow_up" id="follow-up-quarterly"
-                           value="quarterly" checked>
-                    <label for="follow-up-quarterly">{{ _('Quarterly') }}</label>
+                    <input type="radio" name="on_mailing_list" id="mailing-list-yes"
+                           value="yes" checked>
+                    <label for="mailing-list-yes">{{ _('Yes') }}</label>
                 </div>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow_up" id="follow-up-yearly" value="yearly">
-                    <label for="follow-up-yearly">{{ _('Yearly') }}</label>
-                </div>
-
-                <div class="fancy-radio">
-                    <input type="radio" name="follow_up" id="follow-up-never" value="never">
-                    <label for="follow-up-never">{{ _('Never') }}</label>
+                    <input type="radio" name="on_mailing_list" id="mailing-list-no"
+                           value="no">
+                    <label for="mailing-list-no">{{ _('No') }}</label>
                 </div>
 
                 <p class="fine-print help">
@@ -263,7 +259,7 @@ $(document).ready(function() {
                 </p>
 
                 <p class="fine-print">
-                    {{ _('You will get a progress report, with a reminder to pay again.') }}
+                    {{ _('We send updates related to #BackTheStack.') }}
                 </p>
             </fieldset>
         </div>

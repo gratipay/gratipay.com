@@ -236,12 +236,12 @@
                         text-align: center;
                     }
                 }
-                &.email_address, &.follow_up {
+                &.email_address, &.on_mailing_list {
                     .fine-print {
                         text-align: left;
                     }
                 }
-                &.follow_up {
+                &.on_mailing_list {
                     text-align: left;
                     .fancy-radio {
                         position: relative;
