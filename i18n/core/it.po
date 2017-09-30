@@ -716,8 +716,8 @@ msgstr "Acconsento anche agli altri {0}termini di servizio{1}."
 msgid "Eep! Mind looking over your info for us?"
 msgstr "Aah! Ti dispiacerebbe controllare le tue informazioni per noi?"
 
-msgid "Pay for open source."
-msgstr "Paga per open source."
+msgid "Invest in open source."
+msgstr ""
 
 msgid "Payment complete!"
 msgstr "Pagamento completato!"
@@ -734,49 +734,55 @@ msgid ""
 msgstr "{a}Raccomandiamo{_a} $2000 all'anno{br}per ciascun impiegato tecnico{br}nella tua azienda."
 
 msgid "Loading credit card form ..."
-msgstr ""
+msgstr "Modulo per carta di credito in caricamento ..."
 
 msgid "We weren't able to process your card."
 msgstr "Non siamo stati in grado di elaborare la tua carta."
 
-msgid "Thank you for paying for open source!"
-msgstr "Grazie per pagare per l'open source!"
+msgid "Thank you for investing in open source!"
+msgstr ""
 
 msgid "Email {support}{br}with questions or feedback."
 msgstr "Invia un'email a {support} con{br}domande o suggerimenti."
 
 msgid "Campaign"
-msgstr ""
+msgstr "Campagna"
 
 msgid "payment"
 msgid_plural "payments"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Pagamento"
+msgstr[1] "Pagamenti"
 
 msgid "out of {goal} = {percent}"
-msgstr ""
+msgstr "raggiunto il {percent} di {goal}"
 
 msgid "day left"
 msgid_plural "days left"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "giorno mancante"
+msgstr[1] "giorni mancanti"
 
 msgid ""
-"Open source boosts the productivity of your developers {a}by 20%{_a}. "
-"Companies fund half of open source through developer time."
-msgstr "L'open source incrementa la produttività dei tuoi sviluppatori {a}del 20%{_a}. Le aziende finanziano metà dell'open source attraverso il lavoro degli sviluppatori."
-
-msgid ""
-"Gratipay is the easiest way to pay for {a}the other half{_a}. Pay for open "
-"source, and {b}strengthen the foundation{_b} that your developers build on. "
-"Increase innovation and {b}reduce risk{_b} for your company."
+"From {varnish} to {vuejs}, {drf} to {django} itself, {ruby} to {webpack}, "
+"there are more and more examples of community-led open source projects "
+"funded by enlightened companies."
 msgstr ""
 
 msgid ""
-"Gratipay can {b}report back{_b} to you on the progress your payment enables,"
-" and we can {b}promote{_b} your contribution, increasing your visibility "
-"within the open source community."
-msgstr "Gratipay può {b}informarti{_b} dei progressi messi in grado dal tuo finanziamento, e possiamo {b}promuovere{_b} il tuo contributo, aumentando la tua visibilità nella comunità dell'open source."
+"Inspired by this trend, #BackTheStack is a {b} funding campaign for the "
+"whole open source community{_b}. If we all band together, can we encourage "
+"even more of the industry to participate? Can we sustain even more of the "
+"ecosystem, including parts that are less flashy?"
+msgstr ""
+
+msgid ""
+"Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000"
+" for $100,000 in maintenance and new development. We'll report back on the "
+"impact of this shared investment, and we'd be thrilled to promote your "
+"company's contribution to it."
+msgstr ""
+
+msgid "Join #BackTheStack and invest in open source today!"
+msgstr ""
 
 msgid "Optional"
 msgstr "Opzionale"
@@ -812,7 +818,7 @@ msgid "You will get a link to an invoice for your payment."
 msgstr "Riceverai un link alla fattura del tuo pagamento."
 
 msgid "Join Mailing List"
-msgstr ""
+msgstr "Iscrizione Mailing List"
 
 msgid "Yes"
 msgstr "Sì"
@@ -824,7 +830,7 @@ msgid "I am surprised that you are seeing this message."
 msgstr "Sono sorpreso che tu stia vedendo questo messaggio."
 
 msgid "We send updates related to #BackTheStack."
-msgstr ""
+msgstr "Inviamo aggiornamenti relativi a #BackTheStack."
 
 msgid "Promotion"
 msgstr "Promozione"
@@ -859,8 +865,8 @@ msgstr "Per favore limita il tuo messaggio a 128 caratteri."
 msgid "Submit Form"
 msgstr "Invia Il Modulo"
 
-msgid "Pay for Open Source"
-msgstr "Paga per l'Open Source"
+msgid "Invest in Open Source"
+msgstr ""
 
 msgid "Processing ..."
 msgstr "In elaborazione ..."
@@ -1257,7 +1263,7 @@ msgid "Linked to your account"
 msgstr "Collegato col tuo account"
 
 msgid "Verification pending"
-msgstr ""
+msgstr "In attesa di verifica"
 
 msgid "Unverified"
 msgstr "Non verificato"
@@ -1266,13 +1272,13 @@ msgid "Apply to accept payments"
 msgstr "Richiedi di poter accettare pagamenti"
 
 msgid "Resend verification"
-msgstr ""
+msgstr "Invia nuovamente la verifica"
 
 msgid "Verify email address"
-msgstr ""
+msgstr "Verifica indirizzo email"
 
 msgid "Dead-end, sorry"
-msgstr ""
+msgstr "Vicolo cieco, scusa"
 
 msgid "Addresses are from {a}{code}maintainers{_code}{_a}."
 msgstr "Gli indirizzi sono da {a}{code}maintainers{_code}{_a}."
