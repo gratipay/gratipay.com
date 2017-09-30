@@ -177,14 +177,14 @@ $(document).ready(function() {
             </p>
 
             <p class="prose">
-                {{ _( "Inspired by their success, #BackTheStack is a {b} fundraiser for the open source community{_b} as a whole."
+                {{ _( "Inspired by their success, #BackTheStack is a {b} funding campaign for the whole open source community{_b}."
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
             </p>
 
             <p class="prose">
-                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b} worth of work on open source software. Pay $10k for $100k in maintenance and new development. We'll report back on the impact of this shared investment, and we're also happy to promote your company's contribution to it."
+                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000 for $100,000 in maintenance and new development. We'll report back on the impact of this shared investment, and we're also happy to promote your company's contribution to it."
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
