@@ -235,7 +235,7 @@ $(document).ready(function() {
                 {{ _("Please enter a valid email address shorter than 255 characters.") }}
             </p>
             <p class="fine-print">
-                {{ _('You will get a link to an invoice for your payment.') }}
+                {{ _('We will send a link to an invoice for your payment.') }}
             </p>
         </div>
 
@@ -259,7 +259,7 @@ $(document).ready(function() {
             </p>
 
             <p class="fine-print">
-                {{ _('We send updates related to #BackTheStack.') }}
+                {{ _('We will send updates related to #BackTheStack.') }}
             </p>
         </div>
 
