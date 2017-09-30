@@ -87,16 +87,6 @@ $(document).ready(function() {
             </p>
 
         </div>
-
-        <fieldset class="charging rollup">
-            <div class="field">
-                <div id="braintree-container"></div>
-                <div class="loading">{{ _("Loading credit card form ...") }}</div>
-                <p class="fine-print help">
-                    {{ _("We weren't able to process your card.") }}
-                </p>
-            </div>
-        </fieldset>
     </fieldset>
 
     <div class="payment-complete" style="display: none;">
@@ -133,8 +123,7 @@ $(document).ready(function() {
 
     <div class="rollup">
     {% if show_campaign %}
-    <fieldset class="campaign">
-        <legend>{{ _('Campaign') }}</legend>
+    <div class="campaign">
         <h2><img src="{{ website.asset('backthestack/october-2017.svg') }}"
                  alt="#BackTheStack, October 2017"></h2>
 
@@ -212,8 +201,18 @@ $(document).ready(function() {
                 <img src="{{ website.asset('backthestack/readthedocs.svg') }}"
                      alt="Read the Docs"></a>
         </section>
-    </fieldset>
+    </div>
     {% endif %}
+
+    <fieldset class="charging">
+        <div class="field">
+            <div id="braintree-container"></div>
+            <div class="loading">{{ _("Loading credit card form ...") }}</div>
+            <p class="fine-print help">
+                {{ _("We weren't able to process your card.") }}
+            </p>
+        </div>
+    </fieldset>
 
     <fieldset class="optional">
         <legend>{{ _('Optional') }}</legend>

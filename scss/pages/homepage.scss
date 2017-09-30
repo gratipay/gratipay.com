@@ -126,6 +126,7 @@
             }
 
             &.charging {
+                background: $green;
                 border: none;
                 margin: 0;
                 padding: 0 20px 20px;
@@ -137,54 +138,6 @@
                     top: 100px;
                     text-align: center;
                     width: 100%;
-                }
-            }
-
-            &.campaign {
-                legend {
-                    border-color: $brown;
-                    color: $brown;
-                }
-                border-color: $brown;
-                border-style: solid;
-                h2 img {
-                    width: 256px;
-                }
-                .stats {
-                    padding: 20px 40px;
-                    .stat {
-                        width: 33%;
-                        float: left;
-                        strong { font: normal 24px/28px $Ideal; }
-                        &.main strong { font-weight: bold; font-size: 28px; }
-                        .note {
-                            margin: 2px 0 40px;
-                            padding: 0;
-                        }
-                    }
-                }
-                .partners {
-                    padding: 20px 0 40px;
-                    .note {
-                        padding: 0 0 20px;
-                    }
-                    a {
-                        display: inline-block;
-                        width: 64px;
-                        height: 32px;
-                        padding: 0 10px;
-                        img {
-                            height: 32px;
-                            vertical-align: text-top;
-                            filter: grayscale(100%);
-                        }
-                        &:hover {
-                            background: none;
-                            img {
-                                filter: grayscale(0);
-                            }
-                        }
-                    }
                 }
             }
 
@@ -327,6 +280,55 @@
                 &.processing {
                     .active { display: none; }
                     .processing { display: inline; }
+                }
+            }
+        }
+
+        .campaign {
+            fieldset{
+                margin: 20px;
+            }
+
+            margin: 0;
+            border: 20px solid $green;
+            border-style: solid solid none;
+            h2 img {
+                width: 256px;
+            }
+            .stats {
+                padding: 20px 40px;
+                .stat {
+                    width: 33%;
+                    float: left;
+                    strong { font: normal 24px/28px $Ideal; }
+                    &.main strong { font-weight: bold; font-size: 28px; }
+                    .note {
+                        margin: 2px 0 40px;
+                        padding: 0;
+                    }
+                }
+            }
+            .partners {
+                padding: 20px 0 40px;
+                .note {
+                    padding: 0 0 20px;
+                }
+                a {
+                    display: inline-block;
+                    width: 64px;
+                    height: 32px;
+                    padding: 0 10px;
+                    img {
+                        height: 32px;
+                        vertical-align: text-top;
+                        filter: grayscale(100%);
+                    }
+                    &:hover {
+                        background: none;
+                        img {
+                            filter: grayscale(0);
+                        }
+                    }
                 }
             }
         }
