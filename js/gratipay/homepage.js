@@ -18,6 +18,7 @@ Gratipay.homepage.initForm = function(clientAuthorization) {
 
     if (clientAuthorization === undefined) {    // Offline mode
 
+        $('.charging .loading').hide();
         $('#braintree-container').addClass('offline').html(Gratipay.jsonml(['div',
             ['div', {'class': 'field amount'},
                 ['input', {'id': 'nonce', 'value': 'fake-valid-nonce', 'required': true}, 'Nonce'],
