@@ -166,25 +166,25 @@ $(document).ready(function() {
         <section class="materials">
 
             <p class="prose">
-                {{ _( "From {varnish} to {vuejs}, {django} to {drf}, {ruby} to {webpack}, we see many examples of community-led open source projects that successfully fundraise from companies."
+                {{ _( "From {varnish} to {vuejs}, {drf} to {django} itself, {ruby} to {webpack}, there are more and more examples of community-led open source projects funded by enlightened companies."
                     , varnish='<a href="http://phk.freebsd.dk/VML/">Varnish</a>'|safe
                     , vuejs='<a href="https://www.patreon.com/evanyou">Vue.js</a>'|safe
-                    , django='<a href="https://www.djangoproject.com/fundraising/">Django</a>'|safe
                     , drf='<a href="https://fund.django-rest-framework.org/topics/funding/">DRF</a>'|safe
+                    , django='<a href="https://www.djangoproject.com/fundraising/">Django</a>'|safe
                     , ruby='<a href="https://rubytogether.org/">Ruby</a>'|safe
                     , webpack='<a href="https://opencollective.com/webpack">WebPack</a>'|safe
                      ) }}
             </p>
 
             <p class="prose">
-                {{ _( "Inspired by their success, #BackTheStack is a {b} funding campaign for the whole open source community{_b}."
+                {{ _( "Inspired by this trend, #BackTheStack is a {b} funding campaign for the whole open source community{_b}. If we all band together, can we encourage even more companies to participate? Can we sustain even more of the ecosystem, including parts that are less flashy?"
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
             </p>
 
             <p class="prose">
-                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000 for $100,000 in maintenance and new development. We'll report back on the impact of this shared investment, and we're also happy to promote your company's contribution to it."
+                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000 for $100,000 in maintenance and new development. We'll report back on the impact of this shared investment, and we'd be thrilled to promote your company's contribution to it."
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
