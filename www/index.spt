@@ -177,7 +177,7 @@ $(document).ready(function() {
             </p>
 
             <p class="prose">
-                {{ _( "Inspired by this trend, #BackTheStack is a {b} funding campaign for the whole open source community{_b}. If we all band together, can we encourage even more companies to participate? Can we sustain even more of the ecosystem, including parts that are less flashy?"
+                {{ _( "Inspired by this trend, #BackTheStack is a {b} funding campaign for the whole open source community{_b}. If we all band together, can we encourage even more of the industry to participate? Can we sustain even more of the ecosystem, including parts that are less flashy?"
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
