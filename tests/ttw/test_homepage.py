@@ -25,11 +25,10 @@ class Tests(BrowserHarness):
 
 
     def fill_form(self, amount, credit_card_number, expiration, cvv,
-                  grateful_for='', name='', email_address='',
+                  name='', email_address='',
                   promotion_name='', promotion_url='', promotion_twitter='', promotion_message=''):
         self.fill('amount', amount)
         self.fill_cc(credit_card_number, expiration, cvv)
-        if grateful_for: self.fill('grateful_for', grateful_for)
         if name: self.fill('name', name)
         if email_address: self.fill('email_address', email_address)
         if promotion_name: self.fill('promotion_name', promotion_name)
@@ -57,7 +56,7 @@ class Tests(BrowserHarness):
 
     def test_anon_can_post(self):
         self.fill_form('537', '4242424242424242', '1020', '123',
-                       'open source!', 'Alice Liddell', 'alice@example.com',
+                       'Alice Liddell', 'alice@example.com',
                        'Wonderland', 'http://www.example.com/', 'thebestbutter',
                        'Love me! Love me! Say that you love me!')
         assert self.submit_succeeds()
@@ -71,7 +70,7 @@ class Tests(BrowserHarness):
 
     def test_errors_are_handled(self):
         self.fill_form('1,000', '4242424242424242', '1020', '123',
-                       'open source!', 'Alice Liddell', 'alice@example',
+                       'Alice Liddell', 'alice@example',
                        'Wonderland', 'htp://www.example.com/', 'thebestbutter', 'Love me!')
         self.css('fieldset.submit button').click()
         assert self.wait_for_error() == 'Eep! Mind looking over your info for us?'

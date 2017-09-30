@@ -217,19 +217,6 @@ $(document).ready(function() {
     <fieldset class="optional">
         <legend>{{ _('Optional') }}</legend>
 
-        <h2>{{ _('What projects?') }}</h2>
-        <p class="fine-print">
-            {{  _('What ecosystems and/or projects are you grateful for?') }}
-        </p>
-
-        <div class="field grateful_for">
-            <textarea name="grateful_for"></textarea>
-            <p class="fine-print help">
-                {{ _("Please enter less than 16 kB of data.") }}
-            </p>
-        </div>
-
-
         <h2 class="down-more">{{ _('Who are you?') }}</h2>
         <p class="fine-print">{{  _('And do you wish to subscribe to our newsletter?') }}</p>
 

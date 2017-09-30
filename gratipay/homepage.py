@@ -28,12 +28,6 @@ def _parse(raw):
         errors.append('payment_method_nonce')
         payment_method_nonce = ''
 
-    # ecosystems/packages
-    grateful_for = x('grateful_for')
-    if len(grateful_for) > 16*kB:
-        grateful_for = grateful_for[:16*kB]
-        errors.append('grateful_for')
-
     # contact info
     name = x('name')
     if len(name) > 255:
@@ -75,7 +69,6 @@ def _parse(raw):
 
     parsed = { 'amount': amount
              , 'payment_method_nonce': payment_method_nonce
-             , 'grateful_for': grateful_for
              , 'name': name
              , 'email_address': email_address
              , 'on_mailing_list': on_mailing_list
