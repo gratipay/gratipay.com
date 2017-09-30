@@ -1,6 +1,7 @@
-Gratipay.Select = function(selector) {
+Gratipay.Select = function(selector, onselect) {
     var $ul = $('ul', selector);
     var $labels = $('label', $ul);
+    var onselect = onselect || function() {};
 
     // state for vertical position
     var topFactor = 0;      // float between 0 and $labels.length-1
@@ -51,9 +52,11 @@ Gratipay.Select = function(selector) {
 
     function close($label) {
         if ($label) {
-            if ($label.closest('li').hasClass('disabled')) return;
+            var $li = $label.closest('li');
+            if ($li.hasClass('disabled')) return;
             $('.selected', $ul).removeClass('selected')
-            $label.closest('li').addClass('selected').removeClass('hover');
+            $li.addClass('selected').removeClass('hover');
+            onselect($li);
         }
         $ul.css({'top': 0}).removeClass('open');
         $ul.unbind('mousewheel');

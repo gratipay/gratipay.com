@@ -57,9 +57,15 @@ class Tests(QueuedEmailHarness):
         args, kwargs = post.mock_calls[0][1:]
         assert args[0] == 'https://api.github.com/repos/some/repo/issues'
         assert kwargs['data'] == (
-            '{"body": "https://gratipay.com/foo/\\nhttps://gratipay.com/bar/\\n'
-            'https://gratipay.com/baz/\\n\\n(This application will remain open '
-            'for at least a week.)", "title": "foo and 2 other projects"}')
+            '{"body": "*This application will remain open for at least a week.*\\n\\n'
+            '## Projects\\n\\nhttps://gratipay.com/foo/\\nhttps://gratipay.com/bar/\\n'
+            'https://gratipay.com/baz/\\n\\n'
+            '## Badge\\n\\n'
+            'Add a [badge](http://shields.io/) to your README?\\n\\n'
+            '[![Gratipay](https://img.shields.io/gratipay/project/foo.svg)](https://gratipay.com/foo/)\\n\\n'
+            '```markdown\\n'
+            '[![Gratipay](https://img.shields.io/gratipay/project/foo.svg)](https://gratipay.com/foo/)\\n'
+            '```", "title": "foo and 2 other projects"}')
         assert kwargs['auth'] == ('cheeseburger', 'di3tc0ke')
 
 

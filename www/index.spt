@@ -13,7 +13,7 @@ if not user.ANON:
 suppress_banner = True
 suppress_sidebar = True
 page_id = "homepage"
-banner = "Pay for Open Source"  # goofy w/ suppress_banner, it's for <title>
+banner = "Invest in Open Source"  # goofy w/ suppress_banner, it's for <title>
 
 npayments = website.campaign_npayments
 raised = website.campaign_raised
@@ -35,7 +35,7 @@ result
 {% block head %}
     <link rel="publisher" href="https://plus.google.com/104524895706770139568">
     <link type="application/opensearchdescription+xml" rel="search" href="/opensearch.osdd" />
-    <meta name="description" content="Pay for open source on Gratipay." />
+    <meta name="description" content="Invest in open source on Gratipay." />
     <meta name="fb:app_id" content="229465400522758" />
     <meta name="og:type" content="website" />
     <meta name="og:url" content="https://gratipay.com/" />
@@ -63,7 +63,7 @@ $(document).ready(function() {
 
     <fieldset id="banner">
         <h1>
-            <span class="pending">{{ _("Pay for open source.") }}</span>
+            <span class="pending">{{ _("Invest in open source.") }}</span>
             <span class="complete">{{ _("Payment complete!") }}</span>
         </h1>
 
@@ -90,7 +90,7 @@ $(document).ready(function() {
         <fieldset class="charging rollup">
             <div class="field">
                 <div id="braintree-container"></div>
-                <div class="loading">Loading credit card form ...</div>
+                <div class="loading">{{ _("Loading credit card form ...") }}</div>
                 <p class="fine-print help">
                     {{ _("We weren't able to process your card.") }}
                 </p>
@@ -100,7 +100,7 @@ $(document).ready(function() {
 
     <div class="payment-complete" style="display: none;">
         <p class="instructions">
-            {{ _("Thank you for paying for open source!") }} &#x1f483;
+            {{ _("Thank you for investing in open source!") }} &#x1f483;
         </p>
         <div class="important-button" class="important-button">
             <a class="button large selected invoice" href="">{{ _("View Invoice") }}</a>
@@ -164,28 +164,36 @@ $(document).ready(function() {
         </section>
 
         <section class="materials">
+
             <p class="prose">
-                {{ _( 'Open source boosts the productivity of your developers {a}by 20%{_a}. Companies fund half of open source through developer time.'
-                    , a='<a href="https://medium.com/@nayafia/open-source-was-worth-at-least-143m-of-instagram-s-1b-acquisition-808bb85e4681">'|safe
-                    , _a='</a>'|safe
+                {{ _( "From {varnish} to {vuejs}, {drf} to {django} itself, {ruby} to {webpack}, there are more and more examples of community-led open source projects funded by enlightened companies."
+                    , varnish='<a href="http://phk.freebsd.dk/VML/">Varnish</a>'|safe
+                    , vuejs='<a href="https://www.patreon.com/evanyou">Vue.js</a>'|safe
+                    , drf='<a href="https://fund.django-rest-framework.org/topics/funding/">DRF</a>'|safe
+                    , django='<a href="https://www.djangoproject.com/fundraising/">Django</a>'|safe
+                    , ruby='<a href="https://rubytogether.org/">Ruby</a>'|safe
+                    , webpack='<a href="https://opencollective.com/webpack">WebPack</a>'|safe
                      ) }}
             </p>
 
             <p class="prose">
-            {{ _( 'Gratipay is the easiest way to pay for {a}the other half{_a}. Pay for open source, and {b}strengthen the foundation{_b} that your developers build on. Increase innovation and {b}reduce risk{_b} for your company.'
-                , a='<a href="https://gratipay.news/open-source-captures-almost-none-of-the-value-it-creates-9015eb7e293e">'|safe
-                , _a='</a>'|safe
-                , b='<b>'|safe
-                , _b='</b>'|safe
-                 ) }}
-            </p>
-
-            <p class="prose">
-                {{ _( 'Gratipay can {b}report back{_b} to you on the progress your payment enables, and we can {b}promote{_b} your contribution, increasing your visibility within the open source community.'
+                {{ _( "Inspired by this trend, #BackTheStack is a {b} funding campaign for the whole open source community{_b}. If we all band together, can we encourage even more of the industry to participate? Can we sustain even more of the ecosystem, including parts that are less flashy?"
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
             </p>
+
+            <p class="prose">
+                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000 for $100,000 in maintenance and new development. We'll report back on the impact of this shared investment, and we'd be thrilled to promote your company's contribution to it."
+                    , b='<b>'|safe
+                    , _b='</b>'|safe
+                     ) }}
+            </p>
+
+            <p class="prose">
+                {{ _("Join #BackTheStack and invest in open source today!") }}
+            </p>
+
         </section>
 
         <section class="partners">
@@ -238,29 +246,20 @@ $(document).ready(function() {
             </p>
         </div>
 
-        <div class="field follow_up">
+        <div class="field on_mailing_list">
             <fieldset>
-                <legend>{{ _('Follow-up') }}</legend>
+                <legend>{{ _('Join Mailing List') }}</legend>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow_up" id="follow-up-monthly" value="monthly">
-                    <label for="follow-up-monthly">{{ _('Monthly') }}</label>
+                    <input type="radio" name="on_mailing_list" id="mailing-list-yes"
+                           value="yes" checked>
+                    <label for="mailing-list-yes">{{ _('Yes') }}</label>
                 </div>
 
                 <div class="fancy-radio">
-                    <input type="radio" name="follow_up" id="follow-up-quarterly"
-                           value="quarterly" checked>
-                    <label for="follow-up-quarterly">{{ _('Quarterly') }}</label>
-                </div>
-
-                <div class="fancy-radio">
-                    <input type="radio" name="follow_up" id="follow-up-yearly" value="yearly">
-                    <label for="follow-up-yearly">{{ _('Yearly') }}</label>
-                </div>
-
-                <div class="fancy-radio">
-                    <input type="radio" name="follow_up" id="follow-up-never" value="never">
-                    <label for="follow-up-never">{{ _('Never') }}</label>
+                    <input type="radio" name="on_mailing_list" id="mailing-list-no"
+                           value="no">
+                    <label for="mailing-list-no">{{ _('No') }}</label>
                 </div>
 
                 <p class="fine-print help">
@@ -268,7 +267,7 @@ $(document).ready(function() {
                 </p>
 
                 <p class="fine-print">
-                    {{ _('You will get a progress report, with a reminder to pay again.') }}
+                    {{ _('We send updates related to #BackTheStack.') }}
                 </p>
             </fieldset>
         </div>
@@ -320,7 +319,7 @@ $(document).ready(function() {
 
         <div class="important-button">
             <button type="submit" class="selected large">
-                <span class="active">{{ _("Pay for Open Source") }}</span>
+                <span class="active">{{ _("Invest in Open Source") }}</span>
                 <span class="processing">{{ _("Processing ...") }}</span>
             </button>
         </div>
