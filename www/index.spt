@@ -164,28 +164,36 @@ $(document).ready(function() {
         </section>
 
         <section class="materials">
+
             <p class="prose">
-                {{ _( 'Open source boosts the productivity of your developers {a}by 20%{_a}. Companies fund half of open source through developer time.'
-                    , a='<a href="https://medium.com/@nayafia/open-source-was-worth-at-least-143m-of-instagram-s-1b-acquisition-808bb85e4681">'|safe
-                    , _a='</a>'|safe
+                {{ _( "From {varnish} to {vuejs}, {django} to {drf}, {ruby} to {webpack}, we see many examples of community-led open source projects that successfully fundraise from companies."
+                    , varnish='<a href="http://phk.freebsd.dk/VML/">Varnish</a>'|safe
+                    , vuejs='<a href="https://www.patreon.com/evanyou">Vue.js</a>'|safe
+                    , django='<a href="https://www.djangoproject.com/fundraising/">Django</a>'|safe
+                    , drf='<a href="https://fund.django-rest-framework.org/topics/funding/">DRF</a>'|safe
+                    , ruby='<a href="https://rubytogether.org/">Ruby</a>'|safe
+                    , webpack='<a href="https://opencollective.com/webpack">WebPack</a>'|safe
                      ) }}
             </p>
 
             <p class="prose">
-            {{ _( 'Gratipay is the easiest way to pay for {a}the other half{_a}. Pay for open source, and {b}strengthen the foundation{_b} that your developers build on. Increase innovation and {b}reduce risk{_b} for your company.'
-                , a='<a href="https://gratipay.news/open-source-captures-almost-none-of-the-value-it-creates-9015eb7e293e">'|safe
-                , _a='</a>'|safe
-                , b='<b>'|safe
-                , _b='</b>'|safe
-                 ) }}
-            </p>
-
-            <p class="prose">
-                {{ _( 'Gratipay can {b}report back{_b} to you on the progress your payment enables, and we can {b}promote{_b} your contribution, increasing your visibility within the open source community.'
+                {{ _( "Inspired by their success, #BackTheStack is a {b} fundraiser for the open source community{_b} as a whole."
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
             </p>
+
+            <p class="prose">
+                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b} worth of work on open source software. Pay $10k for $100k in maintenance and new development. We'll report back on the impact of this shared investment, and we're also happy to promote your company's contribution to it."
+                    , b='<b>'|safe
+                    , _b='</b>'|safe
+                     ) }}
+            </p>
+
+            <p class="prose">
+                {{ _("Join #BackTheStack and invest in open source today!") }}
+            </p>
+
         </section>
 
         <section class="partners">
