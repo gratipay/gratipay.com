@@ -13,7 +13,7 @@ if not user.ANON:
 suppress_banner = True
 suppress_sidebar = True
 page_id = "homepage"
-banner = "Pay for Open Source"  # goofy w/ suppress_banner, it's for <title>
+banner = "Invest in Open Source"  # goofy w/ suppress_banner, it's for <title>
 
 npayments = website.campaign_npayments
 raised = website.campaign_raised
@@ -35,7 +35,7 @@ result
 {% block head %}
     <link rel="publisher" href="https://plus.google.com/104524895706770139568">
     <link type="application/opensearchdescription+xml" rel="search" href="/opensearch.osdd" />
-    <meta name="description" content="Pay for open source on Gratipay." />
+    <meta name="description" content="Invest in open source on Gratipay." />
     <meta name="fb:app_id" content="229465400522758" />
     <meta name="og:type" content="website" />
     <meta name="og:url" content="https://gratipay.com/" />
@@ -63,7 +63,7 @@ $(document).ready(function() {
 
     <fieldset id="banner">
         <h1>
-            <span class="pending">{{ _("Pay for open source.") }}</span>
+            <span class="pending">{{ _("Invest in open source.") }}</span>
             <span class="complete">{{ _("Payment complete!") }}</span>
         </h1>
 
@@ -100,7 +100,7 @@ $(document).ready(function() {
 
     <div class="payment-complete" style="display: none;">
         <p class="instructions">
-            {{ _("Thank you for paying for open source!") }} &#x1f483;
+            {{ _("Thank you for investing in open source!") }} &#x1f483;
         </p>
         <div class="important-button" class="important-button">
             <a class="button large selected invoice" href="">{{ _("View Invoice") }}</a>
@@ -311,7 +311,7 @@ $(document).ready(function() {
 
         <div class="important-button">
             <button type="submit" class="selected large">
-                <span class="active">{{ _("Pay for Open Source") }}</span>
+                <span class="active">{{ _("Invest in Open Source") }}</span>
                 <span class="processing">{{ _("Processing ...") }}</span>
             </button>
         </div>
