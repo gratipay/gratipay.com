@@ -43,6 +43,10 @@ def add_headers_to_response(website, response):
     if 'X-Content-Type-Options' not in response.headers:
         response.headers['X-Content-Type-Options'] = 'nosniff'
 
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+    if 'strict-transport-security' not in response.headers:
+        response.headers['strict-transport-security'] = 'max-age=31536000'
+
     # https://www.owasp.org/index.php/List_of_useful_HTTP_headers
     if 'X-XSS-Protection' not in response.headers:
         response.headers['X-XSS-Protection'] = '1; mode=block'
