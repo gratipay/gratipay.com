@@ -199,12 +199,18 @@ $(document).ready(function() {
 
         <section class="partners">
             <div class="note">In partnership with:</div>
-            <a href="https://opensource.org/" class="osi">
-                <img src="{{ website.asset('backthestack/osi.png') }}"></a>
-            <a href="https://libraries.io/" class="libraries-io">
-                <img src="{{ website.asset('backthestack/libraries.io.svg') }}"></a>
-            <a href="https://www.stickermule.com/" class="sticker-mule">
-                <img src="{{ website.asset('backthestack/sticker-mule.svg') }}"></a>
+            <a href="https://opensource.org/" class="osi" title="Open Source Initiative">
+                <img src="{{ website.asset('backthestack/osi.png') }}"
+                     alt="Open Source Initiative"></a>
+            <a href="https://libraries.io/" class="libraries-io" title="Libraries.io">
+                <img src="{{ website.asset('backthestack/libraries.io.svg') }}"
+                     alt="Libraries.io"></a>
+            <a href="https://www.stickermule.com/" class="sticker-mule" title="Sticker Mule">
+                <img src="{{ website.asset('backthestack/sticker-mule.svg') }}"
+                     alt="Sticker Mule"></a>
+            <a href="https://readthedocs.org/" class="readthedocs" title="Read the Docs">
+                <img src="{{ website.asset('backthestack/readthedocs.svg') }}"
+                     alt="Read the Docs"></a>
         </section>
     </fieldset>
     {% endif %}

@@ -170,11 +170,11 @@
                     }
                     a {
                         display: inline-block;
-                        width: 80px;
-                        height: 48px;
+                        width: 64px;
+                        height: 32px;
                         padding: 0 10px;
                         img {
-                            height: 48px;
+                            height: 32px;
                             vertical-align: text-top;
                             filter: grayscale(100%);
                         }
@@ -183,9 +183,6 @@
                             img {
                                 filter: grayscale(0);
                             }
-                        }
-                        &.libraries-io img {
-                            height: 32px;
                         }
                     }
                 }
