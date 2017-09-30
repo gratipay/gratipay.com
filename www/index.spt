@@ -131,7 +131,7 @@ $(document).ready(function() {
             <div class="stat">
                 <strong>{{ _(format_number(npayments)) }}</strong>
                 <div class="note">
-                    {{ ngettext('payment', 'payments', npayments) }}
+                    {{ ngettext('backer', 'backers', npayments) }}
                 </div>
             </div>
 
@@ -174,7 +174,7 @@ $(document).ready(function() {
             </p>
 
             <p class="prose">
-                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000 for $100,000 in maintenance and new development. We'll report back on the impact of this shared investment, and we'd be thrilled to promote your company's contribution to it."
+                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000, and receive $100,000 in maintenance and new development. We'll report back on the impact of this shared investment, and we'd be thrilled to promote your company's contribution to it."
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
