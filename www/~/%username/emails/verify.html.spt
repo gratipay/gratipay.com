@@ -13,6 +13,12 @@ participant = get_participant(state, restrict=False)
 banner = '~' + participant.username
 if participant == user.participant:
     if 'email2' in request.qs:
+
+        # As of GH-4662, we've renamed the temporary 'email2' field, introduced
+        # in GH-3965, with 'email' and this can be removed when we're confident
+        # that there are no verification links live with field 'email2' in
+        # their query string.
+
         email_field = 'email2'
     else:
         email_field = 'email'
