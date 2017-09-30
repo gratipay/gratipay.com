@@ -104,7 +104,7 @@ $(document).ready(function() {
         </p>
         <div class="twitter-container">
             <a class="twitter-share-button"
-               href="https://twitter.com/intent/tweet?text=We%20just%20paid%20for%20#opensource%20on%20@Gratipay!"
+               href="https://twitter.com/intent/tweet?text=We%20just%20invested%20in%20#opensource%20on%20@Gratipay!%20You%20too%3F%20#BackTheStack%20on"
                data-size="large" data-url="https://gratipay.com/"></a>
             <script>window.twttr = (function(d, s, id) {
               var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
