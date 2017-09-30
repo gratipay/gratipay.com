@@ -159,7 +159,7 @@ class Email(object):
         nonce = self.get_email_verification_nonce(c, email)
         if packages:
             self.start_package_claims(c, nonce, *packages)
-        link = "{base_url}/~{username}/emails/verify.html?email2={encoded_email}&nonce={nonce}"
+        link = "{base_url}/~{username}/emails/verify.html?email={encoded_email}&nonce={nonce}"
         return link.format( base_url=gratipay.base_url
                           , username=self.username_lower
                           , encoded_email=encode_for_querystring(email)

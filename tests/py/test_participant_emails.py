@@ -63,7 +63,7 @@ class TestEndpoints(Alice):
 
     def hit_verify_spt(self, email, nonce, username='alice', should_fail=False):
         # Email address is encoded in url.
-        url = '/~%s/emails/verify.html?email2=%s&nonce=%s'
+        url = '/~%s/emails/verify.html?email=%s&nonce=%s'
         url %= (username, encode_for_querystring(email), nonce)
         f = self.client.GxT if should_fail else self.client.GET
         return f(url, auth_as=username)
@@ -93,7 +93,7 @@ class TestEndpoints(Alice):
         encoded = encode_for_querystring(address)
         self.hit_email_spt('add-email', address)
         last_email = self.get_last_email()
-        assert "~alice/emails/verify.html?email2="+encoded in last_email['body_text']
+        assert "~alice/emails/verify.html?email="+encoded in last_email['body_text']
 
     def test_verification_email_doesnt_contain_unsubscribe(self):
         self.hit_email_spt('add-email', 'alice@gratipay.com')
@@ -190,14 +190,17 @@ class TestEndpoints(Alice):
             assert result == (_email.VERIFICATION_FAILED, None, None)
 
     def test_email_verification_is_backwards_compatible(self):
-        """Test email verification still works with unencoded email in verification link.
+        """Test email verification still works with 'email2' field in verification link.
         """
-        self.hit_email_spt('add-email', 'alice@example.com')
-        nonce = self.alice.get_email('alice@example.com').nonce
-        url = '/~alice/emails/verify.html?email=alice@example.com&nonce='+nonce
-        self.client.GET(url, auth_as='alice')
-        expected = 'alice@example.com'
-        actual = P('alice').email_address
+        username = 'alice'
+        email = 'alice@example.com'
+        self.hit_email_spt('add-email', email)
+        nonce = self.alice.get_email(email).nonce
+        url = '/~%s/emails/verify.html?email2=%s&nonce=%s'
+        url %= (username, encode_for_querystring(email), nonce)
+        self.client.GET(url, auth_as=username)
+        expected = email
+        actual = P(username).email_address
         assert expected == actual
 
     def test_verified_email_is_not_changed_after_update(self):
@@ -573,7 +576,7 @@ class GetEmailVerificationLink(Harness):
         with self.db.get_cursor() as c:
             alice = self.make_participant('alice')
             link = alice.get_email_verification_link(c, 'alice@example.com')
-        assert link.startswith('/~alice/emails/verify.html?email2=YWxpY2VAZXhhbXBsZS5jb20~&nonce=')
+        assert link.startswith('/~alice/emails/verify.html?email=YWxpY2VAZXhhbXBsZS5jb20~&nonce=')
 
     def test_makes_no_claims_by_default(self):
         with self.db.get_cursor() as c:
