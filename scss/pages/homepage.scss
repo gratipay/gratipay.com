@@ -107,8 +107,10 @@
             padding: 0;
 
             legend {
+                position: absolute;
+                left: 50%;
+                transform: translate(-50%, -50%);
                 display: block;
-                position: relative;
                 top: 0px;
                 font: italic 14px/18px $Chronicle;
                 border: 1px solid $light-brown;
