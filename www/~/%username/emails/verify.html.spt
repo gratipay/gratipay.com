@@ -12,15 +12,17 @@ from gratipay.models.participant import email
 participant = get_participant(state, restrict=False)
 banner = '~' + participant.username
 if participant == user.participant:
-    if 'email' in request.qs:
+    if 'email2' in request.qs:
 
-        # Deprecated in GH-3965. We shouldn't be generating any more of these,
-        # and this can be removed when we're confident that there are no more
-        # old-style verification links hanging out there.
+        # As of GH-4662, we've renamed the temporary 'email2' field, introduced
+        # in GH-3965, with 'email' and this can be removed when we're confident
+        # that there are no verification links live with field 'email2' in
+        # their query string.
 
-        email_address = request.qs['email']
+        email_field = 'email2'
     else:
-        email_address = decode_from_querystring(request.qs.get('email2', ''), default='')
+        email_field = 'email'
+    email_address = decode_from_querystring(request.qs.get(email_field, ''), default='')
     nonce = request.qs.get('nonce', '')
     result, packages, paypal_updated = participant.finish_email_verification(email_address, nonce)
     project_list = None if packages is None else [p.team for p in packages]

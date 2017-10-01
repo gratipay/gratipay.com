@@ -19,7 +19,7 @@ GOOD = { 'amount': '1000'
        , 'grateful_for': 'python, javascript'
        , 'name': 'Alice Liddell'
        , 'email_address': 'alice@example.com'
-       , 'follow_up': 'yearly'
+       , 'on_mailing_list': 'yes'
        , 'promotion_name': 'Wonderland'
        , 'promotion_url': 'http://www.example.com/'
        , 'promotion_twitter': 'thebestbutter'
@@ -30,7 +30,7 @@ BAD = { 'amount': '1,000'
       , 'grateful_for': 'x' * (16 * 2**10) + 'x'
       , 'name': 'Alice Liddell' * 20
       , 'email_address': 'alice' * 100 + '@example.com'
-      , 'follow_up': 'cheese'
+      , 'on_mailing_list': 'cheese'
       , 'promotion_name': 'Wonderland' * 100
       , 'promotion_url': 'http://www.example.com/' + 'cheese' * 100
       , 'promotion_twitter': 'thebestbutter' * 10
@@ -41,7 +41,7 @@ PARTIAL = { 'amount': '1000'
           , 'grateful_for': ''
           , 'name': ''
           , 'email_address': ''
-          , 'follow_up': 'quarterly'
+          , 'on_mailing_list': 'no'
           , 'promotion_name': ''
           , 'promotion_url': ''
           , 'promotion_twitter': ''
@@ -52,13 +52,14 @@ SCRUBBED = { 'amount': '1000'
            , 'grateful_for': 'x' * (16 * 2**10)
            , 'name': 'Alice Liddell' * 19 + 'Alice Li'
            , 'email_address': 'alice' * 51
-           , 'follow_up': 'quarterly'
+           , 'on_mailing_list': 'yes'
            , 'promotion_name': 'WonderlandWonderlandWonderlandWo'
            , 'promotion_url': 'http://www.example.com/' + 'cheese' * 38 + 'chee'
            , 'promotion_twitter': 'thebestbutterthebestbutterthebes'
            , 'promotion_message': 'Love me!' * 16
             }
-ALL = ['amount', 'payment_method_nonce', 'grateful_for', 'name', 'email_address', 'follow_up',
+ALL = ['amount', 'payment_method_nonce',
+       'grateful_for', 'name', 'email_address', 'on_mailing_list',
        'promotion_name', 'promotion_url', 'promotion_twitter', 'promotion_message']
 
 
@@ -125,7 +126,7 @@ class Store(PayForOpenSourceHarness):
         parsed.pop('payment_method_nonce')
         assert self.fetch() is None
         _store(parsed)
-        assert self.fetch().follow_up == 'yearly'
+        assert self.fetch().on_mailing_list
 
 
 class Send(QueuedEmailHarness):

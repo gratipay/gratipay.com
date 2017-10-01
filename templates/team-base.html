@@ -62,6 +62,7 @@
     {% set pages = [ ('/',              _('Profile'))
                    , ('/history/',      _('History'))
                    , ('/receiving/',    _('Receiving'))
+                   , ('/widgets/',    _('Widgets'))
                     ] + ([('/distributing/', _('Distributing'))] if team.available else [])%}
     {% if pages %}
     {% include "templates/nav.html" %}

@@ -71,6 +71,10 @@ class AddHeadersToResponseTests(Harness):
         assert headers['Referrer-Policy'] == \
                                       'no-referrer-when-downgrade, strict-origin-when-cross-origin'
 
+    def test_sets_strict_transport_security(self):
+        headers = self.client.GET('/about/').headers
+        assert headers['strict-transport-security'] == 'max-age=31536000'
+
     def test_doesnt_set_content_security_policy_by_default(self):
         assert 'content-security-policy-report-only' not in self.client.GET('/about/').headers
 

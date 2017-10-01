@@ -14,6 +14,12 @@
         color: $medium-gray;
     }
 
+    .important-button {
+        span {
+            display: none;
+        }
+    }
+
     .status-icon {
         font-size: 12px;
         line-height: 12px;
