@@ -192,7 +192,7 @@
             }
 
             .field {
-                label, fieldset legend {
+                label {
                     display: block;
                     text-align: left;
                     font: normal 10px/12px $Ideal;
@@ -205,11 +205,6 @@
                     position: static;
                     margin: 0;
                     padding: 0;
-                    legend {
-                        color: $black;
-                        position: static;
-                        padding: 2em 0 0;
-                    }
                 }
                 input {
                     width: 100%;
