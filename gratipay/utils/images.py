@@ -5,6 +5,7 @@ import zipfile
 from cStringIO import StringIO
 
 import requests
+from aspen import Response
 
 
 def imgize(image, image_type):
@@ -31,20 +32,19 @@ class BadImage(Exception): pass
 class ImageTooLarge(BadImage): pass
 class InvalidImageType(BadImage): pass
 class UnknownImageError(Exception): pass
-
-
-_SINGULARS = {'teams': 'team', 'payments_for_open_source': 'payment_for_open_source'}
+class BadSize(Response):
+    code = 404
 
 
 class HasImage(object):
     """Mixin for models to store an image.
 
-    Assumes these fields (oid DEFAULT 0 NOT NULL):
+    Assumes these fields:
 
-        image_oid_original
-        image_oid_large
-        image_oid_small
-        image_type
+        image_oid_original  oid DEFAULT 0 NOT NULL,
+        image_oid_large     oid DEFAULT 0 NOT NULL,
+        image_oid_small     oid DEFAULT 0 NOT NULL,
+        image_type          supported_image_types,
 
     """
 
@@ -73,7 +73,7 @@ class HasImage(object):
                  , (oids['original'], oids['large'], oids['small'], image_type, self.id)
                   )
             self.app.add_event( c
-                              , _SINGULARS[self.typname]  # hack
+                              , self.singular
                               , dict( action='upsert_image'
                                     , id=self.id
                                     , **oids
@@ -86,7 +86,8 @@ class HasImage(object):
 
 
     def load_image(self, size):
-        assert size in self.IMAGE_SIZES, size
+        if size not in self.IMAGE_SIZES:
+            raise BadSize(size)
         image = None
         oid = getattr(self, 'image_oid_{}'.format(size))
         if oid != 0:

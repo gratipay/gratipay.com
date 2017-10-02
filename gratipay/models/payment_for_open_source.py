@@ -7,10 +7,13 @@ import gratipay
 from aspen import Response
 from postgres.orm import Model
 
+from ..utils import images
 
-class PaymentForOpenSource(Model):
+
+class PaymentForOpenSource(Model, images.HasImage):
 
     typname = "payments_for_open_source"
+    singular = "payment_for_open_source"
 
     def __repr__(self):
         return '<PaymentForOpenSource: {}>'.format(repr(self.amount))
@@ -22,10 +25,15 @@ class PaymentForOpenSource(Model):
 
 
     @property
+    def url_path(self):
+        return '/browse/payments/{}/'.format(self.uuid)
+
+
+    @property
     def invoice_url(self):
         if not self.succeeded:
             return None
-        return '{}/browse/payments/{}/invoice.html'.format(gratipay.base_url, self.uuid)
+        return '{}{}invoice.html'.format(gratipay.base_url, self.url_path)
 
 
     @classmethod

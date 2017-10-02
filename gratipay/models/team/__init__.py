@@ -44,6 +44,7 @@ class Team(Model, Available, Closing, Membership, Package, ReviewStatus, Takes, 
     """
 
     typname = 'teams'
+    singular = 'team'
 
     def __eq__(self, other):
         if not isinstance(other, Team):
