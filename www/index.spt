@@ -21,6 +21,7 @@ goal = D('100000')
 today = datetime.date.today()
 ndays = (nov_1 - today).days
 show_campaign = (today >= oct_1) or request.qs.get('i_am_fancy') == 'yes'
+show_campaign = request.qs.get('i_am_fancy') == 'yes'  # hack to suppress until we're ready
 
 result = pay_for_open_source(website.app, request.body) if request.method == 'POST' else {}
 if result and result['errors']:
