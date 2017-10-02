@@ -418,6 +418,11 @@ class TestTeams(QueuedEmailHarness):
         image = self.client.GET('/TheEnterprise/image').body  # buffer
         assert str(image) == IMAGE
 
+    def test_get_image_url_gets_image_url(self):
+        team = self.make_team()
+        team.save_image(IMAGE, IMAGE, IMAGE, 'image/png')
+        assert team.get_image_url('small') == '/TheEnterprise/image?size=small'
+
 
     # Update
     # ======

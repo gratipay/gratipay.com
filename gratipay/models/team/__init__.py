@@ -16,7 +16,7 @@ from .review_status import ReviewStatus
 from .takes import Takes
 from .tip_migration import TipMigration
 from ...exceptions import InvalidTeamName
-from ...utils import canonicalize
+from ...utils import canonicalize, images
 
 
 # Should have at least one letter.
@@ -38,7 +38,8 @@ def slugize(name):
     return slug
 
 
-class Team(Model, Available, Closing, Membership, Package, ReviewStatus, Takes, TipMigration):
+class Team(Model, Available, Closing, Membership, Package, ReviewStatus, Takes, TipMigration,
+                                                                                  images.HasImage):
     """Represent a Gratipay team.
     """
 
@@ -315,49 +316,6 @@ class Team(Model, Available, Closing, Membership, Package, ReviewStatus, Takes, 
             'slug': self.slug,
             'status': self.status
         }
-
-
-    # Images
-    # ======
-
-    IMAGE_SIZES = ('original', 'large', 'small')
-
-    def get_image_url(self, size):
-        assert size in ('original', 'large', 'small'), size
-        return '/{}/image?size={}'.format(self.slug, size)
-
-    def save_image(self, original, large, small, image_type):
-        with self.db.get_cursor() as c:
-            oids = {}
-            for size in self.IMAGE_SIZES:
-                lobject = c.connection.lobject(getattr(self, 'image_oid_'+size), mode='wb')
-                lobject.write(locals()[size])
-                oids[size] = lobject.oid
-                lobject.close()
-
-            c.run("""UPDATE teams
-                        SET image_oid_original=%s, image_oid_large=%s, image_oid_small=%s
-                          , image_type=%s
-                      WHERE id=%s"""
-                 , (oids['original'], oids['large'], oids['small'], image_type, self.id)
-                  )
-            self.app.add_event(c, 'team', dict( action='upsert_image'
-                                              , id=self.id
-                                              , **oids
-                                               ))
-            self.set_attributes( image_type=image_type
-                               , **{'image_oid_'+size: oids[size] for size in oids}
-                                )
-            return oids
-
-    def load_image(self, size):
-        assert size in self.IMAGE_SIZES, size
-        image = None
-        oid = getattr(self, 'image_oid_{}'.format(size))
-        if oid != 0:
-            with self.db.get_connection() as c:
-                image = c.lobject(oid, mode='rb').read()
-        return image
 
 
 def cast(path_part, state):
