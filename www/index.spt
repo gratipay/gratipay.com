@@ -247,29 +247,27 @@ $(document).ready(function() {
         </div>
 
         <div class="field on_mailing_list">
-            <fieldset>
-                <legend>{{ _('Join Mailing List') }}</legend>
+            <label for="mailing-list-yes">{{ _('Join Mailing List') }}</label>
 
-                <div class="fancy-radio">
-                    <input type="radio" name="on_mailing_list" id="mailing-list-yes"
-                           value="yes" checked>
-                    <label for="mailing-list-yes">{{ _('Yes') }}</label>
-                </div>
+            <div class="fancy-radio">
+                <input type="radio" name="on_mailing_list" id="mailing-list-yes"
+                       value="yes" checked>
+                <label for="mailing-list-yes">{{ _('Yes') }}</label>
+            </div>
 
-                <div class="fancy-radio">
-                    <input type="radio" name="on_mailing_list" id="mailing-list-no"
-                           value="no">
-                    <label for="mailing-list-no">{{ _('No') }}</label>
-                </div>
+            <div class="fancy-radio">
+                <input type="radio" name="on_mailing_list" id="mailing-list-no"
+                       value="no">
+                <label for="mailing-list-no">{{ _('No') }}</label>
+            </div>
 
-                <p class="fine-print help">
-                    {{ _("I am surprised that you are seeing this message.") }}
-                </p>
+            <p class="fine-print help">
+                {{ _("I am surprised that you are seeing this message.") }}
+            </p>
 
-                <p class="fine-print">
-                    {{ _('We send updates related to #BackTheStack.') }}
-                </p>
-            </fieldset>
+            <p class="fine-print">
+                {{ _('We send updates related to #BackTheStack.') }}
+            </p>
         </div>
 
 
