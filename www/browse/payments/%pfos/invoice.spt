@@ -2,18 +2,7 @@ from aspen import Response
 from gratipay.models.payment_for_open_source import PaymentForOpenSource
 
 [-------------------]
-
-try:
-    uuid = request.path['uuid']
-except ValueError:
-    raise Response(400)
-
-# pfos - payment_for_open_source 
-pfos = PaymentForOpenSource.from_uuid(uuid)
-
-if pfos is None:
-    raise Response(404)
-
+pfos = request.path['pfos']
 
 [-------------------] text/html
 <!DOCTYPE html>

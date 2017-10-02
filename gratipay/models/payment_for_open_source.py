@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import gratipay
 from uuid import uuid4
+
+import gratipay
+from aspen import Response
 from postgres.orm import Model
 
 
@@ -79,3 +81,16 @@ class PaymentForOpenSource(Model):
         self.set_attributes( braintree_result_message=result_message
                            , braintree_transaction_id=transaction_id
                             )
+
+
+def cast(path_part, state):
+    """This is an Aspen typecaster. Given a uuid and a state dict, raise
+    Response or return PaymentForOpenSource.
+    """
+    try:
+        pfos = PaymentForOpenSource.from_uuid(path_part)
+    except:
+        raise Response(404)
+    if pfos is None:
+        raise Response(404)
+    return pfos
