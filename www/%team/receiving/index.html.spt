@@ -54,6 +54,30 @@ Estimated payment for next week: {{ format_currency(team.get_upcoming_payment(),
     {% include "templates/payment-distribution-amount.html" %}
 {% endif %}
 
+{% if user.ADMIN %}
+    <h2>Current Payment Instructions (Admins Only)</h2>
+
+    <table class="table">
+        <tr>
+            <th>Username</th>
+            <th>Amount</th>
+            <th>Last Modified</th>
+        </tr>
+
+        {% for payment_instruction in team.get_payment_instructions() %}
+            <tr>
+                <td>
+                    <a href="/~{{ payment_instruction.username }}">
+                        {{ payment_instruction.username }}
+                    </a>
+                </td>
+                <td>{{ payment_instruction.amount }}</td>
+                <td>{{ to_age(payment_instruction.mtime) }} ago</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+
 {% endblock %}
 
 {% block scripts %}
