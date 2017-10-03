@@ -27,7 +27,7 @@ def slugize(name):
     """ Create a slug from a team name.
     """
     if TEAM_NAME_PATTERN.match(name) is None:
-      raise InvalidTeamName
+        raise InvalidTeamName
 
     slug = name.strip()
     for c in (',', ' '):
@@ -231,6 +231,19 @@ class Team(Model, Available, Closing, Membership, Package, ReviewStatus, Takes, 
 
         return rec.funded, rec.unfunded
 
+    def get_payment_instructions(self):
+        """
+        Returns the incoming payment instructions for this team.
+
+        Since giving is anonymous on Gratipay, this is only to be used
+        internally by other routines, or for exposing values to admins.
+        """
+        return self.db.all("""
+            SELECT p.username, cpi.amount, cpi.mtime
+              FROM current_payment_instructions cpi
+              JOIN participants p ON p.id = cpi.participant_id
+             WHERE cpi.team_id = %(team_id)s
+        """, {'team_id': self.id})
 
     def get_upcoming_payment(self):
         from gratipay.billing.exchanges import MINIMUM_CHARGE  # dodge circular import
