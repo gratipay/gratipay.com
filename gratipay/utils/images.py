@@ -2,7 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import zipfile
-from cStringIO import StringIO
+from io import BytesIO
 
 import requests
 from aspen import Response
@@ -11,12 +11,13 @@ from aspen import Response
 def imgize(image, image_type):
     large = None
     small = None
-    crops = requests.post( 'http://gip.rocks/v1',
-                           data=image,
-                           headers={'Content-Type': image_type})
+    crops = requests.post( 'http://gip.rocks/v1'
+                         , data=image
+                         , headers={'Content-Type': image_type}
+                          )
 
     if crops.status_code == 200:
-        zf = zipfile.ZipFile(StringIO(crops.content))
+        zf = zipfile.ZipFile(BytesIO(crops.content))
         large = zf.open('160').read()
         small = zf.open('48').read()
         return large, small

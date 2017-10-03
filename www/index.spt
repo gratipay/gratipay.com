@@ -70,7 +70,7 @@ $(document).ready(function() {
 
 {% block content %}
 
-<form action="/" method="POST">
+<form action="/" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
     <fieldset id="banner">

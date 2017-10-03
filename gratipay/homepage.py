@@ -4,6 +4,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from gratipay import utils
+from gratipay.utils import images
 from gratipay.models.payment_for_open_source import PaymentForOpenSource
 
 
@@ -45,6 +46,19 @@ def _parse(raw):
         errors.append('on_mailing_list')
 
     # promo fields
+    promotion_logo = None
+    _logo = raw['promotion_logo']
+    if _logo.value:
+        if _logo.type not in ('image/png', 'image/jpeg'):
+            errors.append('promotion_logo')
+        else:
+            try:
+                original = _logo.value
+                large, small = images.imgize(original, _logo.type)
+                promotion_logo = (original, large, small, _logo.type)
+            except images.BadImage:
+                errors.append('promotion_logo')
+
     promotion_name = x('promotion_name')
     if len(promotion_name) > 32:
         promotion_name = promotion_name[:32]
@@ -72,6 +86,7 @@ def _parse(raw):
              , 'name': name
              , 'email_address': email_address
              , 'on_mailing_list': on_mailing_list
+             , 'promotion_logo': promotion_logo
              , 'promotion_name': promotion_name
              , 'promotion_url': promotion_url
              , 'promotion_twitter': promotion_twitter
@@ -81,7 +96,11 @@ def _parse(raw):
 
 
 def _store(parsed):
-    return PaymentForOpenSource.insert(**parsed)
+    logo = parsed.pop('promotion_logo')
+    pfos = PaymentForOpenSource.insert(**parsed)
+    if logo:
+        pfos.save_image(*logo)
+    return pfos
 
 
 def _charge(app, pfos, nonce):

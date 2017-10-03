@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import os
 
-from gratipay.testing import BrowserHarness
+from gratipay.testing import BrowserHarness, images
 
 
 class Tests(BrowserHarness):
@@ -27,12 +27,13 @@ class Tests(BrowserHarness):
 
 
     def fill_form(self, amount, credit_card_number, expiration, cvv,
-                  name='', email_address='',
+                  name='', email_address='', promotion_logo='',
                   promotion_name='', promotion_url='', promotion_twitter='', promotion_message=''):
         self.fill('amount', amount)
         self.fill_cc(credit_card_number, expiration, cvv)
         if name: self.fill('name', name)
         if email_address: self.fill('email_address', email_address)
+        if promotion_logo: self.fill('promotion_logo', promotion_logo)
         if promotion_name: self.fill('promotion_name', promotion_name)
         if promotion_url: self.fill('promotion_url', promotion_url)
         if promotion_twitter: self.fill('promotion_twitter', promotion_twitter)
@@ -57,34 +58,38 @@ class Tests(BrowserHarness):
         told_them = self.css('#banner h1').text == 'Payment complete!'
         return self.fetch().succeeded and told_them
 
-    def test_anon_can_post(self):
+    @images.fixture
+    def test_anon_can_post(self, filepath):
         self.fill_form('537', '4242424242424242', '1020', '123',
-                       'Alice Liddell', 'alice@example.com',
+                       'Alice Liddell', 'alice@example.com', filepath,
                        'Wonderland', 'http://www.example.com/', 'thebestbutter',
                        'Love me! Love me! Say that you love me!')
         assert self.submit_succeeds()
         self.wait_for('a.invoice').click()
-        self.wait_for('#txnid')
+        uuid = self.wait_for('.txnid').text.split()[1].lower()
         assert self.css('#items tbody tr').text == 'open source software $ 537.00'
+        assert self.client.GET('/browse/payments/{}/logo'.format(uuid)).body == images.LARGE
 
     def test_options_are_optional(self):
         self.fill_form('537', '4242424242424242', '1020', '123')
         assert self.submit_succeeds()
 
-    def test_errors_are_handled(self):
+    @images.fixture('.gif')
+    def test_errors_are_handled(self, filepath):
         self.fill_form('1,000', '4242424242424242', '1020', '123',
-                       'Alice Liddell', 'alice@example',
+                       'Alice Liddell', 'alice@example', filepath,
                        'Wonderland', 'htp://www.example.com/', 'thebestbutter', 'Love me!')
         self.css('fieldset.submit button').click()
         assert self.wait_for_error() == 'Eep! Mind looking over your info for us?'
         assert self.css('.field.email_address').has_class('error')
+        assert self.css('.field.promotion_logo').has_class('error')
         assert self.css('.field.promotion_url').has_class('error')
         assert not self.css('.field.email_address').has_class('amount')
         assert self.fetch() is None
 
-    def test_file_chooser_works(self):
-        path = '/path/to/file.txt' if os.sep == '/' else r'C:\path\to\file.txt'
+    @images.fixture()
+    def test_file_chooser_works(self, filepath):
         val = lambda: self.css('.field.promotion_logo label.button').text
         assert val() == 'Choose file ...'
-        self.attach_file('promotion_logo', path)
-        assert val() == 'file.txt'
+        self.attach_file('promotion_logo', filepath)
+        assert val() == filepath.split(os.sep)[-1]

@@ -2,16 +2,26 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
-import urllib
 
 import aspen.body_parsers
+from aspen.testing.client import BOUNDARY, encode_multipart, FileUpload
+from aspen.http.baseheaders import BaseHeaders
 from gratipay.homepage import pay_for_open_source, _parse, _store, _charge, _send
 from gratipay.testing import Harness
 from gratipay.testing.email import QueuedEmailHarness
+from gratipay.testing.images import ORIGINAL, LARGE, SMALL
 
 
 _oh_yeah = lambda *a: 'oh yeah'
 _none = lambda *a: None
+
+
+def bodified(raw):
+    """Convert a plain dict into a cgi.FieldStorage per Aspen.
+    """
+    encoded = encode_multipart(BOUNDARY, raw)
+    headers = BaseHeaders({b'Content-Type': b'multipart/form-data; boundary=' + BOUNDARY})
+    return aspen.body_parsers.formdata(encoded, headers)
 
 
 GOOD = { 'amount': '1000'
@@ -19,6 +29,7 @@ GOOD = { 'amount': '1000'
        , 'name': 'Alice Liddell'
        , 'email_address': 'alice@example.com'
        , 'on_mailing_list': 'yes'
+       , 'promotion_logo': FileUpload(ORIGINAL, 'logo.png')
        , 'promotion_name': 'Wonderland'
        , 'promotion_url': 'http://www.example.com/'
        , 'promotion_twitter': 'thebestbutter'
@@ -29,6 +40,7 @@ BAD = { 'amount': '1,000'
       , 'name': 'Alice Liddell' * 20
       , 'email_address': 'alice' * 100 + '@example.com'
       , 'on_mailing_list': 'cheese'
+      , 'promotion_logo': FileUpload(ORIGINAL, 'logo.gif')
       , 'promotion_name': 'Wonderland' * 100
       , 'promotion_url': 'http://www.example.com/' + 'cheese' * 100
       , 'promotion_twitter': 'thebestbutter' * 10
@@ -39,6 +51,7 @@ PARTIAL = { 'amount': '1000'
           , 'name': ''
           , 'email_address': ''
           , 'on_mailing_list': 'no'
+          , 'promotion_logo': FileUpload(ORIGINAL, 'logo.png')
           , 'promotion_name': ''
           , 'promotion_url': ''
           , 'promotion_twitter': ''
@@ -49,13 +62,14 @@ SCRUBBED = { 'amount': '1000'
            , 'name': 'Alice Liddell' * 19 + 'Alice Li'
            , 'email_address': 'alice' * 51
            , 'on_mailing_list': 'yes'
+           , 'promotion_logo': None
            , 'promotion_name': 'WonderlandWonderlandWonderlandWo'
            , 'promotion_url': 'http://www.example.com/' + 'cheese' * 38 + 'chee'
            , 'promotion_twitter': 'thebestbutterthebestbutterthebes'
            , 'promotion_message': 'Love me!' * 16
             }
 ALL = ['amount', 'payment_method_nonce',
-       'name', 'email_address', 'on_mailing_list',
+       'name', 'email_address', 'on_mailing_list', 'promotion_logo',
        'promotion_name', 'promotion_url', 'promotion_twitter', 'promotion_message']
 
 
@@ -69,28 +83,34 @@ class PayForOpenSourceHarness(Harness):
 class Parse(Harness):
 
     def test_good_values_survive(self):
-        parsed, errors = _parse(GOOD)
-        assert parsed == GOOD
+        parsed, errors = _parse(bodified(GOOD))
+        assert parsed.pop('promotion_logo') == (ORIGINAL, LARGE, SMALL, 'image/png')
+        expected = GOOD.copy(); del expected['promotion_logo']
+        assert parsed == expected
         assert errors == []
 
     def test_bad_values_get_scrubbed_and_flagged(self):
-        parsed, errors = _parse(BAD)
-        assert parsed == SCRUBBED
+        parsed, errors = _parse(bodified(BAD))
+        assert parsed.pop('promotion_logo') is None
+        expected = SCRUBBED.copy(); del expected['promotion_logo']
+        assert parsed == expected
         assert errors == ALL
 
     def test_partial_info_is_fine(self):
-        parsed, errors = _parse(PARTIAL)
-        assert parsed == PARTIAL
+        parsed, errors = _parse(bodified(PARTIAL))
+        assert parsed.pop('promotion_logo') == (ORIGINAL, LARGE, SMALL, 'image/png')
+        expected = PARTIAL.copy(); del expected['promotion_logo']
+        assert parsed == expected
         assert errors == []
 
     def test_10_dollar_minimum(self):
         bad = GOOD.copy()
         bad['amount'] = '9'
-        assert _parse(bad)[1] == ['amount']
+        assert _parse(bodified(bad))[1] == ['amount']
 
         good = GOOD.copy()
         good['amount'] = '10'
-        assert _parse(good)[1] == []
+        assert _parse(bodified(good))[1] == []
 
 
 # Valid nonces for testing:
@@ -118,7 +138,7 @@ class BadCharge(Harness):
 class Store(PayForOpenSourceHarness):
 
     def test_stores_info(self):
-        parsed, errors = _parse(GOOD)
+        parsed, errors = _parse(bodified(GOOD))
         parsed.pop('payment_method_nonce')
         assert self.fetch() is None
         _store(parsed)
@@ -128,7 +148,7 @@ class Store(PayForOpenSourceHarness):
 class Send(QueuedEmailHarness):
 
     def test_sends_invoice_link(self):
-        parsed, errors = _parse(GOOD)
+        parsed, errors = _parse(bodified(GOOD))
         parsed.pop('payment_method_nonce')
         payment_for_open_source = _store(parsed)
         _send(self.app, payment_for_open_source)
@@ -139,36 +159,23 @@ class Send(QueuedEmailHarness):
 
 class PayForOpenSource(PayForOpenSourceHarness):
 
-    def as_body(self, **raw):
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        encoded = urllib.urlencode(raw)
-        return aspen.body_parsers.formdata(encoded, headers)
-
-    @property
-    def good(self):
-        return self.as_body(**GOOD)
-
-    @property
-    def bad(self):
-        return self.as_body(**BAD)
-
     def test_pays_for_open_source(self):
         assert self.fetch() is None
-        result = pay_for_open_source(self.app, self.good)
+        result = pay_for_open_source(self.app, bodified(GOOD))
         assert not result['errors']
         assert result['invoice_url'].endswith('invoice.html')
         assert self.fetch().succeeded
 
     def test_flags_errors_and_doesnt_store(self):
         assert self.fetch() is None
-        result = pay_for_open_source(self.app, self.bad)
+        result = pay_for_open_source(self.app, bodified(BAD))
         assert result == {'errors': ALL, 'invoice_url': None}
         assert self.fetch() is None
 
     def test_flags_errors_with_no_transaction_id(self):
         error = GOOD.copy()
         error['payment_method_nonce'] = 'deadbeef'
-        result = pay_for_open_source(self.app, error)
+        result = pay_for_open_source(self.app, bodified(error))
         assert result['errors'] == ['charging']
         pfos = self.fetch()
         assert not pfos.succeeded
@@ -177,7 +184,7 @@ class PayForOpenSource(PayForOpenSourceHarness):
     def test_flags_failures_with_transaction_id(self):
         failure = GOOD.copy()
         failure['amount'] = '2000'
-        result = pay_for_open_source(self.app, failure)
+        result = pay_for_open_source(self.app, bodified(failure))
         assert result['errors'] == ['charging']
         pfos = self.fetch()
         assert not pfos.succeeded
