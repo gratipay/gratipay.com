@@ -727,23 +727,14 @@ msgid ""
 "company."
 msgstr ""
 
-msgid "Loading credit card form ..."
-msgstr ""
-
-msgid "We weren't able to process your card."
-msgstr ""
-
 msgid "Thank you for investing in open source!"
 msgstr ""
 
 msgid "Email {support}{br}with questions or feedback."
 msgstr ""
 
-msgid "Campaign"
-msgstr ""
-
-msgid "payment"
-msgid_plural "payments"
+msgid "backer"
+msgid_plural "backers"
 msgstr[0] ""
 
 msgid "out of {goal} = {percent}"
@@ -761,31 +752,28 @@ msgstr ""
 
 msgid ""
 "Inspired by this trend, #BackTheStack is a {b} funding campaign for the "
-"whole open source community{_b}. If we all band together, can we encourage "
-"even more of the industry to participate? Can we sustain even more of the "
-"ecosystem, including parts that are less flashy?"
+"whole open source community{_b}. Together, can we encourage even more of the"
+" industry to participate? Can we sustain even more of the ecosystem, "
+"including parts that are less flashy?"
 msgstr ""
 
 msgid ""
-"Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000"
-" for $100,000 in maintenance and new development. We'll report back on the "
-"impact of this shared investment, and we'd be thrilled to promote your "
-"company's contribution to it."
+"Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay "
+"$10,000, and receive $100,000 in maintenance and new development. We'll "
+"report back on the impact of this shared investment, and we'd be thrilled to"
+" promote your company's contribution to it."
 msgstr ""
 
 msgid "Join #BackTheStack and invest in open source today!"
 msgstr ""
 
+msgid "Loading credit card form ..."
+msgstr ""
+
+msgid "We weren't able to process your card."
+msgstr ""
+
 msgid "Optional"
-msgstr ""
-
-msgid "What projects?"
-msgstr ""
-
-msgid "What ecosystems and/or projects are you grateful for?"
-msgstr ""
-
-msgid "Please enter less than 16 kB of data."
 msgstr ""
 
 msgid "Who are you?"
@@ -806,7 +794,7 @@ msgstr ""
 msgid "Please enter a valid email address shorter than 255 characters."
 msgstr ""
 
-msgid "You will get a link to an invoice for your payment."
+msgid "We will send a link to an invoice for your payment."
 msgstr ""
 
 msgid "Join Mailing List"
@@ -821,7 +809,7 @@ msgstr "いいえ"
 msgid "I am surprised that you are seeing this message."
 msgstr ""
 
-msgid "We send updates related to #BackTheStack."
+msgid "We will send updates related to #BackTheStack."
 msgstr ""
 
 msgid "Promotion"
