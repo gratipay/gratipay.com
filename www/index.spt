@@ -87,16 +87,6 @@ $(document).ready(function() {
             </p>
 
         </div>
-
-        <fieldset class="charging rollup">
-            <div class="field">
-                <div id="braintree-container"></div>
-                <div class="loading">{{ _("Loading credit card form ...") }}</div>
-                <p class="fine-print help">
-                    {{ _("We weren't able to process your card.") }}
-                </p>
-            </div>
-        </fieldset>
     </fieldset>
 
     <div class="payment-complete" style="display: none;">
@@ -114,7 +104,7 @@ $(document).ready(function() {
         </p>
         <div class="twitter-container">
             <a class="twitter-share-button"
-               href="https://twitter.com/intent/tweet?text=We%20just%20paid%20for%20#opensource%20on%20@Gratipay!"
+               href="https://twitter.com/intent/tweet?text=We%20just%20invested%20in%20#opensource%20on%20@Gratipay!%20You%20too%3F%20#BackTheStack%20on"
                data-size="large" data-url="https://gratipay.com/"></a>
             <script>window.twttr = (function(d, s, id) {
               var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
@@ -133,8 +123,7 @@ $(document).ready(function() {
 
     <div class="rollup">
     {% if show_campaign %}
-    <fieldset class="campaign">
-        <legend>{{ _('Campaign') }}</legend>
+    <div class="campaign">
         <h2><img src="{{ website.asset('backthestack/october-2017.svg') }}"
                  alt="#BackTheStack, October 2017"></h2>
 
@@ -142,7 +131,7 @@ $(document).ready(function() {
             <div class="stat">
                 <strong>{{ _(format_number(npayments)) }}</strong>
                 <div class="note">
-                    {{ ngettext('payment', 'payments', npayments) }}
+                    {{ ngettext('backer', 'backers', npayments) }}
                 </div>
             </div>
 
@@ -178,14 +167,14 @@ $(document).ready(function() {
             </p>
 
             <p class="prose">
-                {{ _( "Inspired by this trend, #BackTheStack is a {b} funding campaign for the whole open source community{_b}. If we all band together, can we encourage even more of the industry to participate? Can we sustain even more of the ecosystem, including parts that are less flashy?"
+                {{ _( "Inspired by this trend, #BackTheStack is a {b} funding campaign for the whole open source community{_b}. Together, can we encourage even more of the industry to participate? Can we sustain even more of the ecosystem, including parts that are less flashy?"
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
             </p>
 
             <p class="prose">
-                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000 for $100,000 in maintenance and new development. We'll report back on the impact of this shared investment, and we'd be thrilled to promote your company's contribution to it."
+                {{ _( "Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay $10,000, and receive $100,000 in maintenance and new development. We'll report back on the impact of this shared investment, and we'd be thrilled to promote your company's contribution to it."
                     , b='<b>'|safe
                     , _b='</b>'|safe
                      ) }}
@@ -199,31 +188,34 @@ $(document).ready(function() {
 
         <section class="partners">
             <div class="note">In partnership with:</div>
-            <a href="https://opensource.org/" class="osi">
-                <img src="{{ website.asset('backthestack/osi.png') }}"></a>
-            <a href="https://libraries.io/" class="libraries-io">
-                <img src="{{ website.asset('backthestack/libraries.io.svg') }}"></a>
-            <a href="https://www.stickermule.com/" class="sticker-mule">
-                <img src="{{ website.asset('backthestack/sticker-mule.svg') }}"></a>
+            <a href="https://opensource.org/" class="osi" title="Open Source Initiative">
+                <img src="{{ website.asset('backthestack/osi.png') }}"
+                     alt="Open Source Initiative"></a>
+            <a href="https://libraries.io/" class="libraries-io" title="Libraries.io">
+                <img src="{{ website.asset('backthestack/libraries.io.svg') }}"
+                     alt="Libraries.io"></a>
+            <a href="https://www.stickermule.com/" class="sticker-mule" title="Sticker Mule">
+                <img src="{{ website.asset('backthestack/sticker-mule.svg') }}"
+                     alt="Sticker Mule"></a>
+            <a href="https://readthedocs.org/" class="readthedocs" title="Read the Docs">
+                <img src="{{ website.asset('backthestack/readthedocs.svg') }}"
+                     alt="Read the Docs"></a>
         </section>
-    </fieldset>
+    </div>
     {% endif %}
+
+    <fieldset class="charging">
+        <div class="field">
+            <div id="braintree-container"></div>
+            <div class="loading">{{ _("Loading credit card form ...") }}</div>
+            <p class="fine-print help">
+                {{ _("We weren't able to process your card.") }}
+            </p>
+        </div>
+    </fieldset>
 
     <fieldset class="optional">
         <legend>{{ _('Optional') }}</legend>
-
-        <h2>{{ _('What projects?') }}</h2>
-        <p class="fine-print">
-            {{  _('What ecosystems and/or projects are you grateful for?') }}
-        </p>
-
-        <div class="field grateful_for">
-            <textarea name="grateful_for"></textarea>
-            <p class="fine-print help">
-                {{ _("Please enter less than 16 kB of data.") }}
-            </p>
-        </div>
-
 
         <h2 class="down-more">{{ _('Who are you?') }}</h2>
         <p class="fine-print">{{  _('And do you wish to subscribe to our newsletter?') }}</p>
@@ -243,7 +235,7 @@ $(document).ready(function() {
                 {{ _("Please enter a valid email address shorter than 255 characters.") }}
             </p>
             <p class="fine-print">
-                {{ _('You will get a link to an invoice for your payment.') }}
+                {{ _('We will send a link to an invoice for your payment.') }}
             </p>
         </div>
 
@@ -267,7 +259,7 @@ $(document).ready(function() {
             </p>
 
             <p class="fine-print">
-                {{ _('We send updates related to #BackTheStack.') }}
+                {{ _('We will send updates related to #BackTheStack.') }}
             </p>
         </div>
 

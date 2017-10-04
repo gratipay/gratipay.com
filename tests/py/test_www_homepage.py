@@ -16,7 +16,6 @@ _none = lambda *a: None
 
 GOOD = { 'amount': '1000'
        , 'payment_method_nonce': 'fake-valid-nonce'
-       , 'grateful_for': 'python, javascript'
        , 'name': 'Alice Liddell'
        , 'email_address': 'alice@example.com'
        , 'on_mailing_list': 'yes'
@@ -27,7 +26,6 @@ GOOD = { 'amount': '1000'
         }
 BAD = { 'amount': '1,000'
       , 'payment_method_nonce': 'deadbeef' * 5
-      , 'grateful_for': 'x' * (16 * 2**10) + 'x'
       , 'name': 'Alice Liddell' * 20
       , 'email_address': 'alice' * 100 + '@example.com'
       , 'on_mailing_list': 'cheese'
@@ -38,7 +36,6 @@ BAD = { 'amount': '1,000'
        }
 PARTIAL = { 'amount': '1000'
           , 'payment_method_nonce': 'fake-valid-nonce'
-          , 'grateful_for': ''
           , 'name': ''
           , 'email_address': ''
           , 'on_mailing_list': 'no'
@@ -49,7 +46,6 @@ PARTIAL = { 'amount': '1000'
            }
 SCRUBBED = { 'amount': '1000'
            , 'payment_method_nonce': ''
-           , 'grateful_for': 'x' * (16 * 2**10)
            , 'name': 'Alice Liddell' * 19 + 'Alice Li'
            , 'email_address': 'alice' * 51
            , 'on_mailing_list': 'yes'
@@ -59,7 +55,7 @@ SCRUBBED = { 'amount': '1000'
            , 'promotion_message': 'Love me!' * 16
             }
 ALL = ['amount', 'payment_method_nonce',
-       'grateful_for', 'name', 'email_address', 'on_mailing_list',
+       'name', 'email_address', 'on_mailing_list',
        'promotion_name', 'promotion_url', 'promotion_twitter', 'promotion_message']
 
 
