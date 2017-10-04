@@ -1306,7 +1306,6 @@ CREATE TABLE payments_for_open_source (
     promotion_url text DEFAULT ''::text NOT NULL,
     promotion_twitter text DEFAULT ''::text NOT NULL,
     promotion_message text DEFAULT ''::text NOT NULL,
-    grateful_for text DEFAULT ''::text NOT NULL,
     on_mailing_list boolean DEFAULT true NOT NULL
 );
 
