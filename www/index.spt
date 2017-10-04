@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import datetime
+import urllib
 from aspen import Response
 from gratipay.homepage import pay_for_open_source
 from decimal import Decimal as D
@@ -20,6 +21,15 @@ raised = website.campaign_raised
 goal = D('100000')
 today = datetime.date.today()
 ndays = (nov_1 - today).days
+video_id = "W_dnzfpmpG4"
+video_params = dict( autoplay=0
+                   , origin=website.base_url
+                   , modestbranding=1
+                   , rel=0
+                   , showinfo=0
+                   , controls=0
+                    )
+video_src = "https://www.youtube.com/embed/{}?{}".format(video_id, urllib.urlencode(video_params))
 show_campaign = (today >= oct_1) or request.qs.get('i_am_fancy') == 'yes'
 show_campaign = request.qs.get('i_am_fancy') == 'yes'  # hack to suppress until we're ready
 
@@ -153,7 +163,9 @@ $(document).ready(function() {
             </div>
         </section>
 
-        <section class="materials">
+        <iframe class="video" type="text/html" frameborder="0" src="{{ video_src|safe }}"></iframe>
+
+        <section class="pitch">
 
             <p class="prose">
                 {{ _( "From {varnish} to {vuejs}, {drf} to {django} itself, {ruby} to {webpack}, there are more and more examples of community-led open source projects funded by enlightened companies."
