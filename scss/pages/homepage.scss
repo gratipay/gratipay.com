@@ -65,9 +65,6 @@
             }
         }
 
-        #what-why {
-            display: none;
-        }
         p.prose {
             text-align: justify;
             width: 55%;
@@ -287,10 +284,6 @@
         }
 
         .campaign {
-            fieldset{
-                margin: 20px;
-            }
-
             margin: 0;
             border: 20px solid $green;
             border-style: solid solid none;
