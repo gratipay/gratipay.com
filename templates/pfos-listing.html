@@ -1,0 +1,28 @@
+{% set current_page = request.path.raw.split('/')[1] %}
+{% if start_index is not defined %}
+    {% set start_index = 1 %}
+{% endif %}
+{% for i, pfos in enumerate(payments, start=start_index) %}
+    <tr>
+        <td class="item">
+            <img class="avatar" src="{{ pfos.get_image_url('small') }}">
+            {% if pfos.promotion_url %}
+            <a class="listing-name" href="{{ pfos.promotion_url }}">
+                {{ pfos.promotion_name or 'Anonymous' }}</a>
+            {% else %}
+            <span class="listing-name" href="{{ pfos.promotion_url }}">
+                {{ pfos.promotion_name or 'Anonymous' }}</span>
+            {% endif %}
+            <div class="listing-details">
+                <span class="i">{{ i }}</span>
+                <span class="ctime">&middot;
+                    {{ format_currency(pfos.amount, 'USD', trailing_zeroes=False) }}</span>
+                <span class="ctime">&middot;
+                    {{ to_age(pfos.ctime, add_direction=True) }}</span>
+                {% if pfos.promotion_message %}
+                <span>&middot; &ldquo;{{ pfos.promotion_message }}&rdquo;</span>
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+{% endfor %}

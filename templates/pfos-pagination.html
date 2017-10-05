@@ -1,0 +1,36 @@
+{% set start = max(1, current_page - 3) %}
+{% set last_page = ceil(npfos / per_page) | int %}
+{% set end = min(start + 6, last_page) %}
+
+<ul class="pagination">
+    <li class="arrow-button arrow-left">
+    {% if current_page > 1 %}
+        <a href="/browse/payments/?page={{current_page - 1}}"><span class="arrow"><</span> {{ _("Back") }}</a>
+    {% endif %}
+    </li>
+
+    <li class="numbered-list">
+        <span class="show-on-mobile">{{ _("Page {0} of {1}", current_page, last_page) }}</span>
+
+        {% if start > 1 %}
+            <a class="hide-on-mobile" href="/browse/payments/">1</a>
+            <span class="filler hide-on-mobile">...</span>
+        {% endif %}
+
+        {% for i in range(start, end + 1) %}<a
+            class="{{'selected' if current_page == i }} hide-on-mobile"
+            href="/browse/payments/?page={{i}}"
+            >{{i}}</a>{% endfor %}
+
+        {% if end < last_page %}
+            <span class="filler hide-on-mobile">...</span>
+            <a class="hide-on-mobile" href="/browse/payments/?page={{last_page}}">{{last_page}}</a>
+        {% endif %}
+    </li>
+
+    <li class="arrow-button arrow-right">
+    {% if current_page < last_page %}
+        <a href="/browse/payments/?page={{current_page + 1}}">{{ _("Next") }} <span class="arrow">></span></a>
+    {% endif %}
+    </li>
+</ul>

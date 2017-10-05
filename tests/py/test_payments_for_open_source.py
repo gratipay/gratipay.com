@@ -18,7 +18,7 @@ class TestPaymentForOpenSource(Harness):
         assert PaymentForOpenSource.from_id(id).name == 'Alice Liddell'
 
     def test_can_update(self):
-        pfos = self.make_payment_for_open_source()
+        pfos = self.make_payment_for_open_source(charge_result=None)
         assert pfos.braintree_transaction_id is None
         assert pfos.braintree_result_message is None
         assert not pfos.succeeded
