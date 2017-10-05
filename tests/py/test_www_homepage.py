@@ -163,7 +163,7 @@ class PayForOpenSource(PayForOpenSourceHarness):
         assert self.fetch() is None
         result = pay_for_open_source(self.app, bodified(GOOD))
         assert not result['errors']
-        assert result['invoice_url'].endswith('invoice.html')
+        assert 'invoice.html?secret=' in result['invoice_url']
         assert self.fetch().succeeded
 
     def test_flags_errors_and_doesnt_store(self):
@@ -197,7 +197,7 @@ class PayForOpenSource(PayForOpenSourceHarness):
         assert response.headers['Content-Type'] == 'application/json'
         result = json.loads(response.body)
         assert not result['errors']
-        assert result['invoice_url'].endswith('invoice.html')
+        assert 'invoice.html?secret=' in result['invoice_url']
         assert self.fetch().succeeded
 
     def test_bad_post_gets_400(self):
@@ -221,5 +221,5 @@ class PartialPost(PayForOpenSourceHarness):  # separate class to work around wir
         assert response.headers['Content-Type'] == 'application/json'
         result = json.loads(response.body)
         assert not result['errors']
-        assert result['invoice_url'].endswith('invoice.html')
+        assert 'invoice.html?secret=' in result['invoice_url']
         assert self.fetch().succeeded

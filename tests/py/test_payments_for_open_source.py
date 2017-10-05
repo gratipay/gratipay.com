@@ -14,8 +14,8 @@ class TestPaymentForOpenSource(Harness):
         assert self.db.one('SELECT * FROM payments_for_open_source').name == 'Alice Liddell'
 
     def test_can_fetch(self):
-        uuid = self.make_payment_for_open_source().uuid
-        assert PaymentForOpenSource.from_uuid(uuid).name == 'Alice Liddell'
+        id = self.make_payment_for_open_source().id
+        assert PaymentForOpenSource.from_id(id).name == 'Alice Liddell'
 
     def test_can_update(self):
         pfos = self.make_payment_for_open_source()
@@ -67,11 +67,11 @@ class TestPaymentForOpenSource(Harness):
     def test_image_endpoint_serves_an_image(self):
         pfos = self.make_payment_for_open_source()
         pfos.save_image(ORIGINAL, LARGE, SMALL, 'image/png')
-        image = self.client.GET('/browse/payments/{}/image'.format(pfos.uuid)).body  # buffer
+        image = self.client.GET('/browse/payments/{}/image'.format(pfos.id)).body  # buffer
         assert str(image) == LARGE
 
     def test_get_image_url_gets_image_url(self):
         pfos = self.make_payment_for_open_source()
         pfos.save_image(ORIGINAL, LARGE, SMALL, 'image/png')
-        expected = '/browse/payments/{}/image?size=small'.format(pfos.uuid)
+        expected = '/browse/payments/{}/image?size=small'.format(pfos.id)
         assert pfos.get_image_url('small') == expected

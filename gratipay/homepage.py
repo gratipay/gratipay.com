@@ -107,7 +107,7 @@ def _charge(app, pfos, nonce):
     params = { 'amount': pfos.amount
              , 'payment_method_nonce': nonce
              , 'options': {'submit_for_settlement': True}
-             , 'custom_fields': {'pfos_uuid': pfos.uuid}
+             , 'custom_fields': {'pfos_id': pfos.id}
               }
     result = app.pfos_card_charger.charge(params)
     pfos.process_result(result)

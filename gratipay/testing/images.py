@@ -3,24 +3,17 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import base64
 import os
+from contextlib import contextmanager
 from tempfile import NamedTemporaryFile
 
 
-def fixture(extension='.png'):
-    def _(test):
-        def __(self):
-            fp = NamedTemporaryFile(prefix='gratipay-', suffix=extension, delete=False)
-            fp.write(ORIGINAL)
-            fp.close()
-            try:
-                return test(self, fp.name)
-            finally:
-                try:
-                    os.unlink(fp.name)
-                except OSError:
-                    pass
-        return __
-    return _
+@contextmanager
+def path_to(extension):
+    fp = NamedTemporaryFile(prefix='gratipay-', suffix='.'+extension, delete=False)
+    fp.write(ORIGINAL)
+    fp.close()
+    yield fp.name
+    os.unlink(fp.name)
 
 
 # heart coin logo on white, 160x192

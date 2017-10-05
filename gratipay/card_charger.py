@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import random
+
 import braintree
-from uuid import uuid4
 from decimal import Decimal as D
 
 
@@ -33,7 +34,7 @@ class Braintree(object):
 
 class FakeTransaction(object):
     def __init__(self):
-        self.id = uuid4().hex
+        self.id = random.randint(0, 2**16)
 
 class FakeSuccessResult(object):
     def __init__(self):

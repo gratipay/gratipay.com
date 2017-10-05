@@ -38,7 +38,7 @@ class CustomSerializer:
 
 vcr = VCR(
     cassette_library_dir = FIXTURES_ROOT,
-    record_mode = 'once',
+    record_mode = 'once',  # for reference: new_episodes
     match_on = ['url', 'method'],
 )
 vcr.register_serializer('custom', CustomSerializer)

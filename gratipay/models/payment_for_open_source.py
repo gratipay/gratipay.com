@@ -26,25 +26,25 @@ class PaymentForOpenSource(Model, images.HasImage):
 
     @property
     def url_path(self):
-        return '/browse/payments/{}/'.format(self.uuid)
+        return '/browse/payments/{}/'.format(self.id)
 
 
     @property
     def invoice_url(self):
         if not self.succeeded:
             return None
-        return '{}{}invoice.html'.format(gratipay.base_url, self.url_path)
+        return '{}{}invoice.html?secret={}'.format(gratipay.base_url, self.url_path, self.secret)
 
 
     @classmethod
-    def from_uuid(cls, uuid, cursor=None):
-        """Take a uuid and return an object.
+    def from_id(cls, id, cursor=None):
+        """Take an id and return an object.
         """
         return (cursor or cls.db).one("""
             SELECT pfos.*::payments_for_open_source
               FROM payments_for_open_source pfos
-             WHERE uuid = %s
-        """, (uuid,))
+             WHERE id = %s
+        """, (id,))
 
 
     @classmethod
@@ -53,16 +53,16 @@ class PaymentForOpenSource(Model, images.HasImage):
                cursor=None):
         """Take baseline info and insert into the database.
         """
-        uuid = uuid4().hex
+        secret = uuid4().hex
         on_mailing_list = on_mailing_list == 'yes'
         return (cursor or cls.db).one("""
             INSERT INTO payments_for_open_source
-                        (uuid, amount, name, on_mailing_list, email_address,
+                        (secret, amount, name, on_mailing_list, email_address,
                          promotion_name, promotion_url, promotion_twitter, promotion_message)
                  VALUES (%s, %s, %s, %s, %s,
                          %s, %s, %s, %s)
               RETURNING payments_for_open_source.*::payments_for_open_source
-        """, (uuid, amount, name, on_mailing_list, email_address,
+        """, (secret, amount, name, on_mailing_list, email_address,
               promotion_name, promotion_url, promotion_twitter, promotion_message))
 
 
@@ -77,26 +77,26 @@ class PaymentForOpenSource(Model, images.HasImage):
             # Verify that Braintree is sending us the right payload.
             # TODO This is hard to test and it should be a pretty tight guarantee,
             # so I am commenting out for now. :(
-            #pfos_uuid = result.transaction.custom_fields['pfos_uuid']
-            #assert pfos_uuid == self.uuid, (pfos_uuid, transaction_id)
+            #pfos_id = result.transaction.custom_fields['pfos_id']
+            #assert pfos_id == self.id, (pfos_id, transaction_id)
 
         self.db.run("""
             UPDATE payments_for_open_source
                SET braintree_result_message=%s
                  , braintree_transaction_id=%s
-             WHERE uuid=%s
-        """, (result_message, transaction_id, self.uuid))
+             WHERE id=%s
+        """, (result_message, transaction_id, self.id))
         self.set_attributes( braintree_result_message=result_message
                            , braintree_transaction_id=transaction_id
                             )
 
 
 def cast(path_part, state):
-    """This is an Aspen typecaster. Given a uuid and a state dict, raise
+    """This is an Aspen typecaster. Given an id and a state dict, raise
     Response or return PaymentForOpenSource.
     """
     try:
-        pfos = PaymentForOpenSource.from_uuid(path_part)
+        pfos = PaymentForOpenSource.from_id(path_part)
     except:
         raise Response(404)
     if pfos is None:
