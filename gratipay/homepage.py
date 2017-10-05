@@ -136,3 +136,16 @@ def pay_for_open_source(app, raw):
         else:
             out['errors'].append('charging')
     return out
+
+
+def get_latest_pfos(app):
+    return app.db.one("""
+
+    SELECT pfos.*::payments_for_open_source
+      FROM payments_for_open_source pfos
+     WHERE braintree_result_message = ''
+  ORDER BY ctime DESC
+     LIMIT 1
+          ;
+
+    """)

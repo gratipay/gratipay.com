@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920px" height="794px" viewBox="0 0 1920 794" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12072) - http://www.bohemiancoding.com/sketch -->
+    <title>BackTheStack-Q4-2017</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <rect id="Rectangle-2" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="1947" height="794"></rect>
+        <text id="#BackTheStack" sketch:type="MSTextLayer" font-family="Courier" font-size="200" font-weight="bold" fill="#339966">
+            <tspan x="171" y="323">#BackTheStack</tspan>
+        </text>
+        <path d="M1077.23266,583 C1077.23266,639.85111 1030.80032,685.926312 973.497535,685.926312 C916.214468,685.926312 869.767339,639.843773 869.767339,583 C869.767339,526.156227 916.214468,480.073688 973.49507,480.073688 C1030.80032,480.073688 1077.23266,526.14889 1077.23266,583 L1077.23266,583 Z M1015.68769,544.203306 C1004.01367,536.565275 992.921373,542.349438 987.111476,549.055644 C984.939852,551.552739 981.225166,554.497404 974.214837,554.497404 C967.204507,554.497404 963.487357,551.552739 961.323127,549.055644 C955.51323,542.351884 944.420937,536.575058 932.746915,544.203306 C919.039305,553.171816 923.022671,569.387039 927.020826,574.051056 L974.214837,637.45429 L1021.41378,574.051056 C1025.40454,569.39193 1029.3879,553.171816 1015.68769,544.203306 L1015.68769,544.203306 Z" id="Heart_Coin" fill="#663300" sketch:type="MSShapeGroup"></path>
+        <text id="17" sketch:type="MSTextLayer" font-family="Courier" font-size="160" font-weight="bold" fill="#339966">
+            <tspan x="1178" y="637">17</tspan>
+        </text>
+        <text id="Q4" sketch:type="MSTextLayer" font-family="Courier" font-size="160" font-weight="bold" fill="#339966">
+            <tspan x="576" y="637">Q4</tspan>
+        </text>
+    </g>
+</svg>

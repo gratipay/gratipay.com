@@ -3,7 +3,7 @@ import json
 import datetime
 import urllib
 from aspen import Response
-from gratipay.homepage import pay_for_open_source
+from gratipay.homepage import pay_for_open_source, get_latest_pfos
 from decimal import Decimal as D
 
 oct_1 = datetime.date(2017, 10, 01)
@@ -16,6 +16,8 @@ suppress_sidebar = True
 page_id = "homepage"
 banner = "Invest in Open Source"  # goofy w/ suppress_banner, it's for <title>
 
+latest = get_latest_pfos(website.app)
+payments = [latest] if latest else []
 npayments = website.campaign_npayments
 raised = website.campaign_raised
 goal = D('100000')
@@ -135,7 +137,7 @@ $(document).ready(function() {
     <div class="rollup">
     {% if show_campaign %}
     <div class="campaign">
-        <h2><img src="{{ website.asset('backthestack/october-2017.svg') }}"
+        <h2><img src="{{ website.asset('backthestack/logo.svg') }}"
                  alt="#BackTheStack, October 2017"></h2>
 
         <section class="stats">
@@ -149,11 +151,12 @@ $(document).ready(function() {
             <div class="stat main">
                 <strong>{{ format_currency(raised, 'USD', trailing_zeroes=False) }}</strong>
                 <div class="note">
-                {{ _( "out of {goal} = {percent}"
+                {{ _( "out of {goal} ={nbsp}{percent}"
                     , goal = ('<span class="goal">{}</span>'|safe).format(
                                                    format_currency(goal, 'USD', trailing_zeroes=False))
                     , percent = ('<span class="percent">{}</span>'|safe).format(
                                                                          format_percent(raised / goal))
+                    , nbsp = '&nbsp;'|safe
                      ) }}
                 </div>
             </div>
@@ -162,7 +165,22 @@ $(document).ready(function() {
                 <strong>{{ ndays }}</strong>
                 <div class="note">{{ ngettext("day left", "days left", ndays) }}</div>
             </div>
+
+            <div class="clear"></div>
         </section>
+
+        {% if payments %}
+        <section class="backers">
+            <div class="listing-wrapper">
+                <table class="listing">
+                {% include "templates/pfos-listing.html" %}
+                </table>
+            </div>
+            <a class="browse-payments" href="/browse/payments/">
+                {{ _("Browse more payments from backers {rarr}", rarr='&rarr;'|safe) }}
+            </a>
+        </section>
+        {% endif %}
 
         <iframe class="video" type="text/html" frameborder="0"
                 src="{{ video_src|safe }}" allowfullscreen></iframe>

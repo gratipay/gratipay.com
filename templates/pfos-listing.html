@@ -1,4 +1,3 @@
-{% set current_page = request.path.raw.split('/')[1] %}
 {% if start_index is not defined %}
     {% set start_index = 1 %}
 {% endif %}
@@ -20,7 +19,8 @@
                 <span class="ctime">&middot;
                     {{ to_age(pfos.ctime, add_direction=True) }}</span>
                 {% if pfos.promotion_message %}
-                <span>&middot; &ldquo;{{ pfos.promotion_message }}&rdquo;</span>
+                <span class="promotion-message">&middot;
+                    &ldquo;{{ pfos.promotion_message }}&rdquo;</span>
                 {% endif %}
             </div>
         </td>
