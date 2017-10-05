@@ -68,7 +68,7 @@ class Tests(BrowserHarness):
         self.wait_for('a.invoice').click()
         uuid = self.wait_for('.txnid').text.split()[1].lower()
         assert self.css('#items tbody tr').text == 'open source software $ 537.00'
-        assert self.client.GET('/browse/payments/{}/logo'.format(uuid)).body == images.LARGE
+        assert self.client.GET('/browse/payments/{}/image'.format(uuid)).body == images.LARGE
 
     def test_options_are_optional(self):
         self.fill_form('537', '4242424242424242', '1020', '123')

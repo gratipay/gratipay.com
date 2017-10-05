@@ -67,7 +67,7 @@ class TestPaymentForOpenSource(Harness):
     def test_image_endpoint_serves_an_image(self):
         pfos = self.make_payment_for_open_source()
         pfos.save_image(ORIGINAL, LARGE, SMALL, 'image/png')
-        image = self.client.GET('/browse/payments/{}/logo'.format(pfos.uuid)).body  # buffer
+        image = self.client.GET('/browse/payments/{}/image'.format(pfos.uuid)).body  # buffer
         assert str(image) == LARGE
 
     def test_get_image_url_gets_image_url(self):
