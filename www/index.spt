@@ -27,7 +27,8 @@ video_params = dict( autoplay=0
                    , modestbranding=1
                    , rel=0
                    , showinfo=0
-                   , controls=0
+                   , controls=1
+                   , fs=1
                     )
 video_src = "https://www.youtube.com/embed/{}?{}".format(video_id, urllib.urlencode(video_params))
 show_campaign = (today >= oct_1) or request.qs.get('i_am_fancy') == 'yes'
@@ -163,12 +164,13 @@ $(document).ready(function() {
             </div>
         </section>
 
-        <iframe class="video" type="text/html" frameborder="0" src="{{ video_src|safe }}"></iframe>
+        <iframe class="video" type="text/html" frameborder="0"
+                src="{{ video_src|safe }}" allowfullscreen></iframe>
 
         <section class="pitch">
 
             <p class="prose">
-                {{ _( "From {varnish} to {vuejs}, {drf} to {django} itself, {ruby} to {webpack}, there are more and more examples of community-led open source projects funded by enlightened companies."
+                {{ _( "From {varnish} to {vuejs}, {drf} to {django}, {ruby} to {webpack}, there are more and more examples of community-led open source projects funded by enlightened companies."
                     , varnish='<a href="http://phk.freebsd.dk/VML/">Varnish</a>'|safe
                     , vuejs='<a href="https://www.patreon.com/evanyou">Vue.js</a>'|safe
                     , drf='<a href="https://fund.django-rest-framework.org/topics/funding/">DRF</a>'|safe
