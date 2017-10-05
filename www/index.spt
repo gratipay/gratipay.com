@@ -21,7 +21,7 @@ raised = website.campaign_raised
 goal = D('100000')
 today = datetime.date.today()
 ndays = (nov_1 - today).days
-video_id = "W_dnzfpmpG4"
+video_id = "prJmlm2n5Tg"
 video_params = dict( autoplay=0
                    , origin=website.base_url
                    , modestbranding=1
