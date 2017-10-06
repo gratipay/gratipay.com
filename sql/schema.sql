@@ -1295,7 +1295,7 @@ CREATE TABLE payments (
 --
 
 CREATE TABLE payments_for_open_source (
-    uuid text NOT NULL,
+    secret text NOT NULL,
     ctime timestamp with time zone DEFAULT now() NOT NULL,
     amount bigint NOT NULL,
     braintree_transaction_id text,
@@ -1306,8 +1306,32 @@ CREATE TABLE payments_for_open_source (
     promotion_url text DEFAULT ''::text NOT NULL,
     promotion_twitter text DEFAULT ''::text NOT NULL,
     promotion_message text DEFAULT ''::text NOT NULL,
-    on_mailing_list boolean DEFAULT true NOT NULL
+    on_mailing_list boolean DEFAULT true NOT NULL,
+    id bigint NOT NULL,
+    image_oid_original oid DEFAULT 0 NOT NULL,
+    image_oid_large oid DEFAULT 0 NOT NULL,
+    image_oid_small oid DEFAULT 0 NOT NULL,
+    image_type supported_image_types
 );
+
+
+--
+-- Name: payments_for_open_source_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE payments_for_open_source_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: payments_for_open_source_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE payments_for_open_source_id_seq OWNED BY payments_for_open_source.id;
 
 
 --
@@ -1583,6 +1607,13 @@ ALTER TABLE ONLY payment_instructions ALTER COLUMN id SET DEFAULT nextval('payme
 --
 
 ALTER TABLE ONLY payments ALTER COLUMN id SET DEFAULT nextval('payments_id_seq'::regclass);
+
+
+--
+-- Name: payments_for_open_source id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY payments_for_open_source ALTER COLUMN id SET DEFAULT nextval('payments_for_open_source_id_seq'::regclass);
 
 
 --
@@ -1870,11 +1901,19 @@ ALTER TABLE ONLY payments_for_open_source
 
 
 --
+-- Name: payments_for_open_source payments_for_open_source_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY payments_for_open_source
+    ADD CONSTRAINT payments_for_open_source_id_key UNIQUE (id);
+
+
+--
 -- Name: payments_for_open_source payments_for_open_source_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY payments_for_open_source
-    ADD CONSTRAINT payments_for_open_source_pkey PRIMARY KEY (uuid);
+    ADD CONSTRAINT payments_for_open_source_pkey PRIMARY KEY (secret);
 
 
 --
