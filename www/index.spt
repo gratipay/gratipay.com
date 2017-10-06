@@ -32,8 +32,8 @@ video_params = dict( autoplay=0
                    , fs=1
                     )
 video_src = "https://www.youtube.com/embed/{}?{}".format(video_id, urllib.urlencode(video_params))
-is_fancy = request.qs.get('i_am_fancy') == 'yes'
-show_campaign = is_fancy
+is_fancy = request.qs.get('i_am_fancy') == 'yes'  # backcompat
+show_campaign = is_fancy or request.qs.get('backthestack') == 'yes'
 
 result = pay_for_open_source(website.app, request.body) if request.method == 'POST' else {}
 if result and result['errors']:
@@ -139,9 +139,7 @@ $(document).ready(function() {
         <h2><img src="{{ website.asset('backthestack/logo.svg') }}"
                  alt="#BackTheStack, October 2017"></h2>
 
-        {% if is_fancy %}
-        <h2 class="fancy">{{ _("#fancy Prelaunch!") }}</h2>
-        {% endif %}
+        <h2 class="prelaunch">{{ _("Thanks for being part of our prelaunch!") }}</h2>
 
         <section class="stats">
             <div class="stat">
