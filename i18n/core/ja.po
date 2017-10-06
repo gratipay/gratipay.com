@@ -418,6 +418,12 @@ msgstr "最初"
 msgid "Last"
 msgstr "最後"
 
+msgid "Back"
+msgstr ""
+
+msgid "Page {0} of {1}"
+msgstr ""
+
 msgid "Profile"
 msgstr "プロフィール"
 
@@ -501,12 +507,6 @@ msgstr ""
 
 msgid "owned by {a}{owner}{_a}"
 msgstr "オーナー {a}{owner}{_a}"
-
-msgid "Back"
-msgstr ""
-
-msgid "Page {0} of {1}"
-msgstr ""
 
 msgid "Sign In"
 msgstr "サインイン"
@@ -733,21 +733,27 @@ msgstr ""
 msgid "Email {support}{br}with questions or feedback."
 msgstr ""
 
+msgid "#fancy Prelaunch!"
+msgstr ""
+
 msgid "backer"
 msgid_plural "backers"
 msgstr[0] ""
 
-msgid "out of {goal} = {percent}"
+msgid "out of {goal} ={nbsp}{percent}"
 msgstr ""
 
 msgid "day left"
 msgid_plural "days left"
 msgstr[0] ""
 
+msgid "Browse more payments from backers {rarr}"
+msgstr ""
+
 msgid ""
-"From {varnish} to {vuejs}, {drf} to {django} itself, {ruby} to {webpack}, "
-"there are more and more examples of community-led open source projects "
-"funded by enlightened companies."
+"From {varnish} to {vuejs}, {drf} to {django}, {ruby} to {webpack}, there are"
+" more and more examples of community-led open source projects funded by "
+"enlightened companies."
 msgstr ""
 
 msgid ""
@@ -818,13 +824,25 @@ msgstr ""
 msgid "We (probably) want to brag about you! May we?"
 msgstr ""
 
+msgid "Your Company Logo"
+msgstr ""
+
+msgid "Choose file ..."
+msgstr ""
+
+msgid "Please upload a PNG or JPG smaller than 256 kB."
+msgstr ""
+
+msgid "PNG or JPG, will be cropped square."
+msgstr ""
+
 msgid "Your Company Name"
 msgstr ""
 
 msgid "Please enter a value 32 characters or shorter."
 msgstr ""
 
-msgid "Your Landing Page URL"
+msgid "Your Homepage URL"
 msgstr ""
 
 msgid "Please enter a valid URL shorter than 256 characters."

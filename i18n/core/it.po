@@ -423,6 +423,12 @@ msgstr "Primo"
 msgid "Last"
 msgstr "Ultimo"
 
+msgid "Back"
+msgstr "Indietro"
+
+msgid "Page {0} of {1}"
+msgstr "Pagina {0} di {1}"
+
 msgid "Profile"
 msgstr "Profilo"
 
@@ -507,12 +513,6 @@ msgstr "non si è unito"
 
 msgid "owned by {a}{owner}{_a}"
 msgstr "Proprietà di {a}{owner}{_a}"
-
-msgid "Back"
-msgstr "Indietro"
-
-msgid "Page {0} of {1}"
-msgstr "Pagina {0} di {1}"
 
 msgid "Sign In"
 msgstr "Accedi"
@@ -739,38 +739,44 @@ msgstr "Grazie per aver investito nell'open source!"
 msgid "Email {support}{br}with questions or feedback."
 msgstr "Invia un'email a {support} con{br}domande o suggerimenti."
 
+msgid "#fancy Prelaunch!"
+msgstr ""
+
 msgid "backer"
 msgid_plural "backers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sponsor"
+msgstr[1] "Sponsor"
 
-msgid "out of {goal} = {percent}"
-msgstr "raggiunto il {percent} di {goal}"
+msgid "out of {goal} ={nbsp}{percent}"
+msgstr ""
 
 msgid "day left"
 msgid_plural "days left"
 msgstr[0] "giorno mancante"
 msgstr[1] "giorni mancanti"
 
+msgid "Browse more payments from backers {rarr}"
+msgstr ""
+
 msgid ""
-"From {varnish} to {vuejs}, {drf} to {django} itself, {ruby} to {webpack}, "
-"there are more and more examples of community-led open source projects "
-"funded by enlightened companies."
-msgstr "Da {varnish} a {vuejs}, da {drf} a {django}, da {ruby} a {webpack}, ci sono sempre più esempi di progetti open source intrapresi dalla community e finanziati da aziende all'avanguardia."
+"From {varnish} to {vuejs}, {drf} to {django}, {ruby} to {webpack}, there are"
+" more and more examples of community-led open source projects funded by "
+"enlightened companies."
+msgstr ""
 
 msgid ""
 "Inspired by this trend, #BackTheStack is a {b} funding campaign for the "
 "whole open source community{_b}. Together, can we encourage even more of the"
 " industry to participate? Can we sustain even more of the ecosystem, "
 "including parts that are less flashy?"
-msgstr ""
+msgstr "Ispirata a questa tendenza, #BackTheStack è una {b}campagna di finanziamento per tutta la comunità dell'open source{_b}. Assieme, possiamo incoraggiare anche altri a partecipare? Possiamo sostenere una quota ancora maggiore dell'ecosistema, includendo settori meno noti?"
 
 msgid ""
 "Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay "
 "$10,000, and receive $100,000 in maintenance and new development. We'll "
 "report back on the impact of this shared investment, and we'd be thrilled to"
 " promote your company's contribution to it."
-msgstr ""
+msgstr "Il ritorno sull'investimento in #BackTheStack per la tua azienda sarà di {b}almeno 10x{_b}. Paga $10.000 e ricevi $100.000 in manutenzione e nuovi sviluppi. Riferiremo l'impatto di questo investimento condiviso e saremmo entusiasti di promuovere il contributo della tua azienda."
 
 msgid "Join #BackTheStack and invest in open source today!"
 msgstr "Unisciti a #BackTheStack e investi nell'open source oggi!"
@@ -803,7 +809,7 @@ msgid "Please enter a valid email address shorter than 255 characters."
 msgstr "Per favore inserisci un indirizzo email valido con meno di 255 caratteri."
 
 msgid "We will send a link to an invoice for your payment."
-msgstr ""
+msgstr "Invieremo un link alla fattura del tuo pagamento."
 
 msgid "Join Mailing List"
 msgstr "Iscrizione Mailing List"
@@ -818,7 +824,7 @@ msgid "I am surprised that you are seeing this message."
 msgstr "Sono sorpreso che tu stia vedendo questo messaggio."
 
 msgid "We will send updates related to #BackTheStack."
-msgstr ""
+msgstr "Invieremo aggiornamenti relativi a #BackTheStack."
 
 msgid "Promotion"
 msgstr "Promozione"
@@ -826,14 +832,26 @@ msgstr "Promozione"
 msgid "We (probably) want to brag about you! May we?"
 msgstr "(Probabilmente) vorremmo vantarci di te! Possiamo?"
 
+msgid "Your Company Logo"
+msgstr ""
+
+msgid "Choose file ..."
+msgstr ""
+
+msgid "Please upload a PNG or JPG smaller than 256 kB."
+msgstr ""
+
+msgid "PNG or JPG, will be cropped square."
+msgstr ""
+
 msgid "Your Company Name"
 msgstr "Nome Della Tua Azienda"
 
 msgid "Please enter a value 32 characters or shorter."
 msgstr "Per favore inserisci un valore con 32 caratteri o meno."
 
-msgid "Your Landing Page URL"
-msgstr "URL Della Tua Landing Page"
+msgid "Your Homepage URL"
+msgstr ""
 
 msgid "Please enter a valid URL shorter than 256 characters."
 msgstr "Per favore inserisci un URL valido con meno di 256 caratteri."
