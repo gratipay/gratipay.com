@@ -15,6 +15,7 @@ from aspen.testing.client import Client
 from environment import Environment
 from gratipay.application import Application
 from gratipay.billing.exchanges import record_exchange, record_exchange_result
+from gratipay.card_charger import FakeErrorResult, FakeFailureResult, FakeSuccessResult
 from gratipay.elsewhere import UserInfo
 from gratipay.exceptions import NoSelfTipping, NoTippee, BadAmount
 from gratipay.models.account_elsewhere import AccountElsewhere
@@ -27,7 +28,6 @@ from gratipay.security import user
 from gratipay.testing import P
 from gratipay.testing.vcr import use_cassette
 from psycopg2 import IntegrityError, InternalError
-
 
 TOP = realpath(join(dirname(dirname(__file__)), '..'))
 WWW_ROOT = str(realpath(join(TOP, 'www')))
@@ -143,7 +143,7 @@ class Harness(unittest.TestCase):
         self.db.run("INSERT INTO worker_coordination DEFAULT VALUES")
 
 
-    def make_payment_for_open_source(self, **info):
+    def make_payment_for_open_source(self, charge_result='success', **info):
         defaults = dict( amount='1000'
                        , name='Alice Liddell'
                        , email_address='alice@example.com'
@@ -156,7 +156,19 @@ class Harness(unittest.TestCase):
         for key, value in defaults.items():
             if key not in info:
                 info[key] = value
-        return PaymentForOpenSource.insert(**info)
+        pfos = PaymentForOpenSource.insert(**info)
+
+        Result = None
+        if charge_result == 'success':
+            Result = FakeSuccessResult
+        elif charge_result == 'error':
+            Result = FakeErrorResult
+        elif charge_result == 'failure':
+            Result = FakeFailureResult
+        if Result:
+            pfos.process_result(Result())
+
+        return pfos
 
 
     def make_elsewhere(self, platform, user_id, user_name, **kw):

@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from decimal import Decimal
 
+from .images import ORIGINAL as IMAGE
 from ..models.participant import Participant
 from ..models.team import Team
 
@@ -18,7 +19,7 @@ from .deploy_hooks import DeployHooksHarness
 from .email import SentEmailHarness, QueuedEmailHarness
 
 __all__ = [ 'Harness', 'BillingHarness', 'BrowserHarness', 'DeployHooksHarness', 'SentEmailHarness'
-          , 'QueuedEmailHarness', 'D','P','T' ]
+          , 'QueuedEmailHarness', 'D','P','T', 'IMAGE' ]
 
 
 class Foobar(Exception): pass

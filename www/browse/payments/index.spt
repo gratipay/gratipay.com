@@ -1,0 +1,54 @@
+from collections import OrderedDict
+from gratipay.utils import icons
+import random
+
+[---]
+PER_PAGE = 10
+page = request.qs.get('page', 1)
+try:
+    page = int(page)
+except ValueError:
+    page = 1
+
+npfos = website.db.one("""
+
+    SELECT count(1)
+      FROM payments_for_open_source
+     WHERE braintree_result_message = ''
+
+""")
+
+limit, offset = PER_PAGE, (page - 1) * PER_PAGE
+
+payments = website.db.all("""
+
+    SELECT pfos.*::payments_for_open_source
+      FROM payments_for_open_source pfos
+     WHERE braintree_result_message = ''
+  ORDER BY ctime DESC
+     LIMIT %s
+    OFFSET %s
+
+""", (limit, offset))
+
+title = _("Payments")
+banner = _("Browse")
+suppress_sidebar = True
+page_id = "browse-payments"
+[---] text/html
+{% extends "templates/base.html" %}
+
+{% block content %}
+<table class="listing">
+    {% set start_index = ((page - 1) * PER_PAGE) + 1 %}
+    {% include "templates/pfos-listing.html" %}
+</table>
+
+{% if npfos > PER_PAGE %}
+    {% set npfos = npfos %}
+    {% set per_page = PER_PAGE %}
+    {% set current_page = page %}
+    {% include "templates/pfos-pagination.html" %}
+{% endif %}
+
+{% endblock %}

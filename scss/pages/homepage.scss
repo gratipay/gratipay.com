@@ -84,7 +84,7 @@
             &.failed {
                 color: $gold;
                 font: normal 24px/24px $Mono;
-                padding-top: 118px;
+                padding-top: 128px;
             }
             &.offline {
                 color: white;
@@ -182,7 +182,7 @@
                         text-align: center;
                     }
                 }
-                &.email_address, &.on_mailing_list {
+                &.email_address, &.on_mailing_list, &.promotion_logo {
                     .fine-print {
                         text-align: left;
                     }
@@ -255,6 +255,28 @@
                     height: 192px;
                     padding: 10px;
                 }
+                &.promotion_logo {
+                    text-align: left;
+                    line-height: 36px;
+                    input {
+                        width: 0.1px;
+                        height: 0.1px;
+                        opacity: 0;
+                        overflow: hidden;
+                        position: absolute;
+                        z-index: -1;
+                    }
+                    label.button {
+                        font: normal 16px/32px $Ideal;
+                        text-transform: none;
+                        background: $green;
+                        border: 0;
+                        border-radius: 5px;
+                        margin: 0;
+                        padding: 10px 16px;
+                        display: inline-block;
+                    }
+                }
 
                 .help {
                     display: none;
@@ -291,7 +313,11 @@
             h2 img {
                 width: 256px;
             }
+            h2.fancy {
+                color: red;
+            }
             .stats {
+                background: $lightest-gray;
                 padding: 20px 40px;
                 .stat {
                     width: 33%;
@@ -299,9 +325,46 @@
                     strong { font: normal 24px/28px $Ideal; }
                     &.main strong { font-weight: bold; font-size: 28px; }
                     .note {
-                        margin: 2px 0 40px;
+                        margin: 2px 0 0;
                         padding: 0;
+                        color: $gray;
                     }
+                }
+            }
+            .backers {
+                clear: both;
+                .listing-wrapper {
+                    position: relative;
+                    padding: 15px 18% 0;
+                    table.listing {
+                        img {
+                            filter: grayscale(100%) opacity(33%);
+                            transition: filter 0.2s;
+                        }
+                        .listing-name {
+                            color: $medium-gray;
+                        }
+                        .listing-details {
+                            max-width: 350px;
+                        }
+                        &:hover {
+                            img {
+                                filter: grayscale(0) opacity(100%);
+                            }
+                        }
+                    }
+                }
+                .browse-payments {
+                    &:hover {
+                        background: none;
+                        color: $green;
+                    }
+                    color: $medium-gray;
+                    display: block;
+                    padding: 20px 18%;
+                    text-align: center;
+                    font: normal 12px/15px $Ideal;
+                    text-decoration: underline;
                 }
             }
             .video {
@@ -325,12 +388,13 @@
                     img {
                         height: 32px;
                         vertical-align: text-top;
-                        filter: grayscale(100%);
+                        filter: grayscale(100%) opacity(33%);
+                        transition: filter 0.2s;
                     }
                     &:hover {
                         background: none;
                         img {
-                            filter: grayscale(0);
+                            filter: grayscale(0) opacity(100%);
                         }
                     }
                 }

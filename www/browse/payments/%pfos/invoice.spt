@@ -2,24 +2,15 @@ from aspen import Response
 from gratipay.models.payment_for_open_source import PaymentForOpenSource
 
 [-------------------]
-
-try:
-    uuid = request.path['uuid']
-except ValueError:
-    raise Response(400)
-
-# pfos - payment_for_open_source 
-pfos = PaymentForOpenSource.from_uuid(uuid)
-
-if pfos is None:
+pfos = request.path['pfos']
+if ('secret' not in request.qs) or (request.qs['secret'] != pfos.secret):
     raise Response(404)
-
 
 [-------------------] text/html
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Gratipay Invoice {{ pfos.uuid }}</title>
+        <title>Gratipay Invoice {{ pfos.id }}</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -64,10 +55,8 @@ if pfos is None:
 
             #txnid {
                 border-top: 1px solid black;
-                font: normal 10pt/10pt sans-serif;
-                text-transform: uppercase;
                 width: 100%;
-                margin-bottom: 4em;
+                margin-bottom: 3em;
             }
             #txnid td {
                 padding: 3pt 0 0;
@@ -140,7 +129,7 @@ if pfos is None:
         <table id="txnid">
             <tr>
                 <td class="txnid">
-                    <b>ID:</b> {{ pfos.uuid }}</td>
+                    <b>#</b> {{ pfos.id }}</td>
                 <td class="date">
                     <b>Date:</b> {{ pfos.ctime.strftime("%B %d, %Y").replace(' 0', ' ') }}</td>
             </tr>

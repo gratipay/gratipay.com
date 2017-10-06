@@ -154,6 +154,15 @@
             margin-top: 40px;
         }
     }
+    #homepage {
+        .campaign {
+            .backers {
+                .promotion-message {
+                    display: none;
+                }
+            }
+        }
+    }
     .with-sidebar table.listing td.item .details {
         max-width: 100%;
     }

@@ -11,7 +11,7 @@ from . import utils, security, typecasting, version
 from .security import authentication, csrf
 from .utils import erase_cookie, http_caching, i18n, set_cookie, set_version_header, timer
 from .renderers import csv_dump, jinja2_htmlescaped, eval_, scss
-from .models import team
+from .models import payment_for_open_source, team
 
 
 class Website(BaseWebsite):
@@ -40,6 +40,7 @@ class Website(BaseWebsite):
 
 
     def configure_typecasters(self):
+        self.typecasters['pfos'] = payment_for_open_source.cast
         self.typecasters['team'] = team.cast
 
 

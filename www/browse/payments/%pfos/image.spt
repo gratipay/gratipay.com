@@ -5,17 +5,12 @@ from os.path import join
 load = lambda s: open(join(website.www_root, 'assets', 'default-{}.png'.format(s))).read()
 DEFAULTS = {size: load(size) for size in ('large', 'small')}
 DEFAULTS['original'] = DEFAULTS['large']
-
-load = lambda s: open(join(website.www_root, 'assets', 'package-default-{}.png'.format(s))).read()
-DEFAULTS_NPM = {size: load(size) for size in ('large', 'small')}
-DEFAULTS_NPM['original'] = DEFAULTS_NPM['large']
 [----]
-team = request.path['team']
+pfos = request.path['pfos']
 size = request.qs.get('size', 'large')
-image, media_type = team.load_image(size), team.image_type
+image, media_type = pfos.load_image(size), pfos.image_type
 if image is None:
-    defaults = DEFAULTS_NPM if team.package else DEFAULTS
-    image, media_type = defaults[size], "image/png"
+    image, media_type = DEFAULTS[size], "image/png"
 
 parts = request.path.raw.split('/')
 if '.' in parts[-1]:
