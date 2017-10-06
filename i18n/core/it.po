@@ -739,7 +739,7 @@ msgstr "Grazie per aver investito nell'open source!"
 msgid "Email {support}{br}with questions or feedback."
 msgstr "Invia un'email a {support} con{br}domande o suggerimenti."
 
-msgid "#fancy Prelaunch!"
+msgid "Thanks for being part of our prelaunch!"
 msgstr ""
 
 msgid "backer"

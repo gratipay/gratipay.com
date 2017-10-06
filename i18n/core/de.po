@@ -750,7 +750,7 @@ msgstr ""
 msgid "Email {support}{br}with questions or feedback."
 msgstr ""
 
-msgid "#fancy Prelaunch!"
+msgid "Thanks for being part of our prelaunch!"
 msgstr ""
 
 msgid "backer"
