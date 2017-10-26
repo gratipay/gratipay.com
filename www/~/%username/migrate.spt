@@ -1,0 +1,59 @@
+from aspen import Response
+from gratipay.security.crypto import constant_time_compare
+from gratipay.utils import get_participant
+
+SECRET = website.env.liberapay_secret
+
+[---]
+
+participant = get_participant(state, restrict=True)
+secret = (request.body if request.method == 'POST' else request.qs)['secret']
+if not constant_time_compare(secret, SECRET):
+    raise Response(403, "bad secret")
+
+data = {k: getattr(participant, k) for k in (
+    'id', 'username', 'anonymous_giving', 'is_suspicious', 'avatar_url',
+    'email_address', 'email_lang', 'is_searchable'
+)}
+data.update({
+    "elsewhere": website.db.all("""
+        SELECT platform, user_id, user_name, display_name, email, avatar_url, is_team, extra_info
+          FROM elsewhere
+         WHERE participant = %(username)s
+    """, data),
+    "email_addresses": website.db.all("""
+        SELECT address, verified, verification_start, verification_end
+          FROM email_addresses
+         WHERE participant_id = %(id)s
+    """, data),
+    "payment_instructions": website.db.all("""
+        SELECT i.ctime, i.mtime, i.amount, i.team_id, p.email_address
+             , ( SELECT json_agg(json_build_object(
+                            'platform', e.platform,
+                            'user_id', e.user_id,
+                            'user_name', e.user_name
+                        ))
+                   FROM elsewhere e
+                  WHERE e.participant = p.username
+               ) AS elsewhere_accounts
+          FROM payment_instructions i
+          JOIN teams t ON t.id = i.team_id
+          JOIN participants p ON p.username = t.owner
+         WHERE i.participant_id = %(id)s
+    """, data),
+    "statements": website.db.all("""
+        SELECT lang, content
+          FROM statements
+         WHERE participant = %(id)s
+    """, data),
+    "teams": website.db.all("""
+        SELECT t.*, to_json(pkg) AS package
+          FROM teams t
+     LEFT JOIN teams_to_packages t2p ON t2p.team_id = t.id
+     LEFT JOIN packages pkg ON pkg.id = t2p.package_id
+         WHERE t.owner = %(username)s
+    """, data),
+})
+
+[---] application/json
+data

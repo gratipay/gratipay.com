@@ -1,0 +1,6 @@
+<form action="{{ website.env.liberapay_base_url }}/migrate" method="POST">
+    <input type="hidden" name="id" value="{{ user.participant.id }}" />
+    <input type="hidden" name="username" value="{{ user.participant.username }}" />
+    <input type="hidden" name="session_token" value="{{ user.participant.session_token }}" />
+    <button>{{ _("Migrate to Liberapay") }}</button>
+</form>
