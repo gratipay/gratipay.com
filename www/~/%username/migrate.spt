@@ -36,6 +36,7 @@ data.update({
                    FROM elsewhere e
                   WHERE e.participant = p.username
                ) AS elsewhere_accounts
+             , t.name, t.slug
           FROM current_payment_instructions i
           JOIN teams t ON t.id = i.team_id
           JOIN participants p ON p.username = t.owner
