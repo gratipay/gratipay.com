@@ -406,6 +406,9 @@ msgstr "{0} 前"
 msgid "joined {ago}"
 msgstr "参加 {ago}"
 
+msgid "Migrate to Liberapay"
+msgstr ""
+
 msgid "Previous"
 msgstr "前"
 

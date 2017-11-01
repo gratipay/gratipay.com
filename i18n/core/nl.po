@@ -413,6 +413,9 @@ msgstr "{0} geleden"
 msgid "joined {ago}"
 msgstr ""
 
+msgid "Migrate to Liberapay"
+msgstr ""
+
 msgid "Previous"
 msgstr "Vorige"
 

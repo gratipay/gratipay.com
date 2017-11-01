@@ -411,6 +411,9 @@ msgstr "{0} fa"
 msgid "joined {ago}"
 msgstr "Si è unito {ago}"
 
+msgid "Migrate to Liberapay"
+msgstr ""
+
 msgid "Previous"
 msgstr "Precedente"
 
@@ -740,7 +743,7 @@ msgid "Email {support}{br}with questions or feedback."
 msgstr "Invia un'email a {support} con{br}domande o suggerimenti."
 
 msgid "Thanks for being part of our prelaunch!"
-msgstr ""
+msgstr "Grazie per essere parte della nostra campagna di pre-lancio!"
 
 msgid "backer"
 msgid_plural "backers"
@@ -748,7 +751,7 @@ msgstr[0] "Sponsor"
 msgstr[1] "Sponsor"
 
 msgid "out of {goal} ={nbsp}{percent}"
-msgstr ""
+msgstr "{nbsp}{percent} di {goal}"
 
 msgid "day left"
 msgid_plural "days left"
@@ -756,7 +759,7 @@ msgstr[0] "giorno mancante"
 msgstr[1] "giorni mancanti"
 
 msgid "Browse more payments from backers {rarr}"
-msgstr ""
+msgstr "Visualizza altri pagamenti dagli sponsor {rarr}"
 
 msgid ""
 "From {varnish} to {vuejs}, {drf} to {django}, {ruby} to {webpack}, there are"

@@ -418,6 +418,9 @@ msgstr "Hace {0}"
 msgid "joined {ago}"
 msgstr "unido {ago}"
 
+msgid "Migrate to Liberapay"
+msgstr ""
+
 msgid "Previous"
 msgstr "Previo"
 
