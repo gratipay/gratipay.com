@@ -716,173 +716,6 @@ msgstr "Accetto a rendere la mia candidatura {0}pubblicamente visibile{1}."
 msgid "I agree to the other {0}terms of service{1} as well."
 msgstr "Acconsento anche agli altri {0}termini di servizio{1}."
 
-msgid "Eep! Mind looking over your info for us?"
-msgstr "Aah! Ti dispiacerebbe controllare le tue informazioni per noi?"
-
-msgid "Invest in open source."
-msgstr "Investi nell'open source."
-
-msgid "Payment complete!"
-msgstr "Pagamento completato!"
-
-msgid "2000"
-msgstr "2000"
-
-msgid "Please enter a whole dollar amount (minimum $10, no punctuation)."
-msgstr "Per favore, inserisci un'ammontare di dollari in numeri interi (minimo $10, senza punteggiatura)."
-
-msgid ""
-"We {a}recommend{_a} $2,000 per year{br}per technical employee{br}at your "
-"company."
-msgstr "{a}Raccomandiamo{_a} $2000 all'anno{br}per ciascun impiegato tecnico{br}nella tua azienda."
-
-msgid "Thank you for investing in open source!"
-msgstr "Grazie per aver investito nell'open source!"
-
-msgid "Email {support}{br}with questions or feedback."
-msgstr "Invia un'email a {support} con{br}domande o suggerimenti."
-
-msgid "Thanks for being part of our prelaunch!"
-msgstr "Grazie per essere parte della nostra campagna di pre-lancio!"
-
-msgid "backer"
-msgid_plural "backers"
-msgstr[0] "Sponsor"
-msgstr[1] "Sponsor"
-
-msgid "out of {goal} ={nbsp}{percent}"
-msgstr "{nbsp}{percent} di {goal}"
-
-msgid "day left"
-msgid_plural "days left"
-msgstr[0] "giorno mancante"
-msgstr[1] "giorni mancanti"
-
-msgid "Browse more payments from backers {rarr}"
-msgstr "Visualizza altri pagamenti dagli sponsor {rarr}"
-
-msgid ""
-"From {varnish} to {vuejs}, {drf} to {django}, {ruby} to {webpack}, there are"
-" more and more examples of community-led open source projects funded by "
-"enlightened companies."
-msgstr ""
-
-msgid ""
-"Inspired by this trend, #BackTheStack is a {b} funding campaign for the "
-"whole open source community{_b}. Together, can we encourage even more of the"
-" industry to participate? Can we sustain even more of the ecosystem, "
-"including parts that are less flashy?"
-msgstr "Ispirata a questa tendenza, #BackTheStack è una {b}campagna di finanziamento per tutta la comunità dell'open source{_b}. Assieme, possiamo incoraggiare anche altri a partecipare? Possiamo sostenere una quota ancora maggiore dell'ecosistema, includendo settori meno noti?"
-
-msgid ""
-"Your company's ROI on #BackTheStack will be {b}at least 10x{_b}. Pay "
-"$10,000, and receive $100,000 in maintenance and new development. We'll "
-"report back on the impact of this shared investment, and we'd be thrilled to"
-" promote your company's contribution to it."
-msgstr "Il ritorno sull'investimento in #BackTheStack per la tua azienda sarà di {b}almeno 10x{_b}. Paga $10.000 e ricevi $100.000 in manutenzione e nuovi sviluppi. Riferiremo l'impatto di questo investimento condiviso e saremmo entusiasti di promuovere il contributo della tua azienda."
-
-msgid "Join #BackTheStack and invest in open source today!"
-msgstr "Unisciti a #BackTheStack e investi nell'open source oggi!"
-
-msgid "Loading credit card form ..."
-msgstr "Modulo per carta di credito in caricamento ..."
-
-msgid "We weren't able to process your card."
-msgstr "Non siamo stati in grado di elaborare la tua carta."
-
-msgid "Optional"
-msgstr "Opzionale"
-
-msgid "Who are you?"
-msgstr "Chi sei?"
-
-msgid "And do you wish to subscribe to our newsletter?"
-msgstr "E desidere iscriverti alla nostra newsletter?"
-
-msgid "Your Name"
-msgstr "Il Tuo Nome"
-
-msgid "Please enter a value shorter than 256 characters."
-msgstr "Per favore inserisci un valore con meno di 256 caratteri."
-
-msgid "Your Email Address"
-msgstr "Il Tuo Indirizzo Email"
-
-msgid "Please enter a valid email address shorter than 255 characters."
-msgstr "Per favore inserisci un indirizzo email valido con meno di 255 caratteri."
-
-msgid "We will send a link to an invoice for your payment."
-msgstr "Invieremo un link alla fattura del tuo pagamento."
-
-msgid "Join Mailing List"
-msgstr "Iscrizione Mailing List"
-
-msgid "Yes"
-msgstr "Sì"
-
-msgid "No"
-msgstr "No"
-
-msgid "I am surprised that you are seeing this message."
-msgstr "Sono sorpreso che tu stia vedendo questo messaggio."
-
-msgid "We will send updates related to #BackTheStack."
-msgstr "Invieremo aggiornamenti relativi a #BackTheStack."
-
-msgid "Promotion"
-msgstr "Promozione"
-
-msgid "We (probably) want to brag about you! May we?"
-msgstr "(Probabilmente) vorremmo vantarci di te! Possiamo?"
-
-msgid "Your Company Logo"
-msgstr ""
-
-msgid "Choose file ..."
-msgstr ""
-
-msgid "Please upload a PNG or JPG smaller than 256 kB."
-msgstr ""
-
-msgid "PNG or JPG, will be cropped square."
-msgstr ""
-
-msgid "Your Company Name"
-msgstr "Nome Della Tua Azienda"
-
-msgid "Please enter a value 32 characters or shorter."
-msgstr "Per favore inserisci un valore con 32 caratteri o meno."
-
-msgid "Your Homepage URL"
-msgstr ""
-
-msgid "Please enter a valid URL shorter than 256 characters."
-msgstr "Per favore inserisci un URL valido con meno di 256 caratteri."
-
-msgid "Your Company Twitter Handle"
-msgstr "Profilo Twitter Della Tua Azienda"
-
-msgid "Please enter a valid Twitter handle."
-msgstr "Per favore inserisci un profilo Twitter valido."
-
-msgid "Your Message to the Open Source Community"
-msgstr "Il tuo Messaggio alla Comunità Open Source"
-
-msgid "Please limit your message to 128 characters."
-msgstr "Per favore limita il tuo messaggio a 128 caratteri."
-
-msgid "Submit Form"
-msgstr "Invia Il Modulo"
-
-msgid "Invest in Open Source"
-msgstr "Investi nell'Open Source"
-
-msgid "Processing ..."
-msgstr "In elaborazione ..."
-
-msgid "By submitting this form you agree to our {a}terms of service{_a}."
-msgstr "Inviando questo modulo, accetti i nostri {a}termini di servizio{_a}."
-
 msgid "Approved"
 msgstr "Approvati"
 
@@ -1007,6 +840,12 @@ msgstr "Aggiungi"
 
 msgid "Are you sure?"
 msgstr "Sei sicuro?"
+
+msgid "Yes"
+msgstr "Sì"
+
+msgid "No"
+msgstr "No"
 
 msgid "Already closed."
 msgstr "Già chiuso."
