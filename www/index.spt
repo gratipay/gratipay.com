@@ -25,4 +25,14 @@ href="https://gratipay.news/gratipay-year-five-and-a-half-cbfba8f50981">Gratipay
 is shutting down</a>. We intend to process existing weekly payments through the
 end of the year. Thank you, and sorry.</p>
 
+<h2>Options</h2>
+
+<p class="pad"><a href="https://liberapay.com/">Liberapay</a> is offering a
+one-click migration:</p>
+
+{% include "templates/migrate.html" %}
+
+<p class="pad"><a href="https://www.patreon.com/">Patreon</a>
+and <a href="https://opencollective.com/">Open Collective</a> are also options.</p>
+
 {% endblock %}
