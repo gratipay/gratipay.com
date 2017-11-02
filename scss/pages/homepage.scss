@@ -3,10 +3,9 @@
     .pad {
         text-align: justify;
         padding: 0 20%;
-    }
-
-    .migrate {
-        padding-bottom: 2em;
+        &:last-of-type {
+            margin-top: 2em;
+        }
     }
 
     #banner {
