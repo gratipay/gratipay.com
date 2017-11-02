@@ -3,7 +3,7 @@
 suppress_sidebar = True
 page_id = "homepage"
 [---] text/html
-{% from "templates/nav-tabs.html" import nav_tabs with context %}
+{% from "templates/sign-in-using.html" import sign_in_using with context %}
 {% extends "templates/base.html" %}
 {% block head %}
     <link rel="publisher" href="https://plus.google.com/104524895706770139568">
@@ -28,7 +28,11 @@ end of the year. Thank you, and sorry.</p>
 <p class="pad"><a href="https://liberapay.com/">Liberapay</a> is offering a
 one-click migration:</p>
 
+{% if user.ANON  %}
+{{ sign_in_using() }}
+{% else %}
 {% include "templates/migrate.html" %}
+{% endif %}
 
 <p class="pad"><a href="https://www.patreon.com/">Patreon</a>
 and <a href="https://opencollective.com/">Open Collective</a> are also options.</p>
