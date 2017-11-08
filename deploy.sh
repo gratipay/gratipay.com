@@ -57,17 +57,6 @@ heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin \
     ./env/bin/python -m gratipay.wireup
 
 
-# Sync the translations
-echo "Syncing translations ..."
-if [ ! -e .transifexrc ] && [ ! -e ~/.transifexrc ]; then
-    heroku config -s -a gratipay | ./env/bin/honcho run -e /dev/stdin make transifexrc
-fi
-make i18n_upload
-make i18n_download
-git add i18n
-maybe_commit "Update i18n files"
-
-
 # Ask confirmation and bump the version
 yesno "Tag and deploy version $version?" || exit
 echo $version > www/version.txt
