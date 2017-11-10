@@ -1,0 +1,6 @@
+[----]
+team = get_team(request)
+[----]
+{% extends "templates/team-base.html" %}
+{% block content %}
+{% endblock %}
