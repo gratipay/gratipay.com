@@ -13,70 +13,85 @@ platform = getattr(website.platforms, request.path['platform'], None)
 if platform is None:
     raise Response(404)
 
-# Get the query id from the querystring
-query_id = platform.get_query_id(request.qs)
+if request.method == 'GET':
 
-# Check that we have a cookie that matches the query id (CSRF prevention)
-cookie_name = (platform.name+'_'+query_id).encode('ascii')
-try:
-    cookie_value = request.headers.cookie[cookie_name].value
-except KeyError:
-    raise Response(400, 'Missing cookie')
-if not cookie_value:
-    raise Response(400, 'Empty cookie')
-query_data, action, then, action_user_id = json.loads(b64decode(cookie_value))
-then = b64decode(then)  # double-b64encoded to avoid other encoding issues w/ qs
+    # Get the query id from the querystring
+    query_id = platform.get_query_id(request.qs)
 
-# Finish the auth process, the returned session is ready to use
-url = website.base_url+request.line.uri.raw
-try:
-    sess = platform.handle_auth_callback(url, query_id, query_data)
-except TokenRequestDenied as e:
-    raise Response(502, _("{0} returned an error, please try again later.",
-                          platform.display_name))
+    # Check that we have a cookie that matches the query id (CSRF prevention)
+    cookie_name = (platform.name+'_'+query_id).encode('ascii')
+    try:
+        cookie_value = request.headers.cookie[cookie_name].value
+    except KeyError:
+        raise Response(400, 'Missing cookie')
+    if not cookie_value:
+        raise Response(400, 'Empty cookie')
+    query_data, action, then, action_user_id = json.loads(b64decode(cookie_value))
+    then = b64decode(then)  # double-b64encoded to avoid other encoding issues w/ qs
+    response.erase_cookie(cookie_name)
 
-# Get the user's info from the platform's API and upsert it in the DB
-account = AccountElsewhere.upsert(platform.get_user_self_info(sess))
+elif request.method == 'POST':
 
-if action_user_id and account.user_id != action_user_id:
-    claimed_account = AccountElsewhere.upsert(platform.get_user_info('user_id', action_user_id))
-    if not claimed_account.is_team:
-        then = '/on/%s/%s/failure.html'
-        website.redirect(then % (platform.name, claimed_account.gratipay_slug))
-    if not platform.is_team_admin(claimed_account.user_name, sess):
-        then = '/on/%s/%s/failure.html?team=true'
-        website.redirect(then % (platform.name, claimed_account.gratipay_slug))
-    account = claimed_account
+    # Finish the auth process, the returned session is ready to use
+    url = website.base_url+request.line.uri.raw
+    try:
+        sess = platform.handle_auth_callback(url, query_id, query_data)
+    except TokenRequestDenied as e:
+        raise Response(502, _("{0} returned an error, please try again later.",
+                              platform.display_name))
 
-log('%s user "%s" wants to %s' % (platform.name, account.user_id, action))
+    # Get the user's info from the platform's API and upsert it in the DB
+    account = AccountElsewhere.upsert(platform.get_user_self_info(sess))
 
-if action == 'opt-in':
-    if platform not in website.signin_platforms or account.is_team:
+    if action_user_id and account.user_id != action_user_id:
+        claimed_account = AccountElsewhere.upsert(platform.get_user_info('user_id', action_user_id))
+        if not claimed_account.is_team:
+            then = '/on/%s/%s/failure.html'
+            website.redirect(then % (platform.name, claimed_account.gratipay_slug))
+        if not platform.is_team_admin(claimed_account.user_name, sess):
+            then = '/on/%s/%s/failure.html?team=true'
+            website.redirect(then % (platform.name, claimed_account.gratipay_slug))
+        account = claimed_account
+
+    log('%s user "%s" wants to %s' % (platform.name, account.user_id, action))
+
+    if action == 'opt-in':
+        if platform not in website.signin_platforms or account.is_team:
+            raise Response(400)
+        suggested_username = account.user_name or (account.email or '').split('@')[0] or account.display_name
+        user, newly_claimed = account.opt_in(suggested_username)
+        user.sign_in(response.headers.cookie)
+        try:
+            user.participant.add_signin_notifications()
+        except Exception as e:
+            if website.env.raise_signin_notifications:
+                raise
+            website.tell_sentry(e, state)
+
+    elif action == 'connect':
+        if user.ANON:
+            raise Response(403)
+        try:
+            user.participant.take_over((platform.name, account.user_id))
+        except NeedConfirmation, obstacles:
+            token, expires = account.make_connect_token()
+            response.set_cookie(b'connect_%s' % account.id, token, expires)
+            website.redirect('/on/confirm.html?id=%s' % account.id, response=response)
+
+    else:
         raise Response(400)
-    suggested_username = account.user_name or (account.email or '').split('@')[0] or account.display_name
-    user, newly_claimed = account.opt_in(suggested_username)
-    user.sign_in(response.headers.cookie)
-    try:
-        user.participant.add_signin_notifications()
-    except Exception as e:
-        if website.env.raise_signin_notifications:
-            raise
-        website.tell_sentry(e, state)
 
-elif action == 'connect':
-    if user.ANON:
-        raise Response(403)
-    try:
-        user.participant.take_over((platform.name, account.user_id))
-    except NeedConfirmation, obstacles:
-        token, expires = account.make_connect_token()
-        response.set_cookie(b'connect_%s' % account.id, token, expires)
-        website.redirect('/on/confirm.html?id=%s' % account.id, response=response)
-
+    website.redirect(then, response=response)
 else:
-    raise Response(400)
+    raise Response(405)
 
-response.erase_cookie(cookie_name)
-website.redirect(then, response=response)
+[-----------------------------] text/html
+{% extends "templates/base.html %}
 
-[-----------------------------] text/plain
+{% block content %}
+<h1>Proceed?</h1>
+<form action="./associate" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button type="submit">Yes, proceed</button>
+</form>
+{% endblock %}
