@@ -60,13 +60,28 @@ class Team(object):
                            , owner=owner
                            , _cursor=cursor
                             )
-        cursor.run('INSERT INTO teams_to_packages (team_id, package_id) '
-                   'VALUES (%s, %s)', (team.id, self.id))
+        self.link_team(team, cursor)
+
+        return team
+
+
+    def link_team(self, team, cursor=None):
+        """Given a db cursor and a :py:class:`Team`, link the team to this package.
+        Complains if a team is already linked.
+        """
+        cursor = cursor or self.db
+
+        linked_team = self.load_team(cursor)
+        assert linked_team is None # sanity check
+
+        cursor.run("""
+            INSERT INTO teams_to_packages (team_id, package_id)
+                 VALUES (%s, %s)
+        """, (team.id, self.id))
         self.app.add_event( cursor
                           , 'package'
                           , dict(id=self.id, action='link', values=dict(team_id=team.id))
                            )
-        return team
 
 
     def unlink_team(self, cursor):
