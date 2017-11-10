@@ -23,7 +23,10 @@
   ./vendor/alabaster-0.7.8.tar.gz
   ./vendor/snowballstemmer-1.2.1.tar.gz
   ./vendor/Pygments-2.1.3.tar.gz
-  ./vendor/six-1.8.0.tar.gz
+    ./vendor/six-1.9.0.tar.gz
+    ./vendor/webencodings-0.5.1.tar.gz
+    ./vendor/html5lib-0.999999999.tar.gz
+./vendor/bleach-2.0.0.tar.gz
   ./vendor/docutils-0.12.tar.gz
     ./vendor/pytz-2014.7.tar.bz2
   ./vendor/Babel-1.3.tar.gz
