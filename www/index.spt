@@ -35,7 +35,8 @@ one-click migration:</p>
 {% endif %}
 
 <p class="pad"><a href="https://www.patreon.com/">Patreon</a>, <a
-href="https://opencollective.com/">Open Collective</a>, and <a
-href="https://salt.bountysource.com/">Bountysource</a> are also options.</p>
+href="https://opencollective.com/">Open Collective</a>, <a
+href="https://salt.bountysource.com/">Bountysource</a>, and <a
+href="https://codesponsor.io/">Code Sponsor</a> are also options.</p>
 
 {% endblock %}
