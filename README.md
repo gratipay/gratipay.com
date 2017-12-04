@@ -386,7 +386,7 @@ If you'd like to override some settings, create a file named `local.env` to stor
 The following explains some of the content of that file:
 
 The `GITHUB_*` keys are for a gratipay-dev application in the Gratipay
-organization on Github. It points back to localhost:8537, which is where
+organization on Github. It points back to `localhost:8537`, which is where
 Gratipay will be running if you start it locally with `make run`. Similarly
 with the `TWITTER_*` keys, but there they required us to spell it `127.0.0.1`.
 
@@ -528,7 +528,7 @@ charts page used to use this.
 **/`~username`/payment-instructions.json**
 ([source](https://github.com/gratipay/gratipay.com/blob/master/www/~/%25username/payment-instructions.json.spt))&mdash;*private*&mdash;Responds
 to `GET` with an array of objects representing your current payment
-instructions. A payment instruction is created when a ~user instructs Gratipay
+instructions. A payment instruction is created when a `~user` instructs Gratipay
 to make voluntary payments to a Team. Pass a `team_slug` with `GET` to fetch
 payment instruction only for that particular team. `POST` an array of objects
 containing `team_slug` and `amount` to bulk upsert payment instructions (make
